@@ -1,3 +1,7 @@
-StravaPlus
+Install StravaPlus from chrome store
 ==========
-Code coming soon on that repo
+Install from here: http://bitly.com/stravaplus
+
+Install StravaPlus from that git
+==========
+Todo :D
