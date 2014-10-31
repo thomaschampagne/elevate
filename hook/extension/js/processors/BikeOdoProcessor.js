@@ -20,7 +20,7 @@ BikeOdoProcessor.prototype = {
 
         var bikeOdoOfAthleteFromCache = StorageManager.getCookie(this.cacheAgingTimeCookieKey_);
 
-        if (!_.isNull(bikeOdoOfAthleteFromCache)) {
+        if (!_.isNull(bikeOdoOfAthleteFromCache) && !_.isEqual(bikeOdoOfAthleteFromCache, "null")) {
             if (StravaPlus.debugMode) console.log("Using bike odo cache: " + bikeOdoOfAthleteFromCache);
             callback(JSON.parse(bikeOdoOfAthleteFromCache));
             return;

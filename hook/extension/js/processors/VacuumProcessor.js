@@ -15,7 +15,17 @@ VacuumProcessor.prototype = {
      *  @returns the strava athlete id
      */
     getAthleteId: function getAthleteId() {
-        return (_.isUndefined(currentAthlete.id)) ? null : currentAthlete.id;
+
+        var athleteId = null;
+        try {
+            if (!_.isUndefined(currentAthlete)) {
+                athleteId = currentAthlete.id;
+            }
+        } catch (err) {
+            if (StravaPlus.debugMode) console.warn(err);
+        }
+
+        return athleteId;
     },
 
     /**
@@ -23,7 +33,16 @@ VacuumProcessor.prototype = {
      *  @returns the strava athlete id
      */
     getAthleteName: function getAthleteName() {
-        return (_.isUndefined(currentAthlete.id)) ? null : currentAthlete.get('display_name');
+        var athleteName = null;
+        try {
+            if (!_.isUndefined(currentAthlete)) {
+                athleteName = currentAthlete.get('display_name');
+            }
+        } catch (err) {
+            if (StravaPlus.debugMode) console.warn(err);
+        }
+
+        return athleteName;
     },
 
     /**
@@ -48,7 +67,17 @@ VacuumProcessor.prototype = {
      *  @returns premium status
      */
     getPremiumStatus: function getPremiumStatus() {
-        return (_.isUndefined(currentAthlete.attributes.premium)) ? null : currentAthlete.attributes.premium;
+
+        var premiumStatus = null;
+        try {
+            if (!_.isUndefined(currentAthlete)) {
+                premiumStatus = currentAthlete.attributes.premium;
+            }
+        } catch (err) {
+            if (StravaPlus.debugMode) console.warn(err);
+        }
+
+        return premiumStatus;
     },
 
     /**
@@ -57,18 +86,26 @@ VacuumProcessor.prototype = {
      */
     getProStatus: function getProStatus() {
 
-        if (_.isUndefined(currentAthlete.attributes.pro)) { // Pro status exist
+        var proStatus = null;
 
-            return null;
-            
-        } else { // currentAthlete.attributes.pro exists
+        try {
 
-            if (currentAthlete.attributes.pro === true) {
-                return true;
+            if (!_.isUndefined(currentAthlete)) {
+
+                if (!_.isUndefined(currentAthlete.attributes.pro)) {
+
+                    proStatus = currentAthlete.attributes.pro;
+
+                } else {
+                    return null;
+                }
+
             }
+        } catch (err) {
+            if (StravaPlus.debugMode) console.warn(err);
         }
 
-        return false;
+        return proStatus;
     },
     /**
      *  ...
@@ -224,7 +261,7 @@ VacuumProcessor.prototype = {
                 var bikeOdo = jQuery(element).find('td').last().text().trim();
                 bikeOdoArray[btoa(bikeName)] = bikeOdo;
             });
-            
+
             callback(bikeOdoArray);
         });
     },

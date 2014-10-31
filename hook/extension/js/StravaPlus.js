@@ -307,7 +307,7 @@ StravaPlus.prototype = {
 
         var bikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor_, this.athleteIdAuthorOfActivity_);
         bikeOdoProcessor.getBikeOdoOfAthlete(function(bikeOdoArray) {
-            
+
             var activityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheAgingTimeCookieKey());
             activityBikeOdoModifier.modify();
 
@@ -382,6 +382,11 @@ StravaPlus.prototype = {
 
         if (StravaPlus.debugMode) console.log("Cookie 'sp_today_one_incomming_connection' value found is: " + userHasConnectSince24Hour);
 
+        if (_.isNull(this.athleteId_)) {
+            if (StravaPlus.debugMode) console.log("athleteId is empty value: " + this.athleteId_);
+            return;
+        }
+
         if (_.isEmpty(userHasConnectSince24Hour)) {
 
             var accountType = 'Free';
@@ -404,7 +409,9 @@ StravaPlus.prototype = {
 
             if (StravaPlus.debugMode) console.log("Cookie 'sp_today_one_incomming_connection' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
-            _paq.push(['trackEvent', 'DailyConnection', eventAction, eventName]);
+            if (!StravaPlus.debugMode) {
+                _paq.push(['trackEvent', 'DailyConnection', eventAction, eventName]);
+            }
 
             // Create cookie to avoid push during 1 day
             StorageManager.setCookie('sp_today_one_incomming_connection', true, 1);

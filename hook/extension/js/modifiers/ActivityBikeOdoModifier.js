@@ -17,7 +17,12 @@ ActivityBikeOdoModifier.prototype = {
         var bikeDisplayedOnActivityPage = jQuery('.gear-name').text().trim();
 
         // Get odo from map
-        var activityBikeOdo = this.bikeOdoArray_[btoa(bikeDisplayedOnActivityPage)];
+        var activityBikeOdo = 'No bike declared';
+        try {
+            activityBikeOdo = this.bikeOdoArray_[btoa(bikeDisplayedOnActivityPage)];
+        } catch (err) {
+            console.warn('Unable to find bike odo for this Activity');
+        }
 
         var newBikeDisplayHTML = bikeDisplayedOnActivityPage + '<strong> / ' + activityBikeOdo + '</strong>';
 
@@ -34,7 +39,7 @@ ActivityBikeOdoModifier.prototype = {
     },
 
     handleUserBikeOdoForceRefresh_: function handleUserBikeOdoForceRefresh_() {
-    	// Force REMOVE cookie with 0 seconds
+        // Force REMOVE cookie with 0 seconds
         StorageManager.setCookieSeconds(this.cacheAgingTimeCookieKey, null, 0);
 
         window.location.reload();

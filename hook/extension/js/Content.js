@@ -28,7 +28,25 @@ Content.prototype = {
         }
     },
 
+    isExtensionRunnableInThisContext_: function isExtensionRunnableInThisContext_() {
+
+        var isRunnable = true;
+
+        // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
+        if (window.location.pathname.match(/^\/routes\/new/) || window.location.pathname.match(/^\/routes\/(\d+)\/edit$/)) {
+            isRunnable = false;
+        }
+
+        return isRunnable;
+    },
+
     start: function start() {
+
+        // Skip execution if needed
+        if (!this.isExtensionRunnableInThisContext_()) {
+            console.log("Skipping StravaPlus chrome extension execution in this page");
+            return;
+        }
 
         this.loadDependencies();
 
@@ -102,6 +120,5 @@ var dependencies = [
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js'
 ];
-
 var content = new Content(dependencies, userSettings, appResources);
 content.start();

@@ -3,7 +3,7 @@ _paq.push(['trackPageView']);
 _paq.push(['enableLinkTracking']);
 _paq.push(['setDocumentTitle', document.domain + "/" + document.title]);
 (function() {
-    var u = (("https:" == document.location.protocol) ? "https" : "http") + "://your.piwikhost.com";
+    var u = (("https:" == document.location.protocol) ? "https" : "http") + "://php-thomaschampagne.rhcloud.com/piwik/";
     _paq.push(['setTrackerUrl', u + 'piwik.php']);
     _paq.push(['setSiteId', 1]);
     var d = document,
