@@ -33,7 +33,18 @@ Content.prototype = {
         var isRunnable = true;
 
         // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
-        if (window.location.pathname.match(/^\/routes\/new/) || window.location.pathname.match(/^\/routes\/(\d+)\/edit$/)) {
+        if (window.location.pathname.match(/^\/routes\/new/) || 
+            window.location.pathname.match(/^\/routes\/(\d+)\/edit$/) ||
+            window.location.pathname.match(/^\/about/) ||
+            window.location.pathname.match(/^\/running-app/) ||
+            window.location.pathname.match(/^\/features/) ||
+            window.location.pathname.match(/^\/how-it-works/)) {
+            
+            isRunnable = false;
+        }
+
+        // Do not run extension if user not logged
+        if(document.getElementsByClassName('btn-login').length > 0) {
             isRunnable = false;
         }
 

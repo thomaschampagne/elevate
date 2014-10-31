@@ -18,7 +18,7 @@ VacuumProcessor.prototype = {
 
         var athleteId = null;
         try {
-            if (!_.isUndefined(currentAthlete)) {
+            if (!_.isUndefined(currentAthlete) && !_.isUndefined(currentAthlete.id)) {
                 athleteId = currentAthlete.id;
             }
         } catch (err) {
@@ -35,7 +35,7 @@ VacuumProcessor.prototype = {
     getAthleteName: function getAthleteName() {
         var athleteName = null;
         try {
-            if (!_.isUndefined(currentAthlete)) {
+            if (!_.isUndefined(currentAthlete) && !_.isUndefined(currentAthlete.get('display_name'))) {
                 athleteName = currentAthlete.get('display_name');
             }
         } catch (err) {
