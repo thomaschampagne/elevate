@@ -3,7 +3,7 @@
  */
 function BikeOdoProcessor(vacuumProcessor, athleteId) {
     this.vacuumProcessor_ = vacuumProcessor;
-    this.cacheAgingTimeCookieKey_ = 'sp_bikeOdoOfAthlete_' + athleteId + '_cache';
+    this.cacheAgingTimeCookieKey_ = 'stravaplus_bikeOdoOfAthlete_' + athleteId + '_cache';
     this.cacheAgingTimeOfBikesInSeconds_ = 120 * 60; // 2 hours
     this.athleteId_ = athleteId;
 }

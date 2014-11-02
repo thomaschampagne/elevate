@@ -5,7 +5,7 @@ function ActivityProcessor(vacuumProcessor) {
     this.vacuumProcessor_ = vacuumProcessor;
 }
 
-ActivityProcessor.cachePrefix = 'sp_activityCache_';
+ActivityProcessor.cachePrefix = 'stravaplus_activity_';
 
 /**
  * Define prototype

@@ -310,11 +310,15 @@ ExtendedActivityDataModifier.prototype = {
      */
     appendAnalyseDataToStatsPanel_: function appendAnalyseDataToStatsPanel_(userSettingKey, title, valueHtml, unit, style) {
 
+        var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.optionsLink + "?viewHelperId=" + userSettingKey + "\",\"_blank\");'";
+
+        var isA = jQuery(valueHtml).is('a');
+
         // Add unit if needed        
         valueHtml = valueHtml + ((unit === null) ? "" : "<abbr class='unit'>" + unit + "</abbr>");
-        var analyzeDataToAppend = jQuery("<li style='margin-right: 8px;'>" +
+        var analyzeDataToAppend = jQuery("<li style='margin-right: 8px; cursor: pointer;' " + ((!isA) ? onClickHtmlBehaviour : '') + ">" +
             "<strong style='" + style + "'>" + valueHtml + "</strong>" +
-            "<div class='label' onclick='javascript:window.open(\"" + this.appResources_.optionsLink + "?viewHelperId=" + userSettingKey + "\",\"_blank\");'>" + title + "</div>" +
+            "<div class='label' " + ((isA) ? onClickHtmlBehaviour : '') + ">" + title + "</div>" +
             "</li>");
 
         // Add to current panel

@@ -378,16 +378,16 @@ StravaPlus.prototype = {
      */
     handleTrackTodayIncommingConnection_: function handleTrackTodayIncommingConnection_() {
 
-        var userHasConnectSince24Hour = StorageManager.getCookie('sp_today_one_incomming_connection');
+        var userHasConnectSince24Hour = StorageManager.getCookie('stravaplus_daily_connection_done');
 
-        if (StravaPlus.debugMode) console.log("Cookie 'sp_today_one_incomming_connection' value found is: " + userHasConnectSince24Hour);
+        if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 
         if (_.isNull(this.athleteId_)) {
             if (StravaPlus.debugMode) console.log("athleteId is empty value: " + this.athleteId_);
             return;
         }
 
-        if (_.isEmpty(userHasConnectSince24Hour)) {
+        if (_.isNull(userHasConnectSince24Hour) || _.isEmpty(userHasConnectSince24Hour)) {
 
             var accountType = 'Free';
             var accountName = this.athleteName_;
@@ -407,18 +407,18 @@ StravaPlus.prototype = {
             // Push IncomingConnection to piwik
             var eventName = accountName + ' #' + this.athleteId_;
 
-            if (StravaPlus.debugMode) console.log("Cookie 'sp_today_one_incomming_connection' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+            if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
             if (!StravaPlus.debugMode) {
                 _paq.push(['trackEvent', 'DailyConnection', eventAction, eventName]);
             }
 
             // Create cookie to avoid push during 1 day
-            StorageManager.setCookie('sp_today_one_incomming_connection', true, 1);
+            StorageManager.setCookie('stravaplus_daily_connection_done', true, 1);
 
         } else {
 
-            if (StravaPlus.debugMode) console.log("Cookie 'sp_today_one_incomming_connection' exist, DO NOT TRACK IncomingConnection");
+            if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 
         }
     }
