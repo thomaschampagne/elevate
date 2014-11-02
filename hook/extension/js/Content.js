@@ -110,7 +110,6 @@ var appResources = {
 };
 
 var dependencies = [
-    // 'js/libs/underscore.min.js',
     'js/libs/Chart.min.js',
     'js/libs/StorageManager.js',
     'js/processors/VacuumProcessor.js',
