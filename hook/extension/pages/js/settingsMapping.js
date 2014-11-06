@@ -45,7 +45,7 @@ var optionsSectionMapping = {
             'displayNormalizedPower': {
                 optionType: 'checkbox',
                 optionTitle: 'Estimated Normalized Power',
-                optionHtml: 'The "Estimated Normalized Power" is a better statistic to "Estimated Average Power" given by Strava. Why? While average power simply takes all of the samples of "Estimated power" and divides them by the number of samples, Normalized Power uses a tricky weighting system to come up with a number that is more in line with the true physiological effort for your given activity.<br/><br/>"Estimated Normalized Power" is basically the power that you could have maintainted for the same physiological "cost" if your power output had been constant.<br/><br/>"Estimated Normalized Power" is calculated from an algorithm introduced by Dr. Andy Coggan to weight this variability according to its physiological difficulty.',
+                optionHtml: 'The "Estimated Normalized Power" is a better statistic to "Estimated Average Power" given by Strava. Why? While average power simply takes all of the samples of "Estimated power" and divides them by the number of samples, Normalized Power uses a tricky weighting system to come up with a number that is more in line with the true physiological effort for your given activity.<br/><br/>"Estimated Normalized Power" is basically the power that you could have maintainted for the same physiological "cost" if your power output had been constant.<br/><br/>"Estimated Normalized Power" is calculated from an algorithm introduced by Dr. Andy Coggan to weight this variability according to its physiological difficulty. Here\'s the formula: <br/><br/><img src="img/np_equation.png" />',
             },
             'displayVariabilityIndex': {
                 optionType: 'checkbox',
@@ -75,7 +75,7 @@ var optionsSectionMapping = {
             'displayPedalingData': {
                 optionType: 'checkbox',
                 optionTitle: 'Display advanced pedaling data',
-                optionHtml: 'Add pedaling data for your cycling activities:<br/><br/>- Pedaling %<br/>- Pedaling Time<br/>- Crank revolutions count.<br/><br/>Of course, a cadence meter is required to get this feature.',
+                optionHtml: 'Add pedaling data for your cycling activities:<br/><br/>- Pedaling % while moving<br/>- Pedaling Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence meter is required to get this feature.',
             },
             'displayBikeOdoInActivity': {
                 optionType: 'checkbox',

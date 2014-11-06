@@ -165,7 +165,7 @@ ExtendedActivityDataModifier.prototype = {
 
             // Normalized W/Kg
             if (this.userSettings_.displayNormalizedWattsPerKg) { // Add weight per weight
-                this.appendAnalyseDataToStatsPanel_('displayNormalizedWattsPerKg', 'Normalized W/Kg', this.analysisData_.powerData.normalizedWattsPerKg.toFixed(2), null, 'color: #838383;');
+                this.appendAnalyseDataToStatsPanel_('displayNormalizedWattsPerKg', 'Estimated Normalized W/Kg', this.analysisData_.powerData.normalizedWattsPerKg.toFixed(2), null, 'color: #838383;');
             }
         }
     },
@@ -201,8 +201,8 @@ ExtendedActivityDataModifier.prototype = {
 
             this.createNewLineData_('lineForPedalingData', null, 'margin-bottom: 5px;');
 
-            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling Percentage', this.analysisData_.pedalingData.pedalingPercentage.toFixed(2), '%', 'color: #CC00FF;');
-            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling Time hh:mm:ss', Helper.secondsToHHMMSS(this.analysisData_.pedalingData.pedalingTime), null, 'color: #CC00FF;');
+            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling % while moving', this.analysisData_.pedalingData.pedalingPercentageMoving.toFixed(2), '%', 'color: #CC00FF;');
+            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling Time while moving', Helper.secondsToHHMMSS(this.analysisData_.pedalingData.pedalingTimeMoving), null, 'color: #CC00FF;');
             this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Crank Revolutions', this.analysisData_.pedalingData.crankRevolutions.toFixed(0), null, 'color: #CC00FF;');
         }
     },

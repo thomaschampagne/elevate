@@ -5,6 +5,9 @@ function ActivityProcessor(vacuumProcessor) {
     this.vacuumProcessor_ = vacuumProcessor;
 }
 
+ActivityProcessor.movingThresholdKph = 5; // Kph
+ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
+ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
 
 /**
@@ -20,8 +23,8 @@ ActivityProcessor.prototype = {
         // Find in cache first is data exist
         var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
 
-        if (!_.isNull(cacheResult)) {
-            if (StravaPlus.debugMode) console.log("Using existing activity cache: " + JSON.stringify(cacheResult));
+        if (!_.isNull(cacheResult) && !StravaPlus.debugMode) {
+            if (StravaPlus.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
             callback(cacheResult);
             return;
         }
@@ -57,7 +60,7 @@ ActivityProcessor.prototype = {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        var powerData = this.powerData_(athleteWeight, userFTP, activityStatsMap, activityStream.watts);
+        var powerData = this.powerData_(athleteWeight, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
 
         // TRaining IMPulse
         // %HRR Avg
@@ -70,7 +73,7 @@ ActivityProcessor.prototype = {
         // Pedaling percentage
         // Time Pedaling
         // Crank revolution
-        var pedalingData = this.pedalingData_(activityStream.cadence, activityStatsMap);
+        var pedalingData = this.pedalingData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap);
 
         // Return an array with all that shit...
         return {
@@ -132,13 +135,14 @@ ActivityProcessor.prototype = {
         var rawAvgSpeedSum = 0;
         var speedsNonZero = Array();
         var speedVarianceSum = 0;
+        var currentSpeed;
 
         for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
 
             // Compute speed
-            var currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
+            currentSpeed = velocityArray[i] * 3.6;
 
-            if (currentSpeed != 0) {
+            if (currentSpeed != 0) { // Multiply by 3.6 to convert to kph; 
                 speedsNonZero.push(currentSpeed);
                 rawAvgSpeedSum += currentSpeed;
 
@@ -170,29 +174,32 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    powerData_: function powerData_(athleteWeight, userFTP, activityStatsMap, powerArray) {
+    powerData_: function powerData_(athleteWeight, userFTP, activityStatsMap, powerArray, velocityArray) {
 
         if (_.isEmpty(powerArray)) {
             return null;
         }
 
-        var accumulatedWattsFourRoot = 0;
-        var accumulatedWatts = 0;
+        var accumulatedWattsOnMoveFourRoot = 0;
+        var accumulatedWattsOnMove = 0;
+        var wattSampleOnMoveCount = 0;
 
         for (var i = 0; i < powerArray.length; i++) { // Loop on samples
 
-            // Compute average and normalized power
-            accumulatedWattsFourRoot += Math.pow(powerArray[i], 3.785);
-            accumulatedWatts += powerArray[i];
-
+            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
+                // Compute average and normalized power
+                accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.925);
+                accumulatedWattsOnMove += powerArray[i];
+                wattSampleOnMoveCount++;
+            }
         }
 
         // Finalize compute of Power
-        var avgWatts = accumulatedWatts / powerArray.length;
-        var normalizedPower = Math.sqrt(Math.sqrt(accumulatedWattsFourRoot / powerArray.length));
+        var avgWatts = accumulatedWattsOnMove / wattSampleOnMoveCount;
+        var normalizedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
         var variabilityIndex = normalizedPower / avgWatts;
         var intensityFactor = (_.isEmpty(userFTP)) ? null : (normalizedPower / userFTP);
-        var normalizedWattsPerKg = normalizedPower / athleteWeight;
+        var normalizedWattsPerKg = normalizedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
 
         return {
             'avgWatts': avgWatts,
@@ -347,39 +354,44 @@ ActivityProcessor.prototype = {
 
     },
 
-    pedalingData_: function pedalingData_(cadenceArray, activityStatsMap) {
+    pedalingData_: function pedalingData_(cadenceArray, velocityArray, activityStatsMap) {
 
-        if (_.isUndefined(cadenceArray)) {
+        if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
             return null;
         }
 
-        var cadenceZerosCount = 0;
-        var cadenceSum = 0;
-        var cadenceCount = 0;
+        // On Moving
+        var cadenceSumOnMoving = 0;
+        var cadenceOnMovingCount = 0;
+        var pedalingOnMoveSampleCount = 0;
+        var movingSampleCount = 0;
 
-        for (var i = 0; i < cadenceArray.length; i++) {
+        for (var i = 0; i < velocityArray.length; i++) {
 
-            // Compute cadence % and time.
-            if (cadenceArray[i] == 0) {
-                cadenceZerosCount++;
-            }
+            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
 
-            // We count cadence over 35 rpm to compute the cad avg
-            if (cadenceArray[i] > 35) {
-                cadenceSum += cadenceArray[i];
-                cadenceCount++;
+                // Rider is moving here..
+
+                if (cadenceArray[i] > ActivityProcessor.cadenceThresholdRpm) {
+
+                    // Rider is moving here while pedaling
+                    pedalingOnMoveSampleCount++;
+                    cadenceSumOnMoving += cadenceArray[i];
+                    cadenceOnMovingCount++;
+                }
+
+                movingSampleCount++;
             }
         }
 
-        var pedalingPercentage = ((1 - (cadenceZerosCount / cadenceArray.length)) * 100);
-        var averageCadence = (cadenceSum / cadenceCount);
+        var pedalingRatioOnMovingTime = pedalingOnMoveSampleCount / movingSampleCount;
+        var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
         return {
-            'pedalingPercentage': pedalingPercentage,
-            'pedalingTime': (pedalingPercentage / 100 * activityStatsMap.movingTime),
-            'averageCadence': averageCadence,
-            'crankRevolutions': (averageCadence / 60 * activityStatsMap.movingTime),
+            'pedalingPercentageMoving': pedalingRatioOnMovingTime * 100, // TODO OnMove
+            'pedalingTimeMoving': (pedalingRatioOnMovingTime * activityStatsMap.movingTime),
+            'averageCadenceMoving': averageCadenceOnMovingTime,
+            'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
         };
-
     },
 };
