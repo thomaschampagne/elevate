@@ -181,8 +181,9 @@ ExtendedActivityDataModifier.prototype = {
             this.createNewLineData_('lineForHeartSpeedData', null, 'margin-bottom: 5px;');
 
             // add Speeds to panel Speed unit here: pageView.activityAthlete().attributes.measurement_preference
-            var speedUnit = (pageView.activityAthlete().attributes.measurement_preference == 'meters') ? 'km/h' : 'mi/h';
-            var toMilesOnNot = (pageView.activityAthlete().attributes.measurement_preference == 'meters') ? 1 : 0.62137;
+            var measurementPreference = pageView.activityAthlete().attributes.measurement_preference;
+            var speedUnit = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
+            var toMilesOnNot = (speedUnit == 'km/h') ? 1 : 0.62137;
 
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '25% Quartile Speed', (this.analysisData_.speedData.lowerQuartileSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '50% Median Speed', (this.analysisData_.speedData.medianSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
