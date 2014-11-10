@@ -163,6 +163,7 @@ ActivityProcessor.prototype = {
 
         return {
             'rawAvgSpeed': rawAvgSpeed,
+            'avgPace': ((1 / rawAvgSpeed) * 60 * 60).toFixed(0), // send in seconds
             'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
             'medianSpeed': Helper.median(speedsNonZeroSorted),
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
@@ -183,6 +184,7 @@ ActivityProcessor.prototype = {
         var accumulatedWattsOnMoveFourRoot = 0;
         var accumulatedWattsOnMove = 0;
         var wattSampleOnMoveCount = 0;
+        var wattsSamplesOnMove = [];
 
         for (var i = 0; i < powerArray.length; i++) { // Loop on samples
 
@@ -191,6 +193,7 @@ ActivityProcessor.prototype = {
                 accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.925);
                 accumulatedWattsOnMove += powerArray[i];
                 wattSampleOnMoveCount++;
+                wattsSamplesOnMove.push(powerArray[i]);
             }
         }
 
@@ -200,6 +203,9 @@ ActivityProcessor.prototype = {
         var variabilityIndex = normalizedPower / avgWatts;
         var intensityFactor = (_.isEmpty(userFTP)) ? null : (normalizedPower / userFTP);
         var normalizedWattsPerKg = normalizedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
+        var wattsSamplesOnMoveSorted = wattsSamplesOnMove.sort(function(a, b) {
+            return a - b;
+        });
 
         return {
             'avgWatts': avgWatts,
@@ -207,6 +213,9 @@ ActivityProcessor.prototype = {
             'variabilityIndex': variabilityIndex,
             'intensityFactor': intensityFactor,
             'normalizedWattsPerKg': normalizedWattsPerKg,
+            'lowerQuartileWatts': Helper.lowerQuartile(wattsSamplesOnMoveSorted),
+            'medianWatts': Helper.median(wattsSamplesOnMoveSorted),
+            'upperQuartileWatts': Helper.upperQuartile(wattsSamplesOnMoveSorted),
         };
 
     },

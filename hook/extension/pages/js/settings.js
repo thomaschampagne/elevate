@@ -101,26 +101,6 @@ function handleUserHrInputsAndValidation() {
     });
 }
 
-
-function checkOrUncheckVIAndIFAlongNP() {
-
-    function checkElementIdTo(id, bool) {
-        $('#' + id).prop('checked', bool);
-        fireEvent(document.getElementById(id), 'change');
-    }
-
-    $('#displayVariabilityIndex, #displayCurrentIntensityFactor, #displayNormalizedWattsPerKg').next().click(function(e) {
-        checkElementIdTo('displayNormalizedPower', true);
-    });
-
-    $('#displayNormalizedPower').next().click(function(e) {
-        checkElementIdTo('displayVariabilityIndex', false);
-        checkElementIdTo('displayCurrentIntensityFactor', false);
-        checkElementIdTo('displayNormalizedWattsPerKg', false);
-
-    });
-}
-
 function getUrlVars() {
     var vars = {};
     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
@@ -135,7 +115,6 @@ $(document).ready(function() {
     loadFromChromeLocalStorage();
     saveToChromeLocalStorage();
     setupFireChangeEventOnSlideCheckboxClicked();
-    checkOrUncheckVIAndIFAlongNP();
 
     var viewHelperId = getUrlVars()['viewHelperId'];
     if (typeof(viewHelperId) != 'undefined') {

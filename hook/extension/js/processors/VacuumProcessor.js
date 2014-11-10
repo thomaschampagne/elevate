@@ -107,6 +107,7 @@ VacuumProcessor.prototype = {
 
         return proStatus;
     },
+
     /**
      *  ...
      *  @returns ...
@@ -226,7 +227,7 @@ VacuumProcessor.prototype = {
         jQuery.ajax(url).done(function(jsonResponse) {
 
             // jsonResponse.watts = (_.isEmpty(jsonResponse.watts_calc)) ? jsonResponse.watts : jsonResponse.watts_calc;
-            jsonResponse.watts = (_.isEmpty(jsonResponse.watts)) ?  jsonResponse.watts_calc : jsonResponse.watts;
+            jsonResponse.watts = (_.isEmpty(jsonResponse.watts)) ? jsonResponse.watts_calc : jsonResponse.watts;
 
             callback(this.getActivityComonStats(), jsonResponse, this.getAthleteWeight());
 
@@ -234,6 +235,80 @@ VacuumProcessor.prototype = {
 
         }.bind(this));
     },
+
+    /**
+     * @returns
+     */
+    getSegmentsFromBounds: function getSegmentsFromBounds(vectorA, vectorB, callback) {
+
+        var segmentsUnify = {
+            cycling: null,
+            running: null
+        };
+
+        jQuery.when(
+
+            jQuery.ajax({
+                url: '/api/v3/segments/search',
+                data: {
+                    bounds: vectorA + ',' + vectorB,
+                    min_cat: '0',
+                    max_cat: '5',
+                    activity_type: 'cycling'
+                },
+                type: 'GET',
+                crossDomain: true, // enable this
+                dataType: 'jsonp',
+                success: function(xhrResponseText) {
+                    segmentsUnify.cycling = xhrResponseText;
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            }),
+
+            jQuery.ajax({
+                url: '/api/v3/segments/search',
+                data: {
+                    bounds: vectorA + ',' + vectorB,
+                    min_cat: '0',
+                    max_cat: '5',
+                    activity_type: 'running'
+                },
+                type: 'GET',
+                crossDomain: true, // enable this
+                dataType: 'jsonp',
+                success: function(xhrResponseText) {
+                    segmentsUnify.running = xhrResponseText;
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            })
+
+        ).then(function() {
+            callback(segmentsUnify);
+        });
+
+    },
+
+    /**
+     * @returns
+     */
+    getSegmentStream: function getSegmentStream(segmentId, callback) {
+
+        jQuery.ajax({
+            url: '/stream/segments/' + segmentId,
+            type: 'GET',
+            success: function(xhrResponseText) {
+                callback(xhrResponseText);
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        });
+    },
+
 
     /**
      * @returns Array of bikes/odo
