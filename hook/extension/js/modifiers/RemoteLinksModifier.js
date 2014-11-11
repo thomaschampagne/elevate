@@ -71,11 +71,11 @@ RemoteLinksModifier.prototype = {
         var segmentId = segmentData[1];
 
         var remoteViewSegmentLinksArray = [
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/segment/']
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/']
         ];
         var html = "<div class='module' style='padding-bottom: 10px;'>";
-        html += "<div class='drop-down-menu' style='background: #fc4c02; color: white;'>";
-        html += "<div class='selection' style='" + this.htmlRemoteViewForSegmentStyle + "'><img width='12px' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
+        html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;'>";
+        html += "<div class='selection' style='" + this.htmlRemoteViewForSegmentStyle + "'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
         html += "<ul class='options' style='" + this.htmlRemoteViewForActivityStyle + "'>";
 
         jQuery.each(remoteViewSegmentLinksArray, function() {

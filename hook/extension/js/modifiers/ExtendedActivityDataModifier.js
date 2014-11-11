@@ -140,33 +140,36 @@ ExtendedActivityDataModifier.prototype = {
      */
     handlePowerRelatedData_: function handlePowerRelatedData_() {
 
-        if (this.userSettings_.displayNormalizedPower && !_.isNull(this.analysisData_.powerData)) {
+        if (this.userSettings_.displayAdvancedPowerData && !_.isNull(this.analysisData_.powerData)) {
 
             this.createNewLineData_('lineForPowerData', null, 'margin-bottom: 5px;');
 
             // Estimated Normalized Power
-            this.appendAnalyseDataToStatsPanel_('displayNormalizedPower', 'Estimated Normalized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Normalized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
 
             // Estimated Variability Index
-            if (this.userSettings_.displayVariabilityIndex) { // Add VI to panel
-                this.appendAnalyseDataToStatsPanel_('displayVariabilityIndex', 'Estimated Variability Index', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
-            }
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Variability Index', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
 
             // Estimated Intensity Factor
-            if (this.userSettings_.displayCurrentIntensityFactor &&
-                this.athleteId_ == this.athleteIdAuthorOfActivity_) {
+            if (this.athleteId_ == this.athleteIdAuthorOfActivity_) {
 
                 var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
                     "<a style='font-size: 12px;' href='" + this.appResources_.optionsLink + "' target='_blank'>Configure FTP</a>" :
                     this.analysisData_.powerData.intensityFactor.toFixed(2);
 
-                this.appendAnalyseDataToStatsPanel_('displayCurrentIntensityFactor', 'Estimated Intensity Factor', intensityFactorOnToday, null, 'color: #838383;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Intensity Factor', intensityFactorOnToday, null, 'color: #838383;');
             }
 
             // Normalized W/Kg
-            if (this.userSettings_.displayNormalizedWattsPerKg) { // Add weight per weight
-                this.appendAnalyseDataToStatsPanel_('displayNormalizedWattsPerKg', 'Estimated Normalized W/Kg', this.analysisData_.powerData.normalizedWattsPerKg.toFixed(2), null, 'color: #838383;');
-            }
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Normalized W/Kg', this.analysisData_.powerData.normalizedWattsPerKg.toFixed(2), null, 'color: #838383;');
+
+            // New line
+            this.createNewLineData_('lineForPowerDataBis', null, 'margin-bottom: 5px;');
+
+            // median, quartiles..
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', '25% Quartile Watts', this.analysisData_.powerData.lowerQuartileWatts.toFixed(0), "W", 'color: #838383;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', '50% Median Watts', this.analysisData_.powerData.medianWatts.toFixed(0), "W", 'color: #838383;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', '75% Quartile Watts', this.analysisData_.powerData.upperQuartileWatts.toFixed(0), "W", 'color: #838383;');
         }
     },
 
@@ -182,9 +185,14 @@ ExtendedActivityDataModifier.prototype = {
 
             // add Speeds to panel Speed unit here: pageView.activityAthlete().attributes.measurement_preference
             var measurementPreference = pageView.activityAthlete().attributes.measurement_preference;
+            var unit = (measurementPreference == 'meters') ? 'km' : 'mi';
             var speedUnit = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
             var toMilesOnNot = (speedUnit == 'km/h') ? 1 : 0.62137;
 
+            var paceTimePerDistance = Helper.secondsToHHMMSS(this.analysisData_.speedData.avgPace / toMilesOnNot);
+            paceTimePerDistance = paceTimePerDistance.replace('00:', '');
+
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Pace', paceTimePerDistance, '/' + unit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '25% Quartile Speed', (this.analysisData_.speedData.lowerQuartileSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '50% Median Speed', (this.analysisData_.speedData.medianSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '75% Quartile Speed', (this.analysisData_.speedData.upperQuartileSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');

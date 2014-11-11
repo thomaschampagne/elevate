@@ -57,6 +57,7 @@ StravaPlus.prototype = {
 
         // Bike
         this.handleExtendedActivityData_();
+        this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
 
         // Run
@@ -278,6 +279,38 @@ StravaPlus.prototype = {
                 extendedActivityDataModifier.modify();
             }.bind(this)
         );
+    },
+
+    /**
+     *
+     */
+    handleNearbySegments_: function handleNearbySegments_() {
+
+        if (!this.userSettings_.displayNearbySegments) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        var segmentData = window.location.pathname.match(/^\/segments\/(\d+)$/);
+        if (_.isNull(segmentData)) {
+            return;
+        }
+
+        if (StravaPlus.debugMode) console.log("Execute handleNearbySegments_()");
+
+        // Getting segment id
+        var segmentId = parseInt(segmentData[1]);
+
+        var segmentProcessor = new SegmentProcessor(this.vacuumProcessor_, segmentId);
+
+        var arrayOfNearbySegments = segmentProcessor.getNearbySegmentsAround(function(jsonSegments) {
+
+            if (StravaPlus.debugMode) console.log(jsonSegments);
+
+            var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_, this.userSettings_.highLightStravaPlusFeature);
+            nearbySegmentsModifier.modify();
+
+        }.bind(this));
     },
 
     /**

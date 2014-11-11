@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-    "name": "StravaPlus Beta",
+    "name": "StravaPlus",
     "short_name": "StravaPlus",
     "description": "Add the missing features of Strava website with new performances data and improved ergonomics",
-    "version": "0.3.6",
+    "version": "0.3.7",
     "background": {
         "scripts": [
             "js/UserSettings.js",

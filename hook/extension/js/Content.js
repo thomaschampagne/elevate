@@ -90,8 +90,9 @@ var appResources = {
     optionsLink: chrome.extension.getURL('/pages/settings.html'),
     aboutLink: chrome.extension.getURL('/pages/about.html'),
     donateLink: chrome.extension.getURL('/pages/donate.html'),
-    menuIcon: chrome.extension.getURL('/icons/ic_menu_24px.svg'),
-    remoteViewIcon: chrome.extension.getURL('/icons/remoteView.png'),
+    menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),
+    menuIconOrange: chrome.extension.getURL('/icons/ic_menu_24px_orange.svg'),
+    remoteViewIcon: chrome.extension.getURL('/icons/ic_launch_24px.svg'),
     veloviewerIcon: chrome.extension.getURL('/icons/veloviewer.ico'),
     veloviewerDashboardIcon: chrome.extension.getURL('/icons/ic_dashboard_24px.svg'),
     veloviewerChallengesIcon: chrome.extension.getURL('/icons/ic_landscape_24px.svg'),
@@ -105,6 +106,7 @@ var appResources = {
     bikeIcon: chrome.extension.getURL('/icons/ic_directions_bike_24px.svg'),
     newReleaseIcon: chrome.extension.getURL('/icons/ic_new_releases_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
+    trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
     extVersion: chrome.runtime.getManifest().version,
     extensionId: chrome.runtime.id,
 };
@@ -112,9 +114,12 @@ var appResources = {
 var dependencies = [
     'js/libs/Chart.min.js',
     'js/libs/StorageManager.js',
+    'js/libs/geo.js',
+    'js/libs/latlong.js',
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',
+    'js/processors/SegmentProcessor.js',
     'js/Helper.js',
     'js/Track.js',
     'js/modifiers/ActivityScrollingModifier.js',
@@ -129,7 +134,9 @@ var dependencies = [
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
-    'js/modifiers/RunningHeartRateModifier.js'
+    'js/modifiers/RunningHeartRateModifier.js',
+    'js/modifiers/NearbySegmentsModifier.js',
+    
 ];
 
 var content = new Content(dependencies, userSettings, appResources);
