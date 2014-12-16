@@ -45,9 +45,9 @@ NearbySegmentsModifier.prototype = {
             segmentName += '</i>';
 
             if (segment.type === 'cycling') {
-                segmentIconType = "<span class='ride sprite type' style='margin-right: 7px; opacity: 0.3;'/>";
+                segmentIconType = "<span class='icon-ride sprite type' style='margin-right: 7px; opacity: 0.3;'/>";
             } else if (segment.type === 'running') {
-                segmentIconType = "<span class='hike sprite type' style='margin-right: 7px; opacity: 0.3;'/>";
+                segmentIconType = "<span class='icon-run sprite type' style='margin-right: 7px; opacity: 0.3;'/>";
             } else {
                 segmentIconType = "";
             }
