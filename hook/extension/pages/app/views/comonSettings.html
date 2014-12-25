@@ -1,0 +1,30 @@
+<div id="settingsContainer">
+    <div data-ng-repeat="section in sections">
+        <h3 data-ng-hide="false"><span class="label label-primary">{{ section.sectionTitle }}</span></h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th width="80%"></th>
+                    <th width="20%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="option in section.sectionContent">
+                    <td>
+                        <button id="{{option.optionKey}}" popover="Click for help" popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionTitle, option.optionHtml)">{{ option.optionTitle }}</button>
+                    </td>
+                    <td class="text-right">
+                        <div data-ng-switch on="option.optionType">
+                            <div data-ng-switch-when="list">
+                                <select class="form-control" data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
+                            </div>
+                            <div data-ng-switch-default>
+                                <input type="checkbox" data-ng-model="option.active" data-ng-change="toggleCheckOption(option)" />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,8 +1,9 @@
 /**
  *   Contructor
  */
-function ActivityProcessor(vacuumProcessor) {
+function ActivityProcessor(vacuumProcessor, userHrrZones) {
     this.vacuumProcessor_ = vacuumProcessor;
+    this.userHrrZones_ = userHrrZones;
 }
 
 ActivityProcessor.movingThresholdKph = 5; // Kph
@@ -229,82 +230,20 @@ ActivityProcessor.prototype = {
             return null;
         }
 
-        // For heartrate related data.
-        var hrrZones = { //TODO Move out this?
-            'z1': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0,
-                'toHrr': 0.3,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z2': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.3,
-                'toHrr': 0.4,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z3': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.4,
-                'toHrr': 0.5,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z4': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.5,
-                'toHrr': 0.6,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z5': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.6,
-                'toHrr': 0.7,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z6': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.7,
-                'toHrr': 0.8,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z7': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.8,
-                'toHrr': 0.9,
-                'fromHr': null,
-                'toHr': null,
-            },
-            'z8': {
-                's': 0,
-                'percentDistrib': null,
-                'fromHrr': 0.9,
-                'toHrr': 1.0,
-                'fromHr': null,
-                'toHr': null,
-            },
-        };
-
         var TRIMP = 0;
         var TRIMPGenderFactor = (userGender == 'men') ? 1.92 : 1.67;
         var hrrSecondsCount = 0;
+        var hrrZonesCount = Object.keys(this.userHrrZones_).length;
+        var hr, heartRateReserveAvg, durationInSeconds, durationInMinutes, zoneId;
 
         // Find HR for each Hrr of each zones
-        for (var zone in hrrZones) {
-            hrrZones[zone]['fromHr'] = Helper.heartrateFromHeartRateReserve(hrrZones[zone]['fromHrr'], userMaxHr, userRestHr);
-            hrrZones[zone]['toHr'] = Helper.heartrateFromHeartRateReserve(hrrZones[zone]['toHrr'], userMaxHr, userRestHr);
+        for (var zone in this.userHrrZones_) {
+            this.userHrrZones_[zone]['fromHr'] = parseFloat(Helper.heartrateFromHeartRateReserve(this.userHrrZones_[zone]['fromHrr'], userMaxHr, userRestHr));
+            this.userHrrZones_[zone]['toHr'] = parseFloat(Helper.heartrateFromHeartRateReserve(this.userHrrZones_[zone]['toHrr'], userMaxHr, userRestHr));
+            this.userHrrZones_[zone]['fromHrr'] = parseFloat(this.userHrrZones_[zone]['fromHrr']);
+            this.userHrrZones_[zone]['toHrr'] = parseFloat(this.userHrrZones_[zone]['toHrr']);
+            this.userHrrZones_[zone]['s'] = 0;
+            this.userHrrZones_[zone]['percentDistrib'] = null;
         }
 
         for (var i = 0; i < heartRateArray.length; i++) { // Loop on samples
@@ -312,55 +251,50 @@ ActivityProcessor.prototype = {
             // Compute heartrate data
             if (i > 0) {
                 // Compute TRIMP
-                var hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-                var heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
-                var durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
-                var durationInMinutes = durationInSeconds / 60;
+                hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
+                heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                durationInMinutes = durationInSeconds / 60;
 
                 TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
-                if (heartRateReserveAvg < hrrZones['z1']['toHrr']) { // Z1
-                    hrrZones['z1']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z2']['fromHrr'] && heartRateReserveAvg < hrrZones['z2']['toHrr']) { // Z2
-                    hrrZones['z2']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z3']['fromHrr'] && heartRateReserveAvg < hrrZones['z3']['toHrr']) { // Z3
-                    hrrZones['z3']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z4']['fromHrr'] && heartRateReserveAvg < hrrZones['z4']['toHrr']) { // Z4
-                    hrrZones['z4']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z5']['fromHrr'] && heartRateReserveAvg < hrrZones['z5']['toHrr']) { // Z5
-                    hrrZones['z5']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z6']['fromHrr'] && heartRateReserveAvg < hrrZones['z6']['toHrr']) { // Z5
-                    hrrZones['z6']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z7']['fromHrr'] && heartRateReserveAvg < hrrZones['z7']['toHrr']) { // Z5
-                    hrrZones['z7']['s'] += durationInSeconds;
-                } else if (heartRateReserveAvg >= hrrZones['z8']['fromHrr'] && heartRateReserveAvg < hrrZones['z8']['toHrr']) { // Z5
-                    hrrZones['z8']['s'] += durationInSeconds;
+                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg);
+
+                if (!_.isUndefined(zoneId)) {
+                    this.userHrrZones_[zoneId]['s'] += durationInSeconds;
                 }
 
                 hrrSecondsCount += durationInSeconds;
             }
         }
 
-
         var heartRateArraySorted = heartRateArray.sort(function(a, b) {
             return a - b;
         });
 
         // Update zone distribution percentage
-        for (var zone in hrrZones) {
-            hrrZones[zone]['percentDistrib'] = ((hrrZones[zone]['s'] / hrrSecondsCount).toFixed(2) * 100);
+        for (var zone in this.userHrrZones_) {
+            this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(2) * 100);
         }
 
         return {
             'TRIMP': TRIMP,
-            'hrrZones': hrrZones,
+            'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),
             'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
             'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
         };
 
+    },
+
+    getHrrZoneId: function getHrrZoneId(hrrZonesCount, hrrValue) {
+        for (zoneId = 0; zoneId < hrrZonesCount; zoneId++) {
+            if (hrrValue <= this.userHrrZones_[zoneId]['toHrr']) {
+                return zoneId;
+            }
+        }
     },
 
     pedalingData_: function pedalingData_(cadenceArray, velocityArray, activityStatsMap) {
@@ -380,7 +314,6 @@ ActivityProcessor.prototype = {
             if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
 
                 // Rider is moving here..
-
                 if (cadenceArray[i] > ActivityProcessor.cadenceThresholdRpm) {
 
                     // Rider is moving here while pedaling

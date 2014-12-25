@@ -1,0 +1,51 @@
+<div id="settingsContainer">
+    <h3 data-ng-hide="false"><span class="label label-primary">Your health data</span></h3>
+    <form name="healthComonForm">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th width="75%"></th>
+                    <th width="25%"></th>
+                </tr>
+                <tr>
+                    <td>
+                        <button popover="Click for help" popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserMaxHrHelper()">Max heartrate</button>
+                    </td>
+                    <td>
+                        <input name="userMaxHr" type="number" min="10" max="300" class="form-control" data-ng-model="userMaxHr" placeholder="Enter max HR" data-ng-pattern="/^[0-9]+$/" data-ng-change="userMaxHrChanged()"></input>
+                        <alert type="danger" data-ng-show="healthComonForm.userMaxHr.$invalid">Enter a valid max heartrate in bpm upper than rest heartrate (between 10 to 300 bpm)</alert>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button popover="Click for help" popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserRestHrHelper()">Rest heartrate</button>
+                    </td>
+                    <td>
+                        <input name="userRestHr" type="number" min="10" max="160" class="form-control" data-ng-model="userRestHr" placeholder="Enter rest HR" data-ng-pattern="/^[0-9]+$/" data-ng-change="userRestHrChanged()"></input>
+                        <alert type="danger" data-ng-show="healthComonForm.userRestHr.$invalid">Enter a valid rest heartrate in bpm lower than max heartrate (between 10 to 160 bpm)</alert>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button popover="Click for help" popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserFTPHelper()">Cycling Functionnal Threshold Power</button>
+                    </td>
+                    <td>
+                        <input name="userFTP" type="number" min="10" max="2500" class="form-control" data-ng-model="userFTP" placeholder="Enter your FTP" data-ng-pattern="/^[0-9]+$/" data-ng-change="ftpHasChanged()"></input>
+                        <alert type="danger" data-ng-show="healthComonForm.userFTP.$invalid">Enter a valid FTP value in watts (between 10 to 2500 watts)</alert>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </form>
+    <h3 data-ng-hide="false"><span class="label label-primary">Your heartrate custom zones</span></h3>
+    <form name="healthCustomZones">
+        <!-- <table class="table table-hover"> -->
+            <div data-ng-repeat="zone in zones">
+                {{zone | json}}
+                <input type="number" min="10" max="2500" class="form-control"></input>
+                
+            </div>
+        <!-- </table> -->
+        <div>Add zone | Remove zone</div>
+    </form>
+</div>

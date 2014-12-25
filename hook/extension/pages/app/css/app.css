@@ -1,0 +1,21 @@
+footer {
+    text-align: center;
+    padding: 10px;
+    font-style: italic;
+}
+#paypal {
+    padding: 10px;
+}
+#about {
+	font-size: 22px;
+    font-style: italic;
+    padding: 10px;
+}
+#donate {
+	font-size: 28px;
+    text-align: center;
+    padding: 75px;
+}
+.aboutquote {
+    font-size: 48px;
+}

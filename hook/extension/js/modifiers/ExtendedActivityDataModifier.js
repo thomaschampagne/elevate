@@ -154,7 +154,7 @@ ExtendedActivityDataModifier.prototype = {
             if (this.athleteId_ == this.athleteIdAuthorOfActivity_) {
 
                 var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
-                    "<a style='font-size: 12px;' href='" + this.appResources_.optionsLink + "' target='_blank'>Configure FTP</a>" :
+                    "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "' target='_blank'>Configure FTP</a>" :
                     this.analysisData_.powerData.intensityFactor.toFixed(2);
 
                 this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Intensity Factor', intensityFactorOnToday, null, 'color: #838383;');
@@ -243,17 +243,17 @@ ExtendedActivityDataModifier.prototype = {
 
             // "Octo zones distribution of % Heart Rate Reserve in minutes" graph is displayed only if user looking current activity page is the athlete who done italic
             if (iamAuthorOfThisActivity) {
-                this.showOctoHRRGraphDistribution_(); // Let's generate that ***** graph !
+                this.showHRRGraphDistribution_(); // Let's generate that ***** graph !
             }
         }
 
     },
 
-    showOctoHRRGraphDistribution_: function showOctoHRRGraphDistribution_() {
+    showHRRGraphDistribution_: function showHRRGraphDistribution_() {
 
         var labelsData = [];
         for (var zone in this.analysisData_.heartRateData.hrrZones) {
-            var label = zone.toUpperCase() + " " + this.analysisData_.heartRateData.hrrZones[zone].fromHrr * 100 + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr * 100 + "%";
+            var label = "Z" + (parseInt(zone) + 1) + " " + this.analysisData_.heartRateData.hrrZones[zone].fromHrr * 100 + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr * 100 + "%";
             labelsData.push(label);
         }
 
@@ -286,7 +286,7 @@ ExtendedActivityDataModifier.prototype = {
             var hrrChartDistributionHtml = '<style>';
             hrrChartDistributionHtml += '#hrrChartTable {margin: 0;} #hrrChartTable td { text-align: center; padding: 3px;} #hrrChartTable strong { font-size: 12px;}';
             hrrChartDistributionHtml += '</style>';
-            hrrChartDistributionHtml += '<div style="text-align: center; font-style: italic;">Octo zones distribution of <a href="http://fellrnr.com/wiki/Heart_Rate_Reserve" target="_blank">% Heart Rate Reserve</a> in minutes</div>';
+            hrrChartDistributionHtml += '<div style="text-align: center; font-style: italic;">Zones distribution of <a href="http://fellrnr.com/wiki/Heart_Rate_Reserve" target="_blank">% Heart Rate Reserve</a> in minutes</div>';
             hrrChartDistributionHtml += '<table id="hrrChartTable">';
             hrrChartDistributionHtml += '<tr>'; // Zone
             hrrChartDistributionHtml += '<td>Zone</td>'; // Zone
@@ -319,7 +319,7 @@ ExtendedActivityDataModifier.prototype = {
      */
     appendAnalyseDataToStatsPanel_: function appendAnalyseDataToStatsPanel_(userSettingKey, title, valueHtml, unit, style) {
 
-        var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.optionsLink + "?viewHelperId=" + userSettingKey + "\",\"_blank\");'";
+        var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/comonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         var isA = jQuery(valueHtml).is('a');
 

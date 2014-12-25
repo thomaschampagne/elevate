@@ -87,9 +87,7 @@ Content.prototype = {
 };
 
 var appResources = {
-    optionsLink: chrome.extension.getURL('/pages/settings.html'),
-    aboutLink: chrome.extension.getURL('/pages/about.html'),
-    donateLink: chrome.extension.getURL('/pages/donate.html'),
+    settingsLink: chrome.extension.getURL('/pages/app/index.html'),
     menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),
     menuIconOrange: chrome.extension.getURL('/icons/ic_menu_24px_orange.svg'),
     remoteViewIcon: chrome.extension.getURL('/icons/ic_launch_24px.svg'),
@@ -105,6 +103,7 @@ var appResources = {
     eyeIcon: chrome.extension.getURL('/icons/ic_remove_red_eye_24px.svg'),
     bikeIcon: chrome.extension.getURL('/icons/ic_directions_bike_24px.svg'),
     newReleaseIcon: chrome.extension.getURL('/icons/ic_new_releases_24px.svg'),
+    systemUpdatesIcon: chrome.extension.getURL('/icons/ic_system_update_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
     extVersion: chrome.runtime.getManifest().version,

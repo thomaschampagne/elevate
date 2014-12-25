@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Strava+ settings</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="../libs/angular.min.js"></script>
+    <script src="../libs/angular-route.min.js"></script>
+    <script src="../libs/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="../libs/underscore.min.js"></script>
+</head>
+
+<body data-ng-app="App" data-ng-controller="MainController">
+    <header data-ng-include="'views/headerNav.html'" /></header>
+    <div class="container">
+        <div ng-view>
+            <!-- Placeholder for views -->
+        </div>
+    </div>
+
+    <footer data-ng-include="'views/footer.html'" />
+
+    <!-- Specifics StravaPlus includes -->
+    <script src="../../js/UserSettings.js"></script>
+
+    <!-- Angular App -->
+    <script src="App.js"></script>
+    <script src="Config.js"></script>
+
+    <!-- Angular modules -->
+    <script src="modules/SettingsSectionsModule.js"></script>
+    <script src="modules/ChromeStorageModule.js"></script>
+
+    <!-- Angular controllers -->
+    <script src="controllers/MainController.js"></script>
+    <script src="controllers/ComonSettingsController.js"></script>
+    <script src="controllers/HealthSettingsController.js"></script>
+
+    <!-- Angular services -->
+    <script src="services/Notifier.js"></script>
+</body>
+
+</html>

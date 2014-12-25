@@ -7,7 +7,7 @@ function StravaPlus(userSettings, appResources) {
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_);
+    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -25,7 +25,7 @@ function StravaPlus(userSettings, appResources) {
 StravaPlus.getFromStorageMethod = 'getFromStorage';
 StravaPlus.setToStorageMethod = 'setToStorage';
 StravaPlus.defaultIntervalTimeMillis = 750;
-StravaPlus.debugMode = false;
+StravaPlus.debugMode = true;
 
 /**
  * Define prototype
@@ -42,6 +42,13 @@ StravaPlus.prototype = {
         // Handle some tasks to od when update occurs
         if (this.userSettings_.extensionHasJustUpdated) {
             this.handleExtensionHasJustUpdated_();
+        }
+
+        if (this.userSettings_.localStorageMustBeCleared) {
+            localStorage.clear();
+            Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, function(response) {
+                console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
+            });
         }
 
         // Common

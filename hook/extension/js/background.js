@@ -43,7 +43,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
         chrome.tabs.create({
 
-            url: chrome.extension.getURL('/pages/settings.html')
+            url: chrome.extension.getURL('/pages/app/index.html#/')
 
         }, function(tab) {
 
