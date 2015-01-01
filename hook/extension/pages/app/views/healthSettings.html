@@ -38,14 +38,5 @@
         </table>
     </form>
     <h3 data-ng-hide="false"><span class="label label-primary">Your heartrate custom zones</span></h3>
-    <form name="healthCustomZones">
-        <!-- <table class="table table-hover"> -->
-            <div data-ng-repeat="zone in zones">
-                {{zone | json}}
-                <input type="number" min="10" max="2500" class="form-control"></input>
-                
-            </div>
-        <!-- </table> -->
-        <div>Add zone | Remove zone</div>
-    </form>
+    <div data-health-custom-zones data-hr-zones="zones" data-user-max-hr="{{userMaxHr}}" data-user-rest-hr="{{userRestHr}}"></div>
 </div>

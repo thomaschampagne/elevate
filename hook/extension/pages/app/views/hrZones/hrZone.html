@@ -1,0 +1,26 @@
+<div style="margin-bottom: 20px; padding:10px; background-color: #eee;">
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <input type="number" data-ng-model="hrZone.fromHrr" />
+                </td>
+                <td> %HRR to</td>
+                <td>
+                    <input type="number" data-ng-model="hrZone.toHrr" />
+                </td>
+                <td> %HRR</td>
+            </tr>
+            <tr>
+                <td>
+                    {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}}
+                </td>
+                <td> BPM to</td>
+                <td>
+                    {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}}
+                </td>
+                <td> BPM</td>
+            </tr>
+        </table>
+    </div>
+</div>
