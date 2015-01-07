@@ -10,14 +10,21 @@ app.directive('healthCustomZones', function() {
 
     var controllerFunction = function($scope) {
 
-        /*console.warn($scope.hrZones);
+        //console.warn($scope.hrZones);
         // console.warn($scope.userRestHr);
-        $scope.$watch('hrZones', function(a) {
-            console.warn(a);
-        });*/
-        console.warn($scope.hrZones);
-        //$scope.hrZones = {};
-        console.warn($scope.hrZones);
+
+        // $scope.$watch('hrZones', function(a) {
+        //     console.warn(a);
+        // });
+        // console.warn($scope.hrZones);
+        // //$scope.hrZones = {};
+        // console.warn($scope.hrZones);
+
+
+        $scope.debugHrZones = function() {
+            console.debug($scope.hrZones);
+        }
+
     };
 
     return {

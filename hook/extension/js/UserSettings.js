@@ -8,35 +8,35 @@ var userSettings = {
     userHrrZones: [
         {
             fromHrr: 0,
-            toHrr: 0.3,
+            toHrr: 30,
         },
         {
-            fromHrr: 0.3,
-            toHrr: 0.4,
+            fromHrr: 30,
+            toHrr: 40,
         },
         {
-            fromHrr: 0.4,
-            toHrr: 0.5,
+            fromHrr: 40,
+            toHrr: 50,
         },
         {
-            fromHrr: 0.5,
-            toHrr: 0.6,
+            fromHrr: 50,
+            toHrr: 60,
         },
         {
-            fromHrr: 0.6,
-            toHrr: 0.7,
+            fromHrr: 60,
+            toHrr: 70,
         },
         {
-            fromHrr: 0.7,
-            toHrr: 0.8,
+            fromHrr: 70,
+            toHrr: 80,
         },
         {
-            fromHrr: 0.8,
-            toHrr: 0.9,
+            fromHrr: 80,
+            toHrr: 90,
         },
         {
-            fromHrr: 0.9,
-            toHrr: 1.0,
+            fromHrr: 90,
+            toHrr: 100,
         }
     ],
     remoteLinks: true,

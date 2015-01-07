@@ -76,7 +76,7 @@ Helper.lowerQuartile = function(valuesSorted) {
 };
 
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {
-    return (parseFloat(hrr) * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
+    return (parseFloat(hrr) / 100 * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
 };
 
 Helper.heartRateReserveFromHeartrate = function(hr, maxHr, restHr) {

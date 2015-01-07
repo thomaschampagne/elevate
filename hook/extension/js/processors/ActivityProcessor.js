@@ -253,13 +253,14 @@ ActivityProcessor.prototype = {
                 // Compute TRIMP
                 hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
                 heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+                //console.debug(heartRateReserveAvg);
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 durationInMinutes = durationInSeconds / 60;
 
                 TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
-                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg);
+                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
 
                 if (!_.isUndefined(zoneId)) {
                     this.userHrrZones_[zoneId]['s'] += durationInSeconds;

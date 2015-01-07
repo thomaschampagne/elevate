@@ -3,7 +3,7 @@
     "name": "StravaPlus",
     "short_name": "StravaPlus",
     "description": "Add the missing features of Strava website with new performances data and improved ergonomics",
-    "version": "2014.12.23.1",
+    "version": "0.4.0",
     "background": {
         "scripts": [
             "js/UserSettings.js",

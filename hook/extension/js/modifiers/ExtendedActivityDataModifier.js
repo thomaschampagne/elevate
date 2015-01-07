@@ -232,7 +232,7 @@ ExtendedActivityDataModifier.prototype = {
             if (iamAuthorOfThisActivity) {
                 // TRIMP and %HRR are displayed only if user looking current activity page is the athlete who done it
                 // because theses indicators depends on their HRMax and HRRest. They are alone to own these infos.
-                this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', 'TRaining IMPulse', this.analysisData_.heartRateData.TRIMP.toFixed(0), null, 'color: #FF2B42;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', 'TRaining<br />IMPulse', this.analysisData_.heartRateData.TRIMP.toFixed(0), null, 'color: #FF2B42;');
                 this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', '%Heart Rate Reserve Avg', this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0), '%', 'color: #FF2B42;');
             }
 
@@ -253,7 +253,7 @@ ExtendedActivityDataModifier.prototype = {
 
         var labelsData = [];
         for (var zone in this.analysisData_.heartRateData.hrrZones) {
-            var label = "Z" + (parseInt(zone) + 1) + " " + this.analysisData_.heartRateData.hrrZones[zone].fromHrr * 100 + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr * 100 + "%";
+            var label = "Z" + (parseInt(zone) + 1) + " " + this.analysisData_.heartRateData.hrrZones[zone].fromHrr + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr + "%";
             labelsData.push(label);
         }
 
@@ -299,7 +299,7 @@ ExtendedActivityDataModifier.prototype = {
             for (var zone in this.analysisData_.heartRateData.hrrZones) {
                 hrrChartDistributionHtml += '<tr>'; // Zone
                 hrrChartDistributionHtml += '<td>Z' + zoneId + '</td>'; // Zone
-                hrrChartDistributionHtml += '<td>' + this.analysisData_.heartRateData.hrrZones[zone].fromHrr * 100 + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr * 100 + "%" + '</th>'; // %HRR
+                hrrChartDistributionHtml += '<td>' + this.analysisData_.heartRateData.hrrZones[zone].fromHrr + "% - " + this.analysisData_.heartRateData.hrrZones[zone].toHrr + "%" + '</th>'; // %HRR
                 hrrChartDistributionHtml += '<td>' + this.analysisData_.heartRateData.hrrZones[zone].fromHr + " - " + this.analysisData_.heartRateData.hrrZones[zone].toHr + '</td>'; // bpm%
                 hrrChartDistributionHtml += '<td>' + Helper.secondsToHHMMSS(this.analysisData_.heartRateData.hrrZones[zone].s) + '</td>'; // Time%
                 hrrChartDistributionHtml += '<td>' + this.analysisData_.heartRateData.hrrZones[zone].percentDistrib.toFixed(0) + '%</td>'; // % in zone
