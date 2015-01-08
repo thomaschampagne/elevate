@@ -4,15 +4,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', function($scop
         $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
         $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);
         $scope.userFTP = parseInt(userSettingsSynced.userFTP);
-
-        console.warn(userSettingsSynced.userHrrZones);
-
-        // Parsing zones
-        /*_.each(userSettingsSynced.userHrrZones, function(zone) {
-        });*/
-
         $scope.zones = userSettingsSynced.userHrrZones;
-
         $scope.$apply();
     });
 

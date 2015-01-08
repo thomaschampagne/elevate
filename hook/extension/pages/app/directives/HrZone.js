@@ -7,22 +7,23 @@ app.directive('hrZone', function() {
         // $scope.zoneAAA = "dqsdqs";
         /*        $scope.userMaxHr = 209;
                 $scope.userRestHr = 56;*/
-/*
-        console.warn($scope.userMaxHr);
-        console.warn($scope.userRestHr);*/
-        console.warn($scope.hrZone);
+        /*
+                console.warn($scope.userMaxHr);
+                console.warn($scope.userRestHr);*/
+        // console.warn($scope.hrZone);
     };
 
     var controllerFunction = function($scope) {
 
-        // $scope.hrZone.toHrr = $scope.hrZone.toHrr + 0.1;
+        $scope.$watch('hrZone', function(newHrZone, previousHrZone) {
 
-        /*$scope.fromHRRPercent = $scope.hrZone.fromHrr;
-        $scope.toHRRPercent = $scope.hrZone.toHrr;*/
+            // console.debug('zone id:' + $scope.hrZoneId);
+            // console.debug(previousHrZone);
+            // console.debug(newHrZone);
+            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), previousHrZone, newHrZone);
 
-         $scope.$watch('hrZone.toHrr', function(a) {
-            console.warn(a);
-        });
+        }, true);
+
     };
 
     return {
@@ -30,6 +31,7 @@ app.directive('hrZone', function() {
         templateUrl: 'views/hrZones/hrZone.html',
         scope: {
             hrZone: "=",
+            hrZoneId: "@hrZoneId",
             userMaxHr: "@userMaxHr",
             userRestHr: "@userRestHr"
         },

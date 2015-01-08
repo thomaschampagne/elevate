@@ -1,11 +1,9 @@
 <form name="healthCustomZones">
-	<strong>HR Zones final value debug:</strong> <div>{{hrZones | json}} <u data-ng-click="debugHrZones()">Debug it</u></div>
+	<strong>HR Zones final value debug:</strong> <div>{{hrZones | json}}</div>
 	<br/>
-    <!-- <table class="table table-hover"> -->
     <div data-ng-repeat="zone in hrZones">
         Zone #{{$index + 1}}
-        <div data-hr-zone="zone" data-user-max-hr="{{userMaxHr}}" data-user-rest-hr="{{userRestHr}}"></div>
+        <div data-hr-zone="zone" data-hr-zone-id="{{$index}}" data-user-max-hr="{{userMaxHr}}" data-user-rest-hr="{{userRestHr}}"></div>
     </div>
-    <!-- </table> -->
     <div>Add zone | Remove zone</div>
 </form>
