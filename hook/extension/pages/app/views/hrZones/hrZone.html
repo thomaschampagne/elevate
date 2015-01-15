@@ -1,26 +1,62 @@
-<div style="margin-bottom: 20px; padding:10px; background-color: #eee;">
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <input type="number" data-ng-model="hrZone.fromHrr" />
-                </td>
-                <td> %HRR to</td>
-                <td>
-                    <input type="number" data-ng-model="hrZone.toHrr" />
-                </td>
-                <td> %HRR</td>
-            </tr>
-            <tr>
-                <td>
-                    {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}}
-                </td>
-                <td> BPM to</td>
-                <td>
-                    {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}}
-                </td>
-                <td> BPM</td>
-            </tr>
-        </table>
-    </div>
+<div class="hrZone">
+    <!-- Display first zone -->
+    <table data-ng-switch data-on="hrZoneFirst">
+        <tr data-ng-switch-when="true">
+            <td><i>%HRR:</i>
+            </td>
+            <td>
+                <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="0" max="{{hrZone.toHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
+            </td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+        </tr>
+        <tr data-ng-switch-default>
+            <td><i>%HRR:</i>
+            </td>
+            <td>
+                <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="{{previousFromHrr}}" max="{{hrZone.toHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+            </td>
+            <td class="bpmFilter"><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+        </tr>
+    </table>
+
+    <!-- Display zone Id -->
+    <table class="hrZoneBpmDescribe">
+        <tr>
+            <td align="center" colspan="3">
+                <img src="img/ic_more_vert_24px.svg" />
+            </td>
+        </tr>
+        <tr>
+            <td align="center"></td>
+            <td>
+                <span class="printableHrZoneId">Zone {{printableHrZoneId}}</span>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td align="center" colspan="3">
+                <img src="img/ic_more_vert_24px.svg" />
+            </td>
+        </tr>
+    </table>
+
+    <!-- Display last zone -->
+    <table data-ng-switch data-on="hrZoneLast">
+        <tr data-ng-switch-when="true">
+            <td><i>%HRR:</i>
+            </td>
+            <td>
+                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="100" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+            </td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+        </tr>
+        <tr data-ng-switch-default data-ng-hide="true">
+            <td><i>%HRR:</i>
+            </td>
+            <td>
+                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="{{nextToHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" />
+            </td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+        </tr>
+    </table>
 </div>

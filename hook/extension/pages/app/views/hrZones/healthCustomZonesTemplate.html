@@ -1,9 +1,22 @@
-<form name="healthCustomZones">
-	<strong>HR Zones final value debug:</strong> <div>{{hrZones | json}}</div>
-	<br/>
-    <div data-ng-repeat="zone in hrZones">
-        Zone #{{$index + 1}}
-        <div data-hr-zone="zone" data-hr-zone-id="{{$index}}" data-user-max-hr="{{userMaxHr}}" data-user-rest-hr="{{userRestHr}}"></div>
+<div name="healthCustomZones" class="healthCustomZones">
+    <div data-ng-hide="true">
+        <strong>HR Zones final value debug:</strong>
+        <div>{{hrZones | json}}</div>
     </div>
-    <div>Add zone | Remove zone</div>
-</form>
+    <div data-ng-repeat="zone in hrZones">
+        <!-- Zone #{{$index + 1}} -->
+        <div data-hr-zone-id="{{$index}}" data-hr-zone="zone" data-previous-from-hrr="{{hrZones[$index - 1].fromHrr}}" data-next-to-hrr="{{hrZones[$index + 1].toHrr}}" data-hr-zone-first="{{$index == 0}}" data-hr-zone-last="{{$index == (hrZones.length - 1)}}" data-user-max-hr="{{userMaxHr}}" data-user-rest-hr="{{userRestHr}}"></div>
+    </div>
+    <div class="hrZoneAddRemove">
+        <div>
+            <button type="button" class="btn btn-success" data-ng-click="addHrZone()">Add a Last Zone</button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-danger" data-ng-click="removeHrZone()">Remove Last Zone</button>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" data-ng-click="resetHrZone()">Reset Zones</button>
+        </div>
+        
+    </div>
+</div>

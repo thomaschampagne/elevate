@@ -78,4 +78,10 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', function($scop
         Notifier('How to calculate your Functional Threshold Power', '<strong>Calculating Your FTP</strong><br /><br />We recommend you test for your FTP at least every few weeks to a month while you\'re training. Here are some tips to get the most out of your FTP testing:<br /><br />It\'s extremely taxing on your body (and your training program) to continuously push out 60-minute max efforts. It\'s also difficult to find a stretch of road where you can r\'ide for 60 minutes uninterrupted and maintain a steady wattage. Thus, the easiest way to calculate your FTP is to test your best average power for 20 minutes. We believe 20 minutes is enough time to stress the same physiological systems as a 60-minute effort would and it is easier to consistently do within your season.<br /><br /><table><tr><td>1&nbsp;-&nbsp;</td><td>Try to reproduce the same conditions each test. This means use the same stretch of road or always use the same trainer/rollers</td></tr><tr><td>2&nbsp;-&nbsp;</td><td>Make sure you are fresh (the previous few days should be light in terms of training load)</td></tr><tr><td>3&nbsp;-&nbsp;</td><td>Properly warm up</td></tr></table><br /><br /><i>Explanation by strava.com</i>');
     };
 
+    $scope.avoidInputKeyEdit = function(evt) { // TODO Externalize has service
+        if (evt.keyCode !== 38 && evt.keyCode !== 40) { // If key up/down press then return to don't block event progation
+            evt.preventDefault();
+        }
+    };
+
 }]);

@@ -331,7 +331,7 @@ ActivityProcessor.prototype = {
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
         return {
-            'pedalingPercentageMoving': pedalingRatioOnMovingTime * 100, // TODO OnMove
+            'pedalingPercentageMoving': pedalingRatioOnMovingTime * 100,
             'pedalingTimeMoving': (pedalingRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),

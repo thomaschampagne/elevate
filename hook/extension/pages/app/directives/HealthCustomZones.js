@@ -1,30 +1,58 @@
-app.directive('healthCustomZones', function() {
+app.directive('healthCustomZones', ['Notifier', function(Notifier) {
+
+    var maxHrZonesCount = 10;
+    var minHrZonesCount = 3;
 
     var linkFunction = function($scope, element, attrs) {};
 
     var controllerFunction = function($scope) {
 
-        // $scope.$watch('hrZones', function(newHrZones, previousHrZones) {
+        $scope.addHrZone = function() {
 
-        //     console.debug(previousHrZones);
-        //     console.debug(newHrZones);
+            if ($scope.hrZones.length >= maxHrZonesCount) {
+                Notifier('Oups!', 'You can\'t add more than 10 heart rate zones...');
+                return;
+            }
 
-        //     // var diff = _.difference(newHrZones, previousHrZones);
-        //     // var intersection = _.intersection(previousHrZones, newHrZones);
+            var oldLastHrZone = $scope.hrZones[$scope.hrZones.length - 1];
 
-        //     // console.debug(diff);
-        //     // console.debug(intersection);
+            // Computed middle value between oldLastHrZone.fromHrr and oldLastHrZone.toHrr
+            var betweenHrrValue = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
 
-        //     /*
-        //      * hrZones json object has change
-        //      */
-        //     // => Make sure fromHrr equals toHrr
-        //     // angular.forEach($scope.hrZones, function(hrZone, zoneId) {
-        //     // console.debug(zoneId);
-        //     // console.debug(hrZone);
-        //     // });
+            // Creating new Hr Zone
+            var newLastHrZone = {
+                "fromHrr": betweenHrrValue,
+                "toHrr": oldLastHrZone.toHrr
+            };
 
-        // }, true);
+            // Apply middle value computed to previous last zone (toHrr)
+            $scope.hrZones[$scope.hrZones.length - 1].toHrr = betweenHrrValue;
+
+            // Add the new last zone
+            $scope.hrZones.push(newLastHrZone);
+
+        };
+
+        $scope.removeHrZone = function() {
+
+            if ($scope.hrZones.length <= minHrZonesCount) {
+                Notifier('Oups!', 'You can\'t remove more than 3 heart rate zones...');
+                return;
+            }
+
+            var oldLastHrZone = $scope.hrZones[$scope.hrZones.length - 1];
+
+            $scope.hrZones.pop();
+
+            $scope.hrZones[$scope.hrZones.length - 1].toHrr = oldLastHrZone.toHrr;
+        };
+
+        $scope.resetHrZone = function() {
+
+            // TODO resetHrZone
+            Notifier('TODO', '$scope.resetHrZone() to implement...');
+
+        };
 
 
         $scope.onZoneChange = function(hrZoneId, previousHrZone, newHrZone) {
@@ -54,9 +82,7 @@ app.directive('healthCustomZones', function() {
                 }
 
             } else { // If last zone
-
                 $scope.handleFromHrrChange(hrZoneId);
-
             }
 
         };
@@ -95,4 +121,4 @@ app.directive('healthCustomZones', function() {
         controller: controllerFunction,
         link: linkFunction
     };
-});
+}]);

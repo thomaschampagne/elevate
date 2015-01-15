@@ -7,15 +7,41 @@ footer {
     padding: 10px;
 }
 #about {
-	font-size: 22px;
+    font-size: 22px;
     font-style: italic;
     padding: 10px;
 }
 #donate {
-	font-size: 28px;
+    font-size: 28px;
     text-align: center;
     padding: 75px;
 }
 .aboutquote {
     font-size: 48px;
+}
+.healthCustomZones {
+    margin-top: 50px;
+    margin-left: 50px;
+}
+.healthCustomZonesExplanations {
+    background-color: red;
+    /* tmp ... */
+}
+.hrZoneAddRemove {
+    margin-top: 25px;
+}
+.hrZone .bpmFilter {
+    /*font-size: 16px;*/
+}
+.hrZone table td {
+    width: 125px;
+    text-align: center;
+}
+.hrZoneBpmDescribe img {
+    margin: 10px;
+    width: 25px;
+}
+.printableHrZoneId {
+    font-weight: bold;
+    font-size: 16px;
 }

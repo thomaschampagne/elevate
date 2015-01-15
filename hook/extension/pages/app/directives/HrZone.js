@@ -1,39 +1,36 @@
 app.directive('hrZone', function() {
 
     var linkFunction = function($scope, element, attrs) {
-        // console.warn($scope);
-        //console.warn(element);
-        // console.warn(attrs);
-        // $scope.zoneAAA = "dqsdqs";
-        /*        $scope.userMaxHr = 209;
-                $scope.userRestHr = 56;*/
-        /*
-                console.warn($scope.userMaxHr);
-                console.warn($scope.userRestHr);*/
-        // console.warn($scope.hrZone);
+        $scope.printableHrZoneId = parseInt($scope.hrZoneId) + 1;
     };
 
     var controllerFunction = function($scope) {
 
-        $scope.$watch('hrZone', function(newHrZone, previousHrZone) {
+        $scope.avoidInputKeyEdit = function(evt) { // TODO Externalize has service
+            if (evt.keyCode !== 38 && evt.keyCode !== 40) { // If key up/down press then return to don't block event progation
+                evt.preventDefault();
+            }
+        };
 
-            // console.debug('zone id:' + $scope.hrZoneId);
-            // console.debug(previousHrZone);
-            // console.debug(newHrZone);
-            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), previousHrZone, newHrZone);
+        $scope.$watch('hrZone', function(newHrZone, oldHrZone) {
+            // Notify parent scope when a zone has changed
+            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);
 
         }, true);
-
     };
 
     return {
 
         templateUrl: 'views/hrZones/hrZone.html',
         scope: {
-            hrZone: "=",
-            hrZoneId: "@hrZoneId",
-            userMaxHr: "@userMaxHr",
-            userRestHr: "@userRestHr"
+            hrZoneId: '@hrZoneId',
+            hrZone: '=',
+            previousFromHrr: '@previousFromHrr',
+            nextToHrr: '@nextToHrr',
+            hrZoneFirst: '@hrZoneFirst',
+            hrZoneLast: '@hrZoneLast',
+            userMaxHr: '@userMaxHr',
+            userRestHr: '@userRestHr'
         },
         controller: controllerFunction,
         link: linkFunction
