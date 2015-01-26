@@ -5,13 +5,14 @@
             <thead>
                 <tr>
                     <th width="80%"></th>
-                    <th width="20%"></th>
+                    <th width="10%"></th>
+                    <th width="10%"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="option in section.sectionContent">
                     <td>
-                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionTitle, option.optionHtml)">{{ option.optionTitle }}</button>
+                        {{ option.optionTitle }}
                     </td>
                     <td class="text-right">
                         <div data-ng-switch on="option.optionType">
@@ -23,6 +24,7 @@
                             </div>
                         </div>
                     </td>
+                    <td class="text-right"><button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionTitle, option.optionHtml)">Hint</button></td>
                 </tr>
             </tbody>
         </table>

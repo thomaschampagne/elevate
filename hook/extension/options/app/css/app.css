@@ -52,3 +52,6 @@ footer {
     font-weight: bold;
     font-size: 16px;
 }
+.hint {
+    vertical-align: middle !important;
+}

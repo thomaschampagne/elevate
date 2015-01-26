@@ -30,6 +30,8 @@ ActivityProcessor.prototype = {
             return;
         }
 
+        userFTP = parseInt(userFTP);
+
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight) { // Get stream on page
 
@@ -202,7 +204,7 @@ ActivityProcessor.prototype = {
         var avgWatts = accumulatedWattsOnMove / wattSampleOnMoveCount;
         var normalizedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
         var variabilityIndex = normalizedPower / avgWatts;
-        var intensityFactor = (_.isEmpty(userFTP)) ? null : (normalizedPower / userFTP);
+        var intensityFactor = (_.isNumber(userFTP) && userFTP > 0) ? (normalizedPower / userFTP) : null;
         var normalizedWattsPerKg = normalizedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
         var wattsSamplesOnMoveSorted = wattsSamplesOnMove.sort(function(a, b) {
             return a - b;

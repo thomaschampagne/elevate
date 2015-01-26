@@ -154,7 +154,7 @@ ExtendedActivityDataModifier.prototype = {
             if (this.athleteId_ == this.athleteIdAuthorOfActivity_) {
 
                 var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
-                    "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "' target='_blank'>Configure FTP</a>" :
+                    "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "#/healthSettings' target='_blank'>Configure FTP</a>" :
                     this.analysisData_.powerData.intensityFactor.toFixed(2);
 
                 this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Intensity Factor', intensityFactorOnToday, null, 'color: #838383;');
@@ -192,11 +192,11 @@ ExtendedActivityDataModifier.prototype = {
             var paceTimePerDistance = Helper.secondsToHHMMSS(this.analysisData_.speedData.avgPace / toMilesOnNot);
             paceTimePerDistance = paceTimePerDistance.replace('00:', '');
 
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Pace', paceTimePerDistance, '/' + unit, 'color: #3399FF;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Activity Pace&nbsp;&nbsp;&nbsp;&nbsp;', paceTimePerDistance, '/' + unit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '25% Quartile Speed', (this.analysisData_.speedData.lowerQuartileSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '50% Median Speed', (this.analysisData_.speedData.medianSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', '75% Quartile Speed', (this.analysisData_.speedData.upperQuartileSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Standard Deviation Speed &sigma;', (this.analysisData_.speedData.standardDeviationSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Standard Deviation<br/>Speed &sigma;', (this.analysisData_.speedData.standardDeviationSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
             // this.appendAnalyseDataToStatsPanel_('displayAdvancedSpeedData', 'Raw Avg Speed', (this.analysisData_.speedData.rawAvgSpeed * toMilesOnNot).toFixed(1), speedUnit, 'color: #3399FF;');
         }
     },
@@ -232,7 +232,7 @@ ExtendedActivityDataModifier.prototype = {
             if (iamAuthorOfThisActivity) {
                 // TRIMP and %HRR are displayed only if user looking current activity page is the athlete who done it
                 // because theses indicators depends on their HRMax and HRRest. They are alone to own these infos.
-                this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', 'TRaining<br />IMPulse', this.analysisData_.heartRateData.TRIMP.toFixed(0), null, 'color: #FF2B42;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', 'TRaining<br />IMPulse&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', this.analysisData_.heartRateData.TRIMP.toFixed(0), null, 'color: #FF2B42;');
                 this.appendAnalyseDataToStatsPanel_('displayAdvancedHrData', '%Heart Rate Reserve Avg', this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0), '%', 'color: #FF2B42;');
             }
 
@@ -286,7 +286,7 @@ ExtendedActivityDataModifier.prototype = {
             var hrrChartDistributionHtml = '<style>';
             hrrChartDistributionHtml += '#hrrChartTable {margin: 0;} #hrrChartTable td { text-align: center; padding: 3px;} #hrrChartTable strong { font-size: 12px;}';
             hrrChartDistributionHtml += '</style>';
-            hrrChartDistributionHtml += '<div style="text-align: center; font-style: italic;">Zones distribution of <a href="http://fellrnr.com/wiki/Heart_Rate_Reserve" target="_blank">% Heart Rate Reserve</a> in minutes</div>';
+            hrrChartDistributionHtml += '<div style="text-align: center; font-style: italic;">Zones distribution of <a href="http://fellrnr.com/wiki/Heart_Rate_Reserve" target="_blank">% Heart Rate Reserve</a> in minutes<br/><a target="_blank" href="' + this.appResources_.settingsLink + '#/healthSettings">Customize zones</a></div>';
             hrrChartDistributionHtml += '<table id="hrrChartTable">';
             hrrChartDistributionHtml += '<tr>'; // Zone
             hrrChartDistributionHtml += '<td>Zone</td>'; // Zone
@@ -325,7 +325,7 @@ ExtendedActivityDataModifier.prototype = {
 
         // Add unit if needed        
         valueHtml = valueHtml + ((unit === null) ? "" : "<abbr class='unit'>" + unit + "</abbr>");
-        var analyzeDataToAppend = jQuery("<li style='margin-right: 8px; cursor: pointer;' " + ((!isA) ? onClickHtmlBehaviour : '') + ">" +
+        var analyzeDataToAppend = jQuery("<li style='margin-right: 2px; cursor: pointer;' " + ((!isA) ? onClickHtmlBehaviour : '') + ">" +
             "<strong style='" + style + "'>" + valueHtml + "</strong>" +
             "<div class='label' " + ((isA) ? onClickHtmlBehaviour : '') + ">" + title + "</div>" +
             "</li>");

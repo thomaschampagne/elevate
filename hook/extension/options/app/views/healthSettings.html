@@ -5,33 +5,41 @@
             <thead>
                 <tr>
                     <th width="75%"></th>
-                    <th width="25%"></th>
+                    <th width="20%"></th>
+                    <th width="5%"></th>
                 </tr>
                 <tr>
                     <td>
-                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserMaxHrHelper()">Max heartrate</button>
+                        Max heartrate
                     </td>
                     <td>
                         <input name="userMaxHr" type="number" min="{{userRestHr + 10}}" max="300" class="form-control input-lg" data-ng-model="userMaxHr" placeholder="Enter max HR" data-ng-change="userMaxHrChanged()" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set your MAX heart rate in beat per minute (bpm)." data-popover-trigger="mouseenter"></input>
-                        <!--                         <alert type="danger" data-ng-show="healthComonForm.userMaxHr.$invalid">Enter a valid max heartrate in bpm upper than rest heartrate (between 10 to 300 bpm)</alert> -->
+                    </td>
+                    <td class="hint">
+                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserMaxHrHelper()">Hint</button>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserRestHrHelper()">Rest heartrate</button>
+                        Rest heartrate
                     </td>
                     <td>
                         <input name="userRestHr" type="number" min="10" max="{{userMaxHr - 10}}" class="form-control input-lg" data-ng-model="userRestHr" placeholder="Enter rest HR" data-ng-change="userRestHrChanged()" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set your REST heart rate in beat per minute (bpm)." data-popover-trigger="mouseenter"></input>
-                        <!--                         <alert type="danger" data-ng-show="healthComonForm.userRestHr.$invalid">Enter a valid rest heartrate in bpm lower than max heartrate (between 10 to 160 bpm)</alert> -->
+                    </td>
+                    <td class="hint">
+                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserRestHrHelper()">Hint</button>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserFTPHelper()">Cycling Functionnal Threshold Power</button>
+                        Cycling Functionnal Threshold Power
                     </td>
                     <td>
-                        <input name="userFTP" type="number" min="10" max="2500" class="form-control input-lg" data-ng-model="userFTP" placeholder="Enter your FTP" data-ng-pattern="/^[0-9]+$/" data-ng-change="ftpHasChanged()"></input>
+                        <input name="userFTP" type="number" min="10" max="2500" class="form-control input-lg" data-ng-model="userFTP" placeholder="Enter your FTP" data-ng-pattern="/^[0-9]+$/" data-ng-change="ftpHasChanged()" data-popover="Use arrows &#8645; or numpad to set your Functionnal Threshold Power in Watts" data-popover-trigger="mouseenter"></input>
                         <alert type="danger" data-ng-show="healthComonForm.userFTP.$invalid">Enter a valid FTP value in watts (between 10 to 2500 watts)</alert>
+                    </td>
+                    <td class="hint">
+                        <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserFTPHelper()">Hint</button>
                     </td>
                 </tr>
             </thead>
@@ -75,8 +83,8 @@
                 <blockquote>
                     Heart Rate Reserve (HRR) is the difference between your Maximum Heart Rate (Max HR) and Resting Heart Rate (Rest HR). This is basically your global heart capacity :)
                     <br/>
-                    <br/>%HRR = 0% is your current Rest HR
-                    <br/>%HRR = 100% is your current Max HR
+                    <br/>%HRR = 0% is your Rest HR (={{userRestHr}} bpm)
+                    <br/>%HRR = 100% is your Max HR (={{userMaxHr}} bpm)
                 </blockquote>
 
                 <h3>What are Heart Rate Reserve Zones ?</h3>
@@ -91,6 +99,4 @@
             </div>
         </div>
     </div>
-
-
 </div>

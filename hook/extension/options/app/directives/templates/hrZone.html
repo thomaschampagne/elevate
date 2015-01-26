@@ -2,7 +2,7 @@
     <!-- Display first zone -->
     <table data-ng-switch data-on="hrZoneFirst">
         <tr data-ng-switch-when="true">
-            <td><i>%HRR:</i>
+            <td><i>%HRR &#10142;</i>
             </td>
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="0" max="{{hrZone.toHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
@@ -10,7 +10,7 @@
             <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
         <tr data-ng-switch-default>
-            <td><i>%HRR:</i>
+            <td><i>%HRR &#10142;</i>
             </td>
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="{{previousFromHrr}}" max="{{hrZone.toHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
@@ -43,7 +43,7 @@
     <!-- Display last zone -->
     <table data-ng-switch data-on="hrZoneLast">
         <tr data-ng-switch-when="true">
-            <td><i>%HRR:</i>
+            <td><i>%HRR &#10142;</i>
             </td>
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
@@ -51,7 +51,7 @@
             <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
         <tr data-ng-switch-default data-ng-hide="true">
-            <td><i>%HRR:</i>
+            <td><i>%HRR &#10142;</i>
             </td>
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="{{nextToHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" />
