@@ -30,7 +30,7 @@
         "48": "icons/48.png",
         "128": "icons/128.png"
     },
-    "options_page": "pages/app/index.html",
+    "options_page": "options/app/index.html",
     "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
     "permissions": [
         "*://www.strava.com/*",
@@ -42,7 +42,7 @@
         "js/processors/*",
         "js/modifiers/*",
         "js/*",
-        "pages/*",
+        "options/*",
         "icons/*"
     ],
     "externally_connectable": {

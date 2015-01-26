@@ -28,6 +28,6 @@ app.config(['$routeProvider', function($routeProvider) {
     });
 
     $routeProvider.otherwise({
-        redirectTo: routeMap.healthSettingsRoute
+        redirectTo: routeMap.commonSettingsRoute
     })
 }]);

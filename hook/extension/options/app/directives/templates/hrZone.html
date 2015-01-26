@@ -46,7 +46,7 @@
             <td><i>%HRR:</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="100" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
             </td>
             <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>

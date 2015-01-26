@@ -7,6 +7,15 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
     var controllerFunction = function($scope) {
 
+        $scope.$watch('hrZones', function(newHrZones, oldHrZone) {
+
+            // Save if hrZones are compliant and model has well changed (old and new hrZones are equals when the tab is loaded)
+            if ($scope.areHrZonesCompliant() && (angular.toJson(newHrZones) !== angular.toJson(oldHrZone))) {
+                $scope.saveHrZones();
+            }
+
+        }, true);
+
         $scope.addHrZone = function() {
 
             if ($scope.hrZones.length >= maxHrZonesCount) {
@@ -49,16 +58,55 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
         $scope.resetHrZone = function() {
 
-            // TODO resetHrZone
-            Notifier('TODO', '$scope.resetHrZone() to implement...');
+            if (confirm("You are going to reset your custom heart rate zones to default factory value. Are you sure?")) {
+                $scope.hrZones = userSettings.userHrrZones;
+            }
 
         };
 
+        $scope.saveHrZones = function() {
+
+            setTimeout(function() {
+
+                if (!_.isUndefined($scope.hrZones)) {
+
+                    ChromeStorageModule.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), function() {
+
+                        console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrZones));
+
+                        ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                            console.log('localStorageMustBeCleared has been updated to: ' + true);
+                        });
+                    });
+                }
+            }, 250);
+        };
+
+        $scope.areHrZonesCompliant = function() {
+
+            for (var i = 0; i < $scope.hrZones.length; i++) {
+
+                if (i == 0) {
+                    if ($scope.hrZones[i].toHrr != $scope.hrZones[i + 1].fromHrr) {
+                        return false;
+                    }
+
+                } else if (i < ($scope.hrZones.length - 1)) { // Middle
+
+                    if ($scope.hrZones[i].toHrr != $scope.hrZones[i + 1].fromHrr || $scope.hrZones[i].fromHrr != $scope.hrZones[i - 1].toHrr) {
+                        return false;
+                    }
+
+                } else { // Last
+                    if ($scope.hrZones[i].fromHrr != $scope.hrZones[i - 1].toHrr) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
 
         $scope.onZoneChange = function(hrZoneId, previousHrZone, newHrZone) {
-            // console.debug(hrZoneId);
-            // console.debug(previousHrZone);
-            // console.debug(newHrZone);
 
             var fieldHasChanged = $scope.whichFieldHasChanged(previousHrZone, newHrZone);
 
@@ -112,7 +160,7 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
     };
 
     return {
-        templateUrl: 'views/hrZones/healthCustomZonesTemplate.html',
+        templateUrl: 'directives/templates/healthCustomZones.html',
         scope: {
             hrZones: "=",
             userMaxHr: "@userMaxHr",

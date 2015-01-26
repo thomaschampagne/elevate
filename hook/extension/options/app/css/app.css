@@ -20,14 +20,21 @@ footer {
     font-size: 48px;
 }
 .healthCustomZones {
-    margin-top: 50px;
-    margin-left: 50px;
+    text-align: left;
+    /*margin-top: 50px;*/
+    /*margin-left: 50px;*/
 }
 .healthCustomZonesExplanations {
-    background-color: red;
+    /*background-color: red;*/
     /* tmp ... */
 }
-.hrZoneAddRemove {
+.hrZoneActionButton {
+    width: 125px;
+}
+.hrZoneAddRemoveTop {
+    margin-bottom: 25px;
+}
+.hrZoneAddRemoveBottom {
     margin-top: 25px;
 }
 .hrZone .bpmFilter {

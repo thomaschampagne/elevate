@@ -1,0 +1,128 @@
+added roadmap
+Add health settings to menu Remove veloviewer links in menu
+Cleaning
+Change folder pages to options
+HrZones explanation base
+Allow 125 %HRR to be set in last zone
+Allow input switch with SHIFT/TAB Refactor avoidInputKey as a angular service
+Remove debug mode
+Better custom hr zones style
+Reset hrZones Fix "old and new hrZones are equals when the tab is loaded", this create a useless Save() UserSettings default zones update value
+Check compliant hrZones before save, then save if ok
+Custom zones and explanations (lorem) side by side
+Add reset zones base
+Workaround: remove hrr values inside popover because of display refresh problems on +/- zone
+Add/Remove between (3 -­ 10) %HRR zones + clean
+Bpm computed values along side hrr inputs
+Display input of %HRR: "Use input or keyboard up/down(html char) arrows to set %HRR of zone X between Y and Z" Reduce custom hr zone font Set add zone/ remove last zone bottom of page
+Zones be must come from user settings Clean userSettings zones Avoid keydown text + backspace + del on user rest hr / max hr Min value of maxHr must be (restHr + 10) Max value of restHr must be (maxHr ­ 10) Display input message for max hr: Set your max heartrate in beat per minute. You can use input or keyboard up/down(html char) arrows Display input message for rest hr: Invert of max hr...
+Reformat zones
+Adding new zone base
+Fix backspace / delete key event catching on hrr field
+Add/remove button zone
+Add popup over hrr field to set value with arrow
+Avoid input key backspace and Del on some behaviour. Not finished !
+Avoid input key edit
+New simplified UI base
+Custom zone validation: support first and last zone
+Improved custom zone validation
+toHrr equals fromHrr on next zone fromHrr equals toHrr on previous zone
+angular update 1.3.8
+Angular watch global hr zones now possible with previous and new value
+Fix % in zone always 0
+Merge remote-tracking branch 'origin/features/A004' into features/A004
+Change hr zone user settings to %
+update manifest version
+push signing key update manifest version
+Training Impulse label shorter
+Debug hrZone
+Linked zone from root scope to bottom directive scope
+Cleaning
+Add filter hrrToBpmFilter and apply it
+Using 2 angular directive instead of 1: - A global directive healthCustomZones for managing zone - A unit directive hrZone
+add controllerFunction
+Inject first values inside customHeartRateZone directive
+Initialize customHeartRateZone directive
+HRR graph display fix
+rename viewOptionHelperId identifier
+Trigger auto click on activity page extended data click
+Add notifier Add help on health Clean project
+localStorageMustBeCleared
+Cleaning Add fork me icon New versionning system
+Better structure Added icons Refactoring
+Cleaning
+Angular JS upgrade to 1.3.7
+Handle bootstrap menu active class using MainController and watcher on $location.path()
+Try inserting a parent main controller to control NavBar behaviour
+Import changes from release 0.3.8
+Fix undefined zone
+Start custom zones Clean user settings hr zone -> start fix mod indisde code
+Seperate comon health data from comon settings
+Error message on health validation
+Fix health input values which can be string
+Health input validation
+Refactoring folders and includes Add health form
+Add modal views
+Apply checkbox status from users settings Checkbox status mapped with chrome sync
+Chrome options remade with Angular + Bootstrap + underscore
+Stable angular default app + controller sample
+Start settings
+[A004] move hrrZone object outside
+Polish :)
+Version upgrade
+Merge remote-tracking branch 'origin/features/S001' into develop
+Merge remote-tracking branch 'origin/bugs/B007' into develop
+Merge remote-tracking branch 'origin/bugs/B008' into develop
+Merge remote-tracking branch 'origin/features/A003' into develop
+Merge remote-tracking branch 'origin/features/A004' into develop
+Pace finished
+Cosmetic...
+Pace base
+Updated extended power data settings
+Add lower quartile, median, upper quartile to power
+Edit to "KOM/CR" title in menu
+Fixed: Unable to see icon strava plus menu  when highlight is on
+Add nearby segment setting checkbox Stravaplus highlight for nearby segment
+Remove unused icon
+Now display cycling+running neaby segments on segment page
+Unify style
+Neraby segments list displayed to segment with cache system
+Get segements with bounding box
+Add new mid point for SegmentSearchPoint
+Merge remote-tracking branch 'origin/master' into features/S001
+Debug mode false
+About update
+Fix speed displayed along athlete activity measurementPreference
+Finalize B005 + B006 looking
+Fix bug on user who have no pedaling data Change NP expo factor
+Compute power data over movingThresholdKph
+Use exp 4 for NP
+Merge remote-tracking branch 'origin/bugs/B005' into bugs/B006
+Base fix of B006 : Estimated Normalized power not precise
+SegmentProcessor began
+Edit settings page
+Renaming
+Clean
+New version  of ActivityProcessor pedalingData_
+Stable getSegmentsFromBounds in vacuum
+about change
+Better test
+Changing keys
+clean
++0.0.1 version
+Change locastorage key name
+[Activities] Expand on click data info to <li/>
+Get updates from github
+Debug mode false
+Fix bug bike odo display when no bike declared
+updated about
+Menu icon orange
+Merge branch 'bugs/B002' into develop
+Add runnable extension method in content Ext not runnable if user create new route or editing one (solve display bugs)
+Piwik url update
+Indent
+Fix error on undefined vars
+Version upgrade
+Merge branch 'bugs/B001' into develop
+Fixed
+First hook commit

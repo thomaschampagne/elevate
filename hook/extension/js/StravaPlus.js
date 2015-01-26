@@ -25,7 +25,7 @@ function StravaPlus(userSettings, appResources) {
 StravaPlus.getFromStorageMethod = 'getFromStorage';
 StravaPlus.setToStorageMethod = 'setToStorage';
 StravaPlus.defaultIntervalTimeMillis = 750;
-StravaPlus.debugMode = true;
+StravaPlus.debugMode = false;
 
 /**
  * Define prototype

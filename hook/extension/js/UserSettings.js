@@ -7,15 +7,7 @@ var userSettings = {
     userFTP: null,
     userHrrZones: [
         {
-            fromHrr: 0,
-            toHrr: 30,
-        },
-        {
             fromHrr: 30,
-            toHrr: 40,
-        },
-        {
-            fromHrr: 40,
             toHrr: 50,
         },
         {
@@ -36,7 +28,7 @@ var userSettings = {
         },
         {
             fromHrr: 90,
-            toHrr: 100,
+            toHrr: 110,
         }
     ],
     remoteLinks: true,
