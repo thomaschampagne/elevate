@@ -325,7 +325,7 @@ VacuumProcessor.prototype = {
             return;
         }
 
-        var url = "http://www.strava.com/athletes/" + athleteId;
+        var url = location.protocol + "//www.strava.com/athletes/" + athleteId;
 
         jQuery.ajax(url).always(function(data) {
 

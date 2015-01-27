@@ -87,9 +87,7 @@ Content.prototype = {
 };
 
 var appResources = {
-    optionsLink: chrome.extension.getURL('/pages/settings.html'),
-    aboutLink: chrome.extension.getURL('/pages/about.html'),
-    donateLink: chrome.extension.getURL('/pages/donate.html'),
+    settingsLink: chrome.extension.getURL('/options/app/index.html'),
     menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),
     menuIconOrange: chrome.extension.getURL('/icons/ic_menu_24px_orange.svg'),
     remoteViewIcon: chrome.extension.getURL('/icons/ic_launch_24px.svg'),
@@ -98,6 +96,7 @@ var appResources = {
     veloviewerChallengesIcon: chrome.extension.getURL('/icons/ic_landscape_24px.svg'),
     labIcon: chrome.extension.getURL('/icons/lab.png'),
     settingsIcon: chrome.extension.getURL('/icons/ic_settings_24px.svg'),
+    heartIcon: chrome.extension.getURL('/icons/ic_favorite_24px.svg'),
     komMapIcon: chrome.extension.getURL('/icons/ic_looks_one_24px.svg'),
     heatmapIcon: chrome.extension.getURL('/icons/ic_whatshot_24px.svg'),
     bugIcon: chrome.extension.getURL('/icons/ic_bug_report_24px.svg'),
@@ -105,6 +104,7 @@ var appResources = {
     eyeIcon: chrome.extension.getURL('/icons/ic_remove_red_eye_24px.svg'),
     bikeIcon: chrome.extension.getURL('/icons/ic_directions_bike_24px.svg'),
     newReleaseIcon: chrome.extension.getURL('/icons/ic_new_releases_24px.svg'),
+    systemUpdatesIcon: chrome.extension.getURL('/icons/ic_system_update_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
     extVersion: chrome.runtime.getManifest().version,

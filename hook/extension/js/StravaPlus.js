@@ -7,7 +7,7 @@ function StravaPlus(userSettings, appResources) {
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_);
+    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -42,6 +42,13 @@ StravaPlus.prototype = {
         // Handle some tasks to od when update occurs
         if (this.userSettings_.extensionHasJustUpdated) {
             this.handleExtensionHasJustUpdated_();
+        }
+
+        if (this.userSettings_.localStorageMustBeCleared) {
+            localStorage.clear();
+            Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, function(response) {
+                console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
+            });
         }
 
         // Common
@@ -89,7 +96,12 @@ StravaPlus.prototype = {
         // Especially for activies data stored in cache
         if (StravaPlus.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
+        // Display ribbon update message
+        var style = 'background-color: #81FFB2; font-size: 14px; padding: 10px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        jQuery('body').before('<div id="updateRibbon" style="' + style + '">StravaPlus Extension has been updated to version <strong>v' + this.appResources_.extVersion + '</strong>. <a href="' + this.appResources_.settingsLink + '#/releaseNotes" target="_blank">Release notes</a></br><a href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Hide this message</a></div>');
+
         localStorage.clear();
+
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
 
