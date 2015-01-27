@@ -96,7 +96,12 @@ StravaPlus.prototype = {
         // Especially for activies data stored in cache
         if (StravaPlus.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
+        // Display ribbon update message
+        var style = 'background-color: #81FFB2; font-size: 14px; padding: 10px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        jQuery('body').before('<div id="updateRibbon" style="' + style + '">StravaPlus Extension has been updated to version <strong>v' + this.appResources_.extVersion + '</strong>. <a href="' + this.appResources_.settingsLink + '#/releaseNotes" target="_blank">Release notes</a></br><a href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Hide this message</a></div>');
+
         localStorage.clear();
+
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
 
