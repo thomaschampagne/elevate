@@ -86,6 +86,10 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
         };
 
         $scope.areHrZonesCompliant = function() {
+            
+            if(!$scope.hrZones) {
+                return false;
+            }
 
             for (var i = 0; i < $scope.hrZones.length; i++) {
 

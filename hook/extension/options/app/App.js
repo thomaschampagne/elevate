@@ -1,7 +1,7 @@
 /**
  * Declaring Angular App
  */
-var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'SettingsSectionsModule']);
+var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'ui.checkbox', 'SettingsSectionsModule']);
 
 app.config(['$routeProvider', function($routeProvider) {
 

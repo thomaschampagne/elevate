@@ -30,8 +30,12 @@ app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$l
 
     $scope.toggleCheckOption = function(option) {
 
-        ChromeStorageModule.updateUserSetting(option.optionKey, option.active, function() {
-            console.log(option.optionKey + ' has been updated to ' + option.active);
+        // console.debug(!option.active);
+        var bool = option.active;
+        // var bool = !option.active;
+
+        ChromeStorageModule.updateUserSetting(option.optionKey, bool, function() {
+            console.log(option.optionKey + ' has been updated to ' + bool);
         });
     };
 
