@@ -127,7 +127,7 @@ ExtendedActivityDataModifier.prototype = {
     handleVariousData_: function handleVariousData_() {
 
         if (this.userSettings_.displayMotivationScore && !_.isNull(this.analysisData_.toughnessScore)) {
-            this.appendAnalyseDataToStatsPanel_('displayMotivationScore', 'Toughness Factor', this.analysisData_.toughnessScore.toFixed(0), null, null);
+            this.appendAnalyseDataToStatsPanel_('displayMotivationScore', 'Toughness Factor&nbsp;&nbsp;&nbsp;', this.analysisData_.toughnessScore.toFixed(0), null, null);
         }
 
         if (this.userSettings_.displayActivityRatio) {
