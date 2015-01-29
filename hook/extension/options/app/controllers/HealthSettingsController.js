@@ -20,7 +20,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
             if (!_.isUndefined($scope.userMaxHr) && !_.isNull($scope.userMaxHr)) {
 
                 if ($scope.userMaxHr <= $scope.userRestHr) {
-                    $scope.healthComonForm.userMaxHr.$invalid = true;
+                    $scope.healthCommonForm.userMaxHr.$invalid = true;
                     $scope.$apply();
 
                 } else {
@@ -41,7 +41,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
 
 
                 if ($scope.userMaxHr <= $scope.userRestHr) {
-                    $scope.healthComonForm.userRestHr.$invalid = true;
+                    $scope.healthCommonForm.userRestHr.$invalid = true;
                     $scope.$apply();
                 } else {
                     ChromeStorageModule.updateUserSetting('userRestHr', $scope.userRestHr, function() {
