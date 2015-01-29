@@ -2,7 +2,7 @@
  * Declaring Angular App Properties
  */
 var routeMap = {
-    commonSettingsRoute: '/comonSettings',
+    commonSettingsRoute: '/commonSettings',
     healthSettingsRoute: '/healthSettings',
     releaseNotesRoute: '/releaseNotes',
     aboutRoute: '/about',

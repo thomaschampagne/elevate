@@ -6,8 +6,8 @@ var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'ui.checkbox', 'Sett
 app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when(routeMap.commonSettingsRoute, {
-        templateUrl: 'views/comonSettings.html',
-        controller: 'ComonSettingsController'
+        templateUrl: 'views/commonSettings.html',
+        controller: 'CommonSettingsController'
     });
 
     $routeProvider.when(routeMap.healthSettingsRoute, {

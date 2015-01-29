@@ -319,7 +319,7 @@ ExtendedActivityDataModifier.prototype = {
      */
     appendAnalyseDataToStatsPanel_: function appendAnalyseDataToStatsPanel_(userSettingKey, title, valueHtml, unit, style) {
 
-        var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/comonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+        var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         var isA = jQuery(valueHtml).is('a');
 

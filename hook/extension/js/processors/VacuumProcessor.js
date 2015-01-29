@@ -125,9 +125,9 @@ VacuumProcessor.prototype = {
     },
 
     /**
-     * @returns Comon activity stats given by Strava throught right panel
+     * @returns Common activity stats given by Strava throught right panel
      */
-    getActivityComonStats: function getActivityStats() {
+    getActivityCommonStats: function getActivityStats() {
 
         var actStatsContainer = jQuery(".activity-summary-container");
 
@@ -229,7 +229,7 @@ VacuumProcessor.prototype = {
             // jsonResponse.watts = (_.isEmpty(jsonResponse.watts_calc)) ? jsonResponse.watts : jsonResponse.watts_calc;
             jsonResponse.watts = (_.isEmpty(jsonResponse.watts)) ? jsonResponse.watts_calc : jsonResponse.watts;
 
-            callback(this.getActivityComonStats(), jsonResponse, this.getAthleteWeight());
+            callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight());
 
             jsonResponse = null; // Memory clean
 

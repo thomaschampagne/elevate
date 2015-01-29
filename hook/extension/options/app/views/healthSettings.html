@@ -1,6 +1,6 @@
 <div id="settingsContainer">
     <h3 data-ng-hide="false"><span class="label label-default">Your health data</span></h3>
-    <form name="healthComonForm">
+    <form name="healthCommonForm">
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -36,7 +36,7 @@
                     </td>
                     <td>
                         <input name="userFTP" type="number" min="10" max="2500" class="form-control input-lg" data-ng-model="userFTP" placeholder="Enter your FTP" data-ng-pattern="/^[0-9]+$/" data-ng-change="ftpHasChanged()" data-popover="Use arrows &#8645; or numpad to set your Functionnal Threshold Power in Watts" data-popover-trigger="mouseenter"></input>
-                        <alert type="danger" data-ng-show="healthComonForm.userFTP.$invalid">Enter a valid FTP value in watts (between 10 to 2500 watts)</alert>
+                        <alert type="danger" data-ng-show="healthCommonForm.userFTP.$invalid">Enter a valid FTP value in watts (between 10 to 2500 watts)</alert>
                     </td>
                     <td class="hint">
                         <button data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayUserFTPHelper()">Hint</button>
