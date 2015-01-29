@@ -121,7 +121,7 @@ var dependencies = [
     'js/processors/BikeOdoProcessor.js',
     'js/processors/SegmentProcessor.js',
     'js/Helper.js',
-    'js/Track.js',
+    'js/Follow.js',
     'js/modifiers/ActivityScrollingModifier.js',
     'js/modifiers/RemoteLinksModifier.js',
     'js/modifiers/DefaultLeaderboardFilterModifier.js',
