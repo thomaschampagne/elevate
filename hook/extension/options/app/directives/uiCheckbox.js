@@ -1,5 +1,3 @@
-// Modified module from
-// https://github.com/sebastianha/angular-bootstrap-checkbox
 angular.module("ui.checkbox", []).directive("checkbox", function() {
     return {
         scope: {},
