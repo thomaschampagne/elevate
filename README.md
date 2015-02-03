@@ -1,9 +1,24 @@
-Install from Chrome Store
+Install StravaPlus from chrome store
 ==========
-Install from here: http://bitly.com/stravaplus
+Go to http://bitly.com/stravaplus
 
-Install from a Tag
+Develop StravaPlus
 ==========
-* You can follow tags here: ...
+You need **npm** and **node** exectutable
 
-...todo...
+- Install extension dependencies
+```
+node make.js init
+```
+This will download required node modules
+- Create distribution folder 
+```
+node make.js dist
+```
+This will create folder **dist/**, this is folder user before a release
+
+- Create archive package 
+```
+node make.js build
+```
+This will create archive in **builds/StravaPlus\_vX.X.X\_[date].zip**
