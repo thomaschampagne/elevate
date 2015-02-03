@@ -112,10 +112,11 @@ var appResources = {
 };
 
 var dependencies = [
-    'js/libs/Chart.min.js',
-    'js/libs/StorageManager.js',
-    'js/libs/geo.js',
-    'js/libs/latlong.js',
+    'config/env.js',
+    'node_modules/chart.js/Chart.min.js',
+    'modules/StorageManager.js',
+    'modules/geo.js',
+    'modules/latlong.js',
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',

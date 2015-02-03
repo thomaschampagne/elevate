@@ -1,0 +1,18 @@
+{
+    "name": "Make",
+    "description": "Make StravaPlus distribution structure and builds archive",
+    "main": "make.js",
+    "dependencies": {
+        "easy-zip": "^0.0.4",
+        "ncp": "^1.0.1"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thomaschampagne/StravaPlus"
+    },
+    "author": "Thomas Champagne",
+    "readme": "None"
+}

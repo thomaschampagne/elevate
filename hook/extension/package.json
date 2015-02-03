@@ -1,0 +1,28 @@
+{
+    "name": "stravaplus",
+    "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
+    "keywords": [
+        "strava",
+        "cycling",
+        "running",
+        "tracking"
+    ],
+    "maintainers": [{
+        "name": "Thomas Champagne",
+        "email": "th.champagne@gmail.com",
+        "web": "http://thomaschampagne.github.io"
+    }],
+    "dependencies": {
+        "angular": "1.3.11",
+        "angular-route": "1.3.11",
+        "bootstrap": "3.2.*",
+        "angular-bootstrap": "0.12.*",
+        "underscore": "1.7.0",
+        "chart.js": "1.0.*"
+    },
+    "repository": [{
+        "type": "git",
+        "url": "https://github.com/thomaschampagne/StravaPlus"
+    }],
+    "readme": "None"
+}

@@ -8,13 +8,13 @@
         "scripts": [
             "js/UserSettings.js",
             "js/StravaPlus.js",
-            "js/libs/StorageManager.js",
-            "js/background.js"
+            "js/background.js",
+            "modules/StorageManager.js"
         ]
     },
     "content_scripts": [{
         "js": [
-            "js/libs/underscore.min.js",
+            "node_modules/underscore/underscore-min.js",
             "js/Helper.js",
             "js/UserSettings.js",
             "js/Content.js"
@@ -38,7 +38,9 @@
         "storage"
     ],
     "web_accessible_resources": [
-        "js/libs/*",
+        "node_modules/*",
+        "modules/*",
+        "config/*",
         "js/processors/*",
         "js/modifiers/*",
         "js/*",
