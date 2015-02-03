@@ -12,7 +12,7 @@ var action = process.argv.slice(2)[0];
 
 setTimeout(function() {
 
-    if (typeof action === 'undefined' || (action !== 'init' && action !== 'dist' && action !== 'build')) {
+    if (typeof action === 'undefined' || (action !== 'init' && action !== 'dist' && action !== 'build' && action !== 'clean')) {
 
         showUsage();
 
@@ -30,6 +30,12 @@ setTimeout(function() {
 
             case 'build':
                 build();
+                break;
+
+            case 'clean':
+                clean(function() {
+                    console.log('builds/, dist/ and node_modules/ folders cleaned');
+                });
                 break;
         }
     }
@@ -162,15 +168,24 @@ var build = function() {
 };
 
 
+var clean = function (callback) {
+    deleteFolderRecursive('node_modules');
+    deleteFolderRecursive(EXT_FOLDER + 'node_modules');
+    deleteFolderRecursive(DIST_FOLDER);
+    deleteFolderRecursive(BUILD_FOLDER);
+    callback();
+};
+
 /**
  *
  */
 var showUsage = function() {
     console.log('Usage:');
-    console.log('node ' + path.basename(__filename) + ' <init|dist|build>\r\n');
+    console.log('node ' + path.basename(__filename) + ' <init|dist|build|clean>\r\n');
     console.log('init: Install dependencies');
     console.log('dist: Create distribution folder');
     console.log('build: Create archive of distribution folder');
+    console.log('clean: Clean builds/, dist/ and node_modules/ folders');
 };
 
 

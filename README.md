@@ -22,3 +22,9 @@ This will create folder **dist/**, this is folder user before a release
 node make.js build
 ```
 This will create archive in **builds/StravaPlus\_vX.X.X\_[date].zip**
+
+- Clean 
+```
+node make.js clean
+```
+This will clean builds/, dist/ and node_modules/ folders
