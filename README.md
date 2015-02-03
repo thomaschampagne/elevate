@@ -5,11 +5,9 @@ Go to http://bitly.com/stravaplus
 Install/Develop from sources
 ==========
 **Requirements**
-
 You need [**node package manager and nodejs**](http://nodejs.org/) 
 
-#Install extension dependencies
--------------
+## Install extension dependencies
 ```
 node make.js init
 ```
