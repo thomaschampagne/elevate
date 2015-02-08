@@ -464,7 +464,7 @@ StravaPlus.prototype = {
             if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
             if (!StravaPlus.debugMode) {
-                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName, parseFloat(this.appResources_.extVersion));
+                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName, env.buildNumber);
             }
 
             // Create cookie to avoid push during 1 day
