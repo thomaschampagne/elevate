@@ -57,7 +57,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
     $scope.ftpHasChanged = function() {
 
         setTimeout(function() {
-            if (!_.isUndefined($scope.userFTP) && !_.isNull($scope.userFTP)) {
+            if (!_.isUndefined($scope.userFTP)) {
                 ChromeStorageModule.updateUserSetting('userFTP', $scope.userFTP, function() {
                     console.log('userFTP has been updated to ' + $scope.userFTP);
                     $scope.localStorageMustBeCleared();
