@@ -25,7 +25,7 @@ function StravaPlus(userSettings, appResources) {
 StravaPlus.getFromStorageMethod = 'getFromStorage';
 StravaPlus.setToStorageMethod = 'setToStorage';
 StravaPlus.defaultIntervalTimeMillis = 750;
-StravaPlus.debugMode = false;
+StravaPlus.debugMode = false; // Must be false in release
 
 /**
  * Define prototype
@@ -40,7 +40,7 @@ StravaPlus.prototype = {
         }
 
         // Handle some tasks to od when update occurs
-        if (this.userSettings_.extensionHasJustUpdated) {
+        if (this.userSettings_.extensionHasJustUpdated || env.forceUpdated) {
             this.handleExtensionHasJustUpdated_();
         }
 
@@ -108,8 +108,10 @@ StravaPlus.prototype = {
      *
      */
     handleUpdateRibbon_: function handleUpdateRibbon_() {
-        var style = 'background-color: #81FFB2; font-size: 14px; padding: 10px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
-        jQuery('body').before('<div id="updateRibbon" style="' + style + '">StravaPlus Extension has been updated to version <strong>v' + this.appResources_.extVersion + '</strong>. <a href="' + this.appResources_.settingsLink + '#/releaseNotes" target="_blank">View release notes</a></br><a href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Hide this message</a></div>');
+        var globalStyle = 'background-color: #000000; color: lightgrey; font-size: 14px; padding: 30px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas" class="twitter-follow-button" data-show-count="false" data-size="large">What\'s in the next update?</a></strong>';
+        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v0.4.3</strong>, ' + socialButton + '<a style="float: right; color: lightgrey;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
+        jQuery('body').before(html);
     },
 
     /**

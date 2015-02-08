@@ -33,18 +33,18 @@ Content.prototype = {
         var isRunnable = true;
 
         // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
-        if (window.location.pathname.match(/^\/routes\/new/) || 
+        if (window.location.pathname.match(/^\/routes\/new/) ||
             window.location.pathname.match(/^\/routes\/(\d+)\/edit$/) ||
             window.location.pathname.match(/^\/about/) ||
             window.location.pathname.match(/^\/running-app/) ||
             window.location.pathname.match(/^\/features/) ||
             window.location.pathname.match(/^\/how-it-works/)) {
-            
+
             isRunnable = false;
         }
 
         // Do not run extension if user not logged
-        if(document.getElementsByClassName('btn-login').length > 0) {
+        if (document.getElementsByClassName('btn-login').length > 0) {
             isRunnable = false;
         }
 
@@ -100,10 +100,11 @@ var appResources = {
     komMapIcon: chrome.extension.getURL('/icons/ic_looks_one_24px.svg'),
     heatmapIcon: chrome.extension.getURL('/icons/ic_whatshot_24px.svg'),
     bugIcon: chrome.extension.getURL('/icons/ic_bug_report_24px.svg'),
+    rateIcon: chrome.extension.getURL('/icons/ic_star_24px.svg'),
     aboutIcon: chrome.extension.getURL('/icons/ic_info_outline_24px.svg'),
     eyeIcon: chrome.extension.getURL('/icons/ic_remove_red_eye_24px.svg'),
     bikeIcon: chrome.extension.getURL('/icons/ic_directions_bike_24px.svg'),
-    newReleaseIcon: chrome.extension.getURL('/icons/ic_new_releases_24px.svg'),
+    twitterIcon: chrome.extension.getURL('/icons/twitter.svg'),
     systemUpdatesIcon: chrome.extension.getURL('/icons/ic_system_update_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
@@ -137,7 +138,6 @@ var dependencies = [
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
-    
 ];
 
 var content = new Content(dependencies, userSettings, appResources);
