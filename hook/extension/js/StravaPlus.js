@@ -296,8 +296,14 @@ StravaPlus.prototype = {
             this.userSettings_.userMaxHr,
             this.userSettings_.userFTP,
             function(analysisData) { // Callback when analysis data has been computed
-                var extendedActivityDataModifier = new ExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
-                extendedActivityDataModifier.modify();
+                var cyclingExtendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                
+                console.log(cyclingExtendedActivityDataModifier);
+
+                cyclingExtendedActivityDataModifier.modify();
+
+
+
             }.bind(this)
         );
     },

@@ -1,23 +1,25 @@
 /*
- *   ExtendedActivityDataModifier is responsible of ...
+ *   AbstractExtendedActivityDataModifier is responsible of ...
  */
-function ExtendedActivityDataModifier(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
+function AbstractExtendedActivityDataModifier(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
     this.analysisData_ = analysisData;
     this.appResources_ = appResources;
     this.userSettings_ = userSettings;
     this.athleteId_ = athleteId;
     this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
+
+    console.log('AbstractExtendedActivityDataModifier parent constructor');
 }
 
-ExtendedActivityDataModifier.hideDefaultTitle = 'Hide StravaPlus Extended Stats';
-ExtendedActivityDataModifier.showDefaultTitle = 'Show StravaPlus Extended Stats';
-ExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey = 'sp_hideExtendedStatsPanelCookie';
+AbstractExtendedActivityDataModifier.hideDefaultTitle = 'Hide StravaPlus Extended Stats';
+AbstractExtendedActivityDataModifier.showDefaultTitle = 'Show StravaPlus Extended Stats';
+AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey = 'sp_hideExtendedStatsPanelCookie';
 
 
 /**
  * Define prototype
  */
-ExtendedActivityDataModifier.prototype = {
+AbstractExtendedActivityDataModifier.prototype = {
 
     statAnchor: null,
 
@@ -27,6 +29,8 @@ ExtendedActivityDataModifier.prototype = {
      *
      */
     modify: function modify() {
+
+        console.log('AbstractExtendedActivityDataModifier modify parent');
 
         // Creating panel
         this.statAnchor = this.getStatAnchor_();
@@ -55,19 +59,19 @@ ExtendedActivityDataModifier.prototype = {
     makeHideShowExtendedDataLink_: function makeHideShowExtendedDataLink_() {
 
         var style = 'font-style: italic; font-size:11px; padding: 1px; text-align: center; color: white; background: #fc4c02; margin-top: 5px; cursor: pointer;';
-        this.statAnchor.append('<div style="padding-top: 3px; padding-bottom: 3px;"><input type="checkbox" id="hideExtendedStatsPanelCheckbox" value="checked"/> Force hide "Extended Stats" panel</div><div id="extendedDataTitle" style="' + style + '">' + ExtendedActivityDataModifier.hideDefaultTitle + '<div>').each(function() {
+        this.statAnchor.append('<div style="padding-top: 3px; padding-bottom: 3px;"><input type="checkbox" id="hideExtendedStatsPanelCheckbox" value="checked"/> Force hide "Extended Stats" panel</div><div id="extendedDataTitle" style="' + style + '">' + AbstractExtendedActivityDataModifier.hideDefaultTitle + '<div>').each(function() {
 
             // Handle listener on hide/show title
             jQuery('#extendedDataTitle').on('click', function() {
 
                 if (jQuery('#extendedActivityDataContent').is(":visible")) {
                     jQuery('#extendedActivityDataContent').slideUp(function() {
-                        jQuery('#extendedDataTitle').html(ExtendedActivityDataModifier.showDefaultTitle);
+                        jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.showDefaultTitle);
                     });
 
                 } else {
                     jQuery('#extendedActivityDataContent').slideDown(function() {
-                        jQuery('#extendedDataTitle').html(ExtendedActivityDataModifier.hideDefaultTitle);
+                        jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.hideDefaultTitle);
                     });
                 }
             });
@@ -75,9 +79,9 @@ ExtendedActivityDataModifier.prototype = {
             // Handle listener on "Extended Stats" panel hide checkbox
             jQuery('#hideExtendedStatsPanelCheckbox').on('click', function() {
                 if (jQuery('#hideExtendedStatsPanelCheckbox').is(':checked')) {
-                    StorageManager.setCookie(ExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, true, 365);
+                    StorageManager.setCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, true, 365);
                 } else {
-                    StorageManager.setCookie(ExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, false, 365);
+                    StorageManager.setCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, false, 365);
                 }
             });
         });
@@ -94,7 +98,7 @@ ExtendedActivityDataModifier.prototype = {
 
         setTimeout(function() {
 
-            var hideExtendedStatsPanelCookieValue = JSON.parse(StorageManager.getCookie(ExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey));
+            var hideExtendedStatsPanelCookieValue = JSON.parse(StorageManager.getCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey));
 
             if (!_.isNull(hideExtendedStatsPanelCookieValue) && _.isEqual(hideExtendedStatsPanelCookieValue, true)) {
 
@@ -104,7 +108,7 @@ ExtendedActivityDataModifier.prototype = {
                 // Hide #extendedActivityDataContent panel
                 jQuery('#extendedActivityDataContent').slideUp(function() {
                     // Set title
-                    jQuery('#extendedDataTitle').html(ExtendedActivityDataModifier.showDefaultTitle);
+                    jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.showDefaultTitle);
                 });
 
             } else {
@@ -115,7 +119,7 @@ ExtendedActivityDataModifier.prototype = {
                 // Show #extendedActivityDataContent panel
                 jQuery('#extendedActivityDataContent').slideDown(function() {
                     // Set title
-                    jQuery('#extendedDataTitle').html(ExtendedActivityDataModifier.hideDefaultTitle);
+                    jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.hideDefaultTitle);
                 });
             }
         });
