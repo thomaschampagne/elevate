@@ -1,8 +1,9 @@
-/**
+/*
  *   ActivityQRCodeDisplayModifier is responsible of ...
  */
-function ActivityQRCodeDisplayModifier(appResources) {
+function ActivityQRCodeDisplayModifier(appResources, activityId) {
     this.appResources_ = appResources;
+    this.activityId_ = activityId;
 }
 
 /**
@@ -21,10 +22,19 @@ ActivityQRCodeDisplayModifier.prototype = {
             // Once dom inserted
             jQuery('#activityFlashCodebutton').click(function() {
 
-                console.warn('innnn');
+                jQuery.fancybox('<div align="center"><h2>Activity Flash code</h2><h3>Scan with your smartphone to display activity on Strava mobile app.</h3><p><div id="qrcode"></div>save image</p></div>');
 
-                jQuery.fancybox('<div><h1>QRCODE :)</h1><p>qrcode here + save as...</p></div>');
+                var qrcode = new QRCode("qrcode", {
+                    text: "http://app.strava.com/activities/" + this.activityId_,
+                    width: 384,
+                    height: 384,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
             }.bind(this));
+
         }.bind(this));
     }
 };

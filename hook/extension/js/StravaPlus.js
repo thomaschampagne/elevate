@@ -89,7 +89,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_);
+        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
         activityQRCodeDisplayModifier.modify();
 
     },
