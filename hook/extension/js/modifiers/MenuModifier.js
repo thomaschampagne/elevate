@@ -65,6 +65,9 @@ MenuModifier.prototype = {
                 }
             );
         }
+
         globalNav.children().first().before(stravaMenuHtml);
+
+        jQuery.fancybox('<div><h1>Modal example :)</h1><p>Remove this by searching the pattern "5s874d45gfds4ds7s7dsdsq87a7q4s7f7d8ds7f" in code</p></div>');
     },
 };

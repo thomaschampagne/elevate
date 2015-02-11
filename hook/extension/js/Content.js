@@ -1,8 +1,9 @@
 /**
  *   Content is responsible of ...
  */
-function Content(dependencies, userSettings, appResources) {
-    this.dependencies_ = dependencies;
+function Content(jsDependencies, cssDependencies, userSettings, appResources) {
+    this.jsDependencies_ = jsDependencies;
+    this.cssDependencies = cssDependencies;
     this.userSettings_ = userSettings;
     this.appResources_ = appResources;
 }
@@ -12,7 +13,7 @@ function Content(dependencies, userSettings, appResources) {
  */
 Content.prototype = {
 
-    include: function include(scriptUrl) {
+    includeJs: function includeJs(scriptUrl) {
         var s = document.createElement('script');
         s.src = chrome.extension.getURL(scriptUrl);
         s.onload = function() {
@@ -21,10 +22,22 @@ Content.prototype = {
         (document.head || document.documentElement).appendChild(s);
     },
 
+    includeCss: function includeJs(scriptUrl) {
+        var link = document.createElement('link');
+        link.href = chrome.extension.getURL(scriptUrl);
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        (document.head || document.documentElement).appendChild(link);
+    },
+
     loadDependencies: function loadDependencies() {
 
-        for (var i = 0; i < this.dependencies_.length; i++) {
-            this.include(this.dependencies_[i]);
+        for (var i = 0; i < this.jsDependencies_.length; i++) {
+            this.includeJs(this.jsDependencies_[i]);
+        }
+
+        for (var i = 0; i < this.cssDependencies.length; i++) {
+            this.includeCss(this.cssDependencies[i]);
         }
     },
 
@@ -112,9 +125,10 @@ var appResources = {
     extensionId: chrome.runtime.id,
 };
 
-var dependencies = [
+var jsDependencies = [
     'config/env.js',
     'node_modules/chart.js/Chart.min.js',
+    'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'modules/StorageManager.js',
     'modules/geo.js',
     'modules/latlong.js',
@@ -140,5 +154,10 @@ var dependencies = [
     'js/modifiers/NearbySegmentsModifier.js',
 ];
 
-var content = new Content(dependencies, userSettings, appResources);
+var cssDependencies = [
+    'node_modules/fancybox/dist/css/jquery.fancybox.css'
+];
+
+
+var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
