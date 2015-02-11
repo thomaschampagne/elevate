@@ -121,6 +121,7 @@ var appResources = {
     systemUpdatesIcon: chrome.extension.getURL('/icons/ic_system_update_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
+    qrCodeIcon: chrome.extension.getURL('/icons/qrcode.svg'),
     extVersion: chrome.runtime.getManifest().version,
     extensionId: chrome.runtime.id,
 };
@@ -132,6 +133,7 @@ var jsDependencies = [
     'modules/StorageManager.js',
     'modules/geo.js',
     'modules/latlong.js',
+    'modules/qrcode.min.js',
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',
@@ -149,6 +151,7 @@ var jsDependencies = [
     'js/modifiers/ExtendedActivityDataModifier.js',
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
+    'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',

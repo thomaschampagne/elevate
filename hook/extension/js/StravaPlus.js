@@ -71,8 +71,27 @@ StravaPlus.prototype = {
         this.handleRunningGradeAdjustedPace_();
         this.handleRunningHeartRate_();
 
+        // All activities
+        this.handleActivityQRCodeDisplay_();
+
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
+    },
+
+    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
+        
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_);
+        activityQRCodeDisplayModifier.modify();
+
     },
 
     /**
