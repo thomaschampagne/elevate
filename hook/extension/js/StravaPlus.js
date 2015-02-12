@@ -78,22 +78,6 @@ StravaPlus.prototype = {
         this.handleTrackTodayIncommingConnection_();
     },
 
-    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
-        
-        // Test where are on an activity...
-        if (!window.location.pathname.match(/^\/activities/)) {
-            return;
-        }
-
-        if (_.isUndefined(window.pageView)) {
-            return;
-        }
-
-        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
-        activityQRCodeDisplayModifier.modify();
-
-    },
-
     /**
      *
      */
@@ -445,6 +429,24 @@ StravaPlus.prototype = {
         runningHeartRateModifier.modify();
     },
 
+    /**
+     *
+     */
+    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
+        activityQRCodeDisplayModifier.modify();
+
+    },
 
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type
