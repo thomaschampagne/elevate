@@ -282,10 +282,12 @@ StravaPlus.prototype = {
             return;
         }
 
+        var activityType = pageView.activity().attributes.type;
+
         // Avoid running Extended data at the moment
-        if (pageView.activity().attributes.type != "Ride") {
-            return;
-        }
+        // if (activityType != "Ride" && activityType != "Run") {
+        //     return;
+        // }
 
         if (StravaPlus.debugMode) console.log("Execute handleExtendedActivityData_()");
 
@@ -295,14 +297,22 @@ StravaPlus.prototype = {
             this.userSettings_.userRestHr,
             this.userSettings_.userMaxHr,
             this.userSettings_.userFTP,
+
             function(analysisData) { // Callback when analysis data has been computed
-                var cyclingExtendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
-                
-                console.log(cyclingExtendedActivityDataModifier);
 
-                cyclingExtendedActivityDataModifier.modify();
+                var extendedActivityDataModifier = null;
 
+                switch (activityType) {
+                    case 'Ride':
+                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+                    case 'Run':
+                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                }
 
+                if(extendedActivityDataModifier) {
+                    extendedActivityDataModifier.modify();
+                }
 
             }.bind(this)
         );

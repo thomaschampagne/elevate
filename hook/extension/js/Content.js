@@ -115,6 +115,7 @@ var appResources = {
 var dependencies = [
     'config/env.js',
     'node_modules/chart.js/Chart.min.js',
+    'node_modules/fiber/src/fiber.min.js',
     'modules/StorageManager.js',
     'modules/geo.js',
     'modules/latlong.js',
