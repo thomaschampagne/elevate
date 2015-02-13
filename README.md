@@ -17,13 +17,13 @@ This will download required node modules
 ```
 node make.js dist
 ```
-This will create folder **dist/**, this is folder user before a release
+This will create **dist/** folder. He is used for a release.
 
 ## Create archive package 
 ```
 node make.js build
 ```
-This will create archive in **builds/StravaPlus\_vX.X.X\_[date].zip**
+This will create zip archive of **dist/** folder in **builds/StravaPlus\_vX.X.X\_[date].zip**
 
 ## Clean 
 ```

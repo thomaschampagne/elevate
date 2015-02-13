@@ -16,17 +16,23 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         placeExtendedStatsButton: function(buttonAdded) {
 
-            console.log('AbstractExtendedActivityDataModifier::placeExtendedStatsButton');
-
             var htmlButton = '<section>';
-            htmlButton += '<a class="button btn-block btn-primary" href="#">';
+            htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
             htmlButton += '</section>';
 
             jQuery('.inline-stats.section').first().after(htmlButton).each(function() {
-                buttonAdded();
-            });
+
+                jQuery('#extendedStatsButton').click(function() {
+
+                    jQuery.fancybox(this.content); // Content is the html computed by implementations
+
+                }.bind(this));
+
+                if (buttonAdded) buttonAdded();
+                
+            }.bind(this));
         }
     }
 });

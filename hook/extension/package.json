@@ -21,6 +21,7 @@
     "bootstrap": "3.2.*",
     "chart.js": "1.0.*",
     "fiber": "^1.0.4",
+    "fancybox": "^2.1.6",
     "underscore": "1.7.0"
   },
   "repository": [
