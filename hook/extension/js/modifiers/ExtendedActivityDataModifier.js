@@ -184,7 +184,8 @@ ExtendedActivityDataModifier.prototype = {
             this.createNewLineData_('lineForHeartSpeedData', null, 'margin-bottom: 5px;');
 
             // add Speeds to panel Speed unit here: pageView.activityAthlete().attributes.measurement_preference
-            var measurementPreference = pageView.activityAthlete().attributes.measurement_preference;
+            // var measurementPreference = pageView.activityAthlete().attributes.measurement_preference;
+            var measurementPreference = currentAthlete.get('measurement_preference');
             var unit = (measurementPreference == 'meters') ? 'km' : 'mi';
             var speedUnit = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
             var toMilesOnNot = (speedUnit == 'km/h') ? 1 : 0.62137;
