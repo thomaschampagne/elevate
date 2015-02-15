@@ -22,7 +22,7 @@ VacuumProcessor.prototype = {
                 athleteId = currentAthlete.id;
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return athleteId;
@@ -39,7 +39,7 @@ VacuumProcessor.prototype = {
                 athleteName = currentAthlete.get('display_name');
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return athleteName;
@@ -74,7 +74,7 @@ VacuumProcessor.prototype = {
                 premiumStatus = currentAthlete.attributes.premium;
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return premiumStatus;
@@ -102,7 +102,7 @@ VacuumProcessor.prototype = {
 
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return proStatus;

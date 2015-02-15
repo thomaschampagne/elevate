@@ -21,7 +21,7 @@ BikeOdoProcessor.prototype = {
         var bikeOdoOfAthleteFromCache = StorageManager.getCookie(this.cacheAgingTimeCookieKey_);
 
         if (!_.isNull(bikeOdoOfAthleteFromCache) && !_.isEqual(bikeOdoOfAthleteFromCache, "null")) {
-            if (StravaPlus.debugMode) console.log("Using bike odo cache: " + bikeOdoOfAthleteFromCache);
+            if (env.debugMode) console.log("Using bike odo cache: " + bikeOdoOfAthleteFromCache);
             callback(JSON.parse(bikeOdoOfAthleteFromCache));
             return;
         }
@@ -29,7 +29,7 @@ BikeOdoProcessor.prototype = {
         this.vacuumProcessor_.getBikeOdoOfAthlete(this.athleteId_, function(bikeOdoArray) {
             
             // Cache result
-            if (StravaPlus.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheAgingTimeCookieKey_);
+            if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheAgingTimeCookieKey_);
             StorageManager.setCookieSeconds(this.cacheAgingTimeCookieKey_, JSON.stringify(bikeOdoArray), BikeOdoProcessor.cacheAgingTimeOfBikesInSeconds_);
             callback(bikeOdoArray);
 

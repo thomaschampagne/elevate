@@ -87,7 +87,7 @@ Content.prototype = {
                     items = self.userSettings_;
                 }
 
-                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(StravaPlus.debugMode) console.log(stravaPlus);';
+                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
 
                 inner.onload = function() {
                     this.parentNode.removeChild(this);
