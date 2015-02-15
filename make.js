@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var nodeCopy;
-var EasyZip;
 
 var HOOK_FOLDER = __dirname + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + 'extension/';
@@ -97,7 +96,6 @@ var dist = function(callback) {
 
         // Init finish require are now possible
         nodeCopy = require('ncp').ncp;
-        EasyZip = require('easy-zip').EasyZip;
 
         // Clean dist/ folder or create it..
         cleanDistributionFolder();
@@ -111,6 +109,7 @@ var dist = function(callback) {
                     filenameToCopy.match('/src/') ||
                     filenameToCopy.match('/tests/') ||
                     filenameToCopy.match('/test/') ||
+                    filenameToCopy.match('/demo/') ||
                     filenameToCopy.match('/grunt/') ||
                     filenameToCopy.match('/.*\\.gzip$') ||
                     filenameToCopy.match('/.*\\.md$') ||
@@ -144,31 +143,43 @@ var build = function() {
 
     dist(function() {
 
-        var buildName = generateBuildName(DIST_FOLDER + '/manifest.json');
+        if (!fs.existsSync(BUILD_FOLDER)) {
+            fs.mkdirSync(BUILD_FOLDER);
+        }
 
-        console.log('Creating archive ' + buildName + '...');
-
+		// Switch to dist/ folder
         process.chdir(DIST_FOLDER);
 
-        //zip a folder 
-        var archiver = new EasyZip();
+        var buildName = generateBuildName(DIST_FOLDER + '/manifest.json');
+        var outputPath = BUILD_FOLDER + '/' + buildName;
+        var archiver = require('archiver');
+        var output = fs.createWriteStream(outputPath);
+        var zipArchive = archiver('zip');
 
-        archiver.zipFolder('.', function() {
-
-            if (!fs.existsSync(BUILD_FOLDER)) {
-                fs.mkdirSync(BUILD_FOLDER);
-            }
-
-            archiver.writeToFile(BUILD_FOLDER + '/' + buildName);
-
+        output.on('close', function() {
             console.log('Build finished in ' + BUILD_FOLDER + buildName);
         });
 
+        zipArchive.pipe(output);
+
+        zipArchive.bulk([{
+            src: ['**/*'],
+            cwd: '.',
+            expand: true
+        }]);
+
+        zipArchive.finalize(function(err, bytes) {
+            if (err) {
+                throw err;
+            }
+            
+            console.log('done:', base, bytes);
+        });
     });
 };
 
 
-var clean = function (callback) {
+var clean = function(callback) {
     deleteFolderRecursive('node_modules');
     deleteFolderRecursive(EXT_FOLDER + 'node_modules');
     deleteFolderRecursive(DIST_FOLDER);

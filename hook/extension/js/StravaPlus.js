@@ -25,7 +25,6 @@ function StravaPlus(userSettings, appResources) {
 StravaPlus.getFromStorageMethod = 'getFromStorage';
 StravaPlus.setToStorageMethod = 'setToStorage';
 StravaPlus.defaultIntervalTimeMillis = 750;
-StravaPlus.debugMode = false; // Must be false in release
 
 /**
  * Define prototype
@@ -71,6 +70,9 @@ StravaPlus.prototype = {
         this.handleRunningGradeAdjustedPace_();
         this.handleRunningHeartRate_();
 
+        // All activities
+        this.handleActivityQRCodeDisplay_();
+
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
     },
@@ -94,7 +96,7 @@ StravaPlus.prototype = {
     handleExtensionHasJustUpdated_: function handleExtensionHasJustUpdated_() {
         // Clear localstorage 
         // Especially for activies data stored in cache
-        if (StravaPlus.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
+        if (env.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
         // Display ribbon update message
         this.handleUpdateRibbon_()
@@ -119,7 +121,7 @@ StravaPlus.prototype = {
      */
     handleMenu_: function handleMenu_() {
 
-        if (StravaPlus.debugMode) console.log("Execute handleMenu_()");
+        if (env.debugMode) console.log("Execute handleMenu_()");
 
         var menuModifier = new MenuModifier(this.athleteId_, this.userSettings_.highLightStravaPlusFeature, this.appResources_);
         menuModifier.modify();
@@ -139,7 +141,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleRemoteLinks_()");
+        if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
         var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_);
         remoteLinksModifier.modify();
@@ -154,7 +156,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleActivityScrolling_()");
+        if (env.debugMode) console.log("Execute handleActivityScrolling_()");
 
         var activityScrollingModifier = new ActivityScrollingModifier();
         activityScrollingModifier.modify();
@@ -174,11 +176,11 @@ StravaPlus.prototype = {
         try {
             eval('Strava.Labs.Activities.SegmentLeaderboardView');
         } catch (err) {
-            if (StravaPlus.debugMode) console.log('Kick out no Strava.Labs.Activities.SegmentLeaderboardView available');
+            if (env.debugMode) console.log('Kick out no Strava.Labs.Activities.SegmentLeaderboardView available');
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleDefaultLeaderboardFilter_()");
+        if (env.debugMode) console.log("Execute handleDefaultLeaderboardFilter_()");
 
         var defaultLeaderboardFilterModifier = new DefaultLeaderboardFilterModifier(this.userSettings_.defaultLeaderboardFilter);
         defaultLeaderboardFilterModifier.modify();
@@ -198,7 +200,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleSegmentRankPercentage_()");
+        if (env.debugMode) console.log("Execute handleSegmentRankPercentage_()");
 
         var segmentRankPercentage = new SegmentRankPercentageModifier();
         segmentRankPercentage.modify();
@@ -214,7 +216,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleActivityGoogleMapType_()");
+        if (env.debugMode) console.log("Execute handleActivityGoogleMapType_()");
 
         var activityGoogleMapTypeModifier = new ActivityGoogleMapTypeModifier(this.userSettings_.activityGoogleMapType);
         activityGoogleMapTypeModifier.modify();
@@ -235,7 +237,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleHidePremium_()");
+        if (env.debugMode) console.log("Execute handleHidePremium_()");
 
         var hidePremiumModifier = new HidePremiumModifier();
         hidePremiumModifier.modify();
@@ -250,7 +252,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleShopHeaderLink_()");
+        if (env.debugMode) console.log("Execute handleShopHeaderLink_()");
 
         var shopHeaderLinkModifier = new ShopHeaderLinkModifier();
         shopHeaderLinkModifier.modify();
@@ -263,7 +265,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleHideFeed_()");
+        if (env.debugMode) console.log("Execute handleHideFeed_()");
 
         if (!this.userSettings_.feedHideChallenges && !this.userSettings_.feedHideCreatedRoutes) {
             return;
@@ -287,7 +289,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleExtendedActivityData_()");
+        if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
         this.activityProcessor_.getAnalysisData(
             this.activityId_,
@@ -317,7 +319,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleNearbySegments_()");
+        if (env.debugMode) console.log("Execute handleNearbySegments_()");
 
         // Getting segment id
         var segmentId = parseInt(segmentData[1]);
@@ -326,7 +328,7 @@ StravaPlus.prototype = {
 
         var arrayOfNearbySegments = segmentProcessor.getNearbySegmentsAround(function(jsonSegments) {
 
-            if (StravaPlus.debugMode) console.log(jsonSegments);
+            if (env.debugMode) console.log(jsonSegments);
 
             var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_, this.userSettings_.highLightStravaPlusFeature);
             nearbySegmentsModifier.modify();
@@ -357,7 +359,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleActivityBikeOdo_()");
+        if (env.debugMode) console.log("Execute handleActivityBikeOdo_()");
 
         var bikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor_, this.athleteIdAuthorOfActivity_);
         bikeOdoProcessor.getBikeOdoOfAthlete(function(bikeOdoArray) {
@@ -391,7 +393,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleRunningGradeAdjustedPace_()");
+        if (env.debugMode) console.log("Execute handleRunningGradeAdjustedPace_()");
 
         var runningGradeAdjustedPace = new RunningGradeAdjustedPaceModifier();
         runningGradeAdjustedPace.modify();
@@ -420,12 +422,30 @@ StravaPlus.prototype = {
             return;
         }
 
-        if (StravaPlus.debugMode) console.log("Execute handleRunningHeartRate_()");
+        if (env.debugMode) console.log("Execute handleRunningHeartRate_()");
 
         var runningHeartRateModifier = new RunningHeartRateModifier();
         runningHeartRateModifier.modify();
     },
 
+    /**
+     *
+     */
+    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
+        activityQRCodeDisplayModifier.modify();
+
+    },
 
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type
@@ -434,10 +454,10 @@ StravaPlus.prototype = {
 
         var userHasConnectSince24Hour = StorageManager.getCookie('stravaplus_daily_connection_done');
 
-        if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+        if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 
         if (_.isNull(this.athleteId_)) {
-            if (StravaPlus.debugMode) console.log("athleteId is empty value: " + this.athleteId_);
+            if (env.debugMode) console.log("athleteId is empty value: " + this.athleteId_);
             return;
         }
 
@@ -461,9 +481,9 @@ StravaPlus.prototype = {
             // Push IncomingConnection to piwik
             var eventName = accountName + ' #' + this.athleteId_;
 
-            if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+            if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
-            if (!StravaPlus.debugMode) {
+            if (!env.debugMode) {
                 _spTrack('send', 'event', 'DailyConnection', eventAction, eventName, env.buildNumber);
             }
 
@@ -472,7 +492,7 @@ StravaPlus.prototype = {
 
         } else {
 
-            if (StravaPlus.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+            if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 
         }
     }
