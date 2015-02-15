@@ -109,6 +109,7 @@ var dist = function(callback) {
                     filenameToCopy.match('/src/') ||
                     filenameToCopy.match('/tests/') ||
                     filenameToCopy.match('/test/') ||
+                    filenameToCopy.match('/demo/') ||
                     filenameToCopy.match('/grunt/') ||
                     filenameToCopy.match('/.*\\.gzip$') ||
                     filenameToCopy.match('/.*\\.md$') ||
