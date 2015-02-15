@@ -20,8 +20,8 @@ SegmentProcessor.prototype = {
         // NearbySegmentsAround cached?
         var cacheResult = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId_));
 
-        if (!_.isNull(cacheResult) && !StravaPlus.debugMode) {
-            if (StravaPlus.debugMode) console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
+        if (!_.isNull(cacheResult) && !env.debugMode) {
+            if (env.debugMode) console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
             callback(cacheResult);
             return;
         }
@@ -35,7 +35,7 @@ SegmentProcessor.prototype = {
             // Find segments in bounding box
             this.getSegmentsInBoundingBox(boundingBox, function(segmentsInBounds) {
 
-                if (StravaPlus.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
+                if (env.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
                 localStorage.setItem(SegmentProcessor.cachePrefix + this.segmentId_, JSON.stringify(segmentsInBounds)); // Cache the result to local storage
                 callback(segmentsInBounds);
 

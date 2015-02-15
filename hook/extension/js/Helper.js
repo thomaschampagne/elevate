@@ -20,7 +20,7 @@ Helper.saveMe = function() {
 };
 
 Helper.log = function(tag, object) {
-    if (StravaPlus.debugMode) {
+    if (env.debugMode) {
         console.log('<' + tag + '>');
         console.log(object);
         console.log('</' + tag + '>');

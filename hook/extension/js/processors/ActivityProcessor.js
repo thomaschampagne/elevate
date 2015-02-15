@@ -24,8 +24,8 @@ ActivityProcessor.prototype = {
         // Find in cache first is data exist
         var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
 
-        if (!_.isNull(cacheResult) && !StravaPlus.debugMode) {
-            if (StravaPlus.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
+        if (!_.isNull(cacheResult) && !env.debugMode) {
+            if (env.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
             callback(cacheResult);
             return;
         }
@@ -37,7 +37,7 @@ ActivityProcessor.prototype = {
 
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream);
 
-            if (StravaPlus.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
+            if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
             localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
             callback(result);
