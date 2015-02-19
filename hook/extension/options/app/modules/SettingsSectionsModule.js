@@ -97,7 +97,7 @@ settingsSectionsModule.data = [{
     },
 
     {
-        sectionTitle: 'Running activity features',
+        sectionTitle: 'Running activity features (Note: Extended Data soon available in version 0.5.x)',
         sectionContent: [{
             optionKey: 'activateRunningGradeAdjustedPace',
             optionType: 'checkbox',
