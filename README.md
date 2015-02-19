@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravaplus.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravaplus)
 Install StravaPlus from Chrome Store
 ==========
 Go to http://bitly.com/stravaplus
