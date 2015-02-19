@@ -158,13 +158,29 @@ VacuumProcessor.prototype = {
 
         // Get Elapsed Time
         var elapsedTime = this.formatActivityDataValue_(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().last().children().children().last().text(),
+            jQuery('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
             true, false, false, false);
 
         // Get Average speed
         var averageSpeed = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
             false, false, false, false);
+
+        if (!averageSpeed) { // Try to get pace instead
+            averageSpeed = this.formatActivityDataValue_(
+                jQuery('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
+                true, false, false, false);
+
+            averageSpeed = 1 / averageSpeed; // invert to km per seconds
+            averageSpeed = averageSpeed * 60 * 60; // km per h
+
+            // TODO Convert pace in KPH along user display setting: meters/feet
+            console.error("Wrong speed ??!");
+
+            console.error(averageSpeed);
+        }
+
+
 
         var averageHeartRate = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().has('abbr').text(),

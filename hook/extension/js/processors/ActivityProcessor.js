@@ -24,7 +24,7 @@ ActivityProcessor.prototype = {
         // Find in cache first is data exist
         var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
 
-        if (!_.isNull(cacheResult) && !env.debugMode) {
+        if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
             if (env.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
             callback(cacheResult);
             return;
@@ -36,6 +36,8 @@ ActivityProcessor.prototype = {
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight) { // Get stream on page
 
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream);
+
+            console.warn(activityStatsMap);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
