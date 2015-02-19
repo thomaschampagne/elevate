@@ -12,13 +12,13 @@ You need [**node package manager and nodejs**](http://nodejs.org/)
 ```
 node make.js init
 ```
-This will download required node modules
+This will download required node modules. Development must be done inside **hook/extension/** folder.
 
 ## Create distribution folder 
 ```
 node make.js dist
 ```
-This will create **dist/** folder. He is used for a release.
+This will create **dist/** folder. This folder is used for a release.
 
 ## Create archive package 
 ```
