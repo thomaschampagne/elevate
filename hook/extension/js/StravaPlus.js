@@ -284,24 +284,33 @@ StravaPlus.prototype = {
             return;
         }
 
+        if (env.debugMode) console.log("Execute ()");
+
         // Avoid running Extended data at the moment
-        if (pageView.activity().attributes.type != "Ride") {
+        if (pageView.activity().attributes.type == "Ride") {
+
+            this.activityProcessor_.getAnalysisData(
+                this.activityId_,
+                this.userSettings_.userGender,
+                this.userSettings_.userRestHr,
+                this.userSettings_.userMaxHr,
+                this.userSettings_.userFTP,
+                function(analysisData) { // Callback when analysis data has been computed
+                    var extendedActivityDataModifier = new ExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                    extendedActivityDataModifier.modify();
+                }.bind(this)
+            );
+
+        } else if (pageView.activity().attributes.type == "Run") {
+
+            var html = '</br></br><span style="padding-top:20px; color: red; font-size:14px;">StravaPlus <strong>Running Extended Data Features</strong> (like current cycling features) will be very <strong>soon available in version 0.5.x</strong>. Please wait...</span>';
+            jQuery('.inline-stats.section').parent().children().last().after(html);
+
+        } else {
+
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
-
-        this.activityProcessor_.getAnalysisData(
-            this.activityId_,
-            this.userSettings_.userGender,
-            this.userSettings_.userRestHr,
-            this.userSettings_.userMaxHr,
-            this.userSettings_.userFTP,
-            function(analysisData) { // Callback when analysis data has been computed
-                var extendedActivityDataModifier = new ExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
-                extendedActivityDataModifier.modify();
-            }.bind(this)
-        );
     },
 
     /**
