@@ -144,8 +144,8 @@ ExtendedActivityDataModifier.prototype = {
 
             this.createNewLineData_('lineForPowerData', null, 'margin-bottom: 5px;');
 
-            // Estimated Normalized Power
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Normalized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
+            // Estimated Harmonized Power
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Harmonized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
 
             // Estimated Variability Index
             this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Variability Index', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
