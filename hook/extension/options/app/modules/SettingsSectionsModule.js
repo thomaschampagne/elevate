@@ -6,17 +6,17 @@ settingsSectionsModule.data = [{
             optionKey: 'hidePremiumFeatures',
             optionType: 'checkbox',
             optionTitle: 'Hide Premium visuals',
-            optionHtml: 'This option is not intended to remove premium features from Strava!<br/><br/>The intention is just to hide them when you aware with "I don\'t want or i will not be able to pay for it"!<br/><br/>It\'s recommended to get <a href="https://www.strava.com/premium" target="_blank">Strava Premium</a> if you can. This extension will not bring premium features to you! It just add some to enhance the experience.<br/><br/><i>(works for free account only)</i>. ',
+            optionHtml: 'This option is not intended to remove premium features from Strava!<br/><br/>The intention is just to hide them when you aware with "I don\'t want or I will not be able to pay for it"!<br/><br/>It\'s recommended to get <a href="https://www.strava.com/premium" target="_blank">Strava Premium</a> if you can. This extension will not bring premium features to you! It just adds some to enhance the experience.<br/><br/><i>(works for free account only)</i>. ',
         }, {
             optionKey: 'remoteLinks',
             optionType: 'checkbox',
             optionTitle: 'Integration of VeloViewer / FlyBy',
-            optionHtml: 'This enable VeloViewer and FlyBy remote links on activities and segments page.<br/><br/>VeloViewer is another Strava connected plateform designed to analyze your activities.<br/><br/>FlyBy allows you to see riders/runners having an activity in the same time range than you.',
+            optionHtml: 'This enables VeloViewer and FlyBy remote links on activities and segments page.<br/><br/>VeloViewer is another Strava connected platform designed to analyze your activities.<br/><br/>FlyBy allows you to see riders/runners having an activity in the same time range as you.',
         }, {
             optionKey: 'displayShopHeaderLink',
             optionType: 'checkbox',
             optionTitle: 'Hide "Shop" header link',
-            optionHtml: 'This option is not intended to remove Strava Shop from website.<br/><br/>The intention is just to gain space in strava header bar. Especially for french users who have a long....header bar.',
+            optionHtml: 'This option is not intended to remove Strava Shop from the website.<br/><br/>The intention is just to gain space in strava header bar. Especially for French users who have a long....header bar.',
         }]
     }, {
         sectionTitle: 'Cycling activity options',
@@ -29,7 +29,7 @@ settingsSectionsModule.data = [{
             optionKey: 'displayMotivationScore',
             optionType: 'checkbox',
             optionTitle: 'Toughness Factor',
-            optionHtml: 'Add Represention of how much you involved yourself in the cycling activity performed. An higher score involve a better toughness.',
+            optionHtml: 'Add a represention of how much you involved yourself in the cycling activity performed. A higher score indicates a better toughness.',
         }, {
             optionKey: 'displayAdvancedPowerData',
             optionType: 'checkbox',
@@ -49,12 +49,12 @@ settingsSectionsModule.data = [{
             optionKey: 'displayPedalingData',
             optionType: 'checkbox',
             optionTitle: 'Extended pedaling data',
-            optionHtml: 'Add pedaling data for your cycling activities:<br/><br/>- Pedaling % while moving<br/>- Pedaling Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence meter is required to get this feature.',
+            optionHtml: 'Add pedaling data for your cycling activities:<br/><br/>- Pedaling % while moving<br/>- Pedaling Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence sensor is required to get this feature.',
         }, {
             optionKey: 'displayBikeOdoInActivity',
             optionType: 'checkbox',
             optionTitle: 'Display Bike odo',
-            optionHtml: 'This option allow you to display the total distance traveled with the bike which has done the activity.<br /><br />This value is displayed along your bike name in an activity page and is refreshed each 2 hours.<br /><br />Of course, it implies that you have declared at least 1 bike in Strava.',
+            optionHtml: 'This option allow you to display the total distance traveled with the bike which has done the activity.<br /><br />This value is displayed alongside your bike name in an activity page and is refreshed each 2 hours.<br /><br />Of course, it implies that you have declared at least 1 bike in Strava.',
         }]
     }
 
@@ -91,7 +91,7 @@ settingsSectionsModule.data = [{
             optionKey: 'displayNearbySegments',
             optionType: 'checkbox',
             optionTitle: 'Nearby Segments',
-            optionHtml: 'This option display cycling and running nearby segments on a segment page.',
+            optionHtml: 'This option displays cycling and running nearby segments on a segment page.',
         }, ],
 
     },
@@ -138,7 +138,7 @@ settingsSectionsModule.data = [{
             optionKey: 'feedHideChallenges',
             optionType: 'checkbox',
             optionTitle: 'Hide challenges',
-            optionHtml: 'This will hide all related challenges items in the dashboard feed (joined, milestones reached and completed).',
+            optionHtml: 'This will hide all related challenge items in the dashboard feed (joined, milestones reached and completed).',
         }, {
             optionKey: 'feedHideCreatedRoutes',
             optionType: 'checkbox',
@@ -151,7 +151,7 @@ settingsSectionsModule.data = [{
             optionKey: 'highLightStravaPlusFeature',
             optionType: 'checkbox',
             optionTitle: 'Highlight StravaPlus',
-            optionHtml: 'This option highlight StravaPlus features in bright Strava orange color.',
+            optionHtml: 'This option highlights StravaPlus features in bright Strava orange color.',
         }]
     }
 ];
