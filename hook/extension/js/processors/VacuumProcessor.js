@@ -166,21 +166,19 @@ VacuumProcessor.prototype = {
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
             false, false, false, false);
 
-        if (!averageSpeed) { // Try to get pace instead
+        // If no average speed found, try to get pace instead.
+        if (!averageSpeed) { 
             averageSpeed = this.formatActivityDataValue_(
                 jQuery('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
                 true, false, false, false);
 
             averageSpeed = 1 / averageSpeed; // invert to km per seconds
-            averageSpeed = averageSpeed * 60 * 60; // km per h
+            averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
 
-            // TODO Convert pace in KPH along user display setting: meters/feet
-            console.error("Wrong speed ??!");
-
-            console.error(averageSpeed);
+            var measurementPreference = currentAthlete.get('measurement_preference');
+            var speedFactor = (measurementPreference == 'meters') ? 1 : 0.62137;
+            averageSpeed = averageSpeed / speedFactor; // Always give PKH here
         }
-
-
 
         var averageHeartRate = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().has('abbr').text(),
@@ -196,7 +194,7 @@ VacuumProcessor.prototype = {
             'movingTime': movingTime,
             'elevation': elevation,
             'avgPower': avgPower,
-            'energyOutput': energyOutput,
+            'energyOutput': energyOutput, // Not used at the moment
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
             'averageHeartRate': averageHeartRate,

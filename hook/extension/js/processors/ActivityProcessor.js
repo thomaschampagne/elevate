@@ -38,6 +38,7 @@ ActivityProcessor.prototype = {
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream);
 
             console.warn(activityStatsMap);
+            console.warn(result);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
