@@ -148,20 +148,20 @@ AbstractExtendedActivityDataModifier.prototype = {
 
             this.createNewLineData_('lineForPowerData', null, 'margin-bottom: 5px;');
 
-            // Estimated Normalized Power
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Normalized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
+            // Estimated Harmonized Power
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Harmonized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
 
             // Estimated Variability Index
             this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Variability Index', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
 
-            // Estimated Intensity Factor
+            // Estimated Punch Factor
             if (this.athleteId_ == this.athleteIdAuthorOfActivity_) {
 
                 var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
                     "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "#/healthSettings' target='_blank'>Configure FTP</a>" :
                     this.analysisData_.powerData.intensityFactor.toFixed(2);
 
-                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Intensity Factor', intensityFactorOnToday, null, 'color: #838383;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Punch Factor', intensityFactorOnToday, null, 'color: #838383;');
             }
 
             // Normalized W/Kg
