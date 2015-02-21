@@ -284,7 +284,7 @@ StravaPlus.prototype = {
             return;
         }
 
-        var activityType = pageView.activity().attributes.type;
+        var activityType = pageView.activity().get('type');
 
         // Avoid running Extended data at the moment
         // if (activityType != "Ride" && activityType != "Run") {
