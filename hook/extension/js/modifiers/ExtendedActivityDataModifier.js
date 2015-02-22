@@ -267,8 +267,10 @@ ExtendedActivityDataModifier.prototype = {
             labels: labelsData,
             datasets: [{
                 label: "Heart Rate Reserve Distribution",
-                fillColor: "#FF2B42",
-                strokeColor: "rgba(220,220,220,0.8)",
+                fillColor: "rgba(255, 43, 66,0.5)",
+                strokeColor: "rgba(255, 43, 66,0.8)",
+                highlightFill: "rgba(255, 43, 66,0.75)",
+                highlightStroke: "rgba(255, 43, 66,1)",
                 data: hrDistributionInMinutesArray
             }]
         };
@@ -280,7 +282,7 @@ ExtendedActivityDataModifier.prototype = {
             new Chart(document.getElementById("hrrChartDistribution").getContext("2d")).Bar(data, {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
-                showTooltips: false,
+                showTooltips: true,
             });
 
             // Create %HRR Octo zone distribution HTML table
