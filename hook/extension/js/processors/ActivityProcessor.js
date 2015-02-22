@@ -76,10 +76,10 @@ ActivityProcessor.prototype = {
         // Q3 HR
         var heartRateData = this.heartRateData_(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStatsMap);
 
-        // Pedaling percentage
-        // Time Pedaling
+        // Cadence percentage
+        // Time Cadence
         // Crank revolution
-        var pedalingData = this.pedalingData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap);
+        var cadenceData = this.cadenceData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap);
 
         // Return an array with all that shit...
         return {
@@ -88,7 +88,7 @@ ActivityProcessor.prototype = {
             'speedData': speedData,
             'powerData': powerData,
             'heartRateData': heartRateData,
-            'pedalingData': pedalingData
+            'cadenceData': cadenceData
         };
     },
 
@@ -303,7 +303,7 @@ ActivityProcessor.prototype = {
         }
     },
 
-    pedalingData_: function pedalingData_(cadenceArray, velocityArray, activityStatsMap) {
+    cadenceData_: function cadenceData_(cadenceArray, velocityArray, activityStatsMap) {
 
         if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
             return null;
@@ -312,7 +312,7 @@ ActivityProcessor.prototype = {
         // On Moving
         var cadenceSumOnMoving = 0;
         var cadenceOnMovingCount = 0;
-        var pedalingOnMoveSampleCount = 0;
+        var cadenceOnMoveSampleCount = 0;
         var movingSampleCount = 0;
 
         for (var i = 0; i < velocityArray.length; i++) {
@@ -322,8 +322,8 @@ ActivityProcessor.prototype = {
                 // Rider is moving here..
                 if (cadenceArray[i] > ActivityProcessor.cadenceThresholdRpm) {
 
-                    // Rider is moving here while pedaling
-                    pedalingOnMoveSampleCount++;
+                    // Rider is moving here while cadence
+                    cadenceOnMoveSampleCount++;
                     cadenceSumOnMoving += cadenceArray[i];
                     cadenceOnMovingCount++;
                 }
@@ -332,12 +332,12 @@ ActivityProcessor.prototype = {
             }
         }
 
-        var pedalingRatioOnMovingTime = pedalingOnMoveSampleCount / movingSampleCount;
+        var cadenceRatioOnMovingTime = cadenceOnMoveSampleCount / movingSampleCount;
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
         return {
-            'pedalingPercentageMoving': pedalingRatioOnMovingTime * 100,
-            'pedalingTimeMoving': (pedalingRatioOnMovingTime * activityStatsMap.movingTime),
+            'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
+            'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
         };

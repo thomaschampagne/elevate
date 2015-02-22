@@ -48,8 +48,8 @@ AbstractExtendedActivityDataModifier.prototype = {
         // Display power related data
         this.handlePowerRelatedData_();
 
-        // Display pedaling related data
-        this.handlePedalingRelatedData_();
+        // Display cadence related data
+        this.handleCadenceRelatedData_();
 
         // Display heartrate related data
         this.handleHeartrateRelatedData_();
@@ -209,15 +209,15 @@ AbstractExtendedActivityDataModifier.prototype = {
     /**
      *
      */
-    handlePedalingRelatedData_: function handlePedalingRelatedData_() {
+    handleCadenceRelatedData_: function handleCadenceRelatedData_() {
 
-        if (this.userSettings_.displayPedalingData && !_.isNull(this.analysisData_.pedalingData)) {
+        if (this.userSettings_.displayCadenceData && !_.isNull(this.analysisData_.cadenceData)) {
 
-            this.createNewLineData_('lineForPedalingData', null, 'margin-bottom: 5px;');
+            this.createNewLineData_('lineForcadenceData', null, 'margin-bottom: 5px;');
 
-            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling % while moving', this.analysisData_.pedalingData.pedalingPercentageMoving.toFixed(2), '%', 'color: #CC00FF;');
-            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Pedaling Time while moving', Helper.secondsToHHMMSS(this.analysisData_.pedalingData.pedalingTimeMoving), null, 'color: #CC00FF;');
-            this.appendAnalyseDataToStatsPanel_('displayPedalingData', 'Crank Revolutions', this.analysisData_.pedalingData.crankRevolutions.toFixed(0), null, 'color: #CC00FF;');
+            this.appendAnalyseDataToStatsPanel_('displayCadenceData', 'Cadence % while moving', this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(2), '%', 'color: #CC00FF;');
+            this.appendAnalyseDataToStatsPanel_('displayCadenceData', 'Cadence Time while moving', Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving), null, 'color: #CC00FF;');
+            this.appendAnalyseDataToStatsPanel_('displayCadenceData', 'Crank Revolutions', this.analysisData_.cadenceData.crankRevolutions.toFixed(0), null, 'color: #CC00FF;');
         }
     },
 

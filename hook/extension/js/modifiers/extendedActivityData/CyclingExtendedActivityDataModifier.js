@@ -62,8 +62,8 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 // // Display power related data
 // this.handlePowerRelatedData_();
 
-// // Display pedaling related data
-// this.handlePedalingRelatedData_();
+// // Display cadence related data
+// this.handleCadenceRelatedData_();
 
 // // Display heartrate related data
 // this.handleHeartrateRelatedData_();
