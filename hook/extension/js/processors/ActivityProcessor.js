@@ -33,9 +33,12 @@ ActivityProcessor.prototype = {
         userFTP = parseInt(userFTP);
 
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-        this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight) { // Get stream on page
+        this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
-            var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream);
+            var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
+
+            console.warn(activityStatsMap);
+            console.warn(result);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
@@ -45,7 +48,7 @@ ActivityProcessor.prototype = {
         }.bind(this));
     },
 
-    computeAnalysisData_: function computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream) {
+    computeAnalysisData_: function computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream) {
 
         // Move ratio
         var moveRatio = this.moveRatio_(activityStatsMap, activityStream);
@@ -63,7 +66,7 @@ ActivityProcessor.prototype = {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        var powerData = this.powerData_(athleteWeight, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
+        var powerData = this.powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
 
         // TRaining IMPulse
         // %HRR Avg
@@ -178,7 +181,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    powerData_: function powerData_(athleteWeight, userFTP, activityStatsMap, powerArray, velocityArray) {
+    powerData_: function powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray) {
 
         if (_.isEmpty(powerArray)) {
             return null;
@@ -211,6 +214,7 @@ ActivityProcessor.prototype = {
         });
 
         return {
+            'hasPowerMeter': hasPowerMeter,
             'avgWatts': avgWatts,
             'normalizedPower': normalizedPower,
             'variabilityIndex': variabilityIndex,
