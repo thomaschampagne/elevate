@@ -61,7 +61,7 @@ ActivityProcessor.prototype = {
         // Median Speed
         // Q3 Speed
         // Standard deviation Speed
-        var speedData = this.speedData_(activityStatsMap, activityStream.velocity_smooth);
+        var speedData = this.speedData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
 
         // Estimated Normalized power
         // Estimated Variability index
@@ -141,20 +141,28 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    speedData_: function(activityStatsMap, velocityArray) {
+    speedData_: function(activityStatsMap, velocityArray, timeArray) {
 
         var rawAvgSpeedSum = 0;
         var speedsNonZero = Array();
         var speedVarianceSum = 0;
         var currentSpeed;
 
+        var speedZones = [];
         var maxSpeed = Math.max.apply(Math, velocityArray) * 3.6;
         var minSpeed = Math.min.apply(Math, velocityArray) * 3.6;
         var distributionStep = (maxSpeed - minSpeed) / ActivityProcessor.distributionZoneCount;
+        var durationInSeconds, durationCount = 0;
 
-        console.warn(minSpeed);
-        console.warn(maxSpeed);
-        console.warn(distributionStep);
+        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
+
+            speedZones.push({
+                from: distributionStep * i,
+                to: distributionStep * (i + 1),
+                s: 0,
+                percentDistrib: null
+            });
+        }
 
         for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
 
@@ -169,8 +177,25 @@ ActivityProcessor.prototype = {
                 speedVarianceSum += Math.pow(currentSpeed, 2);
             }
 
-            var speedDoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
-            console.debug(speedDoneId + ' @ ' + currentSpeed);
+            // Compute distribution for graph/table
+            if (i > 0) {
+
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                var speedDoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
+
+                if (!_.isUndefined(speedDoneId) && !_.isUndefined(speedZones[speedDoneId])) {
+                    speedZones[speedDoneId]['s'] += durationInSeconds;
+                }
+
+                durationCount += durationInSeconds;
+            }
+
+        }
+
+        // Update zone distribution percentage
+        for (var zone in speedZones) {
+            speedZones[zone]['percentDistrib'] = ((speedZones[zone]['s'] / durationCount).toFixed(2) * 100);
         }
 
         // Finalize compute of Speed
@@ -190,6 +215,7 @@ ActivityProcessor.prototype = {
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
             'varianceSpeed': varianceSpeed,
             'standardDeviationSpeed': standardDeviationSpeed,
+            'speedZones': speedZones
         };
     },
 
