@@ -142,26 +142,31 @@ ExtendedActivityDataModifier.prototype = {
 
         if (this.userSettings_.displayAdvancedPowerData && !_.isNull(this.analysisData_.powerData)) {
 
+            var estimationText = (this.analysisData_.powerData.hasPowerMeter) ? '' : 'Estimated ';
+
             this.createNewLineData_('lineForPowerData', null, 'margin-bottom: 5px;');
 
-            // Estimated Harmonized Power
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Harmonized Power', this.analysisData_.powerData.normalizedPower.toFixed(0), 'W', 'color: #838383;');
+            // User don't have a power meter then display an estimation
+            if (!this.analysisData_.powerData.hasPowerMeter) {
+                // Estimated Weighted Power
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Weighted Power', this.analysisData_.powerData.weightedPower.toFixed(0), 'W', 'color: #838383;');
+            }
 
             // Estimated Variability Index
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Variability Index', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Variability Index&nbsp;&nbsp;&nbsp;', this.analysisData_.powerData.variabilityIndex.toFixed(2), null, 'color: #838383;');
 
             // Estimated Punch Factor
-            if (this.athleteId_ == this.athleteIdAuthorOfActivity_) {
+            if (this.athleteId_== this.athleteIdAuthorOfActivity_) {
 
-                var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
+                var punchFactorOnToday = (_.isNull(this.analysisData_.powerData.punchFactor)) ?
                     "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "#/healthSettings' target='_blank'>Configure FTP</a>" :
-                    this.analysisData_.powerData.intensityFactor.toFixed(2);
+                    this.analysisData_.powerData.punchFactor.toFixed(2);
 
-                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Punch Factor', intensityFactorOnToday, null, 'color: #838383;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Punch Factor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', punchFactorOnToday, null, 'color: #838383;');
             }
 
             // Normalized W/Kg
-            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', 'Estimated Normalized W/Kg', this.analysisData_.powerData.normalizedWattsPerKg.toFixed(2), null, 'color: #838383;');
+            this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Weighted W/Kg&nbsp;&nbsp;&nbsp;', this.analysisData_.powerData.weightedWattsPerKg.toFixed(2), null, 'color: #838383;');
 
             // New line
             this.createNewLineData_('lineForPowerDataBis', null, 'margin-bottom: 5px;');
