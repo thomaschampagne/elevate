@@ -10,6 +10,7 @@ ActivityProcessor.movingThresholdKph = 5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
+ActivityProcessor.distributionZoneCount = 10;
 
 /**
  * Define prototype
@@ -19,7 +20,7 @@ ActivityProcessor.prototype = {
     /**
      *
      */
-    getAnalysisData: function getAnalysisData(activityId, userGender, userRestHr, userMaxHr, userFTP, callback) {
+    getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, callback) {
 
         // Find in cache first is data exist
         var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
@@ -48,7 +49,7 @@ ActivityProcessor.prototype = {
         }.bind(this));
     },
 
-    computeAnalysisData_: function computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream) {
+    computeAnalysisData_: function(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream) {
 
         // Move ratio
         var moveRatio = this.moveRatio_(activityStatsMap, activityStream);
@@ -95,7 +96,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    moveRatio_: function moveRatio_(activityStatsMap, activityStream) {
+    moveRatio_: function(activityStatsMap, activityStream) {
 
         if (_.isNull(activityStatsMap.movingTime) || _.isNull(activityStatsMap.elapsedTime)) {
             Helper.log('WARN', 'Unable to compute ActivityRatio on this activity with following data: ' + JSON.stringify(activityStatsMap))
@@ -114,7 +115,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    toughnessScore_: function toughnessScore_(activityStatsMap, activityStream, moveRatio) {
+    toughnessScore_: function(activityStatsMap, activityStream, moveRatio) {
 
         if (_.isNull(activityStatsMap.elevation) || _.isNull(activityStatsMap.avgPower) || _.isNull(activityStatsMap.averageSpeed) || _.isNull(activityStatsMap.distance)) {
             return null;
@@ -133,22 +134,34 @@ ActivityProcessor.prototype = {
         return toughnessScore;
     },
 
+    getZoneFromDistributionStep_: function(value, distributionStep) {
+        return parseInt(value / distributionStep);
+    },
+
     /**
      * ...
      */
-    speedData_: function speedData_(activityStatsMap, velocityArray) {
+    speedData_: function(activityStatsMap, velocityArray) {
 
         var rawAvgSpeedSum = 0;
         var speedsNonZero = Array();
         var speedVarianceSum = 0;
         var currentSpeed;
 
+        var maxSpeed = Math.max.apply(Math, velocityArray) * 3.6;
+        var minSpeed = Math.min.apply(Math, velocityArray) * 3.6;
+        var distributionStep = (maxSpeed - minSpeed) / ActivityProcessor.distributionZoneCount;
+
+        console.warn(minSpeed);
+        console.warn(maxSpeed);
+        console.warn(distributionStep);
+
         for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
 
             // Compute speed
-            currentSpeed = velocityArray[i] * 3.6;
+            currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
 
-            if (currentSpeed != 0) { // Multiply by 3.6 to convert to kph; 
+            if (currentSpeed != 0) {
                 speedsNonZero.push(currentSpeed);
                 rawAvgSpeedSum += currentSpeed;
 
@@ -156,6 +169,8 @@ ActivityProcessor.prototype = {
                 speedVarianceSum += Math.pow(currentSpeed, 2);
             }
 
+            var speedDoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
+            console.debug(speedDoneId + ' @ ' + currentSpeed);
         }
 
         // Finalize compute of Speed
@@ -181,7 +196,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    powerData_: function powerData_(athleteWeight, userFTP, activityStatsMap, powerArray, velocityArray) {
+    powerData_: function(athleteWeight, userFTP, activityStatsMap, powerArray, velocityArray) {
 
         if (_.isEmpty(powerArray)) {
             return null;
@@ -229,7 +244,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    heartRateData_: function heartRateData_(userGender, userRestHr, userMaxHr, heartRateArray, timeArray, activityStatsMap) {
+    heartRateData_: function(userGender, userRestHr, userMaxHr, heartRateArray, timeArray, activityStatsMap) {
 
         if (_.isUndefined(heartRateArray)) {
             return null;
@@ -295,7 +310,7 @@ ActivityProcessor.prototype = {
 
     },
 
-    getHrrZoneId: function getHrrZoneId(hrrZonesCount, hrrValue) {
+    getHrrZoneId: function(hrrZonesCount, hrrValue) {
         for (zoneId = 0; zoneId < hrrZonesCount; zoneId++) {
             if (hrrValue <= this.userHrrZones_[zoneId]['toHrr']) {
                 return zoneId;
@@ -303,7 +318,7 @@ ActivityProcessor.prototype = {
         }
     },
 
-    cadenceData_: function cadenceData_(cadenceArray, velocityArray, activityStatsMap) {
+    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap) {
 
         if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
             return null;
