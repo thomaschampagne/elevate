@@ -1,9 +1,9 @@
 /**
  *   ActivityBikeOdoModifier is responsible of ...
  */
-function ActivityBikeOdoModifier(bikeOdoArray, cacheAgingTimeCookieKey) {
+function ActivityBikeOdoModifier(bikeOdoArray, cacheKey) {
     this.bikeOdoArray_ = bikeOdoArray;
-    this.cacheAgingTimeCookieKey = cacheAgingTimeCookieKey;
+    this.cacheKey = cacheKey;
 }
 
 /**
@@ -39,9 +39,7 @@ ActivityBikeOdoModifier.prototype = {
     },
 
     handleUserBikeOdoForceRefresh_: function handleUserBikeOdoForceRefresh_() {
-        // Force REMOVE cookie with 0 seconds
-        StorageManager.setCookieSeconds(this.cacheAgingTimeCookieKey, null, 0);
-
+        localStorage.removeItem(this.cacheKey);
         window.location.reload();
     },
 };

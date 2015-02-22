@@ -3,7 +3,7 @@
  */
 function BikeOdoProcessor(vacuumProcessor, athleteId) {
     this.vacuumProcessor_ = vacuumProcessor;
-    this.cacheAgingTimeCookieKey_ = 'stravaplus_bikeOdoOfAthlete_' + athleteId + '_cache';
+    this.cacheKey_ = 'stravaplus_bikeOdo_' + athleteId + '_cache';
     this.cacheAgingTimeOfBikesInSeconds_ = 120 * 60; // 2 hours
     this.athleteId_ = athleteId;
 }
@@ -13,30 +13,44 @@ function BikeOdoProcessor(vacuumProcessor, athleteId) {
  */
 BikeOdoProcessor.prototype = {
 
+
     /*
      *
      */
     getBikeOdoOfAthlete: function getBikeOdoOfAthlete(callback) {
 
-        var bikeOdoOfAthleteFromCache = StorageManager.getCookie(this.cacheAgingTimeCookieKey_);
 
-        if (!_.isNull(bikeOdoOfAthleteFromCache) && !_.isEqual(bikeOdoOfAthleteFromCache, "null")) {
+        var bikeOdoOfAthleteFromCache = localStorage.getItem(this.cacheKey_);
+        var bikeOdoOfAthleteFromCacheObject = JSON.parse(bikeOdoOfAthleteFromCache);
+
+        // Test if cache is still valid
+        var cacheDeprecated = false;
+        var now = Math.floor(Date.now() / 1000);
+        if (bikeOdoOfAthleteFromCacheObject && (now > bikeOdoOfAthleteFromCacheObject.cachedOnTimeStamp + this.cacheAgingTimeOfBikesInSeconds_)) {
+            console.warn('cacheDeprecated !!');
+            cacheDeprecated = true;
+        }
+
+        //console.warn(bikeOdoOfAthleteFromCacheObject);
+        if (!_.isNull(bikeOdoOfAthleteFromCache) && !_.isEqual(bikeOdoOfAthleteFromCache, "null") && !cacheDeprecated) {
             if (env.debugMode) console.log("Using bike odo cache: " + bikeOdoOfAthleteFromCache);
-            callback(JSON.parse(bikeOdoOfAthleteFromCache));
+            callback(bikeOdoOfAthleteFromCacheObject);
             return;
         }
 
         this.vacuumProcessor_.getBikeOdoOfAthlete(this.athleteId_, function(bikeOdoArray) {
-            
+
+            bikeOdoArray.cachedOnTimeStamp = Math.floor(Date.now() / 1000);
+
             // Cache result
-            if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheAgingTimeCookieKey_);
-            StorageManager.setCookieSeconds(this.cacheAgingTimeCookieKey_, JSON.stringify(bikeOdoArray), BikeOdoProcessor.cacheAgingTimeOfBikesInSeconds_);
+            if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheKey_);
+            localStorage.setItem(this.cacheKey_, JSON.stringify(bikeOdoArray));
             callback(bikeOdoArray);
 
         }.bind(this));
     },
 
-    getCacheAgingTimeCookieKey: function getCacheAgingTimeCookieKey()  {
-        return this.cacheAgingTimeCookieKey_;
+    getCacheKey: function getCacheAgingTimeCookieKey() {
+        return this.cacheKey_;
     }
 };

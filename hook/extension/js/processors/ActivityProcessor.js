@@ -33,9 +33,9 @@ ActivityProcessor.prototype = {
         userFTP = parseInt(userFTP);
 
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-        this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight) { // Get stream on page
+        this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
-            var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream);
+            var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
@@ -45,7 +45,7 @@ ActivityProcessor.prototype = {
         }.bind(this));
     },
 
-    computeAnalysisData_: function computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, activityStatsMap, activityStream) {
+    computeAnalysisData_: function computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream) {
 
         // Move ratio
         var moveRatio = this.moveRatio_(activityStatsMap, activityStream);
@@ -63,7 +63,7 @@ ActivityProcessor.prototype = {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        var powerData = this.powerData_(athleteWeight, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
+        var powerData = this.powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
 
         // TRaining IMPulse
         // %HRR Avg
@@ -178,7 +178,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    powerData_: function powerData_(athleteWeight, userFTP, activityStatsMap, powerArray, velocityArray) {
+    powerData_: function powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray) {
 
         if (_.isEmpty(powerArray)) {
             return null;
@@ -202,20 +202,29 @@ ActivityProcessor.prototype = {
 
         // Finalize compute of Power
         var avgWatts = accumulatedWattsOnMove / wattSampleOnMoveCount;
-        var normalizedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
-        var variabilityIndex = normalizedPower / avgWatts;
-        var intensityFactor = (_.isNumber(userFTP) && userFTP > 0) ? (normalizedPower / userFTP) : null;
-        var normalizedWattsPerKg = normalizedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
+
+        var weightedPower;
+
+        if (hasPowerMeter) {
+            weightedPower = activityStatsMap.weightedPower;
+        } else {
+            weightedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
+        }
+
+        var variabilityIndex = weightedPower / avgWatts;
+        var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
+        var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
         var wattsSamplesOnMoveSorted = wattsSamplesOnMove.sort(function(a, b) {
             return a - b;
         });
 
         return {
+            'hasPowerMeter': hasPowerMeter,
             'avgWatts': avgWatts,
-            'normalizedPower': normalizedPower,
+            'weightedPower': weightedPower,
             'variabilityIndex': variabilityIndex,
-            'intensityFactor': intensityFactor,
-            'normalizedWattsPerKg': normalizedWattsPerKg,
+            'punchFactor': punchFactor,
+            'weightedWattsPerKg': weightedWattsPerKg,
             'lowerQuartileWatts': Helper.lowerQuartile(wattsSamplesOnMoveSorted),
             'medianWatts': Helper.median(wattsSamplesOnMoveSorted),
             'upperQuartileWatts': Helper.upperQuartile(wattsSamplesOnMoveSorted),
