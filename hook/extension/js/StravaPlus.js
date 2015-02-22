@@ -302,8 +302,7 @@ StravaPlus.prototype = {
             );
 
         } else if (pageView.activity().attributes.type == "Run") {
-
-            var html = '</br></br><span style="padding-top:20px; color: red; font-size:14px;">StravaPlus <strong>Running Extended Data Features</strong> (like current cycling features) will be very <strong>soon available in version 0.5.x</strong>. Please wait...</span>';
+            var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus <strong>Running Extended Data Features</strong> will be very soon available in version 0.5.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
             jQuery('.inline-stats.section').parent().children().last().after(html);
 
         } else {
