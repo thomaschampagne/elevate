@@ -340,7 +340,6 @@ VacuumProcessor.prototype = {
 
             var bikeOdoArray = {};
             _.each(jQuery(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
-
                 var bikeName = jQuery(element).find('td').first().text().trim();
                 var bikeOdo = jQuery(element).find('td').last().text().trim();
                 bikeOdoArray[btoa(bikeName)] = bikeOdo;
