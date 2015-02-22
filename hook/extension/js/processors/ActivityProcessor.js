@@ -217,7 +217,7 @@ ActivityProcessor.prototype = {
         console.warn(weightedPower);
 
         var variabilityIndex = weightedPower / avgWatts;
-        var intensityFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
+        var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
         var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
         var wattsSamplesOnMoveSorted = wattsSamplesOnMove.sort(function(a, b) {
             return a - b;
@@ -228,7 +228,7 @@ ActivityProcessor.prototype = {
             'avgWatts': avgWatts,
             'weightedPower': weightedPower,
             'variabilityIndex': variabilityIndex,
-            'intensityFactor': intensityFactor,
+            'punchFactor': punchFactor,
             'weightedWattsPerKg': weightedWattsPerKg,
             'lowerQuartileWatts': Helper.lowerQuartile(wattsSamplesOnMoveSorted),
             'medianWatts': Helper.median(wattsSamplesOnMoveSorted),

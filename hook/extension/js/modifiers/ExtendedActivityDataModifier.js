@@ -158,11 +158,11 @@ ExtendedActivityDataModifier.prototype = {
             // Estimated Punch Factor
             if (this.athleteId_== this.athleteIdAuthorOfActivity_) {
 
-                var intensityFactorOnToday = (_.isNull(this.analysisData_.powerData.intensityFactor)) ?
+                var punchFactorOnToday = (_.isNull(this.analysisData_.powerData.punchFactor)) ?
                     "<a style='font-size: 12px;' href='" + this.appResources_.settingsLink + "#/healthSettings' target='_blank'>Configure FTP</a>" :
-                    this.analysisData_.powerData.intensityFactor.toFixed(2);
+                    this.analysisData_.powerData.punchFactor.toFixed(2);
 
-                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Punch Factor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', intensityFactorOnToday, null, 'color: #838383;');
+                this.appendAnalyseDataToStatsPanel_('displayAdvancedPowerData', estimationText + 'Punch Factor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', punchFactorOnToday, null, 'color: #838383;');
             }
 
             // Normalized W/Kg
