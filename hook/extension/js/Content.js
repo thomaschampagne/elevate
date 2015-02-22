@@ -105,6 +105,7 @@ var appResources = {
     menuIconOrange: chrome.extension.getURL('/icons/ic_menu_24px_orange.svg'),
     remoteViewIcon: chrome.extension.getURL('/icons/ic_launch_24px.svg'),
     veloviewerIcon: chrome.extension.getURL('/icons/veloviewer.ico'),
+    raceshapeIcon: chrome.extension.getURL('/icons/raceshape.ico'),
     veloviewerDashboardIcon: chrome.extension.getURL('/icons/ic_dashboard_24px.svg'),
     veloviewerChallengesIcon: chrome.extension.getURL('/icons/ic_landscape_24px.svg'),
     labIcon: chrome.extension.getURL('/icons/lab.png'),
