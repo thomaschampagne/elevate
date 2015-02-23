@@ -380,7 +380,7 @@ StravaPlus.prototype = {
         var bikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor_, this.athleteIdAuthorOfActivity_);
         bikeOdoProcessor.getBikeOdoOfAthlete(function(bikeOdoArray) {
 
-            var activityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheAgingTimeCookieKey());
+            var activityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
             activityBikeOdoModifier.modify();
 
         }.bind(this));

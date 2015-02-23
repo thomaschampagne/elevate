@@ -148,7 +148,11 @@ VacuumProcessor.prototype = {
 
         // Get Estimated Average Power
         var avgPower = this.formatActivityDataValue_(
-            actStatsContainer.find('.inline-stats.section.secondary-stats').children().first().children().first().text(),
+            jQuery('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
+            false, false, false, false);        
+
+        var weightedPower = this.formatActivityDataValue_(
+            jQuery('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
             false, false, false, false);
 
         // Get Energy Output
@@ -194,7 +198,8 @@ VacuumProcessor.prototype = {
             'movingTime': movingTime,
             'elevation': elevation,
             'avgPower': avgPower,
-            'energyOutput': energyOutput, // Not used at the moment
+            'weightedPower': weightedPower,
+            'energyOutput': energyOutput,
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
             'averageHeartRate': averageHeartRate,
@@ -240,10 +245,14 @@ VacuumProcessor.prototype = {
 
         jQuery.ajax(url).done(function(jsonResponse) {
 
-            // jsonResponse.watts = (_.isEmpty(jsonResponse.watts_calc)) ? jsonResponse.watts : jsonResponse.watts_calc;
-            jsonResponse.watts = (_.isEmpty(jsonResponse.watts)) ? jsonResponse.watts_calc : jsonResponse.watts;
+            var hasPowerMeter = true;
 
-            callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight());
+            if (_.isEmpty(jsonResponse.watts)) {
+                jsonResponse.watts = jsonResponse.watts_calc;
+                hasPowerMeter = false;
+            }
+
+            callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight(), hasPowerMeter);
 
             jsonResponse = null; // Memory clean
 
@@ -345,7 +354,6 @@ VacuumProcessor.prototype = {
 
             var bikeOdoArray = {};
             _.each(jQuery(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
-
                 var bikeName = jQuery(element).find('td').first().text().trim();
                 var bikeOdo = jQuery(element).find('td').last().text().trim();
                 bikeOdoArray[btoa(bikeName)] = bikeOdo;
