@@ -6,7 +6,7 @@ function ActivityProcessor(vacuumProcessor, userHrrZones) {
     this.userHrrZones_ = userHrrZones;
 }
 
-ActivityProcessor.movingThresholdKph = 5; // Kph
+ActivityProcessor.movingThresholdKph = 3.5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
@@ -80,7 +80,7 @@ ActivityProcessor.prototype = {
         // Cadence percentage
         // Time Cadence
         // Crank revolution
-        var cadenceData = this.cadenceData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap);
+        var cadenceData = this.cadenceData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap, activityStream.time);
 
         // Return an array with all that shit...
         return {
@@ -390,7 +390,7 @@ ActivityProcessor.prototype = {
         }
     },
 
-    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap) {
+    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap, timeArray) {
 
         if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
             return null;
@@ -401,6 +401,23 @@ ActivityProcessor.prototype = {
         var cadenceOnMovingCount = 0;
         var cadenceOnMoveSampleCount = 0;
         var movingSampleCount = 0;
+
+        var cadenceZones = [];
+        var maxCadence = Math.max.apply(Math, cadenceArray);
+        var minCadence = Math.min.apply(Math, cadenceArray);
+        var distributionStep = (maxCadence - minCadence) / ActivityProcessor.distributionZoneCount;
+
+        var durationInSeconds, durationCount = 0;
+
+        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
+
+            cadenceZones.push({
+                from: distributionStep * i,
+                to: distributionStep * (i + 1),
+                s: 0,
+                percentDistrib: null
+            });
+        }
 
         for (var i = 0; i < velocityArray.length; i++) {
 
@@ -416,17 +433,37 @@ ActivityProcessor.prototype = {
                 }
 
                 movingSampleCount++;
+
+                // Compute distribution for graph/table
+                if (i > 0) {
+
+                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                    var cadenceZoneId = this.getZoneFromDistributionStep_(cadenceArray[i], distributionStep);
+
+                    if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
+                        cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
+                    }
+
+                    durationCount += durationInSeconds;
+                }
             }
         }
 
         var cadenceRatioOnMovingTime = cadenceOnMoveSampleCount / movingSampleCount;
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
+        // Update zone distribution percentage
+        for (var zone in cadenceZones) {
+            cadenceZones[zone]['percentDistrib'] = ((cadenceZones[zone]['s'] / durationCount).toFixed(4) * 100);
+        }
+
         return {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
+            'cadenceZones': cadenceZones
         };
     },
 };
