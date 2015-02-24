@@ -67,7 +67,7 @@ ActivityProcessor.prototype = {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        var powerData = this.powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth);
+        var powerData = this.powerData_(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
 
         // TRaining IMPulse
         // %HRR Avg
@@ -182,10 +182,10 @@ ActivityProcessor.prototype = {
 
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                var speedDoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
+                var speedZoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
 
-                if (!_.isUndefined(speedDoneId) && !_.isUndefined(speedZones[speedDoneId])) {
-                    speedZones[speedDoneId]['s'] += durationInSeconds;
+                if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
+                    speedZones[speedZoneId]['s'] += durationInSeconds;
                 }
 
                 durationCount += durationInSeconds;
@@ -195,7 +195,7 @@ ActivityProcessor.prototype = {
 
         // Update zone distribution percentage
         for (var zone in speedZones) {
-            speedZones[zone]['percentDistrib'] = ((speedZones[zone]['s'] / durationCount).toFixed(2) * 100);
+            speedZones[zone]['percentDistrib'] = ((speedZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
 
         // Finalize compute of Speed
@@ -222,7 +222,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    powerData_: function(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray) {
+    powerData_: function(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray, timeArray) {
 
         if (_.isEmpty(powerArray)) {
             return null;
@@ -233,6 +233,23 @@ ActivityProcessor.prototype = {
         var wattSampleOnMoveCount = 0;
         var wattsSamplesOnMove = [];
 
+        var powerZones = [];
+        var maxPower = Math.max.apply(Math, powerArray);
+        var minPower = Math.min.apply(Math, powerArray);
+        var distributionStep = (maxPower - minPower) / ActivityProcessor.distributionZoneCount;
+
+        var durationInSeconds, durationCount = 0;
+
+        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
+
+            powerZones.push({
+                from: distributionStep * i,
+                to: distributionStep * (i + 1),
+                s: 0,
+                percentDistrib: null
+            });
+        }
+
         for (var i = 0; i < powerArray.length; i++) { // Loop on samples
 
             if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
@@ -241,6 +258,20 @@ ActivityProcessor.prototype = {
                 accumulatedWattsOnMove += powerArray[i];
                 wattSampleOnMoveCount++;
                 wattsSamplesOnMove.push(powerArray[i]);
+
+                // Compute distribution for graph/table
+                if (i > 0) {
+
+                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                    var powerZoneId = this.getZoneFromDistributionStep_(powerArray[i], distributionStep);
+
+                    if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZones[powerZoneId])) {
+                        powerZones[powerZoneId]['s'] += durationInSeconds;
+                    }
+
+                    durationCount += durationInSeconds;
+                }
             }
         }
 
@@ -262,6 +293,11 @@ ActivityProcessor.prototype = {
             return a - b;
         });
 
+        // Update zone distribution percentage
+        for (var zone in powerZones) {
+            powerZones[zone]['percentDistrib'] = ((powerZones[zone]['s'] / durationCount).toFixed(4) * 100);
+        }
+
         return {
             'hasPowerMeter': hasPowerMeter,
             'avgWatts': avgWatts,
@@ -272,6 +308,7 @@ ActivityProcessor.prototype = {
             'lowerQuartileWatts': Helper.lowerQuartile(wattsSamplesOnMoveSorted),
             'medianWatts': Helper.median(wattsSamplesOnMoveSorted),
             'upperQuartileWatts': Helper.upperQuartile(wattsSamplesOnMoveSorted),
+            'powerZones': powerZones // Only while moving
         };
 
     },
@@ -331,7 +368,7 @@ ActivityProcessor.prototype = {
 
         // Update zone distribution percentage
         for (var zone in this.userHrrZones_) {
-            this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(2) * 100);
+            this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(4) * 100);
         }
 
         return {
