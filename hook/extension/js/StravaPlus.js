@@ -94,6 +94,10 @@ StravaPlus.prototype = {
      *
      */
     handleExtensionHasJustUpdated_: function handleExtensionHasJustUpdated_() {
+
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
         // Clear localstorage 
         // Especially for activies data stored in cache
         if (env.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
