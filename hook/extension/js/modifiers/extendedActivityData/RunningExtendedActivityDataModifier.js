@@ -10,9 +10,11 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
         },
 
         modify: function() {
-            // console.warn(this.analysisData_);
-            this.content += " ahhhhh ahhhh";
 
-        },
+            // Super call
+            base.modify.call(this);
+
+            // TODO this.content += mySpecificView.render();
+        }
     }
 });

@@ -1,24 +1,21 @@
-var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var GenericExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
 
     return {
 
-        
+        content: 'Cycle content',
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
 
-            console.log('CyclingExtendedActivityDataModifier::init');
+            console.log('GenericExtendedActivityDataModifier::init');
 
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
         },
 
         modify: function() {
 
-            // Super call
-            base.modify.call(this);
+            this.content += " GenericExtendedActivityDataModifier ";
 
-            // TODO this.content += mySpecificView.render();
-
-        }
+        },
 
         /*
         handleVariousData_: function() {

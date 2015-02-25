@@ -1,6 +1,11 @@
 var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
     return {
+
+        content: '',
+
+        dataViews: [],
+
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
             console.log('AbstractExtendedActivityDataModifier::init');
 
@@ -12,6 +17,19 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             // Add Show extended statistics to page
             this.placeExtendedStatsButton();
+
+            this.setDataViewsNeeded();
+        },
+
+        modify: function() {
+
+            _.each(this.dataViews, function(view) {
+                // Append result of view.render() to this.content
+                
+                this.content += view.render();
+
+                console.warn(view);
+            });
         },
 
         placeExtendedStatsButton: function(buttonAdded) {
@@ -31,8 +49,26 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 }.bind(this));
 
                 if (buttonAdded) buttonAdded();
-                
+
             }.bind(this));
+        },
+
+        setDataViewsNeeded: function() {
+
+            // By default we have... If data exist of course...
+
+            // Speed view
+            if (this.analysisData_.speedData) {
+                this.dataViews.push(new SpeedDataView());
+            }
+
+            // Heart view
+            if (this.analysisData_.heartRateData) {
+                this.dataViews.push(new HeartRateDataView());
+            }
+
+            console.warn(this.dataViews);
+
         }
     }
 });
