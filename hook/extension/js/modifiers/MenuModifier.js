@@ -32,6 +32,9 @@ MenuModifier.prototype = {
         var styleSideRight = 'display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;';
         var styleSideLeft = 'border-top: 1px solid #DDD; width: 50%;';
 
+        var tweetText = escape('You should try...');
+        var twitterTweetLink = 'https://twitter.com/intent/tweet?text=' + tweetText + '&hashtags=strava,stravaplus';
+
         stravaMenuHtml += "<a href='#' class='selection' " + menuStyle + "><img style='vertical-align:middle' src='" + menuIcon + "'/></a>";
         stravaMenuHtml += "<ul class='options' height='' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
         stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources_.settingsIcon + "'/> <span>Common Settings</span></a></li>";
@@ -47,6 +50,7 @@ MenuModifier.prototype = {
 
         stravaMenuHtml += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources_.settingsLink + "#/donate' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.donateIcon + "'/> <span>Donate</span></a></li>";
         stravaMenuHtml += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='http://thomaschampagne.github.io/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.bikeIcon + "'/> <span> Author site</span></a></li>";
+        stravaMenuHtml += "<li style='border-top: 1px solid #DDD;'><a target='_blank' href='" + twitterTweetLink + "'><img style='vertical-align:middle' src='" + this.appResources_.shareIcon + "'/> <span>Share this extension</span></a></li>";
         stravaMenuHtml += "</ul>";
         stravaMenuHtml += "</li>";
 
