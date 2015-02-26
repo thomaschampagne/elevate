@@ -2,56 +2,25 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
     return {
 
-        
-
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
 
             console.log('CyclingExtendedActivityDataModifier::init');
+
+            console.warn(AbstractExtendedActivityDataModifier);
 
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
         },
 
         modify: function() {
 
+            console.log('CyclingExtendedActivityDataModifier::modify');
+
             // Super call
             base.modify.call(this);
 
-            // TODO this.content += mySpecificView.render();
+            console.debug(this.content);
 
         }
-
-        /*
-        handleVariousData_: function() {
-
-            if (this.userSettings_.displayMotivationScore && !_.isNull(this.analysisData_.toughnessScore)) {
-                this.appendAnalyseDataToStatsPanel_('displayMotivationScore', 'Toughness Factor&nbsp;&nbsp;&nbsp;', this.analysisData_.toughnessScore.toFixed(0), null, null);
-            }
-
-            if (this.userSettings_.displayActivityRatio) {
-                this.appendAnalyseDataToStatsPanel_('displayActivityRatio', 'Move ratio', this.analysisData_.moveRatio.toFixed(2), null, null);
-            }
-        },
-
-        appendAnalyseDataToStatsPanel_: function(userSettingKey, title, valueHtml, unit, style) {
-
-            var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
-
-            var isA = jQuery(valueHtml).is('a');
-
-            // Add unit if needed        
-            valueHtml = valueHtml + ((unit === null) ? "" : "<abbr class='unit'>" + unit + "</abbr>");
-            var analyzeDataToAppend = jQuery("<li style='margin-right: 2px; cursor: pointer;' " + ((!isA) ? onClickHtmlBehaviour : '') + ">" +
-                "<strong style='" + style + "'>" + valueHtml + "</strong>" +
-                "<div class='label' " + ((isA) ? onClickHtmlBehaviour : '') + ">" + title + "</div>" +
-                "</li>");
-
-            // Add to current panel
-            this.activityPanel_.append(analyzeDataToAppend);
-
-            // Insert after root stat panel
-            this.statAnchor.append(this.activityPanel_);
-        },
-        */
     }
 });
 

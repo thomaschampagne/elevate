@@ -8,7 +8,9 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-        	base.render.call(this);
+            console.log('FeaturedDataView::render');
+            base.render.call(this);
+            this.content += 'FeaturedDataView html...';
         }
     }
 });

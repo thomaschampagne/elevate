@@ -8,8 +8,9 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-        	base.render.call(this);
-        	console.log('SpeedDataView::render');
+            console.log('SpeedDataView::render');
+            base.render.call(this);
+            this.content += 'SpeedDataView html...';
         }
     }
 });

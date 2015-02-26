@@ -14,22 +14,25 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             this.userSettings_ = userSettings;
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
+        },
+
+        modify: function() {
 
             // Add Show extended statistics to page
             this.placeExtendedStatsButton();
 
             this.setDataViewsNeeded();
-        },
-
-        modify: function() {
 
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
-                
-                this.content += view.render();
+                view.render();
+                this.content += view.getContent();
 
-                console.warn(view);
-            });
+                // console.log(view);
+                //this.content += view.render();
+                // console.warn(view);
+            }.bind(this));
+
         },
 
         placeExtendedStatsButton: function(buttonAdded) {
@@ -56,7 +59,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         setDataViewsNeeded: function() {
 
             // By default we have... If data exist of course...
-
+            
             // Speed view
             if (this.analysisData_.speedData) {
                 this.dataViews.push(new SpeedDataView());
@@ -68,7 +71,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }
 
             console.warn(this.dataViews);
-
+            
         }
     }
 });

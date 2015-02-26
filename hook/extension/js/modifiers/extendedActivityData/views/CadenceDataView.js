@@ -8,7 +8,9 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-        	base.render.call(this);
+            console.log('CadenceDataView::render');
+            base.render.call(this);
+            this.content += 'CadenceDataView html...';
         }
     }
 });

@@ -1,25 +1,25 @@
 /*
- *   AbstractExtendedActivityDataModifier is responsible of ...
+ *   _AbstractExtendedActivityDataModifier is responsible of ...
  */
-function AbstractExtendedActivityDataModifier(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
+function _AbstractExtendedActivityDataModifier(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
     this.analysisData_ = analysisData;
     this.appResources_ = appResources;
     this.userSettings_ = userSettings;
     this.athleteId_ = athleteId;
     this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
 
-    console.log('AbstractExtendedActivityDataModifier parent constructor');
+    console.log('_AbstractExtendedActivityDataModifier parent constructor');
 }
 
-AbstractExtendedActivityDataModifier.hideDefaultTitle = 'Hide StravaPlus Extended Stats';
-AbstractExtendedActivityDataModifier.showDefaultTitle = 'Show StravaPlus Extended Stats';
-AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey = 'sp_hideExtendedStatsPanelCookie';
+_AbstractExtendedActivityDataModifier.hideDefaultTitle = 'Hide StravaPlus Extended Stats';
+_AbstractExtendedActivityDataModifier.showDefaultTitle = 'Show StravaPlus Extended Stats';
+_AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey = 'sp_hideExtendedStatsPanelCookie';
 
 
 /**
  * Define prototype
  */
-AbstractExtendedActivityDataModifier.prototype = {
+_AbstractExtendedActivityDataModifier.prototype = {
 
     statAnchor: null,
 
@@ -30,7 +30,7 @@ AbstractExtendedActivityDataModifier.prototype = {
      */
     modify: function modify() {
 
-        console.log('AbstractExtendedActivityDataModifier modify parent');
+        console.log('_AbstractExtendedActivityDataModifier modify parent');
 
         // Creating panel
         this.statAnchor = this.getStatAnchor_();
@@ -59,19 +59,19 @@ AbstractExtendedActivityDataModifier.prototype = {
     makeHideShowExtendedDataLink_: function makeHideShowExtendedDataLink_() {
 
         var style = 'font-style: italic; font-size:11px; padding: 1px; text-align: center; color: white; background: #fc4c02; margin-top: 5px; cursor: pointer;';
-        this.statAnchor.append('<div style="padding-top: 3px; padding-bottom: 3px;"><input type="checkbox" id="hideExtendedStatsPanelCheckbox" value="checked"/> Force hide "Extended Stats" panel</div><div id="extendedDataTitle" style="' + style + '">' + AbstractExtendedActivityDataModifier.hideDefaultTitle + '<div>').each(function() {
+        this.statAnchor.append('<div style="padding-top: 3px; padding-bottom: 3px;"><input type="checkbox" id="hideExtendedStatsPanelCheckbox" value="checked"/> Force hide "Extended Stats" panel</div><div id="extendedDataTitle" style="' + style + '">' + _AbstractExtendedActivityDataModifier.hideDefaultTitle + '<div>').each(function() {
 
             // Handle listener on hide/show title
             jQuery('#extendedDataTitle').on('click', function() {
 
                 if (jQuery('#extendedActivityDataContent').is(":visible")) {
                     jQuery('#extendedActivityDataContent').slideUp(function() {
-                        jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.showDefaultTitle);
+                        jQuery('#extendedDataTitle').html(_AbstractExtendedActivityDataModifier.showDefaultTitle);
                     });
 
                 } else {
                     jQuery('#extendedActivityDataContent').slideDown(function() {
-                        jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.hideDefaultTitle);
+                        jQuery('#extendedDataTitle').html(_AbstractExtendedActivityDataModifier.hideDefaultTitle);
                     });
                 }
             });
@@ -79,9 +79,9 @@ AbstractExtendedActivityDataModifier.prototype = {
             // Handle listener on "Extended Stats" panel hide checkbox
             jQuery('#hideExtendedStatsPanelCheckbox').on('click', function() {
                 if (jQuery('#hideExtendedStatsPanelCheckbox').is(':checked')) {
-                    StorageManager.setCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, true, 365);
+                    StorageManager.setCookie(_AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, true, 365);
                 } else {
-                    StorageManager.setCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, false, 365);
+                    StorageManager.setCookie(_AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey, false, 365);
                 }
             });
         });
@@ -98,7 +98,7 @@ AbstractExtendedActivityDataModifier.prototype = {
 
         setTimeout(function() {
 
-            var hideExtendedStatsPanelCookieValue = JSON.parse(StorageManager.getCookie(AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey));
+            var hideExtendedStatsPanelCookieValue = JSON.parse(StorageManager.getCookie(_AbstractExtendedActivityDataModifier.hideExtendedStatsPanelCookieKey));
 
             if (!_.isNull(hideExtendedStatsPanelCookieValue) && _.isEqual(hideExtendedStatsPanelCookieValue, true)) {
 
@@ -108,7 +108,7 @@ AbstractExtendedActivityDataModifier.prototype = {
                 // Hide #extendedActivityDataContent panel
                 jQuery('#extendedActivityDataContent').slideUp(function() {
                     // Set title
-                    jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.showDefaultTitle);
+                    jQuery('#extendedDataTitle').html(_AbstractExtendedActivityDataModifier.showDefaultTitle);
                 });
 
             } else {
@@ -119,7 +119,7 @@ AbstractExtendedActivityDataModifier.prototype = {
                 // Show #extendedActivityDataContent panel
                 jQuery('#extendedActivityDataContent').slideDown(function() {
                     // Set title
-                    jQuery('#extendedDataTitle').html(AbstractExtendedActivityDataModifier.hideDefaultTitle);
+                    jQuery('#extendedDataTitle').html(_AbstractExtendedActivityDataModifier.hideDefaultTitle);
                 });
             }
         });

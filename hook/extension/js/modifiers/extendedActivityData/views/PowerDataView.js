@@ -8,7 +8,9 @@ var PowerDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-        	base.render.call(this);
+            console.log('PowerDataView::render');
+            base.render.call(this);
+            this.content += 'PowerDataView html...';
         }
     }
 });
