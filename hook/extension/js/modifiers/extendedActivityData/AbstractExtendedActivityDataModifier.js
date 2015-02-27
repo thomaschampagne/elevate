@@ -62,7 +62,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             
             // Speed view
             if (this.analysisData_.speedData) {
-                this.dataViews.push(new SpeedDataView());
+                this.dataViews.push(new SpeedDataView(this.analysisData_.speedData));
             }
 
             // Heart view

@@ -2,7 +2,6 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
     return {
 
-        content: 'Run content',
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
             console.log('RunningExtendedActivityDataModifier::init');

@@ -10,7 +10,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         render: function() {
             console.log('HeartRateDataView::render');
             base.render.call(this);
-            this.content += 'HeartRateDataView html...';
+            this.content += this.makeGrid(3, 3);
         }
     }
 });
