@@ -18,9 +18,6 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         modify: function() {
 
-            // Add Show extended statistics to page
-            this.placeExtendedStatsButton();
-
             this.setDataViewsNeeded();
 
             _.each(this.dataViews, function(view) {
@@ -31,7 +28,11 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 // console.log(view);
                 //this.content += view.render();
                 // console.warn(view);
+                
             }.bind(this));
+
+            // Add Show extended statistics to page
+            this.placeExtendedStatsButton();
 
         },
 
@@ -59,7 +60,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         setDataViewsNeeded: function() {
 
             // By default we have... If data exist of course...
-            
+
             // Speed view
             if (this.analysisData_.speedData) {
                 this.dataViews.push(new SpeedDataView(this.analysisData_.speedData));
@@ -71,7 +72,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }
 
             console.warn(this.dataViews);
-            
+
         }
     }
 });

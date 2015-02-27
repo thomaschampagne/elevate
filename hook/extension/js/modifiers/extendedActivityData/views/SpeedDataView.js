@@ -21,9 +21,17 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             // Super render () call
             base.render.call(this);
 
-            this.content += this.makeGrid(3, 2);
-        },
+            // Add a title
+            this.content += 'Title Speed';
 
+            // Creates a grid
+            this.makeGrid(3, 2);
 
+            // Insert some data inside grid
+            this.insertContentAtGridPosition(0, 1, '29 kph avg speed');
+
+            // Push grid to content view
+            this.content += this.grid.html(); 
+        }
     }
 });

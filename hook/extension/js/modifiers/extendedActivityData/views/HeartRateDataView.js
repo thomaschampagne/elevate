@@ -10,6 +10,9 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         render: function() {
             console.log('HeartRateDataView::render');
             base.render.call(this);
+
+            this.content += 'Title HR'
+
             this.content += this.makeGrid(3, 3);
         }
     }

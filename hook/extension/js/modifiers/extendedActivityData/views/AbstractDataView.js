@@ -4,6 +4,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         content: '',
 
+        grid: null,
+
         init: function() {
             console.log('AbstractDataView::init');
         },
@@ -25,26 +27,30 @@ var AbstractDataView = Fiber.extend(function(base) {
         makeGrid: function(columns, rows) {
 
             var grid = '';
+            grid += '<div>';
             grid += '<table>';
 
             for (var i = 0; i < rows; i++) {
                 grid += '<tr>';
-
                 for (var j = 0; j < columns; j++) {
-
                     grid += '<td data-column="' + j + '" data-row="' + i + '">';
                     grid += 'data'; // place data here
                     grid += '</td>';
                 }
                 grid += '</tr>';
             }
-
             grid += '</table>';
-            return grid;
+            grid += '</div>';
+            this.grid = jQuery(grid);
         },
 
         insertContentAtGridPosition: function(columnId, rowId, content) {
-            console.error('Must be implement');
+
+            if(this.grid) {
+                this.grid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
+            } else {
+                console.error('Grid is not initialized');
+            }
         }
     }
 });
