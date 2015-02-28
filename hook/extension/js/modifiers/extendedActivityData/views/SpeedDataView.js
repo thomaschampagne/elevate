@@ -22,7 +22,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += 'Title Speed';
+            this.content += 'Speed Data';
 
             // Creates a grid
             this.makeGrid(3, 2);
