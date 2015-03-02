@@ -34,7 +34,9 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }.bind(this));
 
             // Add Show extended statistics to page
-            this.placeExtendedStatsButton();
+            this.placeExtendedStatsButton(function() {
+
+            });
 
         },
 
@@ -51,6 +53,21 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 jQuery('#extendedStatsButton').click(function() {
 
                     jQuery.fancybox('<div style="width: ' + this.extendedActivityDataWidth + ';">' + this.content + '</div>'); // Content is the html computed by implementations
+
+                    // TODO get data value of view
+                    // TODO get canvas element of assiciated view
+
+
+                    this.dataViews[0].displayGraph();
+
+                    /*
+                    // TODO...
+                    _.each(this.dataViews, function(view) {
+
+                        view.displayGraph();
+
+                    }.bind(this));
+                    */
 
                 }.bind(this));
 

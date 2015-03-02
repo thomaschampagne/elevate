@@ -1,5 +1,6 @@
-if(AbstractExtendedActivityDataModifier === 'undefined') {
-    Content.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');
+if(typeof AbstractExtendedActivityDataModifier === 'undefined') {
+    Helper.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');
+    console.error("Helper.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');");
 }
 
 var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
