@@ -2,6 +2,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
     return {
 
+        extendedActivityDataWidth: '800px',
+
         content: '',
 
         dataViews: [],
@@ -28,7 +30,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 // console.log(view);
                 //this.content += view.render();
                 // console.warn(view);
-                
+
             }.bind(this));
 
             // Add Show extended statistics to page
@@ -48,7 +50,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
                 jQuery('#extendedStatsButton').click(function() {
 
-                    jQuery.fancybox(this.content); // Content is the html computed by implementations
+                    jQuery.fancybox('<div style="width: ' + this.extendedActivityDataWidth + ';">' + this.content + '</div>'); // Content is the html computed by implementations
 
                 }.bind(this));
 
@@ -57,6 +59,9 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }.bind(this));
         },
 
+        /**
+         * Affect default view needed
+         */
         setDataViewsNeeded: function() {
 
             // By default we have... If data exist of course...
@@ -70,8 +75,6 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             if (this.analysisData_.heartRateData) {
                 this.dataViews.push(new HeartRateDataView());
             }
-
-            console.warn(this.dataViews);
 
         }
     }

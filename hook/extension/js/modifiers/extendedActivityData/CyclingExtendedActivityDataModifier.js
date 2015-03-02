@@ -1,3 +1,7 @@
+if(AbstractExtendedActivityDataModifier === 'undefined') {
+    Content.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');
+}
+
 var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
 
     return {
