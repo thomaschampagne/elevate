@@ -21,6 +21,8 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             // Super render () call
             base.render.call(this);
 
+            this.setViewId('SpeedDataView_4smf8s7aG7ss1a');
+
             // Add a title
             this.content += this.generateSectionTitle('Speed Data');
 

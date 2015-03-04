@@ -61,23 +61,14 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                         'transitionIn': 'fade',
                         'transitionOut': 'fade',
                         'type': 'iframe',
-                        'content': this.content
+                        'content': '<div class="stravaPlusExtendedData">' + this.content + '</div>'
                     });
 
-                    // TODO get data value of view
-                    // TODO get canvas element of assiciated view
-
-
-                    this.dataViews[0].displayGraph();
-
-                    /*
-                    // TODO...
+                    // For each view start making the assossiated graphs
                     _.each(this.dataViews, function(view) {
-
                         view.displayGraph();
-
                     }.bind(this));
-                    */
+                    
 
                 }.bind(this));
 
@@ -100,7 +91,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             // Heart view
             if (this.analysisData_.heartRateData) {
-                this.dataViews.push(new HeartRateDataView());
+                this.dataViews.push(new HeartRateDataView(this.analysisData_.heartRateData));
             }
 
         }

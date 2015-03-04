@@ -2,20 +2,26 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
     return {
 
-        init: function() {
+        heartRateData: null,
+
+        init: function(heartRateData) {
             console.log('HeartRateDataView::init');
             base.init.call(this);
+
+            this.heartRateData = heartRateData;
         },
 
         render: function() {
             console.log('HeartRateDataView::render');
             base.render.call(this);
 
+            this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
+
             // Add a title
             this.content += this.generateSectionTitle('HeartRate Data');
 
             // Creates a grid
-            this.makeGrid(3, 2); // (col, row)
+            this.makeGrid(3, 3); // (col, row)
 
             this.insertSpeedDataIntoGrid();
             this.generateGenericDistributionGraph();

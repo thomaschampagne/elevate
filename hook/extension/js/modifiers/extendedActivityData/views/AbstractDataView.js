@@ -2,16 +2,41 @@ var AbstractDataView = Fiber.extend(function(base) {
 
     return {
 
+        viewId: null,
+
         content: '',
 
         grid: null,
 
         graph: null,
 
+        graphData: { // TODO Data are specific to view
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [{
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            }, {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }]
+        },
+
         table: null,
 
         init: function() {
             console.log('AbstractDataView::init');
+        },
+
+        setViewId: function(id) {
+            this.viewId = id;
         },
 
         render: function() {
@@ -30,7 +55,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             var graph = '';
             graph += '<div>';
             graph += '<div style="display: inline-block;">';
-            graph += '<canvas id="generateGenericDistributionGraph" height="300" width="400"></canvas>';
+            graph += '<canvas id="' + this.viewId + '" height="300" width="400"></canvas>';
             graph += '</div>';
             graph += '</div>';
             this.graph = jQuery(graph);
@@ -39,27 +64,13 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         displayGraph: function() {
 
-            var data = { // TODO Data are specific to view
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.5)",
-                    strokeColor: "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                }, {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,0.8)",
-                    highlightFill: "rgba(151,187,205,0.75)",
-                    highlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48, 40, 19, 86, 27, 90]
-                }]
-            };
+            if (!this.viewId) {
+                console.error('View Id must exist');
+                return;
+            }
 
             // Generating the chart
-            var chart = new Chart(document.getElementById("generateGenericDistributionGraph").getContext("2d")).Bar(data, { // TODO canvas id must be specific to view
+            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, { // TODO canvas id must be specific to view
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
@@ -71,7 +82,21 @@ var AbstractDataView = Fiber.extend(function(base) {
             var table = '';
             table += '<div>';
             table += '<div style="display: inline-block;">';
-            table += 'table here';
+            table += '<table>';
+
+            for (var i = 0; i < 5; i++) {
+
+                table += '<tr>';
+                table += '<td>';
+                table += 'toto';
+                table += '</td>';
+                table += '<td>';
+                table += 'tata';
+                table += '</td>';
+                table += '</tr>';
+            }
+
+            table += '</table>';
             table += '</div>';
             table += '</div>';
             this.table = jQuery(table);

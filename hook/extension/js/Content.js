@@ -174,7 +174,8 @@ var jsDependencies = [
 ];
 
 var cssDependencies = [
-    'node_modules/fancybox/dist/css/jquery.fancybox.css'
+    'node_modules/fancybox/dist/css/jquery.fancybox.css',
+    'css/extendedData.css'
 ];
 
 
