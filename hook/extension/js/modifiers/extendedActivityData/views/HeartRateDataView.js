@@ -16,25 +16,29 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         },
 
         displayGraph: function() {
-            console.warn('overidden function');
 
-            // TMP GRAPH
-            this.graphData = { // TODO Data are specific to view
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
+            console.debug('override displayGraph() function for HeartRate view');
+
+            var labelsData = [];
+            for (var zone in this.heartRateData.hrrZones) {
+                var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%";
+                labelsData.push(label);
+            }
+
+            var hrDistributionInMinutesArray = [];
+            for (var zone in this.heartRateData.hrrZones) {
+                hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(0));
+            }
+
+            this.graphData = {
+                labels: labelsData,
                 datasets: [{
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.5)",
-                    strokeColor: "rgba(220,220,220,0.8)",
-                    highlightFill: "rgba(220,220,220,0.75)",
-                    highlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                }, {
-                    label: "My Second dataset",
-                    fillColor: "rgba(151,187,205,0.5)",
-                    strokeColor: "rgba(151,187,205,0.8)",
-                    highlightFill: "rgba(151,187,205,0.75)",
-                    highlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 48, 40, 19, 86, 27, 90]
+                    label: "Heart Rate Reserve Distribution",
+                    fillColor: "rgba(255, 43, 66,0.5)",
+                    strokeColor: "rgba(255, 43, 66,0.8)",
+                    highlightFill: "rgba(255, 43, 66,0.75)",
+                    highlightStroke: "rgba(255, 43, 66,1)",
+                    data: hrDistributionInMinutesArray
                 }]
             };
 
