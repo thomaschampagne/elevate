@@ -12,6 +12,8 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
             this.speedData = speedData;
 
+            this.setupDistributionGraph(this.speedData.speedZones, 'kph', [9, 123, 219]);
+
         },
 
         render: function() {
@@ -30,7 +32,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.makeGrid(3, 2); // (col, row)
 
             this.insertSpeedDataIntoGrid();
-            this.generateGenericDistributionGraph();
+            this.generateCanvasForGraph();
             this.generateGenericDistributionTable();
 
             // Push grid, graph and table to content view

@@ -1,8 +1,3 @@
-if(typeof AbstractExtendedActivityDataModifier === 'undefined') {
-    Helper.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');
-    console.error("Helper.includeJs('js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js');");
-}
-
 var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
 
     return {
@@ -14,6 +9,8 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             console.warn(AbstractExtendedActivityDataModifier);
 
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
+
+            this.setDataViewsNeeded();
         },
 
         modify: function() {
@@ -22,9 +19,15 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             // Super call
             base.modify.call(this);
+        },
 
-            console.debug(this.content);
+        setDataViewsNeeded: function() {
 
+            base.setDataViewsNeeded.call(this);
+
+            if (this.analysisData_.cadenceData) {
+                this.dataViews.push(new CadenceDataView(this.analysisData_.cadenceData));
+            }
         }
     }
 });

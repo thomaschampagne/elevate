@@ -10,24 +10,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         graph: null,
 
-        graphData: { // TODO Data are specific to view
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [{
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }]
-        },
+        graphData: null,
 
         table: null,
 
@@ -51,7 +34,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             return "<h3>" + title + "</h3>"
         },
 
-        generateGenericDistributionGraph: function() {
+        generateCanvasForGraph: function() {
             var graph = '';
             graph += '<div>';
             graph += '<div style="display: inline-block;">';
@@ -62,10 +45,34 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         },
 
+        setupDistributionGraph: function(zones, units, rgbArray) {
+            var labelsData = [];
+            for (var zone in zones) {
+                var label = zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + units;
+                labelsData.push(label);
+            }
+
+            var distributionArray = [];
+            for (var zone in zones) {
+                distributionArray.push((zones[zone].s / 60).toFixed(0));
+            }
+
+            this.graphData = {
+                labels: labelsData,
+                datasets: [{
+                    label: "Distribution",
+                    fillColor: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.5)",
+                    strokeColor: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.8)",
+                    highlightFill: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.75)",
+                    data: distributionArray
+                }]
+            };
+        },
+
         displayGraph: function() {
 
             if (!this.viewId) {
-                console.error('View Id must exist');
+                console.error('View Id must exist in ' + typeof this);
                 return;
             }
 
