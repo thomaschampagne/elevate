@@ -87,7 +87,9 @@ Content.prototype = {
                     items = self.userSettings_;
                 }
 
-                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+                inner.textContent = 'setTimeout(function(){';
+                inner.textContent += 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+                inner.textContent += '}.bind(this));';
 
                 inner.onload = function() {
                     this.parentNode.removeChild(this);
@@ -165,7 +167,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
-    
+
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
