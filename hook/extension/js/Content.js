@@ -13,63 +13,32 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
  */
 Content.prototype = {
 
-    includeJs: function includeJs(scriptUrl, callback) {
+    includeJs: function includeJs(scriptUrl) {
         var s = document.createElement('script');
         s.src = chrome.extension.getURL(scriptUrl);
         s.onload = function() {
             this.parentNode.removeChild(this);
-            console.log("onload " + scriptUrl);
-            callback();
         };
-
         (document.head || document.documentElement).appendChild(s);
     },
 
-    includeCss: function includeJs(scriptUrl, callback) {
+    includeCss: function includeJs(scriptUrl) {
         var link = document.createElement('link');
         link.href = chrome.extension.getURL(scriptUrl);
         link.type = 'text/css';
         link.rel = 'stylesheet';
-        link.onload = function() {
-            this.parentNode.removeChild(this);
-            console.log("onload " + scriptUrl);
-            callback();
-        };
         (document.head || document.documentElement).appendChild(link);
     },
-    
-    loadDependencies: function loadDependencies(callback) {
 
-        var self = this;
+    loadDependencies: function loadDependencies() {
 
-        var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
+        for (var i = 0; i < this.jsDependencies_.length; i++) {
+            this.includeJs(this.jsDependencies_[i]);
+        }
 
-        async.each(dependencies, function(file, finish) {
-
-            var ext = file.substr(file.lastIndexOf('.') + 1);
-
-            if (ext === 'js') {
-                self.includeJs(file, function() {
-                    finish();
-                });
-
-            } else if (ext === 'css') {
-                self.includeCss(file, function() {
-                    finish();
-                });
-            }
-
-        }, function(err) {
-            if (err) {
-                console.error('A file failed to process');
-                console.error(err);
-
-            } else {
-                console.log('All files have been processed successfully');
-                callback();
-            }
-
-        });
+        for (var i = 0; i < this.cssDependencies.length; i++) {
+            this.includeCss(this.cssDependencies[i]);
+        }
     },
 
     isExtensionRunnableInThisContext_: function isExtensionRunnableInThisContext_() {
@@ -103,33 +72,30 @@ Content.prototype = {
             return;
         }
 
+        this.loadDependencies();
+
         var self = this;
 
-        this.loadDependencies(function() {
+        chrome.storage.sync.get(this.userSettings_, function(items) {
+            var injectedScript = document.createElement('script');
+            injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
+            injectedScript.onload = function() {
+                this.parentNode.removeChild(this);
+                var inner = document.createElement('script');
 
-            chrome.storage.sync.get(self.userSettings_, function(items) {
-                var injectedScript = document.createElement('script');
-                injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
-                injectedScript.onload = function() {
+                if (_.isEmpty(items)) {
+                    items = self.userSettings_;
+                }
+
+                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+
+                inner.onload = function() {
                     this.parentNode.removeChild(this);
-                    var inner = document.createElement('script');
-
-                    if (_.isEmpty(items)) {
-                        items = self.userSettings_;
-                    }
-
-                    inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
-
-                    inner.onload = function() {
-                        this.parentNode.removeChild(this);
-                    };
-                    (document.head || document.documentElement).appendChild(inner);
                 };
-                (document.head || document.documentElement).appendChild(injectedScript);
-            });
-
+                (document.head || document.documentElement).appendChild(inner);
+            };
+            (document.head || document.documentElement).appendChild(injectedScript);
         });
-
     }
 };
 
@@ -199,7 +165,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
-
+    
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
