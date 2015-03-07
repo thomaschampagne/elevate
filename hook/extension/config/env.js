@@ -1,5 +1,5 @@
 var env = {
-    buildNumber: 19, // 0.4.9
+    buildNumber: 20, // 0.4.10
     analyticsTrackingID: 'UA-51167057-4', // prod:'UA-51167057-4', test:'UA-51167057-5'
     forceUpdated: false, // Must be false in release
     debugMode: false // Must be false in release
