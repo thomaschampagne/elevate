@@ -32,7 +32,7 @@ MenuModifier.prototype = {
         var styleSideRight = 'display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;';
         var styleSideLeft = 'border-top: 1px solid #DDD; width: 50%;';
 
-        var twitterTweetLink = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%40champagnethomas%20%23stravaplus%20web%20extension%20here:%20%20bitly.com/stravaplus.%20%23cycling%20%23running%20%23geek";
+        var twitterTweetLink = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravaplus%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20bitly.com/stravaplus.%20%23cycling%20%23running%20%23geek";
 
         stravaMenuHtml += "<a href='#' class='selection' " + menuStyle + "><img style='vertical-align:middle' src='" + menuIcon + "'/></a>";
         stravaMenuHtml += "<ul class='options' height='' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
