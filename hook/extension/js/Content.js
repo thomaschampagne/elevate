@@ -122,6 +122,7 @@ var appResources = {
     twitterIcon: chrome.extension.getURL('/icons/twitter.svg'),
     systemUpdatesIcon: chrome.extension.getURL('/icons/ic_system_update_24px.svg'),
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
+    shareIcon: chrome.extension.getURL('/icons/ic_share_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
     qrCodeIcon: chrome.extension.getURL('/icons/qrcode.svg'),
     extVersion: chrome.runtime.getManifest().version,

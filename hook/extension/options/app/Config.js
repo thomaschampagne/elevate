@@ -6,5 +6,6 @@ var routeMap = {
     healthSettingsRoute: '/healthSettings',
     releaseNotesRoute: '/releaseNotes',
     aboutRoute: '/about',
-    donateRoute: '/donate'
+    donateRoute: '/donate',
+    shareRoute: '/share'
 };

@@ -27,6 +27,10 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'views/donate.html'
     });
 
+    $routeProvider.when(routeMap.shareRoute, {
+        templateUrl: 'views/share.html'
+    });
+
     $routeProvider.otherwise({
         redirectTo: routeMap.commonSettingsRoute
     })
