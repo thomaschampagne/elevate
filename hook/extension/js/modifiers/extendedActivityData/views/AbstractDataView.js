@@ -12,6 +12,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         graphData: null,
 
+        graphUnits: '',
+
         table: null,
 
         init: function() {
@@ -46,9 +48,12 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         setupDistributionGraph: function(zones, units, rgbArray) {
+
+            this.graphUnits = units;
+
             var labelsData = [];
             for (var zone in zones) {
-                var label = zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + units;
+                var label = zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.graphUnits;
                 labelsData.push(label);
             }
 
@@ -81,8 +86,9 @@ var AbstractDataView = Fiber.extend(function(base) {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> Minutes"
             });
-
+            
         },
 
         generateGenericDistributionTable: function() {

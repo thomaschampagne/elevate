@@ -47,6 +47,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> Minutes"
             });
         },
 
