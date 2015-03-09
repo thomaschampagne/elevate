@@ -14,6 +14,8 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
             this.setupDistributionGraph(this.cadenceData.cadenceZones, 'rpm', [213, 0, 195]);
 
+            this.setupDistributionTable(this.cadenceData.cadenceZones, 'rpm');
+
         },
 
         render: function() {
@@ -32,7 +34,6 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
             this.insertSpeedDataIntoGrid();
             this.generateCanvasForGraph();
-            this.generateGenericDistributionTable();
 
             // Push grid, graph and table to content view
             this.content += this.grid.html();

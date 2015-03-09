@@ -67,7 +67,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             this.insertSpeedDataIntoGrid();
             this.generateCanvasForGraph();
-            this.generateGenericDistributionTable();
+            this.setupDistributionTable();
 
             // Push grid, graph and table to content view
             this.content += this.grid.html();

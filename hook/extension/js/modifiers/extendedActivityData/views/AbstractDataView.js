@@ -88,25 +88,33 @@ var AbstractDataView = Fiber.extend(function(base) {
                 showTooltips: true,
                 tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> Minutes"
             });
-            
+
         },
 
-        generateGenericDistributionTable: function() {
+        setupDistributionTable: function(zones, units) {
+
             var table = '';
             table += '<div>';
             table += '<div style="display: inline-block;">';
             table += '<table>';
 
-            for (var i = 0; i < 5; i++) {
+            // Generate table header
+            table += '<tr>'; // Zone
+            table += '<td>Zone</td>'; // Zone
+            table += '<td>' + units + '</td>'; // bpm
+            table += '<td>Time</br>(hh:mm:ss)</td>'; // Time
+            table += '<td>% in zone</td>'; // % in zone
+            table += '</tr>';
 
-                table += '<tr>';
-                table += '<td>';
-                table += 'toto';
-                table += '</td>';
-                table += '<td>';
-                table += 'tata';
-                table += '</td>';
+            var zoneId = 1;
+            for (var zone in zones) {
+                table += '<tr>'; // Zone
+                table += '<td>Z' + zoneId + '</td>'; // Zone
+                table += '<td>' + zones[zone].from.toFixed(1) + ' ' + units + ' - ' + zones[zone].to.toFixed(1) + ' ' + units + '</th>'; // %HRR
+                table += '<td>' + Helper.secondsToHHMMSS(zones[zone].s) + '</td>'; // Time%
+                table += '<td>' + zones[zone].percentDistrib.toFixed(1) + '%</td>'; // % in zone
                 table += '</tr>';
+                zoneId++;
             }
 
             table += '</table>';
