@@ -127,7 +127,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var grid = '';
             grid += '<div>';
-            grid += '<div style="display: inline-block;">';
+            grid += '<div class="grid" style="display: inline-block;">';
             grid += '<table>';
 
             for (var i = 0; i < rows; i++) {
@@ -145,9 +145,10 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.grid = jQuery(grid);
         },
 
-        insertContentAtGridPosition: function(columnId, rowId, content) {
+        insertContentAtGridPosition: function(columnId, rowId, data, title, units) {
 
             if (this.grid) {
+                var content = data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span>';
                 this.grid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
             } else {
                 console.error('Grid is not initialized');

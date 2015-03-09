@@ -35,7 +35,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
             this.insertSpeedDataIntoGrid();
             this.generateCanvasForGraph();
-            
+
 
             // Push grid, graph and table to content view
             this.content += this.grid.html();
@@ -48,14 +48,15 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         insertSpeedDataIntoGrid: function() {
 
-            // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 0, '29');
-            this.insertContentAtGridPosition(1, 0, '243');
-            this.insertContentAtGridPosition(2, 0, '776');
+            // Quartiles
+            this.insertContentAtGridPosition(0, 0, this.speedData.lowerQuartileSpeed, '25% Quartile Speed', 'Kph');
+            this.insertContentAtGridPosition(1, 0, this.speedData.medianSpeed, '50% Quartile Speed', 'Kph');
+            this.insertContentAtGridPosition(2, 0, this.speedData.upperQuartileSpeed, '75% Quartile Speed', 'Kph');
 
-            this.insertContentAtGridPosition(0, 1, '29');
-            this.insertContentAtGridPosition(1, 1, '100');
-            this.insertContentAtGridPosition(2, 1, '300');
+            // Insert some data inside grid
+            this.insertContentAtGridPosition(0, 1, '29', '', ''); // Pace
+            this.insertContentAtGridPosition(1, 1, '243', '', ''); // Standard deviation speed
+            this.insertContentAtGridPosition(2, 1, '776', '', ''); // Move ratio
         }
     }
 });

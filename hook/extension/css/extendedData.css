@@ -10,3 +10,15 @@
     vertical-align: middle;
     padding: 15px;
 }
+.stravaPlusExtendedData .grid {
+    font-size: 22px;
+}
+.stravaPlusExtendedData .gridUnits {
+    font-size: 14px;
+}
+.stravaPlusExtendedData .gridTitle {
+    font-size: 14px;
+}
+.stravaPlusExtendedData .grid td {
+    max-width: 100px;
+}
