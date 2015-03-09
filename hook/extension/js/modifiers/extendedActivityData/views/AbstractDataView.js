@@ -40,7 +40,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             var graph = '';
             graph += '<div>';
             graph += '<div style="display: inline-block;">';
-            graph += '<canvas id="' + this.viewId + '" height="400" width="500"></canvas>';
+            graph += '<canvas id="' + this.viewId + '" height="500" width="500"></canvas>';
             graph += '</div>';
             graph += '</div>';
             this.graph = jQuery(graph);

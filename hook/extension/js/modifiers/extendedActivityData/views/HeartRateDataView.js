@@ -12,6 +12,44 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             this.heartRateData = heartRateData;
 
+            this.setupDistributionTable();
+
+        },
+
+
+        setupDistributionTable: function() {
+
+            console.debug('override setupDistributionTable() function for HeartRate view');
+
+            var table = '';
+            table += '<div>';
+            table += '<div style="display: inline-block;">';
+            table += '<table>';
+
+            table += '<tr>'; // Zone
+            table += '<td>Zone</td>'; // Zone
+            table += '<td>%HRR</td>'; // %HRR
+            table += '<td>BPM</td>'; // bpm
+            table += '<td>Time</br>(hh:mm:ss)</td>'; // Time
+            table += '<td>% in zone</td>'; // % in zone
+            table += '</tr>';
+            
+            var zoneId = 1;
+            for (var zone in this.heartRateData.hrrZones) {
+                table += '<tr>'; // Zone
+                table += '<td>Z' + zoneId + '</td>'; // Zone
+                table += '<td>' + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%" + '</th>'; // %HRR
+                table += '<td>' + this.heartRateData.hrrZones[zone].fromHr + " - " + this.heartRateData.hrrZones[zone].toHr + '</td>'; // bpm%
+                table += '<td>' + Helper.secondsToHHMMSS(this.heartRateData.hrrZones[zone].s) + '</td>'; // Time%
+                table += '<td>' + this.heartRateData.hrrZones[zone].percentDistrib.toFixed(0) + '%</td>'; // % in zone
+                table += '</tr>';
+                zoneId++;
+            }
+
+            table += '</table>';
+            table += '</div>';
+            table += '</div>';
+            this.table = jQuery(table);
 
         },
 

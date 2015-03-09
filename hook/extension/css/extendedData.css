@@ -1,9 +1,12 @@
 .stravaPlusExtendedData table {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0px;
 }
-
 .stravaPlusExtendedData td {
-	border: 1px solid #333;
+    border: 1px dashed #F0F0F0;
 }
-
+.stravaPlusExtendedData div {
+    vertical-align: middle;
+    padding: 15px;
+}

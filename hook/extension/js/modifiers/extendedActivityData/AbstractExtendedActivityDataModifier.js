@@ -2,7 +2,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
     return {
 
-        extendedActivityDataWidth: '800px',
+        extendedActivityDataWidth: '900px',
 
         content: '',
 
@@ -25,6 +25,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 // Append result of view.render() to this.content
                 view.render();
                 this.content += view.getContent();
+                this.content += '<hr />';
 
             }.bind(this));
 
