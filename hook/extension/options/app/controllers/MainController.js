@@ -13,6 +13,7 @@ app.controller('MainController', function($scope, $location) {
         $scope.releaseNotesActive = null;
         $scope.aboutActive = null;
         $scope.donateActive = null;
+        $scope.shareActive = null;
     };
 
     // Watch for location changes
@@ -40,7 +41,12 @@ app.controller('MainController', function($scope, $location) {
             $scope.aboutActive = $scope.headerActiveClassName;
 
         } else if (path === routeMap.donateRoute) {
+            
             $scope.donateActive = $scope.headerActiveClassName;
+
+        } else if (path === routeMap.shareRoute) {
+
+            $scope.shareActive = $scope.headerActiveClassName;
         }
     });
 });
