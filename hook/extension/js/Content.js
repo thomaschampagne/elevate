@@ -16,8 +16,10 @@ Content.prototype = {
     includeJs: function includeJs(scriptUrl) {
         var s = document.createElement('script');
         s.src = chrome.extension.getURL(scriptUrl);
+        s.async = false;
         s.onload = function() {
             this.parentNode.removeChild(this);
+            console.log(scriptUrl + ' loaded');
         };
         (document.head || document.documentElement).appendChild(s);
     },
@@ -25,6 +27,7 @@ Content.prototype = {
     includeCss: function includeJs(scriptUrl) {
         var link = document.createElement('link');
         link.href = chrome.extension.getURL(scriptUrl);
+        link.async = false;
         link.type = 'text/css';
         link.rel = 'stylesheet';
         (document.head || document.documentElement).appendChild(link);
