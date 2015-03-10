@@ -25,8 +25,6 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 // Append result of view.render() to this.content
                 view.render();
                 this.content += view.getContent();
-                this.content += '<hr />';
-
             }.bind(this));
 
             // Add Show extended statistics to page
@@ -82,12 +80,16 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             // Speed view
             if (this.analysisData_.speedData) {
-                this.dataViews.push(new SpeedDataView(this.analysisData_.speedData));
+                var speedDataView = new SpeedDataView(this.analysisData_.speedData);
+                speedDataView.setAppResources(this.appResources_);
+                this.dataViews.push(speedDataView);
             }
 
             // // Heart view
             if (this.analysisData_.heartRateData) {
-                this.dataViews.push(new HeartRateDataView(this.analysisData_.heartRateData));
+                var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData);
+                heartRateDataView.setAppResources(this.appResources_);
+                this.dataViews.push(heartRateDataView);
             }
 
         }

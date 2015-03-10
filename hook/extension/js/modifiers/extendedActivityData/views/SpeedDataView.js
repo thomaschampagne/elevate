@@ -4,6 +4,8 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         speedData: null,
 
+        mainColor: [9, 123, 219],
+
         init: function(speedData) {
 
             console.log('SpeedDataView::init');
@@ -12,7 +14,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
             this.speedData = speedData;
 
-            this.setupDistributionGraph(this.speedData.speedZones, 'kph', [9, 123, 219]);
+            this.setupDistributionGraph(this.speedData.speedZones, 'kph');
 
             this.setupDistributionTable(this.speedData.speedZones, 'kph');
 
@@ -30,6 +32,8 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Speed Data');
 
+            this.setGraphTitle('Speed distributon over ' + this.speedData.speedZones.length + ' zones');
+
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 
@@ -41,22 +45,27 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.content += this.grid.html();
             this.content += this.graph.html();
             this.content += this.table.html();
-
-            console.debug(this.content);
         },
-
 
         insertSpeedDataIntoGrid: function() {
 
+            var measurementPreference = currentAthlete.get('measurement_preference');
+            var units = (measurementPreference == 'meters') ? 'km' : 'mi';
+            var speedUnitPerhour = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
+            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.62137;
+
+
+            var paceTimePerDistance = Helper.secondsToHHMMSS(this.speedData.avgPace / speedUnitFactor);
+            paceTimePerDistance = paceTimePerDistance.replace('00:', '');
+
             // Quartiles
-            this.insertContentAtGridPosition(0, 0, this.speedData.lowerQuartileSpeed, '25% Quartile Speed', 'Kph');
-            this.insertContentAtGridPosition(1, 0, this.speedData.medianSpeed, '50% Quartile Speed', 'Kph');
-            this.insertContentAtGridPosition(2, 0, this.speedData.upperQuartileSpeed, '75% Quartile Speed', 'Kph');
+            this.insertContentAtGridPosition(0, 0, (this.speedData.lowerQuartileSpeed * speedUnitFactor).toFixed(1), '25% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(1, 0, (this.speedData.medianSpeed * speedUnitFactor).toFixed(1), '50% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(2, 0, (this.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
             // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 1, '29', '', ''); // Pace
-            this.insertContentAtGridPosition(1, 1, '243', '', ''); // Standard deviation speed
-            this.insertContentAtGridPosition(2, 1, '776', '', ''); // Move ratio
+            this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Activity Pace', '/' + units, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(1, 1, (this.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');  
         }
     }
 });

@@ -4,6 +4,8 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         heartRateData: null,
 
+        mainColor: [255, 43, 66],
+
         init: function(heartRateData) {
 
             console.log('HeartRateDataView::init');
@@ -23,17 +25,17 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div style="display: inline-block;">';
+            table += '<div class="distributionTable">';
             table += '<table>';
 
             table += '<tr>'; // Zone
-            table += '<td>Zone</td>'; // Zone
-            table += '<td>%HRR</td>'; // %HRR
-            table += '<td>BPM</td>'; // bpm
-            table += '<td>Time</br>(hh:mm:ss)</td>'; // Time
-            table += '<td>% in zone</td>'; // % in zone
+            table += '<td><strong>Zone</strong></td>'; // Zone
+            table += '<td><strong>%HRR</strong></td>'; // bpm
+            table += '<td><strong>BPM</strong></td>'; // bpm
+            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
+            table += '<td><strong>% in zone</strong></td>'; // % in zone
             table += '</tr>';
-            
+
             var zoneId = 1;
             for (var zone in this.heartRateData.hrrZones) {
                 table += '<tr>'; // Zone
@@ -72,10 +74,10 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
                 labels: labelsData,
                 datasets: [{
                     label: "Heart Rate Reserve Distribution",
-                    fillColor: "rgba(255, 43, 66,0.5)",
-                    strokeColor: "rgba(255, 43, 66,0.8)",
-                    highlightFill: "rgba(255, 43, 66,0.75)",
-                    highlightStroke: "rgba(255, 43, 66,1)",
+                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
                     data: hrDistributionInMinutesArray
                 }]
             };
@@ -100,8 +102,10 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('HeartRate Data');
 
+            this.setGraphTitle('Heart Rate Reserve distributon over ' + this.heartRateData.hrrZones.length + ' zones / <a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
+
             // Creates a grid
-            this.makeGrid(3, 3); // (col, row)
+            this.makeGrid(3, 2); // (col, row)
 
             this.insertSpeedDataIntoGrid();
             this.generateCanvasForGraph();
@@ -116,13 +120,13 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         insertSpeedDataIntoGrid: function() {
 
             // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 0, '29');
-            this.insertContentAtGridPosition(1, 0, '243');
-            this.insertContentAtGridPosition(2, 0, '776');
-
-            this.insertContentAtGridPosition(0, 1, '29');
-            this.insertContentAtGridPosition(1, 1, '100');
-            this.insertContentAtGridPosition(2, 1, '300');
+            this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(1, 0, this.heartRateData.activityHeartRateReserve, '%Heart Rate Reserve Avg', '', 'displayAdvancedHrData');
+            
+            // Quartiles
+            this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
         }
     }
 });

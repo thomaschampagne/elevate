@@ -26,7 +26,9 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             base.setDataViewsNeeded.call(this);
 
             if (this.analysisData_.cadenceData) {
-                this.dataViews.push(new CadenceDataView(this.analysisData_.cadenceData));
+                var cadenceDataView = new CadenceDataView(this.analysisData_.cadenceData);
+                cadenceDataView.setAppResources(this.appResources_);
+                this.dataViews.push(cadenceDataView);
             }
         }
     }

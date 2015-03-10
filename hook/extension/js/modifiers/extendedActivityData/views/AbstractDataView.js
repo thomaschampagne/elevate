@@ -12,9 +12,15 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         graphData: null,
 
+        graphTitle: '',
+
         graphUnits: '',
 
+        mainColor: [0, 0, 0],
+
         table: null,
+
+        appResources: null,
 
         init: function() {
             console.log('AbstractDataView::init');
@@ -22,6 +28,14 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         setViewId: function(id) {
             this.viewId = id;
+        },
+
+        setGraphTitle: function(title) {
+            this.graphTitle = title;
+        },
+
+        setAppResources: function(appResources) {
+            this.appResources = appResources;
         },
 
         render: function() {
@@ -33,21 +47,21 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         generateSectionTitle: function(title) {
-            return "<h3>" + title + "</h3>"
+            return "<h3 style='border-bottom: 3px solid rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); padding: 10px;'># " + title + "</h3>";
         },
 
         generateCanvasForGraph: function() {
             var graph = '';
             graph += '<div>';
-            graph += '<div style="display: inline-block;">';
-            graph += '<canvas id="' + this.viewId + '" height="500" width="500"></canvas>';
+            graph += '<div>';
+            graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
+            graph += '<canvas id="' + this.viewId + '" height="450" width="450"></canvas>';
             graph += '</div>';
             graph += '</div>';
             this.graph = jQuery(graph);
-
         },
 
-        setupDistributionGraph: function(zones, units, rgbArray) {
+        setupDistributionGraph: function(zones, units) {
 
             this.graphUnits = units;
 
@@ -66,9 +80,9 @@ var AbstractDataView = Fiber.extend(function(base) {
                 labels: labelsData,
                 datasets: [{
                     label: "Distribution",
-                    fillColor: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.5)",
-                    strokeColor: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.8)",
-                    highlightFill: "rgba(" + rgbArray[0] + ", " + rgbArray[1] + ", " + rgbArray[2] + ", 0.75)",
+                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
                     data: distributionArray
                 }]
             };
@@ -95,22 +109,24 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div style="display: inline-block;">';
-            table += '<table>';
+            table += '<div>';
+            table += '<table class="distributionTable">';
 
             // Generate table header
             table += '<tr>'; // Zone
-            table += '<td>Zone</td>'; // Zone
-            table += '<td>' + units + '</td>'; // bpm
-            table += '<td>Time</br>(hh:mm:ss)</td>'; // Time
-            table += '<td>% in zone</td>'; // % in zone
+            table += '<td><strong>Zone</strong></td>'; // Zone
+            table += '<td><strong>From ' + units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>To ' + units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
+            table += '<td><strong>% in zone</strong></td>'; // % in zone
             table += '</tr>';
 
             var zoneId = 1;
             for (var zone in zones) {
                 table += '<tr>'; // Zone
                 table += '<td>Z' + zoneId + '</td>'; // Zone
-                table += '<td>' + zones[zone].from.toFixed(1) + ' ' + units + ' - ' + zones[zone].to.toFixed(1) + ' ' + units + '</th>'; // %HRR
+                table += '<td>' + zones[zone].from.toFixed(1) + '</th>'; // %HRR
+                table += '<td>' + zones[zone].to.toFixed(1) + '</th>'; // %HRR
                 table += '<td>' + Helper.secondsToHHMMSS(zones[zone].s) + '</td>'; // Time%
                 table += '<td>' + zones[zone].percentDistrib.toFixed(1) + '%</td>'; // % in zone
                 table += '</tr>';
@@ -127,14 +143,13 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var grid = '';
             grid += '<div>';
-            grid += '<div class="grid" style="display: inline-block;">';
+            grid += '<div class="grid">';
             grid += '<table>';
 
             for (var i = 0; i < rows; i++) {
                 grid += '<tr>';
                 for (var j = 0; j < columns; j++) {
                     grid += '<td data-column="' + j + '" data-row="' + i + '">';
-                    grid += 'data'; // place data here
                     grid += '</td>';
                 }
                 grid += '</tr>';
@@ -145,10 +160,12 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.grid = jQuery(grid);
         },
 
-        insertContentAtGridPosition: function(columnId, rowId, data, title, units) {
+        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
+
+            var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
             if (this.grid) {
-                var content = data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span>';
+                var content = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span></span>';
                 this.grid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
             } else {
                 console.error('Grid is not initialized');

@@ -4,6 +4,8 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
         cadenceData: null,
 
+        mainColor: [213, 0, 195],
+
         init: function(cadenceData) {
 
             console.log('CadenceDataView::init');
@@ -12,14 +14,14 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
             this.cadenceData = cadenceData;
 
-            this.setupDistributionGraph(this.cadenceData.cadenceZones, 'rpm', [213, 0, 195]);
+            this.setupDistributionGraph(this.cadenceData.cadenceZones, 'rpm');
 
             this.setupDistributionTable(this.cadenceData.cadenceZones, 'rpm');
 
         },
 
         render: function() {
-            
+
             console.log('CadenceDataView::render');
 
             base.render.call(this);
@@ -28,6 +30,8 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
             // Add a title
             this.content += this.generateSectionTitle('Cadence Data');
+
+            this.setGraphTitle('Cadence distributon over ' + this.cadenceData.cadenceZones.length + ' zones');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)

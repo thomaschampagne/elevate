@@ -209,7 +209,7 @@ ActivityProcessor.prototype = {
 
         return {
             'rawAvgSpeed': rawAvgSpeed,
-            'avgPace': ((1 / rawAvgSpeed) * 60 * 60).toFixed(0), // send in seconds
+            'avgPace': parseInt(((1 / rawAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
             'medianSpeed': Helper.median(speedsNonZeroSorted),
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
