@@ -327,6 +327,8 @@ ActivityProcessor.prototype = {
         var hrrSecondsCount = 0;
         var hrrZonesCount = Object.keys(this.userHrrZones_).length;
         var hr, heartRateReserveAvg, durationInSeconds, durationInMinutes, zoneId;
+        var hrSum = 0;
+        var hrCount = 0;
 
         // Find HR for each Hrr of each zones
         for (var zone in this.userHrrZones_) {
@@ -342,10 +344,12 @@ ActivityProcessor.prototype = {
 
             // Compute heartrate data
             if (i > 0) {
+
+                hrSum += heartRateArray[i];
+
                 // Compute TRIMP
                 hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
                 heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
-                //console.debug(heartRateReserveAvg);
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 durationInMinutes = durationInSeconds / 60;
 
@@ -359,6 +363,7 @@ ActivityProcessor.prototype = {
                 }
 
                 hrrSecondsCount += durationInSeconds;
+                hrCount++;
             }
         }
 
@@ -370,6 +375,8 @@ ActivityProcessor.prototype = {
         for (var zone in this.userHrrZones_) {
             this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(4) * 100);
         }
+        
+        activityStatsMap.averageHeartRate = hrSum / hrCount;
 
         return {
             'TRIMP': TRIMP,
@@ -377,6 +384,7 @@ ActivityProcessor.prototype = {
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),
             'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
+            'averageHeartRate': activityStatsMap.averageHeartRate,
             'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
         };
 
