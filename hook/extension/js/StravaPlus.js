@@ -314,9 +314,13 @@ StravaPlus.prototype = {
                         break;
                     case 'Run':
                         extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+                    default:
+                        //extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
                 }
 
-                if(extendedActivityDataModifier) {
+                if (extendedActivityDataModifier) {
                     extendedActivityDataModifier.modify();
                 }
 
