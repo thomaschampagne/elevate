@@ -49,10 +49,10 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         insertSpeedDataIntoGrid: function() {
 
-            var measurementPreference = currentAthlete.get('measurement_preference');
-            var units = (measurementPreference == 'meters') ? 'km' : 'mi';
-            var speedUnitPerhour = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
-            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.62137;
+            var speedUnitsData = this.getSpeedUnitData();
+            var speedUnitPerhour = speedUnitsData[0];
+            var speedUnitFactor = speedUnitsData[1];
+            var distanceUnits = speedUnitsData[2];
 
 
             var paceTimePerDistance = Helper.secondsToHHMMSS(this.speedData.avgPace / speedUnitFactor);
@@ -64,7 +64,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(2, 0, (this.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
             // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Activity Pace', '/' + units, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Activity Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 1, (this.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');  
         }
     }

@@ -36,7 +36,7 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
 
-            this.insertSpeedDataIntoGrid();
+            this.insertCadenceDataIntoGrid();
             this.generateCanvasForGraph();
 
             // Push grid, graph and table to content view
@@ -45,7 +45,7 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
             this.content += this.table.html();
         },
 
-        insertSpeedDataIntoGrid: function() {
+        insertCadenceDataIntoGrid: function() {
 
             // Insert some data inside grid
             this.insertContentAtGridPosition(0, 0, '29');

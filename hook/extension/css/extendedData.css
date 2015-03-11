@@ -12,6 +12,15 @@
     vertical-align: middle;
     padding-right: 15px;
 }
+
+/* Remove padding on grid for featured data */
+
+.stravaPlusExtendedData .featuredData .grid td {
+    padding-bottom: 0px;
+    max-width: 200px;
+    padding-right: 30px;
+}
+
 .stravaPlusExtendedData .distributionGraphTitle {
     display: block;
     text-align: center;
@@ -25,9 +34,9 @@
     font-size: 22px;
 }
 .stravaPlusExtendedData .grid td {
-	text-align: left;
+    text-align: left;
     border: 0px;
-    padding-bottom: 30px
+    padding-bottom: 30px;
 }
 .stravaPlusExtendedData .gridDataContainer {
     cursor: pointer;

@@ -82,13 +82,8 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
                 }]
             };
 
-            // Generating the chart
-            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, { // TODO canvas id must be specific to view
-                barShowStroke: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                showTooltips: true,
-                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> Minutes"
-            });
+            // Graph it from Abstract
+            base.displayGraph.call(this);
         },
 
         render: function() {
@@ -102,12 +97,12 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('HeartRate Data');
 
-            this.setGraphTitle('Heart Rate Reserve distributon over ' + this.heartRateData.hrrZones.length + ' zones / <a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
+            this.setGraphTitle('Heart Rate Reserve distributon over ' + this.heartRateData.hrrZones.length + ' zones<br /><a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 
-            this.insertSpeedDataIntoGrid();
+            this.insertheartRateDataIntoGrid();
             this.generateCanvasForGraph();
             this.setupDistributionTable();
 
@@ -117,7 +112,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.content += this.table.html();
         },
 
-        insertSpeedDataIntoGrid: function() {
+        insertheartRateDataIntoGrid: function() {
 
             // Insert some data inside grid
             this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');

@@ -8,6 +8,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         grid: null,
 
+        hasGraph: true,
+
         graph: null,
 
         graphData: null,
@@ -47,7 +49,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         generateSectionTitle: function(title) {
-            return "<h3 style='border-bottom: 3px solid rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); padding: 10px;'># " + title + "</h3>";
+            return "<h3 style='border-bottom: 3px solid rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); padding-bottom: 5px;'># " + title + "</h3>";
         },
 
         generateCanvasForGraph: function() {
@@ -92,6 +94,10 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             if (!this.viewId) {
                 console.error('View Id must exist in ' + typeof this);
+                return;
+            }
+
+            if (!this.hasGraph) {
                 return;
             }
 
@@ -170,6 +176,14 @@ var AbstractDataView = Fiber.extend(function(base) {
             } else {
                 console.error('Grid is not initialized');
             }
+        },
+
+        getSpeedUnitData: function() {
+            var measurementPreference = currentAthlete.get('measurement_preference');
+            var units = (measurementPreference == 'meters') ? 'km' : 'mi';
+            var speedUnitPerhour = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
+            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.62137;
+            return [speedUnitPerhour, speedUnitFactor, units];
         }
     }
 });

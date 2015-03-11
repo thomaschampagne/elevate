@@ -16,7 +16,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             this.userSettings_ = userSettings;
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
-            
+
         },
 
         modify: function() {
@@ -45,8 +45,6 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             jQuery('.inline-stats.section').first().after(htmlButton).each(function() {
 
                 jQuery('#extendedStatsButton').click(function() {
-
-                    // jQuery.fancybox('<div style="width: ' + this.extendedActivityDataWidth + ';">' + this.content + '</div>'); // Content is the html computed by implementations
 
                     jQuery.fancybox({
                         'width': this.extendedActivityDataWidth,
@@ -77,6 +75,13 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         setDataViewsNeeded: function() {
 
             // By default we have... If data exist of course...
+
+            // Featured view
+            if (this.analysisData_) {
+                var featuredDataView = new FeaturedDataView(this.analysisData_);
+                featuredDataView.setAppResources(this.appResources_);
+                this.dataViews.push(featuredDataView);
+            }
 
             // Speed view
             if (this.analysisData_.speedData) {
