@@ -25,6 +25,12 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
+            if (this.analysisData_.powerData) {
+                var powerDataView = new PowerDataView(this.analysisData_.powerData);
+                powerDataView.setAppResources(this.appResources_);
+                this.dataViews.push(powerDataView);
+            }
+
             if (this.analysisData_.cadenceData) {
                 var cadenceDataView = new CadenceDataView(this.analysisData_.cadenceData);
                 cadenceDataView.setAppResources(this.appResources_);
@@ -33,19 +39,3 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
         }
     }
 });
-
-
-// // Display Various related data
-// this.handleVariousData_();
-
-// // Display speed related data
-// this.handleSpeedRelatedData_();
-
-// // Display power related data
-// this.handlePowerRelatedData_();
-
-// // Display cadence related data
-// this.handleCadenceRelatedData_();
-
-// // Display heartrate related data
-// this.handleHeartrateRelatedData_();

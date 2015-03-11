@@ -29,7 +29,7 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
             this.setViewId('CadenceDataView_p8a5d4gl56ds4');
 
             // Add a title
-            this.content += this.generateSectionTitle('Cadence Data');
+            this.content += this.generateSectionTitle('Cadence stats');
 
             this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
 
@@ -47,14 +47,13 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
         insertCadenceDataIntoGrid: function() {
 
-            // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 0, '29');
-            this.insertContentAtGridPosition(1, 0, '243');
-            this.insertContentAtGridPosition(2, 0, '776');
+            this.insertContentAtGridPosition(0, 0, this.cadenceData.cadencePercentageMoving.toFixed(2), 'Cadence % while moving', '%', 'displayCadenceData');
+            this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS(this.cadenceData.cadenceTimeMoving), 'Cadence Time while moving', '', 'displayCadenceData');
+            this.insertContentAtGridPosition(2, 0, this.cadenceData.crankRevolutions.toFixed(0), 'Crank Revolutions', '', 'displayCadenceData');
 
-            this.insertContentAtGridPosition(0, 1, '29');
-            this.insertContentAtGridPosition(1, 1, '100');
-            this.insertContentAtGridPosition(2, 1, '300');
+            this.insertContentAtGridPosition(0, 1, this.cadenceData.lowerQuartileCadence, '25% Quartile Cadence', 'rpm', 'displayCadenceData');
+            this.insertContentAtGridPosition(1, 1, this.cadenceData.medianCadence, '50% Quartile Cadence', 'rpm', 'displayCadenceData');
+            this.insertContentAtGridPosition(2, 1, this.cadenceData.upperQuartileCadence, '75% Quartile Cadence', 'rpm', 'displayCadenceData');
         }
     }
 });

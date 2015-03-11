@@ -95,7 +95,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             // Add a title
-            this.content += this.generateSectionTitle('HeartRate Data');
+            this.content += this.generateSectionTitle('Heart rate stats');
 
             this.setGraphTitle('Heart Rate Reserve distribution over ' + this.heartRateData.hrrZones.length + ' zones<br /><a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
 

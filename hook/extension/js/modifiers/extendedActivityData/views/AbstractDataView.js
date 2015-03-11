@@ -49,7 +49,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         generateSectionTitle: function(title) {
-            return "<h3 style='border-bottom: 3px solid rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); padding-bottom: 5px;'># " + title + "</h3>";
+            return "<h3 style='border-bottom: 3px solid rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); padding-bottom: 5px;'># " + title + "</h3>";
         },
 
         generateCanvasForGraph: function() {

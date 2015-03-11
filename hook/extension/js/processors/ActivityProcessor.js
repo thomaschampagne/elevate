@@ -8,9 +8,11 @@ function ActivityProcessor(vacuumProcessor, userHrrZones) {
 
 ActivityProcessor.movingThresholdKph = 3.5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
+ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
-ActivityProcessor.distributionZoneCount = 10;
+ActivityProcessor.distributionZoneCount = 18;
+
 
 /**
  * Define prototype
@@ -375,7 +377,7 @@ ActivityProcessor.prototype = {
         for (var zone in this.userHrrZones_) {
             this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(4) * 100);
         }
-        
+
         activityStatsMap.averageHeartRate = hrSum / hrCount;
 
         return {
@@ -413,8 +415,13 @@ ActivityProcessor.prototype = {
         var cadenceZones = [];
         var maxCadence = Math.max.apply(Math, cadenceArray);
         var minCadence = Math.min.apply(Math, cadenceArray);
-        var distributionStep = (maxCadence - minCadence) / ActivityProcessor.distributionZoneCount;
 
+        // Clamp max cadence value
+        if(maxCadence > ActivityProcessor.cadenceLimitRpm) {
+            maxCadence = ActivityProcessor.cadenceLimitRpm;
+        }
+
+        var distributionStep = (maxCadence - minCadence) / ActivityProcessor.distributionZoneCount;
         var durationInSeconds, durationCount = 0;
 
         for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
@@ -448,7 +455,6 @@ ActivityProcessor.prototype = {
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
                     var cadenceZoneId = this.getZoneFromDistributionStep_(cadenceArray[i], distributionStep);
-
                     if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
                         cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
                     }
@@ -466,11 +472,18 @@ ActivityProcessor.prototype = {
             cadenceZones[zone]['percentDistrib'] = ((cadenceZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
 
+        var cadenceArraySorted = cadenceArray.sort(function(a, b) {
+            return a - b;
+        });
+
         return {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
+            'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
+            'medianCadence': Helper.median(cadenceArraySorted),
+            'upperQuartileCadence': Helper.upperQuartile(cadenceArraySorted),
             'cadenceZones': cadenceZones
         };
     },

@@ -55,8 +55,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
             if (this.analysisData.speedData) {
                 this.insertContentAtGridPosition(2, 0, (this.analysisData.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // Q3 Speed
-
             }
+            
             if (this.analysisData.heartRateData) {
                 this.insertContentAtGridPosition(3, 0, this.analysisData.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
                 this.insertContentAtGridPosition(4, 0, this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0), '%Heart Rate Reserve Avg', '', 'displayAdvancedHrData');

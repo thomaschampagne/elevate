@@ -30,7 +30,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.setViewId('SpeedDataView_4smf8s7aG7ss1a');
 
             // Add a title
-            this.content += this.generateSectionTitle('Speed Data');
+            this.content += this.generateSectionTitle('Speed stats');
 
             this.setGraphTitle('Speed distribution over ' + this.speedData.speedZones.length + ' zones');
 
