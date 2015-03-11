@@ -31,7 +31,7 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Cadence Data');
 
-            this.setGraphTitle('Cadence distributon over ' + this.cadenceData.cadenceZones.length + ' zones');
+            this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
