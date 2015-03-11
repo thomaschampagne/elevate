@@ -64,6 +64,10 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(2, 0, (this.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
             // Insert some data inside grid
+            
+            // TODO if running then display avg speed
+            // TODO if cycling then display pace
+            // TODO else?
             this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Activity Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 1, (this.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');  
         }
