@@ -61,10 +61,10 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             var labelsData = [];
             for (var zone in this.heartRateData.hrrZones) {
-                var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%";
+                var label = "Z" + (parseInt(zone) + 1) + ": " + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%";
                 labelsData.push(label);
             }
-            
+
 
             var hrDistributionInMinutesArray = [];
             for (var zone in this.heartRateData.hrrZones) {

@@ -14,9 +14,9 @@ var PowerDataView = AbstractDataView.extend(function(base) {
 
             this.powerData = powerData;
 
-            this.setupDistributionGraph(this.powerData.powerZones, 'Watts');
+            this.setupDistributionGraph(this.powerData.powerZones, 'W');
 
-            this.setupDistributionTable(this.powerData.powerZones, 'Watts');
+            this.setupDistributionTable(this.powerData.powerZones, 'W');
 
         },
 
