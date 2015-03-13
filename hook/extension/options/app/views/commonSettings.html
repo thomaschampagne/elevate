@@ -12,7 +12,7 @@
             <tbody>
                 <tr data-ng-repeat="option in section.sectionContent">
                     <td>
-                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionTitle, option.optionHtml)">{{ option.optionTitle }}</button>
+                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionKey)">{{ option.optionTitle }}</button>
                     </td>
                     <td>
                         <span data-ng-repeat="label in option.optionLabels">
