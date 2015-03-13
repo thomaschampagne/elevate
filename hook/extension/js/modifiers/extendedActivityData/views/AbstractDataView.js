@@ -106,7 +106,7 @@ var AbstractDataView = Fiber.extend(function(base) {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
-                tooltipTemplate: "<%if (label){%><%=label%> for <%}%><%= Helper.secondsToHHMMSS(value * 60) %>"
+                tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>"
             });
 
         },
