@@ -43,6 +43,10 @@ StravaPlus.prototype = {
             this.handleExtensionHasJustUpdated_();
         }
 
+        if (env.preview) {
+            this.handlePreviewRibbon_();
+        }
+
         if (this.userSettings_.localStorageMustBeCleared) {
             localStorage.clear();
             Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, function(response) {
@@ -117,6 +121,15 @@ StravaPlus.prototype = {
         var globalStyle = 'background-color: #000000; color: lightgrey; font-size: 14px; padding: 30px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
         var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: lightgrey;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
+        jQuery('body').before(html);
+    },
+
+    /**
+     *
+     */
+    handlePreviewRibbon_: function() {
+        var globalStyle = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravaPlus</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
         jQuery('body').before(html);
     },
 
