@@ -303,11 +303,6 @@ StravaPlus.prototype = {
 
         var activityType = pageView.activity().get('type');
 
-        // Avoid running Extended data at the moment
-        // if (activityType != "Ride" && activityType != "Run") {
-        //     return;
-        // }
-
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
         this.activityProcessor_.getAnalysisData(
@@ -329,7 +324,7 @@ StravaPlus.prototype = {
                         extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
                         break;
                     default:
-                        //extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED
                         break;
                 }
 
