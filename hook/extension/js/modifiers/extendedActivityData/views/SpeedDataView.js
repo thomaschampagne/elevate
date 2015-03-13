@@ -63,8 +63,8 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 0, (this.speedData.medianSpeed * speedUnitFactor).toFixed(1), '50% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, (this.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
-            this.insertContentAtGridPosition(0, 1, (this.speedData.rawAvgSpeed * speedUnitFactor).toFixed(1), 'Raw average speed', speedUnitPerhour, 'displayAdvancedSpeedData');
-            this.insertContentAtGridPosition(1, 1, paceTimePerDistance, 'Raw average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(0, 1, (this.speedData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(1, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 1, (this.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');  
         }
     }

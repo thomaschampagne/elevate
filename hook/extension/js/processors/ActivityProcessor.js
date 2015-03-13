@@ -145,7 +145,8 @@ ActivityProcessor.prototype = {
      */
     speedData_: function(activityStatsMap, velocityArray, timeArray) {
 
-        var rawAvgSpeedSum = 0;
+        var genuineAvgSpeedSum = 0,
+            genuineAvgSpeedSumCount = 0;
         var speedsNonZero = Array();
         var speedVarianceSum = 0;
         var currentSpeed;
@@ -154,7 +155,8 @@ ActivityProcessor.prototype = {
         var maxSpeed = Math.max.apply(Math, velocityArray) * 3.6;
         var minSpeed = Math.min.apply(Math, velocityArray) * 3.6;
         var distributionStep = (maxSpeed - minSpeed) / ActivityProcessor.distributionZoneCount;
-        var durationInSeconds, durationCount = 0;
+        var durationInSeconds = 0,
+            durationCount = 0;
 
         for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
 
@@ -171,30 +173,30 @@ ActivityProcessor.prototype = {
             // Compute speed
             currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
 
-            if (currentSpeed != 0) {
-                
+            if (currentSpeed > 0) { // If moving...
+
                 speedsNonZero.push(currentSpeed);
 
-                rawAvgSpeedSum += currentSpeed;
+                genuineAvgSpeedSum += currentSpeed;
+                genuineAvgSpeedSumCount++;
 
                 // Compute variance speed
                 speedVarianceSum += Math.pow(currentSpeed, 2);
-            }
 
-            // Compute distribution for graph/table
-            if (i > 0) {
+                // Compute distribution for graph/table
+                if (i > 0) {
 
-                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                var speedZoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
+                    var speedZoneId = this.getZoneFromDistributionStep_(currentSpeed, distributionStep);
 
-                if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
-                    speedZones[speedZoneId]['s'] += durationInSeconds;
+                    if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
+                        speedZones[speedZoneId]['s'] += durationInSeconds;
+                    }
+
+                    durationCount += durationInSeconds;
                 }
-
-                durationCount += durationInSeconds;
             }
-
         }
 
         // Update zone distribution percentage
@@ -203,7 +205,7 @@ ActivityProcessor.prototype = {
         }
 
         // Finalize compute of Speed
-        var rawAvgSpeed = rawAvgSpeedSum / speedsNonZero.length;
+        var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
         var varianceSpeed = (speedVarianceSum / speedsNonZero.length) - Math.pow(activityStatsMap.averageSpeed, 2);
         var standardDeviationSpeed = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
         var speedsNonZeroSorted = speedsNonZero.sort(function(a, b) {
@@ -212,8 +214,8 @@ ActivityProcessor.prototype = {
 
 
         return {
-            'rawAvgSpeed': rawAvgSpeed,
-            'avgPace': parseInt(((1 / rawAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+            'genuineAvgSpeed': genuineAvgSpeed,
+            'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
             'medianSpeed': Helper.median(speedsNonZeroSorted),
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
@@ -419,7 +421,7 @@ ActivityProcessor.prototype = {
         var minCadence = Math.min.apply(Math, cadenceArray);
 
         // Clamp max cadence value
-        if(maxCadence > ActivityProcessor.cadenceLimitRpm) {
+        if (maxCadence > ActivityProcessor.cadenceLimitRpm) {
             maxCadence = ActivityProcessor.cadenceLimitRpm;
         }
 
