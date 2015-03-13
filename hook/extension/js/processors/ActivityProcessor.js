@@ -11,7 +11,7 @@ ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
-ActivityProcessor.distributionZoneCount = 18;
+ActivityProcessor.distributionZoneCount = 15;
 
 
 /**
