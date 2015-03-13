@@ -4,6 +4,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         viewId: null,
 
+        units: null,
+
         content: '',
 
         grid: null,
@@ -15,8 +17,6 @@ var AbstractDataView = Fiber.extend(function(base) {
         graphData: null,
 
         graphTitle: '',
-
-        graphUnits: '',
 
         mainColor: [0, 0, 0],
 
@@ -53,6 +53,12 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         generateCanvasForGraph: function() {
+
+            if (!this.units) {
+                console.error('View must have unit');
+                return;
+            }
+
             var graph = '';
             graph += '<div>';
             graph += '<div>';
@@ -63,13 +69,11 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.graph = jQuery(graph);
         },
 
-        setupDistributionGraph: function(zones, units) {
-
-            this.graphUnits = units;
+        setupDistributionGraph: function(zones) {
 
             var labelsData = [];
             for (var zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + ": " + zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.graphUnits;
+                var label = "Z" + (parseInt(zone) + 1) + ": " + zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.units;
                 labelsData.push(label);
             }
 
@@ -111,7 +115,12 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         },
 
-        setupDistributionTable: function(zones, units) {
+        setupDistributionTable: function(zones) {
+
+            if (!this.units) {
+                console.error('View must have unit');
+                return;
+            }
 
             var table = '';
             table += '<div>';
@@ -121,8 +130,8 @@ var AbstractDataView = Fiber.extend(function(base) {
             // Generate table header
             table += '<tr>'; // Zone
             table += '<td><strong>Zone</strong></td>'; // Zone
-            table += '<td><strong>From ' + units.toUpperCase() + '</strong></td>'; // bpm
-            table += '<td><strong>To ' + units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>From ' + this.units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>To ' + this.units.toUpperCase() + '</strong></td>'; // bpm
             table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
             table += '<td><strong>% in zone</strong></td>'; // % in zone
             table += '</tr>';

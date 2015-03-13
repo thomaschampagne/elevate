@@ -6,11 +6,13 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [255, 43, 66],
 
-        init: function(heartRateData) {
+        init: function(heartRateData, units) {
 
             console.log('HeartRateDataView::init');
 
             base.init.call(this);
+
+            this.units = units;
 
             this.heartRateData = heartRateData;
 

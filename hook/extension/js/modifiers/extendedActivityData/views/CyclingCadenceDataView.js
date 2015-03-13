@@ -1,4 +1,4 @@
-var CadenceDataView = AbstractDataView.extend(function(base) {
+var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
     return {
 
@@ -6,30 +6,21 @@ var CadenceDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [213, 0, 195],
 
-        init: function(cadenceData) {
+        init: function(cadenceData, units) {
+            console.log('CyclingCadenceDataView::init');
 
-            console.log('CadenceDataView::init');
+            this.units = units;
 
-            base.init.call(this);
-
-            this.cadenceData = cadenceData;
-
-            this.setupDistributionGraph(this.cadenceData.cadenceZones, 'rpm');
-
-            this.setupDistributionTable(this.cadenceData.cadenceZones, 'rpm');
-
+            base.init.call(this, cadenceData);
         },
 
         render: function() {
 
-            console.log('CadenceDataView::render');
+            console.log('CyclingCadenceDataView::render');
 
             base.render.call(this);
 
-            this.setViewId('CadenceDataView_p8a5d4gl56ds4');
-
-            // Add a title
-            this.content += this.generateSectionTitle('Cadence stats');
+            this.setViewId('CyclingCadenceDataView_p8a5d4gl56ds4');
 
             this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
 

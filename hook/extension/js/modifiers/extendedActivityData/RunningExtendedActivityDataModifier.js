@@ -19,12 +19,10 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
-            // TODO Give cadence units in spm for running
-            
             if (this.analysisData_.cadenceData) {
-                var cadenceDataView = new CadenceDataView(this.analysisData_.cadenceData);
-                cadenceDataView.setAppResources(this.appResources_);
-                this.dataViews.push(cadenceDataView);
+                var runningCadenceDataView = new RunningCadenceDataView(this.analysisData_.cadenceData, 'spm');
+                runningCadenceDataView.setAppResources(this.appResources_);
+                this.dataViews.push(runningCadenceDataView);
             }
         }
     }

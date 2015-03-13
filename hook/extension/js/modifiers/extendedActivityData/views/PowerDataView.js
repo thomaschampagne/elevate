@@ -6,17 +6,19 @@ var PowerDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [96, 96, 96],
 
-        init: function(powerData) {
+        init: function(powerData, units) {
 
             console.log('PowerDataView::init');
 
             base.init.call(this);
 
+            this.units = units;
+
             this.powerData = powerData;
 
-            this.setupDistributionGraph(this.powerData.powerZones, 'W');
+            this.setupDistributionGraph(this.powerData.powerZones);
 
-            this.setupDistributionTable(this.powerData.powerZones, 'W');
+            this.setupDistributionTable(this.powerData.powerZones);
 
         },
 

@@ -161,7 +161,9 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'js/modifiers/extendedActivityData/views/SpeedDataView.js',
     'js/modifiers/extendedActivityData/views/HeartRateDataView.js',
-    'js/modifiers/extendedActivityData/views/CadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/AbstractCadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/RunningCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/PowerDataView.js',
 
     // Extended data modifiers
@@ -169,7 +171,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
     'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
-    
+
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',

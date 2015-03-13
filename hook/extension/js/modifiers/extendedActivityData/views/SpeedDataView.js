@@ -6,17 +6,19 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [9, 123, 219],
 
-        init: function(speedData) {
+        init: function(speedData, units) {
 
             console.log('SpeedDataView::init');
 
             base.init.call(this);
 
+            this.units = units;
+
             this.speedData = speedData;
 
-            this.setupDistributionGraph(this.speedData.speedZones, 'kph');
+            this.setupDistributionGraph(this.speedData.speedZones);
 
-            this.setupDistributionTable(this.speedData.speedZones, 'kph');
+            this.setupDistributionTable(this.speedData.speedZones);
 
         },
 
