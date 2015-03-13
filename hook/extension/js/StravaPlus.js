@@ -84,7 +84,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleForwardToWWW_: function handleForwardToWWW_() {
+    handleForwardToWWW_: function() {
 
         if (_.isEqual(window.location.hostname, 'app.strava.com')) {
             var forwardUrl = window.location.protocol + "//www.strava.com" + window.location.pathname;
@@ -97,7 +97,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleExtensionHasJustUpdated_: function handleExtensionHasJustUpdated_() {
+    handleExtensionHasJustUpdated_: function() {
 
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
@@ -117,7 +117,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleUpdateRibbon_: function handleUpdateRibbon_() {
+    handleUpdateRibbon_: function() {
         var globalStyle = 'background-color: #000000; color: lightgrey; font-size: 14px; padding: 30px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
         var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: lightgrey;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
@@ -136,7 +136,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleMenu_: function handleMenu_() {
+    handleMenu_: function() {
 
         if (env.debugMode) console.log("Execute handleMenu_()");
 
@@ -147,7 +147,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRemoteLinks_: function handleRemoteLinks_() {
+    handleRemoteLinks_: function() {
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
@@ -167,7 +167,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityScrolling_: function handleActivityScrolling_() {
+    handleActivityScrolling_: function() {
 
         if (!this.userSettings_.feedAutoScroll) {
             return;
@@ -182,7 +182,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleDefaultLeaderboardFilter_: function handleDefaultLeaderboardFilter_() {
+    handleDefaultLeaderboardFilter_: function() {
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
@@ -206,7 +206,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleSegmentRankPercentage_: function handleSegmentRankPercentage_() {
+    handleSegmentRankPercentage_: function() {
 
         if (!this.userSettings_.displaySegmentRankPercentage) {
             return;
@@ -226,7 +226,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityGoogleMapType_: function handleActivityGoogleMapType_() {
+    handleActivityGoogleMapType_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
@@ -242,7 +242,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleHidePremium_: function handleHidePremium_() {
+    handleHidePremium_: function() {
 
         // Eject premium users of this "Hiding" feature
         // Even if they checked "ON" the hide premium option
@@ -263,7 +263,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleShopHeaderLink_: function handleShopHeaderLink_() {
+    handleShopHeaderLink_: function() {
 
         if (!this.userSettings_.displayShopHeaderLink) {
             return;
@@ -275,7 +275,7 @@ StravaPlus.prototype = {
         shopHeaderLinkModifier.modify();
     },
 
-    handleHideFeed_: function handleHideFeed_() {
+    handleHideFeed_: function() {
 
         // Test if where are on dashboard page
         if (!window.location.pathname.match(/^\/dashboard/)) {
@@ -295,7 +295,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleExtendedActivityData_: function handleExtendedActivityData_() {
+    handleExtendedActivityData_: function() {
 
         if (_.isUndefined(window.pageView)) {
             return;
@@ -344,7 +344,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleNearbySegments_: function handleNearbySegments_() {
+    handleNearbySegments_: function() {
 
         if (!this.userSettings_.displayNearbySegments) {
             return;
@@ -376,7 +376,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityBikeOdo_: function handleActivityBikeOdo_() {
+    handleActivityBikeOdo_: function() {
 
         if (!this.userSettings_.displayBikeOdoInActivity) {
             return;
@@ -410,7 +410,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRunningGradeAdjustedPace_: function handleRunningGradeAdjustedPace_() {
+    handleRunningGradeAdjustedPace_: function() {
 
         if (!this.userSettings_.activateRunningGradeAdjustedPace) {
             return;
@@ -439,7 +439,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRunningHeartRate_: function handleRunningHeartRate_() {
+    handleRunningHeartRate_: function() {
 
         if (!this.userSettings_.activateRunningHeartRate) {
             return;
@@ -468,7 +468,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
+    handleActivityQRCodeDisplay_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
@@ -487,7 +487,7 @@ StravaPlus.prototype = {
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type
      */
-    handleTrackTodayIncommingConnection_: function handleTrackTodayIncommingConnection_() {
+    handleTrackTodayIncommingConnection_: function() {
 
         var userHasConnectSince24Hour = StorageManager.getCookie('stravaplus_daily_connection_done');
 
