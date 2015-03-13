@@ -69,13 +69,13 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var labelsData = [];
             for (var zone in zones) {
-                var label = zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.graphUnits;
+                var label = "Z" + (parseInt(zone) + 1) + ": " + zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.graphUnits;
                 labelsData.push(label);
             }
 
             var distributionArray = [];
             for (var zone in zones) {
-                distributionArray.push((zones[zone].s / 60).toFixed(0));
+                distributionArray.push((zones[zone].s / 60).toFixed(2));
             }
 
             this.graphData = {
@@ -106,7 +106,7 @@ var AbstractDataView = Fiber.extend(function(base) {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
-                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> Minutes"
+                tooltipTemplate: "<%if (label){%><%=label%> for <%}%><%= Helper.secondsToHHMMSS(value * 60) %>"
             });
 
         },

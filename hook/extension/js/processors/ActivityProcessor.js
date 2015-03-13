@@ -172,7 +172,9 @@ ActivityProcessor.prototype = {
             currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
 
             if (currentSpeed != 0) {
+                
                 speedsNonZero.push(currentSpeed);
+
                 rawAvgSpeedSum += currentSpeed;
 
                 // Compute variance speed
