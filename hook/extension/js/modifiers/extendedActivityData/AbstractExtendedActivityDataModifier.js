@@ -17,6 +17,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
 
+            this.setDataViewsNeeded();
+            
         },
 
         modify: function() {

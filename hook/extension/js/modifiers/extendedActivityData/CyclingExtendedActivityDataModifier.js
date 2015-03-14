@@ -10,7 +10,6 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
 
-            this.setDataViewsNeeded();
         },
 
         modify: function() {

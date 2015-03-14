@@ -6,8 +6,7 @@ var GenericExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             console.log('GenericExtendedActivityDataModifier::init');
 
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
-
-            this.setDataViewsNeeded();
+            
         },
 
         modify: function() {
