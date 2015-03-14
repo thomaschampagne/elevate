@@ -78,20 +78,20 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             // Featured view
             if (this.analysisData_) {
-                var featuredDataView = new FeaturedDataView(this.analysisData_);
+                var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_);
                 featuredDataView.setAppResources(this.appResources_);
                 this.dataViews.push(featuredDataView);
             }
             
             // Speed view
-            if (this.analysisData_.speedData) {
+            if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, 'kph');
                 speedDataView.setAppResources(this.appResources_);
                 this.dataViews.push(speedDataView);
             }
             
             // // Heart view
-            if (this.analysisData_.heartRateData) {
+            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'bpm');
                 heartRateDataView.setAppResources(this.appResources_);
                 this.dataViews.push(heartRateDataView);

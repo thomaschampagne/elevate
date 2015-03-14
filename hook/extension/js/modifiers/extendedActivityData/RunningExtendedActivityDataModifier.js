@@ -19,7 +19,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
-            if (this.analysisData_.cadenceData) {
+            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 var runningCadenceDataView = new RunningCadenceDataView(this.analysisData_.cadenceData, 'spm');
                 runningCadenceDataView.setAppResources(this.appResources_);
                 this.dataViews.push(runningCadenceDataView);

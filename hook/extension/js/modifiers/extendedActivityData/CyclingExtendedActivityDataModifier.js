@@ -25,13 +25,13 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
-            if (this.analysisData_.powerData) {
+            if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'watts');
                 powerDataView.setAppResources(this.appResources_);
                 this.dataViews.push(powerDataView);
             }
 
-            if (this.analysisData_.cadenceData) {
+            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
                 this.dataViews.push(cyclingCadenceDataView);
@@ -39,3 +39,5 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
         }
     }
 });
+
+

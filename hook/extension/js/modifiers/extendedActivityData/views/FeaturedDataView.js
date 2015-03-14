@@ -4,7 +4,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
         analysisData: null,
 
-        init: function(analysisData) {
+        init: function(analysisData, userSettings) {
 
             console.log('FeaturedDataView::init');
 
@@ -12,12 +12,13 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
             this.hasGraph = false;
 
-            if (!analysisData) {
-                console.error('analysisData are empty');
+            if (!analysisData || !userSettings) {
+                console.error('analysisData and userSettings are required');
             }
 
             this.analysisData = analysisData;
 
+            this.userSettings = userSettings;
         },
 
         render: function() {
@@ -45,24 +46,24 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             var speedUnitPerhour = speedUnitsData[0];
             var speedUnitFactor = speedUnitsData[1];
 
-            if (this.analysisData.moveRatio) {
+            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
                 this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio'); // Move ratio
             }
 
-            if (this.analysisData.toughnessScore) {
+            if (this.analysisData.toughnessScore && this.userSettings.displayMotivationScore) {
                 this.insertContentAtGridPosition(1, 0, this.analysisData.toughnessScore.toFixed(0), 'Toughness Factor', '', 'displayMotivationScore'); // Toughness score
             }
 
-            if (this.analysisData.speedData) {
+            if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
                 this.insertContentAtGridPosition(2, 0, (this.analysisData.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // Q3 Speed
             }
-            
-            if (this.analysisData.heartRateData) {
+
+            if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
                 this.insertContentAtGridPosition(3, 0, this.analysisData.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
                 this.insertContentAtGridPosition(4, 0, this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0), '%Heart Rate Reserve Avg', '', 'displayAdvancedHrData');
             }
 
-            if (this.analysisData.powerData) {
+            if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
                 this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'WeightedWatts/kg', '', 'displayAdvancedPowerData'); // Avg watt /kg
             }
         }
