@@ -29,16 +29,22 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
             this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
 
-            // Add a title
-            this.content += this.generateSectionTitle('Highlighted Stats');
+            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio ||
+                this.analysisData.toughnessScore && this.userSettings.displayMotivationScore ||
+                this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData ||
+                this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData ||
+                this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
-            this.makeGrid(6, 1); // (col, row)
+                // Add a title
+                this.content += this.generateSectionTitle('Highlighted Stats');
 
-            this.insertFeaturedDataIntoGrid();
+                this.makeGrid(6, 1); // (col, row)
 
-            this.content += '<div class="featuredData">' + this.grid.html() + '</div>';
+                this.insertFeaturedDataIntoGrid();
+
+                this.content += '<div class="featuredData">' + this.grid.html() + '</div>';
+            }
         },
-
 
         insertFeaturedDataIntoGrid: function() {
 
@@ -66,6 +72,9 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
                 this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'WeightedWatts/kg', '', 'displayAdvancedPowerData'); // Avg watt /kg
             }
+
+            // Remove empty case in grid. This avoid unwanted padding on feature view rendering
+            this.grid.find('td:empty').remove();
         }
     }
 });
