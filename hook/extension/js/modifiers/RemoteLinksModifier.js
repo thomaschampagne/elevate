@@ -55,6 +55,10 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "</li>";
         htmlRemoteViewForActivity = jQuery(htmlRemoteViewForActivity);
         jQuery("#pagenav").append(htmlRemoteViewForActivity);
+
+        // Add tcx export
+        var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
+        jQuery(".actions-menu .slide-menu .options").append(htmlForTCXExport);
     },
 
     /**
