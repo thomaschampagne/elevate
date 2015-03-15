@@ -9,6 +9,8 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         init: function(heartRateData, units) {
 
             console.log('HeartRateDataView::init');
+            
+            this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             base.init.call(this);
 
@@ -94,8 +96,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             console.log('HeartRateDataView::render');
 
             base.render.call(this);
-
-            this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             // Add a title
             this.content += this.generateSectionTitle('Heart rate stats');

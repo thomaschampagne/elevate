@@ -9,6 +9,8 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         init: function(cadenceData, units) {
             console.log('CyclingCadenceDataView::init');
 
+            this.setViewId('CyclingCadenceDataView_p8a5d4gl56ds4');
+
             this.units = units;
 
             base.init.call(this, cadenceData);
@@ -20,7 +22,6 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             base.render.call(this);
 
-            this.setViewId('CyclingCadenceDataView_p8a5d4gl56ds4');
 
             this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
 

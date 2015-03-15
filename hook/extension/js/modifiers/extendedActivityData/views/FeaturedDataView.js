@@ -8,6 +8,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
             console.log('FeaturedDataView::init');
 
+            this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
+
             base.init.call(this);
 
             this.hasGraph = false;
@@ -26,8 +28,6 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             console.log('FeaturedDataView::render');
 
             base.render.call(this);
-
-            this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
 
             if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio ||
                 this.analysisData.toughnessScore && this.userSettings.displayMotivationScore ||

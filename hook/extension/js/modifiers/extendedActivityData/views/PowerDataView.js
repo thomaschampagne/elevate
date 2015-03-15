@@ -10,6 +10,8 @@ var PowerDataView = AbstractDataView.extend(function(base) {
 
             console.log('PowerDataView::init');
 
+            this.setViewId('PowerDataView_p8a5d4gl56ds4');
+
             base.init.call(this);
 
             this.units = units;
@@ -27,8 +29,6 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             console.log('PowerDataView::render');
 
             base.render.call(this);
-
-            this.setViewId('PowerDataView_p8a5d4gl56ds4');
 
             // Add a title
             this.content += this.generateSectionTitle('Power stats');
