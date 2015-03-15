@@ -115,3 +115,11 @@ Helper.getFromStorage = function(extensionId, storageType, key, callback) {
         }
     );
 };
+
+Helper.includeJs = function(scriptUrl) {
+    var link = document.createElement('link');
+    link.href = chrome.extension.getURL(scriptUrl);
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    (document.head || document.documentElement).appendChild(link);
+};

@@ -4,7 +4,7 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th width="70%"></th>
+                    <th width="50%"></th>
                     <th width="20%"></th>
                     <th width="10%"></th>
                 </tr>
@@ -12,7 +12,22 @@
             <tbody>
                 <tr data-ng-repeat="option in section.sectionContent">
                     <td>
-                        {{ option.optionTitle }}
+                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionKey)">{{ option.optionTitle }}</button>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="label in option.optionLabels">
+                            <span data-ng-switch on="label">
+                                <span data-ng-switch-when="Cycling">
+                                    <span class="label label-default" style="background-color: #FC4C02;">{{label}}</span>
+                                </span>
+                                <span data-ng-switch-when="Running">
+                                    <span class="label label-default"style="background-color: #2DAA35;">{{label}}</span>
+                                </span>
+                                <span data-ng-switch-default>
+                                    <span class="label label-default" >{{label}}</span>
+                                </span>
+                            </span>
+                        </span>
                     </td>
                     <td class="text-right">
                         <div data-ng-switch on="option.optionType">
@@ -23,9 +38,6 @@
                                 <checkbox large class="btn-primary" data-ng-model="option.active" data-ng-change="toggleCheckOption(option)"></checkbox>
                             </div>
                         </div>
-                    </td>
-                    <td class="text-right">
-                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionTitle, option.optionHtml)">Hint</button>
                     </td>
                 </tr>
             </tbody>

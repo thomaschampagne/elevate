@@ -86,7 +86,6 @@ SegmentProcessor.prototype = {
             var midPoint = stream.latlng[(stream.latlng.length / 2).toFixed(0)];
             var endPoint = stream.latlng[stream.latlng.length - 1];
 
-            // console.warn(midPoint);
             var approximativeSearchPoint = [];
 
             // Add start + end vector
