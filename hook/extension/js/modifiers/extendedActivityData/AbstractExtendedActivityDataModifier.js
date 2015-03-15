@@ -11,8 +11,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         dataViews: [],
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
-            console.log('AbstractExtendedActivityDataModifier::init');
-
+            
             this.analysisData_ = analysisData;
             this.appResources_ = appResources;
             this.userSettings_ = userSettings;

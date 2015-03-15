@@ -27,11 +27,10 @@ BikeOdoProcessor.prototype = {
         var cacheDeprecated = false;
         var now = Math.floor(Date.now() / 1000);
         if (bikeOdoOfAthleteFromCacheObject && (now > bikeOdoOfAthleteFromCacheObject.cachedOnTimeStamp + this.cacheAgingTimeOfBikesInSeconds_)) {
-            console.warn('cacheDeprecated !!');
+            console.log('bike ode cache is deprecated');
             cacheDeprecated = true;
         }
 
-        //console.warn(bikeOdoOfAthleteFromCacheObject);
         if (!_.isNull(bikeOdoOfAthleteFromCache) && !_.isEqual(bikeOdoOfAthleteFromCache, "null") && !cacheDeprecated) {
             if (env.debugMode) console.log("Using bike odo cache: " + bikeOdoOfAthleteFromCache);
             callback(bikeOdoOfAthleteFromCacheObject);

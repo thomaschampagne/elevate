@@ -3,10 +3,7 @@ var GenericExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
     return {
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
-            console.log('GenericExtendedActivityDataModifier::init');
-
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
-            
         },
 
         modify: function() {

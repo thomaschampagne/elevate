@@ -6,8 +6,6 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
         init: function(analysisData, userSettings) {
 
-            console.log('FeaturedDataView::init');
-
             this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
 
             base.init.call(this);
@@ -24,8 +22,6 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-
-            console.log('FeaturedDataView::render');
 
             base.render.call(this);
 

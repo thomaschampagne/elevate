@@ -3,21 +3,11 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
     return {
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
-
-            console.log('CyclingExtendedActivityDataModifier::init');
-
-            console.warn(AbstractExtendedActivityDataModifier);
-
             base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
-
         },
 
         modify: function() {
-
-            console.log('CyclingExtendedActivityDataModifier::modify');
-
-            // Super call
-            base.modify.call(this);
+            base.modify.call(this); // Super call
         },
 
         setDataViewsNeeded: function() {
@@ -40,5 +30,3 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
         }
     }
 });
-
-

@@ -8,8 +8,6 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         init: function(speedData, units) {
 
-            console.log('SpeedDataView::init');
-
             this.setViewId('SpeedDataView_4smf8s7aG7ss1a');
 
             base.init.call(this);
@@ -27,8 +25,6 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-
-            console.log('SpeedDataView::render');
 
             // Super render () call
             base.render.call(this);

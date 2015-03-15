@@ -26,9 +26,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         isAuthorOfViewedActivity: null,
 
-        init: function() {
-            console.log('AbstractDataView::init');
-        },
+        init: function() {},
 
         setViewId: function(id) {
             this.viewId = id;
@@ -46,9 +44,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.appResources = appResources;
         },
 
-        render: function() {
-            console.log('AbstractDataView::render');
-        },
+        render: function() {},
 
         getContent: function() {
             return this.content;

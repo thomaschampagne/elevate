@@ -8,8 +8,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         init: function(heartRateData, units) {
 
-            console.log('HeartRateDataView::init');
-            
             this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             base.init.call(this);
@@ -24,8 +22,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
 
         setupDistributionTable: function() {
-
-            console.debug('override setupDistributionTable() function for HeartRate view');
 
             var table = '';
             table += '<div>';
@@ -61,8 +57,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         displayGraph: function() {
 
-            console.debug('override displayGraph() function for HeartRate view');
-
             var labelsData = [];
             for (var zone in this.heartRateData.hrrZones) {
                 var label = "Z" + (parseInt(zone) + 1) + ": " + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%";
@@ -92,8 +86,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-
-            console.log('HeartRateDataView::render');
 
             base.render.call(this);
 

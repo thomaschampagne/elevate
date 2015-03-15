@@ -8,8 +8,6 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
 
         init: function(cadenceData) {
 
-            console.log('AbstractCadenceDataView::init');
-
             base.init.call(this);
 
             this.cadenceData = cadenceData;
@@ -21,8 +19,6 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
         },
 
         render: function() {
-
-            console.log('AbstractCadenceDataView::render');
 
             base.render.call(this);
 

@@ -19,7 +19,6 @@ Content.prototype = {
         s.async = false;
         s.onload = function() {
             this.parentNode.removeChild(this);
-            console.log(scriptUrl + ' loaded');
         };
         (document.head || document.documentElement).appendChild(s);
     },

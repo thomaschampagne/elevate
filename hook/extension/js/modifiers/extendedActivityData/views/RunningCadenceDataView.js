@@ -8,8 +8,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
         init: function(cadenceData, units) {
 
-            console.log('RunningCadenceDataView::init');
-
             this.setViewId('RunningCadenceDataView_dhgfj56ds4');
 
             this.units = units;
@@ -18,8 +16,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         },
 
         render: function() {
-
-            console.log('RunningCadenceDataView::render');
 
             base.render.call(this);
 

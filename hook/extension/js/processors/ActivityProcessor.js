@@ -40,9 +40,6 @@ ActivityProcessor.prototype = {
 
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
-            console.warn(activityStatsMap);
-            console.warn(result);
-
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
             localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
