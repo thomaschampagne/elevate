@@ -1,5 +1,7 @@
 var Loader = function() {}
+
 Loader.prototype = {
+
     require: function(scripts, callback) {
         this.loadCount = 0;
         this.totalRequired = scripts.length;
@@ -15,16 +17,33 @@ Loader.prototype = {
         if (this.loadCount == this.totalRequired && typeof this.callback == 'function') this.callback.call();
     },
     writeScript: function(src) {
+
+        var ext = src.substr(src.lastIndexOf('.') + 1);
+
         var self = this;
-        var s = document.createElement('script');
-        s.type = "text/javascript";
-        s.async = true;
-        s.src = src;
-        s.addEventListener('load', function(e) {
-            self.loaded(e);
-        }, false);
-        var head = document.getElementsByTagName('head')[0];
-        head.appendChild(s);
+
+        if (ext === 'js') {
+            var s = document.createElement('script');
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = src;
+            s.addEventListener('load', function(e) {
+                self.loaded(e);
+            }, false);
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(s);
+        } else if (ext === 'css') {
+            var link = document.createElement('link');
+            link.href = src;
+            link.addEventListener('load', function(e) {
+                self.loaded(e);
+            }, false);
+            link.async = true;
+            link.type = 'text/css';
+            link.rel = 'stylesheet';
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(link);
+        }
     }
 }
 
@@ -43,36 +62,11 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
  */
 Content.prototype = {
 
-    /*
-    // deprecated
-    includeJs: function includeJs(scriptUrl) {
-        var s = document.createElement('script');
-        s.src = chrome.extension.getURL(scriptUrl);
-        s.async = false;
-        s.onload = function() {
-            this.parentNode.removeChild(this);
-        };
-        (document.head || document.documentElement).appendChild(s);
-    },
-    */
-    
-    includeCss: function includeJs(scriptUrl) {
-        var link = document.createElement('link');
-        link.href = chrome.extension.getURL(scriptUrl);
-        link.async = false;
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        (document.head || document.documentElement).appendChild(link);
-    },
-
     loadDependencies: function loadDependencies(finishLoading) {
 
-        for (var i = 0; i < this.cssDependencies.length; i++) {
-            this.includeCss(this.cssDependencies[i]);
-        }
-
-        var l = new Loader();
-        l.require(this.jsDependencies_, function() {
+        var loader = new Loader();
+        var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
+        loader.require(dependencies, function() {
             finishLoading();
         });
     },
