@@ -106,7 +106,6 @@ var dist = function(callback) {
             filter: function(filenameToCopy) {
 
                 if (filenameToCopy.match('/docs/') ||
-                    filenameToCopy.match('/src/') ||
                     filenameToCopy.match('/tests/') ||
                     filenameToCopy.match('/test/') ||
                     filenameToCopy.match('/demo/') ||
