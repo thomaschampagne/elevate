@@ -2,8 +2,6 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
     return {
 
-        extendedActivityDataWidth: '900px',
-
         content: '',
 
         isAuthorOfViewedActivity: null,
@@ -51,8 +49,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 jQuery('#extendedStatsButton').click(function() {
 
                     jQuery.fancybox({
-                        'width': this.extendedActivityDataWidth,
-                        'height': '90%',
+                        'width': '100%',
+                        'height': '100%',
                         'autoScale': true,
                         'transitionIn': 'fade',
                         'transitionOut': 'fade',
