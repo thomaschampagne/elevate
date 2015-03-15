@@ -18,9 +18,11 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
             this.speedData = speedData;
 
-            this.setupDistributionGraph(this.speedData.speedZones);
+            this.speedUnitsData = this.getSpeedUnitData();
+            var speedUnitFactor = this.speedUnitsData[1];
 
-            this.setupDistributionTable(this.speedData.speedZones);
+            this.setupDistributionGraph(this.speedData.speedZones, speedUnitFactor);
+            this.setupDistributionTable(this.speedData.speedZones, speedUnitFactor);
 
         },
 
@@ -51,11 +53,9 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
 
         insertSpeedDataIntoGrid: function() {
 
-            var speedUnitsData = this.getSpeedUnitData();
-            var speedUnitPerhour = speedUnitsData[0];
-            var speedUnitFactor = speedUnitsData[1];
-            var distanceUnits = speedUnitsData[2];
-
+            var speedUnitPerhour = this.speedUnitsData[0];
+            var speedUnitFactor = this.speedUnitsData[1];
+            var distanceUnits = this.speedUnitsData[2];
 
             var paceTimePerDistance = Helper.secondsToHHMMSS(this.speedData.avgPace / speedUnitFactor);
             paceTimePerDistance = paceTimePerDistance.replace('00:', '');

@@ -75,11 +75,15 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.graph = jQuery(graph);
         },
 
-        setupDistributionGraph: function(zones) {
+        setupDistributionGraph: function(zones, ratio) {
+
+            if (!ratio) {
+                ratio = 1;
+            }
 
             var labelsData = [];
             for (var zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + ": " + zones[zone].from.toFixed(1) + " - " + zones[zone].to.toFixed(1) + " " + this.units;
+                var label = "Z" + (parseInt(zone) + 1) + ": " + (zones[zone].from * ratio).toFixed(1) + " - " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
                 labelsData.push(label);
             }
 
@@ -121,7 +125,11 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         },
 
-        setupDistributionTable: function(zones) {
+        setupDistributionTable: function(zones, ratio) {
+
+            if (!ratio) {
+                ratio = 1;
+            }
 
             if (!this.units) {
                 console.error('View must have unit');
@@ -146,8 +154,8 @@ var AbstractDataView = Fiber.extend(function(base) {
             for (var zone in zones) {
                 table += '<tr>'; // Zone
                 table += '<td>Z' + zoneId + '</td>'; // Zone
-                table += '<td>' + zones[zone].from.toFixed(1) + '</th>'; // %HRR
-                table += '<td>' + zones[zone].to.toFixed(1) + '</th>'; // %HRR
+                table += '<td>' + (zones[zone].from * ratio).toFixed(1) + '</th>'; // %HRR
+                table += '<td>' + (zones[zone].to * ratio).toFixed(1) + '</th>'; // %HRR
                 table += '<td>' + Helper.secondsToHHMMSS(zones[zone].s) + '</td>'; // Time%
                 table += '<td>' + zones[zone].percentDistrib.toFixed(1) + '%</td>'; // % in zone
                 table += '</tr>';

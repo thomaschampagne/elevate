@@ -88,15 +88,19 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(featuredDataView);
             }
-            
+
             // Speed view
             if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
-                var speedDataView = new SpeedDataView(this.analysisData_.speedData, 'kph');
+
+                var measurementPreference = currentAthlete.get('measurement_preference');
+                var units = (measurementPreference == 'meters') ? 'kph' : 'mph';
+
+                var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
                 speedDataView.setAppResources(this.appResources_);
                 speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(speedDataView);
             }
-            
+
             // // Heart view
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'bpm');
