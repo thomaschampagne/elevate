@@ -15,7 +15,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             base.setDataViewsNeeded.call(this);
 
             if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
-                var powerDataView = new PowerDataView(this.analysisData_.powerData, 'watts');
+                var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(powerDataView);
