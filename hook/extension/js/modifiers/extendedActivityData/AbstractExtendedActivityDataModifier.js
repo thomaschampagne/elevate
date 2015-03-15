@@ -6,6 +6,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         content: '',
 
+        isAuthorOfViewedActivity: null,
+
         dataViews: [],
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
@@ -17,8 +19,9 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
 
+            this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == athleteIdAuthorOfActivity);
+
             this.setDataViewsNeeded();
-            
         },
 
         modify: function() {
