@@ -1,0 +1,54 @@
+.stravaPlusExtendedData table {
+    margin: 0;
+    padding: 0;
+    border-spacing: 0px;
+}
+.stravaPlusExtendedData td {
+    text-align: center;
+    padding: 3px;
+}
+.stravaPlusExtendedData div {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 15px;
+}
+
+/* Remove padding on grid for featured data */
+
+.stravaPlusExtendedData .featuredData .grid td {
+    padding-bottom: 0px;
+    max-width: 200px;
+    padding-right: 30px;
+}
+
+.stravaPlusExtendedData .distributionGraphTitle {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    font-style: italic;
+}
+.stravaPlusExtendedData .distributionTable tr:hover {
+    background-color: #ffff99;
+}
+.stravaPlusExtendedData .grid {
+    font-size: 22px;
+}
+.stravaPlusExtendedData .grid td {
+    text-align: left;
+    border: 0px;
+    padding-bottom: 30px;
+}
+.stravaPlusExtendedData .gridDataContainer {
+    cursor: pointer;
+}
+.stravaPlusExtendedData .gridUnits {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.stravaPlusExtendedData .gridTitle {
+    font-size: 14px;
+    cursor: pointer;
+}
+.stravaPlusExtendedData .grid td {
+    max-width: 100px;
+}

@@ -16,6 +16,7 @@ Content.prototype = {
     includeJs: function includeJs(scriptUrl) {
         var s = document.createElement('script');
         s.src = chrome.extension.getURL(scriptUrl);
+        s.async = false;
         s.onload = function() {
             this.parentNode.removeChild(this);
         };
@@ -25,6 +26,7 @@ Content.prototype = {
     includeCss: function includeJs(scriptUrl) {
         var link = document.createElement('link');
         link.href = chrome.extension.getURL(scriptUrl);
+        link.async = false;
         link.type = 'text/css';
         link.rel = 'stylesheet';
         (document.head || document.documentElement).appendChild(link);
@@ -132,6 +134,7 @@ var appResources = {
 var jsDependencies = [
     'config/env.js',
     'node_modules/chart.js/Chart.min.js',
+    'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'modules/StorageManager.js',
     'modules/geo.js',
@@ -151,7 +154,23 @@ var jsDependencies = [
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
     'js/modifiers/ShopHeaderLinkModifier.js',
-    'js/modifiers/ExtendedActivityDataModifier.js',
+
+    // Extended data views
+    'js/modifiers/extendedActivityData/views/AbstractDataView.js',
+    'js/modifiers/extendedActivityData/views/FeaturedDataView.js',
+    'js/modifiers/extendedActivityData/views/SpeedDataView.js',
+    'js/modifiers/extendedActivityData/views/HeartRateDataView.js',
+    'js/modifiers/extendedActivityData/views/AbstractCadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/RunningCadenceDataView.js',
+    'js/modifiers/extendedActivityData/views/PowerDataView.js',
+
+    // Extended data modifiers
+    'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',
+    'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
+    'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
+    'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
+
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
@@ -161,7 +180,8 @@ var jsDependencies = [
 ];
 
 var cssDependencies = [
-    'node_modules/fancybox/dist/css/jquery.fancybox.css'
+    'node_modules/fancybox/dist/css/jquery.fancybox.css',
+    'css/extendedData.css'
 ];
 
 

@@ -45,16 +45,32 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
         });
     };
 
-    $scope.displayOptionHelper = function(title, content) {
-        Notifier(title, content);
+    $scope.displayOptionHelper = function(optionKeyParam) {
+
+        var option = null;
+
+        _.each($scope.sections, function(section) {
+
+            var optionSearch = _.findWhere(section.sectionContent, {
+                optionKey: optionKeyParam
+            });
+
+            if (optionSearch) {
+                option = optionSearch;
+                return;
+            }
+        });
+
+        if (option) {
+            Notifier(option.optionTitle, option.optionHtml);
+        }
     }
 
     // Trigger auto click on activity page extended data click
     var viewOptionHelperId = $location.search().viewOptionHelperId;
+
     if (!_.isUndefined(viewOptionHelperId)) {
-        $timeout(function() {
-            angular.element(document.getElementById(viewOptionHelperId)).triggerHandler('click');
-        }, 0);
+        $scope.displayOptionHelper(viewOptionHelperId);
     }
-    
+
 }]);

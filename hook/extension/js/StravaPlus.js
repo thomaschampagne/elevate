@@ -43,6 +43,10 @@ StravaPlus.prototype = {
             this.handleExtensionHasJustUpdated_();
         }
 
+        if (env.preview) {
+            this.handlePreviewRibbon_();
+        }
+
         if (this.userSettings_.localStorageMustBeCleared) {
             localStorage.clear();
             Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, function(response) {
@@ -80,7 +84,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleForwardToWWW_: function handleForwardToWWW_() {
+    handleForwardToWWW_: function() {
 
         if (_.isEqual(window.location.hostname, 'app.strava.com')) {
             var forwardUrl = window.location.protocol + "//www.strava.com" + window.location.pathname;
@@ -93,7 +97,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleExtensionHasJustUpdated_: function handleExtensionHasJustUpdated_() {
+    handleExtensionHasJustUpdated_: function() {
 
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
@@ -113,7 +117,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleUpdateRibbon_: function handleUpdateRibbon_() {
+    handleUpdateRibbon_: function() {
         var globalStyle = 'background-color: #000000; color: lightgrey; font-size: 14px; padding: 30px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
         var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: lightgrey;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
@@ -123,7 +127,16 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleMenu_: function handleMenu_() {
+    handlePreviewRibbon_: function() {
+        var globalStyle = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravaPlus</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
+        jQuery('body').before(html);
+    },
+
+    /**
+     *
+     */
+    handleMenu_: function() {
 
         if (env.debugMode) console.log("Execute handleMenu_()");
 
@@ -134,7 +147,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRemoteLinks_: function handleRemoteLinks_() {
+    handleRemoteLinks_: function() {
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
@@ -154,7 +167,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityScrolling_: function handleActivityScrolling_() {
+    handleActivityScrolling_: function() {
 
         if (!this.userSettings_.feedAutoScroll) {
             return;
@@ -169,7 +182,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleDefaultLeaderboardFilter_: function handleDefaultLeaderboardFilter_() {
+    handleDefaultLeaderboardFilter_: function() {
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
@@ -193,7 +206,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleSegmentRankPercentage_: function handleSegmentRankPercentage_() {
+    handleSegmentRankPercentage_: function() {
 
         if (!this.userSettings_.displaySegmentRankPercentage) {
             return;
@@ -213,7 +226,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityGoogleMapType_: function handleActivityGoogleMapType_() {
+    handleActivityGoogleMapType_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
@@ -229,7 +242,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleHidePremium_: function handleHidePremium_() {
+    handleHidePremium_: function() {
 
         // Eject premium users of this "Hiding" feature
         // Even if they checked "ON" the hide premium option
@@ -250,7 +263,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleShopHeaderLink_: function handleShopHeaderLink_() {
+    handleShopHeaderLink_: function() {
 
         if (!this.userSettings_.displayShopHeaderLink) {
             return;
@@ -262,7 +275,7 @@ StravaPlus.prototype = {
         shopHeaderLinkModifier.modify();
     },
 
-    handleHideFeed_: function handleHideFeed_() {
+    handleHideFeed_: function() {
 
         // Test if where are on dashboard page
         if (!window.location.pathname.match(/^\/dashboard/)) {
@@ -282,44 +295,53 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleExtendedActivityData_: function handleExtendedActivityData_() {
+    handleExtendedActivityData_: function() {
 
         if (_.isUndefined(window.pageView)) {
             return;
         }
 
-        if (env.debugMode) console.log("Execute ()");
+        var activityType = pageView.activity().get('type');
 
-        // Avoid running Extended data at the moment
-        if (pageView.activity().attributes.type == "Ride") {
+        if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
-            this.activityProcessor_.getAnalysisData(
-                this.activityId_,
-                this.userSettings_.userGender,
-                this.userSettings_.userRestHr,
-                this.userSettings_.userMaxHr,
-                this.userSettings_.userFTP,
-                function(analysisData) { // Callback when analysis data has been computed
-                    var extendedActivityDataModifier = new ExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+        this.activityProcessor_.getAnalysisData(
+            this.activityId_,
+            this.userSettings_.userGender,
+            this.userSettings_.userRestHr,
+            this.userSettings_.userMaxHr,
+            this.userSettings_.userFTP,
+
+            function(analysisData) { // Callback when analysis data has been computed
+
+                var extendedActivityDataModifier = null;
+
+                switch (activityType) {
+                    case 'Ride':
+                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+                    case 'Run':
+                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+                    default:
+                        // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
+                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                        jQuery('.inline-stats.section').parent().children().last().after(html);
+                        break;
+                }
+
+                if (extendedActivityDataModifier) {
                     extendedActivityDataModifier.modify();
-                }.bind(this)
-            );
+                }
 
-        } else if (pageView.activity().attributes.type == "Run") {
-            var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus <strong>Running Extended Data Features</strong> will be very soon available in version 0.5.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
-            jQuery('.inline-stats.section').parent().children().last().after(html);
-
-        } else {
-
-            return;
-        }
-
+            }.bind(this)
+        );
     },
 
     /**
      *
      */
-    handleNearbySegments_: function handleNearbySegments_() {
+    handleNearbySegments_: function() {
 
         if (!this.userSettings_.displayNearbySegments) {
             return;
@@ -351,7 +373,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityBikeOdo_: function handleActivityBikeOdo_() {
+    handleActivityBikeOdo_: function() {
 
         if (!this.userSettings_.displayBikeOdoInActivity) {
             return;
@@ -385,7 +407,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRunningGradeAdjustedPace_: function handleRunningGradeAdjustedPace_() {
+    handleRunningGradeAdjustedPace_: function() {
 
         if (!this.userSettings_.activateRunningGradeAdjustedPace) {
             return;
@@ -414,7 +436,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleRunningHeartRate_: function handleRunningHeartRate_() {
+    handleRunningHeartRate_: function() {
 
         if (!this.userSettings_.activateRunningHeartRate) {
             return;
@@ -443,7 +465,7 @@ StravaPlus.prototype = {
     /**
      *
      */
-    handleActivityQRCodeDisplay_: function handleActivityQRCodeDisplay_() {
+    handleActivityQRCodeDisplay_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
@@ -462,7 +484,7 @@ StravaPlus.prototype = {
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type
      */
-    handleTrackTodayIncommingConnection_: function handleTrackTodayIncommingConnection_() {
+    handleTrackTodayIncommingConnection_: function() {
 
         var userHasConnectSince24Hour = StorageManager.getCookie('stravaplus_daily_connection_done');
 
