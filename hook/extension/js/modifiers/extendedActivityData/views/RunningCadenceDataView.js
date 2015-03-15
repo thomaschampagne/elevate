@@ -25,8 +25,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
 
-            // DELAYED_FOR_TESTING
-
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 
@@ -46,7 +44,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 0, this.cadenceData.medianCadence, '50% Quartile Cadence', this.units, 'displayCadenceData');
             this.insertContentAtGridPosition(2, 0, this.cadenceData.upperQuartileCadence, '75% Quartile Cadence', this.units, 'displayCadenceData');
 
-            this.insertContentAtGridPosition(0, 1, this.cadenceData.crankRevolutions.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING       
+            // this.insertContentAtGridPosition(0, 1, this.cadenceData.crankRevolutions.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING       
         }
     }
 });
