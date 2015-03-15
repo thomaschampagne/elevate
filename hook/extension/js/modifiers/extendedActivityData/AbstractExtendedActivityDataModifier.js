@@ -9,7 +9,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         dataViews: [],
 
         init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
-            
+
             this.analysisData_ = analysisData;
             this.appResources_ = appResources;
             this.userSettings_ = userSettings;
@@ -22,6 +22,11 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         },
 
         modify: function() {
+
+            // Temporary message for new extended stats
+            this.content += '<p style="padding: 5px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">This extended stats panel is NEW ! ';
+            this.content += 'So feel free to report problems <a target="_blank" href="https://chrome.google.com/webstore/detail/stravaplus/dhiaggccakkgdfcadnklkbljcgicpckn/support">HERE</a> (don\'t forget activities links in report).<br/>';
+            this.content += 'Follow feature updates through <a target="_blank" href="https://twitter.com/champagnethomas">@champagnethomas</a>.<br/>This message will disappear when stravaplus users have acclaimed this new feature (approximately few days...)</p>';
 
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
