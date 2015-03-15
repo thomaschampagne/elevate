@@ -103,7 +103,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             if (!this.isAuthorOfViewedActivity) {
                 this.content += '<u>Note:</u> You don\'t own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravaPlus health settings.<br/>';
-                this.content += 'This allows you to analyse your heart capacity with the data recorded throught the activity of this owner.<br/><br/>';
+                this.content += 'This allows you to analyse your heart capacity with the data recorded on the activity of this athlete.<br/><br/>';
             }
 
             // Push grid, graph and table to content view
