@@ -160,7 +160,7 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_);
+        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         remoteLinksModifier.modify();
     },
 

@@ -1,11 +1,12 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-function RemoteLinksModifier(highLightStravaPlusFeature, appResources) {
+function RemoteLinksModifier(highLightStravaPlusFeature, appResources, authorOfActivity) {
     this.appResources_ = appResources;
     this.highLightStravaPlusFeature_ = highLightStravaPlusFeature;
     this.htmlRemoteViewForActivityStyle = '';
     this.htmlRemoteViewForSegmentStyle = '';
+    this.authorOfActivity = authorOfActivity;
 }
 
 /**
@@ -41,7 +42,7 @@ RemoteLinksModifier.prototype = {
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', '']
         ];
 
-        
+
         // Activity page
         // Adding remote view links on left panel
         var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
@@ -57,8 +58,10 @@ RemoteLinksModifier.prototype = {
         jQuery("#pagenav").append(htmlRemoteViewForActivity);
 
         // Add tcx export
-        var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
-        jQuery(".actions-menu .slide-menu .options").append(htmlForTCXExport);
+        if (this.authorOfActivity) {
+            var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
+            jQuery(".actions-menu .slide-menu .options").append(htmlForTCXExport);
+        }
     },
 
     /**
