@@ -1,3 +1,33 @@
+var Loader = function() {}
+Loader.prototype = {
+    require: function(scripts, callback) {
+        this.loadCount = 0;
+        this.totalRequired = scripts.length;
+        this.callback = callback;
+
+        for (var i = 0; i < scripts.length; i++) {
+            this.writeScript(chrome.extension.getURL(scripts[i]));
+        }
+    },
+    loaded: function(evt) {
+        this.loadCount++;
+
+        if (this.loadCount == this.totalRequired && typeof this.callback == 'function') this.callback.call();
+    },
+    writeScript: function(src) {
+        var self = this;
+        var s = document.createElement('script');
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = src;
+        s.addEventListener('load', function(e) {
+            self.loaded(e);
+        }, false);
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(s);
+    }
+}
+
 /**
  *   Content is responsible of ...
  */
@@ -13,6 +43,8 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
  */
 Content.prototype = {
 
+    /*
+    // deprecated
     includeJs: function includeJs(scriptUrl) {
         var s = document.createElement('script');
         s.src = chrome.extension.getURL(scriptUrl);
@@ -22,7 +54,8 @@ Content.prototype = {
         };
         (document.head || document.documentElement).appendChild(s);
     },
-
+    */
+    
     includeCss: function includeJs(scriptUrl) {
         var link = document.createElement('link');
         link.href = chrome.extension.getURL(scriptUrl);
@@ -32,15 +65,16 @@ Content.prototype = {
         (document.head || document.documentElement).appendChild(link);
     },
 
-    loadDependencies: function loadDependencies() {
-
-        for (var i = 0; i < this.jsDependencies_.length; i++) {
-            this.includeJs(this.jsDependencies_[i]);
-        }
+    loadDependencies: function loadDependencies(finishLoading) {
 
         for (var i = 0; i < this.cssDependencies.length; i++) {
             this.includeCss(this.cssDependencies[i]);
         }
+
+        var l = new Loader();
+        l.require(this.jsDependencies_, function() {
+            finishLoading();
+        });
     },
 
     isExtensionRunnableInThisContext_: function isExtensionRunnableInThisContext_() {
@@ -74,30 +108,35 @@ Content.prototype = {
             return;
         }
 
-        this.loadDependencies();
-
         var self = this;
 
-        chrome.storage.sync.get(this.userSettings_, function(items) {
-            var injectedScript = document.createElement('script');
-            injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
-            injectedScript.onload = function() {
-                this.parentNode.removeChild(this);
-                var inner = document.createElement('script');
+        this.loadDependencies(function() {
 
-                if (_.isEmpty(items)) {
-                    items = self.userSettings_;
-                }
+            console.log('All Scripts Loaded');
 
-                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
-
-                inner.onload = function() {
+            chrome.storage.sync.get(this.userSettings_, function(items) {
+                var injectedScript = document.createElement('script');
+                injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
+                injectedScript.onload = function() {
                     this.parentNode.removeChild(this);
+                    var inner = document.createElement('script');
+
+                    if (_.isEmpty(items)) {
+                        items = self.userSettings_;
+                    }
+
+                    inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+
+                    inner.onload = function() {
+                        this.parentNode.removeChild(this);
+                    };
+                    (document.head || document.documentElement).appendChild(inner);
                 };
-                (document.head || document.documentElement).appendChild(inner);
-            };
-            (document.head || document.documentElement).appendChild(injectedScript);
+                (document.head || document.documentElement).appendChild(injectedScript);
+            });
+
         });
+
     }
 };
 
