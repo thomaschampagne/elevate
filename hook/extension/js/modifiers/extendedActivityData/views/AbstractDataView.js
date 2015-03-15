@@ -24,12 +24,18 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         appResources: null,
 
+        isAuthorOfViewedActivity: null,
+
         init: function() {
             console.log('AbstractDataView::init');
         },
 
         setViewId: function(id) {
             this.viewId = id;
+        },
+
+        setIsAuthorOfViewedActivity: function(bool) {
+            this.isAuthorOfViewedActivity = bool;
         },
 
         setGraphTitle: function(title) {

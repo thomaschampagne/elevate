@@ -27,12 +27,14 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'watts');
                 powerDataView.setAppResources(this.appResources_);
+                powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(powerDataView);
             }
 
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
+                cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(cyclingCadenceDataView);
             }
         }

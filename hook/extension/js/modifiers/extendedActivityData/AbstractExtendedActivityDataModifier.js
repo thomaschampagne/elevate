@@ -19,7 +19,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
 
-            this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == athleteIdAuthorOfActivity);
+            this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == this.athleteId_);
 
             this.setDataViewsNeeded();
         },
@@ -85,6 +85,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             if (this.analysisData_) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_);
                 featuredDataView.setAppResources(this.appResources_);
+                featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(featuredDataView);
             }
             
@@ -92,6 +93,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, 'kph');
                 speedDataView.setAppResources(this.appResources_);
+                speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(speedDataView);
             }
             
@@ -99,6 +101,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'bpm');
                 heartRateDataView.setAppResources(this.appResources_);
+                heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(heartRateDataView);
             }
         }
