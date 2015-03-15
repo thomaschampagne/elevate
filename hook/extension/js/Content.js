@@ -25,7 +25,7 @@ Loader.prototype = {
         if (ext === 'js') {
             var s = document.createElement('script');
             s.type = "text/javascript";
-            s.async = true;
+            s.async = false;
             s.src = src;
             s.addEventListener('load', function(e) {
                 self.loaded(e);
@@ -38,7 +38,7 @@ Loader.prototype = {
             link.addEventListener('load', function(e) {
                 self.loaded(e);
             }, false);
-            link.async = true;
+            link.async = false;
             link.type = 'text/css';
             link.rel = 'stylesheet';
             var head = document.getElementsByTagName('head')[0];
