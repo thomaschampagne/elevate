@@ -66,7 +66,7 @@ ActivityProcessor.prototype = {
         // Median Pace
         // Q3 Pace
         // Standard deviation Pace
-        var paceData = computePaceDataFromSpeedData(speedData);
+        var paceData = this.computePaceDataFromSpeedData(speedData);
 
         // Estimated Normalized power
         // Estimated Variability index
@@ -229,9 +229,38 @@ ActivityProcessor.prototype = {
         };
     },
 
-    computePaceDataFromSpeedData: function () {
-        console.error('not implemented method');
-        return {};
+    computePaceDataFromSpeedData: function(speedData) {
+
+        var paceData = {};
+        paceData.lowerQuartilePace = this.convertSpeedToPace(speedData.lowerQuartileSpeed);
+        paceData.medianPace = this.convertSpeedToPace(speedData.medianSpeed);
+        paceData.upperQuartilePace = this.convertSpeedToPace(speedData.upperQuartileSpeed);
+        paceData.variancePace = this.convertSpeedToPace(speedData.varianceSpeed);
+        paceData.standardDeviationPace = this.convertSpeedToPace(speedData.standardDeviationSpeed);
+
+        paceData.paceZones = [];
+
+        _.each(speedData.speedZones, function(speedZone) {
+
+            var paceZone = {};
+            paceZone.from = this.convertSpeedToPace(speedZone.from);
+            paceZone.to = this.convertSpeedToPace(speedZone.to);
+            paceZone.s = speedZone.s;
+            paceZone.percentDistrib = speedZone.percentDistrib;
+            paceData.paceZones.push(paceZone);
+
+        }.bind(this));
+
+        console.debug(paceData);
+        return paceData;
+    },
+
+    /**
+     * @param speed in kph
+     * @return pace in seconds/km
+     */
+    convertSpeedToPace: function(speed) {
+        return parseInt((1 / speed) * 60 * 60);
     },
 
     /**

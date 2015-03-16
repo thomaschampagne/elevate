@@ -19,8 +19,9 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             this.speedUnitsData = this.getSpeedUnitData();
             var speedUnitFactor = this.speedUnitsData[1];
 
-            this.setupDistributionGraph(this.paceData.paceZones, speedUnitFactor);
-            this.setupDistributionTable(this.paceData.paceZones, speedUnitFactor);
+            // To be overriden..
+            this.setupDistributionGraph(this.paceData.paceZones, 1 / speedUnitFactor);
+            this.setupDistributionTable(this.paceData.paceZones, 1 / speedUnitFactor);
 
         },
 
@@ -53,17 +54,94 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             var speedUnitFactor = this.speedUnitsData[1];
             var distanceUnits = this.speedUnitsData[2];
 
-            var paceTimePerDistance = Helper.secondsToHHMMSS(this.paceData.avgPace / speedUnitFactor);
-            paceTimePerDistance = paceTimePerDistance.replace('00:', '');
+            // var paceTimePerDistance = Helper.secondsToHHMMSS(this.paceData.avgPace / speedUnitFactor);
+            // paceTimePerDistance = paceTimePerDistance.replace('00:', '');
 
             // Quartiles
-            this.insertContentAtGridPosition(0, 0, (this.paceData.lowerQuartileSpeed * speedUnitFactor).toFixed(1), '25% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
-            this.insertContentAtGridPosition(1, 0, (this.paceData.medianSpeed * speedUnitFactor).toFixed(1), '50% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
-            this.insertContentAtGridPosition(2, 0, (this.paceData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
 
-            this.insertContentAtGridPosition(0, 1, (this.paceData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(0, 1, Helper.secondsToHHMMSS((this.paceData.standardDeviationPace / speedUnitFactor).toFixed(0)).replace('00:', ''), 'Std Deviation &sigma;', this.units, 'displayAdvancedSpeedData');
             // this.insertContentAtGridPosition(1, 1, (this.paceData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
             // this.insertContentAtGridPosition(2, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
+
+        },
+
+        setupDistributionTable: function(zones, ratio) {
+
+            if (!ratio) {
+                ratio = 1;
+            }
+
+            if (!this.units) {
+                console.error('View must have unit');
+                return;
+            }
+
+            var table = '';
+            table += '<div>';
+            table += '<div>';
+            table += '<table class="distributionTable">';
+
+            // Generate table header
+            table += '<tr>'; // Zone
+            table += '<td><strong>Zone</strong></td>'; // Zone
+            table += '<td><strong>From<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>To<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
+            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
+            table += '<td><strong>% in zone</strong></td>'; // % in zone
+            table += '</tr>';
+
+            var zoneId = 1;
+            for (var zone in zones) {
+
+                var from = (_.isNaN(zones[zone].from)) ? '&infin;' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
+
+                table += '<tr>'; // Zone
+                table += '<td>Z' + zoneId + '</td>'; // Zone
+                table += '<td>' + from + '</th>'; // %HRR
+                table += '<td>' + Helper.secondsToHHMMSS((zones[zone].to * ratio).toFixed(0)) + '</th>'; // %HRR
+                table += '<td>' + Helper.secondsToHHMMSS(zones[zone].s) + '</td>'; // Time%
+                table += '<td>' + zones[zone].percentDistrib.toFixed(1) + '%</td>'; // % in zone
+                table += '</tr>';
+                zoneId++;
+            }
+
+            table += '</table>';
+            table += '</div>';
+            table += '</div>';
+            this.table = jQuery(table);
+        },
+
+        setupDistributionGraph: function(zones, ratio) {
+
+            if (!ratio) {
+                ratio = 1;
+            }
+
+            var labelsData = [];
+            for (var zone in zones) {
+                var from = (_.isNaN(zones[zone].from)) ? 'Infinite' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
+                var label = "Z" + (parseInt(zone) + 1) + ": " + from + " - " + Helper.secondsToHHMMSS((zones[zone].to * ratio).toFixed(0)) + " " + this.units;
+                labelsData.push(label);
+            }
+
+            var distributionArray = [];
+            for (var zone in zones) {
+                distributionArray.push((zones[zone].s / 60).toFixed(2));
+            }
+
+            this.graphData = {
+                labels: labelsData,
+                datasets: [{
+                    label: "Distribution",
+                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    data: distributionArray
+                }]
+            };
         }
     }
 });
