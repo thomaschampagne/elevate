@@ -99,17 +99,17 @@ StravaPlus.prototype = {
      */
     handleExtensionHasJustUpdated_: function() {
 
+        // Clear localstorage 
+        // Especially for activies data stored in cache
+        console.log("ExtensionHasJustUpdated, localstorage clear");
+        localStorage.clear();
+
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
         }
-        // Clear localstorage 
-        // Especially for activies data stored in cache
-        if (env.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
         // Display ribbon update message
         this.handleUpdateRibbon_()
-
-        localStorage.clear();
 
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
