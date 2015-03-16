@@ -99,17 +99,17 @@ StravaPlus.prototype = {
      */
     handleExtensionHasJustUpdated_: function() {
 
+        // Clear localstorage 
+        // Especially for activies data stored in cache
+        console.log("ExtensionHasJustUpdated, localstorage clear");
+        localStorage.clear();
+
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
         }
-        // Clear localstorage 
-        // Especially for activies data stored in cache
-        if (env.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
         // Display ribbon update message
         this.handleUpdateRibbon_()
-
-        localStorage.clear();
 
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
@@ -160,7 +160,7 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_);
+        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         remoteLinksModifier.modify();
     },
 
