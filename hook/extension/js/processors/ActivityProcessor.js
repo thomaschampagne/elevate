@@ -62,6 +62,12 @@ ActivityProcessor.prototype = {
         // Standard deviation Speed
         var speedData = this.speedData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
 
+        // Q1 Pace
+        // Median Pace
+        // Q3 Pace
+        // Standard deviation Pace
+        var paceData = computePaceDataFromSpeedData(speedData);
+
         // Estimated Normalized power
         // Estimated Variability index
         // Estimated Intensity factor
@@ -86,6 +92,7 @@ ActivityProcessor.prototype = {
             'moveRatio': moveRatio,
             'toughnessScore': toughnessScore,
             'speedData': speedData,
+            'paceData': paceData,
             'powerData': powerData,
             'heartRateData': heartRateData,
             'cadenceData': cadenceData
@@ -220,6 +227,11 @@ ActivityProcessor.prototype = {
             'standardDeviationSpeed': standardDeviationSpeed,
             'speedZones': speedZones
         };
+    },
+
+    computePaceDataFromSpeedData: function () {
+        console.error('not implemented method');
+        return {};
     },
 
     /**
