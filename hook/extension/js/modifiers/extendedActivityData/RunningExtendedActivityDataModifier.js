@@ -15,6 +15,18 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
+            // Pace view
+            if (this.analysisData_.paceData && this.userSettings_.displayAdvancedSpeedData) {
+
+                var measurementPreference = currentAthlete.get('measurement_preference');
+                var units = (measurementPreference == 'meters') ? '/km' : '/mi';
+
+                var paceDataView = new PaceDataView(this.analysisData_.paceData, units);
+                paceDataView.setAppResources(this.appResources_);
+                paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(paceDataView);
+            }
+
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 var runningCadenceDataView = new RunningCadenceDataView(this.analysisData_.cadenceData, 'spm');
                 runningCadenceDataView.setAppResources(this.appResources_);
