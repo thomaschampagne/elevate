@@ -142,6 +142,10 @@ ActivityProcessor.prototype = {
      */
     speedData_: function(activityStatsMap, velocityArray, timeArray) {
 
+        if(!velocityArray) {
+            return null;
+        }
+
         var genuineAvgSpeedSum = 0,
             genuineAvgSpeedSumCount = 0;
         var speedsNonZero = Array();
@@ -227,7 +231,7 @@ ActivityProcessor.prototype = {
      */
     powerData_: function(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray, timeArray) {
 
-        if (_.isEmpty(powerArray)) {
+        if (_.isEmpty(powerArray) || _.isEmpty(velocityArray)) {
             return null;
         }
 

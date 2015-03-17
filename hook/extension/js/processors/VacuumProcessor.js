@@ -55,6 +55,10 @@ VacuumProcessor.prototype = {
             return null;
         }
 
+        if (!window.pageView.activityAthlete()) {
+            return null;
+        }
+
         if (_.isUndefined(window.pageView.activityAthlete().get('id'))) {
             return null;
         }
@@ -149,7 +153,7 @@ VacuumProcessor.prototype = {
         // Get Estimated Average Power
         var avgPower = this.formatActivityDataValue_(
             jQuery('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
-            false, false, false, false);        
+            false, false, false, false);
 
         var weightedPower = this.formatActivityDataValue_(
             jQuery('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
@@ -171,7 +175,7 @@ VacuumProcessor.prototype = {
             false, false, false, false);
 
         // If no average speed found, try to get pace instead.
-        if (!averageSpeed) { 
+        if (!averageSpeed) {
             averageSpeed = this.formatActivityDataValue_(
                 jQuery('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
                 true, false, false, false);
