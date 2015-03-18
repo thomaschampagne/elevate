@@ -149,7 +149,7 @@ ActivityProcessor.prototype = {
      */
     speedData_: function(activityStatsMap, velocityArray, timeArray) {
 
-        if(!velocityArray) {
+        if (!velocityArray) {
             return null;
         }
 
@@ -264,7 +264,7 @@ ActivityProcessor.prototype = {
      * @return pace in seconds/km
      */
     convertSpeedToPace: function(speed) {
-        return parseInt((1 / speed) * 60 * 60);
+        return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
     },
 
     /**

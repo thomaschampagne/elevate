@@ -54,15 +54,19 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             var speedUnitFactor = this.speedUnitsData[1];
             var distanceUnits = this.speedUnitsData[2];
 
-            // var paceTimePerDistance = Helper.secondsToHHMMSS(this.paceData.avgPace / speedUnitFactor);
-            // paceTimePerDistance = paceTimePerDistance.replace('00:', '');
-
             // Quartiles
             this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
 
-            this.insertContentAtGridPosition(0, 1, Helper.secondsToHHMMSS((this.paceData.standardDeviationPace / speedUnitFactor).toFixed(0)).replace('00:', ''), 'Std Deviation &sigma;', this.units, 'displayAdvancedSpeedData');
+            var standardDeviationPace;
+            if (this.paceData.standardDeviationPace === 'infinite') {
+                standardDeviationPace = '&infin;';
+            } else {
+                standardDeviationPace = Helper.secondsToHHMMSS((this.paceData.standardDeviationPace / speedUnitFactor).toFixed(0)).replace('00:', '')
+            }
+
+            this.insertContentAtGridPosition(0, 1, standardDeviationPace, 'Std Deviation &sigma;', this.units, 'displayAdvancedSpeedData');
             // this.insertContentAtGridPosition(1, 1, (this.paceData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
             // this.insertContentAtGridPosition(2, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
 
@@ -95,8 +99,8 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             var zoneId = 1;
             for (var zone in zones) {
-
-                var from = (_.isNaN(zones[zone].from)) ? '&infin;' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
+                
+                var from = (zones[zone].from === 'infinite') ? '&infin;' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
 
                 table += '<tr>'; // Zone
                 table += '<td>Z' + zoneId + '</td>'; // Zone
@@ -122,7 +126,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             var labelsData = [];
             for (var zone in zones) {
-                var from = (_.isNaN(zones[zone].from)) ? 'Infinite' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
+                var from = (zones[zone].from === 'infinite') ? 'Infinite' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
                 var label = "Z" + (parseInt(zone) + 1) + ": " + from + " - " + Helper.secondsToHHMMSS((zones[zone].to * ratio).toFixed(0)) + " " + this.units;
                 labelsData.push(label);
             }
