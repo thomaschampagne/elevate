@@ -16,8 +16,7 @@ HidePremiumModifier.prototype = {
         // Premium left panel (Heart Rate, Est power curve, Est 25w Distribution)
         // Do not hide premium panel for non premium users watching a premium user activity
         if (!_.isUndefined(window.pageView)) {
-            if (!pageView.activityAthlete().attributes.premium) {
-
+            if (pageView.activityAthlete() && !pageView.activityAthlete().get('premium')) {
                 jQuery("#premium-views").hide();
             }
         }

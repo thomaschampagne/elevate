@@ -7,7 +7,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when(routeMap.commonSettingsRoute, {
         templateUrl: 'views/commonSettings.html',
-        controller: 'CommonSettingsController'
+        controller: 'ComonSettingsController'
     });
 
     $routeProvider.when(routeMap.healthSettingsRoute, {
