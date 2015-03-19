@@ -255,7 +255,6 @@ ActivityProcessor.prototype = {
 
         }.bind(this));
 
-        console.debug(paceData);
         return paceData;
     },
 
