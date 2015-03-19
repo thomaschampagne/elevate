@@ -26,6 +26,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         isAuthorOfViewedActivity: null,
 
+        tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
+
         init: function() {},
 
         setViewId: function(id) {
@@ -116,7 +118,7 @@ var AbstractDataView = Fiber.extend(function(base) {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
-                tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>"
+                tooltipTemplate: this.tooltipTemplate
             });
 
         },
