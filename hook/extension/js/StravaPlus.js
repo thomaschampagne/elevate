@@ -31,7 +31,7 @@ StravaPlus.defaultIntervalTimeMillis = 750;
  */
 StravaPlus.prototype = {
 
-    init_: function init_() {
+    init_: function() {
 
         // Redirect app.strava.com/* to www.strava.com/*
         if (this.handleForwardToWWW_()) {

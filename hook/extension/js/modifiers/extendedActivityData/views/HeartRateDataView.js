@@ -6,21 +6,23 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [255, 43, 66],
 
-        init: function(heartRateData, units) {
+        init: function(heartRateData, units, userSettings) {
 
             this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             base.init.call(this);
 
+            this.heartRateData = heartRateData;
+
             this.units = units;
 
-            this.heartRateData = heartRateData;
+            this.userSettings = userSettings;
 
             this.setupDistributionTable();
 
             this.tooltipTemplate = "<%if (label){";
             this.tooltipTemplate += "var hr = label.split(' ')[1].replace('%','').split('-');";
-            this.tooltipTemplate += "var finalLabel = label + ' @ ' + hr[0] + '-' + hr[1] + 'bpm';";
+            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + 'bpm';";
             this.tooltipTemplate += "%><%=finalLabel%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>";
 
         },
