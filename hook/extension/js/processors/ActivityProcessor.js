@@ -400,7 +400,8 @@ ActivityProcessor.prototype = {
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 durationInMinutes = durationInSeconds / 60;
 
-                TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
+                // TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
+                TRIMP += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
                 zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
