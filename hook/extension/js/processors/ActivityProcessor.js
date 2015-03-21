@@ -87,6 +87,15 @@ ActivityProcessor.prototype = {
         // Crank revolution
         var cadenceData = this.cadenceData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap, activityStream.time);
 
+
+        // Avg grade
+        // Q1/Q2/Q grade
+        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.time);
+
+        console.warn(gradeData);
+
+
+
         // Return an array with all that shit...
         return {
             'moveRatio': moveRatio,
@@ -95,7 +104,8 @@ ActivityProcessor.prototype = {
             'paceData': paceData,
             'powerData': powerData,
             'heartRateData': heartRateData,
-            'cadenceData': cadenceData
+            'cadenceData': cadenceData,
+            'gradeData': gradeData
         };
     },
 
@@ -467,14 +477,8 @@ ActivityProcessor.prototype = {
             maxCadence = ActivityProcessor.cadenceLimitRpm;
         }
 
-        // console.debug(minCadence);
-        // console.debug(maxCadence);
-
         var distributionStep = (maxCadence - minCadence) / ActivityProcessor.distributionZoneCount;
         var durationInSeconds, durationCount = 0;
-
-        // console.debug(ActivityProcessor.distributionZoneCount);
-        // console.debug(distributionStep);
 
         for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
 
@@ -485,8 +489,6 @@ ActivityProcessor.prototype = {
                 percentDistrib: null
             });
         }
-
-        // console.debug(cadenceZones);
 
         for (var i = 0; i < velocityArray.length; i++) {
 
@@ -509,9 +511,6 @@ ActivityProcessor.prototype = {
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
                     var cadenceZoneId = this.getZoneFromDistributionStep_(cadenceArray[i], distributionStep, minCadence);
-
-                    // console.debug(cadenceArray[i]);
-                    // // console.debug(cadenceZoneId);
 
                     if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
                         cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
@@ -545,4 +544,73 @@ ActivityProcessor.prototype = {
             'cadenceZones': cadenceZones
         };
     },
+
+    gradeData_: function(gradeArray, timeArray) {
+
+        if (_.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
+            return null;
+        }
+
+        var gradeSum = 0,
+            gradeCount = 0;
+
+        var gradeZones = [];
+        var maxPower = Math.max.apply(Math, gradeArray);
+        var minPower = Math.min.apply(Math, gradeArray);
+        var distributionStep = (maxPower - minPower) / ActivityProcessor.distributionZoneCount;
+
+        var durationInSeconds, durationCount = 0;
+
+        // Prepare zones
+        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
+
+            gradeZones.push({
+                from: distributionStep * i,
+                to: distributionStep * (i + 1),
+                s: 0,
+                percentDistrib: null
+            });
+        }
+
+        for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
+
+            gradeSum += gradeArray[i];
+            gradeCount++;
+
+            // Compute distribution for graph/table
+            if (i > 0) {
+
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                var gradeZoneId = this.getZoneFromDistributionStep_(gradeArray[i], distributionStep, minPower);
+
+                if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
+                    gradeZones[gradeZoneId]['s'] += durationInSeconds;
+                }
+
+                durationCount += durationInSeconds;
+            }
+        }
+
+        var avgGrade = gradeSum / gradeCount;
+
+        var gradeSortedSamples = gradeArray.sort(function(a, b) {
+            return a - b;
+        });
+
+        // Update zone distribution percentage
+        for (var zone in gradeZones) {
+            gradeZones[zone]['percentDistrib'] = ((gradeZones[zone]['s'] / durationCount).toFixed(4) * 100);
+        }
+
+        return {
+            'avgGrade': avgGrade,
+            'lowerQuartileGrade': Helper.lowerQuartile(gradeSortedSamples),
+            'medianGrade': Helper.median(gradeSortedSamples),
+            'upperQuartileGrade': Helper.upperQuartile(gradeSortedSamples),
+            'gradeZones': gradeZones // Only while moving
+        };
+
+    }
+
 };
