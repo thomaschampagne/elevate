@@ -198,6 +198,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/RunningCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/PowerDataView.js',
+    'js/modifiers/extendedActivityData/views/GradeDataView.js',
 
     // Extended data modifiers
     'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',

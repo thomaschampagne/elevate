@@ -555,21 +555,27 @@ ActivityProcessor.prototype = {
             gradeCount = 0;
 
         var gradeZones = [];
-        var maxPower = Math.max.apply(Math, gradeArray);
-        var minPower = Math.min.apply(Math, gradeArray);
-        var distributionStep = (maxPower - minPower) / ActivityProcessor.distributionZoneCount;
+        var maxGrade = Math.max.apply(Math, gradeArray);
+        var minGrade = Math.min.apply(Math, gradeArray);
+        var distributionStep = (maxGrade - minGrade) / ActivityProcessor.distributionZoneCount;
 
         var durationInSeconds, durationCount = 0;
 
         // Prepare zones
+        var currentZoneFrom = minGrade,
+            currentZoneTo;
         for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
 
+            currentZoneTo = currentZoneFrom + distributionStep;
+
             gradeZones.push({
-                from: distributionStep * i,
-                to: distributionStep * (i + 1),
+                from: currentZoneFrom,
+                to: currentZoneTo,
                 s: 0,
                 percentDistrib: null
             });
+
+            currentZoneFrom = currentZoneTo;
         }
 
         for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
@@ -582,7 +588,7 @@ ActivityProcessor.prototype = {
 
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                var gradeZoneId = this.getZoneFromDistributionStep_(gradeArray[i], distributionStep, minPower);
+                var gradeZoneId = this.getZoneFromDistributionStep_(gradeArray[i], distributionStep, minGrade, true);
 
                 if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
                     gradeZones[gradeZoneId]['s'] += durationInSeconds;

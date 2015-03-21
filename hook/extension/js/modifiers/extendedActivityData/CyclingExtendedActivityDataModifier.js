@@ -39,6 +39,12 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(cyclingCadenceDataView);
             }
+
+            // TODO Testing view disply
+            var gradeDataView = new GradeDataView(this.analysisData_.gradeData, '%');
+            gradeDataView.setAppResources(this.appResources_);
+            gradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+            this.dataViews.push(gradeDataView);
         }
     }
 });
