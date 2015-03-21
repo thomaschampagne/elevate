@@ -533,68 +533,6 @@ ActivityProcessor.prototype = {
             'upperQuartileCadence': Helper.upperQuartile(cadenceArraySorted),
             'cadenceZones': cadenceZones
         };
-    },
-
-
-    /**
-     *  @param 
-     *  @param Remove set of value under minPercentExistence
-     *  @return array of values cleaned. /!\ this will return less values
-     */
-    removeUnrepresentativeValues: function(setOfValues, timeArray, minPercentExistence) {
-
-        var setOfValuesCleaned = [];
-
-        var cutSize = 20;
-        var valueZones = [];
-        var maxValue = _.max(setOfValues);
-        var minValue = _.min(setOfValues);
-        var distributionStep = (maxValue - minValue) / cutSize;
-
-        // Prepare zones
-        var currentZoneFrom = minValue,
-            currentZoneTo;
-
-        for (var i = 0; i < cutSize; i++) {
-            currentZoneTo = currentZoneFrom + distributionStep;
-            valueZones.push({
-                from: currentZoneFrom,
-                to: currentZoneTo,
-                s: 0,
-                percentDistrib: null
-            });
-            currentZoneFrom = currentZoneTo;
-        }
-
-        // Determine zone of value and count in zone
-        var durationInSeconds, durationCount = 0;
-        for (var i = 0; i < setOfValues.length; i++) {
-            if (i > 0) {
-                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
-                var valueZoneId = this.getZoneFromDistributionStep_(setOfValues[i], distributionStep, minValue);
-
-                if (!_.isUndefined(valueZoneId) && !_.isUndefined(valueZones[valueZoneId])) {
-                    valueZones[valueZoneId]['s'] += durationInSeconds;
-                }
-                durationCount += durationInSeconds;
-            }
-        }
-
-        // Process percentage in zone
-        for (var zone in valueZones) {
-            valueZones[zone]['percentDistrib'] = valueZones[zone]['s'] / durationCount * 100;
-        }
-
-        // Reloop values and find percentage of sample to keep it or not along minPercentExistence
-        for (var i = 0; i < setOfValues.length; i++) {
-            var valueZoneId = this.getZoneFromDistributionStep_(setOfValues[i], distributionStep, minValue);
-            if (!_.isUndefined(valueZoneId) && !_.isUndefined(valueZones[valueZoneId])) {
-                if (valueZones[valueZoneId].percentDistrib > minPercentExistence) {
-                    setOfValuesCleaned.push(setOfValues[i]);
-                }
-            }
-        }
-        return setOfValuesCleaned;
     }
 
 };
