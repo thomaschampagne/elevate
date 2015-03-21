@@ -551,9 +551,9 @@ ActivityProcessor.prototype = {
             return null;
         }
 
-        console.warn(gradeArray.length);
-        gradeArray = this.removeUnrepresentativeValues(gradeArray, timeArray, 0.1);
-        console.warn(gradeArray.length);
+        // console.warn(gradeArray.length);
+        // gradeArray = this.removeUnrepresentativeValues(gradeArray, timeArray, 0.1);
+        // console.warn(gradeArray.length);
 
         var gradeSum = 0,
             gradeCount = 0;
@@ -628,6 +628,8 @@ ActivityProcessor.prototype = {
      *  @param Remove set of value under minPercentExistence
      *  @return array of values cleaned. /!\ this will return less values
      */
+    /*
+    // Currently unstable
     removeUnrepresentativeValues: function(setOfValues, timeArray, minPercentExistence) {
 
         var setOfValuesCleaned = [];
@@ -683,4 +685,5 @@ ActivityProcessor.prototype = {
         }
         return setOfValuesCleaned;
     }
+    */
 };
