@@ -24,8 +24,6 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
 
             // Add a title
             this.content += this.generateSectionTitle('Cadence stats');
-
-            this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
         }
     }
 });

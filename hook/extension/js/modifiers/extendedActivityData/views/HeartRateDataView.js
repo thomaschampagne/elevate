@@ -98,8 +98,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Heart rate stats');
 
-            this.setGraphTitle('Heart Rate Reserve distribution over ' + this.heartRateData.hrrZones.length + ' zones<br /><a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
-
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 

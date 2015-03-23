@@ -33,8 +33,6 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Pace stats');
 
-            this.setGraphTitle('Pace distribution over ' + this.paceData.paceZones.length + ' zones');
-
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 

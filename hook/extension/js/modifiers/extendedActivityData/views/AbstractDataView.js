@@ -28,7 +28,9 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
 
-        init: function() {},
+        init: function() {
+
+        },
 
         setViewId: function(id) {
             this.viewId = id;
@@ -46,7 +48,9 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.appResources = appResources;
         },
 
-        render: function() {},
+        render: function() {
+            this.setGraphTitle((new String(this.units)).toUpperCase() + ' distribution in minutes');
+        },
 
         getContent: function() {
             return this.content;
