@@ -303,6 +303,11 @@ StravaPlus.prototype = {
 
         var activityType = pageView.activity().get('type');
 
+        // Skip manual activities
+        if(activityType === 'Manual') {
+            return;
+        }
+
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
         this.activityProcessor_.getAnalysisData(
