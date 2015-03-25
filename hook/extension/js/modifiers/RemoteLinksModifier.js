@@ -38,8 +38,16 @@ RemoteLinksModifier.prototype = {
         var remoteViewActivityLinksArray = [
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravaPlus'],
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
-            ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', '']
-        ];
+            ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
+        // please check if this works in this way:
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Map Flipper OCM Cycle", "javascript:(function(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('cycle');}}else{vv_flipMap('cycle')}})();", '?referrer=stravaPlus'],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Map Flipper OCM Landscape", "javascript:(function(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('landscape');}}else{vv_flipMap('landscape')}})();", '?referrer=stravaPlus'],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Map Flipper OCM Outdoors", "javascript:(function(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('outdoors');}}else{vv_flipMap('outdoors')}})();", '?referrer=stravaPlus'],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Map Flipper OSM Open Street Map", "javascript:(function(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('street');}}else{vv_flipMap('street')}})();", '?referrer=stravaPlus']
+        // it works if you copy the "javascript:..." string into a bookmark and click on it, but doesn't seem work if you copy the string into browsers url field ?!?
+        // check http://veloviewer.com/mapFlipper
+        // and https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js
+];
 
         
         // Activity page
