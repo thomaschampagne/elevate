@@ -69,6 +69,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/kg', 'w/kg', 'displayAdvancedPowerData'); // Avg watt /kg
             }
 
+            // TODO Add grade profile: FLAT, UP/DOWNHILL 
+
             // Remove empty case in grid. This avoid unwanted padding on feature view rendering
             this.grid.find('td:empty').remove();
         }

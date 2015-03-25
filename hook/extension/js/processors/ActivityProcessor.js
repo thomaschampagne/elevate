@@ -12,6 +12,11 @@ ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
 ActivityProcessor.distributionZoneCount = 15;
+ActivityProcessor.gradeUpHillLimit = 1.6;
+ActivityProcessor.gradeDownHillLimit = -1.6;
+ActivityProcessor.gradeProfileFlatPercentageDetected = 65;
+ActivityProcessor.gradeProfileFlat = 'FLAT';
+ActivityProcessor.gradeProfileHilly = 'HILLY';
 
 
 /**
@@ -551,14 +556,17 @@ ActivityProcessor.prototype = {
             return null;
         }
 
-        // console.warn(gradeArray.length);
-        // gradeArray = this.removeUnrepresentativeValues(gradeArray, timeArray, 0.1);
-        // console.warn(gradeArray.length);
-
         var gradeSum = 0,
             gradeCount = 0;
 
         var gradeZones = [];
+        var upFlatDownInSeconds = {
+            up: 0,
+            flat: 0,
+            down: 0,
+            total: 0
+        };
+
         var maxGrade = _.max(gradeArray);
         var minGrade = _.min(gradeArray);
         var distributionStep = (maxGrade - minGrade) / ActivityProcessor.distributionZoneCount;
@@ -599,7 +607,26 @@ ActivityProcessor.prototype = {
                 }
 
                 durationCount += durationInSeconds;
+
+                // Compute DOWN/FLAT/UP duration
+                if (gradeArray[i] > ActivityProcessor.gradeUpHillLimit) { // UPHILL
+                    upFlatDownInSeconds.up += durationInSeconds;
+                } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
+                    upFlatDownInSeconds.down += durationInSeconds;
+                } else { // FLAT
+                    upFlatDownInSeconds.flat += durationInSeconds;
+                }
             }
+        }
+
+        upFlatDownInSeconds.total = durationCount;
+
+        // Compute grade profile
+        var gradeProfile;
+        if((upFlatDownInSeconds.flat / upFlatDownInSeconds.total * 100) >= ActivityProcessor.gradeProfileFlatPercentageDetected) {
+            gradeProfile = ActivityProcessor.gradeProfileFlat;
+        } else {
+            gradeProfile = ActivityProcessor.gradeProfileHilly;
         }
 
         var avgGrade = gradeSum / gradeCount;
@@ -618,7 +645,9 @@ ActivityProcessor.prototype = {
             'lowerQuartileGrade': Helper.lowerQuartile(gradeSortedSamples),
             'medianGrade': Helper.median(gradeSortedSamples),
             'upperQuartileGrade': Helper.upperQuartile(gradeSortedSamples),
-            'gradeZones': gradeZones // Only while moving
+            'gradeZones': gradeZones, 
+            'upFlatDownInSeconds': upFlatDownInSeconds,
+            'gradeProfile': gradeProfile
         };
 
     },
