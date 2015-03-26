@@ -114,13 +114,10 @@ StravaPlus.prototype = {
         var updatedToEvent = {
             categorie: 'Exploitation',
             action: 'updatedVersion',
-            name: this.appResources_.extVersion,
-            value: this.athleteId_
+            name: this.appResources_.extVersion
         };
 
-        console.warn(updatedToEvent);
-
-        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name, updatedToEvent.value);
+        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
         // Now mark extension "just updated" to false...
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
@@ -301,7 +298,7 @@ StravaPlus.prototype = {
         var activityType = pageView.activity().get('type');
 
         // Skip manual activities
-        if(activityType === 'Manual') {
+        if (activityType === 'Manual') {
             return;
         }
 
@@ -520,7 +517,7 @@ StravaPlus.prototype = {
             if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
             if (!env.debugMode) {
-                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName, env.buildNumber);
+                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
             // Create cookie to avoid push during 1 day
