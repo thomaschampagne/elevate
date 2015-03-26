@@ -512,7 +512,7 @@ StravaPlus.prototype = {
             var eventAction = 'DailyConnection_Account_' + accountType;
 
             // Push IncomingConnection to piwik
-            var eventName = accountName + ' #' + this.athleteId_;
+            var eventName = accountName + ' #' + this.athleteId_ + ' v' + this.appResources_.extVersion;
 
             if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
