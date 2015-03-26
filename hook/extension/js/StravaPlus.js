@@ -119,8 +119,8 @@ StravaPlus.prototype = {
     handleUpdateRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: #333;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
-        jQuery('body').before(html);
+        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
+        $('body').before(html);
     },
 
     /**
@@ -129,7 +129,7 @@ StravaPlus.prototype = {
     handlePreviewRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravaPlus</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
-        jQuery('body').before(html);
+        $('body').before(html);
     },
 
     /**
@@ -315,7 +315,7 @@ StravaPlus.prototype = {
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
                         var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
-                        jQuery('.inline-stats.section').parent().children().last().after(html);
+                        $('.inline-stats.section').parent().children().last().after(html);
                         break;
                 }
 

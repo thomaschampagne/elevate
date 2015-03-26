@@ -45,11 +45,11 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             htmlButton += '</a>';
             htmlButton += '</section>';
 
-            jQuery('.inline-stats.section').first().after(htmlButton).each(function() {
+            $('.inline-stats.section').first().after(htmlButton).each(function() {
 
-                jQuery('#extendedStatsButton').click(function() {
+                $('#extendedStatsButton').click(function() {
 
-                    jQuery.fancybox({
+                    $.fancybox({
                         'width': '100%',
                         'height': '100%',
                         'autoScale': true,

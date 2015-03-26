@@ -57,7 +57,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             table += '</table>';
             table += '</div>';
             table += '</div>';
-            this.table = jQuery(table);
+            this.table = $(table);
 
         },
 

@@ -21,7 +21,7 @@ SegmentRankPercentageModifier.prototype = {
 
     addPercentageRanking_: function addPercentageRanking_() {
 
-        this.standing = jQuery('.leaders').find("table").find(".standing");
+        this.standing = $('.leaders').find("table").find(".standing");
 
         // Clean
         this.ranking = this.standing.children().last().text().trim().replace("\n", "").replace(/ /g, '').split('/');

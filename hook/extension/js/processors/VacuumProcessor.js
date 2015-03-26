@@ -133,7 +133,7 @@ VacuumProcessor.prototype = {
      */
     getActivityCommonStats: function getActivityStats() {
 
-        var actStatsContainer = jQuery(".activity-summary-container");
+        var actStatsContainer = $(".activity-summary-container");
 
         // Get Distance
         var distance = this.formatActivityDataValue_(
@@ -152,11 +152,11 @@ VacuumProcessor.prototype = {
 
         // Get Estimated Average Power
         var avgPower = this.formatActivityDataValue_(
-            jQuery('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
+            $('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
             false, false, false, false);
 
         var weightedPower = this.formatActivityDataValue_(
-            jQuery('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
+            $('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
             false, false, false, false);
 
         // Get Energy Output
@@ -166,7 +166,7 @@ VacuumProcessor.prototype = {
 
         // Get Elapsed Time
         var elapsedTime = this.formatActivityDataValue_(
-            jQuery('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
+            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
             true, false, false, false);
 
         // Get Average speed
@@ -177,7 +177,7 @@ VacuumProcessor.prototype = {
         // If no average speed found, try to get pace instead.
         if (!averageSpeed) {
             averageSpeed = this.formatActivityDataValue_(
-                jQuery('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
+                $('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
                 true, false, false, false);
 
             averageSpeed = 1 / averageSpeed; // invert to km per seconds
@@ -247,7 +247,7 @@ VacuumProcessor.prototype = {
 
         var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate";
 
-        jQuery.ajax(url).done(function(jsonResponse) {
+        $.ajax(url).done(function(jsonResponse) {
 
             var hasPowerMeter = true;
 
@@ -273,9 +273,9 @@ VacuumProcessor.prototype = {
             running: null
         };
 
-        jQuery.when(
+        $.when(
 
-            jQuery.ajax({
+            $.ajax({
                 url: '/api/v3/segments/search',
                 data: {
                     bounds: vectorA + ',' + vectorB,
@@ -294,7 +294,7 @@ VacuumProcessor.prototype = {
                 }
             }),
 
-            jQuery.ajax({
+            $.ajax({
                 url: '/api/v3/segments/search',
                 data: {
                     bounds: vectorA + ',' + vectorB,
@@ -324,7 +324,7 @@ VacuumProcessor.prototype = {
      */
     getSegmentStream: function getSegmentStream(segmentId, callback) {
 
-        jQuery.ajax({
+        $.ajax({
             url: '/stream/segments/' + segmentId,
             type: 'GET',
             success: function(xhrResponseText) {
@@ -354,12 +354,12 @@ VacuumProcessor.prototype = {
 
         var url = location.protocol + "//www.strava.com/athletes/" + athleteId;
 
-        jQuery.ajax(url).always(function(data) {
+        $.ajax(url).always(function(data) {
 
             var bikeOdoArray = {};
-            _.each(jQuery(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
-                var bikeName = jQuery(element).find('td').first().text().trim();
-                var bikeOdo = jQuery(element).find('td').last().text().trim();
+            _.each($(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
+                var bikeName = $(element).find('td').first().text().trim();
+                var bikeOdo = $(element).find('td').last().text().trim();
                 bikeOdoArray[btoa(bikeName)] = bikeOdo;
             });
 

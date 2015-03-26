@@ -74,7 +74,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             graph += '<canvas id="' + this.viewId + '" height="450" width="450"></canvas>';
             graph += '</div>';
             graph += '</div>';
-            this.graph = jQuery(graph);
+            this.graph = $(graph);
         },
 
         setupDistributionGraph: function(zones, ratio) {
@@ -167,7 +167,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             table += '</table>';
             table += '</div>';
             table += '</div>';
-            this.table = jQuery(table);
+            this.table = $(table);
         },
 
         makeGrid: function(columns, rows) {
@@ -188,7 +188,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             grid += '</table>';
             grid += '</div>';
             grid += '</div>';
-            this.grid = jQuery(grid);
+            this.grid = $(grid);
         },
 
         insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
