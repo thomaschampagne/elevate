@@ -1,3 +1,52 @@
+var Loader = function() {}
+
+Loader.prototype = {
+
+    require: function(scripts, callback) {
+        this.loadCount = 0;
+        this.totalRequired = scripts.length;
+        this.callback = callback;
+
+        for (var i = 0; i < scripts.length; i++) {
+            this.writeScript(chrome.extension.getURL(scripts[i]));
+        }
+    },
+    loaded: function(evt) {
+        this.loadCount++;
+
+        if (this.loadCount == this.totalRequired && typeof this.callback == 'function') this.callback.call();
+    },
+    writeScript: function(src) {
+
+        var ext = src.substr(src.lastIndexOf('.') + 1);
+
+        var self = this;
+
+        if (ext === 'js') {
+            var s = document.createElement('script');
+            s.type = "text/javascript";
+            s.async = false;
+            s.src = src;
+            s.addEventListener('load', function(e) {
+                self.loaded(e);
+            }, false);
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(s);
+        } else if (ext === 'css') {
+            var link = document.createElement('link');
+            link.href = src;
+            link.addEventListener('load', function(e) {
+                self.loaded(e);
+            }, false);
+            link.async = false;
+            link.type = 'text/css';
+            link.rel = 'stylesheet';
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(link);
+        }
+    }
+}
+
 /**
  *   Content is responsible of ...
  */
@@ -13,34 +62,13 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
  */
 Content.prototype = {
 
-    includeJs: function includeJs(scriptUrl) {
-        var s = document.createElement('script');
-        s.src = chrome.extension.getURL(scriptUrl);
-        s.async = false;
-        s.onload = function() {
-            this.parentNode.removeChild(this);
-        };
-        (document.head || document.documentElement).appendChild(s);
-    },
+    loadDependencies: function loadDependencies(finishLoading) {
 
-    includeCss: function includeJs(scriptUrl) {
-        var link = document.createElement('link');
-        link.href = chrome.extension.getURL(scriptUrl);
-        link.async = false;
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        (document.head || document.documentElement).appendChild(link);
-    },
-
-    loadDependencies: function loadDependencies() {
-
-        for (var i = 0; i < this.jsDependencies_.length; i++) {
-            this.includeJs(this.jsDependencies_[i]);
-        }
-
-        for (var i = 0; i < this.cssDependencies.length; i++) {
-            this.includeCss(this.cssDependencies[i]);
-        }
+        var loader = new Loader();
+        var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
+        loader.require(dependencies, function() {
+            finishLoading();
+        });
     },
 
     isExtensionRunnableInThisContext_: function isExtensionRunnableInThisContext_() {
@@ -74,30 +102,35 @@ Content.prototype = {
             return;
         }
 
-        this.loadDependencies();
-
         var self = this;
 
-        chrome.storage.sync.get(this.userSettings_, function(items) {
-            var injectedScript = document.createElement('script');
-            injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
-            injectedScript.onload = function() {
-                this.parentNode.removeChild(this);
-                var inner = document.createElement('script');
+        this.loadDependencies(function() {
 
-                if (_.isEmpty(items)) {
-                    items = self.userSettings_;
-                }
+            console.log('All Scripts Loaded');
 
-                inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
-
-                inner.onload = function() {
+            chrome.storage.sync.get(this.userSettings_, function(items) {
+                var injectedScript = document.createElement('script');
+                injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
+                injectedScript.onload = function() {
                     this.parentNode.removeChild(this);
+                    var inner = document.createElement('script');
+
+                    if (_.isEmpty(items)) {
+                        items = self.userSettings_;
+                    }
+
+                    inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+
+                    inner.onload = function() {
+                        this.parentNode.removeChild(this);
+                    };
+                    (document.head || document.documentElement).appendChild(inner);
                 };
-                (document.head || document.documentElement).appendChild(inner);
-            };
-            (document.head || document.documentElement).appendChild(injectedScript);
+                (document.head || document.documentElement).appendChild(injectedScript);
+            });
+
         });
+
     }
 };
 
@@ -159,6 +192,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
     'js/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'js/modifiers/extendedActivityData/views/SpeedDataView.js',
+    'js/modifiers/extendedActivityData/views/PaceDataView.js',
     'js/modifiers/extendedActivityData/views/HeartRateDataView.js',
     'js/modifiers/extendedActivityData/views/AbstractCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',

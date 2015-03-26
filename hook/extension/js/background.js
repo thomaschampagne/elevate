@@ -51,6 +51,18 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
         });
 
+        // On install too: persist that extension has been updated.
+        // This force local storage clear on install 
+        var storageManager = new StorageManager();
+        storageManager.storageType = StorageManager.storageSyncType;
+        storageManager.setToStorage(
+            'extensionHasJustUpdated',
+            true,
+            function(data) {
+                console.log(data);
+            }
+        );
+
     } else if (details.reason == "update") {
 
         var thisVersion = chrome.runtime.getManifest().version;

@@ -14,8 +14,20 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
             base.setDataViewsNeeded.call(this);
 
+            // Speed view
+            if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
+
+                var measurementPreference = currentAthlete.get('measurement_preference');
+                var units = (measurementPreference == 'meters') ? 'kph' : 'mph';
+
+                var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
+                speedDataView.setAppResources(this.appResources_);
+                speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(speedDataView);
+            }
+
             if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
-                var powerDataView = new PowerDataView(this.analysisData_.powerData, 'watts');
+                var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(powerDataView);

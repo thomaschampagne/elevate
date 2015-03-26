@@ -1,11 +1,12 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-function RemoteLinksModifier(highLightStravaPlusFeature, appResources) {
+function RemoteLinksModifier(highLightStravaPlusFeature, appResources, authorOfActivity) {
     this.appResources_ = appResources;
     this.highLightStravaPlusFeature_ = highLightStravaPlusFeature;
     this.htmlRemoteViewForActivityStyle = '';
     this.htmlRemoteViewForSegmentStyle = '';
+    this.authorOfActivity = authorOfActivity;
 }
 
 /**
@@ -42,7 +43,7 @@ RemoteLinksModifier.prototype = {
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Veloviewer Map Flipper", 'http://veloviewer.com/mapFlipper', 'mapflipper']
 ];
 
-        
+
         // Activity page
         // Adding remote view links on left panel
         var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
@@ -64,6 +65,12 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "</li>";
         htmlRemoteViewForActivity = jQuery(htmlRemoteViewForActivity);
         jQuery("#pagenav").append(htmlRemoteViewForActivity);
+
+        // Add tcx export
+        if (this.authorOfActivity) {
+            var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
+            jQuery(".actions-menu .slide-menu .options").append(htmlForTCXExport);
+        }
     },
 
     /**

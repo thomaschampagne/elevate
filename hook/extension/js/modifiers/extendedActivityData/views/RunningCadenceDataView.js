@@ -19,8 +19,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             base.render.call(this);
 
-            this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
-
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 

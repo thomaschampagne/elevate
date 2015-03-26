@@ -6,20 +6,26 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         mainColor: [255, 43, 66],
 
-        init: function(heartRateData, units) {
+        init: function(heartRateData, units, userSettings) {
 
             this.setViewId('HeartRateDataView_i79a78d98s9a7g7');
 
             base.init.call(this);
 
+            this.heartRateData = heartRateData;
+
             this.units = units;
 
-            this.heartRateData = heartRateData;
+            this.userSettings = userSettings;
 
             this.setupDistributionTable();
 
-        },
+            this.tooltipTemplate = "<%if (label){";
+            this.tooltipTemplate += "var hr = label.split(' ')[1].replace('%','').split('-');";
+            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + 'bpm';";
+            this.tooltipTemplate += "%><%=finalLabel%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>";
 
+        },
 
         setupDistributionTable: function() {
 
@@ -59,7 +65,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             var labelsData = [];
             for (var zone in this.heartRateData.hrrZones) {
-                var label = "Z" + (parseInt(zone) + 1) + ": " + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%";
+                var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
                 labelsData.push(label);
             }
 
@@ -92,8 +98,6 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Heart rate stats');
 
-            this.setGraphTitle('Heart Rate Reserve distribution over ' + this.heartRateData.hrrZones.length + ' zones<br /><a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
-
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 
@@ -117,7 +121,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Insert some data inside grid
             this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(1, 0, this.heartRateData.averageHeartRate.toFixed(0), 'Average Heart Rate', 'bpm', 'displayAdvancedHrData'); // Usefull for running
-            this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), '%Heart Rate Reserve Avg', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
 
             // Quartiles
             this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');

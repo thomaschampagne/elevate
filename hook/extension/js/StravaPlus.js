@@ -31,7 +31,7 @@ StravaPlus.defaultIntervalTimeMillis = 750;
  */
 StravaPlus.prototype = {
 
-    init_: function init_() {
+    init_: function() {
 
         // Redirect app.strava.com/* to www.strava.com/*
         if (this.handleForwardToWWW_()) {
@@ -99,17 +99,17 @@ StravaPlus.prototype = {
      */
     handleExtensionHasJustUpdated_: function() {
 
+        // Clear localstorage 
+        // Especially for activies data stored in cache
+        console.log("ExtensionHasJustUpdated, localstorage clear");
+        localStorage.clear();
+
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
         }
-        // Clear localstorage 
-        // Especially for activies data stored in cache
-        if (env.debugMode) console.log("ExtensionHasJustUpdated, localstorage clear");
 
         // Display ribbon update message
         this.handleUpdateRibbon_()
-
-        localStorage.clear();
 
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
@@ -118,9 +118,9 @@ StravaPlus.prototype = {
      *
      */
     handleUpdateRibbon_: function() {
-        var globalStyle = 'background-color: #000000; color: lightgrey; font-size: 14px; padding: 30px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: lightgrey;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
+        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: #333;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
         jQuery('body').before(html);
     },
 
@@ -160,7 +160,7 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_);
+        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         remoteLinksModifier.modify();
     },
 
@@ -302,6 +302,11 @@ StravaPlus.prototype = {
         }
 
         var activityType = pageView.activity().get('type');
+
+        // Skip manual activities
+        if(activityType === 'Manual') {
+            return;
+        }
 
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
