@@ -12,9 +12,9 @@ ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
 ActivityProcessor.distributionZoneCount = 15;
-ActivityProcessor.gradeUpHillLimit = 1.6;
+ActivityProcessor.gradeClimbingLimit = 1.6;
 ActivityProcessor.gradeDownHillLimit = -1.6;
-ActivityProcessor.gradeProfileFlatPercentageDetected = 65;
+ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
 ActivityProcessor.gradeProfileFlat = 'FLAT';
 ActivityProcessor.gradeProfileHilly = 'HILLY';
 
@@ -605,7 +605,7 @@ ActivityProcessor.prototype = {
                 durationCount += durationInSeconds;
 
                 // Compute DOWN/FLAT/UP duration
-                if (gradeArray[i] > ActivityProcessor.gradeUpHillLimit) { // UPHILL
+                if (gradeArray[i] > ActivityProcessor.gradeClimbingLimit) { // UPHILL
                     upFlatDownInSeconds.up += durationInSeconds;
                 } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
                     upFlatDownInSeconds.down += durationInSeconds;

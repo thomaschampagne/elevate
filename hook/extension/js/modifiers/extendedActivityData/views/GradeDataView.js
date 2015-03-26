@@ -51,11 +51,11 @@ var GradeDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 1, this.gradeData.medianGrade, '50% Quartile Grade', '%', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 1, this.gradeData.upperQuartileGrade, '75% Quartile Grade', '%', 'displayAdvancedGradeData');
 
-            this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% uphill', '%', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% climbing', '%', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(1, 2, (this.gradeData.upFlatDownInSeconds.flat / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% flat', '%', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 2, (this.gradeData.upFlatDownInSeconds.down / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% downhill ', '%', 'displayAdvancedGradeData');            
 
-            this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), 'Time uphill', '', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), 'Time climbing', '', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(1, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat), 'Time flat', '', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.down), 'Time downhill', '', 'displayAdvancedGradeData');
 
