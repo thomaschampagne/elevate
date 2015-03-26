@@ -4,6 +4,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         viewId: null,
 
+        viewTitle: '',
+
         units: null,
 
         content: '',

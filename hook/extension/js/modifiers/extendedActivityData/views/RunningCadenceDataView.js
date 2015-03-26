@@ -6,8 +6,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
         mainColor: [213, 0, 195],
 
-        bothLegsCadence: false, // TODO ...
-
         init: function(cadenceData, units, userSettings) {
 
             this.setViewId('RunningCadenceDataView_dhgfj56ds4');
@@ -35,10 +33,12 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         },
 
         render: function() {
+            
+            // Add legs cadence type to view title
+            this.viewTitle += ' // ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg');
 
+            // Call super AbstractCadenceDataView.render()
             base.render.call(this);
-
-            // TODO if this.bothLegsCadence then display "(both legs)" in title
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
