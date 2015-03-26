@@ -240,7 +240,6 @@ ActivityProcessor.prototype = {
         paceData.medianPace = this.convertSpeedToPace(speedData.medianSpeed);
         paceData.upperQuartilePace = this.convertSpeedToPace(speedData.upperQuartileSpeed);
         paceData.variancePace = this.convertSpeedToPace(speedData.varianceSpeed);
-        paceData.standardDeviationPace = this.convertSpeedToPace(speedData.standardDeviationSpeed);
 
         paceData.paceZones = [];
 

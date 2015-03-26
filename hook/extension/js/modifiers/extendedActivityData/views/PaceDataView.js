@@ -57,14 +57,6 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
 
-            var standardDeviationPace;
-            if (this.paceData.standardDeviationPace === 'infinite') {
-                standardDeviationPace = '&infin;';
-            } else {
-                standardDeviationPace = Helper.secondsToHHMMSS((this.paceData.standardDeviationPace / speedUnitFactor).toFixed(0)).replace('00:', '')
-            }
-
-            this.insertContentAtGridPosition(0, 1, standardDeviationPace, 'Std Deviation &sigma;', this.units, 'displayAdvancedSpeedData');
             // this.insertContentAtGridPosition(1, 1, (this.paceData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
             // this.insertContentAtGridPosition(2, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
 
