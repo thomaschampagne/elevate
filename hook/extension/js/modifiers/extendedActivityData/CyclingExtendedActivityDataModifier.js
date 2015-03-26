@@ -40,11 +40,12 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 this.dataViews.push(cyclingCadenceDataView);
             }
 
-            // TODO Testing view disply
-            var gradeDataView = new GradeDataView(this.analysisData_.gradeData, '%');
-            gradeDataView.setAppResources(this.appResources_);
-            gradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-            this.dataViews.push(gradeDataView);
+            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
+                var gradeDataView = new GradeDataView(this.analysisData_.gradeData, '%');
+                gradeDataView.setAppResources(this.appResources_);
+                gradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(gradeDataView);
+            }
         }
     }
 });

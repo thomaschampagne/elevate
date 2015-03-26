@@ -60,6 +60,12 @@ settingsSectionsModule.data = [{
             optionLabels: ['Cycling', 'Running'],
             optionHtml: 'Add cadence data for your cycling activities:<br/><br/>- Cadence % while moving<br/>- Cadence Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence sensor is required to get this feature.',
         }, {
+            optionKey: 'displayAdvancedGradeData',
+            optionType: 'checkbox',
+            optionTitle: 'Extended grade data',
+            optionLabels: ['Cycling', 'Running'],
+            optionHtml: '',
+        }, {
             optionKey: 'displayBikeOdoInActivity',
             optionType: 'checkbox',
             optionTitle: 'Display Bike odo',

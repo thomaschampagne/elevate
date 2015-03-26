@@ -97,10 +97,6 @@ ActivityProcessor.prototype = {
         // Q1/Q2/Q grade
         var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.time);
 
-        console.warn(gradeData);
-
-
-
         // Return an array with all that shit...
         return {
             'moveRatio': moveRatio,
