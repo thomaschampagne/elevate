@@ -62,7 +62,6 @@ StravaPlus.prototype = {
         this.handleSegmentRankPercentage_();
         this.handleActivityGoogleMapType_();
         this.handleHidePremium_();
-        this.handleShopHeaderLink_();
         this.handleHideFeed_();
 
         // Bike
@@ -258,21 +257,6 @@ StravaPlus.prototype = {
 
         var hidePremiumModifier = new HidePremiumModifier();
         hidePremiumModifier.modify();
-    },
-
-    /**
-     *
-     */
-    handleShopHeaderLink_: function() {
-
-        if (!this.userSettings_.displayShopHeaderLink) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleShopHeaderLink_()");
-
-        var shopHeaderLinkModifier = new ShopHeaderLinkModifier();
-        shopHeaderLinkModifier.modify();
     },
 
     handleHideFeed_: function() {

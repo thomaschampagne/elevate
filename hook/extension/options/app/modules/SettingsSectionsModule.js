@@ -14,12 +14,6 @@ settingsSectionsModule.data = [{
             optionTitle: 'Integration of VeloViewer / FlyBy',
             optionLabels: ['All'],
             optionHtml: 'This enables VeloViewer and FlyBy remote links on activities and segments page.<br/><br/>VeloViewer is another Strava connected platform designed to analyze your activities.<br/><br/>FlyBy allows you to see riders/runners having an activity in the same time range as you.',
-        }, {
-            optionKey: 'displayShopHeaderLink',
-            optionType: 'checkbox',
-            optionTitle: 'Hide "Shop" header link',
-            optionLabels: ['All'],
-            optionHtml: 'This option is not intended to remove Strava Shop from the website.<br/><br/>The intention is just to gain space in strava header bar. Especially for French users who have a long....header bar.',
         }]
     }, {
         sectionTitle: 'Activities',

@@ -38,7 +38,6 @@ var userSettings = {
     activateRunningHeartRate: true,
     activityGoogleMapType: 'terrain',
     hidePremiumFeatures: true,
-    displayShopHeaderLink: true,
     displaySegmentRankPercentage: true,
     displayNearbySegments: true,
     displayMotivationScore: true,
