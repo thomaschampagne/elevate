@@ -48,7 +48,8 @@ var userSettings = {
     displayCadenceData: true,
     displayAdvancedGradeData: true,
     displayBikeOdoInActivity: true,
+    enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
-    highLightStravaPlusFeature: false, // For heartrate related data.
+    highLightStravaPlusFeature: false // For heartrate related data.
 };
