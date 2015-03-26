@@ -106,21 +106,21 @@ Content.prototype = {
 
         this.loadDependencies(function() {
 
-            console.log('All Scripts Loaded');
+            chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
-            chrome.storage.sync.get(this.userSettings_, function(items) {
                 var injectedScript = document.createElement('script');
                 injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
                 injectedScript.onload = function() {
+                    
                     this.parentNode.removeChild(this);
                     var inner = document.createElement('script');
 
-                    if (_.isEmpty(items)) {
-                        items = self.userSettings_;
+                    if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
+                        chromeSettings = self.userSettings_;
                     }
 
                     inner.textContent = 'var $ = jQuery;';
-                    inner.textContent += 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + ');';
+                    inner.textContent += 'var stravaPlus = new StravaPlus(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(self.appResources_) + ');';
 
                     inner.onload = function() {
                         this.parentNode.removeChild(this);
@@ -198,6 +198,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/RunningCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/PowerDataView.js',
+    'js/modifiers/extendedActivityData/views/GradeDataView.js',
 
     // Extended data modifiers
     'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',

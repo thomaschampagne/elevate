@@ -29,12 +29,13 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.toughnessScore && this.userSettings.displayMotivationScore ||
                 this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData ||
                 this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData ||
-                this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
+                this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
+                this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
                 // Add a title
                 this.content += this.generateSectionTitle('Highlighted Stats');
 
-                this.makeGrid(6, 1); // (col, row)
+                this.makeGrid(7, 1); // (col, row)
 
                 this.insertFeaturedDataIntoGrid();
 
@@ -67,6 +68,10 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
             if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
                 this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/kg', 'w/kg', 'displayAdvancedPowerData'); // Avg watt /kg
+            }
+
+            if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
+                this.insertContentAtGridPosition(6, 0, this.analysisData.gradeData.gradeProfile, 'Grade Profile', '', 'displayAdvancedGradeData');
             }
 
             // Remove empty case in grid. This avoid unwanted padding on feature view rendering

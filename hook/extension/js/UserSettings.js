@@ -46,6 +46,7 @@ var userSettings = {
     displayAdvancedSpeedData: true,
     displayAdvancedHrData: true,
     displayCadenceData: true,
+    displayAdvancedGradeData: true,
     displayBikeOdoInActivity: true,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,

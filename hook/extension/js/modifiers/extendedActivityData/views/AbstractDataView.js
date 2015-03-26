@@ -85,7 +85,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var labelsData = [];
             for (var zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + ": " + (zones[zone].from * ratio).toFixed(1) + " - " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
+                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1) + " to " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
                 labelsData.push(label);
             }
 
@@ -118,7 +118,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, { // TODO canvas id must be specific to view
+            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,

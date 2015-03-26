@@ -54,6 +54,12 @@ settingsSectionsModule.data = [{
             optionLabels: ['Cycling', 'Running'],
             optionHtml: 'Add cadence data for your cycling activities:<br/><br/>- Cadence % while moving<br/>- Cadence Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence sensor is required to get this feature.',
         }, {
+            optionKey: 'displayAdvancedGradeData',
+            optionType: 'checkbox',
+            optionTitle: 'Extended grade data',
+            optionLabels: ['Cycling', 'Running'],
+            optionHtml: '<h3>Grade Profile</h3> Tell you if your activity was "Hilly" with climbs and downhills or "Flat" is you activty has been performed on... flat. <h3>Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the grades sorted ascending you obtained during an activity.</br></br> <strong>25% Quartile</strong>: This indicator represents the grades you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br></br> <strong>50% Median</strong>: This indicator represents the grades you maintained at the position "50%". It\'s simply the median...</br></br> <strong>75% Quartile</strong>: This indicator represents the grades you maintai</strong>ned at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Times and percentages during climbs, flats and downhills</h3> Do what section title describes... :)',
+        }, {
             optionKey: 'displayBikeOdoInActivity',
             optionType: 'checkbox',
             optionTitle: 'Display Bike odo',
