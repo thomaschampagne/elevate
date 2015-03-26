@@ -108,8 +108,21 @@ StravaPlus.prototype = {
         }
 
         // Display ribbon update message
-        this.handleUpdateRibbon_()
+        this.handleUpdateRibbon_();
 
+        // Send update info to ga
+        var updatedToEvent = {
+            categorie: 'Exploitation',
+            action: 'updatedVersion',
+            name: this.appResources_.extVersion,
+            value: this.athleteId_
+        };
+
+        console.warn(updatedToEvent);
+
+        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name, updatedToEvent.value);
+
+        // Now mark extension "just updated" to false...
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
 
