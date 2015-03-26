@@ -106,20 +106,20 @@ Content.prototype = {
 
         this.loadDependencies(function() {
 
-            console.log('All Scripts Loaded');
+            chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
-            chrome.storage.sync.get(this.userSettings_, function(items) {
                 var injectedScript = document.createElement('script');
                 injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
                 injectedScript.onload = function() {
+                    
                     this.parentNode.removeChild(this);
                     var inner = document.createElement('script');
 
-                    if (_.isEmpty(items)) {
-                        items = self.userSettings_;
+                    if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
+                        chromeSettings = self.userSettings_;
                     }
 
-                    inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(items) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
+                    inner.textContent = 'var stravaPlus = new StravaPlus(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(self.appResources_) + '); if(env.debugMode) console.log(stravaPlus);';
 
                     inner.onload = function() {
                         this.parentNode.removeChild(this);
