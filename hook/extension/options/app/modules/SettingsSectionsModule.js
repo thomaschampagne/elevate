@@ -48,6 +48,12 @@ settingsSectionsModule.data = [{
 }, {
     sectionTitle: 'Activity viewing options',
     sectionContent: [{
+        optionKey: 'enableBothLegsCadence',
+        optionType: 'checkbox',
+        optionTitle: 'Enable both legs extended cadence data',
+        optionLabels: ['Running'],
+        optionHtml: 'This will display StravaPlus extended cadence data for 2 legs instead of 1 e.g 180 SPM, not 90 SPM.',
+    },{
         optionKey: 'displayBikeOdoInActivity',
         optionType: 'checkbox',
         optionTitle: 'Enable bike odo display',

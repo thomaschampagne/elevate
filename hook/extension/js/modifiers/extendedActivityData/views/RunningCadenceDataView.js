@@ -6,17 +6,17 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
         mainColor: [213, 0, 195],
 
-        strideBothLegs: false, // TODO ...
+        bothLegsCadence: false, // TODO ...
 
-        init: function(cadenceData, units) {
+        init: function(cadenceData, units, userSettings) {
 
             this.setViewId('RunningCadenceDataView_dhgfj56ds4');
 
             this.units = units;
 
-            console.warn(cadenceData);
+            this.userSettings = userSettings;
 
-            if (this.strideBothLegs) {
+            if (this.userSettings.enableBothLegsCadence) {
 
                 // Then multiply cadence per 2
                 cadenceData.averageCadenceMoving *= 2;
@@ -38,7 +38,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             base.render.call(this);
 
-            // TODO if this.strideBothLegs then display "(both legs)" in title
+            // TODO if this.bothLegsCadence then display "(both legs)" in title
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
