@@ -129,7 +129,11 @@ StravaPlus.prototype = {
     handleUpdateRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
+
+        var newNameMessage = 'StravaPlus name has to change, please give your opinion for the new one <a target="_blank" href="http://goo.gl/forms/q5qVN6z4fm">Here</a>';
+
+        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<br/><br/>' + newNameMessage + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
+        // var html += '<div></div>';
         $('body').before(html);
     },
 
