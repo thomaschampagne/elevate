@@ -11,7 +11,7 @@ RunningHeartRateModifier.prototype = {
     modify: function modify() {
 
         var runningHeartRateModifier = function() {
-            var element = jQuery('#elevation-profile td[data-type=heartrate] .toggle-button')
+            var element = $('#elevation-profile td[data-type=heartrate] .toggle-button')
                 .not('.once-only')
                 .addClass('once-only');
             element.click();

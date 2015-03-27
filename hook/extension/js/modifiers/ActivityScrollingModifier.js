@@ -15,8 +15,8 @@ ActivityScrollingModifier.prototype = {
             return;
         }
 
-        var w = jQuery(window);
-        var container = jQuery('.feed-container');
+        var w = $(window);
+        var container = $('.feed-container');
 
         w.scroll(function() {
             var elem = container.find('a.load-feed');

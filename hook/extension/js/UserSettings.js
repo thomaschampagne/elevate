@@ -38,7 +38,6 @@ var userSettings = {
     activateRunningHeartRate: true,
     activityGoogleMapType: 'terrain',
     hidePremiumFeatures: true,
-    displayShopHeaderLink: true,
     displaySegmentRankPercentage: true,
     displayNearbySegments: true,
     displayMotivationScore: true,
@@ -47,8 +46,10 @@ var userSettings = {
     displayAdvancedSpeedData: true,
     displayAdvancedHrData: true,
     displayCadenceData: true,
+    displayAdvancedGradeData: true,
     displayBikeOdoInActivity: true,
+    enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
-    highLightStravaPlusFeature: false, // For heartrate related data.
+    highLightStravaPlusFeature: false // For heartrate related data.
 };
