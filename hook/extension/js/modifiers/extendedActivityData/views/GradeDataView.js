@@ -29,8 +29,6 @@ var GradeDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Grade stats');
 
-            this.setGraphTitle('Grade % distribution over ' + this.gradeData.gradeZones.length + ' zones');
-
             // Creates a grid
             this.makeGrid(3, 4); // (col, row)
 
