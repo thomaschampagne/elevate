@@ -167,7 +167,7 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
     };
 
     return {
-        templateUrl: 'directives/templates/healthCustomZones.html',
+        templateUrl: 'directives/hrzones/templates/healthCustomZones.html',
         scope: {
             hrZones: "=",
             userMaxHr: "@userMaxHr",

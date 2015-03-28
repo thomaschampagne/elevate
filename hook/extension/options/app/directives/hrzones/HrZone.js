@@ -19,7 +19,7 @@ app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
 
     return {
 
-        templateUrl: 'directives/templates/hrZone.html',
+        templateUrl: 'directives/hrzones/templates/hrZone.html',
         scope: {
             hrZoneId: '@hrZoneId',
             hrZone: '=',
