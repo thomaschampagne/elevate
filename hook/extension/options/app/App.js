@@ -15,6 +15,11 @@ app.config(['$routeProvider', function($routeProvider) {
         controller: 'HealthSettingsController'
     });
 
+    $routeProvider.when(routeMap.zonesSettingsRoute, {
+        templateUrl: 'views/zonesSettings.html',
+        controller: 'ZonesSettingsController'
+    });
+
     $routeProvider.when(routeMap.releaseNotesRoute, {
         templateUrl: 'views/releaseNotes.html'
     });
