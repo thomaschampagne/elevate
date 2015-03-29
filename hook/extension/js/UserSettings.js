@@ -22,7 +22,7 @@ var userSettings = {
         toHrr: 90,
     }, {
         fromHrr: 90,
-        toHrr: 110,
+        toHrr: 110
     }],
     zones: {
         speed: [{

@@ -2,20 +2,20 @@
     <!-- Display first zone -->
     <table data-ng-switch data-on="xtdZoneFirst">
         <tr data-ng-switch-when="true">
-            <td><i>%HRR &#10142;</i>
+            <td><i>{{xtdDataSelected.units}} &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="-9999" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{xtdDataSelected.min}}" max="{{xtdZone.to}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td>{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
         </tr>
         <tr data-ng-switch-default>
-            <td><i>%HRR &#10142;</i>
+            <td><i>{{xtdDataSelected.units}} &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{previousFrom}}" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{previousFrom}}" max="{{xtdZone.to}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." data-popover-trigger="mouseenter" />
             </td>
-            <td class="bpmFilter"><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td class="bpmFilter">{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
         </tr>
     </table>
 
@@ -43,20 +43,20 @@
     <!-- Display last zone -->
     <table data-ng-switch data-on="xtdZoneLast">
         <tr data-ng-switch-when="true">
-            <td><i>%HRR &#10142;</i>
+            <td><i>{{xtdDataSelected.units}} &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="9999" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{xtdDataSelected.max}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." data-popover-trigger="mouseenter" />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.to | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td>{{xtdZone.to | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
         </tr>
         <tr data-ng-switch-default data-ng-hide="true">
-            <td><i>%HRR &#10142;</i>
+            <td><i>{{xtdDataSelected.units}} &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{nextTo}}" data-ng-keydown="avoidInputKeyEdit($event)" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{nextTo}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td>{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
         </tr>
     </table>
 </div>

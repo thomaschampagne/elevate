@@ -9,7 +9,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
         $scope.$watch('xtdZones', function(newZones, oldZone) {
 
-            console.debug($scope.xtdType);
+            console.debug($scope.xtdDataSelected);
 
             // Save if xtdZones are compliant and model has well changed (old and new xtdZones are equals when the tab is loaded)
             if ($scope.areZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldZone))) {
@@ -80,8 +80,8 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
                 if (!_.isUndefined($scope.xtdZones)) {
 
-                    console.warn('Save is delayed');
-                    console.warn($scope.xtdZones);
+                    // console.warn('Save is delayed');
+                    // console.warn($scope.xtdZones);
 
 
                     // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.xtdZones)), function() {
@@ -183,7 +183,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
         templateUrl: 'directives/xtdZones/templates/xtdZones.html',
         scope: {
             xtdZones: "=",
-            xtdType: "="
+            xtdDataSelected: "="
         },
         controller: controllerFunction,
         link: linkFunction

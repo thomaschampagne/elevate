@@ -23,6 +23,7 @@ app.directive('xtdZone', ['AvoidInputKeys', function(avoidInputKeys) {
         scope: {
             zoneId: '@zoneId',
             xtdZone: '=',
+            xtdDataSelected: "=",
             previousFrom: '@previousFrom',
             nextTo: '@nextTo',
             xtdZoneFirst: '@xtdZoneFirst',
