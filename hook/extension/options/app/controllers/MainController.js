@@ -33,7 +33,7 @@ app.controller('MainController', function($scope, $location) {
 
             $scope.healthSettingsActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.zoneSettingsRoute) {
+        } else if (path === routeMap.zonesSettingsRoute) {
 
             $scope.zonesSettingsActive = $scope.headerActiveClassName;
 

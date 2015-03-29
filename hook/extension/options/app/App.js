@@ -17,7 +17,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when(routeMap.zonesSettingsRoute, {
         templateUrl: 'views/zonesSettings.html',
-        controller: 'ZonesSettingsController'
+        controller: 'XtdZonesSettingsController'
     });
 
     $routeProvider.when(routeMap.releaseNotesRoute, {

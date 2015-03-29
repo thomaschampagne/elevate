@@ -19,7 +19,7 @@ app.directive('xtdZone', ['AvoidInputKeys', function(avoidInputKeys) {
 
     return {
 
-        templateUrl: 'directives/xtdzones/templates/xtdzone.html',
+        templateUrl: 'directives/xtdZones/templates/xtdZone.html',
         scope: {
             zoneId: '@zoneId',
             xtdZone: '=',

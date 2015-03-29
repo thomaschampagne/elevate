@@ -1,90 +1,92 @@
 app.directive('xtdZones', ['Notifier', function(Notifier) {
 
-    var maxHrZonesCount = 10;
-    var minHrZonesCount = 3;
+    var maxZonesCount = 10;
+    var minZonesCount = 3;
 
     var linkFunction = function($scope, element, attrs) {};
 
     var controllerFunction = function($scope) {
 
-        console.warn($scope.zones);
+        $scope.$watch('xtdZones', function(newZones, oldZone) {
 
-        $scope.$watch('zones', function(newZones, oldHrZone) {
+            console.debug($scope.xtdType);
 
-            // Save if zones are compliant and model has well changed (old and new zones are equals when the tab is loaded)
-            if ($scope.areHrZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldHrZone))) {
-                // $scope.saveHrZones(); // Uncomment for saving...
+            // Save if xtdZones are compliant and model has well changed (old and new xtdZones are equals when the tab is loaded)
+            if ($scope.areZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldZone))) {
+                $scope.saveZones(); // Uncomment for saving...
             }
 
         }, true);
 
-/*
-        $scope.addHrZone = function() {
 
-            if ($scope.zones.length >= maxHrZonesCount) {
+        $scope.addZone = function() {
 
-                Notifier('Oups!', 'You can\'t add more than 10 heart rate zones...');
+            if ($scope.xtdZones.length >= maxZonesCount) {
+
+                Notifier('Oups!', 'You can\'t add more than ' + maxZonesCount + ' xtdZones...');
 
             } else {
 
-                var oldLastZone = $scope.zones[$scope.zones.length - 1];
+                var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
 
                 // Computed middle value between oldLastZone.from and oldLastZone.to
                 var betweenValue = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
 
-                // Creating new Hr Zone
-                var newLastHrZone = {
+                // Creating new Zone
+                var newLastZone = {
                     "from": betweenValue,
                     "to": oldLastZone.to
                 };
 
                 // Apply middle value computed to previous last zone (to)
-                $scope.zones[$scope.zones.length - 1].to = betweenValue;
+                $scope.xtdZones[$scope.xtdZones.length - 1].to = betweenValue;
 
                 // Add the new last zone
-                $scope.zones.push(newLastHrZone);
+                $scope.xtdZones.push(newLastZone);
             }
 
         };
-*/
-/*
-        $scope.removeHrZone = function() {
 
-            if ($scope.zones.length <= minHrZonesCount) {
 
-                Notifier('Oups!', 'You can\'t remove more than 3 heart rate zones...');
+        $scope.removeZone = function() {
+
+            if ($scope.xtdZones.length <= minZonesCount) {
+
+                Notifier('Oups!', 'You can\'t remove more than ' + minZonesCount + ' xtdZones...');
 
             } else {
-                var oldLastZone = $scope.zones[$scope.zones.length - 1];
+                var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
 
-                $scope.zones.pop();
+                $scope.xtdZones.pop();
 
-                $scope.zones[$scope.zones.length - 1].to = oldLastZone.to;
+                $scope.xtdZones[$scope.xtdZones.length - 1].to = oldLastZone.to;
             }
         };
-*/
-/*
-        $scope.resetHrZone = function() {
 
-            if (confirm("You are going to reset your custom heart rate zones to default factory value. Are you sure?")) {
-                angular.copy(userSettings.userHrrZones, $scope.zones);
+
+        $scope.resetZone = function() {
+
+            if (confirm("You are going to reset your custom heart rate xtdZones to default factory value. Are you sure?")) {
+                //angular.copy(userSettings.userHrrZones, $scope.xtdZones);
+                console.error('to be done...');
             }
 
         };
-*/
-/*
-        $scope.saveHrZones = function() {
+
+
+        $scope.saveZones = function() {
 
             setTimeout(function() {
 
-                if (!_.isUndefined($scope.zones)) {
+                if (!_.isUndefined($scope.xtdZones)) {
 
                     console.warn('Save is delayed');
+                    console.warn($scope.xtdZones);
 
-                    
-                    // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.zones)), function() {
 
-                    //     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.zones));
+                    // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.xtdZones)), function() {
+
+                    //     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.xtdZones));
 
                     //     ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
                     //         console.log('localStorageMustBeCleared has been updated to: ' + true);
@@ -93,28 +95,28 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
                 }
             }, 250);
         };
-*/
-        $scope.areHrZonesCompliant = function() {
-            
-            if(!$scope.zones) {
+
+        $scope.areZonesCompliant = function() {
+
+            if (!$scope.xtdZones) {
                 return false;
             }
 
-            for (var i = 0; i < $scope.zones.length; i++) {
+            for (var i = 0; i < $scope.xtdZones.length; i++) {
 
                 if (i == 0) {
-                    if ($scope.zones[i].to != $scope.zones[i + 1].from) {
+                    if ($scope.xtdZones[i].to != $scope.xtdZones[i + 1].from) {
                         return false;
                     }
 
-                } else if (i < ($scope.zones.length - 1)) { // Middle
+                } else if (i < ($scope.xtdZones.length - 1)) { // Middle
 
-                    if ($scope.zones[i].to != $scope.zones[i + 1].from || $scope.zones[i].from != $scope.zones[i - 1].to) {
+                    if ($scope.xtdZones[i].to != $scope.xtdZones[i + 1].from || $scope.xtdZones[i].from != $scope.xtdZones[i - 1].to) {
                         return false;
                     }
 
                 } else { // Last
-                    if ($scope.zones[i].from != $scope.zones[i - 1].to) {
+                    if ($scope.xtdZones[i].from != $scope.xtdZones[i - 1].to) {
                         return false;
                     }
                 }
@@ -124,9 +126,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
         $scope.onZoneChange = function(zoneId, previousZone, newZone) {
 
-            console.warn(zoneId);
-            console.warn(previousZone);
-            console.warn(newZone);
+
 
             var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
 
@@ -136,21 +136,21 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
             if (zoneId === 0) { // If first zone
 
-                $scope.handleToHrrChange(zoneId);
+                $scope.handleToChange(zoneId);
 
-            } else if (zoneId < $scope.zones.length - 1) { // If middle zone
+            } else if (zoneId < $scope.xtdZones.length - 1) { // If middle zone
 
                 if (fieldHasChanged === 'to') {
 
-                    $scope.handleToHrrChange(zoneId);
+                    $scope.handleToChange(zoneId);
 
                 } else if (fieldHasChanged === 'from') {
 
-                    $scope.handleFromHrrChange(zoneId);
+                    $scope.handleFromChange(zoneId);
                 }
 
             } else { // If last zone
-                $scope.handleFromHrrChange(zoneId);
+                $scope.handleFromChange(zoneId);
             }
 
         };
@@ -169,20 +169,21 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
             }
         };
 
-        $scope.handleToHrrChange = function(zoneId) {
-            $scope.zones[zoneId + 1].from = $scope.zones[zoneId].to; // User has changed to value of the zone
+        $scope.handleToChange = function(zoneId) {
+            $scope.xtdZones[zoneId + 1].from = $scope.xtdZones[zoneId].to; // User has changed to value of the zone
         };
 
-        $scope.handleFromHrrChange = function(zoneId) {
-            $scope.zones[zoneId - 1].to = $scope.zones[zoneId].from; // User has changed from value of the zone
+        $scope.handleFromChange = function(zoneId) {
+            $scope.xtdZones[zoneId - 1].to = $scope.xtdZones[zoneId].from; // User has changed from value of the zone
         };
 
     };
 
     return {
-        templateUrl: 'directives/xtdzones/templates/xtdzones.html',
+        templateUrl: 'directives/xtdZones/templates/xtdZones.html',
         scope: {
-            zones: "="
+            xtdZones: "=",
+            xtdType: "="
         },
         controller: controllerFunction,
         link: linkFunction

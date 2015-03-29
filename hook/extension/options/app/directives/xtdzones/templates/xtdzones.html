@@ -1,19 +1,19 @@
 <div>
     <div data-ng-hide="false">
-        <strong>HR Zones final value debug:</strong>
-        <div>{{zones | json}}</div>
+        <strong>Zones debug:</strong>
+        <div>{{xtdZones | json}}</div>
     </div>
     <div class="hrZoneAddRemoveTop">
-        <button type="button" class="btn btn-success hrZoneActionButton" data-ng-click="addHrZone()">Add a Last Zone</button>
-        <button type="button" class="btn btn-danger hrZoneActionButton" data-ng-click="removeHrZone()">Del Last Zone</button>
-        <button type="button" class="btn btn-warning hrZoneActionButton" data-ng-click="resetHrZone()">Reset Zones</button>
+        <button type="button" class="btn btn-success hrZoneActionButton" data-ng-click="addZone()">Add a Last Zone</button>
+        <button type="button" class="btn btn-danger hrZoneActionButton" data-ng-click="removeZone()">Del Last Zone</button>
+        <button type="button" class="btn btn-warning hrZoneActionButton" data-ng-click="resetZone()">Reset Zones</button>
     </div>
-    <div data-ng-repeat="xtdzone in zones">
-        <div data-xtd-zone="xtdzone" data-zone-id="{{$index}}" data-previous-from="{{zones[$index - 1].from}}" data-next-to="{{zones[$index + 1].to}}" data-xtd-zone-first="{{$index == 0}}" data-xtd-zone-last="{{$index == (zones.length - 1)}}"></div>
+    <div data-ng-repeat="xtdZone in xtdZones">
+        <div data-xtd-zone="xtdZone" data-zone-id="{{$index}}" data-previous-from="{{xtdZones[$index - 1].from}}" data-next-to="{{xtdZones[$index + 1].to}}" data-xtd-zone-first="{{$index == 0}}" data-xtd-zone-last="{{$index == (xtdZones.length - 1)}}"></div>
     </div>
     <div class="hrZoneAddRemoveBottom">
-        <button type="button" class="btn btn-success hrZoneActionButton" data-ng-click="addHrZone()">Add a Last Zone</button>
-        <button type="button" class="btn btn-danger hrZoneActionButton" data-ng-click="removeHrZone()">Del Last Zone</button>
-        <button type="button" class="btn btn-warning hrZoneActionButton" data-ng-click="resetHrZone()">Reset Zones</button>
+        <button type="button" class="btn btn-success hrZoneActionButton" data-ng-click="addZone()">Add a Last Zone</button>
+        <button type="button" class="btn btn-danger hrZoneActionButton" data-ng-click="removeZone()">Del Last Zone</button>
+        <button type="button" class="btn btn-warning hrZoneActionButton" data-ng-click="resetZone()">Reset Zones</button>
     </div>
 </div>

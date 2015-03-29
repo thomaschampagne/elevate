@@ -1,7 +1,7 @@
 app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
 
     var linkFunction = function($scope, element, attrs) {
-        $scope.printableHrZoneId = parseInt($scope.hrZoneId) + 1;
+        $scope.printableZoneId = parseInt($scope.hrZoneId) + 1;
     };
 
     var controllerFunction = function($scope) {

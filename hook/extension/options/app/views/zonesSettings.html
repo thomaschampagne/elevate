@@ -1,1 +1,4 @@
-<div data-xtd-zones data-zones="zones" align="center"></div>
+<h3>Choose Xtended data</h3>
+<select class="form-control" data-ng-model="xtdItem" data-ng-init="xtdListOptions[0]" data-ng-options="xtdItem.name for xtdItem in xtdListOptions" data-ng-change="toggleSelectOption(xtdItem)"></select>
+{{xtdType}}
+<div data-xtd-zones="xtdZones" data-xtd-type="xtdItem"  data-ng-show="xtdZones" align="center"></div>

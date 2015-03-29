@@ -5,7 +5,7 @@
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="0" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="-9999" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
             </td>
             <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
@@ -46,7 +46,7 @@
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="9999" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
             </td>
             <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.to | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
