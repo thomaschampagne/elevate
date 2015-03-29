@@ -1,4 +1,4 @@
-app.directive('xtdzone', ['AvoidInputKeys', function(avoidInputKeys) {
+app.directive('xtdZone', ['AvoidInputKeys', function(avoidInputKeys) {
 
     var linkFunction = function($scope, element, attrs) {
         $scope.printableZoneId = parseInt($scope.zoneId) + 1;
@@ -10,7 +10,7 @@ app.directive('xtdzone', ['AvoidInputKeys', function(avoidInputKeys) {
             avoidInputKeys(evt);
         };
 
-        $scope.$watch('xtdzone', function(newZone, oldZone) {
+        $scope.$watch('xtdZone', function(newZone, oldZone) {
             // Notify parent scope when a zone has changed
             $scope.$parent.onZoneChange(parseInt($scope.zoneId), oldZone, newZone);
 
@@ -22,11 +22,11 @@ app.directive('xtdzone', ['AvoidInputKeys', function(avoidInputKeys) {
         templateUrl: 'directives/xtdzones/templates/xtdzone.html',
         scope: {
             zoneId: '@zoneId',
-            hrZone: '=',
+            xtdZone: '=',
             previousFrom: '@previousFrom',
             nextTo: '@nextTo',
-            zoneFirst: '@zoneFirst',
-            zoneLast: '@zoneLast'
+            xtdZoneFirst: '@xtdZoneFirst',
+            xtdZoneLast: '@xtdZoneLast'
         },
         controller: controllerFunction,
         link: linkFunction

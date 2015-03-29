@@ -1,4 +1,4 @@
-app.directive('zones', ['Notifier', function(Notifier) {
+app.directive('xtdZones', ['Notifier', function(Notifier) {
 
     var maxHrZonesCount = 10;
     var minHrZonesCount = 3;
@@ -13,11 +13,12 @@ app.directive('zones', ['Notifier', function(Notifier) {
 
             // Save if zones are compliant and model has well changed (old and new zones are equals when the tab is loaded)
             if ($scope.areHrZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldHrZone))) {
-                $scope.saveHrZones();
+                // $scope.saveHrZones(); // Uncomment for saving...
             }
 
         }, true);
 
+/*
         $scope.addHrZone = function() {
 
             if ($scope.zones.length >= maxHrZonesCount) {
@@ -26,26 +27,27 @@ app.directive('zones', ['Notifier', function(Notifier) {
 
             } else {
 
-                var oldLastHrZone = $scope.zones[$scope.zones.length - 1];
+                var oldLastZone = $scope.zones[$scope.zones.length - 1];
 
-                // Computed middle value between oldLastHrZone.from and oldLastHrZone.to
-                var betweenHrrValue = parseInt(((oldLastHrZone.from + oldLastHrZone.to) / 2).toFixed(0));
+                // Computed middle value between oldLastZone.from and oldLastZone.to
+                var betweenValue = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
 
                 // Creating new Hr Zone
                 var newLastHrZone = {
-                    "from": betweenHrrValue,
-                    "to": oldLastHrZone.to
+                    "from": betweenValue,
+                    "to": oldLastZone.to
                 };
 
                 // Apply middle value computed to previous last zone (to)
-                $scope.zones[$scope.zones.length - 1].to = betweenHrrValue;
+                $scope.zones[$scope.zones.length - 1].to = betweenValue;
 
                 // Add the new last zone
                 $scope.zones.push(newLastHrZone);
             }
 
         };
-
+*/
+/*
         $scope.removeHrZone = function() {
 
             if ($scope.zones.length <= minHrZonesCount) {
@@ -53,14 +55,15 @@ app.directive('zones', ['Notifier', function(Notifier) {
                 Notifier('Oups!', 'You can\'t remove more than 3 heart rate zones...');
 
             } else {
-                var oldLastHrZone = $scope.zones[$scope.zones.length - 1];
+                var oldLastZone = $scope.zones[$scope.zones.length - 1];
 
                 $scope.zones.pop();
 
-                $scope.zones[$scope.zones.length - 1].to = oldLastHrZone.to;
+                $scope.zones[$scope.zones.length - 1].to = oldLastZone.to;
             }
         };
-
+*/
+/*
         $scope.resetHrZone = function() {
 
             if (confirm("You are going to reset your custom heart rate zones to default factory value. Are you sure?")) {
@@ -68,7 +71,8 @@ app.directive('zones', ['Notifier', function(Notifier) {
             }
 
         };
-
+*/
+/*
         $scope.saveHrZones = function() {
 
             setTimeout(function() {
@@ -77,19 +81,19 @@ app.directive('zones', ['Notifier', function(Notifier) {
 
                     console.warn('Save is delayed');
 
-                    /*
-                    ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.zones)), function() {
+                    
+                    // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.zones)), function() {
 
-                        console.log('userHrrZones has been updated to: ' + angular.toJson($scope.zones));
+                    //     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.zones));
 
-                        ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
-                            console.log('localStorageMustBeCleared has been updated to: ' + true);
-                        });
-                    });*/
+                    //     ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                    //         console.log('localStorageMustBeCleared has been updated to: ' + true);
+                    //     });
+                    // });
                 }
             }, 250);
         };
-
+*/
         $scope.areHrZonesCompliant = function() {
             
             if(!$scope.zones) {
@@ -119,6 +123,10 @@ app.directive('zones', ['Notifier', function(Notifier) {
         };
 
         $scope.onZoneChange = function(zoneId, previousZone, newZone) {
+
+            console.warn(zoneId);
+            console.warn(previousZone);
+            console.warn(newZone);
 
             var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
 

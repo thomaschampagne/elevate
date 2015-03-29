@@ -1,26 +1,26 @@
-<div class="xtdzone">
+<div class="xtdZone">
     <!-- Display first zone -->
-    <table data-ng-switch data-on="xtdzoneFirst">
+    <table data-ng-switch data-on="xtdZoneFirst">
         <tr data-ng-switch-when="true">
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdzone.from" min="0" max="{{xtdzone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="0" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdzone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
         <tr data-ng-switch-default>
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdzone.from" min="{{previousFromHrr}}" max="{{xtdzone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{previousFrom}}" max="{{xtdZone.to}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
             </td>
-            <td class="bpmFilter"><img src="img/ic_favorite_24px.svg" /> {{xtdzone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td class="bpmFilter"><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
     </table>
 
     <!-- Display zone Id -->
-    <table class="xtdzoneBpmDescribe">
+    <table class="xtdZoneBpmDescribe">
         <tr>
             <td align="center" colspan="3">
                 <img src="img/ic_more_vert_24px.svg" />
@@ -29,7 +29,7 @@
         <tr>
             <td align="center"></td>
             <td>
-                <span class="printableHrZoneId">Zone {{printableHrZoneId}}</span>
+                <span class="printableZoneId">Zone {{printableZoneId}}</span>
             </td>
             <td></td>
         </tr>
@@ -41,22 +41,22 @@
     </table>
 
     <!-- Display last zone -->
-    <table data-ng-switch data-on="xtdzoneLast">
+    <table data-ng-switch data-on="xtdZoneLast">
         <tr data-ng-switch-when="true">
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdzone.to" min="{{xtdzone.from}}" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdzone.to | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.to | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
         <tr data-ng-switch-default data-ng-hide="true">
             <td><i>%HRR &#10142;</i>
             </td>
             <td>
-                <input class="form-control input-lg" type="number" data-ng-model="xtdzone.to" min="{{xtdzone.from}}" max="{{nextToHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" />
+                <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{nextTo}}" data-ng-keydown="avoidInputKeyEdit($event)" />
             </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{xtdzone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
+            <td><img src="img/ic_favorite_24px.svg" /> {{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
         </tr>
     </table>
 </div>
