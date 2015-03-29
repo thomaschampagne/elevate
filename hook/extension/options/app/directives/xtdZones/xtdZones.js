@@ -7,16 +7,16 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
     var controllerFunction = function($scope) {
 
-        $scope.$watch('xtdZones', function(newZones, oldZone) {
+        // $scope.$watch('xtdZones', function(newZones, oldZone) {
 
-            console.debug($scope.xtdDataSelected);
+        //     console.debug($scope.xtdDataSelected);
 
-            // Save if xtdZones are compliant and model has well changed (old and new xtdZones are equals when the tab is loaded)
-            if ($scope.areZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldZone))) {
-                $scope.saveZones(); // Uncomment for saving...
-            }
+        //     // Save if xtdZones are compliant and model has well changed (old and new xtdZones are equals when the tab is loaded)
+        //     if ($scope.areZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldZone))) {
+        //         $scope.saveZones(); // Uncomment for saving...
+        //     }
 
-        }, true);
+        // }, true);
 
 
         $scope.addZone = function() {
@@ -73,28 +73,51 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
         };
 
-
         $scope.saveZones = function() {
+            if (!$scope.areZonesCompliant()) {
+                console.error('Zones are not compliant');
+                return;
+            }
 
-            setTimeout(function() {
+            if (!_.isUndefined($scope.xtdZones)) {
 
-                if (!_.isUndefined($scope.xtdZones)) {
+                /*
+                ChromeStorageModule.updateUserSetting('???', angular.fromJson(angular.toJson($scope.xtdZones)), function() {
 
-                    // console.warn('Save is delayed');
-                    // console.warn($scope.xtdZones);
+                    console.log('userHrrZones has been updated to: ' + angular.toJson($scope.xtdZones));
 
-
-                    // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.xtdZones)), function() {
-
-                    //     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.xtdZones));
-
-                    //     ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
-                    //         console.log('localStorageMustBeCleared has been updated to: ' + true);
-                    //     });
-                    // });
-                }
-            }, 250);
+                    ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                        console.log('localStorageMustBeCleared has been updated to: ' + true);
+                    });
+                });
+                */
+            }
         };
+
+
+        /*
+                $scope.saveZones = function() {
+
+                    setTimeout(function() {
+
+                        if (!_.isUndefined($scope.xtdZones)) {
+
+                            // console.warn('Save is delayed');
+                            // console.warn($scope.xtdZones);
+
+
+                            // ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.xtdZones)), function() {
+
+                            //     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.xtdZones));
+
+                            //     ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                            //         console.log('localStorageMustBeCleared has been updated to: ' + true);
+                            //     });
+                            // });
+                        }
+                    }, 250);
+                };
+                */
 
         $scope.areZonesCompliant = function() {
 
