@@ -40,7 +40,7 @@ RemoteLinksModifier.prototype = {
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravaPlus'],
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Veloviewer Map Flipper", 'http://veloviewer.com/mapFlipper', 'mapflipper']
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> MapFlipper", 'http://veloviewer.com/mapFlipper', 'mapflipper']
 ];
 
 
