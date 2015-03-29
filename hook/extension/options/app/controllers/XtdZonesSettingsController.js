@@ -6,14 +6,14 @@ app.controller("XtdZonesSettingsController", function($scope) {
     $scope.xtdListOptions = [{
         name: 'Cyling Speed',
         value: 'speed',
-        units: 'kph',
+        units: 'KPH',
         step: 1,
         min: 0,
         max: 9999
     }, {
         name: 'Running Pace',
         value: 'pace',
-        units: 's/min',
+        units: 's/KM', // s/mi?!
         step: 1,
         min: 0,
         max: 9999
@@ -27,14 +27,14 @@ app.controller("XtdZonesSettingsController", function($scope) {
     }, {
         name: 'Cycling Cadence',
         value: 'cyclingCadence',
-        units: 'rpm',
+        units: 'RPM',
         step: 1,
         min: 0,
         max: 9999
     }, {
         name: 'Running Cadence',
         value: 'runningCadence',
-        units: 'spm',
+        units: 'SPM',
         step: 1,
         min: 0,
         max: 9999

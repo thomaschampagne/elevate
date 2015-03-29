@@ -7,7 +7,7 @@
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{xtdDataSelected.min}}" max="{{xtdZone.to}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." />
             </td>
-            <td>{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
+            <td>{{xtdZone.from | xtdDataFilter:2}}</td>
         </tr>
         <tr data-ng-switch-default>
             <td><i>{{xtdDataSelected.units}} &#10142;</i>
@@ -15,7 +15,7 @@
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="xtdZone.from" min="{{previousFrom}}" max="{{xtdZone.to}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." data-popover-trigger="mouseenter" />
             </td>
-            <td class="bpmFilter">{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
+            <td class="bpmFilter">{{xtdZone.from | xtdDataFilter:2}}</td>
         </tr>
     </table>
 
@@ -48,7 +48,7 @@
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{xtdDataSelected.max}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set {{xtdDataSelected.units}} value." data-popover-trigger="mouseenter" />
             </td>
-            <td>{{xtdZone.to | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
+            <td>{{xtdZone.to | xtdDataFilter:2}}</td>
         </tr>
         <tr data-ng-switch-default data-ng-hide="true">
             <td><i>{{xtdDataSelected.units}} &#10142;</i>
@@ -56,7 +56,7 @@
             <td>
                 <input class="form-control input-lg" type="number" data-ng-model="xtdZone.to" min="{{xtdZone.from}}" max="{{nextTo}}" step="{{xtdDataSelected.step}}" data-ng-keydown="avoidInputKeyEdit($event)" />
             </td>
-            <td>{{xtdZone.from | hrrToBpmFilter:userMaxHr:userRestHr}}</td>
+            <td>{{xtdZone.from | xtdDataFilter:2}}</td>
         </tr>
     </table>
 </div>
