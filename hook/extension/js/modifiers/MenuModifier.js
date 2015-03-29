@@ -15,7 +15,7 @@ MenuModifier.prototype = {
     modify: function modify() {
 
         // Add kom-map to global navigation
-        var globalNav = jQuery(".global-nav");
+        var globalNav = $(".global-nav");
         var stravaMenuHtml = "<li class='drop-down-menu' height='auto'>";
 
         var menuStyle = null;
@@ -57,13 +57,13 @@ MenuModifier.prototype = {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    jQuery('#splus_menu_heatmap').find('a').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
+                    $('#splus_menu_heatmap').find('a').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
                 },
                 function(error) {
                     if (error != null) {
-                        jQuery('#splus_menu_heatmap').find('a').attr('href', '#');
-                        jQuery('#splus_menu_heatmap').find('a').attr('target', '_self');
-                        jQuery('#splus_menu_heatmap').find('a').attr('onclick', 'alert("Some Strava+ functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');
+                        $('#splus_menu_heatmap').find('a').attr('href', '#');
+                        $('#splus_menu_heatmap').find('a').attr('target', '_self');
+                        $('#splus_menu_heatmap').find('a').attr('onclick', 'alert("Some Strava+ functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');
                     }
                 }
             );
@@ -71,6 +71,6 @@ MenuModifier.prototype = {
 
         globalNav.children().first().before(stravaMenuHtml);
 
-        // jQuery.fancybox('<div><h1>Modal example :)</h1><p>Remove this by searching the pattern "5s874d45gfds4ds7s7dsdsq87a7q4s7f7d8ds7f" in code</p></div>');
+        // $.fancybox('<div><h1>Modal example :)</h1><p>Remove this by searching the pattern "5s874d45gfds4ds7s7dsdsq87a7q4s7f7d8ds7f" in code</p></div>');
     },
 };

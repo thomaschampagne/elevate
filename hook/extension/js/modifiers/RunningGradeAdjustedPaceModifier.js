@@ -11,7 +11,7 @@ RunningGradeAdjustedPaceModifier.prototype = {
     modify: function modify() {
 
         var runningGradeAdjustedPace = function() {
-            var element = jQuery('#elevation-profile td[data-type=grade_adjusted_pace] .toggle-button')
+            var element = $('#elevation-profile td[data-type=grade_adjusted_pace] .toggle-button')
                 .not('.once-only')
                 .addClass('once-only');
             element.click();

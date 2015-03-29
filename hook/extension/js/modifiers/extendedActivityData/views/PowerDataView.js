@@ -29,8 +29,6 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Power stats');
 
-            this.setGraphTitle('Watts distribution over ' + this.powerData.powerZones.length + ' zones');
-
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
 

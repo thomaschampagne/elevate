@@ -57,7 +57,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             table += '</table>';
             table += '</div>';
             table += '</div>';
-            this.table = jQuery(table);
+            this.table = $(table);
 
         },
 
@@ -96,9 +96,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Heart rate stats');
-
-            this.setGraphTitle('Heart Rate Reserve distribution over ' + this.heartRateData.hrrZones.length + ' zones<br /><a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">Customize</a>');
+            this.content += this.generateSectionTitle('Heart rate stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">(customize)</a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)

@@ -62,7 +62,6 @@ StravaPlus.prototype = {
         this.handleSegmentRankPercentage_();
         this.handleActivityGoogleMapType_();
         this.handleHidePremium_();
-        this.handleShopHeaderLink_();
         this.handleHideFeed_();
 
         // Bike
@@ -109,8 +108,18 @@ StravaPlus.prototype = {
         }
 
         // Display ribbon update message
-        this.handleUpdateRibbon_()
+        this.handleUpdateRibbon_();
 
+        // Send update info to ga
+        var updatedToEvent = {
+            categorie: 'Exploitation',
+            action: 'updatedVersion',
+            name: this.appResources_.extVersion
+        };
+
+        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+
+        // Now mark extension "just updated" to false...
         Helper.setToStorage(this.extensionId_, StorageManager.storageSyncType, 'extensionHasJustUpdated', false, function(response) {});
     },
 
@@ -120,8 +129,12 @@ StravaPlus.prototype = {
     handleUpdateRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<a style="float: right; color: #333;" href="#" onclick="jQuery(\'#updateRibbon\').slideUp()">Close</a></div>';
-        jQuery('body').before(html);
+
+        var newNameMessage = 'StravaPlus name has to change, please give your opinion for the new one <a target="_blank" href="http://goo.gl/forms/q5qVN6z4fm">Here</a>';
+
+        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<br/><br/>' + newNameMessage + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
+        // var html += '<div></div>';
+        $('body').before(html);
     },
 
     /**
@@ -130,7 +143,7 @@ StravaPlus.prototype = {
     handlePreviewRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
         var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravaPlus</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
-        jQuery('body').before(html);
+        $('body').before(html);
     },
 
     /**
@@ -260,21 +273,6 @@ StravaPlus.prototype = {
         hidePremiumModifier.modify();
     },
 
-    /**
-     *
-     */
-    handleShopHeaderLink_: function() {
-
-        if (!this.userSettings_.displayShopHeaderLink) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleShopHeaderLink_()");
-
-        var shopHeaderLinkModifier = new ShopHeaderLinkModifier();
-        shopHeaderLinkModifier.modify();
-    },
-
     handleHideFeed_: function() {
 
         // Test if where are on dashboard page
@@ -303,6 +301,11 @@ StravaPlus.prototype = {
 
         var activityType = pageView.activity().get('type');
 
+        // Skip manual activities
+        if (activityType === 'Manual') {
+            return;
+        }
+
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
         this.activityProcessor_.getAnalysisData(
@@ -326,7 +329,7 @@ StravaPlus.prototype = {
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
                         var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
-                        jQuery('.inline-stats.section').parent().children().last().after(html);
+                        $('.inline-stats.section').parent().children().last().after(html);
                         break;
                 }
 
@@ -513,12 +516,12 @@ StravaPlus.prototype = {
             var eventAction = 'DailyConnection_Account_' + accountType;
 
             // Push IncomingConnection to piwik
-            var eventName = accountName + ' #' + this.athleteId_;
+            var eventName = accountName + ' #' + this.athleteId_ + ' v' + this.appResources_.extVersion;
 
             if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
             if (!env.debugMode) {
-                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName, env.buildNumber);
+                _spTrack('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
             // Create cookie to avoid push during 1 day

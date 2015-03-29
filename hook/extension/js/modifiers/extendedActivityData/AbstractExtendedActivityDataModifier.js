@@ -23,14 +23,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
 
         modify: function() {
-
-            // Temporary message for new extended stats
-            if (!StorageManager.getCookie('hideTmpMessageExtendedStats')) {
-                this.content += '<p id="tmpMessageExtendedStats" style="padding: 5px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">This extended stats panel is NEW ! ';
-                this.content += 'So feel free to report problems <a target="_blank" href="https://chrome.google.com/webstore/detail/stravaplus/dhiaggccakkgdfcadnklkbljcgicpckn/support">HERE</a> (don\'t forget activities links in report).<br/>';
-                this.content += 'Follow feature updates through <a target="_blank" href="https://twitter.com/champagnethomas">@champagnethomas</a>.<br/>This message will disappear when stravaplus users have acclaimed this new feature (approximately few days...)<br/><br/><a onclick="javascript:jQuery(\'#tmpMessageExtendedStats\').hide(); document.cookie=\'hideTmpMessageExtendedStats=true\';">Never show this again</a></p>';
-            }
-
+            
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
                 view.render();
@@ -52,11 +45,11 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             htmlButton += '</a>';
             htmlButton += '</section>';
 
-            jQuery('.inline-stats.section').first().after(htmlButton).each(function() {
+            $('.inline-stats.section').first().after(htmlButton).each(function() {
 
-                jQuery('#extendedStatsButton').click(function() {
+                $('#extendedStatsButton').click(function() {
 
-                    jQuery.fancybox({
+                    $.fancybox({
                         'width': '100%',
                         'height': '100%',
                         'autoScale': true,
@@ -94,9 +87,9 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 this.dataViews.push(featuredDataView);
             }
 
-            // // Heart view
+            // Heart view
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'bpm', this.userSettings_);
+                var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(heartRateDataView);

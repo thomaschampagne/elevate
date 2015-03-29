@@ -48,19 +48,19 @@ RemoteLinksModifier.prototype = {
         var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
         htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'>Remote Views</span> <img width='12px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
         htmlRemoteViewForActivity += "<ul>";
-        jQuery.each(remoteViewActivityLinksArray, function() {
+        $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
             htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
         });
         htmlRemoteViewForActivity += "</ul>";
         htmlRemoteViewForActivity += "</li>";
-        htmlRemoteViewForActivity = jQuery(htmlRemoteViewForActivity);
-        jQuery("#pagenav").append(htmlRemoteViewForActivity);
+        htmlRemoteViewForActivity = $(htmlRemoteViewForActivity);
+        $("#pagenav").append(htmlRemoteViewForActivity);
 
         // Add tcx export
         if (this.authorOfActivity) {
             var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
-            jQuery(".actions-menu .slide-menu .options").append(htmlForTCXExport);
+            $(".actions-menu .slide-menu .options").append(htmlForTCXExport);
         }
     },
 
@@ -88,12 +88,12 @@ RemoteLinksModifier.prototype = {
         html += "<div class='selection' style='" + this.htmlRemoteViewForSegmentStyle + "'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
         html += "<ul class='options' style='" + this.htmlRemoteViewForActivityStyle + "'>";
 
-        jQuery.each(remoteViewSegmentLinksArray, function() {
+        $.each(remoteViewSegmentLinksArray, function() {
             html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "' style='" + this.htmlRemoteViewTextStyle + "'>" + this[0] + "</a></li>";
         });
         html += "</ul>";
         html += "</div>";
         html += "</div>";
-        jQuery(html).prependTo('.sidebar.spans5');
+        $(html).prependTo('.sidebar.spans5');
     },
 };

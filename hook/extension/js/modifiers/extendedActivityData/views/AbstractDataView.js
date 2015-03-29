@@ -4,6 +4,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         viewId: null,
 
+        viewTitle: '',
+
         units: null,
 
         content: '',
@@ -28,7 +30,9 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
 
-        init: function() {},
+        init: function() {
+
+        },
 
         setViewId: function(id) {
             this.viewId = id;
@@ -46,7 +50,9 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.appResources = appResources;
         },
 
-        render: function() {},
+        render: function() {
+            this.setGraphTitle((new String(this.units)).toUpperCase() + ' distribution in minutes');
+        },
 
         getContent: function() {
             return this.content;
@@ -70,7 +76,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             graph += '<canvas id="' + this.viewId + '" height="450" width="450"></canvas>';
             graph += '</div>';
             graph += '</div>';
-            this.graph = jQuery(graph);
+            this.graph = $(graph);
         },
 
         setupDistributionGraph: function(zones, ratio) {
@@ -81,7 +87,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var labelsData = [];
             for (var zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + ": " + (zones[zone].from * ratio).toFixed(1) + " - " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
+                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1) + " to " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
                 labelsData.push(label);
             }
 
@@ -114,7 +120,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, { // TODO canvas id must be specific to view
+            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
@@ -163,7 +169,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             table += '</table>';
             table += '</div>';
             table += '</div>';
-            this.table = jQuery(table);
+            this.table = $(table);
         },
 
         makeGrid: function(columns, rows) {
@@ -184,7 +190,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             grid += '</table>';
             grid += '</div>';
             grid += '</div>';
-            this.grid = jQuery(grid);
+            this.grid = $(grid);
         },
 
         insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
