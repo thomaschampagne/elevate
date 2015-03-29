@@ -1,7 +1,7 @@
-app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
+app.directive('xtdzone', ['AvoidInputKeys', function(avoidInputKeys) {
 
     var linkFunction = function($scope, element, attrs) {
-        $scope.printableHrZoneId = parseInt($scope.hrZoneId) + 1;
+        $scope.printableZoneId = parseInt($scope.zoneId) + 1;
     };
 
     var controllerFunction = function($scope) {
@@ -10,25 +10,23 @@ app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
             avoidInputKeys(evt);
         };
 
-        $scope.$watch('hrZone', function(newHrZone, oldHrZone) {
+        $scope.$watch('xtdzone', function(newZone, oldZone) {
             // Notify parent scope when a zone has changed
-            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);
+            $scope.$parent.onZoneChange(parseInt($scope.zoneId), oldZone, newZone);
 
         }, true);
     };
 
     return {
 
-        templateUrl: 'directives/hrzones/templates/hrZone.html',
+        templateUrl: 'directives/xtdzones/templates/xtdzone.html',
         scope: {
-            hrZoneId: '@hrZoneId',
+            zoneId: '@zoneId',
             hrZone: '=',
-            previousFromHrr: '@previousFromHrr',
-            nextToHrr: '@nextToHrr',
-            hrZoneFirst: '@hrZoneFirst',
-            hrZoneLast: '@hrZoneLast',
-            userMaxHr: '@userMaxHr',
-            userRestHr: '@userRestHr'
+            previousFrom: '@previousFrom',
+            nextTo: '@nextTo',
+            zoneFirst: '@zoneFirst',
+            zoneLast: '@zoneLast'
         },
         controller: controllerFunction,
         link: linkFunction

@@ -1,4 +1,4 @@
-app.directive('healthCustomZones', ['Notifier', function(Notifier) {
+app.directive('zones', ['Notifier', function(Notifier) {
 
     var maxHrZonesCount = 10;
     var minHrZonesCount = 3;
@@ -7,10 +7,12 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
     var controllerFunction = function($scope) {
 
-        $scope.$watch('hrZones', function(newHrZones, oldHrZone) {
+        console.warn($scope.zones);
 
-            // Save if hrZones are compliant and model has well changed (old and new hrZones are equals when the tab is loaded)
-            if ($scope.areHrZonesCompliant() && (angular.toJson(newHrZones) !== angular.toJson(oldHrZone))) {
+        $scope.$watch('zones', function(newZones, oldHrZone) {
+
+            // Save if zones are compliant and model has well changed (old and new zones are equals when the tab is loaded)
+            if ($scope.areHrZonesCompliant() && (angular.toJson(newZones) !== angular.toJson(oldHrZone))) {
                 $scope.saveHrZones();
             }
 
@@ -18,51 +20,51 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
         $scope.addHrZone = function() {
 
-            if ($scope.hrZones.length >= maxHrZonesCount) {
+            if ($scope.zones.length >= maxHrZonesCount) {
 
                 Notifier('Oups!', 'You can\'t add more than 10 heart rate zones...');
 
             } else {
 
-                var oldLastHrZone = $scope.hrZones[$scope.hrZones.length - 1];
+                var oldLastHrZone = $scope.zones[$scope.zones.length - 1];
 
-                // Computed middle value between oldLastHrZone.fromHrr and oldLastHrZone.toHrr
-                var betweenHrrValue = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
+                // Computed middle value between oldLastHrZone.from and oldLastHrZone.to
+                var betweenHrrValue = parseInt(((oldLastHrZone.from + oldLastHrZone.to) / 2).toFixed(0));
 
                 // Creating new Hr Zone
                 var newLastHrZone = {
-                    "fromHrr": betweenHrrValue,
-                    "toHrr": oldLastHrZone.toHrr
+                    "from": betweenHrrValue,
+                    "to": oldLastHrZone.to
                 };
 
-                // Apply middle value computed to previous last zone (toHrr)
-                $scope.hrZones[$scope.hrZones.length - 1].toHrr = betweenHrrValue;
+                // Apply middle value computed to previous last zone (to)
+                $scope.zones[$scope.zones.length - 1].to = betweenHrrValue;
 
                 // Add the new last zone
-                $scope.hrZones.push(newLastHrZone);
+                $scope.zones.push(newLastHrZone);
             }
 
         };
 
         $scope.removeHrZone = function() {
 
-            if ($scope.hrZones.length <= minHrZonesCount) {
+            if ($scope.zones.length <= minHrZonesCount) {
 
                 Notifier('Oups!', 'You can\'t remove more than 3 heart rate zones...');
 
             } else {
-                var oldLastHrZone = $scope.hrZones[$scope.hrZones.length - 1];
+                var oldLastHrZone = $scope.zones[$scope.zones.length - 1];
 
-                $scope.hrZones.pop();
+                $scope.zones.pop();
 
-                $scope.hrZones[$scope.hrZones.length - 1].toHrr = oldLastHrZone.toHrr;
+                $scope.zones[$scope.zones.length - 1].to = oldLastHrZone.to;
             }
         };
 
         $scope.resetHrZone = function() {
 
             if (confirm("You are going to reset your custom heart rate zones to default factory value. Are you sure?")) {
-                angular.copy(userSettings.userHrrZones, $scope.hrZones);
+                angular.copy(userSettings.userHrrZones, $scope.zones);
             }
 
         };
@@ -71,41 +73,44 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
             setTimeout(function() {
 
-                if (!_.isUndefined($scope.hrZones)) {
+                if (!_.isUndefined($scope.zones)) {
 
-                    ChromeStorageModule.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), function() {
+                    console.warn('Save is delayed');
 
-                        console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrZones));
+                    /*
+                    ChromeStorageModule.updateUserSetting('testZones', angular.fromJson(angular.toJson($scope.zones)), function() {
+
+                        console.log('userHrrZones has been updated to: ' + angular.toJson($scope.zones));
 
                         ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
                             console.log('localStorageMustBeCleared has been updated to: ' + true);
                         });
-                    });
+                    });*/
                 }
             }, 250);
         };
 
         $scope.areHrZonesCompliant = function() {
             
-            if(!$scope.hrZones) {
+            if(!$scope.zones) {
                 return false;
             }
 
-            for (var i = 0; i < $scope.hrZones.length; i++) {
+            for (var i = 0; i < $scope.zones.length; i++) {
 
                 if (i == 0) {
-                    if ($scope.hrZones[i].toHrr != $scope.hrZones[i + 1].fromHrr) {
+                    if ($scope.zones[i].to != $scope.zones[i + 1].from) {
                         return false;
                     }
 
-                } else if (i < ($scope.hrZones.length - 1)) { // Middle
+                } else if (i < ($scope.zones.length - 1)) { // Middle
 
-                    if ($scope.hrZones[i].toHrr != $scope.hrZones[i + 1].fromHrr || $scope.hrZones[i].fromHrr != $scope.hrZones[i - 1].toHrr) {
+                    if ($scope.zones[i].to != $scope.zones[i + 1].from || $scope.zones[i].from != $scope.zones[i - 1].to) {
                         return false;
                     }
 
                 } else { // Last
-                    if ($scope.hrZones[i].fromHrr != $scope.hrZones[i - 1].toHrr) {
+                    if ($scope.zones[i].from != $scope.zones[i - 1].to) {
                         return false;
                     }
                 }
@@ -113,65 +118,63 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
             return true;
         };
 
-        $scope.onZoneChange = function(hrZoneId, previousHrZone, newHrZone) {
+        $scope.onZoneChange = function(zoneId, previousZone, newZone) {
 
-            var fieldHasChanged = $scope.whichFieldHasChanged(previousHrZone, newHrZone);
+            var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
 
             if (_.isUndefined(fieldHasChanged)) {
                 return;
             }
 
-            if (hrZoneId === 0) { // If first zone
+            if (zoneId === 0) { // If first zone
 
-                $scope.handleToHrrChange(hrZoneId);
+                $scope.handleToHrrChange(zoneId);
 
-            } else if (hrZoneId < $scope.hrZones.length - 1) { // If middle zone
+            } else if (zoneId < $scope.zones.length - 1) { // If middle zone
 
-                if (fieldHasChanged === 'toHrr') {
+                if (fieldHasChanged === 'to') {
 
-                    $scope.handleToHrrChange(hrZoneId);
+                    $scope.handleToHrrChange(zoneId);
 
-                } else if (fieldHasChanged === 'fromHrr') {
+                } else if (fieldHasChanged === 'from') {
 
-                    $scope.handleFromHrrChange(hrZoneId);
+                    $scope.handleFromHrrChange(zoneId);
                 }
 
             } else { // If last zone
-                $scope.handleFromHrrChange(hrZoneId);
+                $scope.handleFromHrrChange(zoneId);
             }
 
         };
 
         /**
-         * @return 'fromHrr' or 'toHrr'
+         * @return 'from' or 'to'
          */
-        $scope.whichFieldHasChanged = function(previousHrZone, newHrZone) {
+        $scope.whichFieldHasChanged = function(previousZone, newZone) {
 
-            if (previousHrZone.fromHrr !== newHrZone.fromHrr) {
-                return 'fromHrr';
+            if (previousZone.from !== newZone.from) {
+                return 'from';
             }
 
-            if (previousHrZone.toHrr !== newHrZone.toHrr) {
-                return 'toHrr';
+            if (previousZone.to !== newZone.to) {
+                return 'to';
             }
         };
 
-        $scope.handleToHrrChange = function(hrZoneId) {
-            $scope.hrZones[hrZoneId + 1].fromHrr = $scope.hrZones[hrZoneId].toHrr; // User has changed toHrr value of the zone
+        $scope.handleToHrrChange = function(zoneId) {
+            $scope.zones[zoneId + 1].from = $scope.zones[zoneId].to; // User has changed to value of the zone
         };
 
-        $scope.handleFromHrrChange = function(hrZoneId) {
-            $scope.hrZones[hrZoneId - 1].toHrr = $scope.hrZones[hrZoneId].fromHrr; // User has changed fromHrr value of the zone
+        $scope.handleFromHrrChange = function(zoneId) {
+            $scope.zones[zoneId - 1].to = $scope.zones[zoneId].from; // User has changed from value of the zone
         };
 
     };
 
     return {
-        templateUrl: 'directives/hrzones/templates/healthCustomZones.html',
+        templateUrl: 'directives/xtdzones/templates/xtdzones.html',
         scope: {
-            hrZones: "=",
-            userMaxHr: "@userMaxHr",
-            userRestHr: "@userRestHr"
+            zones: "="
         },
         controller: controllerFunction,
         link: linkFunction
