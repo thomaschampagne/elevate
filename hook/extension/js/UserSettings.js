@@ -27,25 +27,31 @@ var userSettings = {
     zones: {
         speed: [{
             from: 0,
-            to: 2
+            to: 10
         }, {
-            from: 2,
-            to: 5
+            from: 10,
+            to: 25
         }, {
-            from: 5,
-            to: 27
-        }, {
-            from: 27,
+            from: 25,
             to: 30
         }, {
             from: 30,
             to: 35
         }, {
             from: 35,
-            to: 38
+            to: 35
         }, {
-            from: 38,
-            to: 41
+            from: 35,
+            to: 39
+        }, {
+            from: 39,
+            to: 42
+        }, {
+            from: 42,
+            to: 50
+        }, {
+            from: 50,
+            to: 75
         }],
         pace: [{
             from: 0,

@@ -51,6 +51,9 @@ app.controller("XtdZonesSettingsController", function($scope) {
 
         $scope.zones = userSettingsSynced.zones;
 
+        console.warn('loaded zones:');
+        console.warn($scope.zones);
+
         // Select cycling speed by default
         $scope.switchZonesFromXtdItem(_.first($scope.xtdListOptions));
         $scope.$apply();
