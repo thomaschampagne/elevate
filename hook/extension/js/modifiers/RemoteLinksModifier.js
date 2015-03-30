@@ -39,8 +39,9 @@ RemoteLinksModifier.prototype = {
         var remoteViewActivityLinksArray = [
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravaPlus'],
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
-            ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', '']
-        ];
+            ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> MapFlipper", 'http://veloviewer.com/mapFlipper', 'mapflipper',  " width='24px' src='" + this.appResources_.OCMIcon + "'/>", " width='24px' src='" + this.appResources_.OCMlsIcon + "'/>", " width='24px' src='" + this.appResources_.OCModIcon + "'/>", " width='24px' src='" + this.appResources_.OSMIcon + "'/>"]
+];
 
 
         // Activity page
@@ -50,7 +51,16 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "<ul>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
-            htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
+            if (this[2] == 'mapflipper') {
+                htmlRemoteViewForActivity += "<a title='Select Satellite Map and/or zoom in/out to enable MapFlipper!' data-menu='' target='_blank' style='color: #333;' href='" + this[1] + "'>" + this[0] + "</a>";
+                
+                htmlRemoteViewForActivity += "<a><img onclick='flip1()' title='Open Cycle Map'" + this[3] + "<script>function flip1(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('cycle');}}else{vv_flipMap('cycle');}}</script>";
+                htmlRemoteViewForActivity += "<img onclick='flip2()' title='Open Cycle Map Landscape'" + this[4] + "<script>function flip2(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('landscape');}}else{vv_flipMap('landscape')}}</script>";
+                htmlRemoteViewForActivity += "<img onclick='flip3()' title='Open Cycle Map Outdoor'" + this[5] + "<script>function flip3(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('outdoors');}}else{vv_flipMap('outdoors')}}</script>";
+                htmlRemoteViewForActivity += "<img onclick='flip4()' title='Open Street Map'" + this[6] + "<script>function flip4(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('street');}}else{vv_flipMap('street')}}</script>   </a>";
+            } else {
+                htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
+            } // Map Flipper doesn't need activity ID
         });
         htmlRemoteViewForActivity += "</ul>";
         htmlRemoteViewForActivity += "</li>";
