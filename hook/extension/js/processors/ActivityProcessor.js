@@ -12,6 +12,11 @@ ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
 ActivityProcessor.distributionZoneCount = 15;
+ActivityProcessor.gradeClimbingLimit = 1.6;
+ActivityProcessor.gradeDownHillLimit = -1.6;
+ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
+ActivityProcessor.gradeProfileFlat = 'FLAT';
+ActivityProcessor.gradeProfileHilly = 'HILLY';
 
 
 /**
@@ -87,6 +92,11 @@ ActivityProcessor.prototype = {
         // Crank revolution
         var cadenceData = this.cadenceData_(activityStream.cadence, activityStream.velocity_smooth, activityStatsMap, activityStream.time);
 
+
+        // Avg grade
+        // Q1/Q2/Q grade
+        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.time);
+
         // Return an array with all that shit...
         return {
             'moveRatio': moveRatio,
@@ -95,7 +105,8 @@ ActivityProcessor.prototype = {
             'paceData': paceData,
             'powerData': powerData,
             'heartRateData': heartRateData,
-            'cadenceData': cadenceData
+            'cadenceData': cadenceData,
+            'gradeData': gradeData
         };
     },
 
@@ -160,8 +171,8 @@ ActivityProcessor.prototype = {
         var currentSpeed;
 
         var speedZones = [];
-        var maxSpeed = Math.max.apply(Math, velocityArray) * 3.6;
-        var minSpeed = Math.min.apply(Math, velocityArray) * 3.6;
+        var maxSpeed = _.max(velocityArray) * 3.6;
+        var minSpeed = _.min(velocityArray) * 3.6;
         var distributionStep = (maxSpeed - minSpeed) / ActivityProcessor.distributionZoneCount;
         var durationInSeconds = 0,
             durationCount = 0;
@@ -240,7 +251,6 @@ ActivityProcessor.prototype = {
         paceData.medianPace = this.convertSpeedToPace(speedData.medianSpeed);
         paceData.upperQuartilePace = this.convertSpeedToPace(speedData.upperQuartileSpeed);
         paceData.variancePace = this.convertSpeedToPace(speedData.varianceSpeed);
-        paceData.standardDeviationPace = this.convertSpeedToPace(speedData.standardDeviationSpeed);
 
         paceData.paceZones = [];
 
@@ -281,8 +291,8 @@ ActivityProcessor.prototype = {
         var wattsSamplesOnMove = [];
 
         var powerZones = [];
-        var maxPower = Math.max.apply(Math, powerArray);
-        var minPower = Math.min.apply(Math, powerArray);
+        var maxPower = _.max(powerArray);
+        var minPower = _.min(powerArray);
         var distributionStep = (maxPower - minPower) / ActivityProcessor.distributionZoneCount;
 
         var durationInSeconds, durationCount = 0;
@@ -400,7 +410,8 @@ ActivityProcessor.prototype = {
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 durationInMinutes = durationInSeconds / 60;
 
-                TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
+                // TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
+                TRIMP += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
                 zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
@@ -458,22 +469,16 @@ ActivityProcessor.prototype = {
         var movingSampleCount = 0;
 
         var cadenceZones = [];
-        var maxCadence = Math.max.apply(Math, cadenceArray);
-        var minCadence = Math.min.apply(Math, cadenceArray);
+        var maxCadence = _.max(cadenceArray);
+        var minCadence = _.min(cadenceArray);
 
         // Clamp max cadence value
         if (maxCadence > ActivityProcessor.cadenceLimitRpm) {
             maxCadence = ActivityProcessor.cadenceLimitRpm;
         }
 
-        // console.debug(minCadence);
-        // console.debug(maxCadence);
-
         var distributionStep = (maxCadence - minCadence) / ActivityProcessor.distributionZoneCount;
         var durationInSeconds, durationCount = 0;
-
-        // console.debug(ActivityProcessor.distributionZoneCount);
-        // console.debug(distributionStep);
 
         for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
 
@@ -484,8 +489,6 @@ ActivityProcessor.prototype = {
                 percentDistrib: null
             });
         }
-
-        // console.debug(cadenceZones);
 
         for (var i = 0; i < velocityArray.length; i++) {
 
@@ -508,9 +511,6 @@ ActivityProcessor.prototype = {
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
                     var cadenceZoneId = this.getZoneFromDistributionStep_(cadenceArray[i], distributionStep, minCadence);
-
-                    // console.debug(cadenceArray[i]);
-                    // // console.debug(cadenceZoneId);
 
                     if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
                         cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
@@ -544,4 +544,170 @@ ActivityProcessor.prototype = {
             'cadenceZones': cadenceZones
         };
     },
+
+    gradeData_: function(gradeArray, timeArray) {
+
+        if (_.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
+            return null;
+        }
+
+        var gradeSum = 0,
+            gradeCount = 0;
+
+        var gradeZones = [];
+        var upFlatDownInSeconds = {
+            up: 0,
+            flat: 0,
+            down: 0,
+            total: 0
+        };
+
+        var maxGrade = _.max(gradeArray);
+        var minGrade = _.min(gradeArray);
+        var distributionStep = (maxGrade - minGrade) / ActivityProcessor.distributionZoneCount;
+
+        var durationInSeconds, durationCount = 0;
+
+        // Prepare zones
+        var currentZoneFrom = minGrade,
+            currentZoneTo;
+        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
+
+            currentZoneTo = currentZoneFrom + distributionStep;
+
+            gradeZones.push({
+                from: currentZoneFrom,
+                to: currentZoneTo,
+                s: 0,
+                percentDistrib: null
+            });
+
+            currentZoneFrom = currentZoneTo;
+        }
+
+        for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
+
+            gradeSum += gradeArray[i];
+            gradeCount++;
+
+            // Compute distribution for graph/table
+            if (i > 0) {
+
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                var gradeZoneId = this.getZoneFromDistributionStep_(gradeArray[i], distributionStep, minGrade);
+
+                if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
+                    gradeZones[gradeZoneId]['s'] += durationInSeconds;
+                }
+
+                durationCount += durationInSeconds;
+
+                // Compute DOWN/FLAT/UP duration
+                if (gradeArray[i] > ActivityProcessor.gradeClimbingLimit) { // UPHILL
+                    upFlatDownInSeconds.up += durationInSeconds;
+                } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
+                    upFlatDownInSeconds.down += durationInSeconds;
+                } else { // FLAT
+                    upFlatDownInSeconds.flat += durationInSeconds;
+                }
+            }
+        }
+
+        upFlatDownInSeconds.total = durationCount;
+
+        // Compute grade profile
+        var gradeProfile;
+        if((upFlatDownInSeconds.flat / upFlatDownInSeconds.total * 100) >= ActivityProcessor.gradeProfileFlatPercentageDetected) {
+            gradeProfile = ActivityProcessor.gradeProfileFlat;
+        } else {
+            gradeProfile = ActivityProcessor.gradeProfileHilly;
+        }
+
+        var avgGrade = gradeSum / gradeCount;
+
+        var gradeSortedSamples = gradeArray.sort(function(a, b) {
+            return a - b;
+        });
+
+        // Update zone distribution percentage
+        for (var zone in gradeZones) {
+            gradeZones[zone]['percentDistrib'] = ((gradeZones[zone]['s'] / durationCount).toFixed(4) * 100);
+        }
+
+        return {
+            'avgGrade': avgGrade,
+            'lowerQuartileGrade': Helper.lowerQuartile(gradeSortedSamples),
+            'medianGrade': Helper.median(gradeSortedSamples),
+            'upperQuartileGrade': Helper.upperQuartile(gradeSortedSamples),
+            'gradeZones': gradeZones, 
+            'upFlatDownInSeconds': upFlatDownInSeconds,
+            'gradeProfile': gradeProfile
+        };
+
+    }
+
+    /**
+     *  @param 
+     *  @param Remove set of value under minPercentExistence
+     *  @return array of values cleaned. /!\ this will return less values
+     */
+    /*
+    // Currently unstable
+    removeUnrepresentativeValues: function(setOfValues, timeArray, minPercentExistence) {
+
+        var setOfValuesCleaned = [];
+
+        var cutSize = 20;
+        var valueZones = [];
+        var maxValue = _.max(setOfValues);
+        var minValue = _.min(setOfValues);
+        var distributionStep = (maxValue - minValue) / cutSize;
+
+        // Prepare zones
+        var currentZoneFrom = minValue,
+            currentZoneTo;
+
+        for (var i = 0; i < cutSize; i++) {
+            currentZoneTo = currentZoneFrom + distributionStep;
+            valueZones.push({
+                from: currentZoneFrom,
+                to: currentZoneTo,
+                s: 0,
+                percentDistrib: null
+            });
+            currentZoneFrom = currentZoneTo;
+        }
+
+        // Determine zone of value and count in zone
+        var durationInSeconds, durationCount = 0;
+        for (var i = 0; i < setOfValues.length; i++) {
+            if (i > 0) {
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                var valueZoneId = this.getZoneFromDistributionStep_(setOfValues[i], distributionStep, minValue);
+
+                if (!_.isUndefined(valueZoneId) && !_.isUndefined(valueZones[valueZoneId])) {
+                    valueZones[valueZoneId]['s'] += durationInSeconds;
+                }
+                durationCount += durationInSeconds;
+            }
+        }
+
+        // Process percentage in zone
+        for (var zone in valueZones) {
+            valueZones[zone]['percentDistrib'] = valueZones[zone]['s'] / durationCount * 100;
+        }
+
+        // Reloop values and find percentage of sample to keep it or not along minPercentExistence
+        for (var i = 0; i < setOfValues.length; i++) {
+            var valueZoneId = this.getZoneFromDistributionStep_(setOfValues[i], distributionStep, minValue);
+            if (!_.isUndefined(valueZoneId) && !_.isUndefined(valueZones[valueZoneId])) {
+                if (valueZones[valueZoneId].percentDistrib > minPercentExistence) {
+                    setOfValuesCleaned.push(setOfValues[i]);
+                }
+            }
+        }
+        return setOfValuesCleaned;
+    }
+    */
 };

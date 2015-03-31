@@ -16,6 +16,8 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
 
             this.setupDistributionTable(this.cadenceData.cadenceZones);
 
+            this.viewTitle = 'Cadence stats';
+
         },
 
         render: function() {
@@ -23,9 +25,7 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Cadence stats');
-
-            this.setGraphTitle('Cadence distribution over ' + this.cadenceData.cadenceZones.length + ' zones');
+            this.content += this.generateSectionTitle(this.viewTitle);
         }
     }
 });

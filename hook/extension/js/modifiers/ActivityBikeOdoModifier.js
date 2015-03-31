@@ -14,7 +14,7 @@ ActivityBikeOdoModifier.prototype = {
     modify: function modify() {
 
         // Get bike name on Activity Page
-        var bikeDisplayedOnActivityPage = jQuery('.gear-name').text().trim();
+        var bikeDisplayedOnActivityPage = $('.gear-name').text().trim();
 
         // Get odo from map
         var activityBikeOdo = 'No bike declared';
@@ -29,9 +29,9 @@ ActivityBikeOdoModifier.prototype = {
         var forceRefreshActionHTML = '<a href="#" style="cursor: pointer;" title="Force odo refresh for this athlete\'s bike. Usually it refresh every 2 hours..." id="bikeOdoForceRefresh">Force refresh odo</a>';
 
         // Edit Activity Page
-        jQuery('.gear-name').html(newBikeDisplayHTML + '<br />' + forceRefreshActionHTML).each(function() {
+        $('.gear-name').html(newBikeDisplayHTML + '<br />' + forceRefreshActionHTML).each(function() {
 
-            jQuery('#bikeOdoForceRefresh').on('click', function() {
+            $('#bikeOdoForceRefresh').on('click', function() {
                 this.handleUserBikeOdoForceRefresh_();
             }.bind(this));
 

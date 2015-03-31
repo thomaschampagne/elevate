@@ -29,12 +29,10 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle('Power stats');
 
-            this.setGraphTitle('Watts distribution over ' + this.powerData.powerZones.length + ' zones');
-
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
 
-            this.insertCadenceDataIntoGrid();
+            this.insertPowerDataIntoGrid();
             this.generateCanvasForGraph();
 
             // Push grid, graph and table to content view
@@ -43,7 +41,7 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             this.content += this.table.html();
         },
 
-        insertCadenceDataIntoGrid: function() {
+        insertPowerDataIntoGrid: function() {
 
             this.insertContentAtGridPosition(0, 0, this.powerData.weightedPower.toFixed(0), 'Weighted Power', 'W', 'displayAdvancedPowerData');
             this.insertContentAtGridPosition(1, 0, this.powerData.variabilityIndex.toFixed(2), 'Variability Index', '', 'displayAdvancedPowerData');

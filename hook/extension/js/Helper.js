@@ -15,10 +15,6 @@ Helper.prototype = {
 /**
  * Static method call test
  */
-Helper.saveMe = function() {
-    console.log('I save you !');
-};
-
 Helper.log = function(tag, object) {
     if (env.debugMode) {
         console.log('<' + tag + '>');
