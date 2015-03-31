@@ -245,6 +245,10 @@ ActivityProcessor.prototype = {
     },
 
     computePaceDataFromSpeedData: function(speedData) {
+        if (!speedData) {
+        //    console.log("No speedData");
+		    return null;
+        }
 
         var paceData = {};
         paceData.lowerQuartilePace = this.convertSpeedToPace(speedData.lowerQuartileSpeed);
