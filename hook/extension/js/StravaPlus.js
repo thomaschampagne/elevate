@@ -319,6 +319,12 @@ StravaPlus.prototype = {
 
                 var extendedActivityDataModifier = null;
 
+                // tell activity type for other than Ride/Run activities
+				if ( (activityType !== "Ride") && (activityType !== "Run") ) {
+                    var html = '<div  style="padding: 0px;background: #FFFFFF;font-size: 9px;color: rgb(103, 103, 103);">&nbsp&nbsp&nbspActivity type: '+window.pageView.activity().attributes.type+'</div>';
+                    $('.inset').parent().children().first().before(html);
+				}
+
                 switch (activityType) {
                     case 'Ride':
                         extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
@@ -326,6 +332,12 @@ StravaPlus.prototype = {
                     case 'Run':
                         extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
                         break;
+
+                    // for Workout, Rowing,...
+                    case 'StationaryOther':
+                        extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
                         var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
