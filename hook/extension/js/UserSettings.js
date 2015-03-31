@@ -2,8 +2,8 @@ var userSettings = {
     extensionHasJustUpdated: false,
     localStorageMustBeCleared: false,
     userGender: 'men',
-    userMaxHr: 190,
-    userRestHr: 65,
+    userMaxHr: 180,
+    userRestHr: 50,
     userFTP: null,
     userHrrZones: [
         {
@@ -28,6 +28,10 @@ var userSettings = {
         },
         {
             fromHrr: 90,
+            toHrr: 100,
+        },
+        {
+            fromHrr: 100,
             toHrr: 110,
         }
     ],
@@ -36,7 +40,7 @@ var userSettings = {
     defaultLeaderboardFilter: 'overall',
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
-    activityGoogleMapType: 'terrain',
+    activityGoogleMapType: 'satellite',
     hidePremiumFeatures: true,
     displaySegmentRankPercentage: true,
     displayNearbySegments: true,
