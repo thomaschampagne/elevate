@@ -308,6 +308,8 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
+        this.activityProcessor_.setActivityType(activityType);
+
         this.activityProcessor_.getAnalysisData(
             this.activityId_,
             this.userSettings_.userGender,

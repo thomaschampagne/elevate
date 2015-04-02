@@ -12,7 +12,6 @@ ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravaplus_activity_';
-ActivityProcessor.distributionZoneCount = 15; //TOREMOVE
 ActivityProcessor.gradeClimbingLimit = 1.6;
 ActivityProcessor.gradeDownHillLimit = -1.6;
 ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
@@ -25,10 +24,18 @@ ActivityProcessor.gradeProfileHilly = 'HILLY';
  */
 ActivityProcessor.prototype = {
 
+    setActivityType: function(activityType) {
+        this.activityType = activityType;
+    },
+
     /**
      *
      */
     getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, callback) {
+
+        if (!this.activityType) {
+            console.error('No activity type set for ActivityProcessor');
+        }
 
         // Find in cache first is data exist
         var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
@@ -466,7 +473,16 @@ ActivityProcessor.prototype = {
         var cadenceOnMoveSampleCount = 0;
         var movingSampleCount = 0;
 
-        var cadenceZones = this.prepareZonesForDistribComputation(this.zones.cyclingCadence); // TODO runningCadence?
+        var cadenceZoneTyped;
+        if (this.activityType === 'Ride') {
+            cadenceZoneTyped = this.zones.cyclingCadence;
+        } else if (this.activityType === 'Run') {
+            cadenceZoneTyped = this.zones.runningCadence;
+        } else {
+            return null;
+        }
+
+        var cadenceZones = this.prepareZonesForDistribComputation(cadenceZoneTyped);
 
         var durationInSeconds = 0,
             durationCount = 0;
@@ -491,7 +507,7 @@ ActivityProcessor.prototype = {
 
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                    var cadenceZoneId = this.getZoneId(this.zones.cyclingCadence, cadenceArray[i]);
+                    var cadenceZoneId = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
 
                     if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
                         cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
@@ -544,24 +560,6 @@ ActivityProcessor.prototype = {
         };
 
         var durationInSeconds, durationCount = 0;
-
-        /*
-        // Prepare zones
-        var currentZoneFrom = minGrade,
-            currentZoneTo;
-        for (var i = 0; i < ActivityProcessor.distributionZoneCount; i++) {
-
-            currentZoneTo = currentZoneFrom + distributionStep;
-
-            gradeZones.push({
-                from: currentZoneFrom,
-                to: currentZoneTo,
-                s: 0,
-                percentDistrib: null
-            });
-
-            currentZoneFrom = currentZoneTo;
-        }*/
 
         for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
 
