@@ -54,23 +54,32 @@ var userSettings = {
             to: 75
         }],
         pace: [{
-            from: 0,
-            to: 200
+            from: 120,
+            to: 150
         }, {
-            from: 200,
-            to: 300
+            from: 150,
+            to: 180
         }, {
-            from: 300,
-            to: 350
+            from: 180,
+            to: 220
         }, {
-            from: 350,
-            to: 400
+            from: 220,
+            to: 250
         }, {
-            from: 400,
-            to: 450
+            from: 250,
+            to: 290
         }, {
-            from: 450,
-            to: 550
+            from: 290,
+            to: 500
+        }, {
+            from: 500,
+            to: 570
+        }, {
+            from: 570,
+            to: 650
+        }, {
+            from: 650,
+            to: 700
         }],
         power: [{
             from: 0,

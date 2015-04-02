@@ -4,21 +4,21 @@ app.controller("XtdZonesSettingsController", function($scope) {
     $scope.xtdListOptions = [{
         name: 'Cyling Speed',
         value: 'speed',
-        units: 'kph',
+        units: 'KPH',
         step: 0.1,
         min: 0,
         max: 9999
     }, {
         name: 'Running Pace',
         value: 'pace',
-        units: 's', // s/mi?!
+        units: 'Seconds', // s/mi?!
         step: 1,
         min: 0,
         max: 9999
     }, {
         name: 'Cyling Power',
         value: 'power',
-        units: 'W',
+        units: 'Watts',
         step: 1,
         min: 0,
         max: 9999
