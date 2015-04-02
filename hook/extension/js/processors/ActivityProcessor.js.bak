@@ -443,7 +443,7 @@ ActivityProcessor.prototype = {
         return {
             'TRIMP': TRIMP,
 //						'TRIMP_hr': TRIMP/(activityStatsMap.elapsedTime/3600),
-						'TRIMP_hr': TRIMP/(activityStatsMap.movingTime/3600),
+						'TRIMP_hr': TRIMP/(activityStatsMap.elapsedTime/3600),
             'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),

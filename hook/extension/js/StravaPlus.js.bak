@@ -365,7 +365,7 @@ StravaPlus.prototype = {
                     html += ' Q50%: <strong>'+analysisData.heartRateData.medianHeartRate.toFixed(0)+'</strong>&nbsp';
                     html += ' Q75%: <strong>'+analysisData.heartRateData.upperQuartileHeartRate.toFixed(0)+'</strong>)';
                     html += '<br><span style="color: rgb(200, 80, 80);font-size: 18px;"> TRIMP: '+analysisData.heartRateData.TRIMP.toFixed(0)+'</span>&nbsp&nbsp';
-                    html += '<span style="font-size: 18px;">['+analysisData.heartRateData.TRIMP_hr.toFixed(0)+'/hour]';
+                    html += '<span style="font-size: 18px;">('+analysisData.heartRateData.TRIMP_hr.toFixed(0)+'/hour)';
 									 	if (analysisData.toughnessScore != null) {
                     	html += '&nbsp Toughness score: <strong>'+analysisData.toughnessScore.toFixed(0)+'</strong>&nbsp&nbsp';
 									 	}

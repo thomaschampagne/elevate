@@ -174,16 +174,12 @@ VacuumProcessor.prototype = {
             actStatsContainer.find('.inline-stats.section').children().first().text(),
             false, false, true, false);
 
-
-// Elapsed and Moving time
-
         // Get Elapsed Time
 // without var -> global scope (window.activityName)
         elapsedTime = this.formatActivityDataValue_(
 //        var elapsedTime = this.formatActivityDataValue_(
             $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
             true, false, false, false);
-
 
         if (isNaN(elapsedTime)) {
 					console.warn("Can't get elapsed time - probably 'race'");
@@ -200,6 +196,7 @@ VacuumProcessor.prototype = {
 //        var movingTime = this.formatActivityDataValue_(
             $('[data-glossary-term*=definition-moving-time]').parent().parent().children().last().text(),
             true, false, false, false);
+				
 	      } else
 	      {
         // Get Moving Time
@@ -209,7 +206,7 @@ VacuumProcessor.prototype = {
             actStatsContainer.find('.inline-stats.section').children().first().next().text(),
             true, false, false, false);
 
-				}
+}
 
 
         // Get Elevation

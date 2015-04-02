@@ -39,13 +39,11 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         placeExtendedStatsButton: function(buttonAdded) {
 
-//            var htmlButton = '<section>';
-            var htmlButton = '<div>';
+            var htmlButton = '<section>';
             htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
-            htmlButton += '</div>';
-//            htmlButton += '</section>';
+            htmlButton += '</section>';
 
             $('.inline-stats.section').first().after(htmlButton).each(function() {
 
