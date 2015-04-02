@@ -1,6 +1,6 @@
 app.directive('xtdZones', ['Notifier', function(Notifier) {
 
-    var maxZonesCount = 10;
+    var maxZonesCount = 20;
     var minZonesCount = 3;
 
     var linkFunction = function($scope, element, attrs) {};
