@@ -1,5 +1,3 @@
-// var devData = '[{"from":0,"to":2},{"from":2,"to":5},{"from":5,"to":27},{"from":27,"to":30},{"from":30,"to":35},{"from":35,"to":38},{"from":38,"to":41}]';
-
 app.controller("XtdZonesSettingsController", function($scope) {
     
     // List of Xtended data to be customize
@@ -7,7 +5,7 @@ app.controller("XtdZonesSettingsController", function($scope) {
         name: 'Cyling Speed',
         value: 'speed',
         units: 'kph',
-        step: 0.01,
+        step: 0.1,
         min: 0,
         max: 9999
     }, {
@@ -35,7 +33,7 @@ app.controller("XtdZonesSettingsController", function($scope) {
         name: 'Running Cadence',
         value: 'runningCadence',
         units: 'SPM',
-        step: 0.01,
+        step: 0.1,
         min: 0,
         max: 9999
     }, {

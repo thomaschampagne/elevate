@@ -13,9 +13,6 @@ app.directive('xtdZone', ['AvoidInputKeys', function(avoidInputKeys) {
         $scope.$watch('xtdZone', function(newZone, oldZone) {
             // Notify parent scope when a zone has changed
             $scope.$parent.onZoneChange(parseInt($scope.zoneId), oldZone, newZone);
-
-            // console.warn($scope.$parent.xtdDataSelected.value);
-
         }, true);
     };
 
