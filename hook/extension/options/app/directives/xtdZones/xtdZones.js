@@ -55,8 +55,8 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
         $scope.resetZone = function() {
 
             if (confirm("You are going to reset your custom heart rate xtdZones to default factory value. Are you sure?")) {
-                //angular.copy(userSettings.userHrrZones, $scope.xtdZones);
-                console.error('to be done...');
+                angular.copy(userSettings.zones[$scope.xtdDataSelected.value], $scope.xtdZones);
+                $scope.saveZones();
             }
 
         };
@@ -78,6 +78,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
                         ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
                             console.log('localStorageMustBeCleared has been updated to: ' + true);
                         });
+                        alert($scope.xtdDataSelected.name + ' zone saved');
                     });
                 }.bind(this));
             }
@@ -112,8 +113,6 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
         };
 
         $scope.onZoneChange = function(zoneId, previousZone, newZone) {
-
-
 
             var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
 
