@@ -39,9 +39,6 @@ var userSettings = {
             to: 35
         }, {
             from: 35,
-            to: 35
-        }, {
-            from: 35,
             to: 39
         }, {
             from: 39,
