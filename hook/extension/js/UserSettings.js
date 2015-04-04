@@ -73,16 +73,34 @@ var userSettings = {
             to: 290
         }, {
             from: 290,
-            to: 500
+            to: 330
         }, {
-            from: 500,
+            from: 330,
+            to: 370
+        }, {
+            from: 370,
+            to: 410
+        }, {
+            from: 410,
+            to: 450
+        }, {
+            from: 450,
+            to: 525
+        }, {
+            from: 525,
             to: 570
         }, {
             from: 570,
+            to: 610
+        }, {
+            from: 610,
             to: 650
         }, {
             from: 650,
             to: 700
+        }, {
+            from: 700,
+            to: 750
         }],
         power: [{
             from: 0,
@@ -105,6 +123,9 @@ var userSettings = {
         }],
         cyclingCadence: [{
             from: 0,
+            to: 5
+        }, {
+            from: 5,
             to: 60
         }, {
             from: 60,

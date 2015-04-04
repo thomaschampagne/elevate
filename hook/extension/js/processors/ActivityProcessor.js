@@ -69,17 +69,20 @@ ActivityProcessor.prototype = {
         // Toughness score
         var toughnessScore = this.toughnessScore_(activityStatsMap, activityStream, moveRatio);
 
+        // Include speed and pace
+        var moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
+
         // Q1 Speed
         // Median Speed
         // Q3 Speed
         // Standard deviation Speed
-        var speedData = this.speedData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
+        var speedData = moveData[0];
 
         // Q1 Pace
         // Median Pace
         // Q3 Pace
         // Standard deviation Pace
-        var paceData = this.computePaceDataFromSpeedData(speedData);
+        var paceData = moveData[1];
 
         // Estimated Normalized power
         // Estimated Variability index
@@ -187,7 +190,7 @@ ActivityProcessor.prototype = {
     /**
      * ...
      */
-    speedData_: function(activityStatsMap, velocityArray, timeArray) {
+    moveData_: function(activityStatsMap, velocityArray, timeArray) {
 
         if (!velocityArray) {
             return null;
@@ -200,6 +203,7 @@ ActivityProcessor.prototype = {
         var currentSpeed;
 
         var speedZones = this.prepareZonesForDistribComputation(this.zones.speed);
+        var paceZones = this.prepareZonesForDistribComputation(this.zones.pace);
 
         var durationInSeconds = 0,
             durationCount = 0;
@@ -225,10 +229,16 @@ ActivityProcessor.prototype = {
 
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
+                    // Find speed zone id
                     var speedZoneId = this.getZoneId(this.zones.speed, currentSpeed);
-
                     if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
                         speedZones[speedZoneId]['s'] += durationInSeconds;
+                    }
+
+                    // Find pace zone
+                    var paceZoneId = this.getZoneId(this.zones.pace, this.convertSpeedToPace(currentSpeed));
+                    if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
+                        paceZones[paceZoneId]['s'] += durationInSeconds;
                     }
 
                     durationCount += durationInSeconds;
@@ -240,6 +250,9 @@ ActivityProcessor.prototype = {
         for (var zone in speedZones) {
             speedZones[zone]['percentDistrib'] = ((speedZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
+        for (var zone in paceZones) {
+            paceZones[zone]['percentDistrib'] = ((paceZones[zone]['s'] / durationCount).toFixed(4) * 100);
+        }
 
         // Finalize compute of Speed
         var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
@@ -250,7 +263,7 @@ ActivityProcessor.prototype = {
         });
 
 
-        return {
+        return [{
             'genuineAvgSpeed': genuineAvgSpeed,
             'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
@@ -259,31 +272,13 @@ ActivityProcessor.prototype = {
             'varianceSpeed': varianceSpeed,
             'standardDeviationSpeed': standardDeviationSpeed,
             'speedZones': speedZones
-        };
-    },
-
-    computePaceDataFromSpeedData: function(speedData) {
-
-        var paceData = {};
-        paceData.lowerQuartilePace = this.convertSpeedToPace(speedData.lowerQuartileSpeed);
-        paceData.medianPace = this.convertSpeedToPace(speedData.medianSpeed);
-        paceData.upperQuartilePace = this.convertSpeedToPace(speedData.upperQuartileSpeed);
-        paceData.variancePace = this.convertSpeedToPace(speedData.varianceSpeed);
-
-        paceData.paceZones = [];
-
-        _.each(speedData.speedZones, function(speedZone) {
-
-            var paceZone = {};
-            paceZone.from = this.convertSpeedToPace(speedZone.from);
-            paceZone.to = this.convertSpeedToPace(speedZone.to);
-            paceZone.s = speedZone.s;
-            paceZone.percentDistrib = speedZone.percentDistrib;
-            paceData.paceZones.push(paceZone);
-
-        }.bind(this));
-
-        return paceData;
+        }, {
+            'lowerQuartilePace': this.convertSpeedToPace(Helper.lowerQuartile(speedsNonZeroSorted)),
+            'medianPace': this.convertSpeedToPace(Helper.median(speedsNonZeroSorted)),
+            'upperQuartilePace': this.convertSpeedToPace(Helper.upperQuartile(speedsNonZeroSorted)),
+            'variancePace': this.convertSpeedToPace(varianceSpeed),
+            'paceZones': paceZones
+        }];
     },
 
     /**
@@ -624,7 +619,7 @@ ActivityProcessor.prototype = {
     }
 
     /**
-     *  @param 
+     *  @param
      *  @param Remove set of value under minPercentExistence
      *  @return array of values cleaned. /!\ this will return less values
      */
