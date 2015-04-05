@@ -17,8 +17,10 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
         render: function() {
 
+            this.viewTitle += ' <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>';
+
             base.render.call(this);
-            
+
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
 

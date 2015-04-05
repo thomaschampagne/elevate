@@ -7,7 +7,7 @@ function StravaPlus(userSettings, appResources) {
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones);
+    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -307,6 +307,8 @@ StravaPlus.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
+
+        this.activityProcessor_.setActivityType(activityType);
 
         this.activityProcessor_.getAnalysisData(
             this.activityId_,
