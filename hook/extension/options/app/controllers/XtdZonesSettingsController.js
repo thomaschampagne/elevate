@@ -2,7 +2,7 @@ app.controller("XtdZonesSettingsController", function($scope) {
     
     // List of Xtended data to be customize
     $scope.xtdListOptions = [{
-        name: 'Cyling Speed',
+        name: 'Cycling Speed',
         value: 'speed',
         units: 'KPH',
         step: 0.1,
@@ -16,7 +16,7 @@ app.controller("XtdZonesSettingsController", function($scope) {
         min: 0,
         max: 9999
     }, {
-        name: 'Cyling Power',
+        name: 'Cycling Power',
         value: 'power',
         units: 'Watts',
         step: 1,
