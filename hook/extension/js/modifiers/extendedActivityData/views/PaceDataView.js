@@ -31,7 +31,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Pace stats');
+            this.content += this.generateSectionTitle('Pace stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)

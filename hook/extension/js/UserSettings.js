@@ -30,6 +30,12 @@ var userSettings = {
             to: 10
         }, {
             from: 10,
+            to: 13
+        }, {
+            from: 13,
+            to: 17
+        }, {
+            from: 17,
             to: 23
         }, {
             from: 23,
@@ -104,9 +110,21 @@ var userSettings = {
         }],
         power: [{
             from: 0,
+            to: 50
+        }, {
+            from: 50,
+            to: 100
+        }, {
+            from: 100,
+            to: 150
+        }, {
+            from: 150,
             to: 200
         }, {
             from: 200,
+            to: 250
+        }, {
+            from: 250,
             to: 300
         }, {
             from: 300,
@@ -119,7 +137,19 @@ var userSettings = {
             to: 450
         }, {
             from: 450,
+            to: 500
+        }, {
+            from: 500,
             to: 550
+        }, {
+            from: 550,
+            to: 600
+        }, {
+            from: 600,
+            to: 700
+        }, {
+            from: 700,
+            to: 1100
         }],
         cyclingCadence: [{
             from: 0,
@@ -211,27 +241,43 @@ var userSettings = {
             to: 94
         }],
         grade: [{
-            from: -20,
+            from: -15,
             to: -10
         }, {
             from: -10,
-            to: -5
+            to: -7
         }, {
-            from: -5,
-            to: 0
+            from: -7,
+            to: -3
         }, {
-            from: 0,
-            to: 5
+            from: -3,
+            to: -1
         }, {
-            from: 5,
+            from: -1,
+            to: 1
+        }, {
+            from: 1,
+            to: 4
+        }, {
+            from: 4,
+            to: 7
+        }, {
+            from: 7,
+            to: 8
+        }, {
+            from: 8,
+            to: 9
+        }, {
+            from: 9,
             to: 10
         }, {
             from: 10,
-            to: 15
+            to: 11
         }, {
-            from: 15,
-            to: 20
+            from: 11,
+            to: 15
         }]
+
     },
     remoteLinks: true,
     feedAutoScroll: true,
