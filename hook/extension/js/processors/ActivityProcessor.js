@@ -543,6 +543,11 @@ ActivityProcessor.prototype = {
             return null;
         }
 
+        // If home trainer
+        if (window.pageView && window.pageView.activity && window.pageView.activity().get('trainer')) {
+            return null;
+        }
+
         var gradeSum = 0,
             gradeCount = 0;
 
