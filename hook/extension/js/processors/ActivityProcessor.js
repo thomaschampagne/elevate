@@ -436,8 +436,11 @@ ActivityProcessor.prototype = {
 
         activityStatsMap.averageHeartRate = hrSum / hrCount;
 
+        var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
+
         return {
             'TRIMP': TRIMP,
+            'TRIMPPerHour': TRIMPPerHour,
             'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),

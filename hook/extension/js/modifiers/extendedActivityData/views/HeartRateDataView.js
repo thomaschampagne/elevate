@@ -99,7 +99,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.content += this.generateSectionTitle('Heart rate stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">(customize)</a>');
 
             // Creates a grid
-            this.makeGrid(3, 2); // (col, row)
+            this.makeGrid(3, 3); // (col, row)
 
             this.insertheartRateDataIntoGrid();
             this.generateCanvasForGraph();
@@ -127,6 +127,9 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
+            
+            // Other
+            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
         }
     }
 });
