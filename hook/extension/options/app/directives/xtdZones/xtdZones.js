@@ -62,7 +62,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
         };
 
         $scope.saveZones = function() {
-            if (!$scope.areZonesCompliant()) {
+            if (!$scope.areZonesCompliant($scope.xtdZones)) {
                 console.error('Zones are not compliant');
                 return;
             }
@@ -84,27 +84,63 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
             }
         };
 
-        $scope.areZonesCompliant = function() {
+        $scope.export = function() {
+            var exportData = angular.toJson($scope.xtdZones); //.replace(/"/g, '');
+            prompt("Exporting " + $scope.xtdDataSelected.name + " zones:\r\nCopy data inside field", exportData);
+        };
 
-            if (!$scope.xtdZones) {
+        $scope.import = function() {
+
+            var importData = prompt("Importing " + $scope.xtdDataSelected.name + " zones\r\nCopy and paste zones. should be like:\r\n[{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, 'to': d }] ", '');
+
+            if (importData) {
+
+                try {
+
+                    var jsonImportData = angular.fromJson(importData);
+
+                    if ($scope.areZonesCompliant(jsonImportData)) {
+                        
+                        $scope.xtdZones = jsonImportData;
+                        $scope.saveZones();
+
+                    } else {
+                        throw new error('not compliant');
+                    }
+
+                } catch (e) {
+                    alert($scope.xtdDataSelected.name + ' zones are not compliant');
+                    return;
+                }
+
+            }
+        };
+
+        $scope.areZonesCompliant = function(zones) {
+
+            if (!zones) {
                 return false;
             }
 
-            for (var i = 0; i < $scope.xtdZones.length; i++) {
+            if(zones.length > maxZonesCount) {
+                return false;
+            }
+
+            for (var i = 0; i < zones.length; i++) {
 
                 if (i == 0) {
-                    if ($scope.xtdZones[i].to != $scope.xtdZones[i + 1].from) {
+                    if (zones[i].to != zones[i + 1].from) {
                         return false;
                     }
 
-                } else if (i < ($scope.xtdZones.length - 1)) { // Middle
+                } else if (i < (zones.length - 1)) { // Middle
 
-                    if ($scope.xtdZones[i].to != $scope.xtdZones[i + 1].from || $scope.xtdZones[i].from != $scope.xtdZones[i - 1].to) {
+                    if (zones[i].to != zones[i + 1].from || zones[i].from != zones[i - 1].to) {
                         return false;
                     }
 
                 } else { // Last
-                    if ($scope.xtdZones[i].from != $scope.xtdZones[i - 1].to) {
+                    if (zones[i].from != zones[i - 1].to) {
                         return false;
                     }
                 }

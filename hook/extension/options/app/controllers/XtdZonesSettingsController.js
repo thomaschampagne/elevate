@@ -64,7 +64,6 @@ app.controller("XtdZonesSettingsController", function($scope) {
         // Load source on toggle option
         // And inject
         // Mocking xtd source
-        console.warn($scope.xtdListOptions);
         $scope.switchZonesFromXtdItem(listItem);
     };
 });
