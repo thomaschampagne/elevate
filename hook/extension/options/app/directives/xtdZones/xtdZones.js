@@ -109,7 +109,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
                     }
 
                 } catch (e) {
-                    alert($scope.xtdDataSelected.name + ' zones are not compliant');
+                    alert($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + maxZonesCount);
                     return;
                 }
 
