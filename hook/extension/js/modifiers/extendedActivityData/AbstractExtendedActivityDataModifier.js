@@ -47,7 +47,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             htmlButton += '</div>';
 //            htmlButton += '</section>';
 
-            $('.inline-stats.section').first().after(htmlButton).each(function() {
+//            $('.inline-stats.section').first().after(htmlButton).each(function() {
+            $('.details').first().after(htmlButton).each(function() {
 
                 $('#extendedStatsButton').click(function() {
 

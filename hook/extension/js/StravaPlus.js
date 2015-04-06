@@ -323,7 +323,7 @@ StravaPlus.prototype = {
 
                 // tell activity type for other than Ride/Run activities
 				if ( (activityType !== "Ride") && (activityType !== "Run") ) {
-                    var html = '<div  style="padding: 0px;background: #FFFFFF;font-size: 9px;color: rgb(103, 103, 103);">&nbsp&nbsp&nbspActivity type: '+window.pageView.activity().attributes.type+'</div>';
+                    var html = '<div  style="padding: 0px 0px 0px 0px;background: #FFFFFF;font-size: 9px;color: rgb(103, 103, 103);">&nbsp&nbsp&nbspActivity type: '+window.pageView.activity().attributes.type+'</div>';
                     $('.inset').parent().children().first().before(html);
 				}
 
@@ -352,26 +352,67 @@ StravaPlus.prototype = {
 
 
 										// print HIGHLIGHTED STATS under inline-stats section
-                    var html = '<div style="padding: 2px;background: #FFFFFF;font-size: 15px;color: rgb(103, 103, 103);">';
-									if (analysisData.speedData != null) {
-                    html += 'Move Ratio: <strong>'+analysisData.moveRatio.toFixed(2)+'</strong>&nbsp&nbsp';
-                    html += 'Speed/Pace: <strong>'+(3600*window.distance/window.elapsedTime).toFixed(1)+' / '+Helper.secondsToHHMMSS((window.elapsedTime/window.distance).toFixed(0)).replace('00:', '')+'</strong>&nbsp';
-                    html += ' (Q75%: <strong>'+analysisData.speedData.upperQuartileSpeed.toFixed(1)+' / '+Helper.secondsToHHMMSS((3600/analysisData.speedData.upperQuartileSpeed).toFixed(0)).replace('00:', '')+'</strong>)&nbsp<br>';
-									}
+                    var html = '<div style="font-size: 15px; padding: 10px 0px 10px 0px;">';
+
 									if (analysisData.heartRateData != null) {
-                    html += 'HRavg: <strong>'+analysisData.heartRateData.averageHeartRate.toFixed(0)+'</strong>&nbsp&nbsp';
-                    html += '(<strong>'+analysisData.heartRateData.activityHeartRateReserve.toFixed(0)+'%</strong> HRR&nbsp&nbsp';
-                    html += ' Q25%: <strong>'+analysisData.heartRateData.lowerQuartileHeartRate.toFixed(0)+'</strong>&nbsp';
-                    html += ' Q50%: <strong>'+analysisData.heartRateData.medianHeartRate.toFixed(0)+'</strong>&nbsp';
-                    html += ' Q75%: <strong>'+analysisData.heartRateData.upperQuartileHeartRate.toFixed(0)+'</strong>)';
-                    html += '<br><span style="color: rgb(200, 80, 80);font-size: 18px;"> TRIMP: '+analysisData.heartRateData.TRIMP.toFixed(0)+'</span>&nbsp&nbsp';
-                    html += '<span style="font-size: 18px;">['+analysisData.heartRateData.TRIMP_hr.toFixed(0)+'/hour]';
-									 	if (analysisData.toughnessScore != null) {
-                    	html += '&nbsp Toughness score: <strong>'+analysisData.toughnessScore.toFixed(0)+'</strong>&nbsp&nbsp';
-									 	}
-                    html += '</span></div>';
-                  }
+                    html += '<span style="color: rgb(200, 80, 80);font-size: 18px;" title="TRIMP = TRaining IMPulse"> TRIMP: <strong>'+analysisData.heartRateData.TRIMP.toFixed(0)+'</strong></span>';
+                    
+								 	if (analysisData.toughnessScore != null) {
+                    	html += '<span style="font-size: 18px;" title="TS = Toughness Score = sqrt( sqrt( elevation^2 * avgPower * avgSpeed^2 * distance^2 * moveRatio ) ) /20"><font size=-2>&nbsp&nbsp&nbsp&nbsp&nbspToughness Score: </font><font size=-1><strong>'+analysisData.toughnessScore.toFixed(0)+'</strong></font></span>';
+								 	}
+
+                    html += '<br><span style="font-size: 18px;" title="TRIMP/hour = Effort estimate\n =<  50  Sure this was a Workout?!\n   \>  50  Easy-Recovery\n   \> 100  Lower Medium\n   \> 117  Medium\n   \> 133  Upper Medium\n   \> 150  Hard\n   \> 175  Very Hard\n   \> 200  Extremely Hard\n   \> 225  Hard as Hell!\n   \> 250  How could You survive this?!?">[ <strong>'+analysisData.heartRateData.TRIMP_hr.toFixed(0)+'</strong> / hour ]';
+                    html += ' &nbsp<font size=-2>Effort Estimate:</font> <strong><font size=-1 style="color: rgb(227, 68, 2);">';
+                    if (analysisData.heartRateData.TRIMP_hr <= 50) {       	html+=' Sure this was a Workout?! [RPE <1]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 100) {	html+=' Easy-Recovery [RPE 1-2]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 117) {	html+=' Lower Medium [RPE 3]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 133) {	html+=' Medium [RPE 4]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 150) {	html+=' Upper Medium [RPE 5]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 175) {	html+=' Hard [RPE 6]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 200) {	html+=' Very Hard [RPE 7]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 225) {	html+=' Extremely Hard [RPE 8]';
+                    } else if (analysisData.heartRateData.TRIMP_hr <= 250) {	html+=' Hard as Hell! [RPE 9]';
+                    } else if (analysisData.heartRateData.TRIMP_hr > 250){	html+=' How could You survive This?!? [RPE 9+]';
+                    }
+                    
+                    html+='</font></strong></span>';
+									 	
                     $('.inline-stats.section').first().after(html);
+                  }
+
+                    html = '<style>.statsplus td {text-align:center; border: 0px 0px 0px 1px; padding: 2px;}</style>';
+                    html += '<table class="statsplus" style="margin: 0px; width:100%;">';
+                    html += '<tr><td>Move Ratio<br><strong>'+analysisData.moveRatio.toFixed(2)+'</strong></td>';
+                    html += '<td>Real<br>Average</td><td>Lower Quart<br>Q25%</td><td>Median<br>Q50%</td><td>Upper Quart<br>Q75%</td></tr>';
+									if (analysisData.heartRateData != null) {
+                    html += '<tr style="color: rgb(200, 80, 80)"><td>HRR% <strong>'+analysisData.heartRateData.activityHeartRateReserve.toFixed(0)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.heartRateData.averageHeartRate.toFixed(0)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.heartRateData.lowerQuartileHeartRate.toFixed(0)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.heartRateData.medianHeartRate.toFixed(0)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.heartRateData.upperQuartileHeartRate.toFixed(0)+'</strong></td></tr>';
+                  }
+									if (analysisData.gradeData != null && !(analysisData.gradeData.lowerQuartileGrade == 0 && analysisData.gradeData.upperQuartileGrade == 0)) {
+                    html += '<tr style="color: rgb(80, 200, 80)"><td><strong>'+analysisData.gradeData.gradeProfile+'</strong> Grade%</td>';
+                    html += '<td><strong>'+analysisData.gradeData.avgGrade.toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.gradeData.lowerQuartileGrade.toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.gradeData.medianGrade.toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.gradeData.upperQuartileGrade.toFixed(1)+'</strong></td></tr>';
+                  }
+									if (analysisData.speedData != null) {
+                    html += '<tr style="color: rgb(80, 80, 200)"><td>Speed</td>';
+                    html += '<td><strong>'+(3600*window.distance/window.elapsedTime).toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.speedData.lowerQuartileSpeed.toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+analysisData.speedData.medianSpeed.toFixed(1)+'<br>'+'</strong></td>';
+                    html += '<td><strong>'+analysisData.speedData.upperQuartileSpeed.toFixed(1)+'</strong></td></tr>';
+                    html += '<tr style="color: rgb(80, 80, 200)"><td>Pace</td>';
+                    html += '<td><strong>'+Helper.secondsToHHMMSS((window.elapsedTime/window.distance).toFixed(0)).replace('00:','')+'</strong></td>';
+                    html += '<td><strong>'+Helper.secondsToHHMMSS((3600/analysisData.speedData.lowerQuartileSpeed).toFixed(0)).replace('00:','')+'</strong></td>';
+                    html += '<td><strong>'+Helper.secondsToHHMMSS((3600/analysisData.speedData.medianSpeed).toFixed(0)).replace('00:','')+'</strong></td>';
+                    html += '<td><strong>'+Helper.secondsToHHMMSS((3600/analysisData.speedData.upperQuartileSpeed).toFixed(0)).replace('00:','')+'</strong></td></tr>';
+									}
+                    html += '</table></div>';
+                    $('.details').first().next().after(html);
+//                    $('.inline-stats.section').first().next().next().after(html);
 
 
 							
