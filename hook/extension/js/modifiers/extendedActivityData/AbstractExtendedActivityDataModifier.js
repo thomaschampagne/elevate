@@ -56,7 +56,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                         'transitionIn': 'fade',
                         'transitionOut': 'fade',
                         'type': 'iframe',
-                        'content': '<div class="stravaPlusExtendedData">' + this.content + '</div>'
+                        'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
                     });
 
                     // For each view start making the assossiated graphs

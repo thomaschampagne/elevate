@@ -299,5 +299,5 @@ var userSettings = {
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
-    highLightStravaPlusFeature: false // For heartrate related data.
+    highLightStravistiXFeature: false // For heartrate related data.
 };

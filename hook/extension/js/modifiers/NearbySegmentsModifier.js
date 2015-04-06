@@ -1,10 +1,10 @@
 /**
  *   NearbySegmentsModifier is responsible of ...
  */
-function NearbySegmentsModifier(jsonSegments, appResources, highLightStravaPlusFeature) {
+function NearbySegmentsModifier(jsonSegments, appResources, highLightStravistiXFeature) {
     this.segments_ = jsonSegments;
     this.appResources_ = appResources;
-    this.highLightStravaPlusFeature_ = highLightStravaPlusFeature;
+    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
 }
 
 /**
@@ -18,7 +18,7 @@ NearbySegmentsModifier.prototype = {
         var dropDownStyle = '',
             optionStyle = '';
 
-        if (this.highLightStravaPlusFeature_) {
+        if (this.highLightStravistiXFeature_) {
             dropDownStyle = 'background: #fc4c02; color: #333;'; // TODO Make colors global
             optionStyle = 'background: #fc4c02; color: white;'; // TODO Make colors global
         }

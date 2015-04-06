@@ -1,10 +1,10 @@
 /**
  *   MenuModifier is responsible of ...
  */
-function MenuModifier(athleteId, highLightStravaPlusFeature, appResources) {
+function MenuModifier(athleteId, highLightStravistiXFeature, appResources) {
     this.athleteId_ = athleteId;
     this.appResources_ = appResources;
-    this.highLightStravaPlusFeature_ = highLightStravaPlusFeature;
+    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
 }
 
 /**
@@ -21,7 +21,7 @@ MenuModifier.prototype = {
         var menuStyle = null;
         var menuIcon;
 
-        if (this.highLightStravaPlusFeature_) {
+        if (this.highLightStravistiXFeature_) {
             menuStyle = "style='font-size:20px; background-color: #fc4c02; color: white;'"; //TODO Globalize colors
             menuIcon = this.appResources_.menuIconBlack;
         } else {
@@ -32,7 +32,7 @@ MenuModifier.prototype = {
         var styleSideRight = 'display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;';
         var styleSideLeft = 'border-top: 1px solid #DDD; width: 50%;';
 
-        var twitterTweetLink = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravaplus%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20bitly.com/stravaplus.%20%23cycling%20%23running%20%23geek";
+        var twitterTweetLink = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravistix%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20bitly.com/stravistix.%20%23cycling%20%23running%20%23geek";
 
         stravaMenuHtml += "<a href='#' class='selection' " + menuStyle + "><img style='vertical-align:middle' src='" + menuIcon + "'/></a>";
         stravaMenuHtml += "<ul class='options' height='' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
@@ -45,7 +45,7 @@ MenuModifier.prototype = {
         // stravaMenuHtml += "<li><a href='http://veloviewer.com/athlete/" + this.athleteId_ + "/challenges' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.veloviewerChallengesIcon + "'/> <span>Strava Challenges <i>VeloViewer</i></span></a></li>";
         stravaMenuHtml += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources_.settingsLink + "#/releaseNotes' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.systemUpdatesIcon + "'/> <span><strong>v" + this.appResources_.extVersion + "</strong> release notes</span></a></li>";
 
-        stravaMenuHtml += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/stravaplus/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.rateIcon + "'/> <span>Rate</span></a></li>";
+        stravaMenuHtml += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/stravistix/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.rateIcon + "'/> <span>Rate</span></a></li>";
         stravaMenuHtml += "<li style='" + styleSideLeft + "' ><a  style='font-style: italic;' href='https://twitter.com/champagnethomas' style='font-style: italic;' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.twitterIcon + "'/> <span>What's next?</span></a></li>";
 
         stravaMenuHtml += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources_.settingsLink + "#/donate' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.donateIcon + "'/> <span>Donate</span></a></li>";
