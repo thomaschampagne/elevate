@@ -22,7 +22,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             this.tooltipTemplate = "<%if (label){";
             this.tooltipTemplate += "var hr = label.split(' ')[1].replace('%','').split('-');";
-            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + 'bpm';";
+            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + 'bpm';";
             this.tooltipTemplate += "%><%=finalLabel%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>";
 
         },
@@ -106,7 +106,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.setupDistributionTable();
 
             if (!this.isAuthorOfViewedActivity) {
-                this.content += '<u>Note:</u> You don\'t own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravaPlus health settings.<br/>';
+                this.content += '<u>Note:</u> You don\'t own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravistiX health settings.<br/>';
                 this.content += 'This allows you to analyse your heart capacity with the data recorded on the activity of this athlete.<br/><br/>';
             }
 

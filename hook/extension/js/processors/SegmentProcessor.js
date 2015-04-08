@@ -6,7 +6,7 @@ function SegmentProcessor(vacuumProcessor, segmentId) {
     this.segmentId_ = segmentId;
 }
 
-SegmentProcessor.cachePrefix = 'stravaplus_nearbySegments_';
+SegmentProcessor.cachePrefix = 'stravistix_nearbySegments_';
 
 /**
  * Define prototype

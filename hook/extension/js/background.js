@@ -6,7 +6,7 @@ chrome.runtime.onMessageExternal.addListener(
         var storageManager = new StorageManager();
 
         switch (request.method) {
-            case StravaPlus.getFromStorageMethod:
+            case StravistiX.getFromStorageMethod:
 
                 storageManager.storageType = request.params['storage'];
                 storageManager.getFromStorage(request.params['key'], function(returnedValue) {
@@ -17,7 +17,7 @@ chrome.runtime.onMessageExternal.addListener(
 
                 break;
 
-            case StravaPlus.setToStorageMethod:
+            case StravistiX.setToStorageMethod:
 
                 storageManager.storageType = request.params['storage'];
                 storageManager.setToStorage(request.params['key'], request.params['value'], function(returnAllData) {

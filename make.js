@@ -237,5 +237,5 @@ var deleteFolderRecursive = function(path) {
 var generateBuildName = function(manifestFile) {
     var manifestData = JSON.parse(fs.readFileSync(manifestFile).toString());
     var d = new Date();
-    return 'StravaPlus_v' + manifestData.version + '_' + d.toDateString().split(' ').join('_') + '_' + d.toLocaleTimeString().split(':').join('_') + '.zip';
+    return 'StravistiX_v' + manifestData.version + '_' + d.toDateString().split(' ').join('_') + '_' + d.toLocaleTimeString().split(':').join('_') + '.zip';
 };
