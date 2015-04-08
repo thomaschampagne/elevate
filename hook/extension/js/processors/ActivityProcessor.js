@@ -453,6 +453,8 @@ ActivityProcessor.prototype = {
             'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
             'averageHeartRate': activityStatsMap.averageHeartRate,
             'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
+            'MaxHr':userMaxHr,
+						'RestHr':userRestHr
         };
 
     },

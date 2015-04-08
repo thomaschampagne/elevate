@@ -24,12 +24,12 @@ ActivityBikeOdoModifier.prototype = {
             console.warn('Unable to find bike odo for this Activity');
         }
 
-        var newBikeDisplayHTML = bikeDisplayedOnActivityPage + '<strong> / ' + activityBikeOdo + '</strong>';
+        var newBikeDisplayHTML = bikeDisplayedOnActivityPage + '<br>ODO: <strong>' + activityBikeOdo + '</strong>';
 
         var forceRefreshActionHTML = '<a href="#" style="cursor: pointer;" title="Force odo refresh for this athlete\'s bike. Usually it refresh every 2 hours..." id="bikeOdoForceRefresh">Force refresh odo</a>';
 
         // Edit Activity Page
-        $('.gear-name').html(newBikeDisplayHTML + '<br />' + forceRefreshActionHTML).each(function() {
+        $('.gear-name').html(newBikeDisplayHTML + '&nbsp&nbsp' + forceRefreshActionHTML).each(function() {
 
             $('#bikeOdoForceRefresh').on('click', function() {
                 this.handleUserBikeOdoForceRefresh_();
