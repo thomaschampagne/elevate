@@ -92,7 +92,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 									html = '<div id="RPE" style="margin:0px;" title="RPE 1-10 (Rated Perceived Exertion) Estimate'+HRnotice+'">';
 									html += '<div id="RPEgauge"><div id="RPEtxt"></div></div></div><div id="RPElin"></div>';
 									html += '<style>';
-									html += '#RPE {height: 6px;position: relative;margin: 10px;border: 2px solid #333;padding: 0px;background: linear-gradient(to right, #0E0, green, yellow, orange, #B33, #F00);border-radius: 2px;box-shadow: 1px 1px 1px #888;}';
+									html += '#RPE {height: 6px;position: relative;margin: 10px;border: 2px solid #333;padding: 0px;background: linear-gradient(to right, #77E, green, yellow, orange, #B33, #F00);border-radius: 2px;box-shadow: 1px 1px 1px #888;}';
 									html += '#RPEgauge {position: relative;top: -5px;width: 0px;height: 0px;border-left: 0px solid transparent;border-right: 8px solid transparent;border-top: 12px solid #A22;box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.100);}';
 									html += '#RPEtxt {color: #000000;text-align:center;font-family: sans-serif;font-size: 9px;font-weight: bold;position: relative;left: 0px;top: -25Px;}';
 									html += '#RPElin {height: 2px;position: relative;top: -6px;left: 2px;background: #C00;}';
