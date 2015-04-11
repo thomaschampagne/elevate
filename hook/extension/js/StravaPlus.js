@@ -301,7 +301,9 @@ StravaPlus.prototype = {
             return;
         }
 
-        var activityType = pageView.activity().get('type');
+// without var -> global scope (window.activityType)
+        activityType = pageView.activity().get('type');
+//        var activityType = pageView.activity().get('type');
 
         // Skip manual activities
         if (activityType === 'Manual') {
@@ -337,6 +339,11 @@ StravaPlus.prototype = {
 
                     // for Workout, Rowing,...
                     case 'StationaryOther':
+                        extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+
+                    // for Workout, Rowing,...
+                    case 'Swim':
                         extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
                         break;
 
