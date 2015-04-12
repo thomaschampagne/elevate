@@ -445,7 +445,6 @@ ActivityProcessor.prototype = {
 
                 // TRIMP += durationInMinutes * heartRateReserveAvg * Math.pow(0.64, TRIMPGenderFactor * heartRateReserveAvg);
                 TRIMP += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
-								TRIMP = Math.round(TRIMP*10)/10;
 								
                 // Count Heart Rate Reserve distribution
                 zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
@@ -458,6 +457,8 @@ ActivityProcessor.prototype = {
                 hrCount++;
             }
         }
+
+				TRIMP = Math.round(TRIMP*10)/10;
 
         var heartRateArraySorted = heartRateArray.sort(function(a, b) {
             return a - b;
