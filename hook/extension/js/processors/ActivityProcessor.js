@@ -471,17 +471,19 @@ ActivityProcessor.prototype = {
 
         activityStatsMap.averageHeartRate = Math.round((hrSum / hrCount)*10)/10;
 
-				if (activityStatsMap.movingTime) {
-					var TRIMP_hr = TRIMP/(activityStatsMap.movingTime/3600);
-				}else{
-					var TRIMP_hr = TRIMP/(activityStatsMap.elapsedTime/3600);
-				}
-//				var TRIMP_hr = Math.round((TRIMP/(activityStatsMap.elapsedTime/3600))*10)/10;
+// using of moving time sometimes results in too big TRIMP/hr numbers
+/*	if (activityStatsMap.movingTime) {
+		var TRIMP_hr = TRIMP/(activityStatsMap.movingTime/3600);
+	}else{
+		var TRIMP_hr = TRIMP/(activityStatsMap.elapsedTime/3600);
+	}
+*/
+	var TRIMP_hr = Math.round((TRIMP/(activityStatsMap.elapsedTime/3600))*10)/10;
 
         return {
             'TRIMP': TRIMP,
-						'TRIMP_hr': TRIMP_hr,
-						'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
+		'TRIMP_hr': TRIMP_hr,
+		'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
             'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),
