@@ -127,15 +127,15 @@ StravistiX.prototype = {
      *
      */
     handleUpdateRibbon_: function() {
-        var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
-        var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
 
-        // var newNameMessage = '<br/><br/>StravistiX name has to change, please give your opinion for the new one <a target="_blank" href="http://goo.gl/forms/q5qVN6z4fm">Here</a>';
-        var newNameMessage = '';
+        var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
+        var message = '';
+        message += '<h4>- StravaPlus is now named StravistiX (= Strava + Statistics + Xtended) </h4>';
+        message += '<h4>- This version now includes customs zones for each Xtended data</h4>';
+        message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
+        message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravistiX updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + newNameMessage + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
-        // var html += '<div></div>';
-        $('body').before(html);
+        $.fancybox('<h2>' + title + '</h2>' + message);
     },
 
     /**
