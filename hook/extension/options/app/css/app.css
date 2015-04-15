@@ -15,7 +15,7 @@ footer {
 }
 
 #donate {
-    font-size: 28px;
+    font-size: 26px;
     text-align: center;
     padding: 75px;
 }
@@ -26,13 +26,9 @@ footer {
 
 .healthCustomZones {
     text-align: left;
-    /*margin-top: 50px;*/
-    /*margin-left: 50px;*/
 }
 
 .healthCustomZonesExplanations {
-    /*background-color: red;*/
-    /* tmp ... */
 }
 
 .zoneActionButton {
@@ -49,7 +45,6 @@ footer {
 }
 
 .hrZone .bpmFilter {
-    /*font-size: 16px;*/
 }
 
 .hrZone table td {
