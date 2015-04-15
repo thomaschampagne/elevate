@@ -98,7 +98,7 @@ Content.prototype = {
 
         // Skip execution if needed
         if (!this.isExtensionRunnableInThisContext_()) {
-            console.log("Skipping StravaPlus chrome extension execution in this page");
+            console.log("Skipping StravistiX chrome extension execution in this page");
             return;
         }
 
@@ -109,7 +109,7 @@ Content.prototype = {
             chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
                 var injectedScript = document.createElement('script');
-                injectedScript.src = chrome.extension.getURL('js/StravaPlus.js');
+                injectedScript.src = chrome.extension.getURL('js/StravistiX.js');
                 injectedScript.onload = function() {
                     
                     this.parentNode.removeChild(this);
@@ -120,7 +120,7 @@ Content.prototype = {
                     }
 
                     inner.textContent = 'var $ = jQuery;';
-                    inner.textContent += 'var stravaPlus = new StravaPlus(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(self.appResources_) + ');';
+                    inner.textContent += 'var stravistiX = new StravistiX(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(self.appResources_) + ');';
 
                     inner.onload = function() {
                         this.parentNode.removeChild(this);
@@ -148,6 +148,7 @@ var appResources = {
     labIcon: chrome.extension.getURL('/icons/lab.png'),
     settingsIcon: chrome.extension.getURL('/icons/ic_settings_24px.svg'),
     heartIcon: chrome.extension.getURL('/icons/ic_favorite_24px.svg'),
+    zonesIcon: chrome.extension.getURL('/icons/ic_format_line_spacing_24px.svg'),
     komMapIcon: chrome.extension.getURL('/icons/ic_looks_one_24px.svg'),
     heatmapIcon: chrome.extension.getURL('/icons/ic_whatshot_24px.svg'),
     bugIcon: chrome.extension.getURL('/icons/ic_bug_report_24px.svg'),

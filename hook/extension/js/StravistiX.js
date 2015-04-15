@@ -1,13 +1,13 @@
 /**
- *   StravaPlus is responsible of linking processors with modfiers and user settings/health data
+ *   StravistiX is responsible of linking processors with modfiers and user settings/health data
  */
-function StravaPlus(userSettings, appResources) {
+function StravistiX(userSettings, appResources) {
 
     this.userSettings_ = userSettings;
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones);
+    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -22,14 +22,14 @@ function StravaPlus(userSettings, appResources) {
 /**
  *   Static vars
  */
-StravaPlus.getFromStorageMethod = 'getFromStorage';
-StravaPlus.setToStorageMethod = 'setToStorage';
-StravaPlus.defaultIntervalTimeMillis = 750;
+StravistiX.getFromStorageMethod = 'getFromStorage';
+StravistiX.setToStorageMethod = 'setToStorage';
+StravistiX.defaultIntervalTimeMillis = 750;
 
 /**
  * Define prototype
  */
-StravaPlus.prototype = {
+StravistiX.prototype = {
 
     init_: function() {
 
@@ -127,14 +127,15 @@ StravaPlus.prototype = {
      *
      */
     handleUpdateRibbon_: function() {
-        var globalStyle = 'background-color: #FFF200; color: #333; font-size: 14px; padding: 20px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
-        var socialButton = '<strong><a style="color: #FC4C02;" target="_blank" href="https://twitter.com/champagnethomas">What\'s in the next update?</a></strong>';
 
-        var newNameMessage = 'StravaPlus name has to change, please give your opinion for the new one <a target="_blank" href="http://goo.gl/forms/q5qVN6z4fm">Here</a>';
+        var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
+        var message = '';
+        message += '<h4>- StravaPlus is now named StravistiX (= Strava + Statistics + Xtended) </h4>';
+        message += '<h4>- This version now includes customs zones for each Xtended data</h4>';
+        message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
+        message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
-        var html = '<div id="updateRibbon" style="' + globalStyle + '">StravaPlus updated to <strong>v' + this.appResources_.extVersion + '</strong>, ' + socialButton + '<br/><br/>' + newNameMessage + '<a style="float: right; color: #333;" href="#" onclick="$(\'#updateRibbon\').slideUp()">Close</a></div>';
-        // var html += '<div></div>';
-        $('body').before(html);
+        $.fancybox('<h2>' + title + '</h2>' + message);
     },
 
     /**
@@ -142,7 +143,7 @@ StravaPlus.prototype = {
      */
     handlePreviewRibbon_: function() {
         var globalStyle = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
-        var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravaPlus</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
+        var html = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
         $('body').before(html);
     },
 
@@ -153,7 +154,7 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleMenu_()");
 
-        var menuModifier = new MenuModifier(this.athleteId_, this.userSettings_.highLightStravaPlusFeature, this.appResources_);
+        var menuModifier = new MenuModifier(this.athleteId_, this.userSettings_.highLightStravistiXFeature, this.appResources_);
         menuModifier.modify();
     },
 
@@ -173,7 +174,7 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravaPlusFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
+        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         remoteLinksModifier.modify();
     },
 
@@ -308,6 +309,8 @@ StravaPlus.prototype = {
 
         if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
 
+        this.activityProcessor_.setActivityType(activityType);
+
         this.activityProcessor_.getAnalysisData(
             this.activityId_,
             this.userSettings_.userGender,
@@ -328,7 +331,7 @@ StravaPlus.prototype = {
                         break;
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
-                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravaPlus don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
                         $('.inline-stats.section').parent().children().last().after(html);
                         break;
                 }
@@ -367,7 +370,7 @@ StravaPlus.prototype = {
 
             if (env.debugMode) console.log(jsonSegments);
 
-            var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_, this.userSettings_.highLightStravaPlusFeature);
+            var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_, this.userSettings_.highLightStravistiXFeature);
             nearbySegmentsModifier.modify();
 
         }.bind(this));
@@ -489,9 +492,9 @@ StravaPlus.prototype = {
      */
     handleTrackTodayIncommingConnection_: function() {
 
-        var userHasConnectSince24Hour = StorageManager.getCookie('stravaplus_daily_connection_done');
+        var userHasConnectSince24Hour = StorageManager.getCookie('stravistix_daily_connection_done');
 
-        if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+        if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 
         if (_.isNull(this.athleteId_)) {
             if (env.debugMode) console.log("athleteId is empty value: " + this.athleteId_);
@@ -518,18 +521,18 @@ StravaPlus.prototype = {
             // Push IncomingConnection to piwik
             var eventName = accountName + ' #' + this.athleteId_ + ' v' + this.appResources_.extVersion;
 
-            if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 
             if (!env.debugMode) {
                 _spTrack('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
             // Create cookie to avoid push during 1 day
-            StorageManager.setCookie('stravaplus_daily_connection_done', true, 1);
+            StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
 
         } else {
 
-            if (env.debugMode) console.log("Cookie 'stravaplus_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 
         }
     }
