@@ -215,6 +215,9 @@ ActivityProcessor.prototype = {
         var speedVarianceSum = 0;
         var currentSpeed;
 
+        var maxSpeed = _.max(velocityArray) * 3.6;
+        var minSpeed = _.min(velocityArray) * 3.6;
+
         var speedZones = this.prepareZonesForDistribComputation(this.zones.speed);
         var paceZones = this.prepareZonesForDistribComputation(this.zones.pace);
 
@@ -284,7 +287,6 @@ ActivityProcessor.prototype = {
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
             'varianceSpeed': varianceSpeed,
             'standardDeviationSpeed': standardDeviationSpeed,
-// < HEAD
             'speedZones': speedZones,
             'maxSpeed': maxSpeed
     	}, {
@@ -296,9 +298,6 @@ ActivityProcessor.prototype = {
         }];
     },
 
-// > thomaschampagne/develop
-
-    },
 
 
 
@@ -609,6 +608,9 @@ ActivityProcessor.prototype = {
             down: 0,
             total: 0
         };
+
+        var maxGrade = _.max(gradeArray);
+        var minGrade = _.min(gradeArray);
 
         var durationInSeconds, durationCount = 0;
 
