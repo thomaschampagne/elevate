@@ -511,23 +511,30 @@ ActivityProcessor.prototype = {
 
         activityStatsMap.averageHeartRate = Math.round((hrSum / hrCount)*10)/10;
 
-				if (activityStatsMap.movingTime) {
-					var TRIMP_hr = TRIMP/(activityStatsMap.movingTime/3600);
-				}else{
-					var TRIMP_hr = TRIMP/(activityStatsMap.elapsedTime/3600);
-				}
-//				var TRIMP_hr = Math.round((TRIMP/(activityStatsMap.elapsedTime/3600))*10)/10;
+// using of moving time sometimes results in too big TRIMP/hr numbers, but it mostly works OK for biking (Ride)
+// because moving time is detected a lot more reliable than for example in running uphill
+	if (activityStatsMap.movingTime && (window.activityType == 'Ride')) {
+		var TRIMP_hr = TRIMP/(activityStatsMap.movingTime/3600);
+	}else{
+		var TRIMP_hr = TRIMP/(activityStatsMap.elapsedTime/3600);
+	}
+//	var TRIMP_hr = Math.round((TRIMP/(activityStatsMap.elapsedTime/3600))*10)/10;
 
         var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
 
         return {
             'TRIMP': TRIMP,
 <<<<<<< HEAD
+<<<<<<< HEAD
 						'TRIMP_hr': TRIMP_hr,
 						'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
 =======
             'TRIMPPerHour': TRIMPPerHour,
 >>>>>>> thomaschampagne/develop
+=======
+		'TRIMP_hr': TRIMP_hr,
+		'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
+>>>>>>> d293b297fdd42710f2c267c60652effb35580f5c
             'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),
