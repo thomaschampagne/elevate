@@ -5,7 +5,6 @@ var userSettings = {
     userMaxHr: 180,
     userRestHr: 50,
     userFTP: null,
-<<<<<<< HEAD
     userHrrZones: [
         {
             fromHrr: 30,
@@ -36,26 +35,6 @@ var userSettings = {
             toHrr: 110,
         }
     ],
-=======
-    userHrrZones: [{
-        fromHrr: 30,
-        toHrr: 50,
-    }, {
-        fromHrr: 50,
-        toHrr: 60,
-    }, {
-        fromHrr: 60,
-        toHrr: 70,
-    }, {
-        fromHrr: 70,
-        toHrr: 80,
-    }, {
-        fromHrr: 80,
-        toHrr: 90,
-    }, {
-        fromHrr: 90,
-        toHrr: 110
-    }],
     zones: {
         speed: [{
             from: 0,
@@ -311,7 +290,6 @@ var userSettings = {
         }]
 
     },
->>>>>>> thomaschampagne/develop
     remoteLinks: true,
     feedAutoScroll: true,
     defaultLeaderboardFilter: 'overall',
