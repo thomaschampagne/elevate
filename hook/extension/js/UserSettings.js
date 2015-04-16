@@ -38,86 +38,95 @@ var userSettings = {
     zones: {
         speed: [{
             from: 0,
+            to: 5
+        }, {
+            from: 5,
             to: 10
         }, {
             from: 10,
-            to: 13
+            to: 15
         }, {
-            from: 13,
-            to: 17
+            from: 15,
+            to: 20
         }, {
-            from: 17,
-            to: 23
+            from: 20,
+            to: 25
         }, {
-            from: 23,
-            to: 28
+            from: 25,
+            to: 30
         }, {
-            from: 28,
-            to: 32
+            from: 30,
+            to: 33
         }, {
-            from: 32,
-            to: 35
+            from: 33,
+            to: 36
         }, {
-            from: 35,
-            to: 38
+            from: 36,
+            to: 39
         }, {
-            from: 38,
-            to: 40
-        }, {
-            from: 40,
+            from: 39,
             to: 42
         }, {
             from: 42,
             to: 45
         }, {
             from: 45,
-            to: 55
+            to: 50
+        }, {
+            from: 50,
+            to: 60
+        }, {
+            from: 60,
+            to: 80
+        }, {
+            from: 80,
+            to: 100
         }],
         pace: [{
-            from: 120,
-            to: 150
-        }, {
             from: 150,
             to: 180
         }, {
             from: 180,
+            to: 200
+        }, {
+            from: 200,
             to: 220
         }, {
             from: 220,
-            to: 250
+            to: 240
         }, {
-            from: 250,
-            to: 290
+            from: 240,
+            to: 260
         }, {
-            from: 290,
-            to: 330
+            from: 260,
+            to: 280
         }, {
-            from: 330,
-            to: 370
+            from: 280,
+            to: 300
         }, {
-            from: 370,
-            to: 410
+            from: 300,
+            to: 320
         }, {
-            from: 410,
-            to: 450
+            from: 320,
+            to: 340
         }, {
-            from: 450,
-            to: 525
+            from: 340,
+            to: 360
         }, {
-            from: 525,
-            to: 570
+            from: 360,
+            to: 390
         }, {
-            from: 570,
-            to: 610
+            from: 390,
+            to: 420
         }, {
-            from: 610,
-            to: 650
+            from: 420,
+            to: 540
         }, {
-            from: 650,
-            to: 700
+            from: 540,
+            to: 720
         }, {
-            from: 700,
-            to: 750
+            from: 720,
+            to: 900
         }],
         power: [{
             from: 0,
@@ -252,13 +261,22 @@ var userSettings = {
             to: 94
         }],
         grade: [{
+            from: -30,
+            to: -20
+        }, {
+            from: -20,
+            to: -15
+        }, {
             from: -15,
-            to: -10
+            to: -12
         }, {
-            from: -10,
-            to: -7
+            from: -12,
+            to: -9
         }, {
-            from: -7,
+            from: -9,
+            to: -6
+        }, {
+            from: -6,
             to: -3
         }, {
             from: -3,
@@ -268,25 +286,25 @@ var userSettings = {
             to: 1
         }, {
             from: 1,
-            to: 4
+            to: 3
         }, {
-            from: 4,
-            to: 7
+            from: 3,
+            to: 6
         }, {
-            from: 7,
-            to: 8
-        }, {
-            from: 8,
+            from: 6,
             to: 9
         }, {
             from: 9,
-            to: 10
+            to: 12
         }, {
-            from: 10,
-            to: 11
-        }, {
-            from: 11,
+            from: 12,
             to: 15
+        }, {
+            from: 15,
+            to: 20
+        }, {
+            from: 20,
+            to: 30
         }]
 
     },

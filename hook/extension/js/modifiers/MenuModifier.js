@@ -40,7 +40,7 @@ MenuModifier.prototype = {
         stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "#/healthSettings'><img style='vertical-align:middle' src='" + this.appResources_.heartIcon + "'> <span>Health Settings</span></a></li>";
         stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "#/zonesSettings'><img style='vertical-align:middle' src='" + this.appResources_.zonesIcon + "'> <span>Zones Settings</span></a></li>";
         stravaMenuHtml += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
-        stravaMenuHtml += "<li id='splus_menu_heatmap'><a href='#' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
+        //stravaMenuHtml += "<li id='splus_menu_heatmap'><a href='#' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
         // stravaMenuHtml += "<li><a href='http://veloviewer.com/athlete/" + this.athleteId_ + "/summary' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.veloviewerDashboardIcon + "'/> <span>Dashboard <i>VeloViewer</i></span></a></li>";
         // stravaMenuHtml += "<li><a href='http://veloviewer.com/athlete/" + this.athleteId_ + "/challenges' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.veloviewerChallengesIcon + "'/> <span>Strava Challenges <i>VeloViewer</i></span></a></li>";
         stravaMenuHtml += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources_.settingsLink + "#/releaseNotes' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.systemUpdatesIcon + "'/> <span><strong>v" + this.appResources_.extVersion + "</strong> release notes</span></a></li>";
@@ -55,6 +55,7 @@ MenuModifier.prototype = {
         stravaMenuHtml += "</li>";
 
         // TODO Move geolocation permission ask out ?
+/*
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(position) {
@@ -69,6 +70,7 @@ MenuModifier.prototype = {
                 }
             );
         }
+*/
 
         globalNav.children().first().before(stravaMenuHtml);
 

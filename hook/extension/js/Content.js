@@ -146,6 +146,7 @@ var appResources = {
     OCMlsIcon: chrome.extension.getURL('/icons/OCMls24.png'),
     OCModIcon: chrome.extension.getURL('/icons/OCMod24.png'),
     OSMIcon: chrome.extension.getURL('/icons/OSM24.png'),
+    aRPEeIcon: chrome.extension.getURL('/icons/aRPEe.png'),
     raceshapeIcon: chrome.extension.getURL('/icons/raceshape.ico'),
     veloviewerDashboardIcon: chrome.extension.getURL('/icons/ic_dashboard_24px.svg'),
     veloviewerChallengesIcon: chrome.extension.getURL('/icons/ic_landscape_24px.svg'),
