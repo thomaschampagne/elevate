@@ -12,18 +12,11 @@ ActivityProcessor.movingThresholdKph = 2.5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.cadenceLimitRpm = 125;
 ActivityProcessor.defaultBikeWeight = 10; // KGs
-<<<<<<< HEAD
-ActivityProcessor.cachePrefix = 'stravaplus_activity_';
-ActivityProcessor.distributionZoneCount = 15;
-//ActivityProcessor.gradeClimbingLimit = 1.6;
-//ActivityProcessor.gradeDownHillLimit = -1.6;
+ActivityProcessor.cachePrefix = 'stravistix_activity_';
 ActivityProcessor.gradeClimbingLimit = 2.5;
 ActivityProcessor.gradeDownHillLimit = -2.5;
-=======
-ActivityProcessor.cachePrefix = 'stravistix_activity_';
-ActivityProcessor.gradeClimbingLimit = 1.6;
-ActivityProcessor.gradeDownHillLimit = -1.6;
->>>>>>> thomaschampagne/develop
+//ActivityProcessor.gradeClimbingLimit = 1.6;
+//ActivityProcessor.gradeDownHillLimit = -1.6;
 ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
 ActivityProcessor.gradeProfileFlat = 'FLAT';
 ActivityProcessor.gradeProfileHilly = 'HILLY';
@@ -82,11 +75,8 @@ ActivityProcessor.prototype = {
         // Toughness score
         var toughnessScore = this.toughnessScore_(activityStatsMap, activityStream, moveRatio);
 
-<<<<<<< HEAD
-=======
         // Include speed and pace
         var moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
->>>>>>> thomaschampagne/develop
 
         // Q1 Speed
         // Median Speed
@@ -189,9 +179,6 @@ ActivityProcessor.prototype = {
         return parseInt((value - minValue) / (distributionStep));
     },
 
-<<<<<<< HEAD
-
-=======
     getZoneId: function(zones, value) {
         for (zoneId = 0; zoneId < zones.length; zoneId++) {
             if (value <= zones[zoneId].to) {
@@ -212,7 +199,6 @@ ActivityProcessor.prototype = {
         }
         return preparedZones;
     },
->>>>>>> thomaschampagne/develop
 
     /**
      * ...
@@ -298,51 +284,20 @@ ActivityProcessor.prototype = {
             'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
             'varianceSpeed': varianceSpeed,
             'standardDeviationSpeed': standardDeviationSpeed,
-<<<<<<< HEAD
+// < HEAD
             'speedZones': speedZones,
             'maxSpeed': maxSpeed
-        };
-    },
-
-
-
-    computePaceDataFromSpeedData: function(speedData) {
-        if (!speedData) {
-        //    console.log("No speedData");
-		    return null;
-        }
-
-        var paceData = {};
-        paceData.lowerQuartilePace = this.convertSpeedToPace(speedData.lowerQuartileSpeed);
-        paceData.medianPace = this.convertSpeedToPace(speedData.medianSpeed);
-        paceData.upperQuartilePace = this.convertSpeedToPace(speedData.upperQuartileSpeed);
-        paceData.variancePace = this.convertSpeedToPace(speedData.varianceSpeed);
-        paceData.maxPace = this.convertSpeedToPace(speedData.maxSpeed);
-
-        paceData.paceZones = [];
-
-        _.each(speedData.speedZones, function(speedZone) {
-
-            var paceZone = {};
-            paceZone.from = this.convertSpeedToPace(speedZone.from);
-            paceZone.to = this.convertSpeedToPace(speedZone.to);
-            paceZone.s = speedZone.s;
-            paceZone.percentDistrib = speedZone.percentDistrib;
-            paceData.paceZones.push(paceZone);
-
-        }.bind(this));
-
-        return paceData;
-=======
-            'speedZones': speedZones
-        }, {
+    	}, {
             'lowerQuartilePace': this.convertSpeedToPace(Helper.lowerQuartile(speedsNonZeroSorted)),
             'medianPace': this.convertSpeedToPace(Helper.median(speedsNonZeroSorted)),
             'upperQuartilePace': this.convertSpeedToPace(Helper.upperQuartile(speedsNonZeroSorted)),
             'variancePace': this.convertSpeedToPace(varianceSpeed),
             'paceZones': paceZones
         }];
->>>>>>> thomaschampagne/develop
+    },
+
+// > thomaschampagne/develop
+
     },
 
 
@@ -457,8 +412,8 @@ ActivityProcessor.prototype = {
         var hr, heartRateReserveAvg, durationInSeconds, durationInMinutes, zoneId;
         var hrSum = 0;
         var hrCount = 0;
-				var maxHeartRate = Math.max.apply(Math, heartRateArray);
-				activityStatsMap.maxHeartRate=maxHeartRate;
+	var maxHeartRate = Math.max.apply(Math, heartRateArray);
+	activityStatsMap.maxHeartRate=maxHeartRate;
 
         // Find HR for each Hrr of each zones
         for (var zone in this.userHrrZones_) {
@@ -498,8 +453,6 @@ ActivityProcessor.prototype = {
             }
         }
 
-				TRIMP = Math.round(TRIMP*10)/10;
-
         var heartRateArraySorted = heartRateArray.sort(function(a, b) {
             return a - b;
         });
@@ -511,6 +464,7 @@ ActivityProcessor.prototype = {
 
         activityStatsMap.averageHeartRate = Math.round((hrSum / hrCount)*10)/10;
 
+	TRIMP = Math.round(TRIMP*10)/10;
 // using of moving time sometimes results in too big TRIMP/hr numbers, but it mostly works OK for biking (Ride)
 // because moving time is detected a lot more reliable than for example in running uphill
 	if (activityStatsMap.movingTime && (window.activityType == 'Ride')) {
@@ -524,27 +478,19 @@ ActivityProcessor.prototype = {
 
         return {
             'TRIMP': TRIMP,
-<<<<<<< HEAD
-<<<<<<< HEAD
-						'TRIMP_hr': TRIMP_hr,
-						'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
-=======
-            'TRIMPPerHour': TRIMPPerHour,
->>>>>>> thomaschampagne/develop
-=======
 		'TRIMP_hr': TRIMP_hr,
 		'aRPEe': Math.round((TRIMP_hr / aRPEeGenderFactor)*10)/10,
->>>>>>> d293b297fdd42710f2c267c60652effb35580f5c
+            'TRIMPPerHour': TRIMPPerHour,
             'hrrZones': this.userHrrZones_,
             'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
             'medianHeartRate': Helper.median(heartRateArraySorted),
             'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
             'averageHeartRate': activityStatsMap.averageHeartRate,
-						'maxHeartRate': maxHeartRate,
+		'maxHeartRate': maxHeartRate,
  //          'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
              'activityHeartRateReserve': Math.round((100*Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr))*10)/10,
-            'MaxHr':userMaxHr,
-						'RestHr':userRestHr
+            	'MaxHr':userMaxHr,
+		'RestHr':userRestHr
         };
 
     },
@@ -559,13 +505,7 @@ ActivityProcessor.prototype = {
         }
     },
 
-<<<<<<< HEAD
-
-
-    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap, timeArray) {
-=======
     cadenceData_: function(cadenceArray, velocityArray, activityStatsMap, timeArray) { // TODO add cadence type here
->>>>>>> thomaschampagne/develop
 
         if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
             return null;
