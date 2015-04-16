@@ -290,7 +290,7 @@ to attach them to the start of each source file to most effectively
 convey the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    StravaPlus is a chrome extension which adds the missing features 
+    StravistiX is a chrome extension which adds the missing features 
     of Strava website with new performances data and improved ergonomics
     Copyright (C) 2014  Thomas Champagne
 

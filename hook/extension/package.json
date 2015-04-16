@@ -1,5 +1,5 @@
 {
-  "name": "stravaplus",
+  "name": "stravistix",
   "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
   "keywords": [
     "strava",
@@ -27,7 +27,7 @@
   "repository": [
     {
       "type": "git",
-      "url": "https://github.com/thomaschampagne/StravaPlus"
+      "url": "https://github.com/thomaschampagne/stravistix"
     }
   ],
   "readme": "None"

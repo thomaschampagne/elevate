@@ -1,9 +1,9 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-function RemoteLinksModifier(highLightStravaPlusFeature, appResources, authorOfActivity) {
+function RemoteLinksModifier(highLightStravistiXFeature, appResources, authorOfActivity) {
     this.appResources_ = appResources;
-    this.highLightStravaPlusFeature_ = highLightStravaPlusFeature;
+    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
     this.htmlRemoteViewForActivityStyle = '';
     this.htmlRemoteViewForSegmentStyle = '';
     this.authorOfActivity = authorOfActivity;
@@ -16,7 +16,7 @@ RemoteLinksModifier.prototype = {
 
     modify: function modify() {
 
-        if (this.highLightStravaPlusFeature_) {
+        if (this.highLightStravistiXFeature_) {
             this.htmlRemoteViewForActivityStyle = 'background: #fc4c02; color: #333;'; // TODO Make colors global
             this.htmlRemoteViewForSegmentStyle = 'background: #fc4c02; color: white;'; // TODO Make colors global
             this.htmlRemoteViewTextStyle = 'color: white;'; // TODO Make colors global
@@ -37,7 +37,7 @@ RemoteLinksModifier.prototype = {
     modifyActivityPage_: function modifyActivityPage_() {
 
         var remoteViewActivityLinksArray = [
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravaPlus'],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX'],
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> MapFlipper", 'http://veloviewer.com/mapFlipper', 'mapflipper',  " width='24px' src='" + this.appResources_.OCMIcon + "'/>", " width='24px' src='" + this.appResources_.OCMlsIcon + "'/>", " width='24px' src='" + this.appResources_.OCModIcon + "'/>", " width='24px' src='" + this.appResources_.OSMIcon + "'/>"]
@@ -90,7 +90,7 @@ RemoteLinksModifier.prototype = {
         var segmentId = segmentData[1];
 
         var remoteViewSegmentLinksArray = [
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/', '?referrer=stravaPlus'],
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/', '?referrer=stravistiX'],
             ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.pollIcon + "'/> <span>Segment Stats</span>", 'http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=', '']
         ];
         var html = "<div class='module' style='padding-bottom: 10px;'>";
