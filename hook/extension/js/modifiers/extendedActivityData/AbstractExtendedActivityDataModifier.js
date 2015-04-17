@@ -56,7 +56,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 										RPEnote  = "aRPEe score - Average RPE (Rated Perceived Exertion) Estimate\nis a simple number and short description of how hard Your workout was for Your Heart\n";
 										RPEnote1 = "\n   1\t[NIL]\tYou really consider THAT a Workout?!\n   2\t[R]\tRecovery\n   3\t[ER]\tEasy-Recovery\n   4\t[LM]\tLower Medium\n   5\t[M]\tMedium\n  5.5\t[UM]\tUpper Medium\n   6\t[H]\tHard\n   7\t[VH]\tVery Hard\n   8\t[EH]\tExtremely Hard\n   9\t[HaH]\tHard as Hell!\n   9+\t[DeaD]\tHave You really had survived THAT!?!";
 										RPEnote2 = "\n** Might seem off for You, as RPE is very user perception dependent.";
-										RPEnote3 = "\n*** aRPE = TRIMP/hr / n   (for Men n=25, for Women n=20)\n\n[ (C) by Kamac - aRPEe concept and design by Dejan Kamensek, sLOVEnia ]";
+										RPEnote3 = "\n*** aRPEe = TRIMP/hr / n   (for Men n=25, for Women n=20)\n\n[ (C) by Kamac - aRPEe concept and design by Dejan Kamensek, sLOVEnia ]";
 										
 										html += '<span style="color: #800 ;font-size: 18px;" title="HR based TRIMP (TRaining IMPulse)\nEstimation of TOTAL Training Load of the Workout'+HRnote+'">';
                     html += ' TRIMP: <strong>'+this.analysisData_.heartRateData.TRIMP.toFixed(0)+'</strong></span>';
