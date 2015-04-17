@@ -6,8 +6,8 @@ I'll try to merge new stuff from his base repository into this; anyone can also 
 
 _Dejan Kamenšek, sLOVEnia_
 ***************************************************************************************************************************
-If You're having trouble using sources from GitHub to install the plugin to Chrome, here's ready-made Plugin:<br>
-**download:** https://dl.dropboxusercontent.com/u/27358404/StraTistiX.crx <br>_To use it, you have to check developer mode in **chrome://extensions/** - see http://goo.gl/o17327_
+If You're having trouble using sources from GitHub to install the plugin to Chrome, I made it available in Chrome Web Store:
+https://chrome.google.com/webstore/detail/stratistix-with-arpee-sco/bilbbbdgdimchenccmooakpfomfajepd
 ***************************************************************************************************************************
 
 
