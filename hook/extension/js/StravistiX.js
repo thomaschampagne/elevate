@@ -57,6 +57,7 @@ StravistiX.prototype = {
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();
+        this.handleOpenStreetMapModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
@@ -130,8 +131,10 @@ StravistiX.prototype = {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        message += '<h4>- StravaPlus is now named StravistiX (= Strava + Statistics + Xtended) </h4>';
-        message += '<h4>- This version now includes customs zones for each Xtended data</h4>';
+        message += '<h4>- OpenStreetMap map flipper for activities added</h4>';
+        message += '<h4><strong>Since 0.6.0:</strong></h4>';
+        message += '<h4>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h4>';
+        message += '<h4>- Customs zones for each Xtended data have been implemented</h4>';
         message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
         message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
@@ -177,6 +180,21 @@ StravistiX.prototype = {
         var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         remoteLinksModifier.modify();
     },
+
+    handleOpenStreetMapModifier_: function() {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleOpenStreetMapModifier_()");
+
+        var openStreetMapModifier = new OpenStreetMapModifier();
+        openStreetMapModifier.modify();
+    },
+
+
 
     /**
      *
