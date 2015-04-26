@@ -29,8 +29,8 @@ OpenStreetMapModifier.prototype = {
         ];
 
         var htmlOsmMaps = "<li class='group'>";
-        htmlOsmMaps += "<div class='title'><span style='font-size: 14px;'>OpenStreetMap</span></div>";
-        htmlOsmMaps += "<ul>";
+        htmlOsmMaps += "<div class='title'><span style='font-size: 14px;'><a id='stravistix_osmListShow'>OpenStreetMap</a></span></div>";
+        htmlOsmMaps += "<ul style='display: none;' id='stravistix_osmList'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlOsmMaps += "<li>";
             htmlOsmMaps += "<a data-osm-map-flip='" + this[1] + "' href='#'>" + this[0] + "</a>";
@@ -48,6 +48,20 @@ OpenStreetMapModifier.prototype = {
                 evt.stopPropagation();
                 self.flipMap_(this.getAttribute('data-osm-map-flip'));
             });
+
+            $('#stravistix_osmListShow').click(function(evt) {
+                
+                evt.preventDefault();
+                evt.stopPropagation();
+
+                if ($('#stravistix_osmList').is(':visible')) {
+                    $('#stravistix_osmList').slideUp();
+                } else {
+                    $('#stravistix_osmList').slideDown();
+                }
+
+            });
+
 
         });
     },
