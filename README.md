@@ -11,10 +11,10 @@ https://chrome.google.com/webstore/detail/stratistix-with-arpee-sco/bilbbbdgdimc
 ***************************************************************************************************************************
 
 
-[![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
-Install StravistiX from Chrome Store
+Thomas's developement: [![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
+Install StraTistiX from Chrome Store
 ==========
-Go to http://bitly.com/stravistix
+Go to https://chrome.google.com/webstore/detail/stratistix-with-arpee-sco/bilbbbdgdimchenccmooakpfomfajepd
 
 Install/Develop from sources
 ==========
@@ -37,7 +37,7 @@ This will create **dist/** folder. This folder is used for a release.
 ```
 node make.js build
 ```
-This will create zip archive of **dist/** folder in **builds/StravistiX\_vX.X.X\_[date].zip**
+This will create zip archive of **dist/** folder in **builds/StraTistiX\_vX.X.X\_[date].zip**
 
 ## Clean 
 ```
