@@ -40,7 +40,10 @@ RemoteLinksModifier.prototype = {
         var remoteViewActivityLinksArray = [
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
-            ["HeatMap", "<img width='16px' src='" + this.appResources_.heatmapIcon + "'/>" ,'heatmap',''],
+            ["HeatMap", "<img width='16px' src='" + this.appResources_.heatmapIcon + "'/>", 'heatmap', 'Strava Global Heatmap'],
+            ["<img width='16px' src='" + this.appResources_.AnnualSummIcon + "'/> AnnualSumm", 'http://www.jonathanokeeffe.com/strava/annualSummary.php', 'various', "Jonathan o\'Keeffe\'s Annual Summary"],
+            ["<img  src='" + this.appResources_.multimapIcon + "'/> MultiMap", 'http://www.jonathanokeeffe.com/strava/map.php', 'various', "Jonathan o\'Keeffe\'s Multiple Ride Mapper"],
+            ["<img src='" + this.appResources_.mesmerideIcon + "'/>", 'http://www.mesmeride.com/', 'various', "Create beautiful elevation profiles in style of Tour or Giro"],
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX'],
             ["MapFlipper", 'http://veloviewer.com/mapFlipper', 'mapflipper',  " width='24px' src='" + this.appResources_.OCMIcon + "'/>", " width='24px' src='" + this.appResources_.OCMlsIcon + "'/>", " width='24px' src='" + this.appResources_.OCModIcon + "'/>", " width='24px' src='" + this.appResources_.OSMIcon + "'/>"]
 ];
@@ -61,11 +64,13 @@ RemoteLinksModifier.prototype = {
                 htmlRemoteViewForActivity += "<img onclick='flip3()' title='Open Cycle Map Outdoor'" + this[5] + "<script>function flip3(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('outdoors');}}else{vv_flipMap('outdoors')}}</script>";
                 htmlRemoteViewForActivity += "<img onclick='flip4()' title='Open Street Map'" + this[6] + "<script>function flip4(){if(typeof(vv_flipMap)==='undefined'){var s=document.createElement('script');s.src='https://s3.amazonaws.com/s3.veloviewer.com/js/vv.mapFlipper.js?v='+Math.floor(Math.random()*1000);document.getElementsByTagName('head')[0].appendChild(s);s.onload=function(){vv_flipMap('street');}}else{vv_flipMap('street')}}</script>";
                 htmlRemoteViewForActivity += "</span></li>";
+            } else if (this[2] == 'various') {
+                htmlRemoteViewForActivity += '<a title="'+this[3]+'" data-menu="" target="_blank" style="color: #333;" href="' + this[1] + '">' + this[0] + '</a>';
             } else if (this[2] == 'heatmap') {
 				// TODO Move geolocation permission ask out ?
-			//
-			// can't find out, why this concept works in MenuModifier.js, but not here :/
-			//
+				//
+				// can't find out, why this concept works in MenuModifier.js, but not here :/
+				//
                	var heatmap="http://labs.strava.com/heatmap/#5/4/46/yellow/bike";
         		if (navigator.geolocation) {
             		navigator.geolocation.getCurrentPosition(
@@ -81,10 +86,12 @@ RemoteLinksModifier.prototype = {
         		}
 				//stravaMenuHtml += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
 				//stravaMenuHtml += "<li id='splus_menu_heatmap'><a href='#' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
-                htmlRemoteViewForActivity += "<a target='_blank' style='color: #333;' href='" + heatmap + "'>" + this[1] + this[0]+"</a>";
+                htmlRemoteViewForActivity += '<a title="'+this[3]+'" data-menu=""  target="_blank" style="color: #333;" href="' + heatmap + '">' + this[1] + this[0]+'</a>';
+            //
+            // everything else
             } else {
-                htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
-            }; // Map Flipper doesn't need activity ID
+                htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";                
+            };
 		    htmlRemoteViewForActivity += "</li>";
         });
         htmlRemoteViewForActivity += "</ul>";

@@ -166,13 +166,15 @@ function getTextWidth(text, font) {
                   }
 									if (this.analysisData_.speedData != null) {
                     html += '<tr style="color: rgb(60,155, 200)"><td>Speed [km/h]</td>';
-                    html += '<td><strong>'+(3600*window.distance/window.elapsedTime).toFixed(1)+'</strong></td>';
+//                    html += '<td><strong>'+(3600*window.distance/window.elapsedTime).toFixed(1)+'</strong></td>';
+                    html += '<td><strong>'+this.analysisData_.speedData.realAvgSpeed.toFixed(1)+'</strong></td>';
                     html += '<td><strong>'+this.analysisData_.speedData.lowerQuartileSpeed.toFixed(1)+'</strong></td>';
                     html += '<td><strong>'+this.analysisData_.speedData.medianSpeed.toFixed(1)+'<br>'+'</strong></td>';
                     html += '<td><strong>'+this.analysisData_.speedData.upperQuartileSpeed.toFixed(1)+'</strong></td>';
                     html += '<td><strong>'+this.analysisData_.speedData.maxSpeed.toFixed(1)+'</strong></td></tr>';
                     html += '<tr style="color: rgb(60,155,200)"><td>Pace [min/km]</td>';
-                    html += '<td><strong>'+Helper.secondsToHHMMSS((window.elapsedTime/window.distance).toFixed(0)).replace('00:','')+'</strong></td>';
+//                    html += '<td><strong>'+Helper.secondsToHHMMSS((window.elapsedTime/window.distance).toFixed(0)).replace('00:','')+'</strong></td>';
+                    html += '<td><strong>'+Helper.secondsToHHMMSS((3600/this.analysisData_.speedData.realAvgSpeed).toFixed(0)).replace('00:','')+'</strong></td>';
                     html += '<td><strong>'+Helper.secondsToHHMMSS((3600/this.analysisData_.speedData.lowerQuartileSpeed).toFixed(0)).replace('00:','')+'</strong></td>';
                     html += '<td><strong>'+Helper.secondsToHHMMSS((3600/this.analysisData_.speedData.medianSpeed).toFixed(0)).replace('00:','')+'</strong></td>';
                     html += '<td><strong>'+Helper.secondsToHHMMSS((3600/this.analysisData_.speedData.upperQuartileSpeed).toFixed(0)).replace('00:','')+'</strong></td>';

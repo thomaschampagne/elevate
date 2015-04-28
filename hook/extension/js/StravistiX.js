@@ -130,10 +130,10 @@ StravistiX.prototype = {
      */
     handleUpdateRibbon_: function() {
 
-        var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
+        var title = 'StraTistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        message += '<h4>- StravaPlus is now named StravistiX (= Strava + Statistics + Xtended) </h4>';
-        message += '<h4>- This version now includes customs zones for each Xtended data</h4>';
+        message += "<h4>- This is StraTistiX - Dejan Kamensek's fork of StravistiX (= Strava + Statistics + Xtended) </h4>";
+        message += '<h4>- Original StravistiX (formerly StravaPlus) is made by Thomas Champagne</h4>';
         message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
         message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
@@ -352,7 +352,7 @@ StravistiX.prototype = {
 
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
-                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StraTistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
                         $('.inline-stats.section').parent().children().last().after(html);
                         break;
                 }

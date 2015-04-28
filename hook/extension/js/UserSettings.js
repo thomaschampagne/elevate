@@ -206,59 +206,56 @@ var userSettings = {
             to: 110
         }],
         runningCadence: [{
+            from: 0,
+            to: 30
+        }, {
+            from: 30,
+            to: 40
+        }, {
+            from: 40,
+            to: 45
+        }, {
+            from: 45,
+            to: 48
+        }, {
+            from: 48,
+            to: 51
+        }, {
+            from: 51,
+            to: 54
+        }, {
+            from: 54,
+            to: 57
+        }, {
+            from: 57,
+            to: 60
+        }, {
+            from: 60,
+            to: 63
+        }, {
+            from: 63,
+            to: 66
+        }, {
+            from: 66,
+            to: 69
+        }, {
+            from: 69,
+            to: 72
+        }, {
+            from: 72,
+            to: 75
+        }, {
+            from: 75,
+            to: 80
+        }, {
+            from: 80,
+            to: 85
+        }, {
             from: 85,
-            to: 85.5
-        }, {
-            from: 85.5,
-            to: 86
-        }, {
-            from: 86,
-            to: 86.5
-        }, {
-            from: 86.5,
-            to: 87
-        }, {
-            from: 87,
-            to: 87.5
-        }, {
-            from: 87.5,
-            to: 88
-        }, {
-            from: 88,
-            to: 88.5
-        }, {
-            from: 88.5,
-            to: 89
-        }, {
-            from: 89,
-            to: 89.5
-        }, {
-            from: 89.5,
             to: 90
         }, {
             from: 90,
-            to: 90.5
-        }, {
-            from: 90.5,
-            to: 91
-        }, {
-            from: 91,
-            to: 91.5
-        }, {
-            from: 91.5,
-            to: 92
-        }, {
-            from: 92,
-            to: 92.5
-        }, {
-            from: 92.5,
-            to: 93
-        }, {
-            from: 93,
-            to: 93.5
-        }, {
-            from: 93.5,
-            to: 94
+            to: 120
         }],
         grade: [{
             from: -30,

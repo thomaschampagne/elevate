@@ -215,6 +215,7 @@ ActivityProcessor.prototype = {
         var speedVarianceSum = 0;
         var currentSpeed;
 
+		var realAvgSpeed = 3600 * activityStatsMap.distance / activityStatsMap.elapsedTime;
         var maxSpeed = _.max(velocityArray) * 3.6;
         var minSpeed = _.min(velocityArray) * 3.6;
 
@@ -281,6 +282,7 @@ ActivityProcessor.prototype = {
 
         return [{
             'genuineAvgSpeed': genuineAvgSpeed,
+            'realAvgSpeed': realAvgSpeed,
             'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
             'medianSpeed': Helper.median(speedsNonZeroSorted),
