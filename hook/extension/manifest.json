@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "StraTistiX with aRPEe Score for Strava",
     "short_name": "StraTistiX",
-    "description": "Add the missing features of Strava website with new performances data and improved ergonomics (forked from Thomas Champagne's StravistiX plugin and enhanced with some additional goodies and tweaks)",
+    "description": "Add the lots of features to Strava website (forked from StravistiX plugin and enhanced with some additional goodies and tweaks)",
     "version": "0.6.0.1",
     "background": {
         "scripts": [
