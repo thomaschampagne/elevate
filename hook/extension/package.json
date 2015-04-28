@@ -1,16 +1,21 @@
 {
-  "name": "stravistix",
+  "name": "stratistix",
   "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
   "keywords": [
     "strava",
     "cycling",
     "running",
-    "tracking"
+    "tracking",
+    "arpee",
+    "rpe",
+    "trimp",
+    "hrm",
+    "hr"
   ],
   "maintainers": [
     {
-      "name": "Thomas Champagne",
-      "email": "th.champagne@gmail.com",
+      "name": "main: Thomas Champagne, StraTistiX fork: Dejan Kamensek",
+      "email": "th.champagne@gmail.com, kamensek@gmail.com",
       "web": "http://thomaschampagne.github.io"
     }
   ],
@@ -27,7 +32,7 @@
   "repository": [
     {
       "type": "git",
-      "url": "https://github.com/thomaschampagne/stravistix"
+      "url": "https://github.com/KamensekD/StraTistiX"
     }
   ],
   "readme": "None"

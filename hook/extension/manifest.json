@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "StravistiX for Strava",
-    "short_name": "StravistiX",
+    "name": "StraTistiX with aRPEe Score for Strava",
+    "short_name": "StraTistiX",
     "description": "Add the missing features of Strava website with new performances data and improved ergonomics",
     "version": "0.6.0",
     "background": {
