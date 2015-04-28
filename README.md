@@ -1,8 +1,8 @@
 ***************************************************************************************************************************
-__StraTistiX__  is my fork (https://github.com/KamensekD/StraTistiX) based on Thomas Champagne's __StravistiX__ Strava Chrome Plugin.
-I add/change some goodies that are based on my ideas and preferences that suit me; they might or might not suit You and/or Thomas. I try to fix any bugs found and, of course, also might introduce some new :)
+__StraTistiX__  is my fork (https://github.com/KamensekD/StraTistiX) based on Thomas Champagne's __StravistiX__ Strava Chrome Extension.
+It contains all the functionality of StravistiX PLUS some additional goodies and changed functionalities that are based on my ideas and preferences that suit me; they might or might not suit You and/or Thomas; just try and see! I try to fix any bugs found in StravistiX and, of course, also might introduce some new :)
 aRPEe Score concept was developed and designed by myself based on lots of my workouts; it mostly seems to acurately describe how hard my workouts were.
-From time to time I'll try to merge interesting new stuff from Thomas's updates of his base repository; any developer can also freely take anything from my repository and use it in non-commercial manner; when using __aRPEe Score__, please link to this repository; most kudos for this plugin go to Thomas Champagne!
+From time to time I'll try to merge interesting new stuff from Thomas's updates of his base repository; any developer can also freely take anything from my repository and use it in non-commercial manner; when using __aRPEe Score__, please link to this repository and/or extension; most kudos for the whole concept go to Thomas Champagne!
 
 _Dejan Kamenšek, sLOVEnia_
 ***************************************************************************************************************************
