@@ -5,6 +5,8 @@ function VacuumProcessor() {
 
 }
 
+
+
 /**
  * Define prototype
  */
@@ -28,6 +30,8 @@ VacuumProcessor.prototype = {
         return athleteId;
     },
 
+
+
     /**
      *  Get the strava athlete name connected
      *  @returns the strava athlete id
@@ -44,6 +48,8 @@ VacuumProcessor.prototype = {
 
         return athleteName;
     },
+
+
 
     /**
      *  Get the strava athlete id connected
@@ -66,6 +72,8 @@ VacuumProcessor.prototype = {
         return window.pageView.activityAthlete().get('id');
     },
 
+
+
     /**
      *  Get the strava athlete premium status
      *  @returns premium status
@@ -83,6 +91,8 @@ VacuumProcessor.prototype = {
 
         return premiumStatus;
     },
+
+
 
     /**
      *  Get the strava athlete pro status
@@ -112,6 +122,8 @@ VacuumProcessor.prototype = {
         return proStatus;
     },
 
+
+
     /**
      *  ...
      *  @returns ...
@@ -119,6 +131,42 @@ VacuumProcessor.prototype = {
     getActivityId: function getActivityId() {
         return (_.isUndefined(window.pageView)) ? null : pageView.activity().id;
     },
+
+
+
+    /**
+     *  ...
+     *  @returns ...
+     */
+    getActivityName: function getActivityName() {
+
+        var actStatsContainer = $(".activity-summary-container");
+
+        // Get Activity Name
+// without var -> global scope (window.activityName)
+        activityName = actStatsContainer.find('.marginless.activity-name').text();
+//        var activityName = actStatsContainer.find('.marginless.activity-name').text();
+        return activityName;
+    },
+
+
+
+    /**
+     *  ...
+     *  @returns ...
+     */
+    getActivityTime: function getActivityTime() {
+
+        var actStatsContainer = $(".activity-summary-container");
+
+        // Get Activity Time
+// without var -> global scope (window.activityTime)
+        activityTime = actStatsContainer.find('time').text();
+//        var activityTime = actStatsContainer.find('time').text();
+        return activityTime;
+    },
+
+
 
     /**
      *  ...
@@ -128,6 +176,10 @@ VacuumProcessor.prototype = {
         return (_.isUndefined(window.pageView)) ? null : pageView.activityAthleteWeight();
     },
 
+
+
+
+
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
@@ -135,20 +187,72 @@ VacuumProcessor.prototype = {
 
         var actStatsContainer = $(".activity-summary-container");
 
+
+
         // Get Distance
-        var distance = this.formatActivityDataValue_(
+// without var -> global scope (window.distance)
+        distance = this.formatActivityDataValue_(
+//        var distance = this.formatActivityDataValue_(
             actStatsContainer.find('.inline-stats.section').children().first().text(),
             false, false, true, false);
 
+
+
+// Elapsed and Moving time
+
+        // Get Elapsed Time
+// without var -> global scope (window.elapsedTime)
+        elapsedTime = this.formatActivityDataValue_(
+//        var elapsedTime = this.formatActivityDataValue_(
+//            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),	// bugfix
+            $('[data-glossary-term*=definition-elapsed-time]').parent().next().text()
+            , true, false, false, false);
+
+        if (isNaN(elapsedTime)) {
+//					console.warn("Can't get elapsed time - probably 'race'");
+				// if 'race' elapsed and moving time are swapped on Strava overview screen
+        // Get Elapsed Time
+// without var -> global scope (window.elapsedTime)
+        elapsedTime = this.formatActivityDataValue_(
+//        var elapsedTime = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-elapsed-time]').parent().first().prev().text()
+            , true, false, false, false);
+
+// without var -> global scope (window.movingTime)
+        movingTime = this.formatActivityDataValue_(
+//        var movingTime = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-moving-time]').parent().next().text()
+            , true, false, false, false);
+	      } else
+	      {
         // Get Moving Time
-        var movingTime = this.formatActivityDataValue_(
-            actStatsContainer.find('.inline-stats.section').children().first().next().text(),
-            true, false, false, false);
+// without var -> global scope (window.movingTime)
+        movingTime = this.formatActivityDataValue_(
+//        var movingTime = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-moving-time]').parent().first().prev().text()
+            , true, false, false, false);
+				}
+
+
 
         // Get Elevation
+		switch (window.activityType) {
+      case 'Ride':
         var elevation = this.formatActivityDataValue_(
             actStatsContainer.find('.inline-stats.section').children().first().next().next().text(),
             false, true, false, false);
+				break;
+    	case 'Run':
+     		var elevation = this.formatActivityDataValue_(
+          	$('[class*="section more-stats"]').children().children().first().next().text(),
+//          var test = $('[class*="section more-stats"]').children().children().first().next().text();
+            false, false, false, false);
+        break;
+      default:
+        break;
+			}
+
+
 
         // Get Estimated Average Power
         var avgPower = this.formatActivityDataValue_(
@@ -159,42 +263,90 @@ VacuumProcessor.prototype = {
             $('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
             false, false, false, false);
 
+        
+
+        // Get Calories
+		switch (window.activityType) {
+      case 'Ride':
+     		var calories = this.formatActivityDataValue_(
+            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().next().next().children().first().next().text(),
+        false, false, false, false);
+				break;
+    	case 'Run':
+     		var calories = this.formatActivityDataValue_(
+          	$('[class*="section more-stats"]').children().children().first().next().next().next().text(),
+//          var test = $('[class*="section more-stats"]').children().children().first().next().next().next().text();
+            false, false, false, false);
+        break;
+      default:
+        break;
+			}
+
+
+
         // Get Energy Output
         var energyOutput = this.formatActivityDataValue_(
             actStatsContainer.find('.inline-stats.section.secondary-stats').children().first().next().children().first().text(),
             false, false, false, true);
 
-        // Get Elapsed Time
-        var elapsedTime = this.formatActivityDataValue_(
-            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
-            true, false, false, false);
+
 
         // Get Average speed
-        var averageSpeed = this.formatActivityDataValue_(
+		switch (window.activityType) {
+      case 'Ride':
+// without var -> global scope (window.averageSpeed)		// preveri pravilnost!
+        averageSpeed = this.formatActivityDataValue_(
+//        var averageSpeed = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
             false, false, false, false);
+				break;
+    	case 'Run':
+        break;
+      default:
+        break;
+			}
 
-        // If no average speed found, try to get pace instead.
-        if (!averageSpeed) {
-            averageSpeed = this.formatActivityDataValue_(
-                $('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
-                true, false, false, false);
-
-            averageSpeed = 1 / averageSpeed; // invert to km per seconds
-            averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
+        if (typeof averageSpeed == 'undefined') {
+            averageSpeed = this.formatActivityDataValue_(			// If no average speed availabe, try to get pace instead and transform to speed
+                $('[class*="inline-stats section"]').children().first().next().next().children().text()
+//                $('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().text()
+                , true, false, false, false);
+        		if (averageSpeed) {
+            		averageSpeed = 1 / averageSpeed; // invert to km per seconds
+            		averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
+        		}
+				}
 
             var measurementPreference = currentAthlete.get('measurement_preference');
             var speedFactor = (measurementPreference == 'meters') ? 1 : 0.62137;
             averageSpeed = averageSpeed / speedFactor; // Always give PKH here
-        }
 
-        var averageHeartRate = this.formatActivityDataValue_(
+
+
+        // Get Average and Max Heartrate			*** done in ActivityProcesor.js
+/*
+		switch (window.activityType) {
+			var maxHeartRate = ;
+      case 'Ride':
+      case 'StationaryOther':
+     		var averageHeartRate = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().has('abbr').text(),
             false, false, false, false);
-
-        var maxHeartRate = this.formatActivityDataValue_(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().next().text(),
+//        var maxHeartRate = this.formatActivityDataValue_(
+//            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().next().text(),
+//            false, false, false, false);
+				break;
+    	case 'Run':
+     		var averageHeartRate = this.formatActivityDataValue_(
+          $('[class*=gap]').next().text(),
+//          var test =  $('[class*=gap]').next().text();
             false, false, false, false);
+        break;
+      default:
+        break;
+			}
+*/
+
 
         // Create activityData Map
         return {
@@ -204,25 +356,43 @@ VacuumProcessor.prototype = {
             'avgPower': avgPower,
             'weightedPower': weightedPower,
             'energyOutput': energyOutput,
+            'calories': calories,
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
-            'averageHeartRate': averageHeartRate,
-            'maxHeartRate': maxHeartRate,
+//            'averageHeartRate': averageHeartRate,	// calculated in ActivityProcessor.js
+//            'maxHeartRate': maxHeartRate					// calculated in ActivityProcessor.js
         };
     },
+
+
 
     /**
      *
      */
     formatActivityDataValue_: function formatActivityDataValue_(dataIn, parsingTime, parsingElevation, parsingDistance, parsingEnergy) {
 
+
         if (dataIn == "") {
             return null;
         }
+
+
         // Common clean
-        var cleanData = dataIn.replace(/\s/g, '').trim('string');
+        var cleanData = dataIn.replace('/100mPace', '');  // remove /100mPace (for Swim Pace)
+        cleanData = cleanData.replace('/', '');					// remove slash     (for Pace /km)
+        cleanData = cleanData.replace(/\s/g, '').trim('string');
         cleanData = cleanData.replace(/[\n\r]/g, '');
-        cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
+
+
+				if (parsingDistance && (cleanData.indexOf("m") != -1)) {	// ce je m
+        	if (cleanData.indexOf("km") == -1) { // ce ni km je m
+	        	cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
+        		cleanData = cleanData.replace(',','');
+        		cleanData = cleanData/1000; 	// change to km
+        	}
+				} else {
+	        cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
+				}
 
 
         if (parsingTime) {
@@ -231,7 +401,7 @@ VacuumProcessor.prototype = {
         } else if (parsingElevation) {
             cleanData = cleanData.replace(' ', '').replace(',', '');
         } else if (parsingDistance) {
-            cleanData = cleanData.replace(',', '.');
+            if (typeof cleanData == 'string') cleanData = cleanData.replace(',', '.');
         } else if (parsingEnergy) {
             cleanData = cleanData.replace(',', '.').replace('.', '');
         } else {
@@ -239,6 +409,8 @@ VacuumProcessor.prototype = {
         }
         return parseFloat(cleanData);
     },
+
+
 
     /**
      * @returns activity stream in callback
@@ -262,6 +434,8 @@ VacuumProcessor.prototype = {
 
         }.bind(this));
     },
+
+
 
     /**
      * @returns
@@ -319,6 +493,8 @@ VacuumProcessor.prototype = {
 
     },
 
+
+
     /**
      * @returns
      */
@@ -335,6 +511,7 @@ VacuumProcessor.prototype = {
             }
         });
     },
+
 
 
     /**
@@ -359,8 +536,8 @@ VacuumProcessor.prototype = {
             var bikeOdoArray = {};
             _.each($(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
                 var bikeName = $(element).find('td').first().text().trim();
-                var bikeOdo = $(element).find('td').last().text().trim();
-                bikeOdoArray[btoa(bikeName)] = bikeOdo;
+                var bikeOdo = $(element).find('td').last().text().trim().replace(/\.[0-9]/,'');
+                bikeOdoArray[btoa(unescape(encodeURIComponent(bikeName)))] = bikeOdo;
             });
 
             callback(bikeOdoArray);

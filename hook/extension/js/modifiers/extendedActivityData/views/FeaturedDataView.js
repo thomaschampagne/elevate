@@ -33,7 +33,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
                 // Add a title
-                this.content += this.generateSectionTitle('Highlighted Stats');
+//                this.content += this.generateSectionTitle('Highlighted Stats');
+                this.content += this.generateSectionTitle('Highlighted Stats for '+' <strong>"'+window.activityName+'"</strong> ('+window.activityTime+")");
 
                 this.makeGrid(7, 1); // (col, row)
 

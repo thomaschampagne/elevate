@@ -14,6 +14,8 @@ function StravistiX(userSettings, appResources) {
     this.isPremium_ = this.vacuumProcessor_.getPremiumStatus();
     this.isPro_ = this.vacuumProcessor_.getProStatus();
     this.activityId_ = this.vacuumProcessor_.getActivityId();
+    this.activityName_ = this.vacuumProcessor_.getActivityName();
+    this.activityTime_ = this.vacuumProcessor_.getActivityTime();
 
     // Make the work...
     this.init_();
@@ -318,7 +320,9 @@ StravistiX.prototype = {
             return;
         }
 
-        var activityType = pageView.activity().get('type');
+// without var -> global scope (window.activityType)
+        activityType = pageView.activity().get('type');
+//        var activityType = pageView.activity().get('type');
 
         // Skip manual activities
         if (activityType === 'Manual') {
@@ -337,8 +341,14 @@ StravistiX.prototype = {
             this.userSettings_.userFTP,
 
             function(analysisData) { // Callback when analysis data has been computed
-
+//console.log("Analysis done; TRIMP:"+analysisData.heartRateData.TRIMP.toFixed(0));
                 var extendedActivityDataModifier = null;
+
+                // tell activity type for other than Ride/Run activities
+				if ( (activityType !== "Ride") && (activityType !== "Run") ) {
+                    var html = '<div  style="padding: 0px 0px 0px 0px;background: #FFFFFF;font-size: 9px;color: rgb(103, 103, 103);">&nbsp&nbsp&nbspActivity type: '+window.pageView.activity().attributes.type+'</div>';
+                    $('.inset').parent().children().first().before(html);
+				}
 
                 switch (activityType) {
                     case 'Ride':
@@ -347,6 +357,17 @@ StravistiX.prototype = {
                     case 'Run':
                         extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
                         break;
+
+                    // for Workout, Rowing,...
+                    case 'StationaryOther':
+                        extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+
+                    // for Workout, Rowing,...
+                    case 'Swim':
+                        extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        break;
+
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
                         var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
@@ -356,6 +377,11 @@ StravistiX.prototype = {
 
                 if (extendedActivityDataModifier) {
                     extendedActivityDataModifier.modify();
+
+
+
+
+							
                 }
 
             }.bind(this)
