@@ -38,21 +38,30 @@ var userSettings = {
     zones: {
         speed: [{
             from: 0,
-            to: 5
+            to: 6
         }, {
-            from: 5,
-            to: 10
+            from: 6,
+            to: 9
         }, {
-            from: 10,
+            from: 9,
+            to: 12
+        }, {
+            from: 12,
             to: 15
         }, {
             from: 15,
-            to: 20
+            to: 18
         }, {
-            from: 20,
-            to: 25
+            from: 18,
+            to: 21
         }, {
-            from: 25,
+            from: 21,
+            to: 24
+        }, {
+            from: 24,
+            to: 27
+        }, {
+            from: 27,
             to: 30
         }, {
             from: 30,
@@ -74,12 +83,9 @@ var userSettings = {
             to: 50
         }, {
             from: 50,
-            to: 60
+            to: 75
         }, {
-            from: 60,
-            to: 80
-        }, {
-            from: 80,
+            from: 75,
             to: 100
         }],
         pace: [{
@@ -160,22 +166,40 @@ var userSettings = {
             to: 500
         }, {
             from: 500,
-            to: 550
-        }, {
-            from: 550,
             to: 600
         }, {
             from: 600,
             to: 700
         }, {
             from: 700,
-            to: 1100
+            to: 800
+        }, {
+            from: 800,
+            to: 1000
+        }, {
+            from: 1000,
+            to: 1200
+        }, {
+            from: 1200,
+            to: 1500
         }],
         cyclingCadence: [{
             from: 0,
-            to: 5
+            to: 10
         }, {
-            from: 5,
+            from: 10,
+            to: 20
+        }, {
+            from: 20,
+            to: 30
+        }, {
+            from: 30,
+            to: 40
+        }, {
+            from: 40,
+            to: 50
+        }, {
+            from: 50,
             to: 60
         }, {
             from: 60,
@@ -204,6 +228,12 @@ var userSettings = {
         }, {
             from: 105,
             to: 110
+        }, {
+            from: 110,
+            to: 120
+        }, {
+            from: 120,
+            to: 150
         }],
         runningCadence: [{
             from: 0,
@@ -237,12 +267,9 @@ var userSettings = {
             to: 66
         }, {
             from: 66,
-            to: 69
+            to: 70
         }, {
-            from: 69,
-            to: 72
-        }, {
-            from: 72,
+            from: 70,
             to: 75
         }, {
             from: 75,
@@ -255,6 +282,9 @@ var userSettings = {
             to: 90
         }, {
             from: 90,
+            to: 100
+        }, {
+            from: 100,
             to: 120
         }],
         grade: [{

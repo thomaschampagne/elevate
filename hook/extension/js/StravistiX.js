@@ -132,8 +132,8 @@ StravistiX.prototype = {
 
         var title = 'StraTistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        message += "<h4>- This is StraTistiX - Dejan Kamensek's fork of StravistiX (= Strava + Statistics + Xtended) </h4>";
-        message += '<h4>- Original StravistiX (formerly StravaPlus) is made by Thomas Champagne</h4>';
+        message += "<h4>- This is StraTistiX - Dejan Kamensek's fork of StravistiX</h4>";
+        message += '<h4>- Original StravistiX (formerly named StravaPlus) is being developed by Thomas Champagne</h4>';
         message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
         message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
