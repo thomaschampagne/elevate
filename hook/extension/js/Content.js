@@ -188,6 +188,7 @@ var jsDependencies = [
     'js/modifiers/DefaultLeaderboardFilterModifier.js',
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',
+    'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
 
