@@ -41,8 +41,8 @@ RemoteLinksModifier.prototype = {
             ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', ''],
             ["HeatMap", "<img width='16px' src='" + this.appResources_.heatmapIcon + "'/>", 'heatmap', 'Strava Global Heatmap'],
-            ["<img width='16px' src='" + this.appResources_.AnnualSummIcon + "'/> AnnualSumm", 'http://www.jonathanokeeffe.com/strava/annualSummary.php', 'various', "Jonathan o\'Keeffe\'s Annual Summary"],
             ["<img  src='" + this.appResources_.multimapIcon + "'/> MultiMap", 'http://www.jonathanokeeffe.com/strava/map.php', 'various', "Jonathan o\'Keeffe\'s Multiple Ride Mapper"],
+            ["<img width='16px' src='" + this.appResources_.AnnualSummIcon + "'/> AnnualSumm", 'http://www.jonathanokeeffe.com/strava/annualSummary.php', 'various', "Jonathan o\'Keeffe\'s Annual Summary"],
             ["<img src='" + this.appResources_.mesmerideIcon + "'/>", 'http://www.mesmeride.com/', 'various', "Create beautiful elevation profiles in style of Tour or Giro"],
             ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX'],
             ["MapFlipper", 'http://veloviewer.com/mapFlipper', 'mapflipper',  " width='24px' src='" + this.appResources_.OCMIcon + "'/>", " width='24px' src='" + this.appResources_.OCMlsIcon + "'/>", " width='24px' src='" + this.appResources_.OCModIcon + "'/>", " width='24px' src='" + this.appResources_.OSMIcon + "'/>"]

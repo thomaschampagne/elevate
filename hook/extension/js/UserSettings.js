@@ -4,7 +4,7 @@ var userSettings = {
     userGender: 'men',
     userMaxHr: 180,
     userRestHr: 50,
-    userFTP: null,
+    userFTP: 300,
     userHrrZones: [
         {
             fromHrr: 30,
