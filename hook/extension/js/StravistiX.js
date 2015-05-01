@@ -77,6 +77,8 @@ StravistiX.prototype = {
         // All activities
         this.handleActivityQRCodeDisplay_();
 
+        this.handleVirtualPartner_();
+
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
     },
@@ -131,11 +133,12 @@ StravistiX.prototype = {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        message += '<h4>- OpenStreetMap map flipper for activities added</h4>';
-        message += '<h4><strong>Since 0.6.0:</strong></h4>';
-        message += '<h4>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h4>';
-        message += '<h4>- Customs zones for each Xtended data have been implemented</h4>';
-        message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to get more features</a></h4>';
+        message += '<h6>- Exporting segment effort as Virtual Partner for your GPS through activity page</h6>';
+        message += '<h6><strong>Since 0.6.1:</strong></h6>';
+        message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
+        message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
+        message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
+        message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donations to offer new services to you. Thanks for your help.</a></h4>';
         message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
         $.fancybox('<h2>' + title + '</h2>' + message);
@@ -503,6 +506,17 @@ StravistiX.prototype = {
         var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
         activityQRCodeDisplayModifier.modify();
 
+    },
+
+    handleVirtualPartner_: function() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        var virtualPartnerModifier = new VirtualPartnerModifier(this.activityId_);
+        virtualPartnerModifier.modify();
     },
 
     /**
