@@ -77,6 +77,8 @@ StravistiX.prototype = {
         // All activities
         this.handleActivityQRCodeDisplay_();
 
+        this.handleVirtualPartner_();
+
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
     },
@@ -503,6 +505,17 @@ StravistiX.prototype = {
         var activityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources_, this.activityId_);
         activityQRCodeDisplayModifier.modify();
 
+    },
+
+    handleVirtualPartner_: function() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        var virtualPartnerModifier = new VirtualPartnerModifier(this.activityId_);
+        virtualPartnerModifier.modify();
     },
 
     /**
