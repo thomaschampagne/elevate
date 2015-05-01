@@ -45,13 +45,21 @@ VirtualPartnerModifier.prototype = {
 
     displayRaceShapePopup: function() {
 
-        var dlButton = '<a class="button btn-block btn-primary" href="http://raceshape.com/strava.export.php?effort=' + $('.analysis-link-js.btn-xs.button').attr('data-segment-effort-id') + '|' + this.activityId + '&type=CRS">';
-        dlButton += 'Download effort as Virtual Partner';
-        dlButton += '</a>';
+        var effortId = $('.analysis-link-js.btn-xs.button').attr('data-segment-effort-id');
+
+        var types = ['CRS', 'TCX', 'GPX'];
+
+        var dlButton = '';
+
+        _.each(types, function(t) {
+            dlButton += '<a class="button btn-block btn-primary" style="margin-bottom: 15px;" href="http://raceshape.com/strava.export.php?effort=' + effortId + '|' + this.activityId + '&type=' + t + '">';
+            dlButton += 'Download effort as .' + t;
+            dlButton += '</a>';
+        }.bind(this));
 
         var title = 'Export effort as Virtual Partner';
-        var message = 'You are going to download a <strong>.crs</strong> file from raceshape.com. If you are using a garmin device put downloaded file into NewFiles/* folder.<br/><br/>' + dlButton;
+        var message = 'You are going to download a course file from raceshape.com.<br/><br/>If you are using a garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/>' + dlButton;
 
-        $.fancybox('<h2>' + title + '</h2><h3>' + message + '</h3>');
+        $.fancybox('<h3>' + title + '</h3><h4>' + message + '</h4>');
     }
 };
