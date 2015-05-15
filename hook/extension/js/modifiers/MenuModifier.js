@@ -25,7 +25,7 @@ MenuModifier.prototype = {
             menuStyle = "style='font-size:20px; background-color: #fc4c02; color: white;'"; //TODO Globalize colors
             menuIcon = this.appResources_.menuIconBlack;
         } else {
-            menuStyle = "style='font-size:20px; background-color: white; color: #fc4c02;'"; //TODO Globalize colors
+            menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors
             menuIcon = this.appResources_.menuIconOrange;
         }
 
