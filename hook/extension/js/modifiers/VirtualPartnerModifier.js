@@ -17,41 +17,64 @@ VirtualPartnerModifier.prototype = {
         if (!view) {
             return;
         }
-
-        console.debug('VirtualPartnerModifier on ' + this.activityId);
+        
+        // console.debug('VirtualPartnerModifier on ' + this.activityId);
         // console.debug('VirtualPartnerModifier on effort ' + $('.analysis-link-js.btn-xs.button').attr( 'data-segment-effort-id'));
 
         var functionRender = view.prototype.render;
 
         var self = this;
 
-        var exportButtonHtml = '<a class="btn-block btn-xs button raceshape-btn" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
 
         view.prototype.render = function() {
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            $('.raceshape-btn').after(exportButtonHtml).each(function() {
+            if (!_.isEmpty($('.raceshape-btn'))) {
 
-                $('#stravistix_exportVpu').click(function(evt) {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    self.displayRaceShapePopup();
+                var exportButtonHtml = '<a class="btn-block btn-xs button raceshape-btn" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
+
+                $('.raceshape-btn').first().after(exportButtonHtml).each(function() {
+
+                    $('#stravistix_exportVpu').click(function(evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        self.displayRaceShapePopup();
+                    });
+
+                    return;
                 });
-            });
+            } 
+            /*else {
+
+                console.warn('toto');
+                // Running export
+                var exportButtonHtml = '<div class="spans8"><a href="/segments/6330649?filter=my_results">View My Efforts</a></div>';
+                $('.bottomless.inset').after(exportButtonHtml);
+            }*/
             return r;
         };
     },
 
     displayRaceShapePopup: function() {
 
-        var dlButton = '<a class="button btn-block btn-primary" href="http://raceshape.com/strava.export.php?effort=' + $('.analysis-link-js.btn-xs.button').attr('data-segment-effort-id') + '|' + this.activityId + '&type=CRS">';
-        dlButton += 'Download effort as Virtual Partner';
-        dlButton += '</a>';
+        var effortId = $('.analysis-link-js.btn-xs.button').attr('data-segment-effort-id');
+
+        effortId = window.location.pathname.split('/')[4];
+
+        var coursesTypesExport = ['CRS', 'TCX', 'GPX'];
+
+        var dlButton = '';
+
+        _.each(coursesTypesExport, function(t) {
+            dlButton += '<a class="button btn-block btn-primary" style="margin-bottom: 15px;" href="http://raceshape.com/strava.export.php?effort=' + effortId + '|' + this.activityId + '&type=' + t + '">';
+            dlButton += 'Download effort as .' + t;
+            dlButton += '</a>';
+        }.bind(this));
 
         var title = 'Export effort as Virtual Partner';
-        var message = 'You are going to download a <strong>.crs</strong> file from raceshape.com. If you are using a garmin device put downloaded file into NewFiles/* folder.<br/><br/>' + dlButton;
+        var message = 'You are going to download a course file from raceshape.com.<br/><br/>If you are using a garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/>' + dlButton;
 
-        $.fancybox('<h2>' + title + '</h2><h3>' + message + '</h3>');
+        $.fancybox('<h3>' + title + '</h3><h4>' + message + '</h4>');
     }
 };
