@@ -106,7 +106,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q grade
-        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.time);
+        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time);
 
         // Return an array with all that shit...
         return {
@@ -540,9 +540,9 @@ ActivityProcessor.prototype = {
         };
     },
 
-    gradeData_: function(gradeArray, timeArray) {
+    gradeData_: function(gradeArray, velocityArray, timeArray) {
 
-        if (_.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
+        if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -562,7 +562,20 @@ ActivityProcessor.prototype = {
             total: 0
         };
 
+        // Currently deals with avg speed/pace
+        var upFlatDownMoveData = {
+            up: 0,
+            flat: 0,
+            down: 0,
+            count: {
+                up: 0,
+                flat: 0,
+                down: 0,
+            }
+        };
+
         var durationInSeconds, durationCount = 0;
+        var currentSpeed;
 
         for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
 
@@ -572,23 +585,34 @@ ActivityProcessor.prototype = {
             // Compute distribution for graph/table
             if (i > 0) {
 
-                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
 
-                var gradeZoneId = this.getZoneId(this.zones.grade, gradeArray[i]);
+                if (currentSpeed > 0) { // If moving...
 
-                if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
-                    gradeZones[gradeZoneId]['s'] += durationInSeconds;
-                }
+                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                durationCount += durationInSeconds;
+                    var gradeZoneId = this.getZoneId(this.zones.grade, gradeArray[i]);
 
-                // Compute DOWN/FLAT/UP duration
-                if (gradeArray[i] > ActivityProcessor.gradeClimbingLimit) { // UPHILL
-                    upFlatDownInSeconds.up += durationInSeconds;
-                } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
-                    upFlatDownInSeconds.down += durationInSeconds;
-                } else { // FLAT
-                    upFlatDownInSeconds.flat += durationInSeconds;
+                    if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
+                        gradeZones[gradeZoneId]['s'] += durationInSeconds;
+                    }
+
+                    durationCount += durationInSeconds;
+
+                    // Compute DOWN/FLAT/UP duration
+                    if (gradeArray[i] > ActivityProcessor.gradeClimbingLimit) { // UPHILL
+                        upFlatDownInSeconds.up += durationInSeconds;
+                        upFlatDownMoveData.up += currentSpeed;
+                        upFlatDownMoveData.count.up++;
+                    } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
+                        upFlatDownInSeconds.down += durationInSeconds;
+                        upFlatDownMoveData.down += currentSpeed;
+                        upFlatDownMoveData.count.down++;
+                    } else { // FLAT
+                        upFlatDownInSeconds.flat += durationInSeconds;
+                        upFlatDownMoveData.flat += currentSpeed;
+                        upFlatDownMoveData.count.flat++;
+                    }
                 }
             }
         }
@@ -602,6 +626,13 @@ ActivityProcessor.prototype = {
         } else {
             gradeProfile = ActivityProcessor.gradeProfileHilly;
         }
+
+        // Compute speed while up, flat down
+        upFlatDownMoveData.up = upFlatDownMoveData.up / upFlatDownMoveData.count.up;
+        upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownMoveData.count.down;
+        upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownMoveData.count.flat;
+
+        console.warn(upFlatDownMoveData);
 
         var avgGrade = gradeSum / gradeCount;
 
@@ -621,6 +652,7 @@ ActivityProcessor.prototype = {
             'upperQuartileGrade': Helper.upperQuartile(gradeSortedSamples),
             'gradeZones': gradeZones,
             'upFlatDownInSeconds': upFlatDownInSeconds,
+            'upFlatDownMoveData': upFlatDownMoveData,
             'gradeProfile': gradeProfile
         };
 
