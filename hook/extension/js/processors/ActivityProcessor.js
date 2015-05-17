@@ -632,8 +632,6 @@ ActivityProcessor.prototype = {
         upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownMoveData.count.down;
         upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownMoveData.count.flat;
 
-        console.warn(upFlatDownMoveData);
-
         var avgGrade = gradeSum / gradeCount;
 
         var gradeSortedSamples = gradeArray.sort(function(a, b) {

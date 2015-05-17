@@ -41,10 +41,10 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
 
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                var gradeDataView = new GradeDataView(this.analysisData_.gradeData, '%');
-                gradeDataView.setAppResources(this.appResources_);
-                gradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-                this.dataViews.push(gradeDataView);
+                var cyclingGradeDataView = new CyclingGradeDataView(this.analysisData_.gradeData, '%');
+                cyclingGradeDataView.setAppResources(this.appResources_);
+                cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(cyclingGradeDataView);
             }
         }
     }
