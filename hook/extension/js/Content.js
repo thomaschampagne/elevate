@@ -111,7 +111,7 @@ Content.prototype = {
                 var injectedScript = document.createElement('script');
                 injectedScript.src = chrome.extension.getURL('js/StravistiX.js');
                 injectedScript.onload = function() {
-                    
+
                     this.parentNode.removeChild(this);
                     var inner = document.createElement('script');
 
@@ -202,7 +202,9 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/CyclingCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/RunningCadenceDataView.js',
     'js/modifiers/extendedActivityData/views/PowerDataView.js',
-    'js/modifiers/extendedActivityData/views/GradeDataView.js',
+    'js/modifiers/extendedActivityData/views/AbstractGradeDataView.js',
+    'js/modifiers/extendedActivityData/views/CyclingGradeDataView.js',
+    'js/modifiers/extendedActivityData/views/RunnningGradeDataView.js',
 
     // Extended data modifiers
     'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',

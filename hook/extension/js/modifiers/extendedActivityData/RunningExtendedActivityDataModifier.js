@@ -35,10 +35,10 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
             
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                var gradeDataView = new GradeDataView(this.analysisData_.gradeData, '%');
-                gradeDataView.setAppResources(this.appResources_);
-                gradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-                this.dataViews.push(gradeDataView);
+                var runnningGradeDataView = new RunnningGradeDataView(this.analysisData_.gradeData, '%');
+                runnningGradeDataView.setAppResources(this.appResources_);
+                runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(runnningGradeDataView);
             }
         }
     }
