@@ -1,4 +1,4 @@
-var GradeDataView = AbstractDataView.extend(function(base) {
+var AbstractGradeDataView = AbstractDataView.extend(function(base) {
 
     return {
 
@@ -7,9 +7,7 @@ var GradeDataView = AbstractDataView.extend(function(base) {
         mainColor: [0, 128, 0],
 
         init: function(gradeData, units) {
-
-            this.setViewId('GradeDataView_pdskdj4475');
-
+            
             base.init.call(this);
 
             this.units = units;
@@ -19,6 +17,8 @@ var GradeDataView = AbstractDataView.extend(function(base) {
             this.setupDistributionGraph(this.gradeData.gradeZones);
 
             this.setupDistributionTable(this.gradeData.gradeZones);
+
+            this.speedUnitsData = this.getSpeedUnitData();
 
         },
 
@@ -56,12 +56,6 @@ var GradeDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), 'Time climbing', '', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(1, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat), 'Time flat', '', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.down), 'Time downhill', '', 'displayAdvancedGradeData');
-
-            // TODO convert if miles if needed
-            // TODO show as pace for running (create separate instance on GradeView for )
-            this.insertContentAtGridPosition(0, 4, this.gradeData.upFlatDownMoveData.up.toFixed(1), 'Avg climbing speed', 'kph', 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(1, 4, this.gradeData.upFlatDownMoveData.flat.toFixed(1), 'Avg flat speed', 'kph', 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(2, 4, this.gradeData.upFlatDownMoveData.down.toFixed(1), 'Avg downhill speed', 'kph', 'displayAdvancedGradeData');
 
         }
     }
