@@ -140,10 +140,33 @@ VacuumProcessor.prototype = {
             actStatsContainer.find('.inline-stats.section').children().first().text(),
             false, false, true, false);
 
-        // Get Moving Time
-        var movingTime = this.formatActivityDataValue_(
+    // Elapsed and Moving time
+
+        // Get Elapsed Time
+        var elapsedTime = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
+            true, false, false, false);
+
+        if (isNaN(elapsedTime)) {
+			// console.warn("Can't get elapsed time - probably 'race'");
+			// if 'race' elapsed and moving time are swapped on Strava overview screen
+
+	        // Get Elapsed Time
+            var elapsedTime = this.formatActivityDataValue_(
             actStatsContainer.find('.inline-stats.section').children().first().next().text(),
             true, false, false, false);
+
+            // Get Moving Time
+            var movingTime = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-moving-time]').parent().parent().children().last().text(),
+            true, false, false, false);
+	    } else
+	    {
+            // Get Moving Time
+            var movingTime = this.formatActivityDataValue_(
+            actStatsContainer.find('.inline-stats.section').children().first().next().text(),
+            true, false, false, false);
+		}
 
         // Get Elevation
         var elevation = this.formatActivityDataValue_(
@@ -163,11 +186,6 @@ VacuumProcessor.prototype = {
         var energyOutput = this.formatActivityDataValue_(
             actStatsContainer.find('.inline-stats.section.secondary-stats').children().first().next().children().first().text(),
             false, false, false, true);
-
-        // Get Elapsed Time
-        var elapsedTime = this.formatActivityDataValue_(
-            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
-            true, false, false, false);
 
         // Get Average speed
         var averageSpeed = this.formatActivityDataValue_(
@@ -360,7 +378,7 @@ VacuumProcessor.prototype = {
             _.each($(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
                 var bikeName = $(element).find('td').first().text().trim();
                 var bikeOdo = $(element).find('td').last().text().trim();
-                bikeOdoArray[btoa(bikeName)] = bikeOdo;
+                bikeOdoArray[btoa(unescape(encodeURIComponent(bikeName)))] = bikeOdo;
             });
 
             callback(bikeOdoArray);
