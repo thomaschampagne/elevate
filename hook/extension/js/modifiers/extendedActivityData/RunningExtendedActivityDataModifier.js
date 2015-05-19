@@ -3,8 +3,8 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
     return {
 
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity);
+        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
+            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos);
         },
 
         modify: function() {
