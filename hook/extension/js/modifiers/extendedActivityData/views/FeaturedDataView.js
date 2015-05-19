@@ -4,7 +4,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
         analysisData: null,
 
-        init: function(analysisData, userSettings) {
+        init: function(analysisData, userSettings, basicInfos) {
 
             this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
 
@@ -19,6 +19,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             this.analysisData = analysisData;
 
             this.userSettings = userSettings;
+
+            this.basicInfos = basicInfos;
         },
 
         render: function() {
@@ -33,7 +35,8 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
                 // Add a title
-                this.content += this.generateSectionTitle('Highlighted Stats');
+                // this.content += this.generateSectionTitle('Highlighted Stats');
+                this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
 
                 this.makeGrid(7, 1); // (col, row)
 
