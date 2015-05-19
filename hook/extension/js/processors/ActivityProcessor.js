@@ -55,6 +55,7 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
+
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
@@ -82,14 +83,14 @@ ActivityProcessor.prototype = {
         // Median Speed
         // Q3 Speed
         // Standard deviation Speed
-        var speedData = moveData[0];
+        if (moveData) var speedData = moveData[0];
 
 
         // Q1 Pace
         // Median Pace
         // Q3 Pace
         // Standard deviation Pace
-        var paceData = moveData[1];
+        if (moveData) var paceData = moveData[1];
 
 
         // Estimated Normalized power

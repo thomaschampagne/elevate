@@ -413,15 +413,26 @@ VacuumProcessor.prototype = {
 
 
     /**
-     * @returns activity stream in callback
+     * @returns activity streams in callback
      */
     getActivityStream: function getActivityStream(callback) {
 
-        var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth";
+//        var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude";
+        var url = "/activities/" + this.getActivityId() + "/streams";  // get all available streams for activity
 
         $.ajax(url).done(function(jsonResponse) {
 
             var hasPowerMeter = true;
+
+/*
+ var full_array=[{t:1,x:0,y:10},{t:2,x:10,y:11},{t:3,x:20,y:13},{t:4,x:30,y:12},{t:5,x:40,y:11}];
+var simpl_array=simplify(full_array,0.1,1);
+*/
+
+
+
+
+
 
             if (_.isEmpty(jsonResponse.watts)) {
                 jsonResponse.watts = jsonResponse.watts_calc;
