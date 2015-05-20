@@ -3,16 +3,17 @@
     padding: 0;
     border-spacing: 0px;
 }
+
 .stravistiXExtendedData td {
     text-align: center;
     padding: 3px;
 }
+
 .stravistiXExtendedData div {
     display: inline-block;
     vertical-align: middle;
     padding-right: 15px;
 }
-
 /* Remove padding on grid for featured data */
 
 .stravistiXExtendedData .featuredData .grid td {
@@ -27,28 +28,60 @@
     font-size: 16px;
     font-style: italic;
 }
+
 .stravistiXExtendedData .distributionTable tr:hover {
     background-color: #ffff99;
 }
+
 .stravistiXExtendedData .grid {
     font-size: 22px;
 }
+
 .stravistiXExtendedData .grid td {
     text-align: left;
     border: 0px;
     padding-bottom: 30px;
 }
+
 .stravistiXExtendedData .gridDataContainer {
     cursor: pointer;
 }
+
 .stravistiXExtendedData .gridUnits {
     font-size: 14px;
     text-transform: uppercase;
 }
+
 .stravistiXExtendedData .gridTitle {
     font-size: 14px;
     cursor: pointer;
 }
+
 .stravistiXExtendedData .grid td {
     max-width: 100px;
+}
+
+.summaryGrid table {
+    margin: 0;
+    padding: 0;
+}
+
+.summaryGrid td {
+    padding: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.summaryGrid .summaryGridDataContainer {
+    color: rgb(78, 78, 78);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.summaryGrid .summaryGridTitle {
+    cursor: pointer;
+    color: rgb(137, 133, 133);
+    font-size: small;
+    font-weight: normal;
 }

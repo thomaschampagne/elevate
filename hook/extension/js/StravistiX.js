@@ -138,6 +138,8 @@ StravistiX.prototype = {
         // message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
         // message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
         // message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
+        message += '<h5>- Added average speed while climbing, on flat and downhill for extended grade data</h5>';
+        message += '<h5>- Added summary panel for some extended data in actitivies</h5>';
         message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
         message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
@@ -343,12 +345,17 @@ StravistiX.prototype = {
 
                 var extendedActivityDataModifier = null;
 
+                var basicInfos = {
+                    activityName: this.vacuumProcessor_.getActivityName(),
+                    activityTime: this.vacuumProcessor_.getActivityTime()
+                }
+
                 switch (activityType) {
                     case 'Ride':
-                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
                         break;
                     case 'Run':
-                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_);
+                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
                         break;
                     default:
                         // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
