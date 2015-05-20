@@ -366,4 +366,14 @@ VacuumProcessor.prototype = {
             callback(bikeOdoArray);
         });
     },
+
+    getActivityTime: function getActivityTime() {
+        var activityTime = $(".activity-summary-container").find('time').text().trim();
+        return (activityTime) ? activityTime : null;
+    },
+
+    getActivityName: function getActivityName() {
+        var activityName = $(".activity-summary-container").find('.marginless.activity-name').text().trim();
+        return (activityName) ? activityName : null;
+    },
 };
