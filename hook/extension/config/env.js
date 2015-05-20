@@ -1,6 +1,6 @@
 var env = {
     preview: false, // Must be false in release
-    buildNumber: 31, // 0.6.3
+    buildNumber: 32, // 0.6.4
     analyticsTrackingID: 'UA-51167057-4', // prod:'UA-51167057-4', test:'UA-51167057-5'
     forceUpdated: false, // Must be false in release
     debugMode: false, // Must be false in release
