@@ -60,7 +60,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             // ...
             var TRIMP = activityHeartRateReserve = '-';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0);
+                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
             }
             this.insertContentAtGridPosition(1, 0, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
