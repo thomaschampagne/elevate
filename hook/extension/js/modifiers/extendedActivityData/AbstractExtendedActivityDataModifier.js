@@ -48,7 +48,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
         //this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% climbing', '%', 'displayAdvancedGradeData');
         placeSummaryPanel: function(panelAdded) {
 
-            this.makeSummaryGrid(2, 2);
+            this.makeSummaryGrid(2, 3);
 
             // Insert summary data
             var moveRatio = '-';
@@ -57,21 +57,36 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }
             this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
 
+            var q3Move = '-';
+            if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
+
+                var speedUnitFactor = 1; // TODO miles
+                var speedUnitPerhour = 'kph'; // TODO miles
+
+                q3Move = (this.analysisData_.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1);
+                this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Speed', speedUnitPerhour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData_.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1) + ' )</span>', 'displayAdvancedSpeedData');
+            }
+
             // ...
             var TRIMP = activityHeartRateReserve = '-';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
             }
-            this.insertContentAtGridPosition(1, 0, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(0, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 1, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
 
             // ...
-            var gradeData = '-';
+            var climbTime = climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                gradeData = Helper.secondsToHHMMSS(this.analysisData_.gradeData.upFlatDownInSeconds.up);
+                var speedUnitFactor = 1; // TODO miles
+                var speedUnitPerhour = 'kph'; // TODO miles
+                climbTime = Helper.secondsToHHMMSS(this.analysisData_.gradeData.upFlatDownInSeconds.up);
+                climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
             }
-            this.insertContentAtGridPosition(1, 1, gradeData, 'Time climbing', '', 'displayAdvancedGradeData');
+
+            this.insertContentAtGridPosition(0, 2, climbTime, 'Time climbing', '', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
 
             $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {
                 // Grid placed
