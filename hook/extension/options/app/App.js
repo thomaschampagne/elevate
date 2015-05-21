@@ -15,6 +15,11 @@ app.config(['$routeProvider', function($routeProvider) {
         controller: 'HealthSettingsController'
     });
 
+    $routeProvider.when(routeMap.zonesSettingsRoute, {
+        templateUrl: 'views/zonesSettings.html',
+        controller: 'XtdZonesSettingsController'
+    });
+
     $routeProvider.when(routeMap.releaseNotesRoute, {
         templateUrl: 'views/releaseNotes.html'
     });
@@ -24,7 +29,8 @@ app.config(['$routeProvider', function($routeProvider) {
     });
 
     $routeProvider.when(routeMap.donateRoute, {
-        templateUrl: 'views/donate.html'
+        templateUrl: 'views/donate.html',
+        controller: 'DonateController'
     });
 
     $routeProvider.when(routeMap.shareRoute, {

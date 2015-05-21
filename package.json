@@ -1,6 +1,6 @@
 {
   "name": "Make",
-  "description": "Make StravaPlus distribution structure and builds archive",
+  "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
   "dependencies": {
     "archiver": "^0.14.2",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thomaschampagne/StravaPlus"
+    "url": "https://github.com/thomaschampagne/stravistix"
   },
   "author": "Thomas Champagne",
   "readme": "None"

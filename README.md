@@ -1,7 +1,7 @@
-[![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravaplus.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravaplus)
-Install StravaPlus from Chrome Store
+[![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
+Install StravistiX from Chrome Store
 ==========
-Go to http://bitly.com/stravaplus
+Go to http://bitly.com/stravistix
 
 Install/Develop from sources
 ==========
@@ -24,7 +24,7 @@ This will create **dist/** folder. This folder is used for a release.
 ```
 node make.js build
 ```
-This will create zip archive of **dist/** folder in **builds/StravaPlus\_vX.X.X\_[date].zip**
+This will create zip archive of **dist/** folder in **builds/StravistiX\_vX.X.X\_[date].zip**
 
 ## Clean 
 ```
