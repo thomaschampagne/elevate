@@ -8,13 +8,16 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         dataViews: [],
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity) {
+        summaryGrid: null,
+
+        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
 
             this.analysisData_ = analysisData;
             this.appResources_ = appResources;
             this.userSettings_ = userSettings;
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
+            this.basicInfos = basicInfos;
 
             this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == this.athleteId_);
 
@@ -23,18 +26,57 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
 
         modify: function() {
-            
+
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
                 view.render();
                 this.content += view.getContent();
             }.bind(this));
 
-            // Add Show extended statistics to page
-            this.placeExtendedStatsButton(function() {
-                // Button has been placed...
-            });
 
+            this.placeSummaryPanel(function() {
+                // Summary panel has been placed...
+
+                // Add Show extended statistics to page
+                this.placeExtendedStatsButton(function() {
+                    // Button has been placed...
+                });
+
+            }.bind(this));
+
+        },
+        //this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% climbing', '%', 'displayAdvancedGradeData');
+        placeSummaryPanel: function(panelAdded) {
+
+            this.makeSummaryGrid(2, 2);
+
+            // Insert summary data
+            var moveRatio = '-';
+            if (this.analysisData_.moveRatio && this.userSettings_.displayActivityRatio) {
+                moveRatio = this.analysisData_.moveRatio.toFixed(2);
+            }
+            this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
+
+            // ...
+            var TRIMP = activityHeartRateReserve = '-';
+            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
+                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0);
+                activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
+            }
+            this.insertContentAtGridPosition(1, 0, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+
+            // ...
+            var gradeData = '-';
+            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
+                gradeData = Helper.secondsToHHMMSS(this.analysisData_.gradeData.upFlatDownInSeconds.up);
+            }
+            this.insertContentAtGridPosition(1, 1, gradeData, 'Time climbing', '', 'displayAdvancedGradeData');
+
+            $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {
+                // Grid placed
+                if (panelAdded) panelAdded();
+            });
         },
 
         placeExtendedStatsButton: function(buttonAdded) {
@@ -56,7 +98,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                         'transitionIn': 'fade',
                         'transitionOut': 'fade',
                         'type': 'iframe',
-                        'content': '<div class="stravaPlusExtendedData">' + this.content + '</div>'
+                        'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
                     });
 
                     // For each view start making the assossiated graphs
@@ -72,6 +114,40 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }.bind(this));
         },
 
+        makeSummaryGrid: function(columns, rows) {
+
+            var summaryGrid = '';
+            summaryGrid += '<div>';
+            summaryGrid += '<div class="summaryGrid">';
+            summaryGrid += '<table>';
+
+            for (var i = 0; i < rows; i++) {
+                summaryGrid += '<tr>';
+                for (var j = 0; j < columns; j++) {
+                    summaryGrid += '<td data-column="' + j + '" data-row="' + i + '">';
+                    summaryGrid += '</td>';
+                }
+                summaryGrid += '</tr>';
+            }
+            summaryGrid += '</table>';
+            summaryGrid += '</div>';
+            summaryGrid += '</div>';
+            this.summaryGrid = $(summaryGrid);
+        },
+
+        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
+
+            var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+
+            if (this.summaryGrid) {
+                var content = '<span class="summaryGridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="summaryGridUnits">' + units + '</span><br /><span class="summaryGridTitle">' + title + '</span></span>';
+                this.summaryGrid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
+            } else {
+                console.error('Grid is not initialized');
+            }
+        },
+
+
         /**
          * Affect default view needed
          */
@@ -81,7 +157,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             // Featured view
             if (this.analysisData_) {
-                var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_);
+                var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
                 featuredDataView.setAppResources(this.appResources_);
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(featuredDataView);

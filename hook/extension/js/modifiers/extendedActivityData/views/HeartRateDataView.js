@@ -22,7 +22,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             this.tooltipTemplate = "<%if (label){";
             this.tooltipTemplate += "var hr = label.split(' ')[1].replace('%','').split('-');";
-            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravaPlus.userSettings_.userMaxHr, stravaPlus.userSettings_.userRestHr) + 'bpm';";
+            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + 'bpm';";
             this.tooltipTemplate += "%><%=finalLabel%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>";
 
         },
@@ -99,14 +99,14 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.content += this.generateSectionTitle('Heart rate stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">(customize)</a>');
 
             // Creates a grid
-            this.makeGrid(3, 2); // (col, row)
+            this.makeGrid(3, 3); // (col, row)
 
             this.insertheartRateDataIntoGrid();
             this.generateCanvasForGraph();
             this.setupDistributionTable();
 
             if (!this.isAuthorOfViewedActivity) {
-                this.content += '<u>Note:</u> You don\'t own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravaPlus health settings.<br/>';
+                this.content += '<u>Note:</u> You don\'t own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravistiX health settings.<br/>';
                 this.content += 'This allows you to analyse your heart capacity with the data recorded on the activity of this athlete.<br/><br/>';
             }
 
@@ -127,6 +127,9 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
+            
+            // Other
+            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
         }
     }
 });

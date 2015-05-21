@@ -84,7 +84,7 @@ Helper.setToStorage = function(extensionId, storageType, key, value, callback) {
 
     // Sending message to background page
     chrome.runtime.sendMessage(extensionId, {
-            method: StravaPlus.setToStorageMethod,
+            method: StravistiX.setToStorageMethod,
             params: {
                 storage: storageType,
                 'key': key,
@@ -100,7 +100,7 @@ Helper.setToStorage = function(extensionId, storageType, key, value, callback) {
 Helper.getFromStorage = function(extensionId, storageType, key, callback) {
     // Sending message to background page
     chrome.runtime.sendMessage(extensionId, {
-            method: StravaPlus.getFromStorageMethod,
+            method: StravistiX.getFromStorageMethod,
             params: {
                 storage: storageType,
                 'key': key
