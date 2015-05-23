@@ -9,6 +9,40 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
         modify: function() {
             base.modify.call(this); // Super call
+
+            this.placeSummaryPanel(function() {
+                // Summary panel has been placed...
+                // Add Show extended statistics to page
+                
+                this.placeExtendedStatsButton(function() {
+                    // Button has been placed...
+                });
+
+            }.bind(this));
+        },
+
+
+        insertContentSummaryGridContent: function() {
+
+            base.insertContentSummaryGridContent.call(this); // Super call
+
+            var speedUnitPerhour = this.speedUnitsData[0];
+            var speedUnitFactor = this.speedUnitsData[1];
+            var distanceUnits = this.speedUnitsData[2];
+
+            // Speed and pace
+            var q3Move = '-';
+            if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
+                q3Move = Helper.secondsToHHMMSS((this.analysisData_.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', '');
+                this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+            }
+
+            // ... 
+            var climbSpeed = '-';
+            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
+                climbSpeed = Helper.secondsToHHMMSS((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0)).replace('00:', '');
+            }
+            this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', speedUnitPerhour, 'displayAdvancedGradeData');
         },
 
         setDataViewsNeeded: function() {
@@ -33,7 +67,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 runningCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(runningCadenceDataView);
             }
-            
+
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 var runnningGradeDataView = new RunnningGradeDataView(this.analysisData_.gradeData, '%');
                 runnningGradeDataView.setAppResources(this.appResources_);

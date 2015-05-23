@@ -8,6 +8,38 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
 
         modify: function() {
             base.modify.call(this); // Super call
+
+            this.placeSummaryPanel(function() {
+                // Summary panel has been placed...
+
+                // Add Show extended statistics to page
+                this.placeExtendedStatsButton(function() {
+                    // Button has been placed...
+                });
+
+            }.bind(this));
+        },
+
+        insertContentSummaryGridContent: function() {
+
+            base.insertContentSummaryGridContent.call(this); // Super call
+
+            var speedUnitPerhour = this.speedUnitsData[0];
+            var speedUnitFactor = this.speedUnitsData[1];
+
+            // Speed and pace
+            var q3Move = '-';
+            if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
+                q3Move = (this.analysisData_.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1);
+                this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Speed', speedUnitPerhour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData_.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1) + ' )</span>', 'displayAdvancedSpeedData');
+            }
+
+            // ... 
+            var climbSpeed = '-';
+            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
+                climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
+            }
+            this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
         },
 
         setDataViewsNeeded: function() {
