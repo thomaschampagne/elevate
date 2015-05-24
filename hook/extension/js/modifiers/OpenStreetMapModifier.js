@@ -80,5 +80,3 @@ OpenStreetMapModifier.prototype = {
         vv_flipMap(map);
     }
 };
-
-// select satellite view first: $('[data-map-type-id=satellite]').click()
