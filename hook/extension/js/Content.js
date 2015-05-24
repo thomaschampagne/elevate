@@ -185,6 +185,7 @@ var jsDependencies = [
     'js/modifiers/ActivityScrollingModifier.js',
     'js/modifiers/RemoteLinksModifier.js',
     'js/modifiers/OpenStreetMapModifier.js',
+    'js/modifiers/WindyTyModifier.js',
     'js/modifiers/DefaultLeaderboardFilterModifier.js',
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',

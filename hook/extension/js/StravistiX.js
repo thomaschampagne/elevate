@@ -58,6 +58,7 @@ StravistiX.prototype = {
         this.handleMenu_();
         this.handleRemoteLinks_();
         this.handleOpenStreetMapModifier_();
+        this.handleWindyTyModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
@@ -199,6 +200,18 @@ StravistiX.prototype = {
         openStreetMapModifier.modify();
     },
 
+    handleWindyTyModifier_: function() {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
+
+        var windyTyModifier = new WindyTyModifier(this.activityId_);
+        windyTyModifier.modify();
+    },
 
 
     /**
