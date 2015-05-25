@@ -196,7 +196,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleOpenStreetMapModifier_()");
 
-        var openStreetMapModifier = new OpenStreetMapModifier();
+        var openStreetMapModifier = new OpenStreetMapModifier(this.appResources_);
         openStreetMapModifier.modify();
     },
 
@@ -214,7 +214,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
 
-        var windyTyModifier = new WindyTyModifier(this.activityId_);
+        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_);
         windyTyModifier.modify();
     },
 

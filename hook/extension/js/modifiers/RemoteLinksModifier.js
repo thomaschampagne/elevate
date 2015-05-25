@@ -46,7 +46,7 @@ RemoteLinksModifier.prototype = {
         // Activity page
         // Adding remote view links on left panel
         var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
-        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'>Remote Views</span> <img width='12px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
+        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'>Remote Views</span> <img style='vertical-align:middle;width:16px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
         htmlRemoteViewForActivity += "<ul>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
