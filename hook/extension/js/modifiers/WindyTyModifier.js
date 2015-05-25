@@ -16,10 +16,7 @@ WindyTyModifier.prototype = {
         }
 
         this.getActivityBaryCenter(function(baryCenterPosition) {
-
             this.baryCenterPosition = baryCenterPosition;
-
-            console.debug(baryCenterPosition);
             this.modifyPage_();
         }.bind(this));
 
@@ -108,6 +105,9 @@ WindyTyModifier.prototype = {
     },
 
     showWeather: function(type) {
+
+        var date = new Date(pageView.activity().get('startDateLocal') * 1000);
+        
         $.fancybox({
             'width': '100%',
             'height': '100%',
@@ -115,7 +115,7 @@ WindyTyModifier.prototype = {
             'transitionIn': 'fade',
             'transitionOut': 'fade',
             'type': 'iframe',
-            'content': '<iframe src="https://embed.windyty.com/?surface,' + type + ',now,' + this.baryCenterPosition.lat() + ',' + this.baryCenterPosition.lon() + ',20,,,," width="1000" height="700" frameborder="0"></iframe>'
+            'content': '<iframe src="https://embed.windyty.com/?surface,' + type + ',' + date.toISOString().split('T')[0] + ',' + this.baryCenterPosition.lat() + ',' + this.baryCenterPosition.lon() + ',20,,,," width="1000" height="700" frameborder="0"></iframe>'
         });
     }
 

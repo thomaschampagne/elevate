@@ -207,6 +207,11 @@ StravistiX.prototype = {
             return;
         }
 
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+
         if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
 
         var windyTyModifier = new WindyTyModifier(this.activityId_);
