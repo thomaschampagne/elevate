@@ -1,7 +1,9 @@
 /**
  *   OpenStreetMapModifier is responsible of ...
  */
-function OpenStreetMapModifier() {}
+function OpenStreetMapModifier(appResources) {
+    this.appResources = appResources;
+}
 
 /**
  * Define prototype
@@ -29,7 +31,7 @@ OpenStreetMapModifier.prototype = {
         ];
 
         var htmlOsmMaps = "<li class='group'>";
-        htmlOsmMaps += "<div class='title'><span style='font-size: 14px;'><a id='stravistix_osmListShow'>OpenStreetMap</a></span></div>";
+        htmlOsmMaps += "<div class='title'><span style='font-size: 14px;'><a id='stravistix_osmListShow'>OSM Maps</a></span>  <img style='vertical-align:middle;width:16px' src='" + this.appResources.mapIcon + "'/></div>";
         htmlOsmMaps += "<ul style='display: none;' id='stravistix_osmList'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlOsmMaps += "<li>";
