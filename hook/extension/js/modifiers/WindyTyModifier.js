@@ -66,7 +66,8 @@ WindyTyModifier.prototype = {
         var remoteViewActivityLinksArray = [
             ['Wind', 'wind'],
             ['Temp', 'temp'],
-            ['Clouds', 'clouds']
+            ['Clouds', 'clouds'],
+            ['Humidity', 'rh'],
         ];
 
         var htmlWheather = "<li class='group'>";
