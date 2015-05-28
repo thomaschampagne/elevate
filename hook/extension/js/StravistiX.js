@@ -58,6 +58,7 @@ StravistiX.prototype = {
         this.handleMenu_();
         this.handleRemoteLinks_();
         this.handleOpenStreetMapModifier_();
+        this.handleWindyTyModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
@@ -132,16 +133,19 @@ StravistiX.prototype = {
     handleUpdateRibbon_: function() {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
-        var message = '';
+        var message = '<h5><strong>New Features:</strong></h5>';
         // message += '<h6>- Exporting segment effort as Virtual Partner for your GPS through activity page</h6>';
         // message += '<h6><strong>Since 0.6.1:</strong></h6>';
         // message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
         // message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
         // message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
-        message += '<h5>- Added average speed while climbing, on flat and downhill for extended grade data</h5>';
-        message += '<h5>- Added summary panel for some extended data in actitivies</h5>';
-        message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
+        message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
+        message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
+        // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
+        message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += 'Donate to help this project';
+        message += '</a>';
+        // message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
         $.fancybox('<h2>' + title + '</h2>' + message);
     },
@@ -195,10 +199,27 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleOpenStreetMapModifier_()");
 
-        var openStreetMapModifier = new OpenStreetMapModifier();
+        var openStreetMapModifier = new OpenStreetMapModifier(this.appResources_);
         openStreetMapModifier.modify();
     },
 
+    handleWindyTyModifier_: function() {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
+
+        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_);
+        windyTyModifier.modify();
+    },
 
 
     /**

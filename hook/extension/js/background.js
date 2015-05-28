@@ -42,13 +42,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (details.reason == "install") {
 
         chrome.tabs.create({
-
-            url: chrome.extension.getURL('/options/app/index.html#/')
-
+            url: 'http://thomaschampagne.github.io/stravistix/'
         }, function(tab) {
-
-            console.log("First install. Display settings");
-
+            console.log("First install. Display site");
+            chrome.tabs.create({
+                url: chrome.extension.getURL('/options/app/index.html#/')
+            }, function(tab) {
+                console.log("First install. Display settings");
+            });
         });
 
         // On install too: persist that extension has been updated.
@@ -68,6 +69,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
         var thisVersion = chrome.runtime.getManifest().version;
 
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+
+        chrome.tabs.create({
+            url: 'http://thomaschampagne.github.io/stravistix/?update=' + thisVersion
+        }, function(tab) {
+            console.log("Updated. Display site");
+        });
 
         // Persist that extension has been updated.
         var storageManager = new StorageManager();
