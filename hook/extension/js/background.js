@@ -70,12 +70,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
-        chrome.tabs.create({
-            url: 'http://thomaschampagne.github.io/stravistix/?update=' + thisVersion
-        }, function(tab) {
-            console.log("Updated. Display site");
-        });
-
         // Persist that extension has been updated.
         var storageManager = new StorageManager();
         storageManager.storageType = StorageManager.storageSyncType;
