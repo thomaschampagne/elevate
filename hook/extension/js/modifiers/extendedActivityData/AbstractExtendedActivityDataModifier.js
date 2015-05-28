@@ -21,6 +21,8 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
             this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == this.athleteId_);
 
+            this.speedUnitsData = this.getSpeedUnitData();
+
             this.setDataViewsNeeded();
         },
 
@@ -33,45 +35,13 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 this.content += view.getContent();
             }.bind(this));
 
-
-            this.placeSummaryPanel(function() {
-                // Summary panel has been placed...
-
-                // Add Show extended statistics to page
-                this.placeExtendedStatsButton(function() {
-                    // Button has been placed...
-                });
-
-            }.bind(this));
-
         },
-        //this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% climbing', '%', 'displayAdvancedGradeData');
+
         placeSummaryPanel: function(panelAdded) {
 
-            this.makeSummaryGrid(2, 2);
+            this.makeSummaryGrid(2, 3);
 
-            // Insert summary data
-            var moveRatio = '-';
-            if (this.analysisData_.moveRatio && this.userSettings_.displayActivityRatio) {
-                moveRatio = this.analysisData_.moveRatio.toFixed(2);
-            }
-            this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
-
-            // ...
-            var TRIMP = activityHeartRateReserve = '-';
-            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0);
-                activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
-            }
-            this.insertContentAtGridPosition(1, 0, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(0, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
-
-            // ...
-            var gradeData = '-';
-            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                gradeData = Helper.secondsToHHMMSS(this.analysisData_.gradeData.upFlatDownInSeconds.up);
-            }
-            this.insertContentAtGridPosition(1, 1, gradeData, 'Time climbing', '', 'displayAdvancedGradeData');
+            this.insertContentSummaryGridContent();
 
             $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {
                 // Grid placed
@@ -147,6 +117,33 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
             }
         },
 
+        insertContentSummaryGridContent: function() {
+            // Insert summary data
+            var moveRatio = '-';
+            if (this.analysisData_.moveRatio && this.userSettings_.displayActivityRatio) {
+                moveRatio = this.analysisData_.moveRatio.toFixed(2);
+            }
+            this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
+
+            // ...
+            var TRIMP = activityHeartRateReserve = '-';
+            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
+                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
+                activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
+            }
+            this.insertContentAtGridPosition(0, 1, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+
+            // ...
+            var climbTime = '-';
+            if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
+                climbTime = Helper.secondsToHHMMSS(this.analysisData_.gradeData.upFlatDownInSeconds.up);
+            }
+
+            this.insertContentAtGridPosition(0, 2, climbTime, 'Time climbing', '', 'displayAdvancedGradeData');
+
+        },
+
 
         /**
          * Affect default view needed
@@ -170,6 +167,14 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(heartRateDataView);
             }
-        }
+        },
+
+        getSpeedUnitData: function() {
+            var measurementPreference = currentAthlete.get('measurement_preference');
+            var units = (measurementPreference == 'meters') ? 'km' : 'mi';
+            var speedUnitPerhour = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
+            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.62137;
+            return [speedUnitPerhour, speedUnitFactor, units];
+        },
     }
 });
