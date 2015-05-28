@@ -83,7 +83,20 @@
         </footer>
 
     </section>
+    <script type="text/javascript">
+    window.onload = function () {
 
+        var param = window.location.search.replace("?", "");
+        
+        if(param.includes('update')) {
+
+            var version = param.split('=')[1];
+            console.log('update to '+ version); 
+
+            alert('StravistiX extension has been updated to ' + version + '. For your information here is the dedicated website you can share to your sports mates ;)');
+        }
+    }
+    </script>
 
 </body>
 
