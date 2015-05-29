@@ -139,6 +139,7 @@ StravistiX.prototype = {
         // message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
         // message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
         // message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
+        message += '<h5>- <strong>Hotfix:</strong> on updates: remove opening chrome tab to <i><a target="_blank"href="http://thomaschampagne.github.io/stravistix">stravistix website</a></i>. A bit spammy... sry...</h5>';
         message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
