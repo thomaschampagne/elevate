@@ -194,6 +194,7 @@ var jsDependencies = [
     'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
+	'js/modifiers/AthleteStatsModifier.js',
 
     // Extended data views
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
