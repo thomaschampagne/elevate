@@ -211,6 +211,10 @@ StravistiX.prototype = {
             return;
         }
 
+        if (!window.pageView) {
+            return;
+        }
+
         // Avoid running Extended data at the moment
         if (window.pageView.activity().attributes.type != "Ride") {
             return;
@@ -392,6 +396,14 @@ StravistiX.prototype = {
 
             }.bind(this)
         );
+
+        // Send opened activity type to ga for stats
+        var updatedToEvent = {
+            categorie: 'Analyse',
+            action: 'openedActivityType',
+            name: activityType
+        };
+        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
     },
 
     /**

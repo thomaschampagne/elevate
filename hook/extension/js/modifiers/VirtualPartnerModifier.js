@@ -12,6 +12,10 @@ VirtualPartnerModifier.prototype = {
 
     modify: function modify() {
 
+        if(!Strava.Labs) {
+            return;
+        }
+
         var view = Strava.Labs.Activities.SegmentLeaderboardView;
 
         if (!view) {
