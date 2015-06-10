@@ -37,12 +37,12 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             }
 
-            // ... 
+            // Avg climb pace
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 climbSpeed = Helper.secondsToHHMMSS((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0)).replace('00:', '');
+                this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', speedUnitPerhour, 'displayAdvancedGradeData');
             }
-            this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', speedUnitPerhour, 'displayAdvancedGradeData');
         },
 
         setDataViewsNeeded: function() {
