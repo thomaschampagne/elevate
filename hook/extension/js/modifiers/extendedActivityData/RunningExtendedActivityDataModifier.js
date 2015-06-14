@@ -13,7 +13,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             this.placeSummaryPanel(function() {
                 // Summary panel has been placed...
                 // Add Show extended statistics to page
-                
+
                 this.placeExtendedStatsButton(function() {
                     // Button has been placed...
                 });
@@ -74,6 +74,14 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(runnningGradeDataView);
             }
+            
+            if (this.analysisData_.elevationData) {
+                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
+                elevationDataView.setAppResources(this.appResources_);
+                elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(elevationDataView);
+            }
+
         }
     }
 });
