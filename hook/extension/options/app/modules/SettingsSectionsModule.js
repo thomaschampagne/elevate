@@ -7,7 +7,7 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Move Ratio',
         optionLabels: ['Cycling', 'Running'],
-        optionHtml: 'Add your activity ratio in activity page. Try to always reach the value of <strong>1</strong>. The value <strong>1</strong> means that you got no rest during your cycling activity. <br /><br /><strong>MOVE YOURSELF !!</strong>',
+        optionHtml: 'Add your activity ratio in activity page. Try to always reach the value of <strong>1</strong>. The value <strong>1</strong> means that you got no rest during your activity. <br /><br /><strong>MOVE YOURSELF !!</strong>',
     }, {
         optionKey: 'displayMotivationScore',
         optionType: 'checkbox',
