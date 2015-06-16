@@ -22,9 +22,6 @@ VirtualPartnerModifier.prototype = {
             return;
         }
         
-        // console.debug('VirtualPartnerModifier on ' + this.activityId);
-        // console.debug('VirtualPartnerModifier on effort ' + $('.analysis-link-js.btn-xs.button').attr( 'data-segment-effort-id'));
-
         var functionRender = view.prototype.render;
 
         var self = this;
