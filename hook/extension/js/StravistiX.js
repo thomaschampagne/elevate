@@ -144,7 +144,9 @@ StravistiX.prototype = {
         // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        message += '<h5>- Improve weather accuracy. Feature coming soon for Running...</h5>';
+        message += '<h5>- NEW extended data: Elevation stats, graph and table. Elevation zones customizable in settings.</h5>';
+        message += '<h5><strong>Currently working on big update:</strong></h5>';
+        message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += 'Donate to help this project';
         message += '</a>';
