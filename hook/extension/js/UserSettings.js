@@ -276,7 +276,39 @@ var userSettings = {
         }, {
             from: 11,
             to: 15
+        }],
+        elevation: [{
+            from: 0,
+            to: 125
+        }, {
+            from: 125,
+            to: 250
+        }, {
+            from: 250,
+            to: 500
+        }, {
+            from: 500,
+            to: 750
+        }, {
+            from: 750,
+            to: 1000
+        }, {
+            from: 1000,
+            to: 1500
+        }, {
+            from: 1500,
+            to: 2000
+        }, {
+            from: 2000,
+            to: 2500
+        }, {
+            from: 2500,
+            to: 3000
+        }, {
+            from: 3000,
+            to: 3500
         }]
+
 
     },
     remoteLinks: true,
