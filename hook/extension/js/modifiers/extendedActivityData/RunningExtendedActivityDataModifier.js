@@ -13,7 +13,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             this.placeSummaryPanel(function() {
                 // Summary panel has been placed...
                 // Add Show extended statistics to page
-                
+
                 this.placeExtendedStatsButton(function() {
                     // Button has been placed...
                 });
@@ -37,12 +37,12 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             }
 
-            // ... 
+            // Avg climb pace
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 climbSpeed = Helper.secondsToHHMMSS((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0)).replace('00:', '');
+                this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', '/' + distanceUnits, 'displayAdvancedGradeData');
             }
-            this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', speedUnitPerhour, 'displayAdvancedGradeData');
         },
 
         setDataViewsNeeded: function() {
@@ -74,6 +74,14 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(runnningGradeDataView);
             }
+            
+            if (this.analysisData_.elevationData) {
+                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
+                elevationDataView.setAppResources(this.appResources_);
+                elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(elevationDataView);
+            }
+
         }
     }
 });
