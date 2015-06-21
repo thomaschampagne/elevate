@@ -43,6 +43,13 @@ app.controller("XtdZonesSettingsController", function($scope) {
         step: 0.1,
         min: -9999,
         max: 9999
+    }, {
+        name: 'Elevation',
+        value: 'elevation',
+        units: 'm',
+        step: 5,
+        min: 0,
+        max: 9999
     }];
 
     ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {

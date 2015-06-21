@@ -78,6 +78,14 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(cyclingGradeDataView);
             }
+
+            if (this.analysisData_.elevationData) {
+                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
+                elevationDataView.setAppResources(this.appResources_);
+                elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(elevationDataView);
+            }
+
         }
     }
 });
