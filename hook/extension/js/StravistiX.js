@@ -68,6 +68,7 @@ StravistiX.prototype = {
 
         // Bike
         this.handleExtendedActivityData_();
+        this.handleExtendedSegmentEffortData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
 
@@ -360,7 +361,7 @@ StravistiX.prototype = {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
+        if (env.debugMode) console.log("Execute handleExtendedData_()");
 
         this.activityProcessor_.setActivityType(activityType);
 
@@ -370,10 +371,10 @@ StravistiX.prototype = {
             this.userSettings_.userRestHr,
             this.userSettings_.userMaxHr,
             this.userSettings_.userFTP,
-
+            null, // No bounds given, full activity requested
             function(analysisData) { // Callback when analysis data has been computed
 
-                var extendedActivityDataModifier = null;
+                var extendedDataModifier = null;
 
                 var basicInfos = {
                     activityName: this.vacuumProcessor_.getActivityName(),
@@ -382,20 +383,20 @@ StravistiX.prototype = {
 
                 switch (activityType) {
                     case 'Ride':
-                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
+                        extendedDataModifier = new CyclingExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
                         break;
                     case 'Run':
-                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
+                        extendedDataModifier = new RunningExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
                         break;
                     default:
-                        // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
+                        // extendedDataModifier = new GenericExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
                         var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
                         $('.inline-stats.section').parent().children().last().after(html);
                         break;
                 }
 
-                if (extendedActivityDataModifier) {
-                    extendedActivityDataModifier.modify();
+                if (extendedDataModifier) {
+                    extendedDataModifier.modify();
                 }
 
             }.bind(this)
@@ -408,6 +409,121 @@ StravistiX.prototype = {
             name: activityType
         };
         _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+    },
+
+    handleExtendedSegmentEffortData_: function() {
+
+        if (!Strava.Labs) {
+            return;
+        }
+
+        var activityType = pageView.activity().get('type');
+
+        // Skip manual activities
+        if (activityType === 'Manual') {
+            return;
+        }
+
+
+        var view = Strava.Labs.Activities.SegmentLeaderboardView;
+
+        if (!view) {
+            return;
+        }
+
+        var functionRender = view.prototype.render;
+
+        var self = this;
+
+        view.prototype.render = function() {
+
+            var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
+
+            var effortId = window.location.pathname.split('/')[4];
+
+            // TODO retreive effortId and activity when url is formated like: "https://www.strava.com/activities/175957511#4107541330"
+
+            console.debug('Do SE stuff on effort: ' + effortId + ', act id: ' + this.activityId_);
+
+            // TODO Refactor Ajax call
+
+            // Get segment effort bounds
+            var segmentInfosResponse;
+            $.when(
+                $.ajax({
+                    url: '/segment_efforts/' + effortId,
+                    type: 'GET',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                    },
+                    dataType: 'json',
+                    success: function(xhrResponseText) {
+                        segmentInfosResponse = xhrResponseText;
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                })
+
+            ).then(function() {
+
+                console.debug(segmentInfosResponse);
+
+                console.debug("name: " + segmentInfosResponse.name + " from: " + segmentInfosResponse.start_index + " to: " + segmentInfosResponse.end_index);
+
+                // Call Activity Processor with bounds
+                if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
+                    return;
+                }
+
+                self.activityProcessor_.getAnalysisData(
+                    self.activityId_,
+                    self.userSettings_.userGender,
+                    self.userSettings_.userRestHr,
+                    self.userSettings_.userMaxHr,
+                    self.userSettings_.userFTP,
+
+                    [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
+
+                    function(analysisData) { // Callback when analysis data has been computed
+
+                        console.log(analysisData);
+
+                        var extendedDataModifier = null;
+
+                        var basicInfos = {
+                            activityName: self.vacuumProcessor_.getActivityName(),
+                            activityTime: self.vacuumProcessor_.getActivityTime()
+                        }
+                        /*
+                        switch (activityType) {
+                            case 'Ride':
+                                extendedDataModifier = new CyclingExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos);
+                                break;
+                            case 'Run':
+                                extendedDataModifier = new RunningExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos);
+                                break;
+                            default:
+                                // extendedDataModifier = new GenericExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
+                                var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                                $('.inline-stats.section').parent().children().last().after(html);
+                                break;
+                        }
+
+                        if (extendedDataModifier) {
+                            extendedDataModifier.modify();
+                        }
+                        */
+                    }.bind(this)
+                );
+                // TODO on Activity Processor callback Call right and good type Xtd data modifier with segment effort param. The modifer will place the button 
+
+            });
+
+
+            return r;
+        };
+
     },
 
     /**

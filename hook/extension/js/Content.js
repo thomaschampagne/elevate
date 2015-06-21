@@ -211,10 +211,10 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/RunnningGradeDataView.js',
 
     // Extended data modifiers
-    'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
+    'js/modifiers/extendedActivityData/AbstractExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/CyclingExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/RunningExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/GenericExtendedDataModifier.js',
 
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',

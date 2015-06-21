@@ -1,4 +1,4 @@
-var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
+var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
     return {
 

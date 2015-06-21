@@ -1,4 +1,4 @@
-var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(base) {
 
     return {
 

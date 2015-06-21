@@ -31,19 +31,27 @@ ActivityProcessor.prototype = {
     /**
      *
      */
-    getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, callback) {
+    getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, bounds, callback) {
 
         if (!this.activityType) {
             console.error('No activity type set for ActivityProcessor');
         }
 
-        // Find in cache first is data exist
-        var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+        // We are not using cache when bounds are given
+        var useCache = true;
+        if (!_.isEmpty(bounds)) {
+            useCache = false;
+        }
 
-        if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
-            if (env.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
-            callback(cacheResult);
-            return;
+        if (useCache) {
+            // Find in cache first is data exist
+            var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+
+            if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
+                console.log("Using existing activity cache mode");
+                callback(cacheResult);
+                return;
+            }
         }
 
         userFTP = parseInt(userFTP);
@@ -51,11 +59,26 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
+
+            if (bounds && bounds[0] && bounds[1]) {
+                activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+                activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+                activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+                activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+                activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+                activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+                activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+            }
+
+            console.debug(activityStream);
+
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
-            if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
+            if (useCache) {
+                console.log("Creating activity cache");
+                localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
+            }
 
-            localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
             callback(result);
 
         }.bind(this));

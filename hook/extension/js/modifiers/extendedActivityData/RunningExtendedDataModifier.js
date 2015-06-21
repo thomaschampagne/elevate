@@ -1,4 +1,4 @@
-var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(base) {
 
     return {
 
