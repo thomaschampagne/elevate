@@ -2,7 +2,7 @@
  *   AthleteStatsModifier is responsible of ...
  */
 function AthleteStatsModifier() {
-    this.cacheKey_ = 'activitiesCount';
+    this.cacheKey_ = 'activitiesHistoryData';
 }
 
 /**
@@ -13,9 +13,7 @@ AthleteStatsModifier.prototype = {
     modify: function modify() {
 
       var self = this,
-          count = 0,
           total = 0,
-          page = 1,
           i,
           max,
           url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
