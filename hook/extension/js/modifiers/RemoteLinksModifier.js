@@ -37,8 +37,9 @@ RemoteLinksModifier.prototype = {
     modifyActivityPage_: function modifyActivityPage_() {
 
         var remoteViewActivityLinksArray = [
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX'],
-            ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', ''],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Activity shorcut", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
+            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Seg. Compare", '#', '', 'onclick="javascript:stravistiX.remoteLinksModifier.veloviewerSegmentCompare(window.event)"'],
+            ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', '', ''],
             ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', '']
         ];
 
@@ -50,7 +51,7 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "<ul>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
-            htmlRemoteViewForActivity += "<a data-menu='' target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
+            htmlRemoteViewForActivity += "<a data-menu='' " + this[3] + " target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
         });
         htmlRemoteViewForActivity += "</ul>";
         htmlRemoteViewForActivity += "</li>";
@@ -61,6 +62,23 @@ RemoteLinksModifier.prototype = {
         if (this.authorOfActivity) {
             var htmlForTCXExport = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
             $(".actions-menu .slide-menu .options").append(htmlForTCXExport);
+        }
+    },
+
+    veloviewerSegmentCompare: function(evt) {
+
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        if (typeof(vv_getData) === 'undefined') {
+            var s = document.createElement('script');
+            s.src = 'https://s3.amazonaws.com/s3.veloviewer.com/js/compareSegments.js?v=' + Math.floor(Math.random() * 1000);
+            document.getElementsByTagName('head')[0].appendChild(s);
+            s.onload = function() {
+                vv_getData();
+            }
+        } else {
+            vv_getData();
         }
     },
 
