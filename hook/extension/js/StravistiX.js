@@ -80,7 +80,7 @@ StravistiX.prototype = {
 
         this.handleVirtualPartner_();
 
-		this.handleAthletesStats();
+		    this.handleAthletesStats();
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
@@ -104,7 +104,7 @@ StravistiX.prototype = {
      */
     handleExtensionHasJustUpdated_: function() {
 
-        // Clear localstorage 
+        // Clear localstorage
         // Especially for activies data stored in cache
         console.log("ExtensionHasJustUpdated, localstorage clear");
         localStorage.clear();
@@ -156,18 +156,18 @@ StravistiX.prototype = {
     /**
      *
      */
-    handleAthletesStats: function() {        
+    handleAthletesStats: function() {
 
         // If we are not on the athletes page then return...
-        if (!window.location.pathname.match(new RegExp("\\athletes/" + this.athleteId_ + "$", "g"))) {
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
             return;
         }
-        
+
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
         var athleteStatsModifier = new AthleteStatsModifier();
         athleteStatsModifier.modify();
-    }, 
+    },
 
     /**
      *
