@@ -37,18 +37,16 @@ RemoteLinksModifier.prototype = {
     modifyActivityPage_: function modifyActivityPage_() {
 
         var remoteViewActivityLinksArray = [
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Activity shorcut", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
-            ["<img width='16px' src='" + this.appResources_.veloviewerIcon + "'/> Seg. Compare", '#', '', 'onclick="javascript:stravistiX.remoteLinksModifier.veloviewerSegmentCompare(window.event)"'],
-            ["<img width='16px' src='" + this.appResources_.labIcon + "'/> FlyBy", 'http://labs.strava.com/flyby/viewer/#', '', ''],
-            ["<img width='16px' src='" + this.appResources_.raceshapeIcon + "'/> Surface", 'http://strava-tools.raceshape.com/erea/?url=', '']
+            ["VV Activity shorcut", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
+            ["VV Seg. Compare", '#', '', 'onclick="javascript:stravistiX.remoteLinksModifier.veloviewerSegmentCompare(window.event)"'],
+            ["Surface", 'http://strava-tools.raceshape.com/erea/?url=', '', '']
         ];
-
 
         // Activity page
         // Adding remote view links on left panel
         var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
-        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'>Remote Views</span> <img style='vertical-align:middle;width:16px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
-        htmlRemoteViewForActivity += "<ul>";
+        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'><a id='stravistix_remote_title'>Remote Views</a></span> <img style='vertical-align:middle;width:16px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
+        htmlRemoteViewForActivity += "<ul style='display: none;' id='stravistix_remoteViews'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
             htmlRemoteViewForActivity += "<a data-menu='' " + this[3] + " target='_blank' style='color: #333;' href='" + this[1] + pageView.activity().id + this[2] + "'>" + this[0] + "</a>";
@@ -56,7 +54,29 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "</ul>";
         htmlRemoteViewForActivity += "</li>";
         htmlRemoteViewForActivity = $(htmlRemoteViewForActivity);
-        $("#pagenav").append(htmlRemoteViewForActivity);
+
+        $("#pagenav").append(htmlRemoteViewForActivity).each(function() {
+
+            $('[data-remote-views]').click(function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                self.showWeather(this.getAttribute('data-remote-views'));
+            });
+
+            $('#stravistix_remote_title').click(function(evt) {
+
+                evt.preventDefault();
+                evt.stopPropagation();
+
+                if ($('#stravistix_remoteViews').is(':visible')) {
+                    $('#stravistix_remoteViews').slideUp();
+                } else {
+                    $('#stravistix_remoteViews').slideDown();
+                }
+
+            });
+
+        });
 
         // Add tcx export
         if (this.authorOfActivity) {
