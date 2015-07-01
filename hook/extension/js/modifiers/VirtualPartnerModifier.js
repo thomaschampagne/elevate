@@ -12,27 +12,27 @@ VirtualPartnerModifier.prototype = {
 
     modify: function modify() {
 
+        if(!Strava.Labs) {
+            return;
+        }
+
         var view = Strava.Labs.Activities.SegmentLeaderboardView;
 
         if (!view) {
             return;
         }
         
-        // console.debug('VirtualPartnerModifier on ' + this.activityId);
-        // console.debug('VirtualPartnerModifier on effort ' + $('.analysis-link-js.btn-xs.button').attr( 'data-segment-effort-id'));
-
         var functionRender = view.prototype.render;
 
         var self = this;
-
 
         view.prototype.render = function() {
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            if (!_.isEmpty($('.raceshape-btn'))) {
+            if ($('.stravistix_exportVpu').size() < 1) {
 
-                var exportButtonHtml = '<a class="btn-block btn-xs button raceshape-btn" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
+                var exportButtonHtml = '<a class="btn-block btn-xs button raceshape-btn stravistix_exportVpu" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
 
                 $('.raceshape-btn').first().after(exportButtonHtml).each(function() {
 
