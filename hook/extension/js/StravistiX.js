@@ -80,7 +80,7 @@ StravistiX.prototype = {
 
         this.handleVirtualPartner_();
 
-		    this.handleAthletesStats();
+        this.handleAthletesStats();
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
@@ -135,16 +135,21 @@ StravistiX.prototype = {
     handleUpdateRibbon_: function() {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
-        var message = '<h5><strong>New Features:</strong></h5>';
+        var message = '';
+        // var message = '<h5><strong>New Features:</strong></h5>';
         // message += '<h6>- Exporting segment effort as Virtual Partner for your GPS through activity page</h6>';
         // message += '<h6><strong>Since 0.6.1:</strong></h6>';
         // message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
         // message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
         // message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
-        message += '<h5>- <strong>Hotfix:</strong> on updates: remove opening chrome tab to <i><a target="_blank"href="http://thomaschampagne.github.io/stravistix">stravistix website</a></i>. A bit spammy... sry...</h5>';
-        message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
-        message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
+        // message += '<h5>- <strong>Hotfix:</strong> on updates: remove opening chrome tab to <i><a target="_blank"href="http://thomaschampagne.github.io/stravistix">stravistix website</a></i>. A bit spammy... sry...</h5>';
+        // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
+        // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
+        message += '<h5>- NEW: Year progressions to current month/day panel. See your progress for each beginning of year to current month and day. Go to "My profile" to see feature</h5>';
+        message += '<h5>- NEW: Veloviewer Segments Comparaison remote link into activities</h5>';
+        message += '<h5><strong>Currently working on big update:</strong></h5>';
+        message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += 'Donate to help this project';
         message += '</a>';
@@ -205,8 +210,8 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
-        remoteLinksModifier.modify();
+        this.remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
+        this.remoteLinksModifier.modify();
     },
 
     handleOpenStreetMapModifier_: function() {
@@ -226,6 +231,10 @@ StravistiX.prototype = {
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!window.pageView) {
             return;
         }
 
@@ -410,6 +419,14 @@ StravistiX.prototype = {
 
             }.bind(this)
         );
+
+        // Send opened activity type to ga for stats
+        var updatedToEvent = {
+            categorie: 'Analyse',
+            action: 'openedActivityType',
+            name: activityType
+        };
+        _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
     },
 
     /**
