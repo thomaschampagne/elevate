@@ -80,6 +80,8 @@ StravistiX.prototype = {
 
         this.handleVirtualPartner_();
 
+        this.handleAthletesStats();
+
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
     },
@@ -102,7 +104,7 @@ StravistiX.prototype = {
      */
     handleExtensionHasJustUpdated_: function() {
 
-        // Clear localstorage 
+        // Clear localstorage
         // Especially for activies data stored in cache
         console.log("ExtensionHasJustUpdated, localstorage clear");
         localStorage.clear();
@@ -144,7 +146,8 @@ StravistiX.prototype = {
         // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        message += '<h5>- NEW extended data: Elevation stats, graph and table. Elevation zones customizable in settings.</h5>';
+        message += '<h5>- NEW: Year progressions to current month/day panel. See your progress for each beginning of year to current month and day. Go to "My profile" to see feature</h5>';
+        message += '<h5>- NEW: Veloviewer Segments Comparaison remote link into activities</h5>';
         message += '<h5><strong>Currently working on big update:</strong></h5>';
         message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
@@ -153,6 +156,22 @@ StravistiX.prototype = {
         // message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
         $.fancybox('<h2>' + title + '</h2>' + message);
+    },
+
+    /**
+     *
+     */
+    handleAthletesStats: function() {
+
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleAthletesStats()");
+
+        var athleteStatsModifier = new AthleteStatsModifier();
+        athleteStatsModifier.modify();
     },
 
     /**
@@ -191,8 +210,8 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
-        remoteLinksModifier.modify();
+        this.remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
+        this.remoteLinksModifier.modify();
     },
 
     handleOpenStreetMapModifier_: function() {
