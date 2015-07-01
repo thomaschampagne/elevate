@@ -12,25 +12,25 @@ AthleteStatsModifier.prototype = {
 
     modify: function modify() {
 
-      // wait for My Stats load
-      if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
-          window.setTimeout(function() {
-              modify();
-          }, 500);
-          return;
-      }
+        // wait for My Stats load
+        if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
+            window.setTimeout(function() {
+                modify();
+            }, 500);
+            return;
+        }
 
-      var self = this,
-          total = 0,
-          i,
-          max,
-          url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
-          activities = [],
-          requests = [],
-          activitiesFromCache = localStorage.getItem(this.cacheKey_),
-          activitiesFromCacheObject = JSON.parse(activitiesFromCache) || [],
-          progress = $("#progress-goals"),
-          progressThisYear = $("<div class='section'><h3>My progress this year <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li class='last-child'><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
+        var self = this,
+            total = 0,
+            i,
+            max,
+            url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
+            activities = [],
+            requests = [],
+            activitiesFromCache = localStorage.getItem(this.cacheKey_),
+            activitiesFromCacheObject = JSON.parse(activitiesFromCache) || [],
+            progress = $("#progress-goals"),
+            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel allows you to see your progress for each beginning of year to current month and day. Assuming May 25 is today, this panel replies to \"What i accomplished on May 25 of this year compared to the previous years until May 25?\"<br/><br/></div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li class='last-child'><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
         var formatData = function(activities) {
             var formattedData = [],
@@ -106,6 +106,7 @@ AthleteStatsModifier.prototype = {
                     $table.find("tbody").append($(
                         "<tr class='" + (item.year === currentYear ? 'currentyear' : '') + "'>" +
                         "<td>" + item.year + "</td>" +
+                        // "<td><strong>" + item.year + "</strong>/" + ('0' + currentMonth).slice(-2) + "/" + ('0' + currentDay).slice(-2) + "</td>" +
                         "<td><div>" + Helper.formatNumber(item.distance, 0) + " km</div><div><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + "</small></div></td>" +
                         "<td>" + Helper.formatNumber(item.elevation, 0) + " m</td>" +
                         "<td>" + Helper.secondsToDHM(item.time) + "</td></tr>"
@@ -165,5 +166,5 @@ AthleteStatsModifier.prototype = {
     handleProgressStatsForceRefresh_: function handleProgressStatsForceRefresh_() {
         localStorage.removeItem(this.cacheKey_);
         window.location.reload();
-    },
+    }
 };

@@ -80,7 +80,7 @@ StravistiX.prototype = {
 
         this.handleVirtualPartner_();
 
-		    this.handleAthletesStats();
+        this.handleAthletesStats();
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
