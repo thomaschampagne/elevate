@@ -146,6 +146,7 @@ StravistiX.prototype = {
         // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
+        message += '<h5>- Hotfix (0.7.5): Year progressions to current month/day panel sometimes not visible</h5>';
         message += '<h5>- NEW: Year progressions to current month/day panel. See your progress for each beginning of year to current month and day. Go to "My profile" to see feature</h5>';
         message += '<h5>- NEW: Veloviewer Segments Comparaison remote link into activities</h5>';
         message += '<h5><strong>Currently working on big update:</strong></h5>';
