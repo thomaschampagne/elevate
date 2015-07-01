@@ -209,8 +209,8 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        var remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
-        remoteLinksModifier.modify();
+        this.remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
+        this.remoteLinksModifier.modify();
     },
 
     handleOpenStreetMapModifier_: function() {
