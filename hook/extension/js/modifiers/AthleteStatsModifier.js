@@ -12,14 +12,6 @@ AthleteStatsModifier.prototype = {
 
     modify: function modify() {
 
-        // wait for My Stats load
-        if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
-            setTimeout(function() {
-                modify();
-            }, 500);
-            return;
-        }
-
         var self = this,
             total = 0,
             i,
@@ -128,39 +120,43 @@ AthleteStatsModifier.prototype = {
             });
         };
 
-        $(progressThisYear).on("click", "a[data-activity-type]", function(e) {
-            e.preventDefault();
-            var $this = $(this),
-                type = $this.data("activity-type");
-            progressThisYear.find(".athletesStatTable").hide();
-            progressThisYear.find("#athletesStatActivityType" + type).show();
-            progressThisYear.find("a.button").removeClass("selected");
-            $this.addClass("selected");
-        });
+        $("#ytd_year_bike, #ytd_year_run").ready(function() {
 
-        progressThisYear.insertAfter(progress);
-
-        total = parseInt($("div.cycling table td:contains('Rides'):last").next().text() || "0");
-        total = total + parseInt($("div.running table td:contains('Runs'):last").next().text() || "0");
-
-        if (total != activitiesFromCacheObject.length) {
-            for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
-                requests.push($.ajax(url + i));
-            }
-            $.when.apply(self, requests).done(function() {
-                for (i in requests) {
-                    var request = requests[i];
-                    if (request.responseJSON.models) {
-                        activities = activities.concat(request.responseJSON.models);
-                    }
-                }
-                activities = formatData(activities);
-                init(activities);
-                localStorage.setItem(self.cacheKey_, JSON.stringify(activities));
+            $(progressThisYear).on("click", "a[data-activity-type]", function(e) {
+                e.preventDefault();
+                var $this = $(this),
+                    type = $this.data("activity-type");
+                progressThisYear.find(".athletesStatTable").hide();
+                progressThisYear.find("#athletesStatActivityType" + type).show();
+                progressThisYear.find("a.button").removeClass("selected");
+                $this.addClass("selected");
             });
-        } else {
-            init(activitiesFromCacheObject);
-        }
+
+            progressThisYear.insertAfter(progress);
+
+            total = parseInt($("div.cycling table td:contains('Rides'):last").next().text() || "0");
+            total = total + parseInt($("div.running table td:contains('Runs'):last").next().text() || "0");
+
+            if (total != activitiesFromCacheObject.length) {
+                for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
+                    requests.push($.ajax(url + i));
+                }
+                $.when.apply(self, requests).done(function() {
+                    for (i in requests) {
+                        var request = requests[i];
+                        if (request.responseJSON.models) {
+                            activities = activities.concat(request.responseJSON.models);
+                        }
+                    }
+                    activities = formatData(activities);
+                    init(activities);
+                    localStorage.setItem(self.cacheKey_, JSON.stringify(activities));
+                });
+            } else {
+                init(activitiesFromCacheObject);
+            }
+
+        }.bind(this));
     },
 
     handleProgressStatsForceRefresh_: function handleProgressStatsForceRefresh_() {
