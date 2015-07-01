@@ -14,7 +14,7 @@ AthleteStatsModifier.prototype = {
 
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
-            window.setTimeout(function() {
+            setTimeout(function() {
                 modify();
             }, 500);
             return;
