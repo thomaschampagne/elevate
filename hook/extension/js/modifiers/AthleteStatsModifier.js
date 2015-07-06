@@ -140,8 +140,8 @@ AthleteStatsModifier.prototype = {
 
         progressThisYear.insertAfter(progress);
 
-        total = parseInt($("div.cycling table td:contains('Rides'):last").next().text() || "0");
-        total = total + parseInt($("div.running table td:contains('Runs'):last").next().text() || "0");
+        total = parseInt($("div.cycling table tbody:last tr:nth(2) td:last").text() || "0");
+        total = total + parseInt($("div.running table tbody:last tr:last td:last").text() || "0");
 
         if (total != activitiesFromCacheObject.length) {
             for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
