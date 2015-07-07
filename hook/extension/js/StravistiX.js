@@ -70,6 +70,7 @@ StravistiX.prototype = {
         this.handleExtendedActivityData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
+        this.handleActivitySegmentTimeComparison_();
 
         // Run
         this.handleRunningGradeAdjustedPace_();
@@ -494,6 +495,36 @@ StravistiX.prototype = {
 
         }.bind(this));
     },
+    
+    /**
+     *
+     */
+    handleActivitySegmentTimeComparison_: function() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Only cycling is supported
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+        
+        // Only for own activities
+        if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
+            
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier();
+        activitySegmentTimeComparisonModifier.modify();
+    },    
 
     /**
      *
