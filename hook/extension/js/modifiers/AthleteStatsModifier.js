@@ -99,7 +99,7 @@ AthleteStatsModifier.prototype = {
                 var $table = $("<table class='athletesStatTable' id='athletesStatActivityType" + i + "' style='display: none;'><thead><tr><th>Year</th><th>Distance</th><th>Elevation</th><th>Time</th></tr></thead><tbody></tbody></table>");
 
                 years.sort(function(left, right) {
-                    return left.year < right.year;
+                    return right.year - left.year;
                 }).forEach(function(item) {
                     item.distance /= 1000;
 
