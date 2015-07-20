@@ -32,7 +32,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 var komSeconds = Helper.HHMMSStoSeconds(data.kom_time.replace(/[^0-9:]/gi, "")),
                     seconds = data.elapsed_time_raw,
                     difference = (seconds - komSeconds);
-                $timeCell.append("&nbsp;(<span title=\"Compare to the current KOM's time (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
+                $timeCell.append("&nbsp;(<span title=\"Time difference with current KOM (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
 
                 $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
                     data.top_results.sort(function(left, right) {
@@ -73,7 +73,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     }
 
                     difference = (seconds - previousPersonalSeconds);
-                    $timeCell.find("span:last").append("&nbsp;|&nbsp;<span title='Compare to your previous best time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                    $timeCell.find("span:last").append("&nbsp;|&nbsp;<span title='Time difference with your previous best time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                 });
             });
         });
