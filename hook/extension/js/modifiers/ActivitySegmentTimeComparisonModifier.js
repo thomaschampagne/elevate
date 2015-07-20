@@ -30,10 +30,10 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     return;
                 }
                                 
-                var komSeconds = Helper.HHMMSStoSeconds(data.kom_time),
+                var komSeconds = Helper.HHMMSStoSeconds(data.kom_time.replace(/[^0-9:]/gi, "")),
                     seconds = data.elapsed_time_raw,
                     difference = (seconds - komSeconds);
-                $timeCell.append("&nbsp;(<span title='Compare to the current KOM's time (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
+                $timeCell.append("&nbsp;(<span title=\"Compare to the current KOM's time (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
                 
                 $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
                     data.top_results.sort(function(left, right) {
@@ -43,7 +43,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     var currentSegmentEfforDateTime,
                         previousPersonalSeconds,
                         previousPersonalDate,
-                        previousPersonalTime,
                         i,
                         max;
                     
@@ -53,9 +52,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                             currentSegmentEfforDateTime = data.top_results[i].__dateTime;
                         }
                     }
-                    
-                    if (segmentEffortId == 7975330999) debugger;
-                    
+                                        
                     if (!currentSegmentEfforDateTime) {
                         return;
                     }
@@ -68,7 +65,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         if (data.top_results[i].__dateTime < currentSegmentEfforDateTime) {
                             previousPersonalSeconds = data.top_results[i].elapsed_time_raw;
                             previousPersonalDate = data.top_results[i].start_date_local;
-                            previousPersonalTime = data.top_results[i].elapsed_time;
                             break;
                         }
                     }
@@ -78,7 +74,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     }
                     
                     difference = (seconds - previousPersonalSeconds);
-                    $timeCell.find("span:last").append("&nbsp;|&nbsp;<span title='Compare to your previous best time (" + previousPersonalTime + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                    $timeCell.find("span:last").append("&nbsp;|&nbsp;<span title='Compare to your previous best time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                 });
             });
         });
