@@ -43,7 +43,7 @@ Helper.HHMMSStoSeconds = function(str) {
     return s;
 };
 
-Helper.secondsToHHMMSS = function(secondsParam) {
+Helper.secondsToHHMMSS = function(secondsParam, trimLeadingZeros) {
     var sec_num = parseInt(secondsParam, 10); // don't forget the second param
     var hours = Math.floor(sec_num / 3600);
     var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
@@ -58,7 +58,7 @@ Helper.secondsToHHMMSS = function(secondsParam) {
         seconds = "0" + seconds;
     }
     var time = hours + ':' + minutes + ':' + seconds;
-    return time;
+    return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
 };
 
 Helper.upperQuartile = function(valuesSorted) {
@@ -136,4 +136,12 @@ Helper.secondsToDHM = function (sec_num) {
     var minutes = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
     var time    = days + 'd ' + hours + 'h ' + minutes + 'm';
     return time;
-}
+};
+
+Helper.trimLeadingZerosHHMMSS = function(time) {
+    var result = time.replace(/^(0*:)*/, '').replace(/^0*/, '') || "0";
+    if (result.indexOf(":") < 0) {
+        return result + "s";
+    }
+    return result;
+};
