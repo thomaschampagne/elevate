@@ -61,7 +61,7 @@ AthleteStatsModifier.prototype = {
                 return "";
             }
             var formatted = formatFunction ? formatFunction(value) : value;
-            return "<span title='" + (value > 0 ? "+" : "") + formatted + "' style='cursor: help; color:" + (value < 0 ? "red" : (value > 0 ? "green" : "black")) + "'>" + (value < 0 ? "\u25BC" : (value > 0 ? "\u25B2" : "=")) + "</span>";            
+            return "<span title='" + (value < 0 ? "-" : (value > 0 ? "+" : "")) + formatted + "' style='cursor: help; color:" + (value < 0 ? "red" : (value > 0 ? "green" : "black")) + "'>" + (value < 0 ? "\u25BC" : (value > 0 ? "\u25B2" : "=")) + "</span>";            
         };
 
         var processData = function(activities) {
