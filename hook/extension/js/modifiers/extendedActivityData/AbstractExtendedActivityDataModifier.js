@@ -132,7 +132,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
             }
             this.insertContentAtGridPosition(0, 1, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', '%  <span class="summarySubGridTitle">(Max: ' + this.analysisData_.heartRateData.activityHeartRateReserveMax.toFixed(0) + '% @ '+ this.analysisData_.heartRateData.maxHeartRate + 'bpm)</span>', 'displayAdvancedHrData');
 
             // ...
             var climbTime = '-';
