@@ -43,6 +43,17 @@ HidePremiumModifier.prototype = {
         // Setting > My Account > "Go Premium Prove that no one loves pushing harder than you."
         $("div[id='upgrade-account-container']").children().first().hide();
 
+        // Learn more about premium...
+        $('.js-channel-dashboard-right-top.section').hide();
+
+        // Hide improve your time
+        this.hideElementWithInteval_('.btn-xs.button.set-goal', null, 750);
+        this.hideElementWithInteval_('.btn-block.btn-xs.button.training-plans-btn', null, 750);
+
+        // Up sell
+        $('.upsell-sm').hide();
+        
+
         // Setting > My Performance (Full premium tab)
         var element = $("a[href='/settings/performance']");
         if (element.size() > 0) {
@@ -54,7 +65,7 @@ HidePremiumModifier.prototype = {
     /**
      *
      */
-    hideElementWithInteval_: function hideElementWithInteval_(selector, notSelector) {
+    hideElementWithInteval_: function hideElementWithInteval_(selector, notSelector, time) {
         // Hide with interval
         setInterval(function() {
             if (notSelector) {
@@ -62,7 +73,7 @@ HidePremiumModifier.prototype = {
             } else {
                 $(selector).hide();
             }
-        }, 750);
+        }, (time) ? time : 750);
     },
 
 };
