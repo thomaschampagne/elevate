@@ -65,6 +65,7 @@ StravistiX.prototype = {
         this.handleActivityGoogleMapType_();
         this.handleHidePremium_();
         this.handleHideFeed_();
+        this.handleDisplayFlyByFeedModifier_();
 
         // Bike
         this.handleExtendedActivityData_();
@@ -240,7 +241,12 @@ StravistiX.prototype = {
         }
 
         // Avoid running Extended data at the moment
-        if (window.pageView.activity().attributes.type != "Ride") {
+        if (window.pageView.activity().get('type') != "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
             return;
         }
 
@@ -362,6 +368,19 @@ StravistiX.prototype = {
 
         var hideFeedModifier = new HideFeedModifier(this.userSettings_.feedHideChallenges, this.userSettings_.feedHideCreatedRoutes);
         hideFeedModifier.modify();
+    },
+
+    handleDisplayFlyByFeedModifier_: function() {
+
+        // Test if where are on dashboard page
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleDisplayFlyByFeedModifier_()");
+
+        var displayFlyByFeedModifier = new DisplayFlyByFeedModifier();
+        displayFlyByFeedModifier.modify();
     },
 
     /**
@@ -495,7 +514,7 @@ StravistiX.prototype = {
 
         }.bind(this));
     },
-    
+
     /**
      *
      */
@@ -514,17 +533,17 @@ StravistiX.prototype = {
         if (window.pageView.activity().attributes.type != "Ride") {
             return;
         }
-        
+
         // Only for own activities
         if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
             return;
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-            
+
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier();
         activitySegmentTimeComparisonModifier.modify();
-    },    
+    },
 
     /**
      *

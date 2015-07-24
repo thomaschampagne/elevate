@@ -219,6 +219,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
 
     'js/modifiers/HideFeedModifier.js',
+    'js/modifiers/DisplayFlyByFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
