@@ -17,6 +17,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             }, 500);
             return;
         }
+        
+        $("#segments #segment-filter").show();
 
         $("tr[data-segment-effort-id]").each(function() {
             var $row = $(this),
