@@ -93,7 +93,10 @@ ActivityProcessor.prototype = {
         var toughnessScore = this.toughnessScore_(activityStatsMap, activityStream, moveRatio);
 
         // Include speed and pace
-        var moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
+        var moveData = [null, null];
+        if (activityStream.velocity_smooth) {
+            moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
+        }
 
         // Q1 Speed
         // Median Speed
@@ -463,6 +466,7 @@ ActivityProcessor.prototype = {
         }
 
         activityStatsMap.averageHeartRate = hrSum / hrCount;
+        activityStatsMap.maxHeartRate = heartRateArraySorted[heartRateArraySorted.length - 1];
 
         var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
 
@@ -474,7 +478,9 @@ ActivityProcessor.prototype = {
             'medianHeartRate': Helper.median(heartRateArraySorted),
             'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
             'averageHeartRate': activityStatsMap.averageHeartRate,
+            'maxHeartRate': activityStatsMap.maxHeartRate,
             'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
+            'activityHeartRateReserveMax': Helper.heartRateReserveFromHeartrate(activityStatsMap.maxHeartRate, userMaxHr, userRestHr) * 100
         };
 
     },

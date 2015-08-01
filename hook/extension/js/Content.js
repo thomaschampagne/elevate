@@ -194,6 +194,8 @@ var jsDependencies = [
     'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
+    'js/modifiers/AthleteStatsModifier.js',
+    'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
 
     // Extended data views
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
@@ -217,6 +219,7 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/GenericExtendedDataModifier.js',
 
     'js/modifiers/HideFeedModifier.js',
+    'js/modifiers/DisplayFlyByFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
