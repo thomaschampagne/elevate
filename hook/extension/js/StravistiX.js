@@ -57,7 +57,6 @@ StravistiX.prototype = {
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();
-        this.handleOpenStreetMapModifier_();
         this.handleWindyTyModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
@@ -214,19 +213,6 @@ StravistiX.prototype = {
 
         this.remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         this.remoteLinksModifier.modify();
-    },
-
-    handleOpenStreetMapModifier_: function() {
-
-        // If we are not on a segment or activity page then return...
-        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleOpenStreetMapModifier_()");
-
-        var openStreetMapModifier = new OpenStreetMapModifier(this.appResources_);
-        openStreetMapModifier.modify();
     },
 
     handleWindyTyModifier_: function() {
