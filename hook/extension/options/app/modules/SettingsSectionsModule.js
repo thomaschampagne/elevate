@@ -85,7 +85,7 @@ settingsSectionsModule.data = [{
             key: 'satellite',
             name: 'Satellite'
         }],
-        optionTitle: 'Default Google Map type in activity page',
+        optionTitle: 'Default Map type in activity page',
         optionHtml: 'Do what title describes...',
     }]
 }, {

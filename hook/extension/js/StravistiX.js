@@ -57,7 +57,6 @@ StravistiX.prototype = {
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();
-        this.handleOpenStreetMapModifier_();
         this.handleWindyTyModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
@@ -65,6 +64,7 @@ StravistiX.prototype = {
         this.handleActivityGoogleMapType_();
         this.handleHidePremium_();
         this.handleHideFeed_();
+        this.handleDisplayFlyByFeedModifier_();
 
         // Bike
         this.handleExtendedActivityData_();
@@ -147,9 +147,12 @@ StravistiX.prototype = {
         // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        message += '<h5>- NEW: Segments time comparaison with KOM and previous PR inside activity page</h5>';
-        message += '<h5>- FIX: Year progressions to current month/day panel not visible if language different from english. Go to "My profile" to see this feature.</h5>';
-        message += '<h5><strong>Currently working on big update:</strong></h5>';
+        // message += '<h5>- NEW: Segments time comparaison with KOM and previous PR inside activity page</h5>';
+        // message += '<h5>- FIX: Year progressions to current month/day panel not visible if language different from english. Go to "My profile" to see this feature.</h5>';
+        message += '<h5>- Remove OSM remotes maps links on activities, Strava now use OpenStreetMap :)</h5>';
+        message += '<h5>- Add FlyBy direct link in dashboard feed</h5>';
+        message += '<h5>- Fix extended data compute error on workouts</h5>';
+        message += '<h5><strong>STILL working on the big update... (Please wait):</strong></h5>';
         message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += 'Donate to help this project';
@@ -215,19 +218,6 @@ StravistiX.prototype = {
         this.remoteLinksModifier.modify();
     },
 
-    handleOpenStreetMapModifier_: function() {
-
-        // If we are not on a segment or activity page then return...
-        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleOpenStreetMapModifier_()");
-
-        var openStreetMapModifier = new OpenStreetMapModifier(this.appResources_);
-        openStreetMapModifier.modify();
-    },
-
     handleWindyTyModifier_: function() {
 
         // If we are not on a segment or activity page then return...
@@ -240,7 +230,12 @@ StravistiX.prototype = {
         }
 
         // Avoid running Extended data at the moment
-        if (window.pageView.activity().attributes.type != "Ride") {
+        if (window.pageView.activity().get('type') != "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
             return;
         }
 
@@ -362,6 +357,19 @@ StravistiX.prototype = {
 
         var hideFeedModifier = new HideFeedModifier(this.userSettings_.feedHideChallenges, this.userSettings_.feedHideCreatedRoutes);
         hideFeedModifier.modify();
+    },
+
+    handleDisplayFlyByFeedModifier_: function() {
+
+        // Test if where are on dashboard page
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleDisplayFlyByFeedModifier_()");
+
+        var displayFlyByFeedModifier = new DisplayFlyByFeedModifier();
+        displayFlyByFeedModifier.modify();
     },
 
     /**
@@ -495,7 +503,7 @@ StravistiX.prototype = {
 
         }.bind(this));
     },
-    
+
     /**
      *
      */
@@ -514,17 +522,17 @@ StravistiX.prototype = {
         if (window.pageView.activity().attributes.type != "Ride") {
             return;
         }
-        
+
         // Only for own activities
         if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
             return;
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-            
+
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier();
         activitySegmentTimeComparisonModifier.modify();
-    },    
+    },
 
     /**
      *
