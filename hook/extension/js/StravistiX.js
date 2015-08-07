@@ -147,9 +147,12 @@ StravistiX.prototype = {
         // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
         // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
         // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        message += '<h5>- NEW: Segments time comparaison with KOM and previous PR inside activity page</h5>';
-        message += '<h5>- FIX: Year progressions to current month/day panel not visible if language different from english. Go to "My profile" to see this feature.</h5>';
-        message += '<h5><strong>Currently working on big update:</strong></h5>';
+        // message += '<h5>- NEW: Segments time comparaison with KOM and previous PR inside activity page</h5>';
+        // message += '<h5>- FIX: Year progressions to current month/day panel not visible if language different from english. Go to "My profile" to see this feature.</h5>';
+        message += '<h5>- Remove OSM remotes maps links on activities, Strava now use OpenStreetMap :)</h5>';
+        message += '<h5>- Add FlyBy direct link in dashboard feed</h5>';
+        message += '<h5>- Fix extended data compute error on workouts</h5>';
+        message += '<h5><strong>STILL working on the big update... (Please wait):</strong></h5>';
         message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += 'Donate to help this project';
