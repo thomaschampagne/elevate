@@ -39,7 +39,7 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
 
         placeSummaryPanel: function(panelAdded) {
 
-            this.makeSummaryGrid(2, 3);
+            this.makeSummaryGrid(2, 4);
 
             this.insertContentSummaryGridContent();
 
