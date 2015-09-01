@@ -529,8 +529,8 @@ ActivityProcessor.prototype = {
 
         var cadenceRatioOnMovingTime = cadenceOnMoveSampleCount / movingSampleCount;
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
-		
-		
+
+
         var varianceCadence = (cadenceSumOnMoving / cadenceOnMoveSampleCount) - Math.pow(averageCadenceOnMovingTime, 2);
         var standardDeviationCadence = (varianceCadence > 0) ? Math.sqrt(varianceCadence) : 0;
 
@@ -547,7 +547,7 @@ ActivityProcessor.prototype = {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
-			'standardDeviationCadence' : standardDeviationCadence,
+            'standardDeviationCadence': standardDeviationCadence,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
             'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
             'medianCadence': Helper.median(cadenceArraySorted),
