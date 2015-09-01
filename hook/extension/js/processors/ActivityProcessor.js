@@ -530,6 +530,10 @@ ActivityProcessor.prototype = {
         var cadenceRatioOnMovingTime = cadenceOnMoveSampleCount / movingSampleCount;
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
+
+        var varianceCadence = (cadenceSumOnMoving / cadenceOnMoveSampleCount) - Math.pow(averageCadenceOnMovingTime, 2);
+        var standardDeviationCadence = (varianceCadence > 0) ? Math.sqrt(varianceCadence) : 0;
+
         // Update zone distribution percentage
         for (var zone in cadenceZones) {
             cadenceZones[zone]['percentDistrib'] = ((cadenceZones[zone]['s'] / durationCount).toFixed(4) * 100);
@@ -543,6 +547,7 @@ ActivityProcessor.prototype = {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
+            'standardDeviationCadence': standardDeviationCadence,
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
             'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
             'medianCadence': Helper.median(cadenceArraySorted),
