@@ -40,6 +40,19 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
             }
             this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
+
+            // Cadence
+            var medianCadence = '-';
+            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
+                medianCadence = this.analysisData_.cadenceData.medianCadence;
+                this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', ' rpm <span class="summarySubGridTitle">(&sigma; :' + this.analysisData_.cadenceData.standardDeviationCadence + ' )</span>', 'displayCadenceData');
+            }
+            
+            var cadenceTimeMoving = '-';
+            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
+                cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
+                this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
+            }
         },
 
         setDataViewsNeeded: function() {

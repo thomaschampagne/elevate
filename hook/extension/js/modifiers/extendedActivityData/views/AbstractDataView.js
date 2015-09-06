@@ -218,6 +218,11 @@ var AbstractDataView = Fiber.extend(function(base) {
          * @return pace in seconds/km
          */
         convertSpeedToPace: function(speed) {
+
+            if(_.isNaN(speed)) {
+                return 0;
+            }
+
             return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
         },
     }
