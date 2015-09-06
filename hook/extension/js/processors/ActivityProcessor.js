@@ -51,6 +51,8 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
+            console.log('Avg VAM from strava stats: ' + activityStatsMap.elevation / activityStatsMap.elapsedTime * 3600);
+
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
@@ -113,7 +115,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream.altitude, activityStream.time);
+        var elevationData = this.elevationData_(activityStream.altitude, activityStream.grade_smooth, activityStream.time);
 
         // Return an array with all that shit...
         return {
@@ -672,15 +674,18 @@ ActivityProcessor.prototype = {
 
     },
 
-    elevationData_: function(altitudeArray, timeArray) {
+    elevationData_: function(altitudeArray, gradeArray, timeArray) {
 
         if (_.isUndefined(altitudeArray) || _.isUndefined(timeArray)) {
             return null;
         }
 
         var accumulatedElevation = 0;
+        var accumulatedElevationAscent = 0;
+        var ascentSpeedMeterPerHourSamples = [];
+        var ascentSpeedMeterPerHourSum = 0;
         var elevationSampleCount = 0;
-        var wattsSamplesOnMove = [];
+        var elevationSamples = [];
 
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
 
@@ -688,13 +693,13 @@ ActivityProcessor.prototype = {
 
         for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
 
-            // Compute average and normalized elevation
-            accumulatedElevation += altitudeArray[i];
-            elevationSampleCount++;
-            wattsSamplesOnMove.push(altitudeArray[i]);
-
             // Compute distribution for graph/table
             if (i > 0) {
+
+                // Compute average and normalized elevation
+                accumulatedElevation += altitudeArray[i];
+                elevationSampleCount++;
+                elevationSamples.push(altitudeArray[i]);
 
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
@@ -705,17 +710,47 @@ ActivityProcessor.prototype = {
                 }
 
                 durationCount += durationInSeconds;
+
+                // meters climbed
+                var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
+
+                // If previous altitude lower than current then => climbing
+                if (elevationDiff > 0.375) { // TODO Make constant 0.375
+                    
+                    accumulatedElevationAscent += elevationDiff;
+
+                    var ascentSpeedMeterPerHour = elevationDiff / durationInSeconds * 3600; // m climbed / seconds
+                    // accumulatedElevationAscent += Math.abs(altitudeArray[i] - altitudeArray[i - 1]);
+
+                    ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
+                    ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+                    console.debug(ascentSpeedMeterPerHour);
+                }
             }
 
         }
+
+        console.warn(accumulatedElevationAscent);
 
         // Finalize compute of Elevation
         var avgElevation = accumulatedElevation / elevationSampleCount;
 
 
-        var elevationSamplesSorted = wattsSamplesOnMove.sort(function(a, b) {
+        var elevationSamplesSorted = elevationSamples.sort(function(a, b) {
             return a - b;
         });
+
+        var ascentSpeedMeterPerHourSamplesSorted = ascentSpeedMeterPerHourSamples.sort(function(a, b) {
+            return a - b;
+        });
+
+        console.log('-----------');
+        console.log('Avg: ' + ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length);
+        console.log(Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0));
+        console.log(Helper.median(ascentSpeedMeterPerHourSamplesSorted).toFixed(0));
+        console.log(Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0));
+        console.log(Helper.quartile_95(ascentSpeedMeterPerHourSamplesSorted).toFixed(0));
+
 
         // Update zone distribution percentage
         for (var zone in elevationZones) {
