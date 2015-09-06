@@ -40,7 +40,10 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             // Avg climb pace
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                climbSpeed = Helper.secondsToHHMMSS((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0)).replace('00:', '');
+                var seconds = parseInt((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0));
+                if (seconds) {
+                    climbSpeed = Helper.secondsToHHMMSS(seconds).replace('00:', '');
+                }
                 this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', '/' + distanceUnits, 'displayAdvancedGradeData');
             }
         },
@@ -74,7 +77,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(runnningGradeDataView);
             }
-            
+
             if (this.analysisData_.elevationData) {
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
