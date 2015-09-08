@@ -640,10 +640,9 @@ StravistiX.prototype = {
             return;
         }
 
-        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier();
+        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_);
         googleMapsComeBackModifier.modify();
     },
-
 
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type

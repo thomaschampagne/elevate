@@ -1,66 +1,44 @@
 /**
  *   GoogleMapsComeBackModifier is responsible of ...
  */
-function GoogleMapsComeBackModifier() {}
+function GoogleMapsComeBackModifier(activityId) {
+    this.activityId = activityId;
+}
 
 /**
  * Define prototype
  */
 
 // Setup callback in window object when gmaps ready
-window.gMapsCallback = function() {
+window.googleMapsApiLoaded = function() {
     $(window).trigger('gMapsLoaded');
-    console.log('gMapsLoaded');
 }
 
 GoogleMapsComeBackModifier.prototype = {
 
     modify: function modify() {
 
-        console.log('GoogleMapsComeBackModifier::modify');
-
-        $(window).bind('gMapsLoaded', this.doStuff);
-
-        this.getScript();
-
-        // // Get bike name on Activity Page
-        // var bikeDisplayedOnActivityPage = $('.gear-name').text().trim();
-
-        // // Get odo from map
-        // var activityBikeOdo = 'No bike declared';
-        // try {
-        //     activityBikeOdo = this.bikeOdoArray_[btoa(bikeDisplayedOnActivityPage)];
-        // } catch (err) {
-        //     console.warn('Unable to find bike odo for this Activity');
-        // }
-
-        // var newBikeDisplayHTML = bikeDisplayedOnActivityPage + '<strong> / ' + activityBikeOdo + '</strong>';
-
-        // var forceRefreshActionHTML = '<a href="#" style="cursor: pointer;" title="Force odo refresh for this athlete\'s bike. Usually it refresh every 2 hours..." id="bikeOdoForceRefresh">Force refresh odo</a>';
-
-        // // Edit Activity Page
-        // $('.gear-name').html(newBikeDisplayHTML + '<br />' + forceRefreshActionHTML).each(function() {
-
-        //     $('#bikeOdoForceRefresh').on('click', function() {
-        //         this.handleUserBikeOdoForceRefresh_();
-        //     }.bind(this));
-
-        // }.bind(this));
+        $(window).bind('gMapsLoaded', this.fetchPathFromStream(this.activityId));
+        this.getGoogleMapsApi();
     },
 
-    doStuff: function() {
+    fetchPathFromStream: function(activityId) {
 
-        console.log('GoogleMapsComeBackModifier::doStuff');
+        var url = "/activities/" + activityId + "/streams?stream_types[]=latlng";
 
+        $.ajax(url).done(function(jsonResponse) {
 
-        var html = 'Maps:<div style="height:400px;width:100%;" id="gmaps_canvas"></div>Maps:';
+            this.displayGoogleMapWithPath(jsonResponse.latlng);
 
-        $('.achievements.row').before(html).each(function() {
+        }.bind(this));
 
-            // $('#bikeOdoForceRefresh').on('click', function() {
-            //     this.handleUserBikeOdoForceRefresh_();
-            // }.bind(this));
+    },
 
+    displayGoogleMapWithPath: function(pathArray) {
+
+        var html = '<div style="padding-bottom:10px;"><div style="height:350px;width:100%;" id="gmaps_canvas"></div></div>';
+
+        $('#map-canvas').before(html).each(function() {
 
             var map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
                 mapTypeId: google.maps.MapTypeId.TERRAIN
@@ -69,14 +47,16 @@ GoogleMapsComeBackModifier.prototype = {
             var points = [];
             var bounds = new google.maps.LatLngBounds();
 
-            var p = new google.maps.LatLng(0, 0);
-            points.push(p);
-            bounds.extend(p);
+            _.each(pathArray, function(position) {
+                var p = new google.maps.LatLng(position[0], position[1]);
+                points.push(p);
+                bounds.extend(p);
+            });
 
             var poly = new google.maps.Polyline({
                 // use your own style here
                 path: points,
-                strokeColor: "#FF00AA",
+                strokeColor: "#FF0000",
                 strokeOpacity: .7,
                 strokeWeight: 4
             });
@@ -86,28 +66,14 @@ GoogleMapsComeBackModifier.prototype = {
             // fit bounds to track
             map.fitBounds(bounds);
 
-
         }.bind(this));
 
-
-
-        // var mapOptions = {
-        //     zoom: 8,
-        //     center: new google.maps.LatLng(47.3239, 5.0428),
-        //     mapTypeId: google.maps.MapTypeId.ROADMAP
-        // };
-        // map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
     },
 
-    getScript: function() {
+    getGoogleMapsApi: function() {
         var script_tag = document.createElement('script');
         script_tag.setAttribute("type", "text/javascript");
-        script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=gMapsCallback");
+        script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=googleMapsApiLoaded");
         (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
     }
-
-    // handleUserBikeOdoForceRefresh_: function handleUserBikeOdoForceRefresh_() {
-    //     localStorage.removeItem(this.cacheKey);
-    //     window.location.reload();
-    // },
 };
