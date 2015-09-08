@@ -53,15 +53,14 @@ StravistiX.prototype = {
                 console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
             });
         }
-
         // Testing gmaps back
-        console.warn('Gooo');
+        // console.warn('Gooo');
 
-        var map = new google.maps.Map(document.getElementById("map_canvas"), {
-            
-        });
+        // var map = new google.maps.Map(document.getElementById("map_canvas"), {
 
-        console.warn(map);
+        // });
+
+        // console.warn(map);
 
         // Common
         this.handleMenu_();
@@ -94,11 +93,8 @@ StravistiX.prototype = {
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
-
+        this.handleGoogleMapsComeBackModifier();
         
-
-
-
 
     },
 
@@ -635,7 +631,19 @@ StravistiX.prototype = {
 
         var virtualPartnerModifier = new VirtualPartnerModifier(this.activityId_);
         virtualPartnerModifier.modify();
+    },    
+
+    handleGoogleMapsComeBackModifier: function() {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier();
+        googleMapsComeBackModifier.modify();
     },
+
 
     /**
      * Launch a track event once a day (is user use it once a day), to follow is account type
