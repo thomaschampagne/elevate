@@ -478,6 +478,7 @@ ActivityProcessor.prototype = {
 
         // On Moving
         var cadenceSumOnMoving = 0;
+        var cadenceVarianceSumOnMoving = 0;
         var cadenceOnMovingCount = 0;
         var cadenceOnMoveSampleCount = 0;
         var movingSampleCount = 0;
@@ -506,6 +507,7 @@ ActivityProcessor.prototype = {
                     // Rider is moving here while cadence
                     cadenceOnMoveSampleCount++;
                     cadenceSumOnMoving += cadenceArray[i];
+                    cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2)
                     cadenceOnMovingCount++;
                 }
 
@@ -531,7 +533,7 @@ ActivityProcessor.prototype = {
         var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
 
 
-        var varianceCadence = (cadenceSumOnMoving / cadenceOnMoveSampleCount) - Math.pow(averageCadenceOnMovingTime, 2);
+        var varianceCadence = (cadenceVarianceSumOnMoving / cadenceOnMoveSampleCount) - Math.pow(averageCadenceOnMovingTime, 2);
         var standardDeviationCadence = (varianceCadence > 0) ? Math.sqrt(varianceCadence) : 0;
 
         // Update zone distribution percentage
