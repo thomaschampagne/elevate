@@ -549,7 +549,7 @@ ActivityProcessor.prototype = {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
-            'standardDeviationCadence': standardDeviationCadence,
+            'standardDeviationCadence': standardDeviationCadence.toFixed(1),
             'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
             'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
             'medianCadence': Helper.median(cadenceArraySorted),
