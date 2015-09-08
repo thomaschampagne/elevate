@@ -544,11 +544,13 @@ StravistiX.prototype = {
         if (window.pageView.activity().attributes.type != "Ride") {
             return;
         }
-        
+
         if (env.debugMode) console.log("Execute handleActivityBestSplits_()");
-            
-        var activityBestSplitsModifier = new ActivityBestSplitsModifier();
-        activityBestSplitsModifier.modify();        
+        
+        this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {            
+            var activityBestSplitsModifier = new ActivityBestSplitsModifier(this.userSettings_, jsonResponse, hasPowerMeter);
+            activityBestSplitsModifier.modify();
+        }.bind(this));
     },
 
     /**
