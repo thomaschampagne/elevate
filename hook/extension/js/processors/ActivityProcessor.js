@@ -507,7 +507,7 @@ ActivityProcessor.prototype = {
                     // Rider is moving here while cadence
                     cadenceOnMoveSampleCount++;
                     cadenceSumOnMoving += cadenceArray[i];
-                    cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2)
+                    cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
                     cadenceOnMovingCount++;
                 }
 
