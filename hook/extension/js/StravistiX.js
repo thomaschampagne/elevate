@@ -54,6 +54,15 @@ StravistiX.prototype = {
             });
         }
 
+        // Testing gmaps back
+        console.warn('Gooo');
+
+        var map = new google.maps.Map(document.getElementById("map_canvas"), {
+            
+        });
+
+        console.warn(map);
+
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();
@@ -85,6 +94,12 @@ StravistiX.prototype = {
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
+
+        
+
+
+
+
     },
 
     /**

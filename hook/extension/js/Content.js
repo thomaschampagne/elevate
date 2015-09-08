@@ -64,10 +64,25 @@ Content.prototype = {
 
     loadDependencies: function loadDependencies(finishLoading) {
 
+
         var loader = new Loader();
         var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
         loader.require(dependencies, function() {
+
+            // window.gMapsCallback = function() {
+            //     //$(window).trigger('gMapsLoaded');
+            //     console.warn('finishLoading !!');
+                
+            // }
+
+
+            var script_tag = document.createElement('script');
+            script_tag.setAttribute("type", "text/javascript");
+            script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false");
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+
             finishLoading();
+
         });
     },
 
@@ -223,7 +238,7 @@ var jsDependencies = [
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
-    'js/modifiers/NearbySegmentsModifier.js',
+    'js/modifiers/NearbySegmentsModifier.js'
 ];
 
 var cssDependencies = [
