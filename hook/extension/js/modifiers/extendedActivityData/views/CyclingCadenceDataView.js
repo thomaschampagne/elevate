@@ -22,7 +22,7 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             base.render.call(this);
 
             // Creates a grid
-            this.makeGrid(3, 2); // (col, row)
+            this.makeGrid(3, 3); // (col, row)
 
             this.insertCadenceDataIntoGrid();
             this.generateCanvasForGraph();
@@ -42,6 +42,8 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 1, this.cadenceData.lowerQuartileCadence, '25% Quartile Cadence', 'rpm', 'displayCadenceData');
             this.insertContentAtGridPosition(1, 1, this.cadenceData.medianCadence, '50% Quartile Cadence', 'rpm', 'displayCadenceData');
             this.insertContentAtGridPosition(2, 1, this.cadenceData.upperQuartileCadence, '75% Quartile Cadence', 'rpm', 'displayCadenceData');
+
+            this.insertContentAtGridPosition(0, 2, this.cadenceData.standardDeviationCadence, 'Std Deviation &sigma;', 'rpm', 'displayCadenceData');
         }
     }
 });
