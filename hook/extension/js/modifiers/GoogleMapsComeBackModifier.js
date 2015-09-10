@@ -91,12 +91,12 @@ GoogleMapsComeBackModifier.prototype = {
         this.fetchSegmentInfoFromEffortId(effortId, function(segmentInfosResponse) {
             // Slice latlong array
             this.displayGoogleMapWithPath(
-                pathArray, [segmentInfosResponse.start_index, segmentInfosResponse.end_index]
+                pathArray, [segmentInfosResponse.start_index, segmentInfosResponse.end_index], effortId
             );
         }.bind(this));
     },
 
-    displayGoogleMapWithPath: function(mainPathArray, highlightFromTo) {
+    displayGoogleMapWithPath: function(mainPathArray, highlightFromTo, effortId) {
 
         var html = '<div style="padding-bottom:10px;"><div style="height:350px;width:100%;" id="gmaps_canvas"></div></div>';
 
@@ -104,17 +104,81 @@ GoogleMapsComeBackModifier.prototype = {
         if (!$('#gmaps_canvas').length) {
 
             $('#map-canvas').before(html).each(function() {
-                this.applyToMap(mainPathArray, highlightFromTo);
+                this.applyToMap('gmaps_canvas', mainPathArray, highlightFromTo);
             }.bind(this));
         } else {
-            this.applyToMap(mainPathArray, highlightFromTo);
+            this.applyToMap('gmaps_canvas', mainPathArray, highlightFromTo);
         }
+
+        // Add a map to segment sub-view
+        if (effortId) {
+
+            var html = '<div style="padding-bottom:10px;"><div style="height:250px;width:100%;" id="gmaps_canvas_effort_' + effortId + '"></div></div>';
+
+            $('tr[data-segment-effort-id=' + effortId + ']').find('.effort-map').before(html).each(function() {
+
+                var map = new google.maps.Map(document.getElementById('gmaps_canvas_effort_' + effortId) , {
+                    mapTypeId: google.maps.MapTypeId.TERRAIN,
+                    draggable: false
+                });
+
+                var points = [];
+                var bounds = new google.maps.LatLngBounds();
+
+                _.each(mainPathArray, function(position) {
+                    var p = new google.maps.LatLng(position[0], position[1]);
+                    points.push(p);
+                    bounds.extend(p);
+                });
+
+                var mainPathPoly = new google.maps.Polyline({
+                    // use your own style here
+                    path: points,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 4
+                });
+
+                // Set path to map
+                mainPathPoly.setMap(map);
+
+                // fit bounds to track
+                map.fitBounds(bounds);
+
+                if (highlightFromTo) {
+
+                    var secondPathPoly = new google.maps.Polyline({
+                        path: points.slice(highlightFromTo[0], highlightFromTo[1]),
+                        strokeColor: "#105cb6",
+                        strokeOpacity: 1,
+                        strokeWeight: 4
+                    });
+
+                    // Erase bounds and computed new ones with highlighted path
+                    bounds = new google.maps.LatLngBounds();
+                    _.each(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), function(position) {
+                        var p = new google.maps.LatLng(position[0], position[1]);
+                        bounds.extend(p);
+                    });
+
+                    // Update with new bounds from highlighted path
+                    map.fitBounds(bounds);
+
+                    // Apply new poly line
+                    secondPathPoly.setMap(map);
+                }
+
+            }.bind(this));
+
+        }
+
+        // $('tr[data-segment-effort-id=9281011530]').find('.effort-map').before('toto')
     },
 
-    applyToMap: function(mainPathArray, highlightFromTo) {
+    applyToMap: function(canvasId, mainPathArray, highlightFromTo) {
 
         // if (!this.map) {
-        this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
+        this.map = new google.maps.Map(document.getElementById(canvasId), {
             mapTypeId: google.maps.MapTypeId.TERRAIN
         });
         // }
