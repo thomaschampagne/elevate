@@ -18,69 +18,89 @@ GoogleMapsComeBackModifier.prototype = {
 
     modify: function modify() {
 
-        $(window).bind('gMapsLoaded', this.fetchPathFromStream(this.activityId));
+        // Bind function for be called when Google API loaded
+        $(window).bind('gMapsLoaded', this.googleMapsApiLoaded(this.activityId));
+
+        // Next load the Google API from external
         this.getGoogleMapsApi();
 
-/*
-        $('[data-segment-effort-id]').click(function () {
-            console.log(''toot'');
-            console.log(this);
+        var self = this;
+        $('[data-segment-effort-id]').click(function() {
+            var effortIdClicked = $(this).attr('data-segment-effort-id');
+            self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortIdClicked);
         });
-*/
+
     },
 
-    fetchPathFromStream: function(activityId) {
+    googleMapsApiLoaded: function(activityId) {
 
-        var streamPathUrl = "/activities/" + activityId + "/streams?stream_types[]=latlng";
+        this.fetchPathFromStream(activityId, function(pathArray) {
 
-        $.ajax(streamPathUrl).done(function(jsonResponse) {
+            this.pathArray = pathArray;
 
+            // Check if effort id is given
             var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
 
             if (effortId) {
 
-                // Get effortId bounds
-                var segmentInfosResponse;
-                $.ajax({
-                    url: '/segment_efforts/' + effortId,
-                    type: 'GET',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-                    },
-                    dataType: 'json',
-                    success: function(xhrResponseText) {
-                        segmentInfosResponse = xhrResponseText;
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
-                }).then(function() {
-
-                    // Call Activity Processor with bounds
-                    if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
-                        console.error('No start_index end_index found for');
-                    }
-
-                    // Slice latlong array
-                    this.displayGoogleMapWithPath(
-                        jsonResponse.latlng, [segmentInfosResponse.start_index, segmentInfosResponse.end_index]
-                    );
-
-                }.bind(this));
-
+                this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
 
             } else {
-                this.displayGoogleMapWithPath(jsonResponse.latlng);
+                this.displayGoogleMapWithPath(this.pathArray);
             }
-
         }.bind(this));
+    },
 
+    fetchPathFromStream: function(activityId, callback) {
+        var streamPathUrl = "/activities/" + activityId + "/streams?stream_types[]=latlng";
+        $.ajax(streamPathUrl).done(function(jsonResponse) {
+            callback(jsonResponse.latlng);
+        }.bind(this));
+    },
+
+    fetchSegmentInfoFromEffortId: function(effortId, callback)  {
+
+        var segmentInfosResponse;
+
+        $.ajax({
+            url: '/segment_efforts/' + effortId,
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            },
+            dataType: 'json',
+            success: function(xhrResponseText) {
+                segmentInfosResponse = xhrResponseText;
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        }).then(function() {
+
+            // Call Activity Processor with bounds
+            if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
+                console.error('No start_index end_index found for');
+            }
+            callback(segmentInfosResponse);
+        });
+    },
+
+    fetchSegmentInfoAndDisplayWithGoogleMap: function(pathArray, effortId) {
+
+        // Display GoogleMap With Path And Segment Effort highlighted
+        this.fetchSegmentInfoFromEffortId(effortId, function(segmentInfosResponse) {
+            // Slice latlong array
+            this.displayGoogleMapWithPath(
+                pathArray, [segmentInfosResponse.start_index, segmentInfosResponse.end_index]
+            );
+        }.bind(this));
     },
 
     displayGoogleMapWithPath: function(mainPathArray, highlightFromTo) {
 
         var html = '<div style="padding-bottom:10px;"><div style="height:350px;width:100%;" id="gmaps_canvas"></div></div>';
 
+        // Test if exit then no append before
         $('#map-canvas').before(html).each(function() {
 
             this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
