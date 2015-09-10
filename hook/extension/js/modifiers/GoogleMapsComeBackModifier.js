@@ -101,60 +101,69 @@ GoogleMapsComeBackModifier.prototype = {
         var html = '<div style="padding-bottom:10px;"><div style="height:350px;width:100%;" id="gmaps_canvas"></div></div>';
 
         // Test if exit then no append before
-        $('#map-canvas').before(html).each(function() {
+        if (!$('#gmaps_canvas').length) {
 
-            this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
-                mapTypeId: google.maps.MapTypeId.TERRAIN
-            });
+            $('#map-canvas').before(html).each(function() {
+                this.applyToMap(mainPathArray, highlightFromTo);
+            }.bind(this));
+        } else {
+            this.applyToMap(mainPathArray, highlightFromTo);
+        }
+    },
 
-            var points = [];
-            var bounds = new google.maps.LatLngBounds();
+    applyToMap: function(mainPathArray, highlightFromTo) {
 
-            _.each(mainPathArray, function(position) {
-                var p = new google.maps.LatLng(position[0], position[1]);
-                points.push(p);
-                bounds.extend(p);
-            });
+        // if (!this.map) {
+        this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        });
+        // }
 
-            var mainPathPoly = new google.maps.Polyline({
-                // use your own style here
-                path: points,
-                strokeColor: "#FF0000",
-                strokeOpacity: .7,
+        var points = [];
+        var bounds = new google.maps.LatLngBounds();
+
+        _.each(mainPathArray, function(position) {
+            var p = new google.maps.LatLng(position[0], position[1]);
+            points.push(p);
+            bounds.extend(p);
+        });
+
+        var mainPathPoly = new google.maps.Polyline({
+            // use your own style here
+            path: points,
+            strokeColor: "#FF0000",
+            strokeOpacity: .7,
+            strokeWeight: 4
+        });
+
+        // Set path to map
+        mainPathPoly.setMap(this.map);
+
+        // fit bounds to track
+        this.map.fitBounds(bounds);
+
+        if (highlightFromTo) {
+
+            var secondPathPoly = new google.maps.Polyline({
+                path: points.slice(highlightFromTo[0], highlightFromTo[1]),
+                strokeColor: "#105cb6",
+                strokeOpacity: 1,
                 strokeWeight: 4
             });
 
-            // Set path to map
-            mainPathPoly.setMap(this.map);
+            // Erase bounds and computed new ones with highlighted path
+            bounds = new google.maps.LatLngBounds();
+            _.each(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), function(position) {
+                var p = new google.maps.LatLng(position[0], position[1]);
+                bounds.extend(p);
+            });
 
-            // fit bounds to track
+            // Update with new bounds from highlighted path
             this.map.fitBounds(bounds);
 
-            if (highlightFromTo) {
-
-                var secondPathPoly = new google.maps.Polyline({
-                    path: points.slice(highlightFromTo[0], highlightFromTo[1]),
-                    strokeColor: "#105cb6",
-                    strokeOpacity: 1,
-                    strokeWeight: 4
-                });
-
-                // Erase bounds and computed new ones with highlighted path
-                bounds = new google.maps.LatLngBounds();
-                _.each(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), function(position) {
-                    var p = new google.maps.LatLng(position[0], position[1]);
-                    bounds.extend(p);
-                });
-
-                // Update with new bounds from highlighted path
-                this.map.fitBounds(bounds);
-
-                // Apply new poly line
-                secondPathPoly.setMap(this.map);
-            }
-
-        }.bind(this));
-
+            // Apply new poly line
+            secondPathPoly.setMap(this.map);
+        }
     },
 
     getGoogleMapsApi: function() {
