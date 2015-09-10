@@ -152,13 +152,16 @@ StravistiX.prototype = {
         // message += '<h5>- Remove OSM remotes maps links on activities, Strava now use OpenStreetMap :)</h5>';
         // message += '<h5>- Add FlyBy direct link in dashboard feed</h5>';
         // message += '<h5>- Fix extended data compute error on workouts</h5>';
-        message += '<h5>- Add Pedaling time to summary panel</h5>';
-        message += '<h5>- Add median cadence to summary panel</h5>';
-        message += '<h5>- Various bug fixes</h5>';
-        message += '<h5><strong>STILL working on the big update... (Please wait):</strong></h5>';
+        message += '<h5>- Bug Fix of v0.7.8: Wrong standard deviation cadence computed and displayed for cycling</h5>';
+        message += '<h5>- Add standard deviation cadence to extended data popup panel</h5>';
+        message += '<h5>- Add Pedaling time to summary panel (v0.7.8)</h5>';
+        message += '<h5>- Add median cadence + standard deviation to summary panel (v0.7.8)</h5>';
+        message += '<h5>- Various bug fixes (v0.7.8)</h5>';
+        message += '<h5><strong>STILL working on the below BIG update... More complicated than expected... Please wait... :</strong></h5>';
         message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
+        message += '<h5>I will also revive Google maps in strava: released as an option, OSM maps will not be removed of course. <a href="https://twitter.com/champagnethomas/status/642048821531426816" target="_blank">As i said here.</a></h5>';
         message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
-        message += 'Donate to help this project to grow up';
+        message += '<strong>Donate to help this project to grow up</strong>';
         message += '</a>';
         // message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
 
