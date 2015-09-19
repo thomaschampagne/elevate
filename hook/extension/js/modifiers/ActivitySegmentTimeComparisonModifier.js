@@ -16,19 +16,21 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         if (!this.showDifferenceToKOM && !this.showDifferenceToPR) {
             return;
         }
+        
+        var self = this;
 
         // wait for Segments section load
         if ($("#segments").length === 0) {
             setTimeout(function() {
-                modify();
+                modify.call(self);
             }, 500);
             return;
         }
         
         $("#segments #segment-filter").show();
+        $("#segments").addClass("time-comparison-enabled");
         
-        var self = this,
-            label = "(";
+        var label = "(";
         if (this.showDifferenceToKOM) {
             label += "&Delta;KOM";
         }
@@ -117,13 +119,13 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run modifier function
         var waitForSegmentsSectionRemoved = function() {
-            if ($("#segments").length !== 0) {
+            if ($("#segments.time-comparison-enabled").length !== 0) {
                 setTimeout(function() {
                     waitForSegmentsSectionRemoved();
                 }, 1000);
                 return;
             }
-            modify();
+            modify.call(self);
         };
         waitForSegmentsSectionRemoved();
 
