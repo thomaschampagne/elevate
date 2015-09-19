@@ -30,17 +30,25 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         $("#segments #segment-filter").show();
         $("#segments").addClass("time-comparison-enabled");
         
-        var label = "(";
+        var label = "(",
+            isFemale = false,
+            komLabel = "KOM";
+        if (!_.isUndefined(window.pageView)) {
+            isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
+            if (isFemale) {
+                komLabel = "QOM";
+            }
+        }
+        
         if (this.showDifferenceToKOM) {
-            label += "&Delta;KOM";
+            label += "&Delta;" + komLabel;
         }
         if (this.showDifferenceToPR) {
             if (this.showDifferenceToKOM) {
                 label += " | ";
             }
             label += "&Delta;PR";
-        }
-        
+        }        
         label += ")";
         $("#segments table.segments th.time-col").append(" " + label);
 
@@ -55,12 +63,12 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     return;
                 }
 
-                var komSeconds = Helper.HHMMSStoSeconds(data.kom_time.replace(/[^0-9:]/gi, "")),
+                var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
                     seconds = data.elapsed_time_raw,
                     difference = (seconds - komSeconds);
                 
                 if (self.showDifferenceToKOM) {
-                    $timeCell.append("&nbsp;(<span title=\"Time difference with current KOM (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
+                    $timeCell.append("&nbsp;(<span title=\"Time difference with current " + komLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
                 }
                 
                 if (!self.showDifferenceToPR) {

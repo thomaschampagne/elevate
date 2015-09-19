@@ -90,9 +90,9 @@ settingsSectionsModule.data = [{
     }, {
         optionKey: 'displaySegmentTimeComparisonToKOM',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison to KOM display',
+        optionTitle: 'Enabled segment time comparison to KOM/QOM display',
         optionLabels: ['Cycling'],
-        optionHtml: 'This option allow you to display the time difference between segment KOM time and the time from the activity for that segment.',
+        optionHtml: 'This option allow you to display the time difference between segment KOM/QOM time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToPR',
         optionType: 'checkbox',
