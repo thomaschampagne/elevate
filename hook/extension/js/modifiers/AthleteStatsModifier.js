@@ -3,6 +3,10 @@
  */
 function AthleteStatsModifier() {
     this.cacheKey_ = 'activitiesHistoryData';
+    this.distanceUnit = "km";
+    this.distanceInKilometers = true;
+    this.elevationUnit = "m";
+    this.elevationInMeters = true;    
 }
 
 /**
@@ -116,8 +120,14 @@ AthleteStatsModifier.prototype = {
 
                 years = years.sort(function(left, right) {
                     return right.year - left.year;
-                }).forEach(function(item) {
-                   yearsList.push(item); 
+                }).forEach(function(item) {                    
+                    if (!self.distanceInKilometers) {
+                        item.distance = item.distance * 0.621371192;
+                    }
+                    if (!self.elevationInMeters) {
+                        item.elevation = item.elevation * 3.2808399;
+                    }
+                    yearsList.push(item);
                 });
                 for (j = 0, max = yearsList.length; j < max; j++) {
                     var item = yearsList[j];
@@ -130,13 +140,13 @@ AthleteStatsModifier.prototype = {
                         timeDifference = item.time - previousYearItem.time;
                     } else {
                         timeDifference = elevationDifference = activitiesCountDifference = distanceDifference = undefined;
-                    }                    
+                    }
                     isCurrentYear = item.year === currentYear;
                     $table.find("tbody").append($(
                         "<tr class='" + (isCurrentYear ? 'currentyear' : '') + "'>" +
                         "<td><div style='white-space: nowrap;'>" + item.year + "</div><div style='white-space: nowrap;'><small>" + (isCurrentYear ? ('0' + (currentMonth + 1)).slice(-2) + "/" + ('0' + currentDay).slice(-2) : "") + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " km" + renderTrendArrow(distanceDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " km"; }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " " + (i == 0 ? "Rides" : "Runs"); }) + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " m" + renderTrendArrow(elevationDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " m"; }) + "</div></td>" +
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + self.distanceUnit + renderTrendArrow(distanceDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " " + self.distanceUnit; }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " " + (i == 0 ? "Rides" : "Runs"); }) + "</small></div></td>" +
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + self.elevationUnit + renderTrendArrow(elevationDifference, function(value) { return Helper.formatNumber(Math.abs(value), 0) + " " + self.elevationUnit; }) + "</div></td>" +
                         "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + renderTrendArrow(timeDifference, function(value) { return Helper.secondsToDHM(Math.abs(value)); }) + "</div></td>" + 
                         "</tr>"
                     ));
@@ -171,6 +181,16 @@ AthleteStatsModifier.prototype = {
 
         total = parseInt($("div.cycling table tbody:last tr:nth(2) td:last").text() || "0");
         total = total + parseInt($("div.running table tbody:last tr:last td:last").text() || "0");
+        
+        var totalCyclingDistanceUnitText = $("div.cycling table tbody:last tr:nth(1) td:last").text(),
+            totalRunningDistanceUnitText = $("div.running table tbody:last tr:nth(1) td:last").text();
+        if ((totalCyclingDistanceUnitText && totalCyclingDistanceUnitText.length > 1 && totalCyclingDistanceUnitText.substr(-2) === "mi")
+            || (totalRunningDistanceUnitText && totalRunningDistanceUnitText.length > 1 && totalRunningDistanceUnitText.substr(-2) === "mi")) {
+            this.distanceInKilometers = false;
+            this.distanceUnit = "mi";
+            this.elevationInMeters = false;
+            this.elevationUnit = "ft";
+        }
 
         if (total != activitiesFromCacheObject.length) {
             for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
