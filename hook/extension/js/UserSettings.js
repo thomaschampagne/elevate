@@ -327,6 +327,7 @@ var userSettings = {
     displayAdvancedHrData: true,
     displayCadenceData: true,
     displayAdvancedGradeData: true,
+    displayAdvancedElevationData: true,
     displayBikeOdoInActivity: true,
     enableBothLegsCadence: false,
     feedHideChallenges: false,
