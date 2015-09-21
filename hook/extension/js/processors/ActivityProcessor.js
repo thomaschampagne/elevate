@@ -113,7 +113,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream.altitude, activityStream.time);
+        var elevationData = this.elevationData_(activityStream.altitude, activityStream.grade_smooth, activityStream.time);
 
         // Return an array with all that shit...
         return {
@@ -674,29 +674,32 @@ ActivityProcessor.prototype = {
 
     },
 
-    elevationData_: function(altitudeArray, timeArray) {
+    elevationData_: function(altitudeArray, gradeArray, timeArray) {
 
         if (_.isUndefined(altitudeArray) || _.isUndefined(timeArray)) {
             return null;
         }
 
         var accumulatedElevation = 0;
+        var accumulatedElevationAscent = 0;
+        var ascentSpeedMeterPerHourSamples = [];
+        var ascentSpeedMeterPerHourSum = 0;
         var elevationSampleCount = 0;
-        var wattsSamplesOnMove = [];
-
+        var elevationSamples = [];
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
-
         var durationInSeconds, durationCount = 0;
+        var ascentCountEverySample = 10;
+        var ascentDurationInSeconds = 0;
 
         for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
 
-            // Compute average and normalized elevation
-            accumulatedElevation += altitudeArray[i];
-            elevationSampleCount++;
-            wattsSamplesOnMove.push(altitudeArray[i]);
-
             // Compute distribution for graph/table
             if (i > 0) {
+
+                // Compute average and normalized elevation
+                accumulatedElevation += altitudeArray[i];
+                elevationSampleCount++;
+                elevationSamples.push(altitudeArray[i]);
 
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
@@ -707,17 +710,45 @@ ActivityProcessor.prototype = {
                 }
 
                 durationCount += durationInSeconds;
-            }
 
+                // Compute elevation diff each ascentCountEverySample
+                if ((i % ascentCountEverySample) == 0) {
+
+                    // Meters climbed between current and sample at ascentCountEverySample position lower.
+                    var elevationDiff = altitudeArray[i] - altitudeArray[i - ascentCountEverySample];
+
+                    // If previous altitude lower than current then => climbing
+                    if (elevationDiff > 0) {
+
+                        // Take time from 'ascentCountEverySample' last samples 
+                        for (j = 0; j < ascentCountEverySample; j++) {
+                            ascentDurationInSeconds += timeArray[i -j] - timeArray[i -j -1];
+                        }
+
+                        accumulatedElevationAscent += elevationDiff;
+                        var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
+
+                        ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
+                        ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+                        ascentDurationInSeconds = 0; // reset for next loop
+                    }
+                }
+            }
         }
 
         // Finalize compute of Elevation
         var avgElevation = accumulatedElevation / elevationSampleCount;
 
 
-        var elevationSamplesSorted = wattsSamplesOnMove.sort(function(a, b) {
+        var elevationSamplesSorted = elevationSamples.sort(function(a, b) {
             return a - b;
         });
+
+        var ascentSpeedMeterPerHourSamplesSorted = ascentSpeedMeterPerHourSamples.sort(function(a, b) {
+            return a - b;
+        });
+
+        var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
         // Update zone distribution percentage
         for (var zone in elevationZones) {
@@ -729,7 +760,13 @@ ActivityProcessor.prototype = {
             'lowerQuartileElevation': Helper.lowerQuartile(elevationSamplesSorted).toFixed(0),
             'medianElevation': Helper.median(elevationSamplesSorted).toFixed(0),
             'upperQuartileElevation': Helper.upperQuartile(elevationSamplesSorted).toFixed(0),
-            'elevationZones': elevationZones // Only while moving
+            'elevationZones': elevationZones, // Only while moving
+            'ascentSpeed': {
+                'avg': avgAscentSpeed,
+                'lowerQuartile': Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
+                'median': Helper.median(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
+                'upperQuartile': Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0)
+            }
         };
     }
 };

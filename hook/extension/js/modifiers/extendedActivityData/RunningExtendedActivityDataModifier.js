@@ -78,7 +78,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 this.dataViews.push(runnningGradeDataView);
             }
 
-            if (this.analysisData_.elevationData) {
+            if (this.analysisData_.elevationData && this.userSettings_.displayAdvancedElevationData) {
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
