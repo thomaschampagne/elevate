@@ -1,20 +1,33 @@
 /**
  *   ActivityBestSplitsModifier is responsible of ...
  */
-function ActivityBestSplitsModifier(userSettings, activityJson, hasPowerMeter) {
+function ActivityBestSplitsModifier(userSettings, activityJson, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
     this.userSettings = userSettings;
     this.activityJson = activityJson;
     this.hasPowerMeter = hasPowerMeter;
+    this.splitsConfiguration = splitsConfiguration;
+    this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function() {};
+    this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
 }
 
 ActivityBestSplitsModifier.Units = {
     Minutes: 0,
     Kilometers: 1,
+    Miles: 2,
+    
+    MetersToMilesFactor: 0.000621371192,
+    MetersTo0001hMileFactor: 0.621371192,
+    KilometersToMilesFactor: 0.621371192,
+    MilesToMetersFactor: 1609.344,
+    KilometersToMetersFactor: 1000,
     
     getLabel: function(unit) {
         switch (unit) {
             case ActivityBestSplitsModifier.Units.Kilometers:
                 return "km";
+                
+            case ActivityBestSplitsModifier.Units.Miles:
+                return "mi";
                 
             case ActivityBestSplitsModifier.Units.Minutes:
                 return "min";
@@ -32,28 +45,36 @@ ActivityBestSplitsModifier.prototype = {
 
     modify: function modify() {
 
+        var self = this;
+
         // wait for Segments section load
         if ($("#segments").length === 0) {
             setTimeout(function() {
-                modify();
+                modify.call(self);
             }, 500);
             return;
         }
+        
+        $("#segments").addClass("best-splits-processed");
 
-        var self = this,
-            segments = $("#segments"),
+        var segments = $("#segments"),
             bestSplitsHeader = $("<h3 class=\"inset segments-header bestsplits-header-title\" style='cursor: pointer'>Best Splits</h3>"),
-            segmentsHeader = segments.find("h3.segments-header")
-                                .css("font-weight", "bold")
-                                .css("text-decoration", "underline")
-                                .css("cursor", "pointer")
-                                .addClass("segments-header-title")
-                                .before(bestSplitsHeader),
             bestSplitsSection = $("<section id='bestsplits' class='pinnable-anchor' style='display: none;'></section>"),
             map,
             splitPolyline,
             splitAltitude,
-            splitColor = "blue";
+            splitColor = "blue",
+            selectedSplitId,
+            measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
+
+        self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
+
+        segments.find("h3.segments-header")
+                .css("font-weight", "bold")
+                .css("text-decoration", "underline")
+                .css("cursor", "pointer")
+                .addClass("segments-header-title")
+                .before(bestSplitsHeader)
                 
         if (pageView) {
             if (pageView.contexts) {
@@ -86,11 +107,7 @@ ActivityBestSplitsModifier.prototype = {
             bestSplitsSection.show();
         });
         
-        $(".segments-header-title").click(function() {
-            $(".segments-header-title").css("font-weight", "bold").css("text-decoration", "underline");
-            $(".bestsplits-header-title").css("font-weight", "normal").css("text-decoration", "none");            
-            bestSplitsSection.hide();
-            segments.find("table.segments").show();
+        var removeSplitSelection = function() {
             if (map && splitPolyline) {
                 map.removeLayer(splitPolyline);
                 splitPolyline = null;
@@ -99,6 +116,15 @@ ActivityBestSplitsModifier.prototype = {
                 splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0");
             }
             $("[data-activity-points].selected").removeClass("selected").css({ "background-color": "", "color": "black" });
+            selectedSplitId = undefined;
+        };
+        
+        $(".segments-header-title").click(function() {
+            $(".segments-header-title").css("font-weight", "bold").css("text-decoration", "underline");
+            $(".bestsplits-header-title").css("font-weight", "normal").css("text-decoration", "none");            
+            bestSplitsSection.hide();
+            segments.find("table.segments").show();
+            removeSplitSelection();
         });
                 
         $(document).on("click", "[data-activity-points]", {}, function() {
@@ -112,8 +138,7 @@ ActivityBestSplitsModifier.prototype = {
                 }                
                 var range = $(this).attr("data-activity-points").split("-"),
                     start = parseInt(range[0]),
-                    stop = parseInt(range[1]),
-                    length = stop - start + 1;
+                    stop = parseInt(range[1]);
                 splitPolyline = L.polyline([], { color: splitColor });
                 for (var i = start; i <= stop; i++) {
                     splitPolyline.addLatLng(L.latLng(self.activityJson.latlng[i][0], self.activityJson.latlng[i][1]));
@@ -134,6 +159,8 @@ ActivityBestSplitsModifier.prototype = {
                 splitAltitude.attr("height", height);
                 splitAltitude.attr("width", xScale(self.activityJson.distance[stop] - self.activityJson.distance[start]));
                 splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0.3");
+                
+                selectedSplitId = $(this).data("split-id");
             }
         });
         
@@ -149,53 +176,157 @@ ActivityBestSplitsModifier.prototype = {
                             "<th style='text-align: center'></th>" +
                             "</tr>" +
                             "</thead>" + 
-                            "<tbody>" +
                             "<tfoot>" +
+                            "<tr>" + 
+                            "<td colspan='7'>Length:&nbsp;" + 
+                            "<input type='number' min='1' max='9999' value='10' id='best-split-new-length' style='width: 100px' />&nbsp;" +                        
+                            "Type:&nbsp;<select id='best-split-new-unit'>" +
+                            "<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
+                            "<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
+                            "<option value='" + ActivityBestSplitsModifier.Units.Miles + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Miles) + "</option>" +
+                            "</select>&nbsp;" +
+                            "<a class='button' id='best-split-new-add'>Add new split</a>" +
+                            "</td>" +
+                            "</tr>" +                                                        
                             "<tr>" +
                             "<td colspan='7' style='text-align: center'><em>Data accuracy depends on GPS logging interval used to record this activity. Move cursor over values to see exact distance/time at which the value was computed. Click on any value to see the split on map and altitude chart.</em></th>" +
                             "</tr>" +
                             "</tfoot>" +
-                            "</tbody");
+                            "<tbody class='splits-list'>" +
+                            "</tbody" +
+                            "</table>");
         bestSplitsSection.append(splitsTable);
         var splitsTableBody = splitsTable.find("tbody");
-        
-        // todo: move it to user settings and allow to add new splits
-        var splitsConfiguration = [
-            { length: 1, unit: ActivityBestSplitsModifier.Units.Kilometers },
-            { length: 10, unit: ActivityBestSplitsModifier.Units.Kilometers },
-            { length: 30, unit: ActivityBestSplitsModifier.Units.Kilometers },
-            { length: 50, unit: ActivityBestSplitsModifier.Units.Kilometers },
-            { length: 1, unit: ActivityBestSplitsModifier.Units.Minutes },
-            { length: 10, unit: ActivityBestSplitsModifier.Units.Minutes },
-            { length: 20, unit: ActivityBestSplitsModifier.Units.Minutes },
-            { length: 60, unit: ActivityBestSplitsModifier.Units.Minutes }
+                
+        var splitsArray = [
+            { length: 1, unit: ActivityBestSplitsModifier.Units.Kilometers, id: Helper.guid() },
+            { length: 10, unit: ActivityBestSplitsModifier.Units.Kilometers, id: Helper.guid() },
+            { length: 30, unit: ActivityBestSplitsModifier.Units.Kilometers, id: Helper.guid() },
+            { length: 50, unit: ActivityBestSplitsModifier.Units.Kilometers, id: Helper.guid() },
+            { length: 1, unit: ActivityBestSplitsModifier.Units.Minutes, id: Helper.guid() },
+            { length: 10, unit: ActivityBestSplitsModifier.Units.Minutes, id: Helper.guid() },
+            { length: 20, unit: ActivityBestSplitsModifier.Units.Minutes, id: Helper.guid() },
+            { length: 60, unit: ActivityBestSplitsModifier.Units.Minutes, id: Helper.guid() }
         ];
         
+        if (self.splitsConfiguration) {
+            splitsArray = self.splitsConfiguration.splits || splitsArray;
+        }
+        splitsArray.sort(function(left, right) {
+            if (left.unit === right.unit) {
+                return left.length - right.length;
+            } else {
+                return left.unit - right.unit;
+            }
+        });
+                
         var i,
-            j,
-            max,
             activityDistanceInMeters = this.activityJson.distance[this.activityJson.distance.length - 1],
-            activityDurationInSeconds = this.activityJson.time[this.activityJson.time.length - 1];        
-        
-        i = 0;
-        splitsConfiguration.forEach(function(split) {
-            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * 1000) > activityDistanceInMeters) {
+            activityDurationInSeconds = this.activityJson.time[this.activityJson.time.length - 1];
+            
+        var addSplitToTable = function(split) {
+            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.KilometersToMetersFactor) > activityDistanceInMeters) {
                 return;
             }
+            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.MilesToMetersFactor) > activityDistanceInMeters) {
+                return;
+            }            
             if (split.unit === ActivityBestSplitsModifier.Units.Minutes && (split.length * 60) > activityDurationInSeconds) {
                 return;
             }
-            split.id = i;            
-            splitsTableBody.append("<tr id='split-" + i + "'>" + 
+            split.id = split.id || Helper.guid();
+            splitsTableBody.append("<tr id='split-" + split.id + "'>" + 
                                    "<td>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
-                                   "<td class='value'><div id='split-" + i + "-time'></div><div id='split-" + i + "-distance'></div></td>" +
-                                   "<td class='value'><div id='split-" + i + "-avg-speed'></div></td>" +
-                                   "<td class='value'><div id='split-" + i + "-avg-hr'></div></td>" +
-                                   "<td class='value'><div id='split-" + i + "-avg-power'></div></td>" +
-                                   "<td class='value'><div id='split-" + i + "-avg-cadence'></div></td>" +
-                                   "<td><div id='split-" + i + "-remove'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-time'></div><div id='split-" + split.id + "-distance'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-avg-speed'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-avg-hr'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-avg-power'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
+                                   "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Remove</button></td>" +
                                    "</tr>");
-            i++;
+        };
+        
+        splitsArray.forEach(function(split) {
+            addSplitToTable(split);
+        });
+                            
+        var saveSplitsConfiguration = function(splitsArray) {
+            self.saveSplitsConfigrationMethod({ splits: splitsArray });
+        };
+                        
+        $(document).on("click", ".best-split-remove", function(e) {
+            e.preventDefault();
+            var splitId = $(this).data("split-id");
+            if (splitId === selectedSplitId) {
+                removeSplitSelection();
+            }
+            splitsTableBody.find("#split-" + splitId).fadeOut(function() {
+                $(this).remove();
+            });
+            splitsArray = splitsArray.filter(function(split) {
+                return split.id != splitId;
+            });
+            saveSplitsConfiguration(splitsArray);
+        });
+                        
+        $("#best-split-new-add").click(function(e) {
+            e.preventDefault();
+            var splitLength = parseInt($("#best-split-new-length").val());
+            if (splitLength < 1) {
+                $("#best-split-new-length").focus();
+                return;
+            }
+            var splitType = parseInt($("#best-split-new-unit").val());
+            switch (splitType) {
+                
+                case ActivityBestSplitsModifier.Units.Minutes:
+                    if ((splitLength * 60) > activityDurationInSeconds) {
+                        $.fancybox({
+                            'autoScale': true,
+                            'transitionIn': 'fade',
+                            'transitionOut': 'fade',
+                            'type': 'iframe',
+                            'content': '<div>The length of the split cannot be longer than the activity time.</div>',
+                            'afterClose': function() {                                
+                                $("#best-split-new-length").focus();
+                            }
+                        });
+                        return;
+                    }
+                    break;
+                    
+                case ActivityBestSplitsModifier.Units.Kilometers:
+                case ActivityBestSplitsModifier.Units.Miles:
+                    var valueToCheck = splitLength * (splitType === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
+                    if (valueToCheck > activityDistanceInMeters) {
+                        $.fancybox({
+                            'autoScale': true,
+                            'transitionIn': 'fade',
+                            'transitionOut': 'fade',
+                            'type': 'iframe',
+                            'content': '<div>The length of the split cannot be longer than the activity distance.</div>',
+                            'afterClose': function() {                                
+                                $("#best-split-new-length").focus();
+                            }
+                        });
+                        return;
+                    }
+                    break;
+                
+                default:
+                    $("#best-split-new-unit").focus();
+                    return;
+            }
+            
+            var newSplit = {
+                id: Helper.guid(),
+                unit: splitType,
+                length: splitLength
+            };
+            splitsArray.push(newSplit);
+            saveSplitsConfiguration(splitsArray);
+            addSplitToTable(newSplit);
+            processSplit(newSplit);
         });
     
         var newSplitValue = function(value) {
@@ -213,7 +344,6 @@ ActivityBestSplitsModifier.prototype = {
             var i,
                 j, 
                 max,
-                total,
                 distance,
                 hr,
                 totalHr,
@@ -319,11 +449,17 @@ ActivityBestSplitsModifier.prototype = {
                     
                     checkValues(time);
                 }
+                
+                if (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles) {
+                    values.distance.value *= ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor;
+                    values.avgSpeed.value *= ActivityBestSplitsModifier.Units.KilometersToMilesFactor;
+                }
             }
             
-            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers) {
-                var distanceInMeters = split.length * 1000,
-                    distanceBefore;
+            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers || split.unit === ActivityBestSplitsModifier.Units.Miles) {
+                var distanceInMeters = split.length * (split.unit === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor),
+                    distanceBefore,
+                    distanceInUserUnits;
                 for (i = 0, max = this.activityJson.distance.length; i < max; i++) {
                     distance = this.activityJson.distance[i];
                     distanceBefore = 0;
@@ -343,22 +479,29 @@ ActivityBestSplitsModifier.prototype = {
                         break;
                     }
                     
+                    distanceInUserUnits = distance * (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor : 1);
+                    
                     time = activityJson.time[end] - activityJson.time[begin];
                     if (time < values.time.value) {
                         values.time.value = time;
                         values.time.begin = begin;
                         values.time.end = end;
-                        values.time.timeOrDistance = distance;
+                        values.time.timeOrDistance = distanceInUserUnits;
                     }
                     
-                    checkValues(distance);
+                    checkValues(distanceInUserUnits);
+                }
+                
+                if (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles) {
+                    values.distance.value *= ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor;
+                    values.avgSpeed.value *= ActivityBestSplitsModifier.Units.KilometersToMilesFactor;
                 }
             }
             
             return values;
         }.bind(this);
         
-        splitsConfiguration.forEach(function(split) {
+        var processSplit = function(split) {
             var splitId = "#split-" + split.id,
                 splitRow = splitsTableBody.find(splitId),
                 setValue = function(elementId, value, formatFunction, defValue, tooltipFormatFunction) {
@@ -368,6 +511,7 @@ ActivityBestSplitsModifier.prototype = {
                         var text = formatFunction ? formatFunction(value.value) : value.value;
                         element.text(text);
                         element.attr("data-activity-points", value.begin + "-" + value.end);
+                        element.data("split-id", split.id);
                         element.css({ "cursor": "pointer" });
                         if (value.timeOrDistance && tooltipFormatFunction) {
                             element.attr("title", tooltipFormatFunction(value.timeOrDistance));
@@ -380,33 +524,39 @@ ActivityBestSplitsModifier.prototype = {
                 };
             splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
             
+            // todo: use Worker
             var value = computeSplit(split, self.activityJson),
                 formatDistance = function(value) {
-                    return Helper.formatNumber(value / 1000) + "km";
+                    return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
                 },
                 formatTime = function(value) {
                     return Helper.secondsToHHMMSS(value, true);
                 },
-                formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Kilometers ? formatDistance : formatTime;
+                formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
+                speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
             
             setValue(splitId + "-time", value.time, formatTime, "", formatDistance);
             setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
-            setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + "km/h"; }, "n/a", formatTooltip);
+            setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
             setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
             setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
             setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
             splitRow.find("td.value span.ajax-loading-image").remove();
+        };
+        
+        splitsArray.forEach(function(split) {
+            processSplit(split);
         });
         
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run the modify function
         var waitForSegmentsSectionRemoved = function() {
-            if ($("#segments").length !== 0) {
+            if ($("#segments.best-splits-processed").length !== 0) {
                 setTimeout(function() {
                     waitForSegmentsSectionRemoved();
                 }, 1000);
                 return;
             }
-            modify();
+            modify.call(self);
         };
         waitForSegmentsSectionRemoved();
     },
