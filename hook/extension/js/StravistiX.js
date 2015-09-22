@@ -547,9 +547,15 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivityBestSplits_()");
         
-        this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {            
-            var activityBestSplitsModifier = new ActivityBestSplitsModifier(this.userSettings_, jsonResponse, hasPowerMeter);
-            activityBestSplitsModifier.modify();
+        var self = this;
+        
+        this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {
+            Helper.getFromStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', function(response) {
+                var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {
+                    Helper.setToStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', splitsConfiguration, function(response) {});
+                });
+                activityBestSplitsModifier.modify();
+            });            
         }.bind(this));
     },
 
