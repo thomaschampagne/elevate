@@ -182,10 +182,8 @@ AthleteStatsModifier.prototype = {
         total = parseInt($("div.cycling table tbody:last tr:nth(2) td:last").text() || "0");
         total = total + parseInt($("div.running table tbody:last tr:last td:last").text() || "0");
         
-        var totalCyclingDistanceUnitText = $("div.cycling table tbody:last tr:nth(1) td:last").text(),
-            totalRunningDistanceUnitText = $("div.running table tbody:last tr:nth(1) td:last").text();
-        if ((totalCyclingDistanceUnitText && totalCyclingDistanceUnitText.length > 1 && totalCyclingDistanceUnitText.substr(-2) === "mi")
-            || (totalRunningDistanceUnitText && totalRunningDistanceUnitText.length > 1 && totalRunningDistanceUnitText.substr(-2) === "mi")) {
+        var measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
+        if (measurementPreference != 'meters') {
             this.distanceInKilometers = false;
             this.distanceUnit = "mi";
             this.elevationInMeters = false;
