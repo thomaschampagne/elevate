@@ -24,31 +24,44 @@ GoogleMapsComeBackModifier.prototype = {
         // Next load the Google API from external
         this.getGoogleMapsApi();
 
+
+        // If segment Item has been clicked then fetch info on segment and display
+        /* 
         var self = this;
         $('[data-segment-effort-id]').click(function() {
             var effortIdClicked = $(this).attr('data-segment-effort-id');
             self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortIdClicked);
         });
+        */
 
     },
 
     googleMapsApiLoaded: function(activityId) {
 
-        this.fetchPathFromStream(activityId, function(pathArray) {
+        // Place show button over MapBox activity main map
+        $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap" href="#">View in Google Maps</a>').each(function() {
 
-            this.pathArray = pathArray;
+            $('#showInGoogleMap').on('click', function() {
 
-            // Check if effort id is given
-            var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+                this.fetchPathFromStream(activityId, function(pathArray) {
 
-            if (effortId) {
+                    this.pathArray = pathArray;
 
-                this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
+                    // Check if effort id is given
+                    var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
 
-            } else {
-                this.displayGoogleMapWithPath(this.pathArray);
-            }
+                    if (effortId) {
+                        this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
+                    } else {
+                        this.displayGoogleMapWithPath(this.pathArray);
+                    }
+
+                }.bind(this));
+
+            }.bind(this));
+
         }.bind(this));
+
     },
 
     fetchPathFromStream: function(activityId, callback) {
@@ -98,7 +111,18 @@ GoogleMapsComeBackModifier.prototype = {
 
     displayGoogleMapWithPath: function(mainPathArray, highlightFromTo) {
 
-        var html = '<div style="padding-bottom:10px;"><div style="height:350px;width:100%;" id="gmaps_canvas"></div></div>';
+        var mapSize = [
+            window.innerWidth * 0.9,
+            window.innerHeight * 0.9
+        ];
+
+        var html = '<div style="padding-bottom:10px;"><div style="height:' + mapSize[1] + 'px;width:' + mapSize[0] + 'px;" id="gmaps_canvas"></div></div>';
+
+        $.fancybox(html, {
+            'autoScale': true,
+            'transitionIn': 'fade',
+            'transitionOut': 'fade'
+        });
 
         // Test if exit then no append before
         if (!$('#gmaps_canvas').length) {
@@ -109,13 +133,15 @@ GoogleMapsComeBackModifier.prototype = {
         } else {
             this.applyToMap(mainPathArray, highlightFromTo);
         }
+
     },
 
     applyToMap: function(mainPathArray, highlightFromTo) {
 
         // if (!this.map) {
         this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
-            mapTypeId: google.maps.MapTypeId.TERRAIN
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            overviewMapControl: true
         });
         // }
 
