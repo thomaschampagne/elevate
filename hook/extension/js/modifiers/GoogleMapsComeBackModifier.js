@@ -43,6 +43,11 @@ GoogleMapsComeBackModifier.prototype = {
 
             $('#showInGoogleMap').on('click', function() {
 
+                // Show loading message while loading gmaps and path
+                $.fancybox('<span style="width:100px;height:50px">Loading...</span>', {
+                    'autoScale': true
+                });
+
                 this.fetchPathFromStream(activityId, function(pathArray) {
 
                     this.pathArray = pathArray;
