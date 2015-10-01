@@ -39,14 +39,27 @@ GoogleMapsComeBackModifier.prototype = {
     googleMapsApiLoaded: function(activityId) {
 
         // Place show button over MapBox activity main map
+        this.placeMainGoogleMapButton(activityId);
+
+        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
+        this.placeSegmentAreaGoogleMapButton(activityId);
+
+    },
+
+    showWaitLoadingMessage: function() {
+        $.fancybox('<div style="width:100px;height:50px">Loading...</div>', {
+            'autoScale': true
+        });
+    },
+
+    placeMainGoogleMapButton: function(activityId) {
+
         $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>').each(function() {
 
             $('#showInGoogleMap').on('click', function() {
 
                 // Show loading message while loading gmaps and path
-                $.fancybox('<span style="width:100px;height:50px">Loading...</span>', {
-                    'autoScale': true
-                });
+                this.showWaitLoadingMessage();
 
                 this.fetchPathFromStream(activityId, function(pathArray) {
 
@@ -66,8 +79,10 @@ GoogleMapsComeBackModifier.prototype = {
             }.bind(this));
 
         }.bind(this));
+    },
 
-        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
+    placeSegmentAreaGoogleMapButton: function(activityId) {
+
         // Listening for Segment Change visualization
         if (!Strava.Labs) return;
 
@@ -88,15 +103,19 @@ GoogleMapsComeBackModifier.prototype = {
 
                 $('#showSegInGoogleMap').on('click', function() {
 
+                    self.showWaitLoadingMessage();
+
                     self.fetchPathFromStream(activityId, function(pathArray) {
 
-                        this.pathArray = pathArray;
+                        self.pathArray = pathArray;
 
                         // Check if effort id is given
                         var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
 
                         if (effortId) {
-                            self.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
+                            self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortId);
+                        } else {
+                            console.error('Cannot display map: effortId not given');
                         }
 
                     }.bind(this));
@@ -107,7 +126,6 @@ GoogleMapsComeBackModifier.prototype = {
 
             return r;
         };
-
     },
 
     fetchPathFromStream: function(activityId, callback) {
