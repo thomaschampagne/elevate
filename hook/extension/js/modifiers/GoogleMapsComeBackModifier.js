@@ -39,7 +39,7 @@ GoogleMapsComeBackModifier.prototype = {
     googleMapsApiLoaded: function(activityId) {
 
         // Place show button over MapBox activity main map
-        $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap" href="#">View in Google Maps</a>').each(function() {
+        $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>').each(function() {
 
             $('#showInGoogleMap').on('click', function() {
 
@@ -66,6 +66,47 @@ GoogleMapsComeBackModifier.prototype = {
             }.bind(this));
 
         }.bind(this));
+
+        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
+        // Listening for Segment Change visualization
+        if (!Strava.Labs) return;
+
+        var view = Strava.Labs.Activities.SegmentLeaderboardView;
+
+        if (!view) return;
+
+        var functionRender = view.prototype.render;
+        var self = this;
+
+        view.prototype.render = function() {
+
+            var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
+
+            var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+
+            $('.effort-map').before('<a class="button btn-block btn-primary"  id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
+
+                $('#showSegInGoogleMap').on('click', function() {
+
+                    self.fetchPathFromStream(activityId, function(pathArray) {
+
+                        this.pathArray = pathArray;
+
+                        // Check if effort id is given
+                        var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+
+                        if (effortId) {
+                            self.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
+                        }
+
+                    }.bind(this));
+
+                }.bind(this));
+
+            }.bind(this));
+
+            return r;
+        };
 
     },
 
