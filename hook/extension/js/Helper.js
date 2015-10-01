@@ -71,6 +71,11 @@ Helper.lowerQuartile = function(valuesSorted) {
     return (valuesSorted[q1]);
 };
 
+Helper.quartile_95 = function(valuesSorted) {
+    var q1 = Math.round(0.95 * (valuesSorted.length + 1));
+    return (valuesSorted[q1]);
+};
+
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {
     return (parseFloat(hrr) / 100 * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
 };

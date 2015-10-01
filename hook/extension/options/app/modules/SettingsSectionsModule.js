@@ -44,6 +44,12 @@ settingsSectionsModule.data = [{
         optionTitle: 'Grade data',
         optionLabels: ['Cycling', 'Running'],
         optionHtml: '<h3>Grade Profile</h3> Tell you if your activity was "Hilly" with climbs and downhills or "Flat" is you activity has been performed on... flat. <h3>Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the grades sorted ascending you obtained during an activity.</br></br> <strong>25% Quartile</strong>: This indicator represents the grades you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br></br> <strong>50% Median</strong>: This indicator represents the grades you maintained at the position "50%". It\'s simply the median...</br></br> <strong>75% Quartile</strong>: This indicator represents the grades you maintai</strong>ned at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Times and percentages during climbs, flats and downhills</h3> Do what section title describes... :)',
+    }, {
+        optionKey: 'displayAdvancedElevationData',
+        optionType: 'checkbox',
+        optionTitle: 'Elevation data',
+        optionLabels: ['Cycling', 'Running'],
+        optionHtml: '<h3>Average Elevation</h3> The... average elevation of your activity :) <h3>Elevation Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the elevations sorted ascending you obtained during an activity.</br> </br> <strong>25% Quartile</strong>: This indicator represents the elevations you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the elevations you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the elevations you maintai</strong>ned at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Average Ascent Speed or VAM</h3> VAM is an abbreviation for the Italian term "Velocità Ascensionale Media", translated in English to mean "average ascent speed" or "mean ascent velocity". This is basically your average ascent speed while climbing. The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour. <h3>Ascent Speed Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the ascent speeds sorted ascending you obtained during an activity.  The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour.</br> </br> <strong>25% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the ascent speed you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "75%". This is commonly called "Upper quartile" or Q3.',
     }]
 }, {
     sectionTitle: 'Activity viewing options',
@@ -53,7 +59,7 @@ settingsSectionsModule.data = [{
         optionTitle: 'Enable both legs extended cadence data',
         optionLabels: ['Running'],
         optionHtml: 'This will display StravistiX extended cadence data for 2 legs instead of 1 e.g 180 SPM, not 90 SPM.',
-    },{
+    }, {
         optionKey: 'displayBikeOdoInActivity',
         optionType: 'checkbox',
         optionTitle: 'Enable bike odo display',
