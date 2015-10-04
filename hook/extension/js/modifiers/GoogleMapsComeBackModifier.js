@@ -91,6 +91,11 @@ GoogleMapsComeBackModifier.prototype = {
 
     placeMainGoogleMapButton: function(activityId) {
 
+        // Do not add Main Google Map Button if native strava map not displayed
+        if(!$('#map-canvas') || $('#map-canvas').is(':hidden')) {
+            return;
+        }
+
         $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>').each(function() {
 
             $('#showInGoogleMap').on('click', function() {
