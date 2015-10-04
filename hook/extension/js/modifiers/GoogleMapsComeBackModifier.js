@@ -1,8 +1,9 @@
 /**
  *   GoogleMapsComeBackModifier is responsible of ...
  */
-function GoogleMapsComeBackModifier(activityId) {
+function GoogleMapsComeBackModifier(activityId, appResources) {
     this.activityId = activityId;
+    this.appResources = appResources;
 }
 
 /**
@@ -92,7 +93,7 @@ GoogleMapsComeBackModifier.prototype = {
     placeMainGoogleMapButton: function(activityId) {
 
         // Do not add Main Google Map Button if native strava map not displayed
-        if(!$('#map-canvas') || $('#map-canvas').is(':hidden')) {
+        if (!$('#map-canvas') || $('#map-canvas').is(':hidden')) {
             return;
         }
 
@@ -186,7 +187,6 @@ GoogleMapsComeBackModifier.prototype = {
     },
 
     getEffortId: function() {
-        // return $('[data-segment-effort-id]').attr('data-segment-effort-id') || (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
         return (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
     },
 
@@ -246,7 +246,7 @@ GoogleMapsComeBackModifier.prototype = {
             window.innerHeight * 0.9
         ];
 
-        var html = '<div style="padding-bottom:10px;"><div style="height:' + mapSize[1] + 'px;width:' + mapSize[0] + 'px;" id="gmaps_canvas"></div></div>';
+        var html = '<div style="padding-bottom:10px; text-align:center;"><div style="height:' + mapSize[1] + 'px;width:' + mapSize[0] + 'px;" id="gmaps_canvas"></div><a target="_blank" href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId=reviveGoogleMaps">Disable this feature in settings</a></div>';
 
         $.fancybox(html, {
             'autoScale': true,

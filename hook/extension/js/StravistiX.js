@@ -652,7 +652,7 @@ StravistiX.prototype = {
             return;
         }
 
-        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_);
+        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_, this.appResources_);
         googleMapsComeBackModifier.modify();
     },
 
