@@ -18,8 +18,6 @@ GoogleMapsComeBackModifier.prototype = {
 
     modify: function modify() {
 
-        // TODO handle case when user click analysis then Preview
-
         // Skip modify if analysis section is watched
         if (this.isAnalysisSection()) {
             console.log('[GoogleMapsComeBackModifier] Skipping Analysis Section');
@@ -46,11 +44,23 @@ GoogleMapsComeBackModifier.prototype = {
 
     googleMapsApiLoaded: function(activityId) {
 
-        // Place show button over MapBox activity main map
-        this.placeMainGoogleMapButton(activityId);
+        // Place the gmaps buttons
+        this.placeGoogleMapsButtons(activityId);
 
-        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
-        this.placeSegmentAreaGoogleMapButton(activityId);
+        // Handle case when user overview button
+        // If user clickoverview then reload gmap buttons placement
+        $('[data-menu="overview"]').click(function() {
+
+            // Execute at the end with set timeout
+            setTimeout(function() {
+                // Place the gmaps buttons
+                this.placeGoogleMapsButtons(activityId);
+
+            }.bind(this));
+
+        }.bind(this));
+
+
 
     },
 
@@ -58,6 +68,15 @@ GoogleMapsComeBackModifier.prototype = {
         $.fancybox('<div style="width:100px;height:50px">Loading...</div>', {
             'autoScale': true
         });
+    },
+
+    placeGoogleMapsButtons: function(activityId) {
+
+        // Place show button over MapBox activity main map
+        this.placeMainGoogleMapButton(activityId);
+
+        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
+        this.placeSegmentAreaGoogleMapButton(activityId);
     },
 
     placeMainGoogleMapButton: function(activityId) {
@@ -105,7 +124,12 @@ GoogleMapsComeBackModifier.prototype = {
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            $('.effort-map').before('<a class="button btn-block btn-primary"  id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
+            // Button already existing, skiping...
+            if ($('#showSegInGoogleMap').length) {
+                return;
+            }
+
+            $('.effort-map').before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
 
                 $('#showSegInGoogleMap').on('click', function() {
 
