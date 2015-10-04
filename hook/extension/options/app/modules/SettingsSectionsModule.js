@@ -105,6 +105,12 @@ settingsSectionsModule.data = [{
         optionTitle: 'Enabled segment time comparison to PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment PR time and the time from the activity for that segment.',
+    }, {
+        optionKey: 'reviveGoogleMaps',
+        optionType: 'checkbox',
+        optionTitle: 'Revive Google Maps on activities (BETA)',
+        optionLabels: ['All'],
+        optionHtml: 'Strava has discontinued Google Maps inside the web version to use "MapBox+OpenStreetMap" maps.<br/><br/>This option allow you revive Google Maps and Street view features with an orange button placed near Strava native maps.<br/><br/><strong>Note:</strong> This feature is currently in BETA and works only on activities page at the moment.',
     }]
 }, {
     sectionTitle: 'Segments viewing options',

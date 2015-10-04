@@ -94,7 +94,7 @@ StravistiX.prototype = {
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
         this.handleGoogleMapsComeBackModifier();
-        
+
 
     },
 
@@ -548,7 +548,7 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-            
+
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
         activitySegmentTimeComparisonModifier.modify();
     },
@@ -639,9 +639,13 @@ StravistiX.prototype = {
 
         var virtualPartnerModifier = new VirtualPartnerModifier(this.activityId_);
         virtualPartnerModifier.modify();
-    },    
+    },
 
     handleGoogleMapsComeBackModifier: function() {
+
+        if (!this.userSettings_.reviveGoogleMaps) {
+            return;
+        }
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
