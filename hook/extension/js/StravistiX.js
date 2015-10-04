@@ -548,8 +548,8 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier();
+            
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
         activitySegmentTimeComparisonModifier.modify();
     },
 
