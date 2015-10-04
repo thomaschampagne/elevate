@@ -48,7 +48,7 @@ GoogleMapsComeBackModifier.prototype = {
         this.placeGoogleMapsButtons(activityId);
 
         // Handle case when user overview button
-        // If user clickoverview then reload gmap buttons placement
+        // If user click left overview button then reload gmap buttons placement
         $('[data-menu="overview"]').click(function() {
 
             // Execute at the end with set timeout
@@ -60,7 +60,17 @@ GoogleMapsComeBackModifier.prototype = {
 
         }.bind(this));
 
+        // If user click left segment button (running ie) then reload gmap buttons placement
+        $('[data-menu="segments"]').click(function() {
 
+            // Execute at the end with set timeout
+            setTimeout(function() {
+                // Place the gmaps buttons
+                this.placeGoogleMapsButtons(activityId);
+
+            }.bind(this));
+
+        }.bind(this));
 
     },
 
