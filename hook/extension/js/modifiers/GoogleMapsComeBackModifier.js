@@ -18,6 +18,14 @@ GoogleMapsComeBackModifier.prototype = {
 
     modify: function modify() {
 
+        // TODO handle case when user click analysis then Preview
+
+        // Skip modify if analysis section is watched
+        if (this.isAnalysisSection()) {
+            console.log('[GoogleMapsComeBackModifier] Skipping Analysis Section');
+            return;
+        }
+
         // Bind function for be called when Google API loaded
         $(window).bind('gMapsLoaded', this.googleMapsApiLoaded(this.activityId));
 
@@ -66,7 +74,7 @@ GoogleMapsComeBackModifier.prototype = {
                     this.pathArray = pathArray;
 
                     // Check if effort id is given
-                    var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+                    var effortId = this.getEffortId();
 
                     if (effortId) {
                         this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
@@ -97,8 +105,6 @@ GoogleMapsComeBackModifier.prototype = {
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
-
             $('.effort-map').before('<a class="button btn-block btn-primary"  id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
 
                 $('#showSegInGoogleMap').on('click', function() {
@@ -110,7 +116,7 @@ GoogleMapsComeBackModifier.prototype = {
                         self.pathArray = pathArray;
 
                         // Check if effort id is given
-                        var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+                        var effortId = self.getEffortId();
 
                         if (effortId) {
                             self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortId);
@@ -118,14 +124,21 @@ GoogleMapsComeBackModifier.prototype = {
                             console.error('Cannot display map: effortId not given');
                         }
 
-                    }.bind(this));
-
-                }.bind(this));
-
-            }.bind(this));
+                    });
+                });
+            });
 
             return r;
         };
+    },
+
+    getEffortId: function() {
+        // return $('[data-segment-effort-id]').attr('data-segment-effort-id') || (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+        return (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+    },
+
+    isAnalysisSection: function() {
+        return window.location.pathname.match('analysis');
     },
 
     fetchPathFromStream: function(activityId, callback) {
