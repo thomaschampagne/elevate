@@ -129,7 +129,21 @@ GoogleMapsComeBackModifier.prototype = {
                 return;
             }
 
-            $('.effort-map').before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
+            var anchor;
+
+            if ($('.effort-map')) { // Try to attach segment button to effort map if cycling activity
+                anchor = $('.effort-map');
+            } else if ($('#map-canvas')) { // Try to attach segment button to map canvas if running activity
+                anchor = $('#map-canvas');
+            } else {
+                anchor = null;
+            }
+
+            if (!anchor) {
+                console.error('No anchor found to attach segment google map button');
+            }
+
+            anchor.before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
 
                 $('#showSegInGoogleMap').on('click', function() {
 
