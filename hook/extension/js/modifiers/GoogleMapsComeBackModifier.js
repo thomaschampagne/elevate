@@ -246,7 +246,7 @@ GoogleMapsComeBackModifier.prototype = {
             window.innerHeight * 0.9
         ];
 
-        var html = '<div style="padding-bottom:10px; text-align:center;"><div style="height:' + mapSize[1] + 'px;width:' + mapSize[0] + 'px;" id="gmaps_canvas"></div><a target="_blank" href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId=reviveGoogleMaps">Disable this feature in settings</a></div>';
+        var html = '<div style="padding-bottom:10px; text-align:center;"><div style="height:' + mapSize[1] + 'px;width:' + mapSize[0] + 'px;" id="gmaps_canvas"></div><a target="_blank" href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId=reviveGoogleMaps">Go to extension settings if you want to disable google maps buttons</a></div>';
 
         $.fancybox(html, {
             'autoScale': true,
