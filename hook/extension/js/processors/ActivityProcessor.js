@@ -79,13 +79,13 @@ ActivityProcessor.prototype = {
         // Median Speed
         // Q3 Speed
         // Standard deviation Speed
-        var speedData = moveData[0];
+        var speedData = (_.isEmpty(moveData)) ? null : moveData[0];
 
         // Q1 Pace
         // Median Pace
         // Q3 Pace
         // Standard deviation Pace
-        var paceData = moveData[1];
+        var paceData = (_.isEmpty(moveData)) ? null : moveData[1];
 
         // Estimated Normalized power
         // Estimated Variability index
@@ -200,7 +200,7 @@ ActivityProcessor.prototype = {
      */
     moveData_: function(activityStatsMap, velocityArray, timeArray) {
 
-        if (!velocityArray) {
+        if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -302,7 +302,7 @@ ActivityProcessor.prototype = {
      */
     powerData_: function(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray, timeArray) {
 
-        if (_.isEmpty(powerArray) || _.isEmpty(velocityArray)) {
+        if (_.isEmpty(powerArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -383,7 +383,7 @@ ActivityProcessor.prototype = {
      */
     heartRateData_: function(userGender, userRestHr, userMaxHr, heartRateArray, timeArray, activityStatsMap) {
 
-        if (_.isUndefined(heartRateArray)) {
+        if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -470,9 +470,9 @@ ActivityProcessor.prototype = {
         }
     },
 
-    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap, timeArray) { // TODO add cadence type here
+    cadenceData_: function(cadenceArray, velocityArray, activityStatsMap, timeArray) {
 
-        if (_.isUndefined(cadenceArray) || _.isUndefined(velocityArray)) {
+        if (_.isEmpty(cadenceArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -676,7 +676,7 @@ ActivityProcessor.prototype = {
 
     elevationData_: function(altitudeArray, gradeArray, timeArray) {
 
-        if (_.isUndefined(altitudeArray) || _.isUndefined(timeArray)) {
+        if (_.isEmpty(altitudeArray) || _.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
@@ -722,7 +722,7 @@ ActivityProcessor.prototype = {
 
                         // Take time from 'ascentCountEverySample' last samples 
                         for (j = 0; j < ascentCountEverySample; j++) {
-                            ascentDurationInSeconds += timeArray[i -j] - timeArray[i -j -1];
+                            ascentDurationInSeconds += timeArray[i - j] - timeArray[i - j - 1];
                         }
 
                         accumulatedElevationAscent += elevationDiff;
