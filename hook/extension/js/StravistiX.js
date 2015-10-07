@@ -53,14 +53,6 @@ StravistiX.prototype = {
                 console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
             });
         }
-        // Testing gmaps back
-        // console.warn('Gooo');
-
-        // var map = new google.maps.Map(document.getElementById("map_canvas"), {
-
-        // });
-
-        // console.warn(map);
 
         // Common
         this.handleMenu_();
