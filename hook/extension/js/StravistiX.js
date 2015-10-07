@@ -53,6 +53,14 @@ StravistiX.prototype = {
                 console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
             });
         }
+        // Testing gmaps back
+        // console.warn('Gooo');
+
+        // var map = new google.maps.Map(document.getElementById("map_canvas"), {
+
+        // });
+
+        // console.warn(map);
 
         // Common
         this.handleMenu_();
@@ -85,6 +93,9 @@ StravistiX.prototype = {
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
+        this.handleGoogleMapsComeBackModifier();
+
+
     },
 
     /**
@@ -537,7 +548,7 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-            
+
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
         activitySegmentTimeComparisonModifier.modify();
     },
@@ -628,6 +639,21 @@ StravistiX.prototype = {
 
         var virtualPartnerModifier = new VirtualPartnerModifier(this.activityId_);
         virtualPartnerModifier.modify();
+    },
+
+    handleGoogleMapsComeBackModifier: function() {
+
+        if (!this.userSettings_.reviveGoogleMaps) {
+            return;
+        }
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_, this.appResources_);
+        googleMapsComeBackModifier.modify();
     },
 
     /**
