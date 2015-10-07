@@ -333,5 +333,6 @@ var userSettings = {
     feedHideCreatedRoutes: false,
     highLightStravistiXFeature: false, // For heartrate related data.
     displaySegmentTimeComparisonToKOM: true,
-    displaySegmentTimeComparisonToPR: true
+    displaySegmentTimeComparisonToPR: true,
+    bestSplitsConfiguration: null
 };
