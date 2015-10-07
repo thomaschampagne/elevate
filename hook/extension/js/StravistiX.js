@@ -140,35 +140,19 @@ StravistiX.prototype = {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        // var message = '<h5><strong>New Features:</strong></h5>';
-        // message += '<h6>- Exporting segment effort as Virtual Partner for your GPS through activity page</h6>';
-        // message += '<h6><strong>Since 0.6.1:</strong></h6>';
-        // message += '<h6>- OpenStreetMap map flipper for activities added</h6>';
-        // message += '<h6>- StravaPlus is named StravistiX (= Strava + Statistics + Xtended) </h6>';
-        // message += '<h6>- Customs zones for each Xtended data have been implemented</h6>';
-        // message += '<h5>- <strong>Hotfix:</strong> on updates: remove opening chrome tab to <i><a target="_blank"href="http://thomaschampagne.github.io/stravistix">stravistix website</a></i>. A bit spammy... sry...</h5>';
-        // message += '<h5>- Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.</h5>';
-        // message += '<h5>- Added 75% speed/pace and average climbing speed to summary panel (under "show extended statistics" button)</h5>';
-        // message += '<h4><a target="_blank" href="' + this.appResources_.settingsLink + '#/donate">Donate to help this project to grow up</a></h4>';
-        // message += '<h5>- NEW: Segments time comparaison with KOM and previous PR inside activity page</h5>';
-        // message += '<h5>- FIX: Year progressions to current month/day panel not visible if language different from english. Go to "My profile" to see this feature.</h5>';
-        // message += '<h5>- Remove OSM remotes maps links on activities, Strava now use OpenStreetMap :)</h5>';
-        // message += '<h5>- Add FlyBy direct link in dashboard feed</h5>';
-        // message += '<h5>- Fix extended data compute error on workouts</h5>';
-        // message += '<h5>- Bug Fix of v0.7.8: Wrong standard deviation cadence computed and displayed for cycling</h5>';
-        // message += '<h5>- Add standard deviation cadence to extended data popup panel</h5>';
-        // message += '<h5>- Add Pedaling time to summary panel (v0.7.8)</h5>';
-        // message += '<h5>- Add median cadence + standard deviation to summary panel (v0.7.8)</h5>';
-        // message += '<h5>- Various bug fixes (v0.7.8)</h5>';
-        message += '<h5>- <strong>NEW:</strong> Add Ascent speed (vertical meters / hour) statistics to extended elevation data stats: Average, first quartile, median and third quartile ascent speed</h5>';
-        message += '<h5>- Fixing bug when exporting another riders segment as a virtual partner</h5>';
-        message += '<h5><strong>STILL working on the below BIG update... More complicated than expected... Please wait... :</strong></h5>';
-        message += '<h5>Segments efforts will have their own extended statistics with graphs and tables. Like an activity ;). Lot of messages for implementing this. The need is clearly understandable. It is being developed !</h5>';
-        message += '<h5>I will also revive Google maps in strava: released as an option, OSM maps will not be removed of course. <a href="https://twitter.com/champagnethomas/status/642048821531426816" target="_blank">As i said here.</a></h5>';
-        message += '<a class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
-        message += '<strong>Donate to help this project to grow up</strong>';
+        message += '<h3><strong>YEAH version 1.0.0 is now out !!! And Google Maps REVIVED !!</strong></h3>';
+        message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
+        message += '<h5>- <strong>NEW:</strong> Add on/off extension settings for the segment time comparison on activities pages</h5>';
+        message += '<h5>- <strong>NEW:</strong> Segment time comparison for QOM (Womens) on activities pages</h5>';
+        message += '<h5>- <strong>FIX</strong> When segment time comparison may not be displayed</h5>';
+        message += '<h5>- <strong>FIX</strong> When no longer seeing extended stats on turbo activities</h5>';
+        message += '<h5>- <strong>FIX</strong> When move ratio not being displayed (eg: Running race)</h5>';
+        message += '<h5><strong>The following update is delayed at the moment:</strong></h5>';
+        message += '<h5>Like an activity, segments efforts will have their own extended statistics with graphs and tables. This feature implies some hard change and impacts on current code. Need more time than expected. Sorry !</h5>';
+        message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
         message += '</a>';
-        // message += '<h4><a target="_blank" href="https://twitter.com/champagnethomas">Follow upcoming updates here</a></h4>';
+
 
         $.fancybox('<h2>' + title + '</h2>' + message);
     },
