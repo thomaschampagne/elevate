@@ -64,6 +64,7 @@ Content.prototype = {
 
     loadDependencies: function loadDependencies(finishLoading) {
 
+
         var loader = new Loader();
         var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
         loader.require(dependencies, function() {
@@ -224,6 +225,7 @@ var jsDependencies = [
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
+    'js/modifiers/GoogleMapsComeBackModifier.js'
 ];
 
 var cssDependencies = [
