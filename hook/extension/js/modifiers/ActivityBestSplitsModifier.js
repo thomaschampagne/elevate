@@ -228,7 +228,7 @@ ActivityBestSplitsModifier.prototype = {
             if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.KilometersToMetersFactor) > activityDistanceInMeters) {
                 return;
             }
-            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.MilesToMetersFactor) > activityDistanceInMeters) {
+            if (split.unit === ActivityBestSplitsModifier.Units.Miles && (split.length * ActivityBestSplitsModifier.Units.MilesToMetersFactor) > activityDistanceInMeters) {
                 return;
             }            
             if (split.unit === ActivityBestSplitsModifier.Units.Minutes && (split.length * 60) > activityDurationInSeconds) {
@@ -329,177 +329,224 @@ ActivityBestSplitsModifier.prototype = {
             processSplit(newSplit);
         });
     
-        var newSplitValue = function(value) {
-            return {
-                value: value || 0,
-                begin: 0,
-                end: -1,
-                samples: function() {
-                    return this.end - this.begin + 1;
+        var worker,
+            workerPromises = [];
+        var computeSplit = function(split, activity) {                       
+            if (!worker) {
+                var blobURL = URL.createObjectURL(new Blob([ '(',			
+                    function() {                    
+                        var computeSplitWorker = function(split, activityJson, options) {
+                            var i,
+                                j, 
+                                max,
+                                distance,
+                                hr,
+                                totalHr,
+                                totalCadence,
+                                avgCadence,
+                                totalPower,
+                                avgPower,
+                                avgSpeed,
+                                time,
+                                begin,
+                                end,      
+                                newSplitValue = function(value) {
+                                    return {
+                                        value: value || 0,
+                                        begin: 0,
+                                        end: -1,
+                                        samples: 0
+                                    };
+                                },
+                                values = {
+                                    time: newSplitValue(999999999),
+                                    distance: newSplitValue(),
+                                    avgSpeed: newSplitValue(),
+                                    avgHr: newSplitValue(),
+                                    avgPower: newSplitValue(),
+                                    avgCadence: newSplitValue()
+                                },
+                                countSamples = function(value) {
+                                    value.samples = value.end - value.begin + 1;
+                                },
+                                totalOfValues = function(start, end, array) {
+                                    var result = 0;
+                                    for (; array && start <= end; start++) {
+                                        result += array[start];
+                                    }
+                                    return result;
+                                },
+                                coutOfNonZero = function(start, end, array) {
+                                    var result = 0;
+                                    for (; array && start <= end; start++) {
+                                        if (array[start]) {
+                                            result += 1;
+                                        }
+                                    }
+                                    return result;
+                                },
+                                checkValues = function(timeOrDistance) {
+                                    totalHr = totalOfValues(begin, end, activityJson.heartrate);
+                                    hr = totalHr / (end - begin + 1);
+                                    if (hr > values.avgHr.value) {
+                                        values.avgHr.value = hr;
+                                        values.avgHr.begin = begin;
+                                        values.avgHr.end = end;
+                                        values.avgHr.timeOrDistance = timeOrDistance;
+                                    }
+                                    
+                                    totalCadence = totalOfValues(begin, end, activityJson.cadence);
+                                    avgCadence = totalCadence / coutOfNonZero(begin, end, activityJson.cadence);
+                                    if (avgCadence > values.avgCadence.value) {
+                                        values.avgCadence.value = avgCadence;
+                                        values.avgCadence.begin = begin;
+                                        values.avgCadence.end = end;
+                                        values.avgCadence.timeOrDistance = timeOrDistance;
+                                    }
+                                    
+                                    totalPower = totalOfValues(begin, end, activityJson.watts);
+                                    avgPower = totalPower / coutOfNonZero(begin, end, activityJson.watts);
+                                    if (avgPower > values.avgPower.value) {
+                                        values.avgPower.value = avgPower;
+                                        values.avgPower.begin = begin;
+                                        values.avgPower.end = end;
+                                        values.avgPower.timeOrDistance = timeOrDistance;
+                                    }
+                                    
+                                    avgSpeed = (distance / 1000) / (time / 60 / 60);
+                                    if (avgSpeed > values.avgSpeed.value) {
+                                        values.avgSpeed.value = avgSpeed;
+                                        values.avgSpeed.begin = begin;
+                                        values.avgSpeed.end = end;
+                                        values.avgSpeed.timeOrDistance = timeOrDistance;
+                                    }
+                                    
+                                }.bind(this);
+                            
+                            if (split.unit === options.Minutes) {
+                                var splitInSeconds = split.length * 60,
+                                    timeBefore;
+                                for (i = 0, max = activityJson.time.length; i < max; i++) {
+                                    time = activityJson.time[i];
+                                    timeBefore = 0;
+                                    if (i > 0) {
+                                        timeBefore = activityJson.time[i - 1];
+                                        time -= timeBefore;                        
+                                    }
+                                    begin = i;
+                                    end = i;
+                                    j = i + 1;
+                                    while (splitInSeconds > time && j < max) {
+                                        end = j;
+                                        time = activityJson.time[end] - timeBefore;
+                                        j++;
+                                    }
+                                    if (time < splitInSeconds) {
+                                        break;
+                                    }
+                                    
+                                    distance = activityJson.distance[end] - activityJson.distance[begin];
+                                    if (distance > values.distance.value) {
+                                        values.distance.value = distance;
+                                        values.distance.begin = begin;
+                                        values.distance.end = end;
+                                        values.distance.timeOrDistance = time;
+                                    }
+                                    
+                                    checkValues(time);
+                                }
+                                
+                                if (options.distanceUnit === options.Miles) {
+                                    values.distance.value *= options.MetersTo0001hMileFactor;
+                                    values.avgSpeed.value *= options.KilometersToMilesFactor;
+                                }
+                            }
+                            
+                            if (split.unit === options.Kilometers || split.unit === options.Miles) {
+                                var distanceInMeters = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
+                                    distanceBefore,
+                                    distanceInUserUnits;
+                                for (i = 0, max = activityJson.distance.length; i < max; i++) {
+                                    distance = activityJson.distance[i];
+                                    distanceBefore = 0;
+                                    if (i > 0) {
+                                        distanceBefore = activityJson.distance[i - 1];
+                                        distance -= distanceBefore;
+                                    }
+                                    begin = i;
+                                    end = i;
+                                    j = i + 1;
+                                    while (distanceInMeters > distance && j < max) {
+                                        end = j;
+                                        distance = activityJson.distance[end] - distanceBefore;
+                                        j++;
+                                    }
+                                    if (distance < distanceInMeters) {
+                                        break;
+                                    }
+                                    
+                                    distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
+                                    
+                                    time = activityJson.time[end] - activityJson.time[begin];
+                                    if (time < values.time.value) {
+                                        values.time.value = time;
+                                        values.time.begin = begin;
+                                        values.time.end = end;
+                                        values.time.timeOrDistance = distanceInUserUnits;
+                                    }
+                                    
+                                    checkValues(distanceInUserUnits);
+                                }
+                                
+                                if (options.distanceUnit === options.Miles) {
+                                    values.distance.value *= options.MetersTo0001hMileFactor;
+                                    values.avgSpeed.value *= options.KilometersToMilesFactor;
+                                }
+                            }
+                            
+                            countSamples(values.avgCadence);
+                            countSamples(values.avgHr);
+                            countSamples(values.avgPower);
+                            countSamples(values.avgSpeed);
+                            countSamples(values.distance);
+                            countSamples(values.time);
+                            
+                            return values;
+                        };                    
+                        
+                        self.onmessage = function(message) {
+                            if (message.data && message.data.split && message.data.activity && message.data.options) {
+                                message.data.result = computeSplitWorker(message.data.split, message.data.activity, message.data.options);
+                                postMessage(message.data);
+                            }
+                        };
+                        
+                    }.toString(),
+                ')()' ], { type: 'application/javascript' } ) );                
+                worker = new Worker( blobURL );            
+                worker.onmessage = function(message) {
+                    workerPromises[message.data.split.id].resolve(message.data.result);
+                    delete workerPromises[message.data.split.id];
+                };
+                URL.revokeObjectURL(blobURL);
+            }
+            workerPromises[split.id] = $.Deferred();
+			worker.postMessage({
+                split: split, 
+                activity: activity, 
+                options: { 
+                    distanceUnit: self.distanceUnit,
+                    Minutes: ActivityBestSplitsModifier.Units.Minutes,
+                    Kilometers: ActivityBestSplitsModifier.Units.Kilometers,
+                    Miles: ActivityBestSplitsModifier.Units.Miles,
+                    MetersTo0001hMileFactor: ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor,
+                    KilometersToMilesFactor: ActivityBestSplitsModifier.Units.KilometersToMilesFactor,
+                    MilesToMetersFactor: ActivityBestSplitsModifier.Units.MilesToMetersFactor,
+                    KilometersToMetersFactor: ActivityBestSplitsModifier.Units.KilometersToMetersFactor
                 }
-            };
+            });
+            return workerPromises[split.id].promise();
         };
-        
-        var computeSplit = function(split, activityJson) {
-            var i,
-                j, 
-                max,
-                distance,
-                hr,
-                totalHr,
-                totalCadence,
-                avgCadence,
-                totalPower,
-                avgPower,
-                avgSpeed,
-                time,
-                begin,
-                end,                
-                values = {
-                    time: newSplitValue(999999999),
-                    distance: newSplitValue(),
-                    avgSpeed: newSplitValue(),
-                    avgHr: newSplitValue(),
-                    avgPower: newSplitValue(),
-                    avgCadence: newSplitValue()
-                },
-                totalOfValues = function(start, end, array) {
-                    var result = 0;
-                    for (; array && start <= end; start++) {
-                        result += array[start];
-                    }
-                    return result;
-                },
-                coutOfNonZero = function(start, end, array) {
-                    var result = 0;
-                    for (; array && start <= end; start++) {
-                        if (array[start]) {
-                            result += 1;
-                        }
-                    }
-                    return result;
-                },
-                checkValues = function(timeOrDistance) {
-                    totalHr = totalOfValues(begin, end, activityJson.heartrate);
-                    hr = totalHr / (end - begin + 1);
-                    if (hr > values.avgHr.value) {
-                        values.avgHr.value = hr;
-                        values.avgHr.begin = begin;
-                        values.avgHr.end = end;
-                        values.avgHr.timeOrDistance = timeOrDistance;
-                    }
-                    
-                    totalCadence = totalOfValues(begin, end, activityJson.cadence);
-                    avgCadence = totalCadence / coutOfNonZero(begin, end, activityJson.cadence);
-                    if (avgCadence > values.avgCadence.value) {
-                        values.avgCadence.value = avgCadence;
-                        values.avgCadence.begin = begin;
-                        values.avgCadence.end = end;
-                        values.avgCadence.timeOrDistance = timeOrDistance;
-                    }
-                    
-                    totalPower = totalOfValues(begin, end, activityJson.watts);
-                    avgPower = totalPower / coutOfNonZero(begin, end, activityJson.watts);
-                    if (avgPower > values.avgPower.value) {
-                        values.avgPower.value = avgPower;
-                        values.avgPower.begin = begin;
-                        values.avgPower.end = end;
-                        values.avgPower.timeOrDistance = timeOrDistance;
-                    }
-                    
-                    avgSpeed = (distance / 1000) / (time / 60 / 60);
-                    if (avgSpeed > values.avgSpeed.value) {
-                        values.avgSpeed.value = avgSpeed;
-                        values.avgSpeed.begin = begin;
-                        values.avgSpeed.end = end;
-                        values.avgSpeed.timeOrDistance = timeOrDistance;
-                    }
-                    
-                }.bind(this);
-            
-            if (split.unit === ActivityBestSplitsModifier.Units.Minutes) {
-                var splitInSeconds = split.length * 60,
-                    timeBefore;
-                for (i = 0, max = this.activityJson.time.length; i < max; i++) {
-                    time = this.activityJson.time[i];
-                    timeBefore = 0;
-                    if (i > 0) {
-                        timeBefore = this.activityJson.time[i - 1];
-                        time -= timeBefore;                        
-                    }
-                    begin = i;
-                    end = i;
-                    j = i + 1;
-                    while (splitInSeconds > time && j < max) {
-                        end = j;
-                        time = this.activityJson.time[end] - timeBefore;
-                        j++;
-                    }
-                    if (time < splitInSeconds) {
-                        break;
-                    }
-                    
-                    distance = activityJson.distance[end] - activityJson.distance[begin];
-                    if (distance > values.distance.value) {
-                        values.distance.value = distance;
-                        values.distance.begin = begin;
-                        values.distance.end = end;
-                        values.distance.timeOrDistance = time;
-                    }
-                    
-                    checkValues(time);
-                }
-                
-                if (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles) {
-                    values.distance.value *= ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor;
-                    values.avgSpeed.value *= ActivityBestSplitsModifier.Units.KilometersToMilesFactor;
-                }
-            }
-            
-            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers || split.unit === ActivityBestSplitsModifier.Units.Miles) {
-                var distanceInMeters = split.length * (split.unit === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor),
-                    distanceBefore,
-                    distanceInUserUnits;
-                for (i = 0, max = this.activityJson.distance.length; i < max; i++) {
-                    distance = this.activityJson.distance[i];
-                    distanceBefore = 0;
-                    if (i > 0) {
-                        distanceBefore = this.activityJson.distance[i - 1];
-                        distance -= distanceBefore;
-                    }
-                    begin = i;
-                    end = i;
-                    j = i + 1;
-                    while (distanceInMeters > distance && j < max) {
-                        end = j;
-                        distance = this.activityJson.distance[end] - distanceBefore;
-                        j++;
-                    }
-                    if (distance < distanceInMeters) {
-                        break;
-                    }
-                    
-                    distanceInUserUnits = distance * (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor : 1);
-                    
-                    time = activityJson.time[end] - activityJson.time[begin];
-                    if (time < values.time.value) {
-                        values.time.value = time;
-                        values.time.begin = begin;
-                        values.time.end = end;
-                        values.time.timeOrDistance = distanceInUserUnits;
-                    }
-                    
-                    checkValues(distanceInUserUnits);
-                }
-                
-                if (self.distanceUnit === ActivityBestSplitsModifier.Units.Miles) {
-                    values.distance.value *= ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor;
-                    values.avgSpeed.value *= ActivityBestSplitsModifier.Units.KilometersToMilesFactor;
-                }
-            }
-            
-            return values;
-        }.bind(this);
         
         var processSplit = function(split) {
             var splitId = "#split-" + split.id,
@@ -507,7 +554,7 @@ ActivityBestSplitsModifier.prototype = {
                 setValue = function(elementId, value, formatFunction, defValue, tooltipFormatFunction) {
                     var element = $(elementId);
                     element.html("");
-                    if (value.samples()) {
+                    if (value.samples) {
                         var text = formatFunction ? formatFunction(value.value) : value.value;
                         element.text(text);
                         element.attr("data-activity-points", value.begin + "-" + value.end);
@@ -524,9 +571,7 @@ ActivityBestSplitsModifier.prototype = {
                 };
             splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
             
-            // todo: use Worker
-            var value = computeSplit(split, self.activityJson),
-                formatDistance = function(value) {
+            var formatDistance = function(value) {
                     return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
                 },
                 formatTime = function(value) {
@@ -535,13 +580,15 @@ ActivityBestSplitsModifier.prototype = {
                 formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
                 speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
             
-            setValue(splitId + "-time", value.time, formatTime, "", formatDistance);
-            setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
-            setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
-            setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
-            setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
-            setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
-            splitRow.find("td.value span.ajax-loading-image").remove();
+            computeSplit(split, self.activityJson).done(function(value) {            
+                setValue(splitId + "-time", value.time, formatTime, "", formatDistance);
+                setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
+                setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
+                setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
+                setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
+                setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
+                splitRow.find("td.value span.ajax-loading-image").remove();
+            });
         };
         
         splitsArray.forEach(function(split) {
