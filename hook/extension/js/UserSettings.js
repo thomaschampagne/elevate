@@ -327,6 +327,7 @@ var userSettings = {
     displayAdvancedHrData: true,
     displayCadenceData: true,
     displayAdvancedGradeData: true,
+    displayAdvancedElevationData: true,
     displayBikeOdoInActivity: true,
     enableBothLegsCadence: false,
     feedHideChallenges: false,
@@ -334,5 +335,6 @@ var userSettings = {
     highLightStravistiXFeature: false, // For heartrate related data.
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
-    bestSplitsConfiguration: null
+    bestSplitsConfiguration: null,
+	reviveGoogleMaps: true
 };

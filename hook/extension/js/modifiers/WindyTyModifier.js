@@ -6,8 +6,8 @@ function WindyTyModifier(activityId, appResources) {
     this.appResources = appResources;
 }
 /**
-* Define prototype
-*/
+ * Define prototype
+ */
 
 WindyTyModifier.prototype = {
 
@@ -18,6 +18,12 @@ WindyTyModifier.prototype = {
         }
 
         this.getActivityBaryCenter(function(baryCenterPosition) {
+
+            if(!baryCenterPosition) {
+                console.log('Skipping WindyTyModifier execution, no baryCenterPosition available');
+                return;
+            }
+
             this.baryCenterPosition = baryCenterPosition;
             this.modifyPage_();
         }.bind(this));
@@ -25,11 +31,16 @@ WindyTyModifier.prototype = {
     },
 
     // Externalize this to vacuum !!
-    getActivityBaryCenter: function getActivityBaryCenter(callback) {
+    getActivityBaryCenter: function(callback) {
 
         var url = "/activities/" + this.activityId + "/streams?stream_types[]=latlng";
 
         $.ajax(url).done(function(jsonResponse) {
+
+            if (_.isEmpty(jsonResponse.latlng)) {
+                callback(null);
+                return;
+            }
 
             // Store first, middle and last position from latlng. These 3 position will help to findout barycenter position of th activity
             var firstMiddleLastPosition = [];
