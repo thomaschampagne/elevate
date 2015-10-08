@@ -734,6 +734,7 @@ ActivityProcessor.prototype = {
                     }
                 }
             }
+        }
 
         // Finalize compute of Elevation
         var avgElevation = accumulatedElevation / elevationSampleCount;
