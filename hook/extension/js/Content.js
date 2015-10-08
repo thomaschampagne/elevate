@@ -187,7 +187,6 @@ var jsDependencies = [
     'js/Follow.js',
     'js/modifiers/ActivityScrollingModifier.js',
     'js/modifiers/RemoteLinksModifier.js',
-    'js/modifiers/OpenStreetMapModifier.js',
     'js/modifiers/WindyTyModifier.js',
     'js/modifiers/DefaultLeaderboardFilterModifier.js',
     'js/modifiers/MenuModifier.js',
@@ -195,7 +194,7 @@ var jsDependencies = [
     'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
-	'js/modifiers/AthleteStatsModifier.js',
+    'js/modifiers/AthleteStatsModifier.js',
     'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
     'js/modifiers/ActivityBestSplitsModifier.js',
 

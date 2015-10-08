@@ -336,5 +336,5 @@ var userSettings = {
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
     bestSplitsConfiguration: null,
-	reviveGoogleMaps: true
+    reviveGoogleMaps: true
 };

@@ -125,7 +125,7 @@ Helper.includeJs = function(scriptUrl) {
     (document.head || document.documentElement).appendChild(link);
 };
 
-Helper.formatNumber = function(n, c, d, t){
+Helper.formatNumber = function(n, c, d, t) {
 var c = isNaN(c = Math.abs(c)) ? 2 : c, 
     d = d == undefined ? "." : d, 
     t = t == undefined ? "," : t, 
@@ -157,4 +157,4 @@ Helper.guid = function() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
+};
