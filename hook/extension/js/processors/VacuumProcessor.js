@@ -169,6 +169,20 @@ VacuumProcessor.prototype = {
             $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
             true, false, false, false);
 
+        // Try to get it another way. (Running races)
+        if (!elapsedTime) {
+            elapsedTime = this.formatActivityDataValue_(
+                $('.section.more-stats').children().last().text(),
+                true, false, false, false);
+        }
+
+        // Invert movingTime and elapsedTime. Theses values seems to be inverted in running races (https://www.strava.com/activities/391338398)
+        if (elapsedTime - movingTime < 0) {
+            var elapsedTimeCopy = elapsedTime;
+            elapsedTime = movingTime;
+            movingTime = elapsedTimeCopy;
+        }
+
         // Get Average speed
         var averageSpeed = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
@@ -220,7 +234,19 @@ VacuumProcessor.prototype = {
             return null;
         }
         // Common clean
-        var cleanData = dataIn.replace(/\s/g, '').trim('string');
+        var cleanData = dataIn.toLowerCase();
+        cleanData = cleanData.replace(new RegExp(/\s/g), '');
+        cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), '');
+        cleanData = cleanData.replace(new RegExp(/æ/g), '');
+        cleanData = cleanData.replace(new RegExp(/ç/g), '');
+        cleanData = cleanData.replace(new RegExp(/[èéêë]/g), '');
+        cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), '');
+        cleanData = cleanData.replace(new RegExp(/ñ/g), '');
+        cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), '');
+        cleanData = cleanData.replace(new RegExp(/œ/g), "o");
+        cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), '');
+        cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), '');
+        cleanData = cleanData.replace(/\s/g, '').trim('string');
         cleanData = cleanData.replace(/[\n\r]/g, '');
         cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
 
@@ -228,6 +254,11 @@ VacuumProcessor.prototype = {
         if (parsingTime) {
             // Remove text from date, format time to hh:mm:ss
             cleanData = Helper.HHMMSStoSeconds(cleanData);
+
+            if (_.isNaN(cleanData)) {
+                return null;
+            }
+
         } else if (parsingElevation) {
             cleanData = cleanData.replace(' ', '').replace(',', '');
         } else if (parsingDistance) {
@@ -237,6 +268,7 @@ VacuumProcessor.prototype = {
         } else {
             cleanData = cleanData.replace(',', '.');
         }
+
         return parseFloat(cleanData);
     },
 
