@@ -202,7 +202,7 @@ ActivityBestSplitsModifier.prototype = {
                             "<tfoot>" +
                             "<tr>" + 
                             "<td colspan='7'>Length:&nbsp;" + 
-                            "<input type='number' min='1' max='9999' value='10' id='best-split-new-length' style='width: 100px' />&nbsp;" +                        
+                            "<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +                        
                             "Type:&nbsp;<select id='best-split-new-unit'>" +
                             "<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
                             "<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
