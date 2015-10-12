@@ -300,6 +300,14 @@ ActivityBestSplitsModifier.prototype = {
                 return;
             }
             var splitType = parseInt($("#best-split-new-unit").val());
+
+            var splitAlreadyExist = _.findWhere(splitsArray, {length: splitLength, unit: splitType});
+
+            if(splitAlreadyExist) {
+                alert('This split already exist.');
+                return;
+            }
+
             switch (splitType) {
                 
                 case ActivityBestSplitsModifier.Units.Minutes:
