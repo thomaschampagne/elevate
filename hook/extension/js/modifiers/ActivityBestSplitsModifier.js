@@ -144,6 +144,11 @@ ActivityBestSplitsModifier.prototype = {
                 $(this).css("text-decoration", "none");
             }
         );
+        
+        // Set Strava blue links color on bestsplits + segments links 
+        $(".bestsplits-header-title").css("color", "#007FB6");
+        $(".segments-header-title").css("color", "#007FB6");
+
                 
         $(document).on("click", "[data-activity-points]", {}, function() {
             if (map) {
