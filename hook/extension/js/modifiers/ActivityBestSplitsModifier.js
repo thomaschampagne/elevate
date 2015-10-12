@@ -125,6 +125,25 @@ ActivityBestSplitsModifier.prototype = {
             segments.find("table.segments").show();
             removeSplitSelection();
         });
+
+        // Set underline on titles only when hovered
+        $(".segments-header-title").hover(
+            function() {
+                $(this).css("text-decoration", "underline");
+            },
+            function() {
+                $(this).css("text-decoration", "none");
+            }
+        );
+
+        $(".bestsplits-header-title").hover(
+            function() {
+                $(this).css("text-decoration", "underline");
+            },
+            function() {
+                $(this).css("text-decoration", "none");
+            }
+        );
                 
         $(document).on("click", "[data-activity-points]", {}, function() {
             if (map) {
