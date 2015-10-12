@@ -71,10 +71,9 @@ ActivityBestSplitsModifier.prototype = {
 
         segments.find("h3.segments-header")
                 .css("font-weight", "bold")
-                .css("text-decoration", "underline")
                 .css("cursor", "pointer")
                 .addClass("segments-header-title")
-                .before(bestSplitsHeader)
+                .before(bestSplitsHeader);
                 
         if (pageView) {
             if (pageView.contexts) {
@@ -101,7 +100,7 @@ ActivityBestSplitsModifier.prototype = {
         }
 
         $(".bestsplits-header-title").click(function() {
-            $(".bestsplits-header-title").css("font-weight", "bold").css("text-decoration", "underline");
+            $(".bestsplits-header-title").css("font-weight", "bold");
             $(".segments-header-title").css("font-weight", "normal").css("text-decoration", "none");
             segments.find("table.segments").hide();
             bestSplitsSection.show();
@@ -120,7 +119,7 @@ ActivityBestSplitsModifier.prototype = {
         };
         
         $(".segments-header-title").click(function() {
-            $(".segments-header-title").css("font-weight", "bold").css("text-decoration", "underline");
+            $(".segments-header-title").css("font-weight", "bold");
             $(".bestsplits-header-title").css("font-weight", "normal").css("text-decoration", "none");            
             bestSplitsSection.hide();
             segments.find("table.segments").show();
