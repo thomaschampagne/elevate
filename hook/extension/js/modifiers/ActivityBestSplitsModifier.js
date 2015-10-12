@@ -63,7 +63,7 @@ ActivityBestSplitsModifier.prototype = {
             map,
             splitPolyline,
             splitAltitude,
-            splitColor = "blue",
+            splitColor = "#105CB6",
             selectedSplitId,
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
 
