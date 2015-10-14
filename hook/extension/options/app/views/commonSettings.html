@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="option in section.sectionContent">
+                <tr data-ng-repeat="option in section.sectionContent" data-ng-hide="option.hidden">
                     <td>
                         <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionKey)">{{ option.optionTitle }}</button>
                     </td>
@@ -32,7 +32,7 @@
                     <td class="text-right">
                         <div data-ng-switch on="option.optionType">
                             <div data-ng-switch-when="list">
-                                <select class="form-control" data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
+                                <select class="form-control"  data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
                             </div>
                             <div data-ng-switch-default>
                                 <checkbox large class="btn-primary" data-ng-model="option.active" data-ng-change="toggleCheckOption(option)"></checkbox>

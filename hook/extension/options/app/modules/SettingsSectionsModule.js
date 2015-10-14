@@ -111,6 +111,23 @@ settingsSectionsModule.data = [{
         optionTitle: 'Revive Google Maps on activities (BETA)',
         optionLabels: ['All'],
         optionHtml: 'Strava has discontinued Google Maps inside the web version to use "MapBox+OpenStreetMap" maps.<br/><br/>This option allows you revive Google Maps and Street view features with an orange button placed near Strava native maps.<br/><br/><strong>Note:</strong> This feature is currently in BETA and works only on activities page at the moment.',
+        optionEnableSub: 'reviveGoogleMapsLayerType'
+    }, {
+        optionKey: 'reviveGoogleMapsLayerType',
+        optionType: 'list',
+        optionLabels: ['All'],
+        optionList: [{
+            key: 'terrain',
+            name: 'Terrain'
+        }, {
+            key: 'standard',
+            name: 'Standard'
+        }, {
+            key: 'satellite',
+            name: 'Satellite'
+        }],
+        optionTitle: 'Default Google Maps layer type',
+        optionHtml: 'Do what title describes...',
     }]
 }, {
     sectionTitle: 'Segments viewing options',

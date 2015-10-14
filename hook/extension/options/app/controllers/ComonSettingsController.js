@@ -20,6 +20,13 @@ app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$l
                     option.active = _.findWhere(option.optionList, {
                         key: userSettingsSynced[option.optionKey]
                     });
+
+                    /*
+                    option.hidden = false;
+                    if (option.optionDisplayAlongAnother) {
+                        option.hidden = !userSettingsSynced[option.optionDisplayAlongAnother];
+                    }
+                    */
                 }
 
             });
@@ -30,16 +37,31 @@ app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$l
 
     $scope.toggleCheckOption = function(option) {
 
-        // console.debug(!option.active);
         var bool = option.active;
-        // var bool = !option.active;
+
 
         ChromeStorageModule.updateUserSetting(option.optionKey, bool, function() {
             console.log(option.optionKey + ' has been updated to ' + bool);
         });
+
+        // Enable/disable sub option if needed
+        if (option.optionEnableSub) {
+
+            // Replace this to find option object from option.optionEnableSub
+            _.each($scope.sections, function(section) {
+                var optionFound = _.findWhere(section.sectionContent, {
+                    optionKey: option.optionEnableSub
+                });
+
+                if (optionFound) {
+                    optionFound.hidden = !option.active;
+                }
+            });
+        }
     };
 
     $scope.toggleSelectOption = function(option) {
+
         ChromeStorageModule.updateUserSetting(option.optionKey, option.active.key, function() {
             console.log(option.optionKey + ' has been updated to ' + option.active);
         });
