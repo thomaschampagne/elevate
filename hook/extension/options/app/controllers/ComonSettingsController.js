@@ -16,19 +16,15 @@ app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$l
                 if (option.optionType === 'checkbox') {
                     option.active = userSettingsSynced[option.optionKey];
 
+                    if (option.optionEnableSub) {
+                        $scope.displaySubOption(option.optionEnableSub, userSettingsSynced[option.optionKey]);
+                    }
+
                 } else if (option.optionType === 'list') {
                     option.active = _.findWhere(option.optionList, {
                         key: userSettingsSynced[option.optionKey]
                     });
-
-                    /*
-                    option.hidden = false;
-                    if (option.optionDisplayAlongAnother) {
-                        option.hidden = !userSettingsSynced[option.optionDisplayAlongAnother];
-                    }
-                    */
                 }
-
             });
         });
 
@@ -39,25 +35,26 @@ app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$l
 
         var bool = option.active;
 
-
         ChromeStorageModule.updateUserSetting(option.optionKey, bool, function() {
             console.log(option.optionKey + ' has been updated to ' + bool);
         });
 
         // Enable/disable sub option if needed
         if (option.optionEnableSub) {
-
             // Replace this to find option object from option.optionEnableSub
-            _.each($scope.sections, function(section) {
-                var optionFound = _.findWhere(section.sectionContent, {
-                    optionKey: option.optionEnableSub
-                });
-
-                if (optionFound) {
-                    optionFound.hidden = !option.active;
-                }
-            });
+            $scope.displaySubOption(option.optionEnableSub, option.active);
         }
+    };
+
+    $scope.displaySubOption = function(subOptionKey, show) {
+        _.each($scope.sections, function(section) {
+            var optionFound = _.findWhere(section.sectionContent, {
+                optionKey: subOptionKey
+            });
+            if (optionFound) {
+                optionFound.hidden = !show;
+            }
+        });
     };
 
     $scope.toggleSelectOption = function(option) {
