@@ -1,9 +1,10 @@
 /**
  *   GoogleMapsComeBackModifier is responsible of ...
  */
-function GoogleMapsComeBackModifier(activityId, appResources) {
+function GoogleMapsComeBackModifier(activityId, appResources, userSettings) {
     this.activityId = activityId;
     this.appResources = appResources;
+    this.userSettings = userSettings;
 }
 
 /**
@@ -268,9 +269,16 @@ GoogleMapsComeBackModifier.prototype = {
 
     applyToMap: function(mainPathArray, highlightFromTo) {
 
+        var layerType = google.maps.MapTypeId.TERRAIN; // Use terrain by default
+
+        // If user layer settings value exist into Google Maps Layer Type then use it
+        if(_.indexOf(_.values(google.maps.MapTypeId), this.userSettings.reviveGoogleMapsLayerType) != -1) {
+            layerType = this.userSettings.reviveGoogleMapsLayerType;
+        }
+
         // if (!this.map) {
         this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
-            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            mapTypeId: layerType,
             overviewMapControl: true
         });
         // }

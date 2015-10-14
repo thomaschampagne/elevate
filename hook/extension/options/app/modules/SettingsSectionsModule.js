@@ -124,7 +124,7 @@ settingsSectionsModule.data = [{
             name: 'Satellite'
         }, {
             key: 'hybrid',
-            name: 'Hybrid'
+            name: 'Satellite + Legends'
         }, {
             key: 'terrain',
             name: 'Terrain'
