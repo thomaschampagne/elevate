@@ -117,14 +117,17 @@ settingsSectionsModule.data = [{
         optionType: 'list',
         optionLabels: ['All'],
         optionList: [{
-            key: 'terrain',
-            name: 'Terrain'
-        }, {
-            key: 'standard',
-            name: 'Standard'
+            key: 'roadmap',
+            name: 'Roadmap'
         }, {
             key: 'satellite',
             name: 'Satellite'
+        }, {
+            key: 'hybrid',
+            name: 'Hybrid'
+        }, {
+            key: 'terrain',
+            name: 'Terrain'
         }],
         optionTitle: 'Default Google Maps layer type',
         optionHtml: 'Do what title describes...',
