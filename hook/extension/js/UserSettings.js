@@ -335,5 +335,6 @@ var userSettings = {
     highLightStravistiXFeature: false, // For heartrate related data.
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
-    reviveGoogleMaps: true
+    reviveGoogleMaps: true,
+    reviveGoogleMapsLayerType: 'terrain'
 };
