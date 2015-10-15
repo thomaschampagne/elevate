@@ -30,33 +30,42 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         $("#segments #segment-filter").show();
         $("#segments").addClass("time-comparison-enabled");
         
-        var label = "(",
-            isFemale = false,
-            komLabel = "KOM";
+        var isFemale = false,
+            deltaKomLabel = "&Delta;KOM",
+            deltaPRLabel = "&Delta;PR",
+            timeColumnHeader = $("#segments table.segments th.time-col");
         if (!_.isUndefined(window.pageView)) {
             isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
             if (isFemale) {
-                komLabel = "QOM";
+                deltaKomLabel = "&Delta;QOM";
             }
+        }
+       
+        if (self.showDifferenceToPR) {
+            timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
         }
         
-        if (this.showDifferenceToKOM) {
-            label += "&Delta;" + komLabel;
+        if (self.showDifferenceToKOM) {
+            timeColumnHeader.after("<th title='Column shows the difference between the current " + (isFemale ? "QOM" : "KOM") + " time and the acitivity segment time.'>" + deltaKomLabel + "</th>");
         }
-        if (this.showDifferenceToPR) {
-            if (this.showDifferenceToKOM) {
-                label += " | ";
-            }
-            label += "&Delta;PR";
-        }        
-        label += ")";
-        $("#segments table.segments th.time-col").append(" " + label);
-
+        
         $("tr[data-segment-effort-id]").each(function() {
             var $row = $(this),
                 $timeCell = $row.find("td.time-col"),
                 segmentEffortId = $row.data("segment-effort-id"),
-                url = "/segment_efforts/" + segmentEffortId;
+                url = "/segment_efforts/" + segmentEffortId,
+                deltaKomCell,
+                deltaPRCell;
+           
+            if (self.showDifferenceToPR) {
+                deltaPRCell = $("<td><span class='ajax-loading-image'></span></td>");
+                $timeCell.after(deltaPRCell);
+            }
+            
+            if (self.showDifferenceToKOM) {
+                deltaKomCell = $("<td><span class='ajax-loading-image'></span></td>");
+                $timeCell.after(deltaKomCell);
+            }
 
             $.getJSON(url, function(data) {
                 if (!data) {
@@ -68,7 +77,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     difference = (seconds - komSeconds);
                 
                 if (self.showDifferenceToKOM) {
-                    $timeCell.append("&nbsp;(<span title=\"Time difference with current " + komLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span><span></span>)");
+                    deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                 }
                 
                 if (!self.showDifferenceToPR) {
@@ -115,12 +124,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     }
 
                     difference = (seconds - previousPersonalSeconds);
-                    text = "<span title='Time difference with your PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>";
-                    if (self.showDifferenceToKOM) {
-                        $timeCell.find("span:last").append("&nbsp;|&nbsp;" + text);
-                    } else {
-                        $timeCell.append("&nbsp;(" + text + ")");
-                    }                    
+                    deltaPRCell.html("<span title='Time difference with your PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                 });
             });
         });
