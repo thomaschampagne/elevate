@@ -140,7 +140,11 @@ StravistiX.prototype = {
 
         var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
         var message = '';
-        message += '<h3><strong>YEAH version 1.0.1 is now out !!! And Google Maps REVIVED !!</strong></h3>';
+        message += '<h3><strong>YEAH version <i>1</i> is now out !!! And Google Maps REVIVED !!</strong></h3>';
+        message += '<h5><strong>HOTFIX 1.0.2:</strong></h5>';
+        message += '<h5>Fix map display problem while cropping an activity. Google maps API was loaded twice.</h5>';
+        message += '<h5><strong>SINCE 1.0.X:</strong></h5>';
+        message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
         message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
         message += '<h5>- <strong>NEW:</strong> Add on/off extension settings for the segment time comparison on activities pages</h5>';
         message += '<h5>- <strong>NEW:</strong> Segment time comparison for QOM (Womens) on activities pages</h5>';
@@ -618,6 +622,10 @@ StravistiX.prototype = {
     },
 
     handleGoogleMapsComeBackModifier: function() {
+
+        if (window.location.pathname.match(/\/truncate/)) { // Skipping on activity cropping
+            return;
+        }
 
         if (!this.userSettings_.reviveGoogleMaps) {
             return;
