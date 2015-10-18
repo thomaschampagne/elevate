@@ -68,6 +68,8 @@ ActivityProcessor.prototype = {
                 activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
                 activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
                 activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+                activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+                activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
             }
 
             console.debug(activityStream);

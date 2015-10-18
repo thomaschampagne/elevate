@@ -465,15 +465,19 @@ StravistiX.prototype = {
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            var effortId = window.location.pathname.split('/')[4];
+            var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
 
-            // TODO retreive effortId and activity when url is formated like: "https://www.strava.com/activities/175957511#4107541330"
+            if (!effortId) {
+                console.Error('No effort id found');
+                return;
+            }
 
-            console.debug('Do SE stuff on effort: ' + effortId + ', act id: ' + this.activityId_);
+            console.debug('Do SE stuff on effort: ' + effortId + ', act id: ' + self.activityId_);
 
-            // TODO Refactor Ajax call
+
 
             // Get segment effort bounds
+            // TODO Refactor Ajax call
             var segmentInfosResponse;
             $.when(
                 $.ajax({
@@ -521,7 +525,7 @@ StravistiX.prototype = {
                             activityName: self.vacuumProcessor_.getActivityName(),
                             activityTime: self.vacuumProcessor_.getActivityTime()
                         }
-                        /*
+
                         switch (activityType) {
                             case 'Ride':
                                 extendedDataModifier = new CyclingExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos);
@@ -539,7 +543,7 @@ StravistiX.prototype = {
                         if (extendedDataModifier) {
                             extendedDataModifier.modify();
                         }
-                        */
+
                     }.bind(this)
                 );
                 // TODO on Activity Processor callback Call right and good type Xtd data modifier with segment effort param. The modifer will place the button 
