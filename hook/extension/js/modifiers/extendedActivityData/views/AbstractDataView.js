@@ -121,12 +121,14 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            var chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
+            this.chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
                 tooltipTemplate: this.tooltipTemplate
             });
+
+            this.chart = this.chart.clear();
 
         },
 

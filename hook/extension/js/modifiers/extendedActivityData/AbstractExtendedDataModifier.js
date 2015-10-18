@@ -25,8 +25,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
             this.speedUnitsData = this.getSpeedUnitData();
 
-            this.setDataViewsNeeded();
-
             this.type = type;
 
             if (_.isNull(this.type)) {
@@ -45,27 +43,22 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                     });
 
                 }.bind(this));
+
+            } else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+
+                // Place button for segment
+                this.placeExtendedStatsButtonSegment(function() {
+                    // Button has been placed...
+
+                });
             }
         },
-
-        /*
-                modify: function() {
-
-                    //this.content = '';
-
-                    // _.each(this.dataViews, function(view) {
-                    //     // Append result of view.render() to this.content
-                    //     view.render();
-                    //     this.content += view.getContent();
-                    // }.bind(this));
-
-                    this.renderViews();
-
-                },*/
 
         renderViews: function() {
 
             this.content = '';
+
+            this.setDataViewsNeeded();
 
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
@@ -100,6 +93,29 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             $('.inline-stats.section').first().after(htmlButton).each(function() {
 
                 $('#extendedStatsButton').click(function() {
+
+                    this.renderViews();
+
+                    this.showResultsAndRefeshGraphs();
+
+                }.bind(this));
+
+                if (buttonAdded) buttonAdded();
+
+            }.bind(this));
+        },
+
+        placeExtendedStatsButtonSegment: function(buttonAdded) {
+
+            var htmlButton = '<section>';
+            htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButtonSegment" href="#">';
+            htmlButton += 'Show extended statistics';
+            htmlButton += '</a>';
+            htmlButton += '</section>';
+
+            $('.effort-elevation-profile').before(htmlButton).each(function() {
+
+                $('#extendedStatsButtonSegment').click(function() {
 
                     this.renderViews();
 
@@ -196,14 +212,26 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         },
 
+        cleanDataViews: function() {
+            
+            if (!_.isEmpty(this.dataViews)) {
+                for (var i = 0; i < this.dataViews.length; i++) {
+                    this.dataViews[i] = null;
+                    delete this.dataViews[i];
+                }
+                this.dataViews = [];
+            }
+        },
 
         /**
          * Affect default view needed
          */
         setDataViewsNeeded: function() {
 
-            // By default we have... If data exist of course...
+            // Clean Data View Before
+            this.cleanDataViews();
 
+            // By default we have... If data exist of course...
             // Featured view
             if (this.analysisData_) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
