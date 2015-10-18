@@ -18,12 +18,11 @@ DisplayFlyByFeedModifier.prototype = {
                 if (!$(this).parent().parent().find('.sx-flyby').length) {
 
                     var activityId = $(this).attr('href').split('/')[2];
-                    var html = '<button class="btn-xs" title="FlyBy"><span class="sx-flyby">FlyBy</span></button>';
-                    $(this).parent().parent().find('.btn-group').after('</br>' + html).each(function() {
-
+                    
+                    var html = '<a href="#" title="FlyBy" class="sx-flyby">Go to FlyBy</a>';
+                    $(this).parent().parent().find('.btn-group').after('</br></br>' + html + '</br></br>').each(function() {
 
                         $(this).parent().parent().find('.sx-flyby').click(function() {
-                            console.log(activityId);
                             window.open('http://labs.strava.com/flyby/viewer/?utm_source=strava_activity_header#' + activityId);
                         });
 

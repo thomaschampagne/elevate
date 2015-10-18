@@ -327,9 +327,14 @@ var userSettings = {
     displayAdvancedHrData: true,
     displayCadenceData: true,
     displayAdvancedGradeData: true,
+    displayAdvancedElevationData: true,
     displayBikeOdoInActivity: true,
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
-    highLightStravistiXFeature: false // For heartrate related data.
+    highLightStravistiXFeature: false, // For heartrate related data.
+    displaySegmentTimeComparisonToKOM: true,
+    displaySegmentTimeComparisonToPR: true,
+    reviveGoogleMaps: true,
+    reviveGoogleMapsLayerType: 'terrain'
 };

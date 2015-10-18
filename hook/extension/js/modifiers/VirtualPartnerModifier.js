@@ -61,8 +61,7 @@ VirtualPartnerModifier.prototype = {
     displayRaceShapePopup: function() {
 
         var effortId = $('.analysis-link-js.btn-xs.button').attr('data-segment-effort-id');
-
-        effortId = window.location.pathname.split('/')[4];
+        effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', ''));
 
         var coursesTypesExport = ['CRS', 'TCX', 'GPX'];
 
