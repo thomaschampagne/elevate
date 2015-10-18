@@ -10,7 +10,9 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         summaryGrid: null,
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
+        type: null,
+
+        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
 
             this.analysisData_ = analysisData;
             this.appResources_ = appResources;
@@ -24,10 +26,46 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             this.speedUnitsData = this.getSpeedUnitData();
 
             this.setDataViewsNeeded();
+
+            this.type = type;
+
+            if (_.isNull(this.type)) {
+                console.error('ExtendedDataModifier must be set');
+            }
+
+            if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+
+                this.placeSummaryPanel(function() {
+                    // Summary panel has been placed...
+
+                    // Add Show extended statistics to page
+                    this.placeExtendedStatsButton(function() {
+                        // Button has been placed...
+
+                    });
+
+                }.bind(this));
+            }
         },
 
+        /*
+                modify: function() {
 
-        modify: function() {
+                    //this.content = '';
+
+                    // _.each(this.dataViews, function(view) {
+                    //     // Append result of view.render() to this.content
+                    //     view.render();
+                    //     this.content += view.getContent();
+                    // }.bind(this));
+
+                    this.renderViews();
+
+                },*/
+
+        renderViews: function() {
+
+            this.content = '';
 
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
@@ -35,6 +73,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 this.content += view.getContent();
             }.bind(this));
 
+            console.warn('renderViews :: content length:' + this.content.length);
+            console.warn('dataViews :: length:' + this.dataViews.length);
         },
 
         placeSummaryPanel: function(panelAdded) {
@@ -61,27 +101,35 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
                 $('#extendedStatsButton').click(function() {
 
-                    $.fancybox({
-                        'width': '100%',
-                        'height': '100%',
-                        'autoScale': true,
-                        'transitionIn': 'fade',
-                        'transitionOut': 'fade',
-                        'type': 'iframe',
-                        'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
-                    });
+                    this.renderViews();
 
-                    // For each view start making the assossiated graphs
-                    _.each(this.dataViews, function(view) {
-                        view.displayGraph();
-                    }.bind(this));
-
+                    this.showResultsAndRefeshGraphs();
 
                 }.bind(this));
 
                 if (buttonAdded) buttonAdded();
 
             }.bind(this));
+        },
+
+        showResultsAndRefeshGraphs: function() {
+
+            $.fancybox({
+                'width': '100%',
+                'height': '100%',
+                'autoScale': true,
+                'transitionIn': 'fade',
+                'transitionOut': 'fade',
+                'type': 'iframe',
+                'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
+            });
+
+            // For each view start making the assossiated graphs
+            _.each(this.dataViews, function(view) {
+                view.displayGraph();
+            }.bind(this));
+
+            console.warn('showResultsAndRefeshGraphs :: content length:' + this.content.length);
         },
 
         makeSummaryGrid: function(columns, rows) {
@@ -182,3 +230,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
         },
     }
 });
+
+AbstractExtendedDataModifier.TYPE_ACTIVITY = 0;
+AbstractExtendedDataModifier.TYPE_SEGMENT = 1;

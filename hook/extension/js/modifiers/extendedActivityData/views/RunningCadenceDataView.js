@@ -34,11 +34,11 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
         render: function() {
             
-            // Add legs cadence type to view title
-            this.viewTitle += ' // ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>';
-
             // Call super AbstractCadenceDataView.render()
             base.render.call(this);
+
+            // Add legs cadence type to view title
+            this.viewTitle = 'Cadence // ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>';
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)

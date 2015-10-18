@@ -2,23 +2,15 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
     return {
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos);
-        },
+        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
 
+
+        },
+        /*
         modify: function() {
             base.modify.call(this); // Super call
-
-            this.placeSummaryPanel(function() {
-                // Summary panel has been placed...
-
-                // Add Show extended statistics to page
-                this.placeExtendedStatsButton(function() {
-                    // Button has been placed...
-                });
-
-            }.bind(this));
-        },
+        },*/
 
         insertContentSummaryGridContent: function() {
 
@@ -47,7 +39,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 medianCadence = this.analysisData_.cadenceData.medianCadence;
                 this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', ' rpm <span class="summarySubGridTitle">(&sigma; :' + this.analysisData_.cadenceData.standardDeviationCadence + ' )</span>', 'displayCadenceData');
             }
-            
+
             var cadenceTimeMoving = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);

@@ -51,6 +51,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         render: function() {
+            this.content = ''; // reset content view
             this.setGraphTitle((new String(this.units)).toUpperCase() + ' distribution in minutes');
         },
 

@@ -3,10 +3,11 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
     return {
 
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos);
+        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
         },
 
+        /*
         modify: function() {
             base.modify.call(this); // Super call
 
@@ -20,7 +21,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
             }.bind(this));
         },
-
+*/
 
         insertContentSummaryGridContent: function() {
 

@@ -409,10 +409,10 @@ StravistiX.prototype = {
 
                 switch (activityType) {
                     case 'Ride':
-                        extendedDataModifier = new CyclingExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
+                        extendedDataModifier = new CyclingExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_ACTIVITY);
                         break;
                     case 'Run':
-                        extendedDataModifier = new RunningExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
+                        extendedDataModifier = new RunningExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_ACTIVITY);
                         break;
                     default:
                         // extendedDataModifier = new GenericExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
@@ -421,9 +421,9 @@ StravistiX.prototype = {
                         break;
                 }
 
-                if (extendedDataModifier) {
-                    extendedDataModifier.modify();
-                }
+                // if (extendedDataModifier) {
+                //     extendedDataModifier.modify();
+                // }
 
             }.bind(this)
         );
@@ -450,6 +450,7 @@ StravistiX.prototype = {
             return;
         }
 
+        this.activityProcessor_.setActivityType(activityType);
 
         var view = Strava.Labs.Activities.SegmentLeaderboardView;
 
@@ -473,8 +474,6 @@ StravistiX.prototype = {
             }
 
             console.debug('Do SE stuff on effort: ' + effortId + ', act id: ' + self.activityId_);
-
-
 
             // Get segment effort bounds
             // TODO Refactor Ajax call
@@ -528,10 +527,10 @@ StravistiX.prototype = {
 
                         switch (activityType) {
                             case 'Ride':
-                                extendedDataModifier = new CyclingExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos);
+                                extendedDataModifier = new CyclingExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_SEGMENT);
                                 break;
                             case 'Run':
-                                extendedDataModifier = new RunningExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos);
+                                extendedDataModifier = new RunningExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_SEGMENT);
                                 break;
                             default:
                                 // extendedDataModifier = new GenericExtendedDataModifier(analysisData, self.appResources_, self.userSettings_, self.athleteId_, self.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
@@ -540,9 +539,10 @@ StravistiX.prototype = {
                                 break;
                         }
 
-                        if (extendedDataModifier) {
-                            extendedDataModifier.modify();
-                        }
+
+                        // if (extendedDataModifier) {
+                        //     extendedDataModifier.modify();
+                        // }
 
                     }.bind(this)
                 );
