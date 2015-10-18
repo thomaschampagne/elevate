@@ -145,7 +145,6 @@ StravistiX.prototype = {
         message += '<h5>Fix map display problem while cropping an activity. Google maps API was loaded twice.</h5>';
         message += '<h5><strong>SINCE 1.0.X:</strong></h5>';
         message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
-        message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
         message += '<h5>- <strong>NEW:</strong> Add on/off extension settings for the segment time comparison on activities pages</h5>';
         message += '<h5>- <strong>NEW:</strong> Segment time comparison for QOM (Womens) on activities pages</h5>';
         message += '<h5>- <strong>FIX</strong> When segment time comparison may not be displayed</h5>';
