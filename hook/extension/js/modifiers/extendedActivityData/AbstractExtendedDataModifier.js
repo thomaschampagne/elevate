@@ -43,8 +43,10 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 this.userSettings_.userFTP,
                 null, // No bounds given, full activity requested
                 function(analysisData) { // Callback when analysis data has been computed
+
                     this.analysisData_ = analysisData;
                     if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+
                         this.placeSummaryPanel(function() { // Summary panel has been placed...
                             // Add Show extended statistics to page
                             this.placeExtendedStatsButton(function() {}); // Button has been placed...
@@ -127,6 +129,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
         },
 
         placeExtendedStatsButtonSegment: function(buttonAdded) {
+            console.warn('placeExtendedStatsButtonSegment !!!');
 
             var htmlButton = '<section>';
             htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButtonSegment" href="#">';
@@ -138,14 +141,72 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
                 $('#extendedStatsButtonSegment').click(function() {
 
-                    this.renderViews();
+                    this.getSegmentInfos(function(segmentInfosResponse) {
 
-                    this.showResultsAndRefeshGraphs();
+                        // Call Activity Processor with bounds
+                        if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
+                            return;
+                        }
+
+                        this.activityProcessor_.getAnalysisData(
+                            this.activityId_,
+                            this.userSettings_.userGender,
+                            this.userSettings_.userRestHr,
+                            this.userSettings_.userMaxHr,
+                            this.userSettings_.userFTP,
+
+                            [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
+
+                            function(analysisData) { // Callback when analysis data has been computed
+
+                                console.log(analysisData);
+
+                                this.analysisData_ = analysisData;
+                                this.renderViews();
+                                this.showResultsAndRefeshGraphs();
+
+                            }.bind(this));
+
+                    }.bind(this));
 
                 }.bind(this));
 
                 if (buttonAdded) buttonAdded();
 
+            }.bind(this));
+        },
+
+        getSegmentInfos: function(callback) {
+
+            var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
+
+            if (!effortId) {
+                console.Error('No effort id found');
+                return;
+            }
+
+            // Get segment effort bounds
+            var segmentInfosResponse;
+            $.when(
+                $.ajax({
+                    url: '/segment_efforts/' + effortId,
+                    type: 'GET',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                    },
+                    dataType: 'json',
+                    success: function(xhrResponseText) {
+                        segmentInfosResponse = xhrResponseText;
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                })
+
+            ).then(function() {
+                console.debug(segmentInfosResponse);
+                console.debug("name: " + segmentInfosResponse.name + " from: " + segmentInfosResponse.start_index + " to: " + segmentInfosResponse.end_index);
+                callback(segmentInfosResponse);
             }.bind(this));
         },
 
