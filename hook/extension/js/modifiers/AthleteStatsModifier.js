@@ -34,7 +34,7 @@ AthleteStatsModifier.prototype = {
             activitiesFromCache = localStorage.getItem(this.cacheKey_),
             activitiesFromCacheObject = JSON.parse(activitiesFromCache) || [],
             progress = $("#progress-goals"),
-            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel allows you to see your progress for each beginning of year to current month and day. Assuming May 25 is today, this panel replies to \"What i've accomplished on May 25 of this year compared to the previous years on same period?\"<br/><br/></div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li class='last-child'><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
+            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel allows you to see your progress for each beginning of year to current month and day. Assuming May 25 is today, this panel replies to \"What i've accomplished on May 25 of this year compared to the previous years on same period?\"<br/><br/></div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' title='Chart'>&#128200;</a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
         var formatData = function(activities) {
             var formattedData = [],
@@ -153,6 +153,7 @@ AthleteStatsModifier.prototype = {
                 };
                 progressThisYear.append($table);
                 progressThisYear.find("a[data-activity-type=" + i + "]").show();
+                progressThisYear.find("#athleteStatsShowChart").show();
             }
 
             progressThisYear.find(".switches .button:visible").first().click();
@@ -170,11 +171,23 @@ AthleteStatsModifier.prototype = {
         $(progressThisYear).on("click", "a[data-activity-type]", function(e) {
             e.preventDefault();
             var $this = $(this),
-                type = $this.data("activity-type");
+                activityType = $this.data("activity-type");
             progressThisYear.find(".athletesStatTable").hide();
-            progressThisYear.find("#athletesStatActivityType" + type).show();
+            progressThisYear.find("#athletesStatActivityType" + activityType).show();
             progressThisYear.find("a.button").removeClass("selected");
             $this.addClass("selected");
+        });
+        
+        $(progressThisYear).on("click", "#athleteStatsShowChart a", function(e) {
+            e.preventDefault();
+            var activityType = progressThisYear.find("a[data-activity-type].selected").data("activity-type");
+            $.fancybox({
+                'autoScale': true,
+                'transitionIn': 'fade',
+                'transitionOut': 'fade',
+                'type': 'iframe',
+                'content': '<em>todo: ' + activityType + '</em>'
+            });
         });
 
         progressThisYear.insertAfter(progress);
