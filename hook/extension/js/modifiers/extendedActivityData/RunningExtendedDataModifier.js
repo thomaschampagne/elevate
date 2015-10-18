@@ -3,25 +3,9 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
     return {
 
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
+        init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
         },
-
-        /*
-        modify: function() {
-            base.modify.call(this); // Super call
-
-            this.placeSummaryPanel(function() {
-                // Summary panel has been placed...
-                // Add Show extended statistics to page
-
-                this.placeExtendedStatsButton(function() {
-                    // Button has been placed...
-                });
-
-            }.bind(this));
-        },
-*/
 
         insertContentSummaryGridContent: function() {
 

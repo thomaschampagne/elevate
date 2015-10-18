@@ -2,15 +2,11 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
     return {
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
+        init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
 
 
         },
-        /*
-        modify: function() {
-            base.modify.call(this); // Super call
-        },*/
 
         insertContentSummaryGridContent: function() {
 

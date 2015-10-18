@@ -68,7 +68,7 @@ StravistiX.prototype = {
 
         // Bike
         this.handleExtendedActivityData_();
-        this.handleExtendedSegmentEffortData_();
+        //this.handleExtendedSegmentEffortData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
         this.handleActivitySegmentTimeComparison_();
@@ -389,44 +389,44 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
-        this.activityProcessor_.setActivityType(activityType);
+        var basicInfos = {
+            activityName: this.vacuumProcessor_.getActivityName(),
+            activityTime: this.vacuumProcessor_.getActivityTime()
+        }
 
-        this.activityProcessor_.getAnalysisData(
-            this.activityId_,
-            this.userSettings_.userGender,
-            this.userSettings_.userRestHr,
-            this.userSettings_.userMaxHr,
-            this.userSettings_.userFTP,
-            null, // No bounds given, full activity requested
-            function(analysisData) { // Callback when analysis data has been computed
+        var extendedDataModifier = null;
 
-                var extendedDataModifier = null;
-
-                var basicInfos = {
-                    activityName: this.vacuumProcessor_.getActivityName(),
-                    activityTime: this.vacuumProcessor_.getActivityTime()
-                }
-
-                switch (activityType) {
-                    case 'Ride':
-                        extendedDataModifier = new CyclingExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_ACTIVITY);
-                        break;
-                    case 'Run':
-                        extendedDataModifier = new RunningExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos, AbstractExtendedDataModifier.TYPE_ACTIVITY);
-                        break;
-                    default:
-                        // extendedDataModifier = new GenericExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
-                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
-                        $('.inline-stats.section').parent().children().last().after(html);
-                        break;
-                }
-
-                // if (extendedDataModifier) {
-                //     extendedDataModifier.modify();
-                // }
-
-            }.bind(this)
-        );
+        switch (activityType) {
+            case 'Ride':
+                extendedDataModifier = new CyclingExtendedDataModifier(
+                    this.activityProcessor_,
+                    this.activityId_,
+                    activityType,
+                    this.appResources_,
+                    this.userSettings_,
+                    this.athleteId_,
+                    this.athleteIdAuthorOfActivity_,
+                    basicInfos,
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            case 'Run':
+                extendedDataModifier = new RunningExtendedDataModifier(
+                    this.activityProcessor_,
+                    this.activityId_,
+                    activityType, 
+                    this.appResources_, 
+                    this.userSettings_, 
+                    this.athleteId_, 
+                    this.athleteIdAuthorOfActivity_, 
+                    basicInfos, 
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            default:
+                // extendedDataModifier = new GenericExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
+                var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                $('.inline-stats.section').parent().children().last().after(html);
+                break;
+        }
 
         // Send opened activity type to ga for stats
         var updatedToEvent = {

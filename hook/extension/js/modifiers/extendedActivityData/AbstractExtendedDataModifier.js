@@ -12,46 +12,51 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         type: null,
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+        analysisData_: null,
 
-            this.analysisData_ = analysisData;
+        init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+
+            this.activityProcessor_ = activityProcessor;
+            this.activityId_ = activityId;
+            this.activityType = activityType;
             this.appResources_ = appResources;
             this.userSettings_ = userSettings;
             this.athleteId_ = athleteId;
             this.athleteIdAuthorOfActivity_ = athleteIdAuthorOfActivity;
             this.basicInfos = basicInfos;
-
             this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity_ == this.athleteId_);
-
             this.speedUnitsData = this.getSpeedUnitData();
-
             this.type = type;
 
             if (_.isNull(this.type)) {
                 console.error('ExtendedDataModifier must be set');
             }
 
-            if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+            this.activityProcessor_.setActivityType(activityType);
 
-                this.placeSummaryPanel(function() {
-                    // Summary panel has been placed...
+            // Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
+            this.activityProcessor_.getAnalysisData(
+                this.activityId_,
+                this.userSettings_.userGender,
+                this.userSettings_.userRestHr,
+                this.userSettings_.userMaxHr,
+                this.userSettings_.userFTP,
+                null, // No bounds given, full activity requested
+                function(analysisData) { // Callback when analysis data has been computed
+                    this.analysisData_ = analysisData;
+                    if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+                        this.placeSummaryPanel(function() { // Summary panel has been placed...
+                            // Add Show extended statistics to page
+                            this.placeExtendedStatsButton(function() {}); // Button has been placed...
+                        }.bind(this));
 
-                    // Add Show extended statistics to page
-                    this.placeExtendedStatsButton(function() {
-                        // Button has been placed...
+                    } else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+                        // Place button for segment
+                        this.placeExtendedStatsButtonSegment(function() {}); // Button has been placed...
+                    }
+                }.bind(this)
+            );
 
-                    });
-
-                }.bind(this));
-
-            } else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
-
-                // Place button for segment
-                this.placeExtendedStatsButtonSegment(function() {
-                    // Button has been placed...
-
-                });
-            }
         },
 
         renderViews: function() {
@@ -94,9 +99,25 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
                 $('#extendedStatsButton').click(function() {
 
-                    this.renderViews();
+                    this.activityProcessor_.setActivityType(this.activityType);
 
-                    this.showResultsAndRefeshGraphs();
+                    this.activityProcessor_.getAnalysisData(
+                        this.activityId_,
+                        this.userSettings_.userGender,
+                        this.userSettings_.userRestHr,
+                        this.userSettings_.userMaxHr,
+                        this.userSettings_.userFTP,
+                        null, // No bounds given, full activity requested
+                        function(analysisData) { // Callback when analysis data has been computed
+
+                            this.analysisData_ = analysisData;
+
+                            this.renderViews();
+
+                            this.showResultsAndRefeshGraphs();
+
+                        }.bind(this)
+                    );
 
                 }.bind(this));
 
@@ -213,7 +234,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
         },
 
         cleanDataViews: function() {
-            
+
             if (!_.isEmpty(this.dataViews)) {
                 for (var i = 0; i < this.dataViews.length; i++) {
                     this.dataViews[i] = null;
