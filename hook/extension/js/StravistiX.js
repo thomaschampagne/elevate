@@ -509,11 +509,8 @@ StravistiX.prototype = {
                 default:
                     break;
             }
-
             return r;
-
         };
-
     },
 
     /**

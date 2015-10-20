@@ -141,6 +141,12 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                         return;
                     }
 
+                    // Update basic Infos
+                    this.basicInfos.segmentEffort = {
+                        name: segmentInfosResponse.display_name,
+                        elapsedTimeSec: segmentInfosResponse.elapsed_time_raw,
+                    };
+
                     this.activityProcessor_.getAnalysisData(
                         this.activityId_,
                         this.userSettings_.userGender,
@@ -303,6 +309,11 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
             // Clean Data View Before
             this.cleanDataViews();
+
+            // New view segment
+            if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+
+            }
 
             // By default we have... If data exist of course...
             // Featured view
