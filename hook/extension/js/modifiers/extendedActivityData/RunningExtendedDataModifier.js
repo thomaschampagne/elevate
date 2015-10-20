@@ -33,6 +33,22 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             }
         },
 
+        placeExtendedStatsButtonSegment: function(buttonAdded) {
+            setTimeout(function() { // Execute at the end to make sure DOM is ready
+
+                var htmlButton = '<section>';
+                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="' + this.segmentEffortButtonId + '">';
+                htmlButton += 'Show extended statistics';
+                htmlButton += '</a>';
+                htmlButton += '</section>';
+
+                $('.personal-records').after(htmlButton).each(function() {
+                    base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+                }.bind(this));
+
+            }.bind(this));
+        },
+
         setDataViewsNeeded: function() {
 
             base.setDataViewsNeeded.call(this);

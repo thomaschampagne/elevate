@@ -4,8 +4,6 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
         init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
             base.init.call(this, activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
-
-
         },
 
         insertContentSummaryGridContent: function() {
@@ -41,6 +39,18 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
                 this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
             }
+        },
+
+        placeExtendedStatsButtonSegment: function(buttonAdded) {
+            var htmlButton = '<section>';
+            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="' + this.segmentEffortButtonId + '">';
+            htmlButton += 'Show extended statistics';
+            htmlButton += '</a>';
+            htmlButton += '</section>';
+
+            $('.raceshape-btn').last().after(htmlButton).each(function() {
+                base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+            }.bind(this));
         },
 
         setDataViewsNeeded: function() {

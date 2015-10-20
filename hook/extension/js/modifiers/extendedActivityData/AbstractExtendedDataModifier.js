@@ -14,6 +14,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         analysisData_: null,
 
+        segmentEffortButtonId: 'extendedStatsButtonSegment',
+
         init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
 
             this.activityProcessor_ = activityProcessor;
@@ -128,52 +130,41 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             }.bind(this));
         },
 
-        placeExtendedStatsButtonSegment: function(buttonAdded) {
-            console.warn('placeExtendedStatsButtonSegment !!!');
+        placeExtendedStatsButtonSegment: function(buttonAdded, buttonId) { // Note: This method has been overriden in childs
 
-            var htmlButton = '<section>';
-            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="extendedStatsButtonSegment">';
-            htmlButton += 'Show extended statistics';
-            htmlButton += '</a>';
-            htmlButton += '</section>';
+            $('#' + this.segmentEffortButtonId).click(function() {
 
-            $('.raceshape-btn').last().after(htmlButton).each(function() {
+                this.getSegmentInfos(function(segmentInfosResponse) {
 
-                $('#extendedStatsButtonSegment').click(function() {
+                    // Call Activity Processor with bounds
+                    if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
+                        return;
+                    }
 
-                    this.getSegmentInfos(function(segmentInfosResponse) {
+                    this.activityProcessor_.getAnalysisData(
+                        this.activityId_,
+                        this.userSettings_.userGender,
+                        this.userSettings_.userRestHr,
+                        this.userSettings_.userMaxHr,
+                        this.userSettings_.userFTP,
 
-                        // Call Activity Processor with bounds
-                        if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
-                            return;
-                        }
+                        [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
 
-                        this.activityProcessor_.getAnalysisData(
-                            this.activityId_,
-                            this.userSettings_.userGender,
-                            this.userSettings_.userRestHr,
-                            this.userSettings_.userMaxHr,
-                            this.userSettings_.userFTP,
+                        function(analysisData) { // Callback when analysis data has been computed
 
-                            [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
+                            console.log(analysisData);
 
-                            function(analysisData) { // Callback when analysis data has been computed
+                            this.analysisData_ = analysisData;
+                            this.renderViews();
+                            this.showResultsAndRefeshGraphs();
 
-                                console.log(analysisData);
-
-                                this.analysisData_ = analysisData;
-                                this.renderViews();
-                                this.showResultsAndRefeshGraphs();
-
-                            }.bind(this));
-
-                    }.bind(this));
+                        }.bind(this));
 
                 }.bind(this));
 
-                if (buttonAdded) buttonAdded();
-
             }.bind(this));
+
+            if (buttonAdded) buttonAdded();
         },
 
         getSegmentInfos: function(callback) {

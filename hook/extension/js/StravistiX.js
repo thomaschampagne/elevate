@@ -456,7 +456,11 @@ StravistiX.prototype = {
 
         this.activityProcessor_.setActivityType(activityType);
 
-        var view = Strava.Labs.Activities.SegmentLeaderboardView;
+        var view = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
+
+        if (activityType === ('Run' || 'Hike' || 'Walk')) {
+            view = Strava.Labs.Activities.SegmentEffortDetailView;
+        }
 
         if (!view) {
             return;
@@ -467,8 +471,6 @@ StravistiX.prototype = {
         var self = this;
 
         view.prototype.render = function() {
-
-            console.warn('HEYyyy');
 
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
