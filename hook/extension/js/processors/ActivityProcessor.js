@@ -59,17 +59,43 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
-
+            // Slices array if activity bounds given. It's mainly used for segment effort extended stats
             if (bounds && bounds[0] && bounds[1]) {
-                activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
-                activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
-                activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
-                activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
-                activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
-                activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
-                activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
-                activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
-                activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+
+                if (!_.isEmpty(activityStream.velocity_smooth)) {
+                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+                }
+                if (!_.isEmpty(activityStream.time)) {
+                    activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.heartrate)) {
+                    activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.watts)) {
+                    activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.watts_calc)) {
+                    activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.cadence)) {
+                    activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.grade_smooth)) {
+                    activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.altitude)) {
+                    activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.distance)) {
+                    activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+                }
             }
 
             console.debug(activityStream);
