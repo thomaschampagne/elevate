@@ -4,6 +4,7 @@
     "short_name": "StravistiX",
     "description": "Add the missing features of Strava website with new performances data and improved ergonomics",
     "version": "1.0.2",
+    "version_name": "1.0.2 stable",
     "background": {
         "scripts": [
             "js/UserSettings.js",
