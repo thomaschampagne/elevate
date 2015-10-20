@@ -48,12 +48,12 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-            
+
             this.insertContentAtGridPosition(0, 2, this.elevationData.ascentSpeed.avg.toFixed(0), 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
 
-            this.insertContentAtGridPosition(0, 3, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(0, 3, ((this.elevationData.ascentSpeed.lowerQuartile) ? this.elevationData.ascentSpeed.lowerQuartile : '-'), '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(1, 3, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(2, 3, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(2, 3, ((this.elevationData.ascentSpeed.upperQuartile) ? this.elevationData.ascentSpeed.upperQuartile : '-'), '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
         }
     }
 });

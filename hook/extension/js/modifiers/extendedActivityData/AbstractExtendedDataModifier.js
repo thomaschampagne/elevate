@@ -133,8 +133,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
             var htmlButton = '<section>';
             htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="extendedStatsButtonSegment">';
-            // htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButtonSegment" href="#">';
-
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
             htmlButton += '</section>';

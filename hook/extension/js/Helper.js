@@ -69,7 +69,7 @@ Helper.upperQuartile = function(valuesSorted) {
         return 0;
     }
     var q3 = Math.round(0.75 * (valuesSorted.length + 1));
-    return (valuesSorted[q3]);
+    return (_.isUndefined(valuesSorted[q3])) ? null : valuesSorted[q3];
 };
 
 Helper.lowerQuartile = function(valuesSorted) {
@@ -77,15 +77,15 @@ Helper.lowerQuartile = function(valuesSorted) {
         return 0;
     }
     var q1 = Math.round(0.25 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
+    return (_.isUndefined(valuesSorted[q1])) ? null : valuesSorted[q1];
 };
 
 Helper.quartile_95 = function(valuesSorted) {
     if (valuesSorted.length === 0) {
         return 0;
     }
-    var q1 = Math.round(0.95 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
+    var q95 = Math.round(0.95 * (valuesSorted.length + 1));
+    return (_.isUndefined(valuesSorted[q95])) ? null : valuesSorted[q95];
 };
 
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {

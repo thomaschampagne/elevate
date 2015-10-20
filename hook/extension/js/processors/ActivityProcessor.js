@@ -780,6 +780,13 @@ ActivityProcessor.prototype = {
             elevationZones[zone]['percentDistrib'] = ((elevationZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
 
+        console.debug(ascentSpeedMeterPerHourSamplesSorted);
+        console.debug(Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted));
+
+        var lowerQuartile = Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted);
+        var median = Helper.median(ascentSpeedMeterPerHourSamplesSorted);
+        var upperQuartile = Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted);
+
         return {
             'avgElevation': avgElevation.toFixed(0),
             'lowerQuartileElevation': Helper.lowerQuartile(elevationSamplesSorted).toFixed(0),
@@ -788,9 +795,9 @@ ActivityProcessor.prototype = {
             'elevationZones': elevationZones, // Only while moving
             'ascentSpeed': {
                 'avg': avgAscentSpeed,
-                'lowerQuartile': Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'median': Helper.median(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'upperQuartile': Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0)
+                'lowerQuartile': ((lowerQuartile) ? lowerQuartile.toFixed(0) : null),
+                'median': ((median) ? median.toFixed(0) : null),
+                'upperQuartile': ((upperQuartile) ? upperQuartile.toFixed(0) : null)
             }
         };
     }

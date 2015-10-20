@@ -468,6 +468,8 @@ StravistiX.prototype = {
 
         view.prototype.render = function() {
 
+            console.warn('HEYyyy');
+
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
             var basicInfos = {
