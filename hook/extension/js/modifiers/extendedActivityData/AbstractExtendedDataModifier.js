@@ -132,12 +132,14 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             console.warn('placeExtendedStatsButtonSegment !!!');
 
             var htmlButton = '<section>';
-            htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButtonSegment" href="#">';
+            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="extendedStatsButtonSegment">';
+            // htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButtonSegment" href="#">';
+
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
             htmlButton += '</section>';
 
-            $('.effort-elevation-profile').before(htmlButton).each(function() {
+            $('.raceshape-btn').last().after(htmlButton).each(function() {
 
                 $('#extendedStatsButtonSegment').click(function() {
 
@@ -181,7 +183,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             var effortId = (window.location.pathname.split('/')[4] || window.location.hash.replace('#', '')) || false;
 
             if (!effortId) {
-                console.Error('No effort id found');
+                console.error('No effort id found');
                 return;
             }
 
