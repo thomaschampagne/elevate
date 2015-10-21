@@ -55,7 +55,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             var speedUnitPerhour = speedUnitsData[0];
             var speedUnitFactor = speedUnitsData[1];
 
-            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
+            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfos.segmentEffort)) {
                 this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio'); // Move ratio
             }
 
