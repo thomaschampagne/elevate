@@ -98,8 +98,6 @@ ActivityProcessor.prototype = {
                 }
             }
 
-            console.debug(activityStream);
-
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
             if (useCache) {
@@ -806,9 +804,6 @@ ActivityProcessor.prototype = {
         for (var zone in elevationZones) {
             elevationZones[zone]['percentDistrib'] = ((elevationZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
-
-        console.debug(ascentSpeedMeterPerHourSamplesSorted);
-        console.debug(Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted));
 
         var lowerQuartile = Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted);
         var median = Helper.median(ascentSpeedMeterPerHourSamplesSorted);

@@ -75,8 +75,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 this.content += view.getContent();
             }.bind(this));
 
-            console.warn('renderViews :: content length:' + this.content.length);
-            console.warn('dataViews :: length:' + this.dataViews.length);
         },
 
         placeSummaryPanel: function(panelAdded) {
@@ -158,8 +156,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
                         function(analysisData) { // Callback when analysis data has been computed
 
-                            console.log(analysisData);
-
                             this.analysisData_ = analysisData;
                             this.renderViews();
                             this.showResultsAndRefeshGraphs();
@@ -201,8 +197,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 })
 
             ).then(function() {
-                console.debug(segmentInfosResponse);
-                console.debug("name: " + segmentInfosResponse.name + " from: " + segmentInfosResponse.start_index + " to: " + segmentInfosResponse.end_index);
                 callback(segmentInfosResponse);
             }.bind(this));
         },
@@ -223,8 +217,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             _.each(this.dataViews, function(view) {
                 view.displayGraph();
             }.bind(this));
-
-            console.warn('showResultsAndRefeshGraphs :: content length:' + this.content.length);
         },
 
         makeSummaryGrid: function(columns, rows) {
@@ -309,7 +301,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
             // Clean Data View Before
             this.cleanDataViews();
-            
+
             // By default we have... If data exist of course...
             // Featured view
             if (this.analysisData_) {
