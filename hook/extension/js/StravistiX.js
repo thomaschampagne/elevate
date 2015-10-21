@@ -118,7 +118,7 @@ StravistiX.prototype = {
         }
 
         // Display ribbon update message
-        this.handleUpdateRibbon_();
+        this.handleUpdatePopup_();
 
         // Send update info to ga
         var updatedToEvent = {
@@ -136,28 +136,58 @@ StravistiX.prototype = {
     /**
      *
      */
-    handleUpdateRibbon_: function() {
+    handleUpdatePopup_: function() {
 
-        var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
+        var updateMessageObj = {
+            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
+            hotFixes: [
+                'Fix map display problem while cropping an activity. Google maps API was loaded twice.'
+            ],
+            features: [
+                'Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)',
+                'Add on/off extension settings for the segment time comparison on activities pages'
+            ],
+            fixes: [
+                'When segment time comparison may not be displayed',
+                'When no longer seeing extended stats on turbo activities'
+            ]
+        };
+
         var message = '';
+
         message += '<h3><strong>YEAH version <i>1</i> is now out !!! And Google Maps REVIVED !!</strong></h3>';
-        message += '<h5><strong>HOTFIX 1.0.2:</strong></h5>';
-        message += '<h5>Fix map display problem while cropping an activity. Google maps API was loaded twice.</h5>';
-        message += '<h5><strong>SINCE 1.0.X:</strong></h5>';
-        message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
-        message += '<h5>- <strong>NEW:</strong> Add on/off extension settings for the segment time comparison on activities pages</h5>';
-        message += '<h5>- <strong>NEW:</strong> Segment time comparison for QOM (Womens) on activities pages</h5>';
-        message += '<h5>- <strong>FIX</strong> When segment time comparison may not be displayed</h5>';
-        message += '<h5>- <strong>FIX</strong> When no longer seeing extended stats on turbo activities</h5>';
-        message += '<h5>- <strong>FIX</strong> When move ratio not being displayed (eg: Running race)</h5>';
+
+        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+            message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
+            _.each(updateMessageObj.hotFixes, function(hotFix) {
+                message += '<h5>- ' + hotFix + '</h5>';
+            });
+        };
+
+        var baseVersion = this.appResources_.extVersion.split('.');
+        baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
+
+        if (!_.isEmpty(updateMessageObj.features)) {
+            message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
+            _.each(updateMessageObj.features, function(feature) {
+                message += '<h5>- ' + feature + '</h5>';
+            });
+        };
+
+        if (!_.isEmpty(updateMessageObj.fixes)) {
+            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            _.each(updateMessageObj.fixes, function(fix) {
+                message += '<h5>- ' + fix + '</h5>';
+            });
+        };
+
         message += '<h5><strong>The following update is delayed at the moment:</strong></h5>';
         message += '<h5>Like an activity, segments efforts will have their own extended statistics with graphs and tables. This feature implies some hard change and impacts on current code. Need more time than expected. Sorry !</h5>';
         message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
         message += '</a>';
 
-
-        $.fancybox('<h2>' + title + '</h2>' + message);
+        $.fancybox('<h2>' + updateMessageObj.title + '</h2>' + message);
     },
 
     /**
