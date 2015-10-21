@@ -62,6 +62,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var paceDataView = new PaceDataView(this.analysisData_.paceData, units);
                 paceDataView.setAppResources(this.appResources_);
                 paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(paceDataView);
             }
 
@@ -69,6 +70,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var runningCadenceDataView = new RunningCadenceDataView(this.analysisData_.cadenceData, 'spm', this.userSettings_);
                 runningCadenceDataView.setAppResources(this.appResources_);
                 runningCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                runningCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(runningCadenceDataView);
             }
 
@@ -76,6 +78,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var runnningGradeDataView = new RunnningGradeDataView(this.analysisData_.gradeData, '%');
                 runnningGradeDataView.setAppResources(this.appResources_);
                 runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                runnningGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(runnningGradeDataView);
             }
 
@@ -83,6 +86,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
             }
 

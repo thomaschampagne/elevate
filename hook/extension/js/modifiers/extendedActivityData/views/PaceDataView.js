@@ -52,14 +52,17 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             var speedUnitFactor = this.speedUnitsData[1];
             var distanceUnits = this.speedUnitsData[2];
 
+            var paceTimePerDistance = Helper.secondsToHHMMSS(this.paceData.avgPace / speedUnitFactor);
+            paceTimePerDistance = paceTimePerDistance.replace('00:', '');
+
             // Quartiles
             this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-
-            // this.insertContentAtGridPosition(1, 1, (this.paceData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
-            // this.insertContentAtGridPosition(2, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
-
+            
+            if (this.isSegmentEffortView) {
+                this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+            }
         },
 
         setupDistributionTable: function(zones, ratio) {
@@ -89,7 +92,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             var zoneId = 1;
             for (var zone in zones) {
-                
+
                 var from = (zones[zone].from === 'infinite') ? '&infin;' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
 
                 table += '<tr>'; // Zone

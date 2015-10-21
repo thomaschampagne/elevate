@@ -335,6 +335,7 @@ ActivityProcessor.prototype = {
             'lowerQuartilePace': this.convertSpeedToPace(Helper.lowerQuartile(speedsNonZeroSorted)),
             'medianPace': this.convertSpeedToPace(Helper.median(speedsNonZeroSorted)),
             'upperQuartilePace': this.convertSpeedToPace(Helper.upperQuartile(speedsNonZeroSorted)),
+            'avgPace': this.convertSpeedToPace(genuineAvgSpeed),
             'variancePace': this.convertSpeedToPace(varianceSpeed),
             'paceZones': paceZones
         }];

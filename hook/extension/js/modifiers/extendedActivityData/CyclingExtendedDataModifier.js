@@ -66,6 +66,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
                 speedDataView.setAppResources(this.appResources_);
                 speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(speedDataView);
             }
 
@@ -73,6 +74,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(powerDataView);
             }
 
@@ -80,6 +82,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
                 cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingCadenceDataView);
             }
 
@@ -87,6 +90,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingGradeDataView = new CyclingGradeDataView(this.analysisData_.gradeData, '%');
                 cyclingGradeDataView.setAppResources(this.appResources_);
                 cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingGradeDataView);
             }
 
@@ -94,6 +98,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
             }
 

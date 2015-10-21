@@ -309,18 +309,14 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
             // Clean Data View Before
             this.cleanDataViews();
-
-            // New view segment
-            if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
-
-            }
-
+            
             // By default we have... If data exist of course...
             // Featured view
             if (this.analysisData_) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
                 featuredDataView.setAppResources(this.appResources_);
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
 
@@ -329,6 +325,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(heartRateDataView);
             }
         },

@@ -34,7 +34,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
-                if (!_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
+                if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
                     this.content += this.generateSectionTitle('Segment Effort Stats on ' + ' <i>"' + this.basicInfos.segmentEffort.name + '"</i> // Time ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec) + ' // Activity "' + this.basicInfos.activityName + '"');
                 } else { // Complete activity
                     this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '</i>" @ <i>' + this.basicInfos.activityTime + "</i>");

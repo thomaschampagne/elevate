@@ -28,6 +28,8 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         isAuthorOfViewedActivity: null,
 
+        isSegmentEffortView: null,
+
         tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
 
         init: function() {
@@ -36,6 +38,14 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         setViewId: function(id) {
             this.viewId = id;
+        },
+
+        setIsSegmentEffortView: function(bool) {
+            this.isSegmentEffortView = bool;
+        },
+
+        isSegmentEffortView: function() {
+            return this.isSegmentEffortView;
         },
 
         setIsAuthorOfViewedActivity: function(bool) {
@@ -222,7 +232,7 @@ var AbstractDataView = Fiber.extend(function(base) {
          */
         convertSpeedToPace: function(speed) {
 
-            if(_.isNaN(speed)) {
+            if (_.isNaN(speed)) {
                 return 0;
             }
 
