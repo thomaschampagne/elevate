@@ -144,7 +144,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                     // Update basic Infos
                     this.basicInfos.segmentEffort = {
                         name: segmentInfosResponse.display_name,
-                        elapsedTimeSec: segmentInfosResponse.elapsed_time_raw,
+                        elapsedTimeSec: segmentInfosResponse.elapsed_time_raw
                     };
 
                     this.activityProcessor_.getAnalysisData(

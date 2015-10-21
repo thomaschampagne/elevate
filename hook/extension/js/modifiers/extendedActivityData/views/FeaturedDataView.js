@@ -34,9 +34,13 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
-                // Add a title
-                this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
+                if (!_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
+                    this.content += this.generateSectionTitle('Segment Effort Stats on ' + ' <i>"' + this.basicInfos.segmentEffort.name + '"</i> // Time ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec) + ' // Activity "' + this.basicInfos.activityName + '"');
+                } else { // Complete activity
+                    this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '</i>" @ <i>' + this.basicInfos.activityTime + "</i>");
+                }
 
+                // Add a title
                 this.makeGrid(7, 1); // (col, row)
 
                 this.insertFeaturedDataIntoGrid();
