@@ -1,4 +1,4 @@
-app.controller("ComonSettingsController", ['$scope', 'Notifier', '$timeout', '$location', function($scope, Notifier, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$location', function($scope, Notifier, $timeout, $location) {
 
     // Define options structure
     $scope.sections = settingsSectionsModule.data;
