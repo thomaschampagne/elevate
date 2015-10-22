@@ -16,16 +16,17 @@ AthleteStatsModifier.prototype = {
 
     modify: function modify() {
 
+        var self = this;
+
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
             setTimeout(function() {
-                modify();
+                modify.call(self);
             }, 500);
             return;
         }
 
-        var self = this,
-            total = 0,
+        var total = 0,
             i,
             max,
             url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
