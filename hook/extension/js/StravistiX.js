@@ -140,22 +140,17 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                'Fix map display problem while cropping an activity. Google maps API was loaded twice.'
-            ],
+            hotFixes: [],
             features: [
-                'Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)',
-                'Add on/off extension settings for the segment time comparison on activities pages'
+                'You can now choose the default Google Maps layer type in common settings. (Roadmap, terrain, satellite or satellite+legends)',
+                'You can now search for options in common settings: added "search input" on top'
             ],
             fixes: [
-                'When segment time comparison may not be displayed',
-                'When no longer seeing extended stats on turbo activities'
+                'Avoid undefined errors which could occurs in year progression',
             ]
         };
 
         var message = '';
-
-        message += '<h3><strong>YEAH version <i>1</i> is now out !!! And Google Maps REVIVED !!</strong></h3>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
@@ -181,8 +176,7 @@ StravistiX.prototype = {
             });
         };
 
-        message += '<h5><strong>The following update is delayed at the moment:</strong></h5>';
-        message += '<h5>Like an activity, segments efforts will have their own extended statistics with graphs and tables. This feature implies some hard change and impacts on current code. Need more time than expected. Sorry !</h5>';
+        // Donate button
         message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
         message += '</a>';
