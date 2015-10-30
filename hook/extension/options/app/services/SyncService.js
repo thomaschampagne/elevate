@@ -17,11 +17,11 @@ app.config(['$provide', function($provide) {
             if (!_.isEmpty(currentActivitiesOnStorage)) {
 
                 // Try to sync since last date now
-                var fromTimestamp = localStorage.getItem('lastSyncDate');
-                fromTimestamp = (fromTimestamp) ? fromTimestamp : 0;
+                var untilTimestamp = localStorage.getItem('lastSyncDate');
+                untilTimestamp = (untilTimestamp) ? untilTimestamp : 0;
 
                 // Ask for activities until from timesptamp reached
-                SyncService.fetchActivitiesRecursive(fromTimestamp, 25).then(function(result) {
+                SyncService.fetchActivitiesRecursive(untilTimestamp, 25).then(function(result) {
 
                     // Update local storage
                     var newActivitiesOnStorage = _.flatten(_.union(result, currentActivitiesOnStorage));
@@ -41,7 +41,7 @@ app.config(['$provide', function($provide) {
                     console.error(error);
 
                 }, function(fetchedCount) {
-                    deferred.notify(fetchedCount + ' activities fetch since timestamp: ' + fromTimestamp);
+                    deferred.notify(fetchedCount + ' activities fetch since timestamp: ' + untilTimestamp);
                 });
 
             } else {
@@ -65,7 +65,7 @@ app.config(['$provide', function($provide) {
             return deferred.promise;
         };
 
-        SyncService.fetchActivitiesRecursive = function(fromTimestamp, perPage, page, deferred, activitiesList) {
+        SyncService.fetchActivitiesRecursive = function(untilTimestamp, perPage, page, deferred, activitiesList) {
 
             if (!page) {
                 page = 1; // Usually start from first page when no page given
@@ -100,31 +100,31 @@ app.config(['$provide', function($provide) {
                     } else {
 
                         // Syncing is asked until activity start date is lower than timestamp given
-                        if (fromTimestamp) {
+                        if (untilTimestamp) {
 
                             var activityCountOnCurrentPage = response.data.length;
 
-                            // Filter activities with start date upper than fromTimestamp
-                            var activitiesCompliantWithFromTimeStamp = _.filter(response.data, function(item) {
+                            // Filter activities with start date upper than untilTimestamp
+                            var activitiesCompliantWithuntilTimestamp = _.filter(response.data, function(item) {
                                 var startDate = Math.floor(new Date(item.start_date) / 1000);
-                                return (startDate >= fromTimestamp);
+                                return (startDate >= untilTimestamp);
                             });
 
                             // Append activities
-                            activitiesList = _.flatten(_.union(activitiesCompliantWithFromTimeStamp, activitiesList));
+                            activitiesList = _.flatten(_.union(activitiesCompliantWithuntilTimestamp, activitiesList));
 
-                            if (activityCountOnCurrentPage > activitiesCompliantWithFromTimeStamp.length) {
+                            if (activityCountOnCurrentPage > activitiesCompliantWithuntilTimestamp.length) {
                                 deferred.notify(activitiesList.length);
                                 deferred.resolve(activitiesList);
                             } else {
                                 // Continue to fetch
-                                SyncService.fetchActivitiesRecursive(fromTimestamp, perPage, page + 1, deferred, activitiesList);
+                                SyncService.fetchActivitiesRecursive(untilTimestamp, perPage, page + 1, deferred, activitiesList);
                             }
 
                         } else {
                             // Append activities
                             activitiesList = _.flatten(_.union(activitiesList, response.data));
-                            SyncService.fetchActivitiesRecursive(fromTimestamp, perPage, page + 1, deferred, activitiesList);
+                            SyncService.fetchActivitiesRecursive(untilTimestamp, perPage, page + 1, deferred, activitiesList);
                         }
 
                         deferred.notify(activitiesList.length);
