@@ -13,7 +13,7 @@
 </head>
 
 <body data-ng-app="App" data-ng-controller="MainController">
-    <header data-ng-include="'views/headerNav.html'" /></header>
+    <header data-ng-include="'views/headerNav.html'" ng-hide="true" /></header>
     <div class="container">
         <div ng-view>
             <!-- Placeholder for views -->
@@ -36,7 +36,8 @@
 
     <!-- Angular controllers -->
     <script src="controllers/MainController.js"></script>
-    <script src="controllers/ComonSettingsController.js"></script>
+    <script src="controllers/ActivitiesStatsController.js"></script>
+    <script src="controllers/CommonSettingsController.js"></script>
     <script src="controllers/HealthSettingsController.js"></script>
     <script src="controllers/XtdZonesSettingsController.js"></script>
     <script src="controllers/DonateController.js"></script>
@@ -44,6 +45,9 @@
     <!-- Angular services -->
     <script src="services/Notifier.js"></script>
     <script src="services/AvoidInputKeys.js"></script>
+    <script src="services/SyncService.js"></script>
+    <script src="services/TokenService.js"></script>
+    <script src="services/DaoService.js"></script>
 
     <!-- Angular directives -->
     <script src="directives/uiCheckbox.js"></script>

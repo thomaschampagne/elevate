@@ -25,31 +25,31 @@ app.controller('MainController', function($scope, $location) {
         $scope.resetFields();
 
         // Apply proper
-        if (path === routeMap.commonSettingsRoute) {
+        if (path === Config.routeMap.commonSettingsRoute) {
 
             $scope.CommonSettingsActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.healthSettingsRoute) {
+        } else if (path === Config.routeMap.healthSettingsRoute) {
 
             $scope.healthSettingsActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.zonesSettingsRoute) {
+        } else if (path === Config.routeMap.zonesSettingsRoute) {
 
             $scope.zonesSettingsActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.releaseNotesRoute) {
+        } else if (path === Config.routeMap.releaseNotesRoute) {
 
             $scope.releaseNotesActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.aboutRoute) {
+        } else if (path === Config.routeMap.aboutRoute) {
 
             $scope.aboutActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.donateRoute) {
+        } else if (path === Config.routeMap.donateRoute) {
 
             $scope.donateActive = $scope.headerActiveClassName;
 
-        } else if (path === routeMap.shareRoute) {
+        } else if (path === Config.routeMap.shareRoute) {
 
             $scope.shareActive = $scope.headerActiveClassName;
         }

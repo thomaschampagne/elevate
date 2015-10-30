@@ -1,0 +1,29 @@
+Access token: {{stravaAccessToken}}
+<div ng-show="connectToStravaButton">
+    <a href="{{stravaApiAuthorizeUrl}}">Connect to strava</a>
+</div>
+<div>
+    <button ng-hide="isSyncing" ng-click="sync()">Sync</button>
+    <button ng-hide="isSyncing" ng-click="crop()">Crop</button>
+</div>
+<div>
+    {{syncError | json}}
+</div>
+<div>
+    {{syncUpdate}}
+</div>
+<div>
+    {{syncResult | json}}
+</div>
+<div>
+    Current activitiesCount: {{activitiesCount}}
+</div>
+<hr/>
+<div>
+    <table>
+        <tr ng-repeat="activity in activities">
+            <td>{{activity.name}}</td>
+            <td>{{activity.start_date}}</td>
+        </tr>
+    </table>
+</div>
