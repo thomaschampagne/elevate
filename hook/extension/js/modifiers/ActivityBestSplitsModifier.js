@@ -104,6 +104,8 @@ ActivityBestSplitsModifier.prototype = {
             $(".bestsplits-header-title").css("font-weight", "bold").css("text-decoration", "underline");
             $(".segments-header-title").css("font-weight", "normal").css("text-decoration", "none");
             segments.find("table.segments").hide();
+            segments.find("div.show-hide-segments").hide();
+            segments.find("div.hidden-segments-container").hide();
             bestSplitsSection.show();
         });
         
@@ -124,6 +126,10 @@ ActivityBestSplitsModifier.prototype = {
             $(".bestsplits-header-title").css("font-weight", "normal").css("text-decoration", "none");            
             bestSplitsSection.hide();
             segments.find("table.segments").show();
+            segments.find("div.show-hide-segments").show();
+            if ($("#show-hidden-efforts").hasClass("hidden")) {
+                segments.find("div.hidden-segments-container").show();
+            }
             removeSplitSelection();
         });
                 
