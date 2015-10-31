@@ -16,16 +16,17 @@ AthleteStatsModifier.prototype = {
 
     modify: function modify() {
 
+        var self = this;
+
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
             setTimeout(function() {
-                modify();
+                modify.call(self);
             }, 500);
             return;
         }
 
-        var self = this,
-            metersTo1000thOfMileFactor = 0.621371192,
+        var metersTo1000thOfMileFactor = 0.621371192,
             metersToFeetsFactor = 3.2808399,
             total = 0,
             i,
