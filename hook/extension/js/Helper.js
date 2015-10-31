@@ -135,12 +135,17 @@ var c = isNaN(c = Math.abs(c)) ? 2 : c,
    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-Helper.secondsToDHM = function (sec_num) {
+Helper.secondsToDHM = function (sec_num, trimZeros) {
     var days    = Math.floor(sec_num / 86400);
     var hours   = Math.floor((sec_num - (days * 86400)) / 3600);
     var minutes = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
-    var time    = days + 'd ' + hours + 'h ' + minutes + 'm';
-    return time;
+    if (trimZeros && days === 0) {
+        if (hours === 0) {
+            return minutes + 'm';
+        }
+        return hours + 'h ' + minutes + 'm';
+    }
+    return days + 'd ' + hours + 'h ' + minutes + 'm';
 };
 
 Helper.trimLeadingZerosHHMMSS = function(time) {
