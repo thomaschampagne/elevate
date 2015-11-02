@@ -164,6 +164,7 @@ var appResources = {
     donateIcon: chrome.extension.getURL('/icons/ic_attach_money_24px.svg'),
     shareIcon: chrome.extension.getURL('/icons/ic_share_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
+    trendingUpIcon: chrome.extension.getURL('/icons/ic_trending_up_black_24px.svg'),
     qrCodeIcon: chrome.extension.getURL('/icons/qrcode.svg'),
     extVersion: chrome.runtime.getManifest().version,
     extensionId: chrome.runtime.id,
