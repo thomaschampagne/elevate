@@ -142,11 +142,12 @@ StravistiX.prototype = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'You can now choose the default Google Maps layer type in common settings. (Roadmap, terrain, satellite or satellite+legends)',
-                'You can now search for options in common settings: added "search input" on top'
+                'Added "Year progression chart" on Distance, Activity count, Elevation and Time. Go to "your profile" and click graph button under "My year progressions to current month/day"'
             ],
-            fixes: [
-                'Avoid undefined errors which could occurs in year progression',
+            fixes: [],
+            upcommingFeatures: [
+                'Best splits on activities. Splits based on best Time or Distance, best speed, best heartrate, best power and best cadence. Fully customizable. Released before mid November.',
+                'After an hard redesign work, "<i>Extended statistics on segments efforts</i>" are soon finished!! You will like it. Released end of November.'
             ]
         };
 
@@ -173,6 +174,13 @@ StravistiX.prototype = {
             message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h5>- ' + fix + '</h5>';
+            });
+        };
+
+        if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
+            message += '<h5><strong>Upcomming features:</strong></h5>';
+            _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
+                message += '<h5>- ' + upcommingFeatures + '</h5>';
             });
         };
 
