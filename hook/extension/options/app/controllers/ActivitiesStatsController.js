@@ -16,6 +16,8 @@ app.controller("ActivitiesStatsController", ['$scope', '$location', 'SyncService
         $scope.activitiesCount = (currentActivitiesOnStorage) ? currentActivitiesOnStorage.length : 0;
     };
 
+    
+
     $scope.sync = function() { // Sync button listener
 
         $scope.isSyncing = true;
@@ -54,7 +56,7 @@ app.controller("ActivitiesStatsController", ['$scope', '$location', 'SyncService
     if ($scope.stravaAccessToken) {
         console.debug('Cool we have the access token: ' + $scope.stravaAccessToken);
 
-        $scope.sync();
+        //$scope.sync();
 
     } else {
         console.debug('No access token retrieved');

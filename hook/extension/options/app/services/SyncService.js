@@ -1,7 +1,7 @@
 // Synchronization Service
 app.config(['$provide', function($provide) {
 
-    $provide.factory('SyncService', function($http, $q, $location) {
+    $provide.factory('SyncService', function($http, $q, $location, Hash) {
 
         var SyncService = {};
 
@@ -31,7 +31,8 @@ app.config(['$provide', function($provide) {
                         return (new Date(item.start_date) * -1);
                     });
 
-                    localStorage.setItem('activities', angular.toJson(newActivitiesOnStorage));
+                    // localStorage.setItem('activities', angular.toJson(newActivitiesOnStorage));
+                    SyncService.saveActivities(newActivitiesOnStorage);
 
                     // Syncing with existing activities in sotrage finished :)
                     deferred.resolve();
@@ -50,7 +51,8 @@ app.config(['$provide', function($provide) {
                 SyncService.fetchActivitiesRecursive().then(function(result) {
 
                     // Store result in local storage
-                    localStorage.setItem('activities', angular.toJson(result));
+                    // localStorage.setItem('activities', angular.toJson(result));
+                    SyncService.saveActivities(result);
 
                     // Syncing with no activities in sotrage finished :)
                     deferred.resolve();
@@ -135,6 +137,18 @@ app.config(['$provide', function($provide) {
                 deferred.reject(error);
             });
             return deferred.promise;
+        }
+
+        SyncService.saveActivities = function(arrayOfActivities) {
+
+            // Add fingerPrint attribute to each activity
+            angular.forEach(arrayOfActivities, function(activity) {
+                if(!activity.fingerPrint) {
+                    activity.fingerPrint = Hash.md5(angular.toJson(activity));
+                }
+            });
+
+            localStorage.setItem('activities', angular.toJson(arrayOfActivities));
         }
 
         return SyncService;
