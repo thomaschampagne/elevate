@@ -140,7 +140,9 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                'Fix invisible icon of "year progression chart" in "My Profile" page'
+            ],
             features: [
                 'Added "Year progression chart" on Distance, Activity count, Elevation and Time. Go to "your profile" and click graph button under "My year progressions to current month/day"'
             ],
@@ -204,7 +206,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier();
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
         athleteStatsModifier.modify();
     },
 
