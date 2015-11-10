@@ -64,7 +64,7 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Enable bike odo display',
         optionLabels: ['Cycling'],
-        optionHtml: 'This option allow you to display the total distance traveled with the bike which has done the activity.<br /><br />This value is displayed alongside your bike name in an activity page and is refreshed each 2 hours.<br /><br />Of course, it implies that you have declared at least 1 bike in Strava.',
+        optionHtml: 'This option allows you to display the total distance traveled with the bike which has done the activity.<br /><br />This value is displayed alongside your bike name in an activity page and is refreshed each 2 hours.<br /><br />Of course, it implies that you have declared at least 1 bike in Strava.',
     }, {
         optionKey: 'activateRunningGradeAdjustedPace',
         optionType: 'checkbox',
@@ -98,13 +98,13 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Enabled segment time comparison to KOM/QOM display',
         optionLabels: ['Cycling'],
-        optionHtml: 'This option allow you to display the time difference between segment KOM/QOM time and the time from the activity for that segment.',
+        optionHtml: 'This option allows you to display the time difference between segment KOM/QOM time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToPR',
         optionType: 'checkbox',
         optionTitle: 'Enabled segment time comparison to PR display',
         optionLabels: ['Cycling'],
-        optionHtml: 'This option allow you to display the time difference between segment PR time and the time from the activity for that segment.',
+        optionHtml: 'This option allows you to display the time difference between segment PR time and the time from the activity for that segment.',
     }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',
@@ -131,6 +131,12 @@ settingsSectionsModule.data = [{
         }],
         optionTitle: 'Default Google Maps layer type',
         optionHtml: 'Do what title describes...',
+    }, {
+        optionKey: 'displayActivityBestSplits',
+        optionType: 'checkbox',
+        optionTitle: 'Enable best splits into your cycling activities',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This option allows to enable best splits into your cycling activities.',
     }]
 }, {
     sectionTitle: 'Segments viewing options',
