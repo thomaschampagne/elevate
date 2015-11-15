@@ -71,6 +71,7 @@ StravistiX.prototype = {
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
         this.handleActivitySegmentTimeComparison_();
+        this.handleActivityBestSplits_();
 
         // Run
         this.handleRunningGradeAdjustedPace_();
@@ -141,19 +142,22 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [
-                'Fix invisible icon of "year progression chart" in "My Profile" page'
+
             ],
             features: [
-                'Added "Year progression chart" on Distance, Activity count, Elevation and Time. Go to "your profile" and click graph button under "My year progressions to current month/day"'
+                'NEW ! Cycling BEST SPLITS !! Load a cycling activity, then under elevation chart click "Best Splits"'
             ],
-            fixes: [],
+            fixes: [
+                'Pressing multiple times on the current tab adds "View in Google Maps" multiple times.'
+            ],
             upcommingFeatures: [
-                'Best splits on activities. Splits based on best Time or Distance, best speed, best heartrate, best power and best cadence. Fully customizable. Released before mid November.',
                 'After an hard redesign work, "<i>Extended statistics on segments efforts</i>" are soon finished!! You will like it. Released end of November.'
             ]
         };
 
         var message = '';
+
+        message += '<h3 style="background: #eee; padding: 10px;">Version <strong>2</strong> is out, <strong>Best Splits</strong> for cyclists are live !!</h3>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
@@ -564,6 +568,43 @@ StravistiX.prototype = {
 
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
         activitySegmentTimeComparisonModifier.modify();
+    },
+
+    /**
+     *
+     */
+    handleActivityBestSplits_: function() {
+
+        if (!this.userSettings_.displayActivityBestSplits) {
+            return;
+        }
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Only cycling is supported
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivityBestSplits_()");
+
+        var self = this;
+
+        this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {
+            Helper.getFromStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', function(response) {
+                var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {
+                    Helper.setToStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', splitsConfiguration, function(response) {});
+                });
+                activityBestSplitsModifier.modify();
+            });
+        }.bind(this));
     },
 
     /**

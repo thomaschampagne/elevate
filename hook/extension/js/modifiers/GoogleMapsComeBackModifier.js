@@ -94,7 +94,7 @@ GoogleMapsComeBackModifier.prototype = {
     placeMainGoogleMapButton: function(activityId) {
 
         // Do not add Main Google Map Button if native strava map not displayed
-        if (!$('#map-canvas') || $('#map-canvas').is(':hidden')) {
+        if (!$('#map-canvas') || $('#map-canvas').is(':hidden') || $('#showInGoogleMap').size()) {
             return;
         }
 
