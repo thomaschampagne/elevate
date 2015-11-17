@@ -62,19 +62,37 @@ Helper.secondsToHHMMSS = function(secondsParam, trimLeadingZeros) {
 };
 
 Helper.upperQuartile = function(valuesSorted) {
-    var q3 = Math.round(0.75 * (valuesSorted.length + 1));
-    return (valuesSorted[q3]);
+	if(valuesSorted.length<3) return (0);
+//	if(valuesSorted.length<3) return ("-");
+	if(Helper.isEven(valuesSorted.length)) { 
+		var valuesSortedUpperHalf=valuesSorted.slice(valuesSorted.length/2);
+	} else {
+		var valuesSortedUpperHalf=valuesSorted.slice((valuesSorted.length+1)/2);
+	}
+	return Helper.median(valuesSortedUpperHalf);
+//    var q3 = Math.round(0.75 * (valuesSorted.length + 1));
+//    return (valuesSorted[q3]);
 };
 
 Helper.lowerQuartile = function(valuesSorted) {
-    var q1 = Math.round(0.25 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
+	if(valuesSorted.length<3) return (0);
+//	if(valuesSorted.length<3) return ("-");
+	if(Helper.isEven(valuesSorted.length)) {
+		var valuesSortedLowerHalf=valuesSorted.slice(0,valuesSorted.length/2);
+	} else {
+		var valuesSortedLowerHalf=valuesSorted.slice(0,(valuesSorted.length-1)/2);
+	}
+	return Helper.median(valuesSortedLowerHalf);
+//    var q1 = Math.round(0.25 * (valuesSorted.length + 1));
+//    return (valuesSorted[q1]);
 };
 
-Helper.quartile_95 = function(valuesSorted) {
-    var q1 = Math.round(0.95 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
-};
+
+// Use abstract equality == for "is number" test
+Helper.isEven = function(n) {
+  return n == parseFloat(n)? !(n%2) : void 0;
+}
+
 
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {
     return (parseFloat(hrr) / 100 * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
