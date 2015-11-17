@@ -427,7 +427,7 @@ ActivityBestSplitsModifier.prototype = {
                                     }
                                     
                                     totalCadence = totalOfValues(begin, end, activityJson.cadence);
-                                    avgCadence = totalCadence / coutOfNonZero(begin, end, activityJson.cadence);
+                                    avgCadence = totalCadence / (end - begin + 1);
                                     if (avgCadence > values.avgCadence.value) {
                                         values.avgCadence.value = avgCadence;
                                         values.avgCadence.begin = begin;
@@ -436,7 +436,7 @@ ActivityBestSplitsModifier.prototype = {
                                     }
                                     
                                     totalPower = totalOfValues(begin, end, activityJson.watts);
-                                    avgPower = totalPower / coutOfNonZero(begin, end, activityJson.watts);
+                                    avgPower = totalPower / (end - begin + 1);
                                     if (avgPower > values.avgPower.value) {
                                         values.avgPower.value = avgPower;
                                         values.avgPower.begin = begin;
