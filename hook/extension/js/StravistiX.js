@@ -142,7 +142,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [
-
+                '"Null powers" are computed in power best splits. They were removed from computation before.'
             ],
             features: [
                 'NEW ! Cycling BEST SPLITS !! Load a cycling activity, then under elevation chart click "Best Splits"'
