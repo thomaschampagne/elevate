@@ -207,6 +207,44 @@ settingsSectionsModule.data = [{
         optionHtml: 'This will hide all routes created in the dashboard feed.',
     }, ]
 }, {
+    sectionTitle: 'Units',
+    sectionContent: [{
+        optionKey: 'temperatureUnit',
+        optionType: 'list',
+        optionLabels: ['All'],
+        optionList: [{
+            key: 'F',
+            name: 'Fahrenheit'
+        }, {
+            key: 'C',
+            name: 'Celsius'
+        }],
+        optionTitle: 'Temperature',
+        optionHtml: 'This selects which units to use when displaying temperature on weather pages.',
+    }, {
+        optionKey: 'windUnit',
+        optionType: 'list',
+        optionLabels: ['All'],
+        optionList: [{
+              key: 'mph',
+              name: 'Miles per hour'
+          }, {
+              key: 'km/h',
+              name: 'Kilometers per hour'
+          }, {
+              key: 'm/s',
+              name: 'Meters per second'
+          }, {
+              key: 'kn',
+              name: 'Knots'
+          }, {
+              key: 'bft',
+              name: 'Beaufort scale'
+          }],
+        optionTitle: 'Wind Speed',
+        optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
+    }]
+}, {
     sectionTitle: 'Miscellaneous',
     sectionContent: [{
         optionKey: 'highLightStravistiXFeature',

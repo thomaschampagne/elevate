@@ -277,7 +277,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
 
-        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_);
+        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_, this.userSettings_);
         windyTyModifier.modify();
     },
 
