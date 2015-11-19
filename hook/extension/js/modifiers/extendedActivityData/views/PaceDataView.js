@@ -83,11 +83,11 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             // Generate table header
             table += '<tr>'; // Zone
-            table += '<td><strong>Zone</strong></td>'; // Zone
-            table += '<td><strong>From<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
-            table += '<td><strong>To<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
-            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
-            table += '<td><strong>% in zone</strong></td>'; // % in zone
+            table += '<td>ZONE</td>'; // Zone
+            table += '<td>FROM ' + this.units.toUpperCase() + '</td>'; // bpm
+            table += '<td>TO ' + this.units.toUpperCase() + '</td>'; // bpm
+            table += '<td>TIME</td>'; // Time
+            table += '<td>% ZONE</td>'; // % in zone
             table += '</tr>';
 
             var zoneId = 1;
