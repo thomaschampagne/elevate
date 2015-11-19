@@ -31,15 +31,15 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div class="distributionTable">';
-            table += '<table>';
+            table += '<div>';
+            table += '<table class="distributionTable">';
 
             table += '<tr>'; // Zone
-            table += '<td><strong>Zone</strong></td>'; // Zone
-            table += '<td><strong>%HRR</strong></td>'; // bpm
-            table += '<td><strong>BPM</strong></td>'; // bpm
-            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
-            table += '<td><strong>% in zone</strong></td>'; // % in zone
+            table += '<td>ZONE</td>'; // Zone
+            table += '<td>%HRR</td>'; // bpm
+            table += '<td>BPM</td>'; // bpm
+            table += '<td>TIME</td>'; // Time
+            table += '<td>% ZONE</td>'; // % in zone
             table += '</tr>';
 
             var zoneId = 1;
@@ -96,7 +96,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Heart rate stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings">(customize)</a>');
+            this.content += this.generateSectionTitle('HEART RATE STATS <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 5px;">Customize</a>');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)

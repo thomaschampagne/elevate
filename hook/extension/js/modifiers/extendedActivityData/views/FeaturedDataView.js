@@ -36,7 +36,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
 
                 // Add a title
                 // this.content += this.generateSectionTitle('Highlighted Stats');
-                this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
+                this.content += this.generateSectionTitle('HIGHLIGHTED STATS for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
 
                 this.makeGrid(7, 1); // (col, row)
 

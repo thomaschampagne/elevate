@@ -62,11 +62,14 @@ var AbstractExtendedActivityDataModifier = Fiber.extend(function(base) {
                 $('#extendedStatsButton').click(function() {
 
                     $.fancybox({
+                        'padding': 0,
+                        'margin': 15,
                         'width': '100%',
                         'height': '100%',
                         'autoScale': true,
-                        'transitionIn': 'fade',
-                        'transitionOut': 'fade',
+                        'transitionIn': 'none',
+                        'transitionOut': 'none',
+                        'closeBtn': false,
                         'type': 'iframe',
                         'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
                     });
