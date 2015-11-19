@@ -42,7 +42,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 htmlButton += '</a>';
                 htmlButton += '</section>';
 
-                $('.personal-records').after(htmlButton).each(function() {
+                $('.leaderboard-summary').after(htmlButton).each(function() {
                     base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
                 }.bind(this));
 
