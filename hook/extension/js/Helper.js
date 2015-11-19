@@ -23,17 +23,6 @@ Helper.log = function(tag, object) {
     }
 };
 
-Helper.median = function(valuesSorted) {
-    if (valuesSorted.length === 0) {
-        return 0;
-    }
-    var half = Math.floor(valuesSorted.length / 2);
-    if (valuesSorted.length % 2)
-        return valuesSorted[half];
-    else
-        return (valuesSorted[half - 1] + valuesSorted[half]) / 2.0;
-};
-
 Helper.HHMMSStoSeconds = function(str) {
     var p = str.split(':'),
         s = 0,
@@ -64,29 +53,50 @@ Helper.secondsToHHMMSS = function(secondsParam, trimLeadingZeros) {
     return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
 };
 
+Helper.median = function(valuesSorted) {
+    var half = Math.floor(valuesSorted.length / 2);
+    if (valuesSorted.length % 2)
+        return valuesSorted[half];
+    else
+        return (valuesSorted[half - 1] + valuesSorted[half]) / 2.0;
+};
+
 Helper.upperQuartile = function(valuesSorted) {
-    if (valuesSorted.length === 0) {
-        return 0;
+
+    if (valuesSorted.length < 3) {
+        return (0);
     }
-    var q3 = Math.round(0.75 * (valuesSorted.length + 1));
-    return (_.isUndefined(valuesSorted[q3])) ? null : valuesSorted[q3];
+
+    if (Helper.isEven(valuesSorted.length)) {
+        var valuesSortedUpperHalf = valuesSorted.slice(valuesSorted.length / 2);
+    } else {
+        var valuesSortedUpperHalf = valuesSorted.slice((valuesSorted.length + 1) / 2);
+    }
+
+    return Helper.median(valuesSortedUpperHalf);
 };
 
 Helper.lowerQuartile = function(valuesSorted) {
-    if (valuesSorted.length === 0) {
-        return 0;
+
+    if (valuesSorted.length < 3) {
+        return (0);
     }
-    var q1 = Math.round(0.25 * (valuesSorted.length + 1));
-    return (_.isUndefined(valuesSorted[q1])) ? null : valuesSorted[q1];
+
+    if (Helper.isEven(valuesSorted.length)) {
+        var valuesSortedLowerHalf = valuesSorted.slice(0, valuesSorted.length / 2);
+    } else {
+        var valuesSortedLowerHalf = valuesSorted.slice(0, (valuesSorted.length - 1) / 2);
+    }
+
+    return Helper.median(valuesSortedLowerHalf);
 };
 
-Helper.quartile_95 = function(valuesSorted) {
-    if (valuesSorted.length === 0) {
-        return 0;
-    }
-    var q95 = Math.round(0.95 * (valuesSorted.length + 1));
-    return (_.isUndefined(valuesSorted[q95])) ? null : valuesSorted[q95];
-};
+
+// Use abstract equality == for "is number" test
+Helper.isEven = function(n) {
+    return n == parseFloat(n) ? !(n % 2) : void 0;
+}
+
 
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {
     return (parseFloat(hrr) / 100 * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
@@ -138,18 +148,18 @@ Helper.includeJs = function(scriptUrl) {
 };
 
 Helper.formatNumber = function(n, c, d, t) {
-var c = isNaN(c = Math.abs(c)) ? 2 : c, 
-    d = d == undefined ? "." : d, 
-    t = t == undefined ? "," : t, 
-    s = n < 0 ? "-" : "", 
-    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
-    j = (j = i.length) > 3 ? j % 3 : 0;
-   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-Helper.secondsToDHM = function (sec_num, trimZeros) {
-    var days    = Math.floor(sec_num / 86400);
-    var hours   = Math.floor((sec_num - (days * 86400)) / 3600);
+Helper.secondsToDHM = function(sec_num, trimZeros) {
+    var days = Math.floor(sec_num / 86400);
+    var hours = Math.floor((sec_num - (days * 86400)) / 3600);
     var minutes = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
     if (trimZeros && days === 0) {
         if (hours === 0) {

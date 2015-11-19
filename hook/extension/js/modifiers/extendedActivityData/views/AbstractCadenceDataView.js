@@ -16,7 +16,7 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
 
             this.setupDistributionTable(this.cadenceData.cadenceZones);
 
-            this.viewTitle = 'Cadence stats';
+            this.viewTitle = 'CADENCE STATS';
 
         },
 

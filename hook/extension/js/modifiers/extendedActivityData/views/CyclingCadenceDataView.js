@@ -16,6 +16,9 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         },
 
         render: function() {
+
+            this.viewTitle += '<a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 5px;">Customize</a>';
+
             base.render.call(this);
 
             this.viewTitle = 'Cadence <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>';
