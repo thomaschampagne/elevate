@@ -338,5 +338,7 @@ var userSettings = {
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,
-    bestSplitsConfiguration: null
+    bestSplitsConfiguration: null,
+    temperatureUnit: 'F',
+    windUnit: 'mph',
 };
