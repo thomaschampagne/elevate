@@ -207,7 +207,7 @@ settingsSectionsModule.data = [{
         optionHtml: 'This will hide all routes created in the dashboard feed.',
     }, ]
 }, {
-    sectionTitle: 'Units',
+    sectionTitle: 'Weather units',
     sectionContent: [{
         optionKey: 'temperatureUnit',
         optionType: 'list',
@@ -220,7 +220,7 @@ settingsSectionsModule.data = [{
             name: 'Celsius'
         }],
         optionTitle: 'Temperature',
-        optionHtml: 'This selects which units to use when displaying temperature on weather pages.',
+        optionHtml: 'This selects which units to use when displaying temperature on weather activity overlay.',
     }, {
         optionKey: 'windUnit',
         optionType: 'list',
