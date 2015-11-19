@@ -597,6 +597,7 @@ StravistiX.prototype = {
 
         var self = this;
 
+        // TODO Implement cache here: get stream from cache if exist
         this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {
             Helper.getFromStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', function(response) {
                 var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {

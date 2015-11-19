@@ -362,7 +362,8 @@ ActivityBestSplitsModifier.prototype = {
     
         var worker,
             workerPromises = [];
-        var computeSplit = function(split, activity) {                       
+        var computeSplit = function(split, activity) {
+            // TODO Implement cache for best split here. Avoid computation of split each time to load the page faster
             if (!worker) {
                 var blobURL = URL.createObjectURL(new Blob([ '(',			
                     function() {                    
