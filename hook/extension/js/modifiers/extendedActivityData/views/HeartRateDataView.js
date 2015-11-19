@@ -96,7 +96,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('HEART RATE STATS <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 5px;">Customize</a>');
+            this.content += this.generateSectionTitle('HEART RATE <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 5px;">Customize</a>');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
