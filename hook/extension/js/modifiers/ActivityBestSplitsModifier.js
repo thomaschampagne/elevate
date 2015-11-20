@@ -194,6 +194,8 @@ ActivityBestSplitsModifier.prototype = {
                             "<th style='text-align: center'>Time/Distance</th>" +
                             "<th style='text-align: center'>Avg Speed</th>" +
                             "<th style='text-align: center'>Avg HR</th>" +
+                            "<th style='text-align: center'>Drop HR</th>" +
+                            "<th style='text-align: center'>Rise HR</th>" +
                             "<th style='text-align: center'>Avg Power</th>" +
                             "<th style='text-align: center'>Avg Cadence</th>" +
                             "<th style='text-align: center'></th>" +
@@ -263,6 +265,8 @@ ActivityBestSplitsModifier.prototype = {
                                    "<td class='value'><div id='split-" + split.id + "-time'></div><div id='split-" + split.id + "-distance'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-speed'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-hr'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-drop-hr'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-rise-hr'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-power'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
                                    "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Remove</button></td>" +
@@ -364,7 +368,7 @@ ActivityBestSplitsModifier.prototype = {
             workerPromises = [];
         var computeSplit = function(split, activity) {                       
             if (!worker) {
-                var blobURL = URL.createObjectURL(new Blob([ '(',			
+                var blobURL = URL.createObjectURL(new Blob([ '(',           
                     function() {                    
                         var computeSplitWorker = function(split, activityJson, options) {
                             var i,
@@ -389,11 +393,25 @@ ActivityBestSplitsModifier.prototype = {
                                         samples: 0
                                     };
                                 },
+                                newDropRiseValue = function() {
+                                    return {
+                                        value: {
+                                            value: 0,
+                                            beginValue: 0,
+                                            endValue: 0
+                                        },
+                                        begin: 0,
+                                        end: -1,
+                                        samples: 0
+                                    };
+                                },
                                 values = {
                                     time: newSplitValue(999999999),
                                     distance: newSplitValue(),
                                     avgSpeed: newSplitValue(),
                                     avgHr: newSplitValue(),
+                                    dropHr: newDropRiseValue(),
+                                    riseHr: newDropRiseValue(),
                                     avgPower: newSplitValue(),
                                     avgCadence: newSplitValue()
                                 },
@@ -406,6 +424,79 @@ ActivityBestSplitsModifier.prototype = {
                                         result += array[start];
                                     }
                                     return result;
+                                },
+                                dropOfValues = function(start, end, array) {
+                                    var dropHr = newSplitValue();
+                                    var maxDrop = 0;
+                                    var maxBegin = 0;
+                                    var maxEnd = 0;
+                                    var maxValueBegin = 0;
+                                    var maxValueEnd = 0;
+                                    if (array) {
+                                        var previous = array[start++];
+                                        var currentMax = previous;
+                                        var begin = start;
+                                        for (; array && start < end; start++) {
+                                            if (array[start] > previous) {
+                                                if (maxValueEnd == 0 || array[start] - maxValueEnd > 5) {
+                                                    currentMax = array[start];
+                                                    begin = start;
+                                                }
+                                            } else if (currentMax - array[start] > maxDrop) {
+                                                maxDrop = currentMax - array[start];
+                                                maxBegin = begin;
+                                                maxEnd = start;
+                                                maxValueBegin = currentMax;
+                                                maxValueEnd = array[start];
+                                            }
+                                            previous = array[start];
+                                        }
+                                    }
+                                    dropHr.value = {
+                                        value: maxDrop,
+                                        beginValue: maxValueBegin,
+                                        endValue: maxValueEnd
+                                    };
+                                    dropHr.begin = maxBegin;
+                                    dropHr.end = maxEnd;
+                                    return dropHr;
+                                },
+                                riseOfValues = function(start, end, array) {
+                                    var riseHr = newSplitValue();
+                                    var maxRise = 0;
+                                    var maxBegin = 0;
+                                    var maxEnd = 0;
+                                    var maxValueBegin = 0;
+                                    var maxValueEnd = 0;
+                                    if (array) {
+                                        var previous = array[start++];
+                                        var currentMin = previous;
+                                        var begin = start;
+                                        for (; array && start < end; start++) {
+                                            if (array[start] < previous) {
+                                                if (maxValueEnd == 0 || maxValueEnd - array[start] > 5) {
+                                                    // restart
+                                                    currentMin = array[start];
+                                                    begin = start;
+                                                }
+                                            } else if (array[start] - currentMin > maxRise) {
+                                                maxRise = array[start] - currentMin;
+                                                maxBegin = begin;
+                                                maxEnd = start;
+                                                maxValueBegin = currentMin;
+                                                maxValueEnd = array[start];
+                                            }
+                                            previous = array[start];
+                                        }
+                                    }
+                                    riseHr.value = {
+                                        value: maxRise,
+                                        beginValue: maxValueBegin,
+                                        endValue: maxValueEnd
+                                    };
+                                    riseHr.begin = maxBegin;
+                                    riseHr.end = maxEnd;
+                                    return riseHr;
                                 },
                                 coutOfNonZero = function(start, end, array) {
                                     var result = 0;
@@ -424,6 +515,15 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgHr.begin = begin;
                                         values.avgHr.end = end;
                                         values.avgHr.timeOrDistance = timeOrDistance;
+                                    }
+                                    dropHr = dropOfValues(begin, end, activityJson.heartrate);
+                                    if (dropHr.value.value > values.dropHr.value.value) {
+                                        values.dropHr = dropHr;
+                                    }
+                                    
+                                    riseHr = riseOfValues(begin, end, activityJson.heartrate);
+                                    if (riseHr.value.value > values.riseHr.value.value) {
+                                        values.riseHr = riseHr;
                                     }
                                     
                                     totalCadence = totalOfValues(begin, end, activityJson.cadence);
@@ -486,6 +586,11 @@ ActivityBestSplitsModifier.prototype = {
                                     
                                     checkValues(time);
                                 }
+
+                                time = activityJson.time[values.riseHr.end] - activityJson.time[values.riseHr.begin];
+                                values.riseHr.timeOrDistance = time;
+                                time = activityJson.time[values.dropHr.end] - activityJson.time[values.dropHr.begin];
+                                values.dropHr.timeOrDistance = time;
                                 
                                 if (options.distanceUnit === options.Miles) {
                                     values.distance.value *= options.MetersTo0001hMileFactor;
@@ -528,7 +633,14 @@ ActivityBestSplitsModifier.prototype = {
                                     
                                     checkValues(distanceInUserUnits);
                                 }
-                                
+
+                                distance = activityJson.distance[values.riseHr.end] - activityJson.distance[values.riseHr.begin];
+                                distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
+                                values.riseHr.timeOrDistance = distanceInUserUnits;
+                                distance = activityJson.distance[values.dropHr.end] - activityJson.distance[values.dropHr.begin];
+                                distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
+                                values.dropHr.timeOrDistance = distanceInUserUnits;
+
                                 if (options.distanceUnit === options.Miles) {
                                     values.distance.value *= options.MetersTo0001hMileFactor;
                                     values.avgSpeed.value *= options.KilometersToMilesFactor;
@@ -537,11 +649,13 @@ ActivityBestSplitsModifier.prototype = {
                             
                             countSamples(values.avgCadence);
                             countSamples(values.avgHr);
+                            countSamples(values.dropHr);
+                            countSamples(values.riseHr);
                             countSamples(values.avgPower);
                             countSamples(values.avgSpeed);
                             countSamples(values.distance);
                             countSamples(values.time);
-                            
+
                             return values;
                         };                    
                         
@@ -562,7 +676,7 @@ ActivityBestSplitsModifier.prototype = {
                 URL.revokeObjectURL(blobURL);
             }
             workerPromises[split.id] = $.Deferred();
-			worker.postMessage({
+            worker.postMessage({
                 split: split, 
                 activity: activity, 
                 options: { 
@@ -616,6 +730,8 @@ ActivityBestSplitsModifier.prototype = {
                 setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
                 setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
+                setValue(splitId + "-drop-hr", value.dropHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2198" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "-" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
+                setValue(splitId + "-rise-hr", value.riseHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2197" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "+" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
                 splitRow.find("td.value span.ajax-loading-image").remove();
