@@ -20,7 +20,7 @@ ActivityGoogleMapTypeModifier.prototype = {
 
         setInterval(function() {
 
-            jQuery('a.map-type-selector[data-map-type-id=' + mapGoal + ']')
+            $('a.map-type-selector[data-map-type-id=' + mapGoal + ']')
                 .not('.once-only')
                 .addClass('once-only')
                 .click()

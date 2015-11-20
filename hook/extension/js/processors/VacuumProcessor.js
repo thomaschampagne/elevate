@@ -22,7 +22,7 @@ VacuumProcessor.prototype = {
                 athleteId = currentAthlete.id;
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return athleteId;
@@ -39,7 +39,7 @@ VacuumProcessor.prototype = {
                 athleteName = currentAthlete.get('display_name');
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return athleteName;
@@ -52,6 +52,10 @@ VacuumProcessor.prototype = {
     getAthleteIdAuthorOfActivity: function getAthleteId() {
 
         if (_.isUndefined(window.pageView)) {
+            return null;
+        }
+
+        if (!window.pageView.activityAthlete()) {
             return null;
         }
 
@@ -74,7 +78,7 @@ VacuumProcessor.prototype = {
                 premiumStatus = currentAthlete.attributes.premium;
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return premiumStatus;
@@ -102,7 +106,7 @@ VacuumProcessor.prototype = {
 
             }
         } catch (err) {
-            if (StravaPlus.debugMode) console.warn(err);
+            if (env.debugMode) console.warn(err);
         }
 
         return proStatus;
@@ -125,11 +129,11 @@ VacuumProcessor.prototype = {
     },
 
     /**
-     * @returns Comon activity stats given by Strava throught right panel
+     * @returns Common activity stats given by Strava throught right panel
      */
-    getActivityComonStats: function getActivityStats() {
+    getActivityCommonStats: function getActivityStats() {
 
-        var actStatsContainer = jQuery(".activity-summary-container");
+        var actStatsContainer = $(".activity-summary-container");
 
         // Get Distance
         var distance = this.formatActivityDataValue_(
@@ -148,7 +152,11 @@ VacuumProcessor.prototype = {
 
         // Get Estimated Average Power
         var avgPower = this.formatActivityDataValue_(
-            actStatsContainer.find('.inline-stats.section.secondary-stats').children().first().children().first().text(),
+            $('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
+            false, false, false, false);
+
+        var weightedPower = this.formatActivityDataValue_(
+            $('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
             false, false, false, false);
 
         // Get Energy Output
@@ -158,13 +166,41 @@ VacuumProcessor.prototype = {
 
         // Get Elapsed Time
         var elapsedTime = this.formatActivityDataValue_(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().last().children().children().last().text(),
+            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
             true, false, false, false);
+
+        // Try to get it another way. (Running races)
+        if (!elapsedTime) {
+            elapsedTime = this.formatActivityDataValue_(
+                $('.section.more-stats').children().last().text(),
+                true, false, false, false);
+        }
+
+        // Invert movingTime and elapsedTime. Theses values seems to be inverted in running races (https://www.strava.com/activities/391338398)
+        if (elapsedTime - movingTime < 0) {
+            var elapsedTimeCopy = elapsedTime;
+            elapsedTime = movingTime;
+            movingTime = elapsedTimeCopy;
+        }
 
         // Get Average speed
         var averageSpeed = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
             false, false, false, false);
+
+        // If no average speed found, try to get pace instead.
+        if (!averageSpeed) {
+            averageSpeed = this.formatActivityDataValue_(
+                $('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
+                true, false, false, false);
+
+            averageSpeed = 1 / averageSpeed; // invert to km per seconds
+            averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
+
+            var measurementPreference = currentAthlete.get('measurement_preference');
+            var speedFactor = (measurementPreference == 'meters') ? 1 : 0.62137;
+            averageSpeed = averageSpeed / speedFactor; // Always give PKH here
+        }
 
         var averageHeartRate = this.formatActivityDataValue_(
             actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().has('abbr').text(),
@@ -180,6 +216,7 @@ VacuumProcessor.prototype = {
             'movingTime': movingTime,
             'elevation': elevation,
             'avgPower': avgPower,
+            'weightedPower': weightedPower,
             'energyOutput': energyOutput,
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
@@ -197,7 +234,19 @@ VacuumProcessor.prototype = {
             return null;
         }
         // Common clean
-        var cleanData = dataIn.replace(/\s/g, '').trim('string');
+        var cleanData = dataIn.toLowerCase();
+        cleanData = cleanData.replace(new RegExp(/\s/g), '');
+        cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), '');
+        cleanData = cleanData.replace(new RegExp(/æ/g), '');
+        cleanData = cleanData.replace(new RegExp(/ç/g), '');
+        cleanData = cleanData.replace(new RegExp(/[èéêë]/g), '');
+        cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), '');
+        cleanData = cleanData.replace(new RegExp(/ñ/g), '');
+        cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), '');
+        cleanData = cleanData.replace(new RegExp(/œ/g), "o");
+        cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), '');
+        cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), '');
+        cleanData = cleanData.replace(/\s/g, '').trim('string');
         cleanData = cleanData.replace(/[\n\r]/g, '');
         cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
 
@@ -205,6 +254,11 @@ VacuumProcessor.prototype = {
         if (parsingTime) {
             // Remove text from date, format time to hh:mm:ss
             cleanData = Helper.HHMMSStoSeconds(cleanData);
+
+            if (_.isNaN(cleanData)) {
+                return null;
+            }
+
         } else if (parsingElevation) {
             cleanData = cleanData.replace(' ', '').replace(',', '');
         } else if (parsingDistance) {
@@ -214,6 +268,7 @@ VacuumProcessor.prototype = {
         } else {
             cleanData = cleanData.replace(',', '.');
         }
+
         return parseFloat(cleanData);
     },
 
@@ -222,14 +277,18 @@ VacuumProcessor.prototype = {
      */
     getActivityStream: function getActivityStream(callback) {
 
-        var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate";
+        var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
 
-        jQuery.ajax(url).done(function(jsonResponse) {
+        $.ajax(url).done(function(jsonResponse) {
 
-            // jsonResponse.watts = (_.isEmpty(jsonResponse.watts_calc)) ? jsonResponse.watts : jsonResponse.watts_calc;
-            jsonResponse.watts = (_.isEmpty(jsonResponse.watts)) ? jsonResponse.watts_calc : jsonResponse.watts;
+            var hasPowerMeter = true;
 
-            callback(this.getActivityComonStats(), jsonResponse, this.getAthleteWeight());
+            if (_.isEmpty(jsonResponse.watts)) {
+                jsonResponse.watts = jsonResponse.watts_calc;
+                hasPowerMeter = false;
+            }
+
+            callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight(), hasPowerMeter);
 
             jsonResponse = null; // Memory clean
 
@@ -246,9 +305,9 @@ VacuumProcessor.prototype = {
             running: null
         };
 
-        jQuery.when(
+        $.when(
 
-            jQuery.ajax({
+            $.ajax({
                 url: '/api/v3/segments/search',
                 data: {
                     bounds: vectorA + ',' + vectorB,
@@ -267,7 +326,7 @@ VacuumProcessor.prototype = {
                 }
             }),
 
-            jQuery.ajax({
+            $.ajax({
                 url: '/api/v3/segments/search',
                 data: {
                     bounds: vectorA + ',' + vectorB,
@@ -297,7 +356,7 @@ VacuumProcessor.prototype = {
      */
     getSegmentStream: function getSegmentStream(segmentId, callback) {
 
-        jQuery.ajax({
+        $.ajax({
             url: '/stream/segments/' + segmentId,
             type: 'GET',
             success: function(xhrResponseText) {
@@ -327,17 +386,26 @@ VacuumProcessor.prototype = {
 
         var url = location.protocol + "//www.strava.com/athletes/" + athleteId;
 
-        jQuery.ajax(url).always(function(data) {
+        $.ajax(url).always(function(data) {
 
             var bikeOdoArray = {};
-            _.each(jQuery(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
-
-                var bikeName = jQuery(element).find('td').first().text().trim();
-                var bikeOdo = jQuery(element).find('td').last().text().trim();
-                bikeOdoArray[btoa(bikeName)] = bikeOdo;
+            _.each($(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
+                var bikeName = $(element).find('td').first().text().trim();
+                var bikeOdo = $(element).find('td').last().text().trim();
+                bikeOdoArray[btoa(unescape(encodeURIComponent(bikeName)))] = bikeOdo;
             });
 
             callback(bikeOdoArray);
         });
+    },
+
+    getActivityTime: function getActivityTime() {
+        var activityTime = $(".activity-summary-container").find('time').text().trim();
+        return (activityTime) ? activityTime : null;
+    },
+
+    getActivityName: function getActivityName() {
+        var activityName = $(".activity-summary-container").find('.marginless.activity-name').text().trim();
+        return (activityName) ? activityName : null;
     },
 };

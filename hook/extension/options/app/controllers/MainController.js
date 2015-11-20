@@ -10,9 +10,11 @@ app.controller('MainController', function($scope, $location) {
     $scope.resetFields = function() {
         $scope.CommonSettingsActive = null;
         $scope.healthSettingsActive = null;
+        $scope.zonesSettingsActive = null;
         $scope.releaseNotesActive = null;
         $scope.aboutActive = null;
         $scope.donateActive = null;
+        $scope.shareActive = null;
     };
 
     // Watch for location changes
@@ -31,6 +33,10 @@ app.controller('MainController', function($scope, $location) {
 
             $scope.healthSettingsActive = $scope.headerActiveClassName;
 
+        } else if (path === routeMap.zonesSettingsRoute) {
+
+            $scope.zonesSettingsActive = $scope.headerActiveClassName;
+
         } else if (path === routeMap.releaseNotesRoute) {
 
             $scope.releaseNotesActive = $scope.headerActiveClassName;
@@ -40,7 +46,12 @@ app.controller('MainController', function($scope, $location) {
             $scope.aboutActive = $scope.headerActiveClassName;
 
         } else if (path === routeMap.donateRoute) {
+
             $scope.donateActive = $scope.headerActiveClassName;
+
+        } else if (path === routeMap.shareRoute) {
+
+            $scope.shareActive = $scope.headerActiveClassName;
         }
     });
 });

@@ -6,13 +6,18 @@ var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'ui.checkbox', 'Sett
 app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when(routeMap.commonSettingsRoute, {
-        templateUrl: 'views/comonSettings.html',
-        controller: 'ComonSettingsController'
+        templateUrl: 'views/commonSettings.html',
+        controller: 'CommonSettingsController'
     });
 
     $routeProvider.when(routeMap.healthSettingsRoute, {
         templateUrl: 'views/healthSettings.html',
         controller: 'HealthSettingsController'
+    });
+
+    $routeProvider.when(routeMap.zonesSettingsRoute, {
+        templateUrl: 'views/zonesSettings.html',
+        controller: 'XtdZonesSettingsController'
     });
 
     $routeProvider.when(routeMap.releaseNotesRoute, {
@@ -24,7 +29,12 @@ app.config(['$routeProvider', function($routeProvider) {
     });
 
     $routeProvider.when(routeMap.donateRoute, {
-        templateUrl: 'views/donate.html'
+        templateUrl: 'views/donate.html',
+        controller: 'DonateController'
+    });
+
+    $routeProvider.when(routeMap.shareRoute, {
+        templateUrl: 'views/share.html'
     });
 
     $routeProvider.otherwise({

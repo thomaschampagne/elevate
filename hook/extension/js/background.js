@@ -6,7 +6,7 @@ chrome.runtime.onMessageExternal.addListener(
         var storageManager = new StorageManager();
 
         switch (request.method) {
-            case StravaPlus.getFromStorageMethod:
+            case StravistiX.getFromStorageMethod:
 
                 storageManager.storageType = request.params['storage'];
                 storageManager.getFromStorage(request.params['key'], function(returnedValue) {
@@ -17,7 +17,7 @@ chrome.runtime.onMessageExternal.addListener(
 
                 break;
 
-            case StravaPlus.setToStorageMethod:
+            case StravistiX.setToStorageMethod:
 
                 storageManager.storageType = request.params['storage'];
                 storageManager.setToStorage(request.params['key'], request.params['value'], function(returnAllData) {
@@ -42,14 +42,27 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (details.reason == "install") {
 
         chrome.tabs.create({
-
-            url: chrome.extension.getURL('/options/app/index.html#/')
-
+            url: 'http://thomaschampagne.github.io/stravistix/'
         }, function(tab) {
-
-            console.log("First install. Display settings");
-
+            console.log("First install. Display site");
+            chrome.tabs.create({
+                url: chrome.extension.getURL('/options/app/index.html#/')
+            }, function(tab) {
+                console.log("First install. Display settings");
+            });
         });
+
+        // On install too: persist that extension has been updated.
+        // This force local storage clear on install 
+        var storageManager = new StorageManager();
+        storageManager.storageType = StorageManager.storageSyncType;
+        storageManager.setToStorage(
+            'extensionHasJustUpdated',
+            true,
+            function(data) {
+                console.log(data);
+            }
+        );
 
     } else if (details.reason == "update") {
 

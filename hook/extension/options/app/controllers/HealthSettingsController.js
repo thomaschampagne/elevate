@@ -20,7 +20,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
             if (!_.isUndefined($scope.userMaxHr) && !_.isNull($scope.userMaxHr)) {
 
                 if ($scope.userMaxHr <= $scope.userRestHr) {
-                    $scope.healthComonForm.userMaxHr.$invalid = true;
+                    $scope.healthCommonForm.userMaxHr.$invalid = true;
                     $scope.$apply();
 
                 } else {
@@ -41,7 +41,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
 
 
                 if ($scope.userMaxHr <= $scope.userRestHr) {
-                    $scope.healthComonForm.userRestHr.$invalid = true;
+                    $scope.healthCommonForm.userRestHr.$invalid = true;
                     $scope.$apply();
                 } else {
                     ChromeStorageModule.updateUserSetting('userRestHr', $scope.userRestHr, function() {
@@ -57,7 +57,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
     $scope.ftpHasChanged = function() {
 
         setTimeout(function() {
-            if (!_.isUndefined($scope.userFTP) && !_.isNull($scope.userFTP)) {
+            if (!_.isUndefined($scope.userFTP)) {
                 ChromeStorageModule.updateUserSetting('userFTP', $scope.userFTP, function() {
                     console.log('userFTP has been updated to ' + $scope.userFTP);
                     $scope.localStorageMustBeCleared();
@@ -67,11 +67,11 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
     };
 
     $scope.displayUserMaxHrHelper = function() {
-        Notifier('How to find your max Heart rate value', 'If you don\'t know your own max Heart rate then enter your the value <strong> 220 - "your age" </strong>. <br /><br /> Example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>');
+        Notifier('How to find your max Heart rate value', 'If you don\'t know your own max Heart rate then enter the value <strong> 220 - "your age" </strong>. <br /><br /> For example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>');
     };
 
     $scope.displayUserRestHrHelper = function() {
-        Notifier('How to find your rest Heart rate value', 'Measure you rest HR lying down in your bed and relaxed...<br/><br/>zzzZZZZzzzzZZZzzzzzZZz');
+        Notifier('How to find your resting Heart rate value', 'Measure your resting HR lying down in your bed and relaxed...<br/><br/>zzzZZZZzzzzZZZzzzzzZZz');
     };
 
     $scope.displayUserFTPHelper = function() {

@@ -1,2 +1,6 @@
 *.git/
 */.gitignore
+**/node_modules/
+dist/
+builds/
+chrome-win32/

@@ -1,20 +1,21 @@
 {
     "manifest_version": 2,
-    "name": "StravaPlus",
-    "short_name": "StravaPlus",
+    "name": "StravistiX for Strava",
+    "short_name": "StravistiX",
     "description": "Add the missing features of Strava website with new performances data and improved ergonomics",
-    "version": "0.4.2",
+    "version": "2.0.1",
+    "version_name": "2.0.1 Stable",
     "background": {
         "scripts": [
             "js/UserSettings.js",
-            "js/StravaPlus.js",
-            "js/libs/StorageManager.js",
-            "js/background.js"
+            "js/StravistiX.js",
+            "js/background.js",
+            "modules/StorageManager.js"
         ]
     },
     "content_scripts": [{
         "js": [
-            "js/libs/underscore.min.js",
+            "node_modules/underscore/underscore-min.js",
             "js/Helper.js",
             "js/UserSettings.js",
             "js/Content.js"
@@ -38,10 +39,13 @@
         "storage"
     ],
     "web_accessible_resources": [
-        "js/libs/*",
+        "node_modules/*",
+        "modules/*",
+        "config/*",
         "js/processors/*",
         "js/modifiers/*",
         "js/*",
+        "css/*",
         "options/*",
         "icons/*"
     ],

@@ -10,5 +10,5 @@
     m.parentNode.insertBefore(a, m)
 })(window, document, 'script', '//www.google-analytics.com/analytics.js', '_spTrack');
 
-_spTrack('create', 'UA-51167057-4', 'auto');
+_spTrack('create', env.analyticsTrackingID, 'auto');
 _spTrack('send', 'pageview');

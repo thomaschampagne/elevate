@@ -28,7 +28,7 @@ DefaultLeaderboardFilterModifier.prototype = {
 
         view.prototype.render = function() {
             var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
-            jQuery(this.el).not('.once-only').addClass('once-only').find('.clickable[data-filter=' + self.defaultLeaderboardFilter_ + ']').click();
+            $(this.el).not('.once-only').addClass('once-only').find('.clickable[data-filter=' + self.defaultLeaderboardFilter_ + ']').click();
             return r;
         };
     },
