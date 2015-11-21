@@ -3,8 +3,8 @@
   "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
   "dependencies": {
-    "archiver": "^0.14.2",
-    "ncp": "^1.0.1"
+    "archiver": "0.16.0",
+    "ncp": "2.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
