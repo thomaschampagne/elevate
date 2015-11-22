@@ -706,7 +706,7 @@ ActivityBestSplitsModifier.prototype = {
                         element.data("split-id", split.id);
                         element.css({ "cursor": "pointer" });
                         if (value.timeOrDistance && tooltipFormatFunction) {
-                            element.attr("title", tooltipFormatFunction(value.timeOrDistance));
+                            element.attr("title", tooltipFormatFunction(value));
                         }
                     } else {
                         if (defValue) {
@@ -717,21 +717,25 @@ ActivityBestSplitsModifier.prototype = {
             splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
             
             var formatDistance = function(value) {
-                    return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
+                    return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
                 },
                 formatTime = function(value) {
-                    return Helper.secondsToHHMMSS(value, true);
+                    return Helper.secondsToHHMMSS(value.timeOrDistance, true);
                 },
                 formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
+                formatTooltipDropRise  = function(value) {
+                    var arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
+                    return Helper.formatNumber(value.value.beginValue, 0) + arrow + Helper.formatNumber(value.value.endValue, 0) + " " + formatTooltip(value);
+                },
                 speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
             
             computeSplit(split, self.activityJson).done(function(value) {            
-                setValue(splitId + "-time", value.time, formatTime, "", formatDistance);
-                setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
+                setValue(splitId + "-time", value.time, function(value) { return Helper.secondsToHHMMSS(value, true); }, "", formatDistance);
+                setValue(splitId + "-distance", value.distance, function(value) { return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit); }, "", formatTime);
                 setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
-                setValue(splitId + "-drop-hr", value.dropHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2198" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "-" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
-                setValue(splitId + "-rise-hr", value.riseHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2197" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "+" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
+                setValue(splitId + "-drop-hr", value.dropHr, function(value) { return "-" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltipDropRise);
+                setValue(splitId + "-rise-hr", value.riseHr, function(value) { return "+" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltipDropRise);
                 setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
                 splitRow.find("td.value span.ajax-loading-image").remove();
