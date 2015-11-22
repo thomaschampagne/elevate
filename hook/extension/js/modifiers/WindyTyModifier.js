@@ -1,9 +1,10 @@
 /**
  *   WindyTyModifier is responsible of ...
  */
-function WindyTyModifier(activityId, appResources) {
+function WindyTyModifier(activityId, appResources, userSettings) {
     this.activityId = activityId;
     this.appResources = appResources;
+    this.userSettings = userSettings;
 }
 /**
  * Define prototype
@@ -122,8 +123,18 @@ WindyTyModifier.prototype = {
 
         var date = new Date(pageView.activity().get('startDateLocal') * 1000);
         var windyTyHour = Math.round(date.getUTCHours() / 6) * 6;
+        var windUnitConfig = 'metric.wind.' + this.userSettings.windUnit;
+        var temperatureUnitConfig = 'metric.temp.' + this.userSettings.temperatureUnit;
         windyTyHour = this.pad(windyTyHour, 2);
-        var url = 'https://embed.windyty.com/?surface,' + type + ',' + date.toISOString().split('T')[0] + '-' + windyTyHour + ',' + this.baryCenterPosition.lat() + ',' + this.baryCenterPosition.lon() + ',20,,,message,';
+      var url = 'https://embed.windyty.com/?surface,' +
+            type + ',' +
+            date.toISOString().split('T')[0] + '-' + windyTyHour + ',' +
+            this.baryCenterPosition.lat() + ',' +
+            this.baryCenterPosition.lon() +
+            ',20,' +
+            windUnitConfig + ',' +
+            temperatureUnitConfig +
+            ',message,';
 
         $.fancybox({
             'width': '100%',
