@@ -30,7 +30,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.content += this.generateSectionTitle('Elevation stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>');
 
             // Creates a grid
-            this.makeGrid(3, 4); // (col, row)
+            this.makeGrid(3, 6); // (col, row)
 
             this.insertElevationDataIntoGrid();
             this.generateCanvasForGraph();
@@ -54,6 +54,15 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 3, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(1, 3, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 3, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
+
+            this.insertContentAtGridPosition(0, 4, this.elevationData.accumulatedElevationAscents[0].toFixed(0), 'Ascent (no smoothing)', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(1, 4, this.elevationData.accumulatedElevationAscents[1].toFixed(0), 'Ascent (average smoothing)', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(2, 4, this.elevationData.accumulatedElevationAscents[2].toFixed(0), 'Ascent (strong smoothing)', 'm', 'displayAdvancedElevationData');
+
+            this.insertContentAtGridPosition(0, 5, this.elevationData.accumulatedElevationDescents[0].toFixed(0), 'Descent (no smoothing)', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(1, 5, this.elevationData.accumulatedElevationDescents[1].toFixed(0), 'Descent (average smoothing)', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(2, 5, this.elevationData.accumulatedElevationDescents[2].toFixed(0), 'Descent (strong smoothing)', 'm', 'displayAdvancedElevationData');
+
         }
     }
 });
