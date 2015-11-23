@@ -690,6 +690,7 @@ ActivityProcessor.prototype = {
         var elevationSampleCount = 0;
         var elevationSamples = [];
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
+        var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
         var durationInSeconds, durationCount = 0;
         var ascentCountEverySample = 10;
         var ascentDurationInSeconds = 0;
