@@ -77,7 +77,7 @@ ActivityBestSplitsModifier.prototype = {
                 return result;
             }
         };
-        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 300);
+        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 200);
 
         self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
