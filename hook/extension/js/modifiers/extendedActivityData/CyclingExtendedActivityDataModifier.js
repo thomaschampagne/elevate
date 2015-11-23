@@ -93,11 +93,16 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
 
             if (this.analysisData_.elevationData && this.userSettings_.displayAdvancedElevationData) {
-                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
+                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm', false);
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(elevationDataView);
-            }
+
+                var ascentSpeedDataView = new ElevationDataView(this.analysisData_.elevationData, 'Vm/h', true);
+                ascentSpeedDataView.setAppResources(this.appResources_);
+                ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(ascentSpeedDataView);
+			}
 
         }
     }

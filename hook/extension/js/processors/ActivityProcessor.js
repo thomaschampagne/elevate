@@ -113,7 +113,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream.distance, activityStream.altitude, activityStream.grade_smooth, activityStream.time);
+        var elevationData = this.elevationData_(activityStream.distance, activityStream.altitude, activityStream.grade_smooth, activityStream.time, activityStream.velocity_smooth);
 
         // Return an array with all that shit...
         return {
@@ -694,7 +694,7 @@ ActivityProcessor.prototype = {
         }
     },
 
-    elevationData_: function(distanceArray, activityAltitudeArray, gradeArray, timeArray) {
+    elevationData_: function(distanceArray, activityAltitudeArray, gradeArray, timeArray, velocityArray) {
 
         if (_.isEmpty(activityAltitudeArray) || _.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
             return null;
@@ -711,7 +711,11 @@ ActivityProcessor.prototype = {
         var accumulatedElevation = 0;
         var accumulatedElevationAscents = [ 0, 0, 0 ];
         var accumulatedElevationDescents = [ 0, 0, 0 ];
+        var accumulatedDistance = 0;
+        // special arrays for ascent speeds
         var ascentSpeedMeterPerHourSamples = [];
+        var ascentSpeedMeterPerHourDistance = [];
+        var ascentSpeedMeterPerHourTime = [];
         var ascentSpeedMeterPerHourSum = 0;
         var elevationSampleCount = 0;
         var elevationSamples = [];
@@ -719,12 +723,13 @@ ActivityProcessor.prototype = {
         var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
         var durationInSeconds = 0;
         var durationCount = 0;
+        var durationAscentSpeedCount = 0;
         var ascentDurationInSeconds = 0;
 
         for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
 
             // Compute distribution for graph/table
-            if (i > 0) {
+            if (i > 0 && velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
 
                 // Compute average and normalized elevation
                 accumulatedElevation += altitudeArray[i];
@@ -750,8 +755,15 @@ ActivityProcessor.prototype = {
 
                     var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
 
-                    ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
-                    ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+                    var distance = distanceArray[i] - distanceArray[i - 1];
+                    // only if grade is > 3%
+                    if (distance > 0 && (elevationDiff / distance) > 0.03) {
+                        accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
+                        ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
+                        ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
+                        ascentSpeedMeterPerHourTime.push(ascentDurationInSeconds);
+                        ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+                    }
                 }
 
                 for (j = 0; j < smoothings.length; j++) {
@@ -763,6 +775,16 @@ ActivityProcessor.prototype = {
                     }
                 }
 
+            }
+        }
+
+        var ascentSpeedArray = ascentSpeedMeterPerHourSamples;//this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
+        for (j = 0; j < ascentSpeedArray.length; j++) {
+            var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedArray[j]);
+
+            if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
+                ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentSpeedMeterPerHourTime[j];
+                durationAscentSpeedCount += ascentSpeedMeterPerHourTime[j];
             }
         }
 
@@ -784,6 +806,11 @@ ActivityProcessor.prototype = {
         for (var zone in elevationZones) {
             elevationZones[zone]['percentDistrib'] = ((elevationZones[zone]['s'] / durationCount).toFixed(4) * 100);
         }
+        if (durationAscentSpeedCount > 0) {
+            for (var zone in ascentSpeedZones) {
+                ascentSpeedZones[zone]['percentDistrib'] = ((ascentSpeedZones[zone]['s'] / durationAscentSpeedCount).toFixed(4) * 100);
+            }
+        }
 
         return {
             'avgElevation': avgElevation.toFixed(0),
@@ -793,6 +820,7 @@ ActivityProcessor.prototype = {
             'medianElevation': Helper.median(elevationSamplesSorted).toFixed(0),
             'upperQuartileElevation': Helper.upperQuartile(elevationSamplesSorted).toFixed(0),
             'elevationZones': elevationZones, // Only while moving
+            'ascentSpeedZones': ascentSpeedZones, // Only while moving
             'ascentSpeed': {
                 'avg': avgAscentSpeed,
                 'lowerQuartile': Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
