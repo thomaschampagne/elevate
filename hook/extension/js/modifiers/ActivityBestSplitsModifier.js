@@ -1,9 +1,10 @@
 /**
  *   ActivityBestSplitsModifier is responsible of ...
  */
-function ActivityBestSplitsModifier(userSettings, activityJson, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
+function ActivityBestSplitsModifier(userSettings, activityJson, activityCommonStats, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
     this.userSettings = userSettings;
     this.activityJson = activityJson;
+    this.activityCommonStats = activityCommonStats;
     this.hasPowerMeter = hasPowerMeter;
     this.splitsConfiguration = splitsConfiguration;
     this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function() {};
@@ -66,18 +67,6 @@ ActivityBestSplitsModifier.prototype = {
             splitColor = "#105CB6",
             selectedSplitId,
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
-
-        var filterData = function(data, distance, smoothing) {
-            if (data && distance) {
-                var result = [];
-                result[0] = data[0];
-                for (i = 1, max = data.length; i < max; i++) {
-                    result[i] = result[i-1] + (distance[i] - distance[i-1]) * (data[i] - result[i-1]) / smoothing;
-                }
-                return result;
-            }
-        };
-        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 200);
 
         self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
@@ -382,11 +371,11 @@ ActivityBestSplitsModifier.prototype = {
     
         var worker,
             workerPromises = [];
-        var computeSplit = function(split, activity) {                       
+        var computeSplit = function(split, activity, activityCommonStats) {                       
             if (!worker) {
                 var blobURL = URL.createObjectURL(new Blob([ '(',           
                     function() {                    
-                        var computeSplitWorker = function(split, activityJson, options) {
+                        var computeSplitWorker = function(split, activityJson, activityCommonStats, options) {
                             var i,
                                 j, 
                                 max,
@@ -586,8 +575,8 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgPower.timeOrDistance = timeOrDistance;
                                     }
 
-                                    elevationGain = totalGainOfValues(begin, end, activityJson.filteredAltitude);
-                                    elevationDrop = totalDropOfValues(begin, end, activityJson.filteredAltitude);
+                                    elevationGain = totalGainOfValues(begin, end, activityCommonStats.altitude_smooth);
+                                    elevationDrop = totalDropOfValues(begin, end, activityCommonStats.altitude_smooth);
                                     if (elevationGain > values.elevationGain.value) {
                                         values.elevationGain.value = elevationGain;
                                         values.elevationGain.begin = begin;
@@ -719,8 +708,8 @@ ActivityBestSplitsModifier.prototype = {
                         };                    
                         
                         self.onmessage = function(message) {
-                            if (message.data && message.data.split && message.data.activity && message.data.options) {
-                                message.data.result = computeSplitWorker(message.data.split, message.data.activity, message.data.options);
+                            if (message.data && message.data.split && message.data.activity && message.data.activityCommonStats && message.data.options) {
+                                message.data.result = computeSplitWorker(message.data.split, message.data.activity, message.data.activityCommonStats, message.data.options);
                                 postMessage(message.data);
                             }
                         };
@@ -738,6 +727,7 @@ ActivityBestSplitsModifier.prototype = {
             worker.postMessage({
                 split: split, 
                 activity: activity, 
+                activityCommonStats: activityCommonStats, 
                 options: { 
                     distanceUnit: self.distanceUnit,
                     Minutes: ActivityBestSplitsModifier.Units.Minutes,
@@ -788,7 +778,7 @@ ActivityBestSplitsModifier.prototype = {
                 },
                 speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
             
-            computeSplit(split, self.activityJson).done(function(value) {            
+            computeSplit(split, self.activityJson, self.activityCommonStats).done(function(value) {            
                 setValue(splitId + "-time", value.time, function(value) { return Helper.secondsToHHMMSS(value, true); }, "", formatDistance);
                 setValue(splitId + "-distance", value.distance, function(value) { return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit); }, "", formatTime);
                 setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
