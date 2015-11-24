@@ -113,7 +113,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream.distance, activityStream.altitude, activityStream.grade_smooth, activityStream.time, activityStream.velocity_smooth);
+        var elevationData = this.elevationData_(activityStream.distance, activityStream.altitude, activityStream.grade_smooth, activityStream.time, activityStream.velocity_smooth, activityStatsMap.elevation);
 
         // Return an array with all that shit...
         return {
@@ -694,23 +694,39 @@ ActivityProcessor.prototype = {
         }
     },
 
-    elevationData_: function(distanceArray, activityAltitudeArray, gradeArray, timeArray, velocityArray) {
+    elevationData_: function(distanceArray, activityAltitudeArray, gradeArray, timeArray, velocityArray, stravaElevation) {
 
         if (_.isEmpty(activityAltitudeArray) || _.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
-        var smoothings = [0, 200, 400];
-        var altitudeArrays = [];
-        var j = 0;
-        for (j = 0; j < smoothings.length; j++) {
-            altitudeArrays[j] = this.filterData_(activityAltitudeArray, distanceArray, smoothings[j]);
+        var smoothingL = 10;
+        var smoothingH = 600;
+        var smoothing;
+        var altitudeArray; 
+        while (smoothingH - smoothingL >= 1) {
+            smoothing = smoothingL + (smoothingH - smoothingL) / 2;
+            altitudeArray = this.filterData_(activityAltitudeArray, distanceArray, smoothing);
+            var totalElevation = 0;
+            for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
+                if (i > 0 && velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
+                    var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
+                    if (elevationDiff > 0) {
+                        totalElevation += elevationDiff;
+                    }
+                }
+            }
+            
+            if (totalElevation < stravaElevation) {
+                smoothingH = smoothing;
+            } else {
+                smoothingL = smoothing;
+            }
         }
-        var altitudeArray = altitudeArrays[1];
 
         var accumulatedElevation = 0;
-        var accumulatedElevationAscents = [ 0, 0, 0 ];
-        var accumulatedElevationDescents = [ 0, 0, 0 ];
+        var accumulatedElevationAscent = 0;
+        var accumulatedElevationDescent = 0;
         var accumulatedDistance = 0;
         // special arrays for ascent speeds
         var ascentSpeedMeterPerHourSamples = [];
@@ -751,6 +767,7 @@ ActivityProcessor.prototype = {
 
                 // If previous altitude lower than current then => climbing
                 if (elevationDiff > 0) {
+                    accumulatedElevationAscent += elevationDiff;
                     ascentDurationInSeconds = timeArray[i] - timeArray[i - 1];
 
                     var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
@@ -764,21 +781,15 @@ ActivityProcessor.prototype = {
                         ascentSpeedMeterPerHourTime.push(ascentDurationInSeconds);
                         ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
                     }
-                }
-
-                for (j = 0; j < smoothings.length; j++) {
-                    elevationDiff = altitudeArrays[j][i] - altitudeArrays[j][i - 1];
-                    if (elevationDiff > 0) {
-                        accumulatedElevationAscents[j] += elevationDiff;
-                    } else {
-                        accumulatedElevationDescents[j] -= elevationDiff;
-                    }
+                } else {
+                    accumulatedElevationDescent -= elevationDiff;
                 }
 
             }
         }
 
         var ascentSpeedArray = ascentSpeedMeterPerHourSamples;//this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
+        var j = 0;
         for (j = 0; j < ascentSpeedArray.length; j++) {
             var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedArray[j]);
 
@@ -814,8 +825,8 @@ ActivityProcessor.prototype = {
 
         return {
             'avgElevation': avgElevation.toFixed(0),
-            'accumulatedElevationAscents': accumulatedElevationAscents,
-            'accumulatedElevationDescents': accumulatedElevationDescents,
+            'accumulatedElevationAscent': accumulatedElevationAscent,
+            'accumulatedElevationDescent': accumulatedElevationDescent,
             'lowerQuartileElevation': Helper.lowerQuartile(elevationSamplesSorted).toFixed(0),
             'medianElevation': Helper.median(elevationSamplesSorted).toFixed(0),
             'upperQuartileElevation': Helper.upperQuartile(elevationSamplesSorted).toFixed(0),

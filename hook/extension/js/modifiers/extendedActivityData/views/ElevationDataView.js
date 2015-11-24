@@ -40,11 +40,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             }
 
             // Creates a grid
-            if (this.ascentSpeed) {
-                this.makeGrid(3, 2); // (col, row)
-            } else {
-                this.makeGrid(3, 4); // (col, row)
-            }
+            this.makeGrid(3, 2); // (col, row)
 
             this.insertElevationDataIntoGrid();
             this.generateCanvasForGraph();
@@ -65,18 +61,12 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
                 this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             } else {
                 this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, 'Average Elevation', 'm', 'displayAdvancedElevationData');
+                this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), 'Ascent', 'm', 'displayAdvancedElevationData');
+                this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), 'Descent', 'm', 'displayAdvancedElevationData');
 
                 this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData');
                 this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-                this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-            
-                this.insertContentAtGridPosition(0, 2, this.elevationData.accumulatedElevationAscents[0].toFixed(0), 'Ascent (no smoothing)', 'm', 'displayAdvancedElevationData');
-                this.insertContentAtGridPosition(1, 2, this.elevationData.accumulatedElevationAscents[1].toFixed(0), 'Ascent (average smoothing)', 'm', 'displayAdvancedElevationData');
-                this.insertContentAtGridPosition(2, 2, this.elevationData.accumulatedElevationAscents[2].toFixed(0), 'Ascent (strong smoothing)', 'm', 'displayAdvancedElevationData');
-
-                this.insertContentAtGridPosition(0, 3, this.elevationData.accumulatedElevationDescents[0].toFixed(0), 'Descent (no smoothing)', 'm', 'displayAdvancedElevationData');
-                this.insertContentAtGridPosition(1, 3, this.elevationData.accumulatedElevationDescents[1].toFixed(0), 'Descent (average smoothing)', 'm', 'displayAdvancedElevationData');
-                this.insertContentAtGridPosition(2, 3, this.elevationData.accumulatedElevationDescents[2].toFixed(0), 'Descent (strong smoothing)', 'm', 'displayAdvancedElevationData');
+                this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');            
             }
         }
     }
