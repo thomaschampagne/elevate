@@ -102,7 +102,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 ascentSpeedDataView.setAppResources(this.appResources_);
                 ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(ascentSpeedDataView);
-			}
+            }
 
         }
     }
