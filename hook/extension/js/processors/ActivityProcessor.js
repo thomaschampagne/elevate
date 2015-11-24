@@ -113,7 +113,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream.distance, activityStream.altitude, activityStream.grade_smooth, activityStream.time, activityStream.velocity_smooth, activityStatsMap.elevation);
+        var elevationData = this.elevationData_(activityStream, activityStatsMap);
 
         // Return an array with all that shit...
         return {
@@ -678,50 +678,13 @@ ActivityProcessor.prototype = {
     },
 
 
-    filterData_: function(data, distance, smoothing) {
-        // http://phrogz.net/js/framerate-independent-low-pass-filter.html
-        if (data && distance) {
-            var result = [];
-            result[0] = data[0];
-            for (i = 1, max = data.length; i < max; i++) {
-                if (smoothing === 0) {
-                    result[i] = data[i];
-                } else {
-                    result[i] = result[i-1] + (distance[i] - distance[i-1]) * (data[i] - result[i-1]) / smoothing;
-                }
-            }
-            return result;
-        }
-    },
-
-    elevationData_: function(distanceArray, activityAltitudeArray, gradeArray, timeArray, velocityArray, stravaElevation) {
-
-        if (_.isEmpty(activityAltitudeArray) || _.isEmpty(gradeArray) || _.isEmpty(timeArray)) {
+    elevationData_: function(activityStream, activityStatsMap) {
+        var distanceArray = activityStream.distance;
+        var timeArray = activityStream.time;
+        var velocityArray= activityStream.velocity_smooth;
+        var altitudeArray = activityStatsMap.altitude_smooth;
+        if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
             return null;
-        }
-
-        var smoothingL = 10;
-        var smoothingH = 600;
-        var smoothing;
-        var altitudeArray; 
-        while (smoothingH - smoothingL >= 1) {
-            smoothing = smoothingL + (smoothingH - smoothingL) / 2;
-            altitudeArray = this.filterData_(activityAltitudeArray, distanceArray, smoothing);
-            var totalElevation = 0;
-            for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
-                if (i > 0 && velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
-                    var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
-                    if (elevationDiff > 0) {
-                        totalElevation += elevationDiff;
-                    }
-                }
-            }
-            
-            if (totalElevation < stravaElevation) {
-                smoothingH = smoothing;
-            } else {
-                smoothingL = smoothing;
-            }
         }
 
         var accumulatedElevation = 0;
