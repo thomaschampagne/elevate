@@ -549,7 +549,7 @@ ActivityBestSplitsModifier.prototype = {
                                     }
                                     return result;
                                 },
-                                checkValues = function(timeOrDistance) {
+                                checkValues = function(timeOrDistance, ratio) {
                                     totalHr = totalOfValues(begin, end, activityJson.heartrate);
                                     hr = totalHr / (end - begin + 1);
                                     if (hr > values.avgHr.value) {
@@ -559,11 +559,13 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgHr.timeOrDistance = timeOrDistance;
                                     }
                                     dropHr = dropOfValues(begin, end, activityJson.heartrate);
+                                    dropHr.value.value = dropHr.value.value * ratio;
                                     if (dropHr.value.value > values.dropHr.value.value) {
                                         values.dropHr = dropHr;
                                     }
                                     
                                     riseHr = riseOfValues(begin, end, activityJson.heartrate);
+                                    riseHr.value.value = riseHr.value.value * ratio;
                                     if (riseHr.value.value > values.riseHr.value.value) {
                                         values.riseHr = riseHr;
                                     }
@@ -586,8 +588,8 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgPower.timeOrDistance = timeOrDistance;
                                     }
 
-                                    elevationGain = totalGainOfValues(begin, end, activityJson.filteredAltitude);
-                                    elevationDrop = totalDropOfValues(begin, end, activityJson.filteredAltitude);
+                                    elevationGain = totalGainOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+                                    elevationDrop = totalDropOfValues(begin, end, activityJson.filteredAltitude) * ratio;
                                     if (elevationGain > values.elevationGain.value) {
                                         values.elevationGain.value = elevationGain;
                                         values.elevationGain.begin = begin;
@@ -633,15 +635,16 @@ ActivityBestSplitsModifier.prototype = {
                                         break;
                                     }
                                     
-                                    distance = activityJson.distance[end] - activityJson.distance[begin];
-                                    if (distance > values.distance.value) {
-                                        values.distance.value = distance;
+                                    distance = (activityJson.distance[end] - activityJson.distance[begin]);
+                                    var ratio = splitInSeconds / time;
+                                    if (distance * ratio > values.distance.value) {
+                                        values.distance.value = distance * ratio;
                                         values.distance.begin = begin;
                                         values.distance.end = end;
                                         values.distance.timeOrDistance = time;
                                     }
                                     
-                                    checkValues(time);
+                                    checkValues(time, ratio);
                                 }
 
                                 time = activityJson.time[values.riseHr.end] - activityJson.time[values.riseHr.begin];
@@ -677,18 +680,18 @@ ActivityBestSplitsModifier.prototype = {
                                     if (distance < distanceInMeters) {
                                         break;
                                     }
-                                    
+                                    var ratio = distanceInMeters / distance;
                                     distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
                                     
                                     time = activityJson.time[end] - activityJson.time[begin];
-                                    if (time < values.time.value) {
-                                        values.time.value = time;
+                                    if (time * ratio < values.time.value) {
+                                        values.time.value = time * ratio;
                                         values.time.begin = begin;
                                         values.time.end = end;
                                         values.time.timeOrDistance = distanceInUserUnits;
                                     }
                                     
-                                    checkValues(distanceInUserUnits);
+                                    checkValues(distanceInUserUnits, ratio);
                                 }
 
                                 distance = activityJson.distance[values.riseHr.end] - activityJson.distance[values.riseHr.begin];
