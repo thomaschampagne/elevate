@@ -230,6 +230,7 @@ ActivityProcessor.prototype = {
         var genuineAvgSpeedSum = 0,
             genuineAvgSpeedSumCount = 0;
         var speedsNonZero = Array();
+        var speedsNonZeroDuration = Array();
         var speedVarianceSum = 0;
         var currentSpeed;
 
@@ -246,15 +247,16 @@ ActivityProcessor.prototype = {
 
             if (currentSpeed > 0) { // If moving...
 
-                speedsNonZero.push(currentSpeed);
-
-                // Compute variance speed
-                speedVarianceSum += Math.pow(currentSpeed, 2);
-
                 // Compute distribution for graph/table
                 if (i > 0) {
 
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                    speedsNonZero.push(currentSpeed);
+                    speedsNonZeroDuration.push(durationInSeconds);
+
+                    // Compute variance speed
+                    speedVarianceSum += Math.pow(currentSpeed, 2);
 
                     // distance
                     genuineAvgSpeedSum += this.valueForSum_(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, durationInSeconds);
@@ -285,24 +287,21 @@ ActivityProcessor.prototype = {
         var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
         var varianceSpeed = (speedVarianceSum / speedsNonZero.length) - Math.pow(activityStatsMap.averageSpeed, 2);
         var standardDeviationSpeed = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
-        var speedsNonZeroSorted = speedsNonZero.sort(function(a, b) {
-            return a - b;
-        });
-
+        var percentiles = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [ 0.25, 0.5, 0.75 ]);
 
         return [{
             'genuineAvgSpeed': genuineAvgSpeed,
             'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
-            'lowerQuartileSpeed': Helper.lowerQuartile(speedsNonZeroSorted),
-            'medianSpeed': Helper.median(speedsNonZeroSorted),
-            'upperQuartileSpeed': Helper.upperQuartile(speedsNonZeroSorted),
+            'lowerQuartileSpeed': percentiles[0],
+            'medianSpeed': percentiles[1],
+            'upperQuartileSpeed': percentiles[2],
             'varianceSpeed': varianceSpeed,
             'standardDeviationSpeed': standardDeviationSpeed,
             'speedZones': speedZones
         }, {
-            'lowerQuartilePace': this.convertSpeedToPace(Helper.lowerQuartile(speedsNonZeroSorted)),
-            'medianPace': this.convertSpeedToPace(Helper.median(speedsNonZeroSorted)),
-            'upperQuartilePace': this.convertSpeedToPace(Helper.upperQuartile(speedsNonZeroSorted)),
+            'lowerQuartilePace': this.convertSpeedToPace(percentiles[0]),
+            'medianPace': this.convertSpeedToPace(percentiles[1]),
+            'upperQuartilePace': this.convertSpeedToPace(percentiles[2]),
             'variancePace': this.convertSpeedToPace(varianceSpeed),
             'paceZones': paceZones
         }];
@@ -329,6 +328,7 @@ ActivityProcessor.prototype = {
         var accumulatedWattsOnMove = 0;
         var wattSampleOnMoveCount = 0;
         var wattsSamplesOnMove = [];
+        var wattsSamplesOnMoveDuration = [];
 
         var powerZones = this.prepareZonesForDistribComputation(this.zones.power);
 
@@ -339,10 +339,11 @@ ActivityProcessor.prototype = {
             if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph && i > 0) {
                 // Compute average and normalized power
                 accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.925);
-                wattsSamplesOnMove.push(powerArray[i]);
-
                 // Compute distribution for graph/table
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                wattsSamplesOnMove.push(powerArray[i]);
+                wattsSamplesOnMoveDuration.push(durationInSeconds);
 
                 // average over time
                 accumulatedWattsOnMove += this.valueForSum_(powerArray[i], powerArray[i - 1], durationInSeconds);
@@ -370,9 +371,8 @@ ActivityProcessor.prototype = {
         var variabilityIndex = weightedPower / avgWatts;
         var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
         var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
-        var wattsSamplesOnMoveSorted = wattsSamplesOnMove.sort(function(a, b) {
-            return a - b;
-        });
+        
+        var percentiles = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [ 0.25, 0.5, 0.75 ]);
 
         // Update zone distribution percentage
         powerZones = this.finalizeDistribComputationZones(powerZones);
@@ -384,9 +384,9 @@ ActivityProcessor.prototype = {
             'variabilityIndex': variabilityIndex,
             'punchFactor': punchFactor,
             'weightedWattsPerKg': weightedWattsPerKg,
-            'lowerQuartileWatts': Helper.lowerQuartile(wattsSamplesOnMoveSorted),
-            'medianWatts': Helper.median(wattsSamplesOnMoveSorted),
-            'upperQuartileWatts': Helper.upperQuartile(wattsSamplesOnMoveSorted),
+            'lowerQuartileWatts': percentiles[0],
+            'medianWatts': percentiles[1],
+            'upperQuartileWatts': percentiles[2],
             'powerZones': powerZones // Only while moving
         };
 
@@ -407,6 +407,8 @@ ActivityProcessor.prototype = {
         var hrrZonesCount = Object.keys(this.userHrrZones_).length;
         var hr, heartRateReserveAvg, durationInSeconds, durationInMinutes, zoneId;
         var hrSum = 0;
+        var heartRateArrayMoving = [];
+        var heartRateArrayMovingDuration = [];
 
         // Find HR for each Hrr of each zones
         for (var zone in this.userHrrZones_) {
@@ -425,6 +427,9 @@ ActivityProcessor.prototype = {
                 // average over time
                 hrSum += this.valueForSum_(heartRateArray[i], heartRateArray[i - 1], durationInSeconds);
                 hrrSecondsCount += durationInSeconds;
+
+                heartRateArrayMoving.push(heartRateArray[i]);
+                heartRateArrayMovingDuration.push(durationInSeconds);
 
                 // Compute TRIMP
                 hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
@@ -453,14 +458,15 @@ ActivityProcessor.prototype = {
         activityStatsMap.maxHeartRate = heartRateArraySorted[heartRateArraySorted.length - 1];
 
         var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
+        var percentiles = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [ 0.25, 0.5, 0.75 ]);
 
         return {
             'TRIMP': TRIMP,
             'TRIMPPerHour': TRIMPPerHour,
             'hrrZones': this.userHrrZones_,
-            'lowerQuartileHeartRate': Helper.lowerQuartile(heartRateArraySorted),
-            'medianHeartRate': Helper.median(heartRateArraySorted),
-            'upperQuartileHeartRate': Helper.upperQuartile(heartRateArraySorted),
+            'lowerQuartileHeartRate': percentiles[0],
+            'medianHeartRate': percentiles[1],
+            'upperQuartileHeartRate': percentiles[2],
             'averageHeartRate': activityStatsMap.averageHeartRate,
             'maxHeartRate': activityStatsMap.maxHeartRate,
             'activityHeartRateReserve': Helper.heartRateReserveFromHeartrate(activityStatsMap.averageHeartRate, userMaxHr, userRestHr) * 100,
@@ -504,6 +510,8 @@ ActivityProcessor.prototype = {
         var cadenceZones = this.prepareZonesForDistribComputation(cadenceZoneTyped);
 
         var durationInSeconds = 0;
+        var cadenceArrayMoving = [];
+        var cadenceArrayDuration = [];
 
         for (var i = 0; i < velocityArray.length; i++) {
 
@@ -524,6 +532,8 @@ ActivityProcessor.prototype = {
                         cadenceSumOnMoving += this.valueForSum_(cadenceArray[i], cadenceArray[i - 1], durationInSeconds);
                         cadenceSumDurationOnMoving += durationInSeconds;
                         cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
+                        cadenceArrayMoving.push(cadenceArray[i]);
+                        cadenceArrayDuration.push(durationInSeconds);
                     }
 
                     var cadenceZoneId = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
@@ -545,9 +555,7 @@ ActivityProcessor.prototype = {
         // Update zone distribution percentage
         cadenceZones = this.finalizeDistribComputationZones(cadenceZones);
 
-        var cadenceArraySorted = cadenceArray.sort(function(a, b) {
-            return a - b;
-        });
+        var percentiles = Helper.weightedPercentiles(cadenceArrayMoving, cadenceArrayDuration, [ 0.25, 0.5, 0.75 ]);
 
         return {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
@@ -555,9 +563,9 @@ ActivityProcessor.prototype = {
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'standardDeviationCadence': standardDeviationCadence.toFixed(1),
             'crankRevolutions': crankRevolutions,
-            'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
-            'medianCadence': Helper.median(cadenceArraySorted),
-            'upperQuartileCadence': Helper.upperQuartile(cadenceArraySorted),
+            'lowerQuartileCadence': percentiles[0],
+            'medianCadence': percentiles[1],
+            'upperQuartileCadence': percentiles[2],
             'cadenceZones': cadenceZones
         };
     },
@@ -595,6 +603,9 @@ ActivityProcessor.prototype = {
         var distance = 0;
         var currentSpeed;
 
+        var gradeArrayMoving = [];
+        var gradeArrayDistance = [];
+
         for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
 
             if (i > 0) {
@@ -608,6 +619,9 @@ ActivityProcessor.prototype = {
                     gradeSum += this.valueForSum_(gradeArray[i], gradeArray[i - 1], distance);
                     // distance
                     gradeCount += distance;
+
+                    gradeArrayMoving.push(gradeArray[i]);
+                    gradeArrayDistance.push(distance);
 
                     var gradeZoneId = this.getZoneId(this.zones.grade, gradeArray[i]);
 
@@ -655,18 +669,16 @@ ActivityProcessor.prototype = {
 
         var avgGrade = gradeSum / gradeCount;
 
-        var gradeSortedSamples = gradeArray.sort(function(a, b) {
-            return a - b;
-        });
-
         // Update zone distribution percentage
         gradeZones = this.finalizeDistribComputationZones(gradeZones);
 
+        var percentiles = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [ 0.25, 0.5, 0.75 ]);
+
         return {
             'avgGrade': avgGrade,
-            'lowerQuartileGrade': Helper.lowerQuartile(gradeSortedSamples),
-            'medianGrade': Helper.median(gradeSortedSamples),
-            'upperQuartileGrade': Helper.upperQuartile(gradeSortedSamples),
+            'lowerQuartileGrade': percentiles[0],
+            'medianGrade': percentiles[1],
+            'upperQuartileGrade': percentiles[2],
             'gradeZones': gradeZones,
             'upFlatDownInSeconds': upFlatDownInSeconds,
             'upFlatDownMoveData': upFlatDownMoveData,
@@ -696,6 +708,7 @@ ActivityProcessor.prototype = {
         var ascentSpeedMeterPerHourSum = 0;
         var elevationSampleCount = 0;
         var elevationSamples = [];
+        var elevationSamplesDistance = [];
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
         var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
         var durationInSeconds = 0;
@@ -716,6 +729,7 @@ ActivityProcessor.prototype = {
                 accumulatedElevation += this.valueForSum_(altitudeArray[i], altitudeArray[i - 1], distance);
                 elevationSampleCount += distance;
                 elevationSamples.push(altitudeArray[i]);
+                elevationSamplesDistance.push(distance);
 
                 var elevationZoneId = this.getZoneId(this.zones.elevation, altitudeArray[i]);
 
@@ -761,11 +775,6 @@ ActivityProcessor.prototype = {
         // Finalize compute of Elevation
         var avgElevation = accumulatedElevation / elevationSampleCount;
 
-
-        var elevationSamplesSorted = elevationSamples.sort(function(a, b) {
-            return a - b;
-        });
-
         var ascentSpeedMeterPerHourSamplesSorted = ascentSpeedMeterPerHourSamples.sort(function(a, b) {
             return a - b;
         });
@@ -776,20 +785,23 @@ ActivityProcessor.prototype = {
         elevationZones = this.finalizeDistribComputationZones(elevationZones);
         ascentSpeedZones = this.finalizeDistribComputationZones(ascentSpeedZones);
 
+        var percentilesElevation = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [ 0.25, 0.5, 0.75 ]);
+        var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [ 0.25, 0.5, 0.75 ]);
+
         return {
             'avgElevation': avgElevation.toFixed(0),
             'accumulatedElevationAscent': accumulatedElevationAscent,
             'accumulatedElevationDescent': accumulatedElevationDescent,
-            'lowerQuartileElevation': Helper.lowerQuartile(elevationSamplesSorted).toFixed(0),
-            'medianElevation': Helper.median(elevationSamplesSorted).toFixed(0),
-            'upperQuartileElevation': Helper.upperQuartile(elevationSamplesSorted).toFixed(0),
+            'lowerQuartileElevation': percentilesElevation[0].toFixed(0),
+            'medianElevation': percentilesElevation[1].toFixed(0),
+            'upperQuartileElevation': percentilesElevation[2].toFixed(0),
             'elevationZones': elevationZones, // Only while moving
             'ascentSpeedZones': ascentSpeedZones, // Only while moving
             'ascentSpeed': {
                 'avg': avgAscentSpeed,
-                'lowerQuartile': Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'median': Helper.median(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'upperQuartile': Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0)
+                'lowerQuartile': percentilesAscent[0].toFixed(0),
+                'median': percentilesAscent[1].toFixed(0),
+                'upperQuartile': percentilesAscent[2].toFixed(0)
             }
         };
     }
