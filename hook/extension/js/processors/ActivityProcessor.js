@@ -51,6 +51,9 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
+            // Append altitude_smooth to fetched strava activity stream before compute analysis data on
+            activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
+
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
@@ -682,7 +685,8 @@ ActivityProcessor.prototype = {
         var distanceArray = activityStream.distance;
         var timeArray = activityStream.time;
         var velocityArray = activityStream.velocity_smooth;
-        var altitudeArray = activityStatsMap.altitude_smooth;
+        var altitudeArray = activityStream.altitude_smooth;
+
         if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
             return null;
         }
@@ -732,7 +736,7 @@ ActivityProcessor.prototype = {
 
                 // If previous altitude lower than current then => climbing
                 if (elevationDiff > 0) {
-                    
+
                     accumulatedElevationAscent += elevationDiff;
                     ascentDurationInSeconds = timeArray[i] - timeArray[i - 1];
 
@@ -809,5 +813,52 @@ ActivityProcessor.prototype = {
                 'upperQuartile': (upperQuartileAscentSpeed) ? upperQuartileAscentSpeed.toFixed(0) : 0,
             }
         };
+    },
+
+    smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
+        var activityAltitudeArray = activityStream.altitude;
+        var distanceArray = activityStream.distance;
+        var velocityArray = activityStream.velocity_smooth;
+        var smoothingL = 10;
+        var smoothingH = 600;
+        var smoothing;
+        var altitudeArray;
+        while (smoothingH - smoothingL >= 1) {
+            smoothing = smoothingL + (smoothingH - smoothingL) / 2;
+            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing);
+            var totalElevation = 0;
+            for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
+                if (i > 0 && velocityArray[i] * 3.6 > VacuumProcessor.movingThresholdKph) {
+                    var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
+                    if (elevationDiff > 0) {
+                        totalElevation += elevationDiff;
+                    }
+                }
+            }
+
+            if (totalElevation < stravaElevation) {
+                smoothingH = smoothing;
+            } else {
+                smoothingL = smoothing;
+            }
+        }
+        return altitudeArray;
+    },
+
+    lowPassDataSmoothing_: function(data, distance, smoothing) {
+        // Below algorithm is applied in this method
+        // http://phrogz.net/js/framerate-independent-low-pass-filter.html
+        if (data && distance) {
+            var result = [];
+            result[0] = data[0];
+            for (i = 1, max = data.length; i < max; i++) {
+                if (smoothing === 0) {
+                    result[i] = data[i];
+                } else {
+                    result[i] = result[i - 1] + (distance[i] - distance[i - 1]) * (data[i] - result[i - 1]) / smoothing;
+                }
+            }
+            return result;
+        }
     }
 };
