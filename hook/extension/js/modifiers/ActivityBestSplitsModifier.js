@@ -392,10 +392,7 @@ ActivityBestSplitsModifier.prototype = {
                                 max,
                                 distance,
                                 hr,
-                                totalHr,
-                                totalCadence,
                                 avgCadence,
-                                totalPower,
                                 avgPower,
                                 avgSpeed,
                                 time,
@@ -436,12 +433,21 @@ ActivityBestSplitsModifier.prototype = {
                                 countSamples = function(value) {
                                     value.samples = value.end - value.begin + 1;
                                 },
-                                totalOfValues = function(start, end, array) {
-                                    var result = 0;
+                                averageOfValues = function(start, end, array) {
+                                    var sumValues = 0;
+									var sumTime = 0;
+									var deltaTime;
                                     for (; array && start <= end; start++) {
-                                        result += array[start];
+										if (start > 0) {
+											deltaTime = activityJson.time[start] - activityJson.time[start - 1];
+											sumValues += array[start] * deltaTime;
+											sumTime += deltaTime;
+										}
                                     }
-                                    return result;
+									if (sumTime === 0) {
+										return 0;
+									}
+                                    return sumValues / sumTime;
                                 },
                                 totalGainOfValues = function(start, end, array) {
                                     if (!array) {
@@ -556,8 +562,7 @@ ActivityBestSplitsModifier.prototype = {
                                     return result;
                                 },
                                 checkValues = function(timeOrDistance, ratio) {
-                                    totalHr = totalOfValues(begin, end, activityJson.heartrate);
-                                    hr = totalHr / (end - begin + 1);
+									hr = averageOfValues(begin, end, activityJson.heartrate);
                                     if (hr > values.avgHr.value) {
                                         values.avgHr.value = hr;
                                         values.avgHr.begin = begin;
@@ -576,8 +581,7 @@ ActivityBestSplitsModifier.prototype = {
                                         values.riseHr = riseHr;
                                     }
                                     
-                                    totalCadence = totalOfValues(begin, end, activityJson.cadence);
-                                    avgCadence = totalCadence / (end - begin + 1);
+									avgCadence = averageOfValues(begin, end, activityJson.cadence);
                                     if (avgCadence > values.avgCadence.value) {
                                         values.avgCadence.value = avgCadence;
                                         values.avgCadence.begin = begin;
@@ -585,8 +589,7 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgCadence.timeOrDistance = timeOrDistance;
                                     }
                                     
-                                    totalPower = totalOfValues(begin, end, activityJson.watts);
-                                    avgPower = totalPower / (end - begin + 1);
+									avgPower = averageOfValues(begin, end, activityJson.watts);
                                     if (avgPower > values.avgPower.value) {
                                         values.avgPower.value = avgPower;
                                         values.avgPower.begin = begin;
