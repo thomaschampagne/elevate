@@ -115,6 +115,7 @@ var dist = function(callback) {
                     filenameToCopy.match('/grunt/') ||
                     filenameToCopy.match('/.*\\.gzip$') ||
                     filenameToCopy.match('/.*\\.md$') ||
+                    filenameToCopy.match('/.*\\.idea$') ||
                     filenameToCopy.match('/package\\.json') ||
                     filenameToCopy.match('/bower\\.json')) {
                     return false;
