@@ -47,7 +47,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 medianCadence = this.analysisData_.cadenceData.medianCadence;
                 this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', ' rpm <span class="summarySubGridTitle">(&sigma; :' + this.analysisData_.cadenceData.standardDeviationCadence + ' )</span>', 'displayCadenceData');
             }
-            
+
             var cadenceTimeMoving = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
@@ -93,12 +93,12 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
 
             if (this.analysisData_.elevationData && this.userSettings_.displayAdvancedElevationData) {
-                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm', false);
+                var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(elevationDataView);
 
-                var ascentSpeedDataView = new ElevationDataView(this.analysisData_.elevationData, 'Vm/h', true);
+                var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
                 ascentSpeedDataView.setAppResources(this.appResources_);
                 ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 this.dataViews.push(ascentSpeedDataView);

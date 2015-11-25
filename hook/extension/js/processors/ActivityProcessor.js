@@ -691,11 +691,13 @@ ActivityProcessor.prototype = {
         var accumulatedElevationAscent = 0;
         var accumulatedElevationDescent = 0;
         var accumulatedDistance = 0;
-        // special arrays for ascent speeds
+
+        // specials arrays for ascent speeds
         var ascentSpeedMeterPerHourSamples = [];
         var ascentSpeedMeterPerHourDistance = [];
         var ascentSpeedMeterPerHourTime = [];
         var ascentSpeedMeterPerHourSum = 0;
+
         var elevationSampleCount = 0;
         var elevationSamples = [];
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
@@ -730,6 +732,7 @@ ActivityProcessor.prototype = {
 
                 // If previous altitude lower than current then => climbing
                 if (elevationDiff > 0) {
+                    
                     accumulatedElevationAscent += elevationDiff;
                     ascentDurationInSeconds = timeArray[i] - timeArray[i - 1];
 
