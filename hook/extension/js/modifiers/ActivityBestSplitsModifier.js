@@ -435,18 +435,18 @@ ActivityBestSplitsModifier.prototype = {
                                 },
                                 averageOfValues = function(start, end, array) {
                                     var sumValues = 0;
-									var sumTime = 0;
-									var deltaTime;
+                                    var sumTime = 0;
+                                    var deltaTime;
                                     for (; array && start <= end; start++) {
-										if (start > 0) {
-											deltaTime = activityJson.time[start] - activityJson.time[start - 1];
-											sumValues += array[start] * deltaTime;
-											sumTime += deltaTime;
-										}
+                                        if (start > 0) {
+                                            deltaTime = activityJson.time[start] - activityJson.time[start - 1];
+                                            sumValues += array[start] * deltaTime;
+                                            sumTime += deltaTime;
+                                        }
                                     }
-									if (sumTime === 0) {
-										return 0;
-									}
+                                    if (sumTime === 0) {
+                                        return 0;
+                                    }
                                     return sumValues / sumTime;
                                 },
                                 totalGainOfValues = function(start, end, array) {
@@ -562,7 +562,7 @@ ActivityBestSplitsModifier.prototype = {
                                     return result;
                                 },
                                 checkValues = function(timeOrDistance, ratio) {
-									hr = averageOfValues(begin, end, activityJson.heartrate);
+                                    hr = averageOfValues(begin, end, activityJson.heartrate);
                                     if (hr > values.avgHr.value) {
                                         values.avgHr.value = hr;
                                         values.avgHr.begin = begin;
@@ -581,7 +581,7 @@ ActivityBestSplitsModifier.prototype = {
                                         values.riseHr = riseHr;
                                     }
                                     
-									avgCadence = averageOfValues(begin, end, activityJson.cadence);
+                                    avgCadence = averageOfValues(begin, end, activityJson.cadence);
                                     if (avgCadence > values.avgCadence.value) {
                                         values.avgCadence.value = avgCadence;
                                         values.avgCadence.begin = begin;
@@ -589,7 +589,7 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgCadence.timeOrDistance = timeOrDistance;
                                     }
                                     
-									avgPower = averageOfValues(begin, end, activityJson.watts);
+                                    avgPower = averageOfValues(begin, end, activityJson.watts);
                                     if (avgPower > values.avgPower.value) {
                                         values.avgPower.value = avgPower;
                                         values.avgPower.begin = begin;
