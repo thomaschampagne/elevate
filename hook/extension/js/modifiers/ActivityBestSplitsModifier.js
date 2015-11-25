@@ -444,9 +444,12 @@ ActivityBestSplitsModifier.prototype = {
                                     return result;
                                 },
                                 totalGainOfValues = function(start, end, array) {
+                                    if (!array) {
+                                        return 0;
+                                    }
                                     var result = 0;
                                     var previous = array[start++];
-                                    for (; array && start <= end; start++) {
+                                    for (; start <= end; start++) {
                                         var value = array[start];
                                         if (previous < value) {
                                             result += (value - previous);
@@ -456,9 +459,12 @@ ActivityBestSplitsModifier.prototype = {
                                     return result;
                                 },
                                 totalDropOfValues = function(start, end, array, distance, smoothing) {
+                                    if (!array) {
+                                        return 0;
+                                    }
                                     var result = 0;
                                     var previous = array[start++];
-                                    for (; array && start <= end; start++) {
+                                    for (; start <= end; start++) {
                                         var value = array[start];
                                         if (previous > value) {
                                             result += (previous - value);
@@ -478,7 +484,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var previous = array[start++];
                                         var currentMax = previous;
                                         var begin = start;
-                                        for (; array && start < end; start++) {
+                                        for (; start <= end; start++) {
                                             if (array[start] > previous) {
                                                 if (maxValueEnd == 0 || array[start] - maxValueEnd > 5) {
                                                     currentMax = array[start];
@@ -514,7 +520,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var previous = array[start++];
                                         var currentMin = previous;
                                         var begin = start;
-                                        for (; array && start < end; start++) {
+                                        for (; start <= end; start++) {
                                             if (array[start] < previous) {
                                                 if (maxValueEnd == 0 || maxValueEnd - array[start] > 5) {
                                                     // restart
@@ -614,23 +620,16 @@ ActivityBestSplitsModifier.prototype = {
                                 }.bind(this);
                             
                             if (split.unit === options.Minutes) {
-                                var splitInSeconds = split.length * 60,
-                                    timeBefore;
+                                var splitInSeconds = split.length * 60;
                                 for (i = 0, max = activityJson.time.length; i < max; i++) {
-                                    time = activityJson.time[i];
-                                    timeBefore = 0;
-                                    if (i > 0) {
-                                        timeBefore = activityJson.time[i - 1];
-                                        time -= timeBefore;                        
-                                    }
+                                    time = 0;
                                     begin = i;
-                                    end = i;
-                                    j = i + 1;
-                                    while (splitInSeconds > time && j < max) {
-                                        end = j;
-                                        time = activityJson.time[end] - timeBefore;
-                                        j++;
+                                    end = i + 1;
+                                    while (splitInSeconds > time && end < max) {
+                                        time = activityJson.time[end] - activityJson.time[begin];
+                                        end++;
                                     }
+                                    end--;
                                     if (time < splitInSeconds) {
                                         break;
                                     }
@@ -660,23 +659,16 @@ ActivityBestSplitsModifier.prototype = {
                             
                             if (split.unit === options.Kilometers || split.unit === options.Miles) {
                                 var distanceInMeters = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
-                                    distanceBefore,
                                     distanceInUserUnits;
                                 for (i = 0, max = activityJson.distance.length; i < max; i++) {
-                                    distance = activityJson.distance[i];
-                                    distanceBefore = 0;
-                                    if (i > 0) {
-                                        distanceBefore = activityJson.distance[i - 1];
-                                        distance -= distanceBefore;
-                                    }
+                                    distance = 0;
                                     begin = i;
-                                    end = i;
-                                    j = i + 1;
-                                    while (distanceInMeters > distance && j < max) {
-                                        end = j;
-                                        distance = activityJson.distance[end] - distanceBefore;
-                                        j++;
+                                    end = i + 1;
+                                    while (distanceInMeters > distance && end < max) {
+                                        distance = activityJson.distance[end] - activityJson.distance[begin];
+                                        end++;
                                     }
+                                    end--;
                                     if (distance < distanceInMeters) {
                                         break;
                                     }
