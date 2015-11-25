@@ -109,7 +109,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time);
+        var gradeData = this.gradeData_(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance);
 
         // Avg grade
         // Q1/Q2/Q3 grade
@@ -195,6 +195,29 @@ ActivityProcessor.prototype = {
         return preparedZones;
     },
 
+    finalizeDistribComputationZones: function(zones) {
+        var total = 0;
+        for (zone of zones) {
+            if (zone['s']) {
+                total += zone['s'];
+            }
+            zone['percentDistrib'] = 0;
+        }
+        if (total > 0) {
+            for (zone of zones) {
+                if (zone['s']) {
+                    zone['percentDistrib'] = ((zone['s'] / total).toFixed(4) * 100);
+                }
+            }
+        }
+        return zones;
+    },
+
+    valueForSum_: function(currentValue, previousValue, delta) {
+        // discrete integral
+        return currentValue * delta - ((currentValue - previousValue) * delta) / 2;
+    },
+
     /**
      * ...
      */
@@ -213,8 +236,7 @@ ActivityProcessor.prototype = {
         var speedZones = this.prepareZonesForDistribComputation(this.zones.speed);
         var paceZones = this.prepareZonesForDistribComputation(this.zones.pace);
 
-        var durationInSeconds = 0,
-            durationCount = 0;
+        var durationInSeconds = 0;
 
         // End Preparing zone
         for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
@@ -226,9 +248,6 @@ ActivityProcessor.prototype = {
 
                 speedsNonZero.push(currentSpeed);
 
-                genuineAvgSpeedSum += currentSpeed;
-                genuineAvgSpeedSumCount++;
-
                 // Compute variance speed
                 speedVarianceSum += Math.pow(currentSpeed, 2);
 
@@ -236,6 +255,11 @@ ActivityProcessor.prototype = {
                 if (i > 0) {
 
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                    // distance
+                    genuineAvgSpeedSum += this.valueForSum_(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, durationInSeconds);
+                    // time
+                    genuineAvgSpeedSumCount += durationInSeconds;
 
                     // Find speed zone id
                     var speedZoneId = this.getZoneId(this.zones.speed, currentSpeed);
@@ -249,18 +273,13 @@ ActivityProcessor.prototype = {
                         paceZones[paceZoneId]['s'] += durationInSeconds;
                     }
 
-                    durationCount += durationInSeconds;
                 }
             }
         }
 
         // Update zone distribution percentage
-        for (var zone in speedZones) {
-            speedZones[zone]['percentDistrib'] = ((speedZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
-        for (var zone in paceZones) {
-            paceZones[zone]['percentDistrib'] = ((paceZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
+        speedZones = this.finalizeDistribComputationZones(speedZones);
+        paceZones = this.finalizeDistribComputationZones(paceZones);
 
         // Finalize compute of Speed
         var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
@@ -313,29 +332,26 @@ ActivityProcessor.prototype = {
 
         var powerZones = this.prepareZonesForDistribComputation(this.zones.power);
 
-        var durationInSeconds, durationCount = 0;
+        var durationInSeconds;
 
         for (var i = 0; i < powerArray.length; i++) { // Loop on samples
 
-            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
+            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph && i > 0) {
                 // Compute average and normalized power
                 accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.925);
-                accumulatedWattsOnMove += powerArray[i];
-                wattSampleOnMoveCount++;
                 wattsSamplesOnMove.push(powerArray[i]);
 
                 // Compute distribution for graph/table
-                if (i > 0) {
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                // average over time
+                accumulatedWattsOnMove += this.valueForSum_(powerArray[i], powerArray[i - 1], durationInSeconds);
+                wattSampleOnMoveCount += durationInSeconds;
 
-                    var powerZoneId = this.getZoneId(this.zones.power, powerArray[i]);
+                var powerZoneId = this.getZoneId(this.zones.power, powerArray[i]);
 
-                    if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZones[powerZoneId])) {
-                        powerZones[powerZoneId]['s'] += durationInSeconds;
-                    }
-
-                    durationCount += durationInSeconds;
+                if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZones[powerZoneId])) {
+                    powerZones[powerZoneId]['s'] += durationInSeconds;
                 }
             }
         }
@@ -359,9 +375,7 @@ ActivityProcessor.prototype = {
         });
 
         // Update zone distribution percentage
-        for (var zone in powerZones) {
-            powerZones[zone]['percentDistrib'] = ((powerZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
+        powerZones = this.finalizeDistribComputationZones(powerZones);
 
         return {
             'hasPowerMeter': hasPowerMeter,
@@ -393,7 +407,6 @@ ActivityProcessor.prototype = {
         var hrrZonesCount = Object.keys(this.userHrrZones_).length;
         var hr, heartRateReserveAvg, durationInSeconds, durationInMinutes, zoneId;
         var hrSum = 0;
-        var hrCount = 0;
 
         // Find HR for each Hrr of each zones
         for (var zone in this.userHrrZones_) {
@@ -406,32 +419,25 @@ ActivityProcessor.prototype = {
         }
 
         for (var i = 0; i < heartRateArray.length; i++) { // Loop on samples
-
-
-            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
-
+            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph && i > 0) {
                 // Compute heartrate data while moving from now
-                if (i > 0) {
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                // average over time
+                hrSum += this.valueForSum_(heartRateArray[i], heartRateArray[i - 1], durationInSeconds);
+                hrrSecondsCount += durationInSeconds;
 
-                    hrSum += heartRateArray[i];
+                // Compute TRIMP
+                hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
+                heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+                durationInMinutes = durationInSeconds / 60;
 
-                    // Compute TRIMP
-                    hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-                    heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
-                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
-                    durationInMinutes = durationInSeconds / 60;
+                TRIMP += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
-                    TRIMP += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
+                // Count Heart Rate Reserve distribution
+                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
 
-                    // Count Heart Rate Reserve distribution
-                    zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
-
-                    if (!_.isUndefined(zoneId)) {
-                        this.userHrrZones_[zoneId]['s'] += durationInSeconds;
-                    }
-
-                    hrrSecondsCount += durationInSeconds;
-                    hrCount++;
+                if (!_.isUndefined(zoneId)) {
+                    this.userHrrZones_[zoneId]['s'] += durationInSeconds;
                 }
             }
         }
@@ -441,11 +447,9 @@ ActivityProcessor.prototype = {
         });
 
         // Update zone distribution percentage
-        for (var zone in this.userHrrZones_) {
-            this.userHrrZones_[zone]['percentDistrib'] = ((this.userHrrZones_[zone]['s'] / hrrSecondsCount).toFixed(4) * 100);
-        }
+        userHrrZones_ = this.finalizeDistribComputationZones(this.userHrrZones_);
 
-        activityStatsMap.averageHeartRate = hrSum / hrCount;
+        activityStatsMap.averageHeartRate = hrSum / hrrSecondsCount;
         activityStatsMap.maxHeartRate = heartRateArraySorted[heartRateArraySorted.length - 1];
 
         var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
@@ -479,10 +483,12 @@ ActivityProcessor.prototype = {
             return null;
         }
 
+        // recomputing crank revolutions using cadence data
+        var crankRevolutions = 0;
         // On Moving
         var cadenceSumOnMoving = 0;
+        var cadenceSumDurationOnMoving = 0;
         var cadenceVarianceSumOnMoving = 0;
-        var cadenceOnMovingCount = 0;
         var cadenceOnMoveSampleCount = 0;
         var movingSampleCount = 0;
 
@@ -497,52 +503,47 @@ ActivityProcessor.prototype = {
 
         var cadenceZones = this.prepareZonesForDistribComputation(cadenceZoneTyped);
 
-        var durationInSeconds = 0,
-            durationCount = 0;
+        var durationInSeconds = 0;
 
         for (var i = 0; i < velocityArray.length; i++) {
 
-            if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
+            if (i > 0) {
+                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                // recomputing crank revolutions using cadence data
+                crankRevolutions += this.valueForSum_(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60);
 
-                // Rider is moving here..
-                if (cadenceArray[i] > ActivityProcessor.cadenceThresholdRpm) {
+                if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
 
-                    // Rider is moving here while cadence
-                    cadenceOnMoveSampleCount++;
-                    cadenceSumOnMoving += cadenceArray[i];
-                    cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
-                    cadenceOnMovingCount++;
-                }
+                    movingSampleCount++;
 
-                movingSampleCount++;
-
-                // Compute distribution for graph/table
-                if (i > 0) {
-
-                    durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                    // Rider is moving here..
+                    if (cadenceArray[i] > ActivityProcessor.cadenceThresholdRpm) {
+                        // Rider is moving here while cadence
+                        cadenceOnMoveSampleCount++;
+                        // cadence averaging over time
+                        cadenceSumOnMoving += this.valueForSum_(cadenceArray[i], cadenceArray[i - 1], durationInSeconds);
+                        cadenceSumDurationOnMoving += durationInSeconds;
+                        cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
+                    }
 
                     var cadenceZoneId = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
 
                     if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
                         cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
                     }
-
-                    durationCount += durationInSeconds;
                 }
             }
         }
 
         var cadenceRatioOnMovingTime = cadenceOnMoveSampleCount / movingSampleCount;
-        var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceOnMovingCount;
+        var averageCadenceOnMovingTime = cadenceSumOnMoving / cadenceSumDurationOnMoving;
 
 
         var varianceCadence = (cadenceVarianceSumOnMoving / cadenceOnMoveSampleCount) - Math.pow(averageCadenceOnMovingTime, 2);
         var standardDeviationCadence = (varianceCadence > 0) ? Math.sqrt(varianceCadence) : 0;
 
         // Update zone distribution percentage
-        for (var zone in cadenceZones) {
-            cadenceZones[zone]['percentDistrib'] = ((cadenceZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
+        cadenceZones = this.finalizeDistribComputationZones(cadenceZones);
 
         var cadenceArraySorted = cadenceArray.sort(function(a, b) {
             return a - b;
@@ -553,7 +554,7 @@ ActivityProcessor.prototype = {
             'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
             'averageCadenceMoving': averageCadenceOnMovingTime,
             'standardDeviationCadence': standardDeviationCadence.toFixed(1),
-            'crankRevolutions': (averageCadenceOnMovingTime / 60 * activityStatsMap.movingTime),
+            'crankRevolutions': crankRevolutions,
             'lowerQuartileCadence': Helper.lowerQuartile(cadenceArraySorted),
             'medianCadence': Helper.median(cadenceArraySorted),
             'upperQuartileCadence': Helper.upperQuartile(cadenceArraySorted),
@@ -561,7 +562,7 @@ ActivityProcessor.prototype = {
         };
     },
 
-    gradeData_: function(gradeArray, velocityArray, timeArray) {
+    gradeData_: function(gradeArray, velocityArray, timeArray, distanceArray) {
 
         if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -587,30 +588,26 @@ ActivityProcessor.prototype = {
         var upFlatDownMoveData = {
             up: 0,
             flat: 0,
-            down: 0,
-            count: {
-                up: 0,
-                flat: 0,
-                down: 0,
-            }
+            down: 0
         };
 
         var durationInSeconds, durationCount = 0;
+        var distance = 0;
         var currentSpeed;
 
         for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
 
-            gradeSum += gradeArray[i];
-            gradeCount++;
-
-            // Compute distribution for graph/table
             if (i > 0) {
-
                 currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
-
+                // Compute distribution for graph/table
                 if (currentSpeed > 0) { // If moving...
-
                     durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                    distance = distanceArray[i] - distanceArray[i - 1];
+
+                    // elevation gain
+                    gradeSum += this.valueForSum_(gradeArray[i], gradeArray[i - 1], distance);
+                    // distance
+                    gradeCount += distance;
 
                     var gradeZoneId = this.getZoneId(this.zones.grade, gradeArray[i]);
 
@@ -622,17 +619,20 @@ ActivityProcessor.prototype = {
 
                     // Compute DOWN/FLAT/UP duration
                     if (gradeArray[i] > ActivityProcessor.gradeClimbingLimit) { // UPHILL
+                        // time
                         upFlatDownInSeconds.up += durationInSeconds;
-                        upFlatDownMoveData.up += currentSpeed;
-                        upFlatDownMoveData.count.up++;
+                        // distance
+                        upFlatDownMoveData.up += currentSpeed * durationInSeconds;
                     } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
+                        // time
                         upFlatDownInSeconds.down += durationInSeconds;
-                        upFlatDownMoveData.down += currentSpeed;
-                        upFlatDownMoveData.count.down++;
+                        // distance
+                        upFlatDownMoveData.down += currentSpeed * durationInSeconds;
                     } else { // FLAT
+                        // time
                         upFlatDownInSeconds.flat += durationInSeconds;
-                        upFlatDownMoveData.flat += currentSpeed;
-                        upFlatDownMoveData.count.flat++;
+                        // distance
+                        upFlatDownMoveData.flat += currentSpeed * durationInSeconds;
                     }
                 }
             }
@@ -649,9 +649,9 @@ ActivityProcessor.prototype = {
         }
 
         // Compute speed while up, flat down
-        upFlatDownMoveData.up = upFlatDownMoveData.up / upFlatDownMoveData.count.up;
-        upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownMoveData.count.down;
-        upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownMoveData.count.flat;
+        upFlatDownMoveData.up = upFlatDownMoveData.up / upFlatDownInSeconds.up;
+        upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownInSeconds.down;
+        upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownInSeconds.flat;
 
         var avgGrade = gradeSum / gradeCount;
 
@@ -660,9 +660,7 @@ ActivityProcessor.prototype = {
         });
 
         // Update zone distribution percentage
-        for (var zone in gradeZones) {
-            gradeZones[zone]['percentDistrib'] = ((gradeZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
+        gradeZones = this.finalizeDistribComputationZones(gradeZones);
 
         return {
             'avgGrade': avgGrade,
@@ -701,8 +699,7 @@ ActivityProcessor.prototype = {
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
         var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
         var durationInSeconds = 0;
-        var durationCount = 0;
-        var durationAscentSpeedCount = 0;
+        var distance = 0;
         var ascentDurationInSeconds = 0;
 
         for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
@@ -710,20 +707,21 @@ ActivityProcessor.prototype = {
             // Compute distribution for graph/table
             if (i > 0 && velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
 
-                // Compute average and normalized elevation
-                accumulatedElevation += altitudeArray[i];
-                elevationSampleCount++;
-                elevationSamples.push(altitudeArray[i]);
-
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                distance = distanceArray[i] - distanceArray[i - 1];
+
+                // Compute average and normalized 
+
+                // average elevation over distance
+                accumulatedElevation += this.valueForSum_(altitudeArray[i], altitudeArray[i - 1], distance);
+                elevationSampleCount += distance;
+                elevationSamples.push(altitudeArray[i]);
 
                 var elevationZoneId = this.getZoneId(this.zones.elevation, altitudeArray[i]);
 
                 if (!_.isUndefined(elevationZoneId) && !_.isUndefined(elevationZones[elevationZoneId])) {
                     elevationZones[elevationZoneId]['s'] += durationInSeconds;
                 }
-
-                durationCount += durationInSeconds;
 
                 // Meters climbed between current and previous
                 var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
@@ -735,7 +733,6 @@ ActivityProcessor.prototype = {
 
                     var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
 
-                    var distance = distanceArray[i] - distanceArray[i - 1];
                     // only if grade is > 3%
                     if (distance > 0 && (elevationDiff / distance) > 0.03) {
                         accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
@@ -758,7 +755,6 @@ ActivityProcessor.prototype = {
 
             if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
                 ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentSpeedMeterPerHourTime[j];
-                durationAscentSpeedCount += ascentSpeedMeterPerHourTime[j];
             }
         }
 
@@ -777,14 +773,8 @@ ActivityProcessor.prototype = {
         var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
         // Update zone distribution percentage
-        for (var zone in elevationZones) {
-            elevationZones[zone]['percentDistrib'] = ((elevationZones[zone]['s'] / durationCount).toFixed(4) * 100);
-        }
-        if (durationAscentSpeedCount > 0) {
-            for (var zone in ascentSpeedZones) {
-                ascentSpeedZones[zone]['percentDistrib'] = ((ascentSpeedZones[zone]['s'] / durationAscentSpeedCount).toFixed(4) * 100);
-            }
-        }
+        elevationZones = this.finalizeDistribComputationZones(elevationZones);
+        ascentSpeedZones = this.finalizeDistribComputationZones(ascentSpeedZones);
 
         return {
             'avgElevation': avgElevation.toFixed(0),

@@ -437,12 +437,11 @@ ActivityBestSplitsModifier.prototype = {
                                     var sumValues = 0;
                                     var sumTime = 0;
                                     var deltaTime;
+                                    start++;
                                     for (; array && start <= end; start++) {
-                                        if (start > 0) {
-                                            deltaTime = activityJson.time[start] - activityJson.time[start - 1];
-                                            sumValues += array[start] * deltaTime;
-                                            sumTime += deltaTime;
-                                        }
+                                        deltaTime = activityJson.time[start] - activityJson.time[start - 1];
+                                        sumValues += array[start] * deltaTime - ((array[start] - array[start - 1]) * deltaTime) / 2;
+                                        sumTime += deltaTime;
                                     }
                                     if (sumTime === 0) {
                                         return 0;
