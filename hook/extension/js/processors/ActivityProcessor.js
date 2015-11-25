@@ -681,7 +681,7 @@ ActivityProcessor.prototype = {
     elevationData_: function(activityStream, activityStatsMap) {
         var distanceArray = activityStream.distance;
         var timeArray = activityStream.time;
-        var velocityArray= activityStream.velocity_smooth;
+        var velocityArray = activityStream.velocity_smooth;
         var altitudeArray = activityStatsMap.altitude_smooth;
         if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
             return null;
@@ -751,7 +751,7 @@ ActivityProcessor.prototype = {
             }
         }
 
-        var ascentSpeedArray = ascentSpeedMeterPerHourSamples;//this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
+        var ascentSpeedArray = ascentSpeedMeterPerHourSamples; //this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
         var j = 0;
         for (j = 0; j < ascentSpeedArray.length; j++) {
             var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedArray[j]);
@@ -786,6 +786,10 @@ ActivityProcessor.prototype = {
             }
         }
 
+        var lowerQuartileAscentSpeed = Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted);
+        var medianAscentSpeed = Helper.median(ascentSpeedMeterPerHourSamplesSorted);
+        var upperQuartileAscentSpeed = Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted);
+
         return {
             'avgElevation': avgElevation.toFixed(0),
             'accumulatedElevationAscent': accumulatedElevationAscent,
@@ -797,9 +801,9 @@ ActivityProcessor.prototype = {
             'ascentSpeedZones': ascentSpeedZones, // Only while moving
             'ascentSpeed': {
                 'avg': avgAscentSpeed,
-                'lowerQuartile': Helper.lowerQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'median': Helper.median(ascentSpeedMeterPerHourSamplesSorted).toFixed(0),
-                'upperQuartile': Helper.upperQuartile(ascentSpeedMeterPerHourSamplesSorted).toFixed(0)
+                'lowerQuartile': (lowerQuartileAscentSpeed) ? lowerQuartileAscentSpeed.toFixed(0) : 0,
+                'median': (medianAscentSpeed) ? medianAscentSpeed.toFixed(0) : 0,
+                'upperQuartile': (upperQuartileAscentSpeed) ? upperQuartileAscentSpeed.toFixed(0) : 0,
             }
         };
     }
