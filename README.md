@@ -14,7 +14,7 @@ Install/Develop from sources
 
 ## Install extension dependencies
 ```
-node make.js init
+node make init
 ```
 This will download required node modules. Development must be done inside **hook/extension/** folder.
 You can now load extension from **chrome://extensions** chrome tab:
@@ -26,18 +26,18 @@ You can now load extension from **chrome://extensions** chrome tab:
 
 ## Create distribution folder 
 ```
-node make.js dist
+node make dist
 ```
 This will create **dist/** folder. This folder is used for a release.
 
 ## Create archive package 
 ```
-node make.js build
+node make build
 ```
 This will create zip archive of **dist/** folder in **builds/StravistiX\_vX.X.X\_[date].zip**
 
 ## Clean 
 ```
-node make.js clean
+node make clean
 ```
 This will clean builds/, dist/ and node_modules/ folders
