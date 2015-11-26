@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg)](https://travis-ci.org/thomaschampagne/stravistix)
 [![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
 [![Join the chat at https://gitter.im/thomaschampagne/stravistix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thomaschampagne/stravistix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Install StravistiX from Chrome Store
