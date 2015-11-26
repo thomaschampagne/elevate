@@ -73,7 +73,7 @@ Helper.weightedPercentiles = function(values, weights, percentiles) {
     for (var i = 0; i < list.length; i++) {
         for (var j = 0; j < percentiles.length; j++) {
             // found the sample matching the percentile
-            if (cur < percentiles[j] * tot && (tot - cur - list[i].weight) <= (tot - percentiles[j] * tot)) {
+            if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
                 result[j] = list[i].value;
             }
         }
