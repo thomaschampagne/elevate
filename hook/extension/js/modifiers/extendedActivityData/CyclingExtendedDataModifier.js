@@ -100,6 +100,11 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
                 elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
+
+                var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
+                ascentSpeedDataView.setAppResources(this.appResources_);
+                ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                this.dataViews.push(ascentSpeedDataView);
             }
 
         }

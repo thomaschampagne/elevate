@@ -19,7 +19,6 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.setupDistributionGraph(this.elevationData.elevationZones);
 
             this.setupDistributionTable(this.elevationData.elevationZones);
-
         },
 
         render: function() {
@@ -30,7 +29,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.content += this.generateSectionTitle('ELEVATION <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 5px;">Customize</a>');
 
             // Creates a grid
-            this.makeGrid(3, 4); // (col, row)
+            this.makeGrid(3, 2); // (col, row)
 
             this.insertElevationDataIntoGrid();
             this.generateCanvasForGraph();
@@ -44,16 +43,12 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
         insertElevationDataIntoGrid: function() {
 
             this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, 'Average Elevation', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), 'Ascent', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), 'Descent', 'm', 'displayAdvancedElevationData');
 
             this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-
-            this.insertContentAtGridPosition(0, 2, this.elevationData.ascentSpeed.avg.toFixed(0), 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
-
-            this.insertContentAtGridPosition(0, 3, ((this.elevationData.ascentSpeed.lowerQuartile) ? this.elevationData.ascentSpeed.lowerQuartile : '-'), '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(1, 3, ((this.elevationData.ascentSpeed.median) ? this.elevationData.ascentSpeed.median : '-'), '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(2, 3, ((this.elevationData.ascentSpeed.upperQuartile) ? this.elevationData.ascentSpeed.upperQuartile : '-'), '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
         }
     }
 });

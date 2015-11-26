@@ -67,6 +67,18 @@ ActivityBestSplitsModifier.prototype = {
             selectedSplitId,
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
 
+        var filterData = function(data, distance, smoothing) {
+            if (data && distance) {
+                var result = [];
+                result[0] = data[0];
+                for (i = 1, max = data.length; i < max; i++) {
+                    result[i] = result[i-1] + (distance[i] - distance[i-1]) * (data[i] - result[i-1]) / smoothing;
+                }
+                return result;
+            }
+        };
+        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 200);
+
         self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
         segments.find("h3.segments-header")
@@ -198,6 +210,8 @@ ActivityBestSplitsModifier.prototype = {
                             "<th style='text-align: center'>Rise HR</th>" +
                             "<th style='text-align: center'>Avg Power</th>" +
                             "<th style='text-align: center'>Avg Cadence</th>" +
+                            "<th style='text-align: center'>Elevation gain</th>" +
+                            "<th style='text-align: center'>Elevation drop</th>" +
                             "<th style='text-align: center'></th>" +
                             "</tr>" +
                             "</thead>" + 
@@ -269,6 +283,8 @@ ActivityBestSplitsModifier.prototype = {
                                    "<td class='value'><div id='split-" + split.id + "-rise-hr'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-power'></div></td>" +
                                    "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-elevation-gain'></div></td>" +
+                                   "<td class='value'><div id='split-" + split.id + "-elevation-drop'></div></td>" +
                                    "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Remove</button></td>" +
                                    "</tr>");
         };
@@ -384,7 +400,7 @@ ActivityBestSplitsModifier.prototype = {
                                 avgSpeed,
                                 time,
                                 begin,
-                                end,      
+                                end,
                                 newSplitValue = function(value) {
                                     return {
                                         value: value || 0,
@@ -413,7 +429,9 @@ ActivityBestSplitsModifier.prototype = {
                                     dropHr: newDropRiseValue(),
                                     riseHr: newDropRiseValue(),
                                     avgPower: newSplitValue(),
-                                    avgCadence: newSplitValue()
+                                    avgCadence: newSplitValue(),
+                                    elevationGain: newSplitValue(),
+                                    elevationDrop: newSplitValue()
                                 },
                                 countSamples = function(value) {
                                     value.samples = value.end - value.begin + 1;
@@ -422,6 +440,36 @@ ActivityBestSplitsModifier.prototype = {
                                     var result = 0;
                                     for (; array && start <= end; start++) {
                                         result += array[start];
+                                    }
+                                    return result;
+                                },
+                                totalGainOfValues = function(start, end, array) {
+                                    if (!array) {
+                                        return 0;
+                                    }
+                                    var result = 0;
+                                    var previous = array[start++];
+                                    for (; start <= end; start++) {
+                                        var value = array[start];
+                                        if (previous < value) {
+                                            result += (value - previous);
+                                        }
+                                        previous = value;
+                                    }
+                                    return result;
+                                },
+                                totalDropOfValues = function(start, end, array, distance, smoothing) {
+                                    if (!array) {
+                                        return 0;
+                                    }
+                                    var result = 0;
+                                    var previous = array[start++];
+                                    for (; start <= end; start++) {
+                                        var value = array[start];
+                                        if (previous > value) {
+                                            result += (previous - value);
+                                        }
+                                        previous = value;
                                     }
                                     return result;
                                 },
@@ -436,7 +484,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var previous = array[start++];
                                         var currentMax = previous;
                                         var begin = start;
-                                        for (; array && start < end; start++) {
+                                        for (; start <= end; start++) {
                                             if (array[start] > previous) {
                                                 if (maxValueEnd == 0 || array[start] - maxValueEnd > 5) {
                                                     currentMax = array[start];
@@ -472,7 +520,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var previous = array[start++];
                                         var currentMin = previous;
                                         var begin = start;
-                                        for (; array && start < end; start++) {
+                                        for (; start <= end; start++) {
                                             if (array[start] < previous) {
                                                 if (maxValueEnd == 0 || maxValueEnd - array[start] > 5) {
                                                     // restart
@@ -507,7 +555,7 @@ ActivityBestSplitsModifier.prototype = {
                                     }
                                     return result;
                                 },
-                                checkValues = function(timeOrDistance) {
+                                checkValues = function(timeOrDistance, ratio) {
                                     totalHr = totalOfValues(begin, end, activityJson.heartrate);
                                     hr = totalHr / (end - begin + 1);
                                     if (hr > values.avgHr.value) {
@@ -517,11 +565,13 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgHr.timeOrDistance = timeOrDistance;
                                     }
                                     dropHr = dropOfValues(begin, end, activityJson.heartrate);
+                                    dropHr.value.value = dropHr.value.value * ratio;
                                     if (dropHr.value.value > values.dropHr.value.value) {
                                         values.dropHr = dropHr;
                                     }
                                     
                                     riseHr = riseOfValues(begin, end, activityJson.heartrate);
+                                    riseHr.value.value = riseHr.value.value * ratio;
                                     if (riseHr.value.value > values.riseHr.value.value) {
                                         values.riseHr = riseHr;
                                     }
@@ -543,6 +593,21 @@ ActivityBestSplitsModifier.prototype = {
                                         values.avgPower.end = end;
                                         values.avgPower.timeOrDistance = timeOrDistance;
                                     }
+
+                                    elevationGain = totalGainOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+                                    elevationDrop = totalDropOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+                                    if (elevationGain > values.elevationGain.value) {
+                                        values.elevationGain.value = elevationGain;
+                                        values.elevationGain.begin = begin;
+                                        values.elevationGain.end = end;
+                                        values.elevationGain.timeOrDistance = timeOrDistance;
+                                    }
+                                    if (elevationDrop > values.elevationDrop.value) {
+                                        values.elevationDrop.value = elevationDrop;
+                                        values.elevationDrop.begin = begin;
+                                        values.elevationDrop.end = end;
+                                        values.elevationDrop.timeOrDistance = timeOrDistance;
+                                    }
                                     
                                     avgSpeed = (distance / 1000) / (time / 60 / 60);
                                     if (avgSpeed > values.avgSpeed.value) {
@@ -555,36 +620,30 @@ ActivityBestSplitsModifier.prototype = {
                                 }.bind(this);
                             
                             if (split.unit === options.Minutes) {
-                                var splitInSeconds = split.length * 60,
-                                    timeBefore;
+                                var splitInSeconds = split.length * 60;
                                 for (i = 0, max = activityJson.time.length; i < max; i++) {
-                                    time = activityJson.time[i];
-                                    timeBefore = 0;
-                                    if (i > 0) {
-                                        timeBefore = activityJson.time[i - 1];
-                                        time -= timeBefore;                        
-                                    }
+                                    time = 0;
                                     begin = i;
-                                    end = i;
-                                    j = i + 1;
-                                    while (splitInSeconds > time && j < max) {
-                                        end = j;
-                                        time = activityJson.time[end] - timeBefore;
-                                        j++;
+                                    end = i + 1;
+                                    while (splitInSeconds > time && end < max) {
+                                        time = activityJson.time[end] - activityJson.time[begin];
+                                        end++;
                                     }
+                                    end--;
                                     if (time < splitInSeconds) {
                                         break;
                                     }
                                     
-                                    distance = activityJson.distance[end] - activityJson.distance[begin];
-                                    if (distance > values.distance.value) {
-                                        values.distance.value = distance;
+                                    distance = (activityJson.distance[end] - activityJson.distance[begin]);
+                                    var ratio = splitInSeconds / time;
+                                    if (distance * ratio > values.distance.value) {
+                                        values.distance.value = distance * ratio;
                                         values.distance.begin = begin;
                                         values.distance.end = end;
                                         values.distance.timeOrDistance = time;
                                     }
                                     
-                                    checkValues(time);
+                                    checkValues(time, ratio);
                                 }
 
                                 time = activityJson.time[values.riseHr.end] - activityJson.time[values.riseHr.begin];
@@ -600,38 +659,31 @@ ActivityBestSplitsModifier.prototype = {
                             
                             if (split.unit === options.Kilometers || split.unit === options.Miles) {
                                 var distanceInMeters = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
-                                    distanceBefore,
                                     distanceInUserUnits;
                                 for (i = 0, max = activityJson.distance.length; i < max; i++) {
-                                    distance = activityJson.distance[i];
-                                    distanceBefore = 0;
-                                    if (i > 0) {
-                                        distanceBefore = activityJson.distance[i - 1];
-                                        distance -= distanceBefore;
-                                    }
+                                    distance = 0;
                                     begin = i;
-                                    end = i;
-                                    j = i + 1;
-                                    while (distanceInMeters > distance && j < max) {
-                                        end = j;
-                                        distance = activityJson.distance[end] - distanceBefore;
-                                        j++;
+                                    end = i + 1;
+                                    while (distanceInMeters > distance && end < max) {
+                                        distance = activityJson.distance[end] - activityJson.distance[begin];
+                                        end++;
                                     }
+                                    end--;
                                     if (distance < distanceInMeters) {
                                         break;
                                     }
-                                    
+                                    var ratio = distanceInMeters / distance;
                                     distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
                                     
                                     time = activityJson.time[end] - activityJson.time[begin];
-                                    if (time < values.time.value) {
-                                        values.time.value = time;
+                                    if (time * ratio < values.time.value) {
+                                        values.time.value = time * ratio;
                                         values.time.begin = begin;
                                         values.time.end = end;
                                         values.time.timeOrDistance = distanceInUserUnits;
                                     }
                                     
-                                    checkValues(distanceInUserUnits);
+                                    checkValues(distanceInUserUnits, ratio);
                                 }
 
                                 distance = activityJson.distance[values.riseHr.end] - activityJson.distance[values.riseHr.begin];
@@ -652,6 +704,8 @@ ActivityBestSplitsModifier.prototype = {
                             countSamples(values.dropHr);
                             countSamples(values.riseHr);
                             countSamples(values.avgPower);
+                            countSamples(values.elevationGain);
+                            countSamples(values.elevationDrop);
                             countSamples(values.avgSpeed);
                             countSamples(values.distance);
                             countSamples(values.time);
@@ -706,7 +760,7 @@ ActivityBestSplitsModifier.prototype = {
                         element.data("split-id", split.id);
                         element.css({ "cursor": "pointer" });
                         if (value.timeOrDistance && tooltipFormatFunction) {
-                            element.attr("title", tooltipFormatFunction(value.timeOrDistance));
+                            element.attr("title", tooltipFormatFunction(value));
                         }
                     } else {
                         if (defValue) {
@@ -717,22 +771,28 @@ ActivityBestSplitsModifier.prototype = {
             splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
             
             var formatDistance = function(value) {
-                    return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
+                    return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
                 },
                 formatTime = function(value) {
-                    return Helper.secondsToHHMMSS(value, true);
+                    return Helper.secondsToHHMMSS(value.timeOrDistance, true);
                 },
                 formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
+                formatTooltipDropRise  = function(value) {
+                    var arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
+                    return Helper.formatNumber(value.value.beginValue, 0) + arrow + Helper.formatNumber(value.value.endValue, 0) + " " + formatTooltip(value);
+                },
                 speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
             
             computeSplit(split, self.activityJson).done(function(value) {            
-                setValue(splitId + "-time", value.time, formatTime, "", formatDistance);
-                setValue(splitId + "-distance", value.distance, formatDistance, "", formatTime);
+                setValue(splitId + "-time", value.time, function(value) { return Helper.secondsToHHMMSS(value, true); }, "", formatDistance);
+                setValue(splitId + "-distance", value.distance, function(value) { return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit); }, "", formatTime);
                 setValue(splitId + "-avg-speed", value.avgSpeed, function(value) { return Helper.formatNumber(value) + speedLabel; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-hr", value.avgHr, function(value) { return Helper.formatNumber(value, 0) + "bpm"; }, "n/a", formatTooltip);
-                setValue(splitId + "-drop-hr", value.dropHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2198" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "-" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
-                setValue(splitId + "-rise-hr", value.riseHr, function(value) { return Helper.formatNumber(value.beginValue, 0) + "\u2197" + Helper.formatNumber(value.endValue, 0) + "\u2192" + "+" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltip);
+                setValue(splitId + "-drop-hr", value.dropHr, function(value) { return "-" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltipDropRise);
+                setValue(splitId + "-rise-hr", value.riseHr, function(value) { return "+" + Helper.formatNumber(value.value, 0) + "bpm"; }, "n/a", formatTooltipDropRise);
                 setValue(splitId + "-avg-power", value.avgPower, function(value) { return Helper.formatNumber(value, 0) + "W"; }, "n/a", formatTooltip);
+                setValue(splitId + "-elevation-gain", value.elevationGain, function(value) { return Helper.formatNumber(value, 0) + "m"; }, "n/a", formatTooltip);
+                setValue(splitId + "-elevation-drop", value.elevationDrop, function(value) { return Helper.formatNumber(value, 0) + "m"; }, "n/a", formatTooltip);
                 setValue(splitId + "-avg-cadence", value.avgCadence, function(value) { return Helper.formatNumber(value, 0); }, "n/a", formatTooltip);
                 splitRow.find("td.value span.ajax-loading-image").remove();
             });

@@ -5,6 +5,8 @@ function VacuumProcessor() {
 
 }
 
+VacuumProcessor.movingThresholdKph = 3.5; // Kph
+
 /**
  * Define prototype
  */
@@ -131,7 +133,7 @@ VacuumProcessor.prototype = {
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
-    getActivityCommonStats: function getActivityStats() {
+    getActivityCommonStats: function () {
 
         var actStatsContainer = $(".activity-summary-container");
 
@@ -221,7 +223,7 @@ VacuumProcessor.prototype = {
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
             'averageHeartRate': averageHeartRate,
-            'maxHeartRate': maxHeartRate,
+            'maxHeartRate': maxHeartRate
         };
     },
 
