@@ -281,9 +281,7 @@ VacuumProcessor.prototype = {
     getActivityStream: function getActivityStream(callback) {
 
         var cache = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
-
         if (cache) {
-            console.debug('Use vacuum activity cache');
             cache = JSON.parse(cache);
             callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.hasPowerMeter);
             return;
