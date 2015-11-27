@@ -34,7 +34,7 @@ ActivityBestSplitsModifier.Units = {
                 return "min";
 
             case ActivityBestSplitsModifier.Units.Seconds:
-                return "seconds";
+                return "sec";
 
 
             default:
@@ -320,7 +320,7 @@ ActivityBestSplitsModifier.prototype = {
 
             split.id = split.id || Helper.guid();
             splitsTableBody.append("<tr id='split-" + split.id + "'>" +
-                "<td>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
+                "<td style='white-space: nowrap;'>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
                 "<td class='value'><div id='split-" + split.id + "-time'></div><div id='split-" + split.id + "-distance'></div></td>" +
                 "<td class='value'><div id='split-" + split.id + "-avg-speed'></div></td>" +
                 "<td class='value'><div id='split-" + split.id + "-avg-hr'></div></td>" +
