@@ -1,13 +1,15 @@
 /**
  *   ActivityBestSplitsModifier is responsible of ...
  */
-function ActivityBestSplitsModifier(userSettings, activityJson, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
+function ActivityBestSplitsModifier(activityId, userSettings, activityJson, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
+    this.activityId = activityId;
     this.userSettings = userSettings;
     this.activityJson = activityJson;
     this.hasPowerMeter = hasPowerMeter;
     this.splitsConfiguration = splitsConfiguration;
     this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function() {};
     this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
+    this.cacheKeyPrefix = 'stravistix_bestsplit_' + this.activityId + '_';
 }
 
 ActivityBestSplitsModifier.Units = {
@@ -35,8 +37,6 @@ ActivityBestSplitsModifier.Units = {
 
             case ActivityBestSplitsModifier.Units.Seconds:
                 return "sec";
-
-
             default:
                 return "";
         }
@@ -449,6 +449,7 @@ ActivityBestSplitsModifier.prototype = {
         var worker,
             workerPromises = [];
         var computeSplit = function(split, activity) {
+            // TODO Implement cache for best split here. Avoid computation of split each time to load the page faster
             if (!worker) {
                 var blobURL = URL.createObjectURL(new Blob(['(',
                     function() {
@@ -791,9 +792,17 @@ ActivityBestSplitsModifier.prototype = {
                         };
 
                         self.onmessage = function(message) {
+
                             if (message.data && message.data.split && message.data.activity && message.data.options) {
-                                message.data.result = computeSplitWorker(message.data.split, message.data.activity, message.data.options);
-                                postMessage(message.data);
+
+                                // If result has always been given by cache, then publish results without computing new ones
+                                if (message.data.result) {
+                                    message.data.result = JSON.parse(message.data.result);
+                                    postMessage(message.data);
+                                } else {
+                                    message.data.result = computeSplitWorker(message.data.split, message.data.activity, message.data.options);
+                                    postMessage(message.data);
+                                }
                             }
                         };
 
@@ -811,6 +820,7 @@ ActivityBestSplitsModifier.prototype = {
             }
             workerPromises[split.id] = $.Deferred();
             worker.postMessage({
+                result: localStorage.getItem(self.cacheKeyPrefix + split.id),
                 split: split,
                 activity: activity,
                 options: {
@@ -867,6 +877,12 @@ ActivityBestSplitsModifier.prototype = {
                 speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
 
             computeSplit(split, self.activityJson).done(function(value) {
+
+                // Set or update split result in cache
+                if (!localStorage.getItem(self.cacheKeyPrefix + split.id)) {
+                    localStorage.setItem(self.cacheKeyPrefix + split.id, JSON.stringify(value));
+                }
+
                 setValue(splitId + "-time", value.time, function(value) {
                     return Helper.secondsToHHMMSS(value, true);
                 }, "", formatDistance);
