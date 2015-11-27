@@ -50,6 +50,13 @@ app.controller("XtdZonesSettingsController", function($scope) {
         step: 5,
         min: 0,
         max: 9999
+    }, {
+        name: 'Ascent speed',
+        value: 'ascent',
+        units: 'Vm/h',
+        step: 5,
+        min: 0,
+        max: 9999
     }];
 
     ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {

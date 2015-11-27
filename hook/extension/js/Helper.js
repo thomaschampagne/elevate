@@ -53,44 +53,35 @@ Helper.secondsToHHMMSS = function(secondsParam, trimLeadingZeros) {
     return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
 };
 
-Helper.median = function(valuesSorted) {
-    var half = Math.floor(valuesSorted.length / 2);
-    if (valuesSorted.length % 2)
-        return valuesSorted[half];
-    else
-        return (valuesSorted[half - 1] + valuesSorted[half]) / 2.0;
+Helper.weightedPercentiles = function(values, weights, percentiles) {
+    // inspired from https://en.wikipedia.org/wiki/Weighted_median and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
+    var list = [];
+    var tot = 0;
+    for (var i = 0; i < values.length; i++) {
+        list.push({ value : values[i], weight : weights[i]});
+        tot += weights[i];
+    }
+    list.sort(function(a, b) {
+        return a.value - b.value;
+    });
+    var result = [];
+    for (var i = 0; i < percentiles.length; i++) {
+        result.push(0);
+    }
+
+    var cur = 0;
+    for (var i = 0; i < list.length; i++) {
+        for (var j = 0; j < percentiles.length; j++) {
+            // found the sample matching the percentile
+            if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
+                result[j] = list[i].value;
+            }
+        }
+        cur += list[i].weight;
+    }
+
+    return result;
 };
-
-Helper.upperQuartile = function(valuesSorted) {
-
-    if (valuesSorted.length < 3) {
-        return (0);
-    }
-
-    if (Helper.isEven(valuesSorted.length)) {
-        var valuesSortedUpperHalf = valuesSorted.slice(valuesSorted.length / 2);
-    } else {
-        var valuesSortedUpperHalf = valuesSorted.slice((valuesSorted.length + 1) / 2);
-    }
-
-    return Helper.median(valuesSortedUpperHalf);
-};
-
-Helper.lowerQuartile = function(valuesSorted) {
-
-    if (valuesSorted.length < 3) {
-        return (0);
-    }
-
-    if (Helper.isEven(valuesSorted.length)) {
-        var valuesSortedLowerHalf = valuesSorted.slice(0, valuesSorted.length / 2);
-    } else {
-        var valuesSortedLowerHalf = valuesSorted.slice(0, (valuesSorted.length - 1) / 2);
-    }
-
-    return Helper.median(valuesSortedLowerHalf);
-};
-
 
 // Use abstract equality == for "is number" test
 Helper.isEven = function(n) {
