@@ -11,6 +11,7 @@ function ActivityBestSplitsModifier(userSettings, activityJson, hasPowerMeter, s
 }
 
 ActivityBestSplitsModifier.Units = {
+    Seconds: -1,
     Minutes: 0,
     Kilometers: 1,
     Miles: 2,
@@ -31,6 +32,10 @@ ActivityBestSplitsModifier.Units = {
 
             case ActivityBestSplitsModifier.Units.Minutes:
                 return "min";
+
+            case ActivityBestSplitsModifier.Units.Seconds:
+                return "seconds";
+
 
             default:
                 return "";
@@ -232,6 +237,7 @@ ActivityBestSplitsModifier.prototype = {
             "<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +
             "Type:&nbsp;<select id='best-split-new-unit'>" +
             "<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
+            "<option value='" + ActivityBestSplitsModifier.Units.Seconds + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Seconds) + "</option>" +
             "<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
             "<option value='" + ActivityBestSplitsModifier.Units.Miles + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Miles) + "</option>" +
             "</select>&nbsp;" +
@@ -307,6 +313,11 @@ ActivityBestSplitsModifier.prototype = {
             if (split.unit === ActivityBestSplitsModifier.Units.Minutes && (split.length * 60) > activityDurationInSeconds) {
                 return;
             }
+
+            if (split.unit === ActivityBestSplitsModifier.Units.Seconds && split.length > activityDurationInSeconds) {
+                return;
+            }
+
             split.id = split.id || Helper.guid();
             splitsTableBody.append("<tr id='split-" + split.id + "'>" +
                 "<td>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
@@ -371,6 +382,22 @@ ActivityBestSplitsModifier.prototype = {
 
                 case ActivityBestSplitsModifier.Units.Minutes:
                     if ((splitLength * 60) > activityDurationInSeconds) {
+                        $.fancybox({
+                            'autoScale': true,
+                            'transitionIn': 'fade',
+                            'transitionOut': 'fade',
+                            'type': 'iframe',
+                            'content': '<div>The length of the split cannot be longer than the activity time.</div>',
+                            'afterClose': function() {
+                                $("#best-split-new-length").focus();
+                            }
+                        });
+                        return;
+                    }
+                    break;
+
+                case ActivityBestSplitsModifier.Units.Seconds:
+                    if (splitLength > activityDurationInSeconds) {
                         $.fancybox({
                             'autoScale': true,
                             'transitionIn': 'fade',
@@ -660,8 +687,17 @@ ActivityBestSplitsModifier.prototype = {
 
                                 }.bind(this);
 
-                            if (split.unit === options.Minutes) {
-                                var splitInSeconds = split.length * 60;
+                            if (split.unit === options.Minutes || split.unit === options.Seconds) {
+
+                                var splitInSeconds;
+
+                                if (split.unit === options.Minutes) {
+                                    splitInSeconds = split.length * 60;
+                                } else {
+
+                                    splitInSeconds = split.length;
+                                }
+
                                 for (i = 0, max = activityJson.time.length; i < max; i++) {
                                     time = 0;
                                     begin = i;
@@ -780,6 +816,7 @@ ActivityBestSplitsModifier.prototype = {
                 options: {
                     distanceUnit: self.distanceUnit,
                     Minutes: ActivityBestSplitsModifier.Units.Minutes,
+                    Seconds: ActivityBestSplitsModifier.Units.Seconds,
                     Kilometers: ActivityBestSplitsModifier.Units.Kilometers,
                     Miles: ActivityBestSplitsModifier.Units.Miles,
                     MetersTo0001hMileFactor: ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor,
