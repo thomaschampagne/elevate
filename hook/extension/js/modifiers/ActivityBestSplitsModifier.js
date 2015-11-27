@@ -63,7 +63,7 @@ ActivityBestSplitsModifier.prototype = {
             map,
             splitPolyline,
             splitAltitude,
-            splitColor = "#105CB6",
+            splitColor = "black",
             selectedSplitId,
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
 
@@ -213,22 +213,22 @@ ActivityBestSplitsModifier.prototype = {
         var splitsTable = $("<table class='dense marginless best-splits' style='text-align: center'>" +
             "<thead>" +
             "<tr>" +
-            "<th style='text-align: center'>Split</th>" +
-            "<th style='text-align: center'>Time/Distance</th>" +
-            "<th style='text-align: center'>Avg Speed</th>" +
-            "<th style='text-align: center'>Avg HR</th>" +
-            "<th style='text-align: center'>Drop HR</th>" +
-            "<th style='text-align: center'>Rise HR</th>" +
-            "<th style='text-align: center'>Avg Power</th>" +
-            "<th style='text-align: center'>Avg Cadence</th>" +
-            "<th style='text-align: center'>Elevation gain</th>" +
-            "<th style='text-align: center'>Elevation drop</th>" +
-            "<th style='text-align: center'></th>" +
+            "<th style='text-align: center; vertical-align: top;'>Split</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Time Distance</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Avg Speed</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Avg HR</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Drop HR</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Rise HR</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Avg Power</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Avg Cadence</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Elevation gain</th>" +
+            "<th style='text-align: center; vertical-align: top;'>Elevation drop</th>" +
+            "<th style='text-align: center; vertical-align: top;'></th>" +
             "</tr>" +
             "</thead>" +
             "<tfoot>" +
             "<tr>" +
-            "<td colspan='7'>Length:&nbsp;" +
+            "<td colspan='11'>Length:&nbsp;" +
             "<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +
             "Type:&nbsp;<select id='best-split-new-unit'>" +
             "<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
@@ -239,7 +239,7 @@ ActivityBestSplitsModifier.prototype = {
             "</td>" +
             "</tr>" +
             "<tr>" +
-            "<td colspan='7' style='text-align: center'><em>Data accuracy depends on GPS logging interval used to record this activity. Move cursor over values to see exact distance/time at which the value was computed. Click on any value to see the split on map and altitude chart.</em></th>" +
+            "<td colspan='11' style='text-align: center'><em>Data accuracy depends on GPS logging interval used to record this activity. Move cursor over values to see exact distance/time at which the value was computed. Click on any value to see the split on map and altitude chart.</em></th>" +
             "</tr>" +
             "</tfoot>" +
             "<tbody class='splits-list'>" +
@@ -319,7 +319,7 @@ ActivityBestSplitsModifier.prototype = {
                 "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
                 "<td class='value'><div id='split-" + split.id + "-elevation-gain'></div></td>" +
                 "<td class='value'><div id='split-" + split.id + "-elevation-drop'></div></td>" +
-                "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Remove</button></td>" +
+                "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Del</button></td>" +
                 "</tr>");
         };
 
