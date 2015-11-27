@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg)](https://travis-ci.org/thomaschampagne/stravistix)
 [![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
 [![Join the chat at https://gitter.im/thomaschampagne/stravistix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thomaschampagne/stravistix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Install StravistiX from Chrome Store
@@ -41,3 +40,7 @@ This will create zip archive of **dist/** folder in **builds/StravistiX\_vX.X.X\
 node make clean
 ```
 This will clean builds/, dist/ and node_modules/ folders
+
+## Code Editor and Indentation plugin used
+
+[**Sublime Text 3**](http://www.sublimetext.com/3) code editor with [**Sublime-HTMLPrettify**](https://github.com/victorporof/Sublime-HTMLPrettify) plugin for code indentation have been used in this project
