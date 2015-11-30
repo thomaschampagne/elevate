@@ -119,7 +119,7 @@ StravistiX.prototype = {
         }
 
         // Display ribbon update message
-        this.handleUpdateRibbon_();
+        this.handleUpdatePopup_();
 
         // Send update info to ga
         var updatedToEvent = {
@@ -137,25 +137,62 @@ StravistiX.prototype = {
     /**
      *
      */
-    handleUpdateRibbon_: function() {
+    handleUpdatePopup_: function() {
 
-        var title = 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>';
+        var updateMessageObj = {
+            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
+            hotFixes: [
+                'Fix invisible icon of "year progression chart" in "My Profile" page'
+            ],
+            features: [
+                'Added "Year progression chart" on Distance, Activity count, Elevation and Time. Go to "your profile" and click graph button under "My year progressions to current month/day"'
+            ],
+            fixes: [],
+            upcommingFeatures: [
+                'Best splits on activities. Splits based on best Time or Distance, best speed, best heartrate, best power and best cadence. Fully customizable. Released before mid November.',
+                'After an hard redesign work, "<i>Extended statistics on segments efforts</i>" are soon finished!! You will like it. Released end of November.'
+            ]
+        };
+
         var message = '';
-        message += '<h3><strong>YEAH version 1.0.0 is now out !!! And Google Maps REVIVED !!</strong></h3>';
-        message += '<h5>- <strong>NEW:</strong> Google Maps are revived. Currently for activities only at the moment (You can disable this in extension settings)</h5>';
-        message += '<h5>- <strong>NEW:</strong> Add on/off extension settings for the segment time comparison on activities pages</h5>';
-        message += '<h5>- <strong>NEW:</strong> Segment time comparison for QOM (Womens) on activities pages</h5>';
-        message += '<h5>- <strong>FIX</strong> When segment time comparison may not be displayed</h5>';
-        message += '<h5>- <strong>FIX</strong> When no longer seeing extended stats on turbo activities</h5>';
-        message += '<h5>- <strong>FIX</strong> When move ratio not being displayed (eg: Running race)</h5>';
-        message += '<h5><strong>The following update is delayed at the moment:</strong></h5>';
-        message += '<h5>Like an activity, segments efforts will have their own extended statistics with graphs and tables. This feature implies some hard change and impacts on current code. Need more time than expected. Sorry !</h5>';
+
+        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+            message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
+            _.each(updateMessageObj.hotFixes, function(hotFix) {
+                message += '<h5>- ' + hotFix + '</h5>';
+            });
+        };
+
+        var baseVersion = this.appResources_.extVersion.split('.');
+        baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
+
+        if (!_.isEmpty(updateMessageObj.features)) {
+            message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
+            _.each(updateMessageObj.features, function(feature) {
+                message += '<h5>- ' + feature + '</h5>';
+            });
+        };
+
+        if (!_.isEmpty(updateMessageObj.fixes)) {
+            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            _.each(updateMessageObj.fixes, function(fix) {
+                message += '<h5>- ' + fix + '</h5>';
+            });
+        };
+
+        if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
+            message += '<h5><strong>Upcomming features:</strong></h5>';
+            _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
+                message += '<h5>- ' + upcommingFeatures + '</h5>';
+            });
+        };
+
+        // Donate button
         message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
         message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
         message += '</a>';
 
-
-        $.fancybox('<h2>' + title + '</h2>' + message);
+        $.fancybox('<h2>' + updateMessageObj.title + '</h2>' + message);
     },
 
     /**
@@ -170,7 +207,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier();
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
         athleteStatsModifier.modify();
     },
 
@@ -499,7 +536,7 @@ StravistiX.prototype = {
 
         }.bind(this));
     },
-    
+
     /**
      *
      */
@@ -518,22 +555,27 @@ StravistiX.prototype = {
         if (window.pageView.activity().attributes.type != "Ride") {
             return;
         }
-        
+
         // Only for own activities
         if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
             return;
         }
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-            
+
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
         activitySegmentTimeComparisonModifier.modify();
-    },    
+    },
 
     /**
      *
-     */    
+     */
     handleActivityBestSplits_: function() {
+
+        if (!this.userSettings_.displayActivityBestSplits) {
+            return;
+        }
+
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
@@ -549,16 +591,16 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleActivityBestSplits_()");
-        
+
         var self = this;
-        
+
         this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {
             Helper.getFromStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', function(response) {
                 var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {
                     Helper.setToStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', splitsConfiguration, function(response) {});
                 });
                 activityBestSplitsModifier.modify();
-            });            
+            });
         }.bind(this));
     },
 
@@ -652,6 +694,10 @@ StravistiX.prototype = {
 
     handleGoogleMapsComeBackModifier: function() {
 
+        if (window.location.pathname.match(/\/truncate/)) { // Skipping on activity cropping
+            return;
+        }
+
         if (!this.userSettings_.reviveGoogleMaps) {
             return;
         }
@@ -661,7 +707,7 @@ StravistiX.prototype = {
             return;
         }
 
-        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_, this.appResources_);
+        var googleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId_, this.appResources_, this.userSettings_);
         googleMapsComeBackModifier.modify();
     },
 
