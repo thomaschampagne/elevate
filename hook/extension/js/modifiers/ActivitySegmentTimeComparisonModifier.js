@@ -35,13 +35,16 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             deltaKomLabel = "&Delta;KOM",
             deltaPRLabel = "&Delta;PR",
             deltaYearPRLabel = "&Delta;yPR",
-            timeColumnHeader = $("#segments table.segments th.time-col");
+            timeColumnHeader = $("#segments table.segments th.time-col"),
+            starColumnHeader = $("#segments table.segments th.starred-col");
         if (!_.isUndefined(window.pageView)) {
             isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
             if (isFemale) {
                 deltaKomLabel = "&Delta;QOM";
             }
-        }
+        }        
+        
+        starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
 
         if (self.showDifferenceToCurrentYearPR) {
             timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
@@ -58,11 +61,16 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         $("tr[data-segment-effort-id]").each(function() {
             var $row = $(this),
                 $timeCell = $row.find("td.time-col"),
+                $starCell = $row.find("td.starred-col"),
                 segmentEffortId = $row.data("segment-effort-id"),
                 url = "/segment_efforts/" + segmentEffortId,
+                positionCell,
                 deltaKomCell,
                 deltaPRCell,
                 deltaYearPRCell;
+
+            positionCell = $("<td><span class='ajax-loading-image'></span></td>");
+            $starCell.after(positionCell);
                 
             if (self.showDifferenceToCurrentYearPR) {
                 deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
@@ -83,6 +91,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 if (!data) {
                     return;
                 }
+                
+                positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
 
                 var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
                     seconds = data.elapsed_time_raw,
@@ -116,7 +126,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         }
                     }
 
-                    if (!currentSegmentEfforDateTime) {
+                    if (!currentSegmentEfforDateTime) {                        
                         return;
                     }
 
