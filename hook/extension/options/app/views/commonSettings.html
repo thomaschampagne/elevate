@@ -1,16 +1,17 @@
 <div id="settingsContainer">
+<input ng-model="searchText" placeholder="Search for an option" class="form-control input-lg">
     <div data-ng-repeat="section in sections">
         <h3 data-ng-hide="false"><span class="label label-default">{{ section.sectionTitle }}</span></h3>
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th width="50%"></th>
-                    <th width="20%"></th>
-                    <th width="10%"></th>
+                    <th width="15%"></th>
+                    <th width="15%"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="option in section.sectionContent">
+                <tr data-ng-repeat="option in section.sectionContent | filter:searchText" data-ng-hide="option.hidden">
                     <td>
                         <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionKey)">{{ option.optionTitle }}</button>
                     </td>
@@ -32,7 +33,7 @@
                     <td class="text-right">
                         <div data-ng-switch on="option.optionType">
                             <div data-ng-switch-when="list">
-                                <select class="form-control" data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
+                                <select class="form-control"  data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
                             </div>
                             <div data-ng-switch-default>
                                 <checkbox large class="btn-primary" data-ng-model="option.active" data-ng-change="toggleCheckOption(option)"></checkbox>

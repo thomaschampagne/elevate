@@ -32,9 +32,7 @@ setTimeout(function() {
                 break;
 
             case 'clean':
-                clean(function() {
-                    console.log('builds/, dist/ and node_modules/ folders cleaned');
-                });
+                clean();
                 break;
         }
     }
@@ -46,42 +44,47 @@ setTimeout(function() {
  */
 var init = function(callback) {
 
-    var exec = require('child_process').exec;
+    clean(function() {
 
-    var child = exec('npm install', function(error, stdout, stderr) {
+        var exec = require('child_process').exec;
 
-        process.chdir(HOOK_FOLDER);
+        var child = exec('npm install', function(error, stdout, stderr) {
 
-        console.log(stdout);
+            process.chdir(HOOK_FOLDER);
 
-        if (error !== null) {
+            console.log(stdout);
 
-            console.log('exec error: ' + error);
+            if (error !== null) {
 
-        } else {
+                console.log('exec error: ' + error);
 
-            process.chdir(EXT_FOLDER);
+            } else {
 
-            exec('npm install', function(error, stdout, stderr) {
+                process.chdir(EXT_FOLDER);
 
-                process.chdir('..');
+                exec('npm install', function(error, stdout, stderr) {
 
-                console.log(stdout);
+                    process.chdir('..');
 
-                if (error !== null) {
+                    console.log(stdout);
 
-                    console.log('exec error: ' + error);
+                    if (error !== null) {
 
-                } else {
+                        console.log('exec error: ' + error);
 
-                    console.log('Node dependencies are installed.');
+                    } else {
 
-                    if (typeof callback !== 'undefined') {
-                        callback();
+                        console.log('Node dependencies are installed.');
+
+                        if (typeof callback !== 'undefined') {
+                            callback();
+                        }
                     }
-                }
-            }.bind(this));
-        }
+                }.bind(this));
+            }
+
+        }.bind(this));
+
     }.bind(this));
 
 };
@@ -146,7 +149,7 @@ var build = function() {
             fs.mkdirSync(BUILD_FOLDER);
         }
 
-		// Switch to dist/ folder
+        // Switch to dist/ folder
         process.chdir(DIST_FOLDER);
 
         var buildName = generateBuildName(DIST_FOLDER + '/manifest.json');
@@ -171,7 +174,7 @@ var build = function() {
             if (err) {
                 throw err;
             }
-            
+
             console.log('done:', base, bytes);
         });
     });
@@ -179,11 +182,15 @@ var build = function() {
 
 
 var clean = function(callback) {
+    console.log('Cleaning builds/, dist/ and node_modules/ folders...');
     deleteFolderRecursive('node_modules');
     deleteFolderRecursive(EXT_FOLDER + 'node_modules');
     deleteFolderRecursive(DIST_FOLDER);
     deleteFolderRecursive(BUILD_FOLDER);
-    callback();
+    console.log('builds/, dist/ and node_modules/ folders cleaned');
+    if (callback) {
+        callback();
+    }
 };
 
 /**

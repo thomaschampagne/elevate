@@ -336,6 +336,8 @@ var userSettings = {
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
     displaySegmentTimeComparisonToCurrentYearPR: true,
-    bestSplitsConfiguration: null,
     reviveGoogleMaps: true
+    reviveGoogleMapsLayerType: 'terrain',
+    displayActivityBestSplits: true,
+    bestSplitsConfiguration: null
 };

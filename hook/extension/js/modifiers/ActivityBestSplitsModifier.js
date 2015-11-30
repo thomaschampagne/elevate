@@ -63,7 +63,7 @@ ActivityBestSplitsModifier.prototype = {
             map,
             splitPolyline,
             splitAltitude,
-            splitColor = "blue",
+            splitColor = "#105CB6",
             selectedSplitId,
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
 
@@ -71,10 +71,9 @@ ActivityBestSplitsModifier.prototype = {
 
         segments.find("h3.segments-header")
                 .css("font-weight", "bold")
-                .css("text-decoration", "underline")
                 .css("cursor", "pointer")
                 .addClass("segments-header-title")
-                .before(bestSplitsHeader)
+                .before(bestSplitsHeader);
                 
         if (pageView) {
             if (pageView.contexts) {
@@ -101,7 +100,7 @@ ActivityBestSplitsModifier.prototype = {
         }
 
         $(".bestsplits-header-title").click(function() {
-            $(".bestsplits-header-title").css("font-weight", "bold").css("text-decoration", "underline");
+            $(".bestsplits-header-title").css("font-weight", "bold");
             $(".segments-header-title").css("font-weight", "normal").css("text-decoration", "none");
             segments.find("table.segments").hide();
             segments.find("div.show-hide-segments").hide();
@@ -122,7 +121,7 @@ ActivityBestSplitsModifier.prototype = {
         };
         
         $(".segments-header-title").click(function() {
-            $(".segments-header-title").css("font-weight", "bold").css("text-decoration", "underline");
+            $(".segments-header-title").css("font-weight", "bold");
             $(".bestsplits-header-title").css("font-weight", "normal").css("text-decoration", "none");            
             bestSplitsSection.hide();
             segments.find("table.segments").show();
@@ -132,6 +131,30 @@ ActivityBestSplitsModifier.prototype = {
             }
             removeSplitSelection();
         });
+
+        // Set underline on titles only when hovered
+        $(".segments-header-title").hover(
+            function() {
+                $(this).css("text-decoration", "underline");
+            },
+            function() {
+                $(this).css("text-decoration", "none");
+            }
+        );
+
+        $(".bestsplits-header-title").hover(
+            function() {
+                $(this).css("text-decoration", "underline");
+            },
+            function() {
+                $(this).css("text-decoration", "none");
+            }
+        );
+        
+        // Set Strava blue links color on bestsplits + segments links 
+        $(".bestsplits-header-title").css("color", "#007FB6");
+        $(".segments-header-title").css("color", "#007FB6");
+
                 
         $(document).on("click", "[data-activity-points]", {}, function() {
             if (map) {
@@ -185,7 +208,7 @@ ActivityBestSplitsModifier.prototype = {
                             "<tfoot>" +
                             "<tr>" + 
                             "<td colspan='7'>Length:&nbsp;" + 
-                            "<input type='number' min='1' max='9999' value='10' id='best-split-new-length' style='width: 100px' />&nbsp;" +                        
+                            "<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +                        
                             "Type:&nbsp;<select id='best-split-new-unit'>" +
                             "<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
                             "<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
@@ -283,6 +306,14 @@ ActivityBestSplitsModifier.prototype = {
                 return;
             }
             var splitType = parseInt($("#best-split-new-unit").val());
+
+            var splitAlreadyExist = _.findWhere(splitsArray, {length: splitLength, unit: splitType});
+
+            if(splitAlreadyExist) {
+                alert('This split already exist.');
+                return;
+            }
+
             switch (splitType) {
                 
                 case ActivityBestSplitsModifier.Units.Minutes:
