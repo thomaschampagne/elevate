@@ -142,22 +142,35 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [
-                'Fix invisible icon of "year progression chart" in "My Profile" page'
+
             ],
             features: [
-                'Added "Year progression chart" on Distance, Activity count, Elevation and Time. Go to "your profile" and click graph button under "My year progressions to current month/day"'
+                'Added new extended statistics for cyclists: <strong>Ascent speed</strong>',
+                'Best splits can be highlighted from the higher <strong>elevation gain or drop</strong>',
+                'Best splits can be highlighted from the higher <strong>heartrate rise or drop</strong>',
+                'Best splits can be also user defined on <strong>"seconds"</strong> from now',
+                '<strong>Performance enhanced on best splits</strong> computation. A caching system has been implemented to reduce computation when cache exist.',
+                'Improved elevation data accuracy while computing extended statistics. Elevation data smoothed using low pass filter.',
+                'Heart rate extended statitics are now computed <strong>while moving</strong> from now.',
+                'Display now weather along units preferences. Set your temperature and wind speed unit in settings.',
+                'Quartiles and median are now computed using <strong>weighted percentiles</strong>. This will <strong>better highlight your efforts</strong> at those values'
             ],
-            fixes: [],
+            fixes: [
+                'All best splits averages were computed on sample counts. May cause problems if sampling was "smart". It\'s now computed using using time or distance.',
+                'Highlighted power best splits map points might be wrong.',
+                'Extended stats display button on turbos activities may not appear ',
+            ],
             upcommingFeatures: [
-                'Best splits on activities. Splits based on best Time or Distance, best speed, best heartrate, best power and best cadence. Fully customizable. Released before mid November.',
-                'After an hard redesign work, "<i>Extended statistics on segments efforts</i>" are soon finished!! You will like it. Released end of November.'
+                '"<i>Extended statistics on segments efforts</i>" delayed to end of december due to 2.1.x delay, sry !'
             ]
         };
 
         var message = '';
 
+        message += '<h3 style="background: #eee; padding: 10px;">Version <strong>2</strong> is out, <strong>Best Splits</strong> for cyclists are live !!</h3>';
+
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
-            message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
+            message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
             _.each(updateMessageObj.hotFixes, function(hotFix) {
                 message += '<h5>- ' + hotFix + '</h5>';
             });
@@ -167,21 +180,21 @@ StravistiX.prototype = {
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
 
         if (!_.isEmpty(updateMessageObj.features)) {
-            message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
+            message += '<h4><strong>NEW in ' + baseVersion + ':</strong></h4>';
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h5>- ' + feature + '</h5>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.fixes)) {
-            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            message += '<h4><strong>FIXED in ' + baseVersion + ':</strong></h4>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h5>- ' + fix + '</h5>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
-            message += '<h5><strong>Upcomming features:</strong></h5>';
+            message += '<h4><strong>Upcomming features:</strong></h4>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h5>- ' + upcommingFeatures + '</h5>';
             });
@@ -274,7 +287,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleWindyTyModifier_()");
 
-        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_);
+        var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_, this.userSettings_);
         windyTyModifier.modify();
     },
 
@@ -594,9 +607,10 @@ StravistiX.prototype = {
 
         var self = this;
 
+        // TODO Implement cache here: get stream from cache if exist
         this.vacuumProcessor_.getActivityStream(function(activityCommonStats, jsonResponse, athleteWeight, hasPowerMeter) {
             Helper.getFromStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', function(response) {
-                var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {
+                var activityBestSplitsModifier = new ActivityBestSplitsModifier(self.activityId_, self.userSettings_, jsonResponse, hasPowerMeter, response.data, function(splitsConfiguration) {
                     Helper.setToStorage(self.extensionId_, StorageManager.storageSyncType, 'bestSplitsConfiguration', splitsConfiguration, function(response) {});
                 });
                 activityBestSplitsModifier.modify();
