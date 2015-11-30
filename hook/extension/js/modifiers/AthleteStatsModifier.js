@@ -27,8 +27,7 @@ AthleteStatsModifier.prototype = {
             return;
         }
 
-        var self = this,
-            metersTo1000thOfMileFactor = 0.621371192,
+        var metersTo1000thOfMileFactor = 0.621371192,
             metersToFeetsFactor = 3.2808399,
             total = 0,
             i,
