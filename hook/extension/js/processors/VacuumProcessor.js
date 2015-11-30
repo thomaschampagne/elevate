@@ -5,6 +5,9 @@ function VacuumProcessor() {
 
 }
 
+VacuumProcessor.movingThresholdKph = 3.5; // Kph
+VacuumProcessor.cachePrefix = 'stravistix_activityStream_';
+
 /**
  * Define prototype
  */
@@ -131,7 +134,7 @@ VacuumProcessor.prototype = {
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
-    getActivityCommonStats: function getActivityStats() {
+    getActivityCommonStats: function() {
 
         var actStatsContainer = $(".activity-summary-container");
 
@@ -221,7 +224,7 @@ VacuumProcessor.prototype = {
             'elapsedTime': elapsedTime,
             'averageSpeed': averageSpeed,
             'averageHeartRate': averageHeartRate,
-            'maxHeartRate': maxHeartRate,
+            'maxHeartRate': maxHeartRate
         };
     },
 
@@ -277,6 +280,13 @@ VacuumProcessor.prototype = {
      */
     getActivityStream: function getActivityStream(callback) {
 
+        var cache = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
+        if (cache) {
+            cache = JSON.parse(cache);
+            callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.hasPowerMeter);
+            return;
+        }
+
         var url = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
 
         $.ajax(url).done(function(jsonResponse) {
@@ -287,6 +297,14 @@ VacuumProcessor.prototype = {
                 jsonResponse.watts = jsonResponse.watts_calc;
                 hasPowerMeter = false;
             }
+
+            // Save result to cache
+            localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
+                activityCommonStats: this.getActivityCommonStats(),
+                stream: jsonResponse,
+                athleteWeight: this.getAthleteWeight(),
+                hasPowerMeter: hasPowerMeter
+            }));
 
             callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight(), hasPowerMeter);
 

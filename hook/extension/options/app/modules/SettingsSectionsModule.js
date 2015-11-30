@@ -49,7 +49,7 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Elevation data',
         optionLabels: ['Cycling', 'Running'],
-        optionHtml: '<h3>Average Elevation</h3> The... average elevation of your activity :) <h3>Elevation Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the elevations sorted ascending you obtained during an activity.</br> </br> <strong>25% Quartile</strong>: This indicator represents the elevations you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the elevations you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the elevations you maintai</strong>ned at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Average Ascent Speed or VAM</h3> VAM is an abbreviation for the Italian term "Velocità Ascensionale Media", translated in English to mean "average ascent speed" or "mean ascent velocity". This is basically your average ascent speed while climbing. The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour. <h3>Ascent Speed Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the ascent speeds sorted ascending you obtained during an activity.  The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour.</br> </br> <strong>25% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the ascent speed you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "75%". This is commonly called "Upper quartile" or Q3.',
+        optionHtml: '<h3>Average Elevation</h3> The... average elevation of your activity :) <h3>Elevation Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the elevations sorted ascending you obtained during an activity.</br> </br> <strong>25% Quartile</strong>: This indicator represents the elevations you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the elevations you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the elevations you maintai</strong>ned at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Average Ascent Speed or VAM</h3> VAM is an abbreviation for the Italian term "Velocità Ascensionale Media", translated in English to mean "average ascent speed" or "mean ascent velocity". This is basically your average ascent speed while climbing. The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour. <h3>Ascent Speed Quartiles</h3> For understanding these indicators, we assume that 0% to 100% are all the ascent speeds sorted ascending you obtained during an activity.  The unit used in StravistiX to represent this indicator is "Vm/h" for vertical metres per hour.</br> </br> <strong>25% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "25%". This is commonly called "Lower quartile" or Q1.</br> </br> <strong>50% Median</strong>: This indicator represents the ascent speed you maintained at the position "50%". It\'s simply the median...</br> </br> <strong>75% Quartile</strong>: This indicator represents the ascent speed you maintained at the position "75%". This is commonly called "Upper quartile" or Q3. <h3>Ascent</h3> Computed ascents for different smoothing values <h3>Descent</h3> Computed descents for different smoothing values ',
     }]
 }, {
     sectionTitle: 'Activity viewing options',
@@ -212,6 +212,44 @@ settingsSectionsModule.data = [{
         optionLabels: ['All'],
         optionHtml: 'This will hide all routes created in the dashboard feed.',
     }, ]
+}, {
+    sectionTitle: 'Weather units',
+    sectionContent: [{
+        optionKey: 'temperatureUnit',
+        optionType: 'list',
+        optionLabels: ['All'],
+        optionList: [{
+            key: 'F',
+            name: 'Fahrenheit'
+        }, {
+            key: 'C',
+            name: 'Celsius'
+        }],
+        optionTitle: 'Temperature',
+        optionHtml: 'This selects which units to use when displaying temperature on weather activity overlay.',
+    }, {
+        optionKey: 'windUnit',
+        optionType: 'list',
+        optionLabels: ['All'],
+        optionList: [{
+              key: 'mph',
+              name: 'Miles per hour'
+          }, {
+              key: 'km/h',
+              name: 'Kilometers per hour'
+          }, {
+              key: 'm/s',
+              name: 'Meters per second'
+          }, {
+              key: 'kn',
+              name: 'Knots'
+          }, {
+              key: 'bft',
+              name: 'Beaufort scale'
+          }],
+        optionTitle: 'Wind Speed',
+        optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
+    }]
 }, {
     sectionTitle: 'Miscellaneous',
     sectionContent: [{

@@ -23,14 +23,6 @@ Helper.log = function(tag, object) {
     }
 };
 
-Helper.median = function(valuesSorted) {
-    var half = Math.floor(valuesSorted.length / 2);
-    if (valuesSorted.length % 2)
-        return valuesSorted[half];
-    else
-        return (valuesSorted[half - 1] + valuesSorted[half]) / 2.0;
-};
-
 Helper.HHMMSStoSeconds = function(str) {
     var p = str.split(':'),
         s = 0,
@@ -61,20 +53,41 @@ Helper.secondsToHHMMSS = function(secondsParam, trimLeadingZeros) {
     return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
 };
 
-Helper.upperQuartile = function(valuesSorted) {
-    var q3 = Math.round(0.75 * (valuesSorted.length + 1));
-    return (valuesSorted[q3]);
+Helper.weightedPercentiles = function(values, weights, percentiles) {
+    // inspired from https://en.wikipedia.org/wiki/Weighted_median and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
+    var list = [];
+    var tot = 0;
+    for (var i = 0; i < values.length; i++) {
+        list.push({ value : values[i], weight : weights[i]});
+        tot += weights[i];
+    }
+    list.sort(function(a, b) {
+        return a.value - b.value;
+    });
+    var result = [];
+    for (var i = 0; i < percentiles.length; i++) {
+        result.push(0);
+    }
+
+    var cur = 0;
+    for (var i = 0; i < list.length; i++) {
+        for (var j = 0; j < percentiles.length; j++) {
+            // found the sample matching the percentile
+            if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
+                result[j] = list[i].value;
+            }
+        }
+        cur += list[i].weight;
+    }
+
+    return result;
 };
 
-Helper.lowerQuartile = function(valuesSorted) {
-    var q1 = Math.round(0.25 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
-};
+// Use abstract equality == for "is number" test
+Helper.isEven = function(n) {
+    return n == parseFloat(n) ? !(n % 2) : void 0;
+}
 
-Helper.quartile_95 = function(valuesSorted) {
-    var q1 = Math.round(0.95 * (valuesSorted.length + 1));
-    return (valuesSorted[q1]);
-};
 
 Helper.heartrateFromHeartRateReserve = function(hrr, maxHr, restHr) {
     return (parseFloat(hrr) / 100 * (parseInt(maxHr) - parseInt(restHr)) + parseInt(restHr)).toFixed(0);
@@ -126,18 +139,18 @@ Helper.includeJs = function(scriptUrl) {
 };
 
 Helper.formatNumber = function(n, c, d, t) {
-var c = isNaN(c = Math.abs(c)) ? 2 : c, 
-    d = d == undefined ? "." : d, 
-    t = t == undefined ? "," : t, 
-    s = n < 0 ? "-" : "", 
-    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
-    j = (j = i.length) > 3 ? j % 3 : 0;
-   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-Helper.secondsToDHM = function (sec_num, trimZeros) {
-    var days    = Math.floor(sec_num / 86400);
-    var hours   = Math.floor((sec_num - (days * 86400)) / 3600);
+Helper.secondsToDHM = function(sec_num, trimZeros) {
+    var days = Math.floor(sec_num / 86400);
+    var hours = Math.floor((sec_num - (days * 86400)) / 3600);
     var minutes = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
     if (trimZeros && days === 0) {
         if (hours === 0) {
