@@ -307,6 +307,49 @@ var userSettings = {
         }, {
             from: 3000,
             to: 3500
+        }],
+        ascent: [{
+            from: 0,
+            to: 300
+        }, {
+            from: 300,
+            to: 450
+        }, {
+            from: 450,
+            to: 600
+        }, {
+            from: 600,
+            to: 750
+        }, {
+            from: 750,
+            to: 900
+        }, {
+            from: 900,
+            to: 1000
+        }, {
+            from: 1000,
+            to: 1100
+        }, {
+            from: 1100,
+            to: 1200
+        }, {
+            from: 1200,
+            to: 1300
+        }, {
+            from: 1300,
+            to: 1400
+        }, {
+            from: 1400,
+            to: 1500
+        }, {
+            from: 1500,
+            to: 1700
+        }, {
+            from: 1700,
+            to: 2000
+        }, {
+            from: 2000,
+            to: 3000
         }]
 
 
@@ -338,5 +381,7 @@ var userSettings = {
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,
-    bestSplitsConfiguration: null
+    bestSplitsConfiguration: null,
+    temperatureUnit: 'F',
+    windUnit: 'mph',
 };

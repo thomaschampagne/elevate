@@ -15,9 +15,9 @@
     }
   ],
   "dependencies": {
-    "angular": "1.4.7",
+    "angular": "1.4.8",
     "angular-bootstrap": "0.12.2",
-    "angular-route": "1.4.7",
+    "angular-route": "1.4.8",
     "bootstrap": "3.3.5",
     "chart.js": "1.0.*",
     "fiber": "^1.0.4",
