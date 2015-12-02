@@ -142,7 +142,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [
-
+                'Not getting extension stats on big ride (>300km)'
             ],
             features: [
                 'Added new extended statistics for cyclists: <strong>Ascent speed</strong>',
