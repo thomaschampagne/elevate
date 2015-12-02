@@ -298,13 +298,17 @@ VacuumProcessor.prototype = {
                 hasPowerMeter = false;
             }
 
-            // Save result to cache
-            localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
-                activityCommonStats: this.getActivityCommonStats(),
-                stream: jsonResponse,
-                athleteWeight: this.getAthleteWeight(),
-                hasPowerMeter: hasPowerMeter
-            }));
+            try {
+                // Save result to cache
+                localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
+                    activityCommonStats: this.getActivityCommonStats(),
+                    stream: jsonResponse,
+                    athleteWeight: this.getAthleteWeight(),
+                    hasPowerMeter: hasPowerMeter
+                }));
+            } catch (err) {
+                console.warn(err);
+            }
 
             callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight(), hasPowerMeter);
 
