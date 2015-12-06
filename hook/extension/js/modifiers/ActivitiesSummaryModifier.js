@@ -97,7 +97,7 @@ ActivitiesSummaryModifier.prototype = {
                 activityTypes.push(total);
             }
             
-            var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Count</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th></tr></thead><tbody></tbody></table>");
+            var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th></tr></thead><tbody></tbody></table>");
             activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
