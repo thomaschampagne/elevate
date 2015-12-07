@@ -40,11 +40,17 @@ ActivitiesSummaryModifier.prototype = {
         $("table.activitiesSummary").remove();
 
         $("#interval-rides div[id^='map-canvas-activity-']").each(function() {
-            var url = "/activities/" + $(this).attr("id").substr(20);
+            var $this = $(this),
+                url = "/activities/" + $this.attr("id").substr(20),
+                icon = $this.closest("div.entity-details").find("div.app-icon"),
+                pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");            
             requests.push($.ajax({
                 url: url,
                 type: "GET",
-                dataType: "html"
+                dataType: "html",
+                context: {
+                    pace: pace
+                }
             }));
         });
                 
@@ -78,6 +84,7 @@ ActivitiesSummaryModifier.prototype = {
                         index: index
                     };
                 }
+                summary.pace = this[i].pace || summary.pace;
                 summary.count += 1;
                 summary.distance += distance;
                 summary.elevation += elevation;
@@ -104,7 +111,7 @@ ActivitiesSummaryModifier.prototype = {
                 $row.append("<td style='text-align: right'>" + type.count + "</td>");
                 $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.distance), 1) + " " + distanceUnit + "</td>");
                 $row.append("<td style='text-align: right'>" + Helper.secondsToDHM(type.time, true) + "</td>");
-                $row.append("<td style='text-align: right'>" + (type.noAverage ? "" : (averageSpeedOrPace(type.type, type.distance, type.time) + " " + (isAveragePace(type.type) ? paceUnit : speedUnit))) + "</td>");
+                $row.append("<td style='text-align: right'>" + (type.noAverage ? "" : (averageSpeedOrPace(type.pace, type.distance, type.time) + " " + (type.pace ? paceUnit : speedUnit))) + "</td>");
                 $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.elevation), 0) + " " + elevationUnit + "</td>");
                 $table.find("tbody").append($row);
             });
@@ -113,18 +120,14 @@ ActivitiesSummaryModifier.prototype = {
             $totals.hide();
             waitForTotalActivitiesCountRemove();
         });
-        
-        var isAveragePace = function(activityType) {
-            return activityType === "Run" || activityType === "Walk";
-        };
-        
-        var averageSpeedOrPace = function(activityType, distance, time) {
+                
+        var averageSpeedOrPace = function(pace, distance, time) {
             time /= 60;
-            if (isAveragePace(activityType)) {
+            if (pace) {
                 var result = time / distance;
                 var minutes = Math.floor(result);
                 var seconds = (result - minutes) * 60; 
-                return minutes + ":" + Helper.formatNumber(seconds, 0);
+                return minutes + ":" + (seconds < 10 ? "0" : "") + Helper.formatNumber(seconds, 0);
             } else {
                 time /= 60;                
                 return Helper.formatNumber(distance / time);
