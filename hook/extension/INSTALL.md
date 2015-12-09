@@ -1,5 +1,4 @@
 ## How to install in chrome based browser
-* Install extension dependencies by typing `node make init`
 * Open new tab and type **chrome://extensions** then enter
 * Tick **Developer Mode** checkbox
 * Disable official 'StravistiX for Strava' extension (if exists) to avoid any conflicts
