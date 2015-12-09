@@ -816,6 +816,11 @@ ActivityProcessor.prototype = {
     },
 
     smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
+
+        if(!activityStream.altitude) {
+            return null;
+        }
+        
         var activityAltitudeArray = activityStream.altitude;
         var distanceArray = activityStream.distance;
         //  var timeArray = activityStream.time;  // for smoothing by time
