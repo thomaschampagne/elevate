@@ -818,7 +818,7 @@ ActivityProcessor.prototype = {
     smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
         var activityAltitudeArray = activityStream.altitude;
         var distanceArray = activityStream.distance;
-//        var timeArray = activityStream.time;  // for smoothing by time
+        //  var timeArray = activityStream.time;  // for smoothing by time
         var velocityArray = activityStream.velocity_smooth;
         var smoothingL = 10;
         var smoothingH = 600;
@@ -826,8 +826,8 @@ ActivityProcessor.prototype = {
         var altitudeArray;
         while (smoothingH - smoothingL >= 1) {
             smoothing = smoothingL + (smoothingH - smoothingL) / 2;
-            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing);	// smoothing by distance
-//            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, timeArray, smoothing);	// smoothing by time
+            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
+            // altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
             var totalElevation = 0;
             for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
                 if (i > 0 && velocityArray[i] * 3.6 > VacuumProcessor.movingThresholdKph) {
@@ -853,17 +853,17 @@ ActivityProcessor.prototype = {
         // value += (currentValue - value) / (smoothing / timeSinceLastSample);
         // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
         if (data && distance) {
-            var smooth_factor=0;
+            var smooth_factor = 0;
             var result = [];
             result[0] = data[0];
             for (i = 1, max = data.length; i < max; i++) {
                 if (smoothing === 0) {
                     result[i] = data[i];
                 } else {
-               	    smooth_factor = smoothing / (distance[i] - distance[i - 1]);
-                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor>1 ? smooth_factor : 1 ); // low limit smooth_factor to 1!!!
-//                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
+                    smooth_factor = smoothing / (distance[i] - distance[i - 1]);
                     // only apply filter if smooth_factor > 1, else this leads to instability !!!
+                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
+                    // result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
                 }
             }
             return result;
