@@ -43,7 +43,17 @@ var AscentSpeedDataView = AbstractDataView.extend(function(base) {
 
         insertElevationDataIntoGrid: function() {
 
-            this.insertContentAtGridPosition(0, 0, this.elevationData.ascentSpeed.avg.toFixed(0), 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
+            var ascentSpeedAvg = this.elevationData.ascentSpeed.avg;
+
+            if (ascentSpeedAvg) {
+                if (ascentSpeedAvg == -1) {
+                    ascentSpeedAvg = '&infin;';
+                } else {
+                    ascentSpeedAvg = ascentSpeedAvg.toFixed(0);
+                }
+            }
+
+            this.insertContentAtGridPosition(0, 0, ascentSpeedAvg, 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(0, 1, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(1, 1, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
