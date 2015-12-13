@@ -60,8 +60,9 @@ ActivitiesSummaryModifier.prototype = {
                     type: "Total",
                     count: 0,
                     distance: 0,
-                    elevation: 0,
+                    elevation: 0,                    
                     time: 0,
+                    calories: 0,
                     noAverage: true
                 };
             for (i in requests) {
@@ -69,6 +70,7 @@ ActivitiesSummaryModifier.prototype = {
                     distance = data.distance_raw / 1000,
                     movingTime = data.moving_time_raw,
                     elevation = data.elevation_gain_raw,
+                    calories = data.calories || 0,
                     type = data.display_type,
                     summary;
                 if (!(summary = activityTypes[type])) {
@@ -77,8 +79,9 @@ ActivitiesSummaryModifier.prototype = {
                         type: type,
                         count: 0,
                         distance: 0,
-                        elevation: 0,
+                        elevation: 0,                        
                         time: 0,
+                        calories: 0,
                         index: index
                     };
                 }
@@ -87,11 +90,13 @@ ActivitiesSummaryModifier.prototype = {
                 summary.distance += distance;
                 summary.elevation += elevation;
                 summary.time += movingTime;
+                summary.calories += calories;
                 
                 total.count += 1;
                 total.distance += distance;
                 total.elevation += elevation;
                 total.time += movingTime;
+                total.calories += calories;
             }
             
             activityTypes.sort(function(left, right) {
@@ -102,7 +107,7 @@ ActivitiesSummaryModifier.prototype = {
                 activityTypes.push(total);
             }
             
-            var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th></tr></thead><tbody></tbody></table>");
+            var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
             activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
@@ -111,6 +116,7 @@ ActivitiesSummaryModifier.prototype = {
                 $row.append("<td style='text-align: right'>" + Helper.secondsToDHM(type.time, true) + "</td>");
                 $row.append("<td style='text-align: right'>" + (type.noAverage ? "" : (averageSpeedOrPace(type.pace, type.distance, type.time) + " " + (type.pace ? paceUnit : speedUnit))) + "</td>");
                 $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.elevation), 0) + " " + elevationUnit + "</td>");
+                $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.calories), 0) + "</td>");
                 $table.find("tbody").append($row);
             });
             
