@@ -39,9 +39,10 @@ ActivitiesSummaryModifier.prototype = {
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
 
-        $("#interval-rides div[id^='map-canvas-activity-']").each(function() {
+        $("#interval-rides a[href='/athletes/" + currentAthlete.id + "'].athlete-name").each(function() {
             var $this = $(this),
-                url = "/activities/" + $this.attr("id").substr(20),
+                $activityUrl = $this.prev(".entry-title").find("a[href^='/activities/']"),
+                url = $activityUrl.attr("href"),
                 icon = $this.closest("div.entity-details").find("div.app-icon"),
                 pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");            
             requests.push($.ajax({
@@ -84,7 +85,7 @@ ActivitiesSummaryModifier.prototype = {
                         index: index
                     };
                 }
-                summary.pace = this[i].pace || summary.pace;
+                summary.pace = (this.length ? this[i].pace : this.pace) || summary.pace;
                 summary.count += 1;
                 summary.distance += distance;
                 summary.elevation += elevation;
@@ -120,7 +121,7 @@ ActivitiesSummaryModifier.prototype = {
             $totals.hide();
             waitForTotalActivitiesCountRemove();
         });
-                
+        
         var averageSpeedOrPace = function(pace, distance, time) {
             time /= 60;
             if (pace) {
