@@ -147,15 +147,5 @@ ActivitiesSummaryModifier.prototype = {
             }
             modify.call(self);
         };
-    },
-    
-    getActivityType: function(activityTitle) {
-        activityTitle = activityTitle.replace(/(\r\n|\n|\r)/gm,"");
-        var indexOfLastDash = activityTitle.lastIndexOf("–"),
-            type = "unknown";
-        if (indexOfLastDash) {
-            type = activityTitle.substr(indexOfLastDash + 1).trim();
-        }
-        return type;
     }
 };
