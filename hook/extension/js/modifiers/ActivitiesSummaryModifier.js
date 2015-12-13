@@ -1,8 +1,7 @@
 /**
  *   ActivitiesSummaryModifier is responsible of ...
  */
-function ActivitiesSummaryModifier(vacuumProcessor) {
-    this.vacuumProcessor = vacuumProcessor;
+function ActivitiesSummaryModifier() {
 }
 
 /**
@@ -42,13 +41,13 @@ ActivitiesSummaryModifier.prototype = {
         $("#interval-rides a[href='/athletes/" + currentAthlete.id + "'].athlete-name").each(function() {
             var $this = $(this),
                 $activityUrl = $this.prev(".entry-title").find("a[href^='/activities/']"),
-                url = $activityUrl.attr("href"),
+                url = "/athlete/training_activities/" + $activityUrl.attr("href").substr("/activities/".length),
                 icon = $this.closest("div.entity-details").find("div.app-icon"),
                 pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");            
             requests.push($.ajax({
                 url: url,
                 type: "GET",
-                dataType: "html",
+                dataType: "json",
                 context: {
                     pace: pace
                 }
@@ -66,13 +65,11 @@ ActivitiesSummaryModifier.prototype = {
                     noAverage: true
                 };
             for (i in requests) {
-                var request = requests[i],
-                    $html = $(request.responseText),
-                    actStatsContainer = $(".activity-summary-container", $html),
-                    distance = self.vacuumProcessor.formatActivityDataValue_(actStatsContainer.find('.inline-stats.section', $html).children().first().text(), false, false, true, false),
-                    movingTime = self.vacuumProcessor.formatActivityDataValue_(actStatsContainer.find('.inline-stats.section', $html).children().first().next().text(), true, false, false, false),
-                    elevation = self.vacuumProcessor.formatActivityDataValue_(actStatsContainer.find('.inline-stats.section', $html).children().first().next().next().text(), false, true, false, false),
-                    type = self.getActivityType($("#heading>header>h1>span.title", $html).text()),
+                var data = requests[i].responseJSON,
+                    distance = data.distance_raw / 1000,
+                    movingTime = data.moving_time_raw,
+                    elevation = data.elevation_gain_raw,
+                    type = data.display_type,
                     summary;
                 if (!(summary = activityTypes[type])) {
                     index += 1;

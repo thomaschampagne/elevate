@@ -233,7 +233,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivitiesSummary()");
 
-        var activitiesSummaryModifier = new ActivitiesSummaryModifier(this.vacuumProcessor_);
+        var activitiesSummaryModifier = new ActivitiesSummaryModifier();
         activitiesSummaryModifier.modify();
     },
 
