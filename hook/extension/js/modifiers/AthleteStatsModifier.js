@@ -33,7 +33,7 @@ AthleteStatsModifier.prototype = {
             total = 0,
             i,
             max,
-            url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
+            url = '/athlete/training_activities?new_activity_only=false&per_page=2000&page=',
             currentActivities = [],
             requests = [],
             activitiesFromCache = localStorage.getItem(this.cacheKey_),
@@ -527,20 +527,25 @@ AthleteStatsModifier.prototype = {
         }
 
         if (total != activitiesFromCacheObject.length) {
-            for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
-                requests.push($.ajax(url + i));
-            }
-            $.when.apply(self, requests).done(function() {
-                for (i in requests) {
-                    var request = requests[i];
-                    if (request.responseJSON.models) {
-                        currentActivities = currentActivities.concat(request.responseJSON.models);
+            requests.push($.ajax({
+                url: url + "1",
+                success: function(data) {
+                    for (i = 2, max = Math.ceil(data.total / data.perPage); i <= max; i++) {
+                        requests.push($.ajax(url + i));
                     }
+                    $.when.apply(self, requests).done(function() {
+                        for (i in requests) {
+                            var request = requests[i];
+                            if (request.responseJSON.models) {
+                                currentActivities = currentActivities.concat(request.responseJSON.models);
+                            }
+                        }
+                        currentActivities = formatData(currentActivities);
+                        init(currentActivities);
+                        localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
+                    });
                 }
-                currentActivities = formatData(currentActivities);
-                init(currentActivities);
-                localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
-            });
+            }));
         } else {
             currentActivities = activitiesFromCacheObject;
             init(activitiesFromCacheObject);
