@@ -149,7 +149,7 @@ StravistiX.prototype = {
             ],
             fixes: [
                 'Counting of activities for athlete yearly progression could be wrong in some cases.',
-                'Extended stats may not displayed on some few activities .',
+                'Major issue: Extended stats may not displayed on some activities. Error in local storage cache management.',
             ],
             upcommingFeatures: [
                 'V3: "<i>Extended statistics on segments efforts</i>" delayed after Christmas :). Doing my best to release this on time during my holidays'
@@ -160,7 +160,7 @@ StravistiX.prototype = {
 
 
 
-        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>Fixed major issue: Extended stats could disappear.</h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
