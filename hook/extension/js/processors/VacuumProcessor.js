@@ -308,6 +308,7 @@ VacuumProcessor.prototype = {
                 }));
             } catch (err) {
                 console.warn(err);
+                localStorage.clear();
             }
 
             callback(this.getActivityCommonStats(), jsonResponse, this.getAthleteWeight(), hasPowerMeter);

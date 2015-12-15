@@ -542,7 +542,12 @@ AthleteStatsModifier.prototype = {
                         }
                         currentActivities = formatData(currentActivities);
                         init(currentActivities);
-                        localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
+                        try {
+                            localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
+                        } catch (err) {
+                            console.warn(err);
+                            localStorage.clear();
+                        }
                     });
                 }
             }));

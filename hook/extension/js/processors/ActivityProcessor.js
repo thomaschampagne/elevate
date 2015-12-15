@@ -59,7 +59,13 @@ ActivityProcessor.prototype = {
 
             if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
 
-            localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
+            try {
+                localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
+            } catch (err) {
+                console.warn(err);
+                localStorage.clear();
+            }
+            
             callback(result);
 
         }.bind(this));
@@ -817,10 +823,10 @@ ActivityProcessor.prototype = {
 
     smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
 
-        if(!activityStream.altitude) {
+        if (!activityStream.altitude) {
             return null;
         }
-        
+
         var activityAltitudeArray = activityStream.altitude;
         var distanceArray = activityStream.distance;
         //  var timeArray = activityStream.time;  // for smoothing by time
