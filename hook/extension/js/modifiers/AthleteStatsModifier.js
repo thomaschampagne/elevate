@@ -33,15 +33,18 @@ AthleteStatsModifier.prototype = {
             total = 0,
             i,
             max,
-            url = '/athlete/training_activities?new_activity_only=false&per_page=20&page=',
+            url = '/athlete/training_activities?new_activity_only=false&per_page=2000&page=',
             currentActivities = [],
             requests = [],
             activitiesFromCache = localStorage.getItem(this.cacheKey_),
             activitiesFromCacheObject = JSON.parse(activitiesFromCache) || [],
             progress = $("#progress-goals"),
-            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel allows you to see your progress for each beginning of year to current month and day. Assuming May 25 is today, this panel replies to \"What i've accomplished on May 25 of this year compared to the previous years on same period?\"<br/><br/></div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
+            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
         var formatData = function(activities) {
+
+            var includeVirtualRide = (StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
+
             var formattedData = [],
                 i,
                 max,
@@ -49,10 +52,10 @@ AthleteStatsModifier.prototype = {
                 date;
             for (i = 0, max = activities.length; i < max; i++) {
                 activity = activities[i];
-                if (activity.type === "Ride" || activity.type === "Run") {
+                if (activity.type === "Ride" || activity.type === "Run" || (includeVirtualRide && activity.type === "VirtualRide")) {
                     date = new Date(activity.start_time);
                     formattedData.push({
-                        t: activity.type === "Ride" ? 0 : 1,
+                        t: (activity.type === "Ride" || (includeVirtualRide && activity.type === "VirtualRide")) ? 0 : 1,
                         y: date.getFullYear(),
                         m: date.getMonth(),
                         d: date.getDate(),
@@ -178,6 +181,16 @@ AthleteStatsModifier.prototype = {
             progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click(function(e) {
                 e.preventDefault();
                 self.handleProgressStatsForceRefresh_();
+            });
+
+
+            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
+
+            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', function() {
+
+                StorageManager.setCookie('stravistix_yearProgress_incVirtualRides', $('#stravistix_yearProgress_incVirtualRides').prop('checked'), 365);
+                self.handleProgressStatsForceRefresh_();
+
             });
         };
 
@@ -514,20 +527,25 @@ AthleteStatsModifier.prototype = {
         }
 
         if (total != activitiesFromCacheObject.length) {
-            for (i = 1, max = Math.ceil(total / 20); i <= max; i++) {
-                requests.push($.ajax(url + i));
-            }
-            $.when.apply(self, requests).done(function() {
-                for (i in requests) {
-                    var request = requests[i];
-                    if (request.responseJSON.models) {
-                        currentActivities = currentActivities.concat(request.responseJSON.models);
+            requests.push($.ajax({
+                url: url + "1",
+                success: function(data) {
+                    for (i = 2, max = Math.ceil(data.total / data.perPage); i <= max; i++) {
+                        requests.push($.ajax(url + i));
                     }
+                    $.when.apply(self, requests).done(function() {
+                        for (i in requests) {
+                            var request = requests[i];
+                            if (request.responseJSON.models) {
+                                currentActivities = currentActivities.concat(request.responseJSON.models);
+                            }
+                        }
+                        currentActivities = formatData(currentActivities);
+                        init(currentActivities);
+                        localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
+                    });
                 }
-                currentActivities = formatData(currentActivities);
-                init(currentActivities);
-                localStorage.setItem(self.cacheKey_, JSON.stringify(currentActivities));
-            });
+            }));
         } else {
             currentActivities = activitiesFromCacheObject;
             init(activitiesFromCacheObject);

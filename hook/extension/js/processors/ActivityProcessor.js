@@ -17,6 +17,7 @@ ActivityProcessor.gradeDownHillLimit = -1.6;
 ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
 ActivityProcessor.gradeProfileFlat = 'FLAT';
 ActivityProcessor.gradeProfileHilly = 'HILLY';
+ActivityProcessor.ascentSpeedGradeLimit = 0.03;
 
 
 /**
@@ -290,7 +291,7 @@ ActivityProcessor.prototype = {
         var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
         var varianceSpeed = (speedVarianceSum / speedsNonZero.length) - Math.pow(activityStatsMap.averageSpeed, 2);
         var standardDeviationSpeed = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
-        var percentiles = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [ 0.25, 0.5, 0.75 ]);
+        var percentiles = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
         return [{
             'genuineAvgSpeed': genuineAvgSpeed,
@@ -374,8 +375,8 @@ ActivityProcessor.prototype = {
         var variabilityIndex = weightedPower / avgWatts;
         var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
         var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
-        
-        var percentiles = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [ 0.25, 0.5, 0.75 ]);
+
+        var percentiles = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
         // Update zone distribution percentage
         powerZones = this.finalizeDistribComputationZones(powerZones);
@@ -461,7 +462,7 @@ ActivityProcessor.prototype = {
         activityStatsMap.maxHeartRate = heartRateArraySorted[heartRateArraySorted.length - 1];
 
         var TRIMPPerHour = TRIMP / hrrSecondsCount * 60 * 60;
-        var percentiles = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [ 0.25, 0.5, 0.75 ]);
+        var percentiles = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
         return {
             'TRIMP': TRIMP,
@@ -558,7 +559,7 @@ ActivityProcessor.prototype = {
         // Update zone distribution percentage
         cadenceZones = this.finalizeDistribComputationZones(cadenceZones);
 
-        var percentiles = Helper.weightedPercentiles(cadenceArrayMoving, cadenceArrayDuration, [ 0.25, 0.5, 0.75 ]);
+        var percentiles = Helper.weightedPercentiles(cadenceArrayMoving, cadenceArrayDuration, [0.25, 0.5, 0.75]);
 
         return {
             'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
@@ -675,7 +676,7 @@ ActivityProcessor.prototype = {
         // Update zone distribution percentage
         gradeZones = this.finalizeDistribComputationZones(gradeZones);
 
-        var percentiles = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [ 0.25, 0.5, 0.75 ]);
+        var percentiles = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
 
         return {
             'avgGrade': avgGrade,
@@ -755,7 +756,7 @@ ActivityProcessor.prototype = {
                     var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
 
                     // only if grade is > 3%
-                    if (distance > 0 && (elevationDiff / distance) > 0.03) {
+                    if (distance > 0 && (elevationDiff / distance) > ActivityProcessor.ascentSpeedGradeLimit) {
                         accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
                         ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
                         ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
@@ -788,12 +789,13 @@ ActivityProcessor.prototype = {
 
         var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
+
         // Update zone distribution percentage
         elevationZones = this.finalizeDistribComputationZones(elevationZones);
         ascentSpeedZones = this.finalizeDistribComputationZones(ascentSpeedZones);
 
-        var percentilesElevation = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [ 0.25, 0.5, 0.75 ]);
-        var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [ 0.25, 0.5, 0.75 ]);
+        var percentilesElevation = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
+        var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
 
         return {
             'avgElevation': avgElevation.toFixed(0),
@@ -805,7 +807,7 @@ ActivityProcessor.prototype = {
             'elevationZones': elevationZones, // Only while moving
             'ascentSpeedZones': ascentSpeedZones, // Only while moving
             'ascentSpeed': {
-                'avg': avgAscentSpeed,
+                'avg': _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
                 'lowerQuartile': percentilesAscent[0].toFixed(0),
                 'median': percentilesAscent[1].toFixed(0),
                 'upperQuartile': percentilesAscent[2].toFixed(0)
@@ -814,8 +816,14 @@ ActivityProcessor.prototype = {
     },
 
     smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
+
+        if(!activityStream.altitude) {
+            return null;
+        }
+        
         var activityAltitudeArray = activityStream.altitude;
         var distanceArray = activityStream.distance;
+        //  var timeArray = activityStream.time;  // for smoothing by time
         var velocityArray = activityStream.velocity_smooth;
         var smoothingL = 10;
         var smoothingH = 600;
@@ -823,7 +831,8 @@ ActivityProcessor.prototype = {
         var altitudeArray;
         while (smoothingH - smoothingL >= 1) {
             smoothing = smoothingL + (smoothingH - smoothingL) / 2;
-            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing);
+            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
+            // altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
             var totalElevation = 0;
             for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
                 if (i > 0 && velocityArray[i] * 3.6 > VacuumProcessor.movingThresholdKph) {
@@ -846,14 +855,20 @@ ActivityProcessor.prototype = {
     lowPassDataSmoothing_: function(data, distance, smoothing) {
         // Below algorithm is applied in this method
         // http://phrogz.net/js/framerate-independent-low-pass-filter.html
+        // value += (currentValue - value) / (smoothing / timeSinceLastSample);
+        // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
         if (data && distance) {
+            var smooth_factor = 0;
             var result = [];
             result[0] = data[0];
             for (i = 1, max = data.length; i < max; i++) {
                 if (smoothing === 0) {
                     result[i] = data[i];
                 } else {
-                    result[i] = result[i - 1] + (distance[i] - distance[i - 1]) * (data[i] - result[i - 1]) / smoothing;
+                    smooth_factor = smoothing / (distance[i] - distance[i - 1]);
+                    // only apply filter if smooth_factor > 1, else this leads to instability !!!
+                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
+                    // result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
                 }
             }
             return result;
