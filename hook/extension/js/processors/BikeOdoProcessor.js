@@ -43,7 +43,12 @@ BikeOdoProcessor.prototype = {
 
             // Cache result
             if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheKey_);
-            localStorage.setItem(this.cacheKey_, JSON.stringify(bikeOdoArray));
+            try {
+                localStorage.setItem(this.cacheKey_, JSON.stringify(bikeOdoArray));
+            } catch (err) {
+                console.warn(err);
+                localStorage.clear();
+            }
             callback(bikeOdoArray);
 
         }.bind(this));
