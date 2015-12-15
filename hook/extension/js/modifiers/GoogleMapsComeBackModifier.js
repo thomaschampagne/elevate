@@ -21,10 +21,10 @@ GoogleMapsComeBackModifier.prototype = {
     modify: function modify() {
 
         // Skip modify if analysis section is watched
-        if (this.isAnalysisSection()) {
-            console.log('[GoogleMapsComeBackModifier] Skipping Analysis Section');
-            return;
-        }
+//        if (this.isAnalysisSection()) {
+//            console.log('[GoogleMapsComeBackModifier] Skipping Analysis Section');
+//            return;
+//        }
 
         // Bind function for be called when Google API loaded
         $(window).bind('gMapsLoaded', this.googleMapsApiLoaded(this.activityId));
@@ -98,9 +98,38 @@ GoogleMapsComeBackModifier.prototype = {
             return;
         }
 
+
         $('#map-canvas').before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>').each(function() {
 
             $('#showInGoogleMap').on('click', function() {
+
+			    if (window.location.pathname.match(/\/analysis\//)) {
+					if($('#effort-detail').children().length) {	// if segment is selected in analysis view
+						selected_segment = $('#effort-detail').children()[0].children[0].attributes['data-segment-effort-id'].value;
+						//console.log('Selected segment: '+selected_segment);
+
+             		   // Show loading message while loading gmaps and path
+                		this.showWaitLoadingMessage('<br>segment '+selected_segment+'<br>of activity '+activityId);
+
+                		this.fetchPathFromStream(activityId, function(pathArray) {
+
+                    		this.pathArray = pathArray;
+
+                    		// Check if effort id is given
+                    		var effortId = selected_segment;
+
+                    		if (effortId) {
+                        		this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
+                    		} else {
+                        		this.displayGoogleMapWithPath(this.pathArray);
+                    		}
+
+                		}.bind(this));
+
+					} //if
+
+            		return;
+	    		} //if
 
                 // Show loading message while loading gmaps and path
                 this.showWaitLoadingMessage();
@@ -160,7 +189,7 @@ GoogleMapsComeBackModifier.prototype = {
                 console.error('No anchor found to attach segment google map button');
             }
 
-            anchor.before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
+            anchor.after('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(function() {
 
                 $('#showSegInGoogleMap').on('click', function() {
 
