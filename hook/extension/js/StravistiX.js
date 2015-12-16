@@ -142,26 +142,29 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                '"Null powers" are computed in power best splits. They were removed from computation before.'
-            ],
+            hotFixes: [],
             features: [
-                'NEW ! Cycling BEST SPLITS !! Load a cycling activity, then under elevation chart click "Best Splits"'
+                'Added option to count <strong>Virtual Rides (e.g. Zwift rides)</strong> into athlete yearly progression (Into "My profile").',
+                'Improved <strong>Ascent speed</strong> extended statistics for cyclists: altitude smoothness accuracy improved again.',
+                'Improved Best Splits computation for <strong>elevation gain and drop</strong>: altitude smoothness accuracy improved again.'
             ],
             fixes: [
-                'Pressing multiple times on the current tab adds "View in Google Maps" multiple times.'
+                'Counting of activities for athlete yearly progression could be wrong in some cases.',
+                'Major issue: Extended stats may not displayed on some activities. Error in local storage cache management.',
             ],
             upcommingFeatures: [
-                'After an hard redesign work, "<i>Extended statistics on segments efforts</i>" are soon finished!! You will like it. Released end of November.'
+                'V3: "<i>Extended statistics on segments efforts</i>" delayed after Christmas :). Doing my best to release this on time during my holidays'
             ]
         };
 
         var message = '';
 
-        message += '<h3 style="background: #eee; padding: 10px;">Version <strong>2</strong> is out, <strong>Best Splits</strong> for cyclists are live !!</h3>';
+
+
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>Fixed major issue: Extended stats could disappear.</h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
-            message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
+            message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
             _.each(updateMessageObj.hotFixes, function(hotFix) {
                 message += '<h5>- ' + hotFix + '</h5>';
             });
@@ -171,21 +174,21 @@ StravistiX.prototype = {
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
 
         if (!_.isEmpty(updateMessageObj.features)) {
-            message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
+            message += '<h4><strong>NEW in ' + baseVersion + ':</strong></h4>';
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h5>- ' + feature + '</h5>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.fixes)) {
-            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            message += '<h4><strong>FIXED in ' + baseVersion + ':</strong></h4>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h5>- ' + fix + '</h5>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
-            message += '<h5><strong>Upcomming features:</strong></h5>';
+            message += '<h4><strong>Upcomming features:</strong></h4>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h5>- ' + upcommingFeatures + '</h5>';
             });

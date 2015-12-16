@@ -73,16 +73,37 @@ ActivityBestSplitsModifier.prototype = {
             measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
 
         var filterData = function(data, distance, smoothing) {
+            /*
+                        if (data && distance) {
+                            var result = [];
+                            result[0] = data[0];
+                            for (i = 1, max = data.length; i < max; i++) {
+                                result[i] = result[i - 1] + (distance[i] - distance[i - 1]) * (data[i] - result[i - 1]) / smoothing;
+                            }
+                            return result;
+            */
+            // Below algorithm is applied in this method
+            // http://phrogz.net/js/framerate-independent-low-pass-filter.html
+            // value += (currentValue - value) / (smoothing / timeSinceLastSample);
+            // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
             if (data && distance) {
+                var smooth_factor = 0;
                 var result = [];
                 result[0] = data[0];
                 for (i = 1, max = data.length; i < max; i++) {
-                    result[i] = result[i - 1] + (distance[i] - distance[i - 1]) * (data[i] - result[i - 1]) / smoothing;
+                    if (smoothing === 0) {
+                        result[i] = data[i];
+                    } else {
+                        smooth_factor = smoothing / (distance[i] - distance[i - 1]);
+                        result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
+                        //                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
+                        // only apply filter if smooth_factor > 1, else this leads to instability !!!
+                    }
                 }
                 return result;
             }
         };
-        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 200);
+        this.activityJson.filteredAltitude = filterData(this.activityJson.altitude, this.activityJson.distance, 22); // fixed smoothing 200 way way too high!
 
         self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
@@ -880,7 +901,12 @@ ActivityBestSplitsModifier.prototype = {
 
                 // Set or update split result in cache
                 if (!localStorage.getItem(self.cacheKeyPrefix + split.id)) {
-                    localStorage.setItem(self.cacheKeyPrefix + split.id, JSON.stringify(value));
+                    try {
+                        localStorage.setItem(self.cacheKeyPrefix + split.id, JSON.stringify(value));
+                    } catch (err) {
+                        console.warn(err);
+                        localStorage.clear();
+                    }
                 }
 
                 setValue(splitId + "-time", value.time, function(value) {
