@@ -7,9 +7,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
         init: function(analysisData, userSettings, basicInfos) {
 
             this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
-
             base.init.call(this);
-
             this.hasGraph = false;
 
             if (!analysisData || !userSettings) {
@@ -17,9 +15,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             }
 
             this.analysisData = analysisData;
-
             this.userSettings = userSettings;
-
             this.basicInfos = basicInfos;
         },
 
@@ -34,10 +30,14 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
+                var title = '<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/>';
+
                 if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
-                    this.content += this.generateSectionTitle('<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/> SEGMENT EFFORT STATS on ' + ' <i>"' + this.basicInfos.segmentEffort.name + '"</i> // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec) + ' // ACTIVITY "' + this.basicInfos.activityName + '"');
+                    title += ' EFFORT STATS on <i>&lt;' + this.basicInfos.segmentEffort.name + '&gt;</i> SEGMENT // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec);
+                    this.content += this.generateSectionTitle(title);
                 } else { // Complete activity
-                    this.content += this.generateSectionTitle('<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/> HIGHLIGHTED STATS for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
+                    title += ' STATS on <i>&lt;' + this.basicInfos.activityName + '&gt;</i> ACTIVITY';
+                    this.content += this.generateSectionTitle(title);
                 }
 
                 // Add a title
