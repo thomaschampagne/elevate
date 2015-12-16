@@ -35,7 +35,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         render: function() {
 
             // Add legs cadence type to view title
-            this.viewTitle += ' @ ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 5px;">Customize</a>';
+            this.viewTitle += '<img src="' + this.appResources.circleNotchIcon + '" style="vertical-align: baseline; height:20px;"/> CADENCE @ ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 5px;">Customize</a>';
             
             // Call super AbstractCadenceDataView.render()
             base.render.call(this);

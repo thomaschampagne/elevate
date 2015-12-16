@@ -96,7 +96,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('HEART RATE <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 5px;">Customize</a>');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.heartBeatIcon + '" style="vertical-align: baseline; height:20px;"/> HEART RATE <a class="btn-sm button" target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 5px;">Customize</a>');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
@@ -127,7 +127,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
             this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
-            
+
             // Other
             this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
         }

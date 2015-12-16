@@ -35,9 +35,9 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
                 if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
-                    this.content += this.generateSectionTitle('SEGMENT EFFORT STATS on ' + ' <i>"' + this.basicInfos.segmentEffort.name + '"</i> // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec) + ' // ACTIVITY "' + this.basicInfos.activityName + '"');
+                    this.content += this.generateSectionTitle('<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/> SEGMENT EFFORT STATS on ' + ' <i>"' + this.basicInfos.segmentEffort.name + '"</i> // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec) + ' // ACTIVITY "' + this.basicInfos.activityName + '"');
                 } else { // Complete activity
-                    this.content += this.generateSectionTitle('HIGHLIGHTED STATS for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
+                    this.content += this.generateSectionTitle('<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/> HIGHLIGHTED STATS for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
                 }
 
                 // Add a title
