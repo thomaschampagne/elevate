@@ -69,7 +69,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         generateSectionTitle: function(title) {
-            return "<h2 style='background-color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: white; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 5px;'>" + title + "</span></h2>";
+            return "<h2 style='background-color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: white; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 10px;'>" + title + "</span></h2>";
         },
 
         generateCanvasForGraph: function() {
