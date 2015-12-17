@@ -17,6 +17,10 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             this.analysisData = analysisData;
             this.userSettings = userSettings;
             this.basicInfos = basicInfos;
+
+            if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) {
+                this.mainColor = [252, 76, 2];
+            }
         },
 
         render: function() {
