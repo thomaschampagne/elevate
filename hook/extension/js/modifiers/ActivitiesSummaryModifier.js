@@ -24,6 +24,29 @@ ActivitiesSummaryModifier.prototype = {
             speedUnit = "km/h",
             paceUnit = "/km";
             
+        var averageSpeedOrPace = function(pace, distance, time) {
+            time /= 60;
+            if (pace) {
+                var result = time / distance;
+                var minutes = Math.floor(result);
+                var seconds = (result - minutes) * 60; 
+                return minutes + ":" + (seconds < 10 ? "0" : "") + Helper.formatNumber(seconds, 0);
+            } else {
+                time /= 60;                
+                return Helper.formatNumber(distance / time);
+            }
+        };
+        
+        var waitForTotalActivitiesCountRemove = function() {
+            if ($("#" + activitiesCountElementId).length !== 0) {
+                setTimeout(function() {
+                    waitForTotalActivitiesCountRemove();
+                }, 1000);
+                return;
+            }
+            modify.call(self);
+        };
+            
         var measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
         if (measurementPreference != 'meters') {
             distanceInKilometers = false;
@@ -124,28 +147,5 @@ ActivitiesSummaryModifier.prototype = {
             $totals.hide();
             waitForTotalActivitiesCountRemove();
         });
-        
-        var averageSpeedOrPace = function(pace, distance, time) {
-            time /= 60;
-            if (pace) {
-                var result = time / distance;
-                var minutes = Math.floor(result);
-                var seconds = (result - minutes) * 60; 
-                return minutes + ":" + (seconds < 10 ? "0" : "") + Helper.formatNumber(seconds, 0);
-            } else {
-                time /= 60;                
-                return Helper.formatNumber(distance / time);
-            }
-        };
-        
-        var waitForTotalActivitiesCountRemove = function() {
-            if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function() {
-                    waitForTotalActivitiesCountRemove();
-                }, 1000);
-                return;
-            }
-            modify.call(self);
-        };
     }
 };
