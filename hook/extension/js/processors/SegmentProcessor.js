@@ -36,7 +36,12 @@ SegmentProcessor.prototype = {
             this.getSegmentsInBoundingBox(boundingBox, function(segmentsInBounds) {
 
                 if (env.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
-                localStorage.setItem(SegmentProcessor.cachePrefix + this.segmentId_, JSON.stringify(segmentsInBounds)); // Cache the result to local storage
+                try {
+                    localStorage.setItem(SegmentProcessor.cachePrefix + this.segmentId_, JSON.stringify(segmentsInBounds)); // Cache the result to local storage
+                } catch (err) {
+                    console.warn(err);
+                    localStorage.clear();
+                }
                 callback(segmentsInBounds);
 
             }.bind(this));
@@ -58,7 +63,7 @@ SegmentProcessor.prototype = {
                 _.each(segmentsData.cycling.segments, function(segment) {
                     segment.type = 'cycling';
                 });
-                
+
                 _.each(segmentsData.running.segments, function(segment) {
                     segment.type = 'running';
                 });
