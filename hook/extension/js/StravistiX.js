@@ -143,32 +143,27 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [
-
+                'Fixed javascript syntax error while processing activities extended stats. No crash from now for users getting this in the past'
             ],
             features: [
-                'Added new extended statistics for cyclists: <strong>Ascent speed</strong>',
-                'Best splits can be highlighted from the higher <strong>elevation gain or drop</strong>',
-                'Best splits can be highlighted from the higher <strong>heartrate rise or drop</strong>',
-                'Best splits can be also user defined on <strong>"seconds"</strong> from now',
-                '<strong>Performance enhanced on best splits</strong> computation. A caching system has been implemented to reduce computation when cache exist.',
-                'Improved elevation data accuracy while computing extended statistics. Elevation data smoothed using low pass filter.',
-                'Heart rate extended statitics are now computed <strong>while moving</strong> from now.',
-                'Display now weather along units preferences. Set your temperature and wind speed unit in settings.',
-                'Quartiles and median are now computed using <strong>weighted percentiles</strong>. This will <strong>better highlight your efforts</strong> at those values'
+                'Added option to count <strong>Virtual Rides (e.g. Zwift rides)</strong> into athlete yearly progression (Into "My profile").',
+                'Improved <strong>Ascent speed</strong> extended statistics for cyclists: altitude smoothness accuracy improved again.',
+                'Improved Best Splits computation for <strong>elevation gain and drop</strong>: altitude smoothness accuracy improved again.'
             ],
             fixes: [
-                'All best splits averages were computed on sample counts. May cause problems if sampling was "smart". It\'s now computed using using time or distance.',
-                'Highlighted power best splits map points might be wrong.',
-                'Extended stats display button on turbos activities may not appear ',
+                'Counting of activities for athlete yearly progression could be wrong in some cases.',
+                'Major issue: Extended stats may not displayed on some activities. Error in local storage cache management.',
             ],
             upcommingFeatures: [
-                '"<i>Extended statistics on segments efforts</i>" delayed to end of december due to 2.1.x delay, sry !'
+                'V3: "<i>Extended statistics on segments efforts</i>" delayed after new year :). Doing my best to release this on time during my holidays'
             ]
         };
 
         var message = '';
 
-        message += '<h3 style="background: #eee; padding: 10px;">Version <strong>2</strong> is out, <strong>Best Splits</strong> for cyclists are live !!</h3>';
+
+
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance in 2.2.X...</strong></h3><h3>Fixed javascript syntax error while processing activities extended stats.</h3><h3>Fixed major issue: Extended stats could disappear.</h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
