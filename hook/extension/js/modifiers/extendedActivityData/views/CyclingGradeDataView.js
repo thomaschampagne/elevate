@@ -16,10 +16,14 @@ var CyclingGradeDataView = AbstractGradeDataView.extend(function(base) {
             var speedUnitPerhour = this.speedUnitsData[0];
             var speedUnitFactor = this.speedUnitsData[1];
             var distanceUnits = this.speedUnitsData[2];
-            
-            this.insertContentAtGridPosition(0, 4, (this.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1), 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(1, 4, (this.gradeData.upFlatDownMoveData.flat * speedUnitFactor).toFixed(1), 'Avg flat speed', speedUnitPerhour, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(2, 4, (this.gradeData.upFlatDownMoveData.down * speedUnitFactor).toFixed(1), 'Avg downhill speed', speedUnitPerhour, 'displayAdvancedGradeData');
+
+            var avgClimbingSpeed = (this.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
+            var avgFlatSpeed = (this.gradeData.upFlatDownMoveData.flat * speedUnitFactor).toFixed(1);
+            var avgDownhillSpeed = (this.gradeData.upFlatDownMoveData.down * speedUnitFactor).toFixed(1);
+
+            this.insertContentAtGridPosition(0, 4, _.isNaN(avgClimbingSpeed) || avgClimbingSpeed == 'NaN' ? '-' : avgClimbingSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(1, 4, _.isNaN(avgFlatSpeed) || avgFlatSpeed == 'NaN' ? '-' : avgFlatSpeed, 'Avg flat speed', speedUnitPerhour, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(2, 4, _.isNaN(avgDownhillSpeed) || avgDownhillSpeed == 'NaN' ? '-' : avgDownhillSpeed, 'Avg downhill speed', speedUnitPerhour, 'displayAdvancedGradeData');
         }
     }
 });
