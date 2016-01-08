@@ -365,6 +365,7 @@ ActivityProcessor.prototype = {
             'standardDeviationSpeed': standardDeviationSpeed,
             'speedZones': speedZones
         }, {
+            'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartilePace': this.convertSpeedToPace(percentiles[0]),
             'medianPace': this.convertSpeedToPace(percentiles[1]),
             'upperQuartilePace': this.convertSpeedToPace(percentiles[2]),
