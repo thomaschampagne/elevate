@@ -259,7 +259,7 @@ ActivityProcessor.prototype = {
 
     finalizeDistribComputationZones: function(zones) {
         var total = 0;
-        for(var i = 0; i < zones.length; i++) {
+        for (var i = 0; i < zones.length; i++) {
 
             var zone = zones[i];
             if (zone['s']) {
@@ -268,7 +268,7 @@ ActivityProcessor.prototype = {
             zone['percentDistrib'] = 0;
         }
         if (total > 0) {
-            for(var i = 0; i < zones.length; i++) {
+            for (var i = 0; i < zones.length; i++) {
                 var zone = zones[i];
 
                 if (zone['s']) {
