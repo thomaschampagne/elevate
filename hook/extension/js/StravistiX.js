@@ -141,29 +141,20 @@ StravistiX.prototype = {
     handleUpdatePopup_: function() {
 
         var updateMessageObj = {
-            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                'Fixed javascript syntax error while processing activities extended stats. No crash from now for users getting this in the past'
-            ],
+            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
+            hotFixes: [],
             features: [
-                'Added option to count <strong>Virtual Rides (e.g. Zwift rides)</strong> into athlete yearly progression (Into "My profile").',
-                'Improved <strong>Ascent speed</strong> extended statistics for cyclists: altitude smoothness accuracy improved again.',
-                'Improved Best Splits computation for <strong>elevation gain and drop</strong>: altitude smoothness accuracy improved again.'
+                'Extended data on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
             ],
-            fixes: [
-                'Counting of activities for athlete yearly progression could be wrong in some cases.',
-                'Major issue: Extended stats may not displayed on some activities. Error in local storage cache management.',
-            ],
+            fixes: [],
             upcommingFeatures: [
-                'V3: "<i>Extended statistics on segments efforts</i>" delayed after new year :). Doing my best to release this on time during my holidays'
+                'V4: A new big feature already started ;) Stay tunned via https://twitter.com/champagnethomas at the moment.'
             ]
         };
 
         var message = '';
 
-
-
-        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance in 2.2.X...</strong></h3><h3>Fixed javascript syntax error while processing activities extended stats.</h3><h3>Fixed major issue: Extended stats could disappear.</h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>Added extended data on segment efforts</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
