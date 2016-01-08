@@ -37,15 +37,16 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             setTimeout(function() { // Execute at the end to make sure DOM is ready
 
                 var htmlButton = '<section>';
-                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="' + this.segmentEffortButtonId + '">';
+                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
                 htmlButton += 'Show extended statistics';
                 htmlButton += '</a>';
                 htmlButton += '</section>';
 
-                $('.leaderboard-summary').after(htmlButton).each(function() {
-                    base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
-                }.bind(this));
-
+                if ($('[data-xtd-seg-effort-stats]').length === 0)  {
+                    $('.leaderboard-summary').after(htmlButton).each(function() {
+                        base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+                    }.bind(this));
+                }
             }.bind(this));
         },
 
