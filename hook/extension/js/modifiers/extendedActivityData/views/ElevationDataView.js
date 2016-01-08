@@ -4,7 +4,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
 
         elevationData: null,
 
-        mainColor: [153, 153, 0],
+        mainColor: [216, 212, 38],
 
         init: function(elevationData, units) {
 
@@ -26,7 +26,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Elevation stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.logArrowUpIcon + '" style="vertical-align: baseline; height:20px;"/> ELEVATION <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
@@ -50,7 +50,5 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
         }
-
     }
-
 });
