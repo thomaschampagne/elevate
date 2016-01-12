@@ -468,6 +468,7 @@ StravistiX.prototype = {
             action: 'openedActivityType',
             name: activityType
         };
+        
         _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
     },
 

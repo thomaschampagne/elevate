@@ -43,14 +43,16 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
         placeExtendedStatsButtonSegment: function(buttonAdded) {
             var htmlButton = '<section>';
-            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" id="' + this.segmentEffortButtonId + '">';
+            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
             htmlButton += '</section>';
 
-            $('.raceshape-btn').last().after(htmlButton).each(function() {
-                base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
-            }.bind(this));
+            if ($('[data-xtd-seg-effort-stats]').length === 0)  {
+                $('.raceshape-btn').last().after(htmlButton).each(function() {
+                    base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+                }.bind(this));
+            }
         },
 
         setDataViewsNeeded: function() {
