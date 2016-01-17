@@ -71,7 +71,9 @@ StravistiX.prototype = {
         this.handleExtendedSegmentEffortData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
-        this.handleActivitySegmentTimeComparison_();
+        setTimeout(function() {
+            this.handleActivitySegmentTimeComparison_();
+        }.bind(this), 1000);
         this.handleActivityBestSplits_();
 
         // Run
