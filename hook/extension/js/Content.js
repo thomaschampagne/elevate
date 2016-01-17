@@ -176,6 +176,7 @@ var appResources = {
     logArrowUpIcon: chrome.extension.getURL('/icons/fa-long-arrow-up.png'),
     cogIcon: chrome.extension.getURL('/icons/fa-cog.png'),
     extVersion: chrome.runtime.getManifest().version,
+    extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
 };
 
