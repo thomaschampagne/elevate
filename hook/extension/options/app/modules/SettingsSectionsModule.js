@@ -106,6 +106,12 @@ settingsSectionsModule.data = [{
         optionLabels: ['Cycling'],
         optionHtml: 'This option allows you to display the time difference between segment PR time and the time from the activity for that segment.',
     }, {
+        optionKey: 'displaySegmentTimeComparisonToCurrentYearPR',
+        optionType: 'checkbox',
+        optionTitle: 'Enabled segment time comparison to current year PR display',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
+    }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',
         optionTitle: 'Revive Google Maps on activities (BETA)',

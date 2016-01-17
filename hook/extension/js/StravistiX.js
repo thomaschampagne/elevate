@@ -84,6 +84,7 @@ StravistiX.prototype = {
         this.handleVirtualPartner_();
 
         this.handleAthletesStats();
+        this.handleActivitiesSummary();
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
@@ -218,6 +219,18 @@ StravistiX.prototype = {
 
         var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
         athleteStatsModifier.modify();
+    },
+    
+    handleActivitiesSummary: function() {
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivitiesSummary()");
+
+        var activitiesSummaryModifier = new ActivitiesSummaryModifier();
+        activitiesSummaryModifier.modify();
     },
 
     /**
