@@ -31,7 +31,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('Pace stats <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> PACE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
@@ -52,14 +52,17 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             var speedUnitFactor = this.speedUnitsData[1];
             var distanceUnits = this.speedUnitsData[2];
 
+            var paceTimePerDistance = Helper.secondsToHHMMSS(this.paceData.avgPace / speedUnitFactor);
+            paceTimePerDistance = paceTimePerDistance.replace('00:', '');
+
             // Quartiles
             this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-
-            // this.insertContentAtGridPosition(1, 1, (this.paceData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Genuine average speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
-            // this.insertContentAtGridPosition(2, 1, paceTimePerDistance, 'Genuine average pace', '/' + distanceUnits, 'displayAdvancedSpeedData'); // DELAYED_FOR_TESTING
-
+            
+            if (this.isSegmentEffortView) {
+                this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+            }
         },
 
         setupDistributionTable: function(zones, ratio) {
@@ -80,16 +83,16 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             // Generate table header
             table += '<tr>'; // Zone
-            table += '<td><strong>Zone</strong></td>'; // Zone
-            table += '<td><strong>From<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
-            table += '<td><strong>To<br/>Time' + this.units.toUpperCase() + '</strong></td>'; // bpm
-            table += '<td><strong>Time<br/>(hh:mm:ss)</strong></td>'; // Time
-            table += '<td><strong>% in zone</strong></td>'; // % in zone
+            table += '<td>ZONE</td>'; // Zone
+            table += '<td>FROM ' + this.units.toUpperCase() + '</td>'; // bpm
+            table += '<td>TO ' + this.units.toUpperCase() + '</td>'; // bpm
+            table += '<td>TIME</td>'; // Time
+            table += '<td>% ZONE</td>'; // % in zone
             table += '</tr>';
 
             var zoneId = 1;
             for (var zone in zones) {
-                
+
                 var from = (zones[zone].from === 'infinite') ? '&infin;' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
 
                 table += '<tr>'; // Zone

@@ -1,4 +1,4 @@
-var GenericExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var GenericExtendedDataModifier = AbstractExtendedDataModifier.extend(function(base) {
 
     return {
 
