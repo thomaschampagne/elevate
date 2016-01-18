@@ -108,7 +108,7 @@ settingsSectionsModule.data = [{
     }, {
         optionKey: 'displaySegmentTimeComparisonToCurrentYearPR',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison to current year PR display',
+        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to current year PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
     }, {

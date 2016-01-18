@@ -59,7 +59,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
                         false,
                         function(data) {
                             console.log(data);
-                            finished();
+                            storageManager.setToStorage(
+                                'displaySegmentTimeComparisonToCurrentYearPR',
+                                false,
+                                function(data) {
+                                    console.log(data);
+                                    finished();
+                                }.bind(this)
+                            );
                         }.bind(this)
                     );
                 }.bind(this)
