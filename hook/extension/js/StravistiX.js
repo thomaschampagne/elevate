@@ -71,9 +71,7 @@ StravistiX.prototype = {
         this.handleExtendedSegmentEffortData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
-        setTimeout(function() {
-            this.handleActivitySegmentTimeComparison_();
-        }.bind(this), 1000);
+        this.handleActivitySegmentTimeComparison_();
         this.handleActivityBestSplits_();
 
         // Run
@@ -470,7 +468,7 @@ StravistiX.prototype = {
             action: 'openedActivityType',
             name: activityType
         };
-        
+
         _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
     },
 
@@ -642,7 +640,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
 
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_);
         activitySegmentTimeComparisonModifier.modify();
     },
 
