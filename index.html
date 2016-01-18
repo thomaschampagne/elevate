@@ -9,31 +9,37 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    
 </head>
 
 <body>
     <section class="page-header">
         <!-- <h1 class="project-name"> -->
-        <img src="images/stravistix_logo.png" class="smallResolution"/>
+        <img src="images/stravistix_logo.png" class="smallResolution" />
         <!-- </h1> -->
         <h2 class="project-tagline">Chrome/Opera extension adding features for Strava website with new performances data and improved ergonomics. Options made with AngularJS</h2>
-        <a href="http://bitly.com/stravistix" target="_blank" class="btn">Download</a>
+        <br/>
+        <br/>
+        <br/>
+        <a href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn" target="_blank" style="font-size: 24px;">Download from chrome store...</a>
+        <br/>
+        <br/>
+        <a href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn" target="_blank"><img style="box-shadow: 0 0 10px #555;" src="images/ChromeWebStore_Badge_v2.png" /></a>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
         <a href="donate.html" target="_blank" class="btn">Donate</a>
         <a href="https://www.facebook.com/stravistixforstrava" target="_blank" class="btn">Facebook</a>
         <a href="https://twitter.com/champagnethomas" target="_blank" class="btn">Twitter</a>
         <a href="https://github.com/thomaschampagne/stravistix" target="_blank" class="btn">GitHub</a>
-
-
     </section>
-
     <section class="main-content">
         <h3>
 <a id="activities-improvements" class="anchor" href="#activities-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activity improvements</h3>
-
         <ul>
             <li>Zone distribution through charts and tables of
-
                 <ul>
                     <li>Speed/Pace: Quartiles, standard deviation, ...</li>
                     <li>Cadence: Quartiles, Pedaling/freewheel time, Crank Revolutions</li>
@@ -57,47 +63,40 @@
             <li>OpenStreetMap flipper. Available osm maps: Cycle, Landscape, Street, Os, Outdoors. Garmin TCX export.</li>
             <li>Weather for cycling activities</li>
         </ul>
-
         <h3>
 <a id="segments-improvements" class="anchor" href="#segments-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Segments improvements</h3>
-
         <ul>
             <li>Exporting cycling segment effort as Virtual Partner course for your Garmin device or other compatible GPS. File format: .crs, .tcx, .gpx</li>
             <li>% rank in segments</li>
             <li>Nearby segments around watching segment.</li>
             <li>Default order in segments: All, Man, Woman, People I am, My results</li>
         </ul>
-
         <h3>
 <a id="other-cool-things" class="anchor" href="#other-cool-things" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other cool things</h3>
-
         <ul>
             <li>Integration KOM/CR map</li>
             <li>Integration of Heat Map Global Strava</li>
             <li>Hidden challenges or/and roads created in the Dashboard</li>
             <li>...</li>
         </ul>
-
         <footer class="site-footer">
             <span class="site-footer-owner"><a href="https://github.com/thomaschampagne/stravistix">Stravistix for Strava</a> is maintained by <a href="https://github.com/thomaschampagne">thomaschampagne</a>.</span>
         </footer>
-
     </section>
     <script type="text/javascript">
-    window.onload = function () {
+    window.onload = function() {
 
         var param = window.location.search.replace("?", "");
-        
-        if(param.includes('update')) {
+
+        if (param.includes('update')) {
 
             var version = param.split('=')[1];
-            console.log('update to '+ version); 
+            console.log('update to ' + version);
 
             alert('StravistiX extension has been updated to ' + version + '. For your information here is the dedicated website you can share to your sports mates ;)');
         }
     }
     </script>
-
 </body>
 
 </html>
