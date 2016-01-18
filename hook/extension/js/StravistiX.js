@@ -144,7 +144,7 @@ StravistiX.prototype = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [],
             features: [
-                'Extended data on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
+                'Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
             ],
             fixes: [],
             upcommingFeatures: [
@@ -154,7 +154,7 @@ StravistiX.prototype = {
 
         var message = '';
 
-        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>Added extended data on segment efforts</h3></div>';
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>- Big Feature: Extended stats on segment efforts !!</h3><h4><i><u>How to?</u> Just go to an activity, choose a crossed segment, then click "Show extended statistics of effort" button</i></h4><h3>- Extended stats panel relooking</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
