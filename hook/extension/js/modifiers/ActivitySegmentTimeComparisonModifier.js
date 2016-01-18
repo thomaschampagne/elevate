@@ -1,10 +1,11 @@
 /**
  *   ActivitySegmentTimeComparisonModifier is responsible of ...
  */
-function ActivitySegmentTimeComparisonModifier(userSettings) {
+function ActivitySegmentTimeComparisonModifier(userSettings, appResources) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
     this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
     this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+    this.appResources = appResources;
 }
 
 /**
@@ -13,6 +14,11 @@ function ActivitySegmentTimeComparisonModifier(userSettings) {
 ActivitySegmentTimeComparisonModifier.prototype = {
 
     modify: function modify() {
+
+        // Display temporary disable message
+        if (!StorageManager.getCookie('stravistix_hide_seg_time_compare_disabled_message')) {
+            $('body').before('<div id="hide_seg_time_compare_disabled_message" style="text-align: center; padding: 10px; background-color: #FFF397;font-family: sans-serif;font-size: 14px;color: #333;"><strong style="font-size: 16px;">Important note</strong><br /><br /><strong>Segment Time Comparison features</strong> have been <strong>disabled</strong> by default due to <strong>performance issues</strong>.<br />You can still <strong><a target="_blank" href="' + this.appResources.settingsLink + '#/commonSettings?searchText=segment%20time%20comparison">re-enable them in options by clicking here</a></strong> <strong>but it will work but slowy</strong>...<br />This issue is being fixed and Segment Time Comparison features will be automatically re-enabled when fixed.<br /><br /><a onclick="javascript:StorageManager.setCookie(\'stravistix_hide_seg_time_compare_disabled_message\', true, 365);$(\'#hide_seg_time_compare_disabled_message\').slideUp();"><strong>[Close and hide this message on this computer]</strong></a></div>');
+        }
 
         if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
             return;

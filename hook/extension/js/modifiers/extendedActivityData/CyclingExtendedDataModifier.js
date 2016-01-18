@@ -44,7 +44,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
         placeExtendedStatsButtonSegment: function(buttonAdded) {
             var htmlButton = '<section>';
             htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
-            htmlButton += 'Show extended statistics';
+            htmlButton += 'Show extended statistics of effort';
             htmlButton += '</a>';
             htmlButton += '</section>';
 
