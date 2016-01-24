@@ -1,8 +1,7 @@
 /**
  *   ActivitiesSummaryModifier is responsible of ...
  */
-function ActivitiesSummaryModifier() {
-}
+function ActivitiesSummaryModifier() {}
 
 /**
  * Define prototype
@@ -23,20 +22,20 @@ ActivitiesSummaryModifier.prototype = {
             elevationUnit = "m",
             speedUnit = "km/h",
             paceUnit = "/km";
-            
+
         var averageSpeedOrPace = function(pace, distance, time) {
             time /= 60;
             if (pace) {
                 var result = time / distance;
                 var minutes = Math.floor(result);
-                var seconds = (result - minutes) * 60; 
+                var seconds = (result - minutes) * 60;
                 return minutes + ":" + (seconds < 10 ? "0" : "") + Helper.formatNumber(seconds, 0);
             } else {
-                time /= 60;                
+                time /= 60;
                 return Helper.formatNumber(distance / time);
             }
         };
-        
+
         var waitForTotalActivitiesCountRemove = function() {
             if ($("#" + activitiesCountElementId).length !== 0) {
                 setTimeout(function() {
@@ -46,7 +45,7 @@ ActivitiesSummaryModifier.prototype = {
             }
             modify.call(self);
         };
-            
+
         var measurementPreference = currentAthlete ? currentAthlete.get('measurement_preference') : 'meters';
         if (measurementPreference != 'meters') {
             distanceInKilometers = false;
@@ -56,7 +55,7 @@ ActivitiesSummaryModifier.prototype = {
             speedUnit = "mph";
             paceUnit = "/mi";
         }
-            
+
         $totals.show();
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
@@ -66,7 +65,7 @@ ActivitiesSummaryModifier.prototype = {
                 $activityUrl = $this.prev(".entry-title").find("a[href^='/activities/']"),
                 url = "/athlete/training_activities/" + $activityUrl.attr("href").substr("/activities/".length),
                 icon = $this.closest("div.entity-details").find("div.app-icon"),
-                pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");            
+                pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");
             requests.push($.ajax({
                 url: url,
                 type: "GET",
@@ -76,14 +75,14 @@ ActivitiesSummaryModifier.prototype = {
                 }
             }));
         });
-                
+
         $.when.apply(self, requests).done(function() {
             var index = 0,
                 total = {
                     type: "Total",
                     count: 0,
                     distance: 0,
-                    elevation: 0,                    
+                    elevation: 0,
                     time: 0,
                     calories: 0,
                     noAverage: true
@@ -102,7 +101,7 @@ ActivitiesSummaryModifier.prototype = {
                         type: type,
                         count: 0,
                         distance: 0,
-                        elevation: 0,                        
+                        elevation: 0,
                         time: 0,
                         calories: 0,
                         index: index
@@ -114,22 +113,22 @@ ActivitiesSummaryModifier.prototype = {
                 summary.elevation += elevation;
                 summary.time += movingTime;
                 summary.calories += calories;
-                
+
                 total.count += 1;
                 total.distance += distance;
                 total.elevation += elevation;
                 total.time += movingTime;
                 total.calories += calories;
             }
-            
+
             activityTypes.sort(function(left, right) {
                 return left.type.localeCompare(right.type);
             });
-            
+
             if (activityTypes.length > 2) {
                 activityTypes.push(total);
             }
-            
+
             var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
             activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
@@ -142,7 +141,7 @@ ActivitiesSummaryModifier.prototype = {
                 $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.calories), 0) + "</td>");
                 $table.find("tbody").append($row);
             });
-            
+
             $totals.before($table);
             $totals.hide();
             waitForTotalActivitiesCountRemove();

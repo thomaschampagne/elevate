@@ -166,7 +166,17 @@ var appResources = {
     trackChangesIcon: chrome.extension.getURL('/icons/ic_track_changes_24px.svg'),
     trendingUpIcon: chrome.extension.getURL('/icons/ic_trending_up_black_24px.svg'),
     qrCodeIcon: chrome.extension.getURL('/icons/qrcode.svg'),
+    lightbulbIcon: chrome.extension.getURL('/icons/fa-lightbulb-o.png'),
+    heartBeatIcon: chrome.extension.getURL('/icons/fa-heartbeat.png'),
+    areaChartIcon: chrome.extension.getURL('/icons/fa-area-chart.png'),
+    tachometerIcon: chrome.extension.getURL('/icons/fa-tachometer.png'),
+    boltIcon: chrome.extension.getURL('/icons/fa-bolt.png'),
+    circleNotchIcon: chrome.extension.getURL('/icons/fa-circle-o-notch.png'),
+    lineChartIcon: chrome.extension.getURL('/icons/fa-line-chart.png'),
+    logArrowUpIcon: chrome.extension.getURL('/icons/fa-long-arrow-up.png'),
+    cogIcon: chrome.extension.getURL('/icons/fa-cog.png'),
     extVersion: chrome.runtime.getManifest().version,
+    extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
 };
 
@@ -217,10 +227,10 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/RunnningGradeDataView.js',
 
     // Extended data modifiers
-    'js/modifiers/extendedActivityData/AbstractExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/CyclingExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/RunningExtendedActivityDataModifier.js',
-    'js/modifiers/extendedActivityData/GenericExtendedActivityDataModifier.js',
+    'js/modifiers/extendedActivityData/AbstractExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/CyclingExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/RunningExtendedDataModifier.js',
+    'js/modifiers/extendedActivityData/GenericExtendedDataModifier.js',
 
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/DisplayFlyByFeedModifier.js',

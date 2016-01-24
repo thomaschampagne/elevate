@@ -96,27 +96,27 @@ settingsSectionsModule.data = [{
     }, {
         optionKey: 'displaySegmentTimeComparisonToKOM',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison to KOM/QOM display',
+        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to KOM/QOM display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allows you to display the time difference between segment KOM/QOM time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToPR',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison to PR display',
+        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allows you to display the time difference between segment PR time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToCurrentYearPR',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison to current year PR display',
+        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to current year PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
     }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',
-        optionTitle: 'Revive Google Maps on activities (BETA)',
+        optionTitle: 'Revive Google Maps on activities',
         optionLabels: ['All'],
-        optionHtml: 'Strava has discontinued Google Maps inside the web version to use "MapBox+OpenStreetMap" maps.<br/><br/>This option allows you revive Google Maps and Street view features with an orange button placed near Strava native maps.<br/><br/><strong>Note:</strong> This feature is currently in BETA and works only on activities page at the moment.',
+        optionHtml: 'Strava has discontinued Google Maps inside the web version to use "MapBox+OpenStreetMap" maps.<br/><br/>This option allows you revive Google Maps and Street view features with an orange button placed near Strava native maps.<br/><br/><strong>Note:</strong> This feature is currently working only on activity pages at the moment.',
         optionEnableSub: 'reviveGoogleMapsLayerType'
     }, {
         optionKey: 'reviveGoogleMapsLayerType',
@@ -232,21 +232,21 @@ settingsSectionsModule.data = [{
         optionType: 'list',
         optionLabels: ['All'],
         optionList: [{
-              key: 'mph',
-              name: 'Miles per hour'
-          }, {
-              key: 'km/h',
-              name: 'Kilometers per hour'
-          }, {
-              key: 'm/s',
-              name: 'Meters per second'
-          }, {
-              key: 'kn',
-              name: 'Knots'
-          }, {
-              key: 'bft',
-              name: 'Beaufort scale'
-          }],
+            key: 'mph',
+            name: 'Miles per hour'
+        }, {
+            key: 'km/h',
+            name: 'Kilometers per hour'
+        }, {
+            key: 'm/s',
+            name: 'Meters per second'
+        }, {
+            key: 'kn',
+            name: 'Knots'
+        }, {
+            key: 'bft',
+            name: 'Beaufort scale'
+        }],
         optionTitle: 'Wind Speed',
         optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
     }]

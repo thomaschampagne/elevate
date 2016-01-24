@@ -32,19 +32,27 @@ ActivityProcessor.prototype = {
     /**
      *
      */
-    getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, callback) {
+    getAnalysisData: function(activityId, userGender, userRestHr, userMaxHr, userFTP, bounds, callback) {
 
         if (!this.activityType) {
             console.error('No activity type set for ActivityProcessor');
         }
 
-        // Find in cache first is data exist
-        var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+        // We are not using cache when bounds are given
+        var useCache = true;
+        if (!_.isEmpty(bounds)) {
+            useCache = false;
+        }
 
-        if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
-            if (env.debugMode) console.log("Using existing activity cache in non debug mode: " + JSON.stringify(cacheResult));
-            callback(cacheResult);
-            return;
+        if (useCache) {
+            // Find in cache first is data exist
+            var cacheResult = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+
+            if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
+                console.log("Using existing activity cache mode");
+                callback(cacheResult);
+                return;
+            }
         }
 
         userFTP = parseInt(userFTP);
@@ -55,17 +63,61 @@ ActivityProcessor.prototype = {
             // Append altitude_smooth to fetched strava activity stream before compute analysis data on
             activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
 
+            // Slices array if activity bounds given. It's mainly used for segment effort extended stats
+            if (bounds && bounds[0] && bounds[1]) {
+
+                if (!_.isEmpty(activityStream.velocity_smooth)) {
+                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+                }
+                if (!_.isEmpty(activityStream.time)) {
+                    activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.heartrate)) {
+                    activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.watts)) {
+                    activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.watts_calc)) {
+                    activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.cadence)) {
+                    activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.grade_smooth)) {
+                    activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.altitude)) {
+                    activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.distance)) {
+                    activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+                }
+
+                if (!_.isEmpty(activityStream.altitude_smooth)) {
+                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
+                }
+
+            }
+
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
 
-            if (env.debugMode) console.log("Creating activity cache: " + JSON.stringify(result));
-
-            try {
-                localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
-            } catch (err) {
-                console.warn(err);
-                localStorage.clear();
+            if (useCache) {
+                console.log("Creating activity cache");
+                try {
+                    localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(result)); // Cache the result to local storage
+                } catch (err) {
+                    console.warn(err);
+                    localStorage.clear();
+                }
             }
-            
             callback(result);
 
         }.bind(this));
@@ -207,7 +259,7 @@ ActivityProcessor.prototype = {
 
     finalizeDistribComputationZones: function(zones) {
         var total = 0;
-        for(var i = 0; i < zones.length; i++) {
+        for (var i = 0; i < zones.length; i++) {
 
             var zone = zones[i];
             if (zone['s']) {
@@ -216,7 +268,7 @@ ActivityProcessor.prototype = {
             zone['percentDistrib'] = 0;
         }
         if (total > 0) {
-            for(var i = 0; i < zones.length; i++) {
+            for (var i = 0; i < zones.length; i++) {
                 var zone = zones[i];
 
                 if (zone['s']) {
@@ -313,6 +365,7 @@ ActivityProcessor.prototype = {
             'standardDeviationSpeed': standardDeviationSpeed,
             'speedZones': speedZones
         }, {
+            'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             'lowerQuartilePace': this.convertSpeedToPace(percentiles[0]),
             'medianPace': this.convertSpeedToPace(percentiles[1]),
             'upperQuartilePace': this.convertSpeedToPace(percentiles[2]),

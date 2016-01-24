@@ -14,8 +14,8 @@
     vertical-align: middle;
     padding-right: 15px;
 }
-/* Remove padding on grid for featured data */
 
+/* Remove padding on grid for featured data */
 .stravistiXExtendedData .featuredData .grid td {
     padding-bottom: 0px;
     max-width: 200px;
@@ -25,8 +25,12 @@
 .stravistiXExtendedData .distributionGraphTitle {
     display: block;
     text-align: center;
-    font-size: 16px;
-    font-style: italic;
+    font-size: 14px;
+}
+
+.stravistiXExtendedData .distributionTable {
+    height: 450px;
+    width: 350px;
 }
 
 .stravistiXExtendedData .distributionTable tr:hover {
@@ -35,6 +39,7 @@
 
 .stravistiXExtendedData .grid {
     font-size: 22px;
+    padding-left: 10px;
 }
 
 .stravistiXExtendedData .grid td {
@@ -91,5 +96,3 @@
     font-size: small;
     font-weight: normal;
 }
-
-

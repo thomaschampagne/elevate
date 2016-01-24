@@ -1,23 +1,9 @@
-var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(base) {
 
     return {
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos);
-        },
-
-        modify: function() {
-            base.modify.call(this); // Super call
-
-            this.placeSummaryPanel(function() {
-                // Summary panel has been placed...
-
-                // Add Show extended statistics to page
-                this.placeExtendedStatsButton(function() {
-                    // Button has been placed...
-                });
-
-            }.bind(this));
+        init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
         },
 
         insertContentSummaryGridContent: function() {
@@ -55,6 +41,20 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
         },
 
+        placeExtendedStatsButtonSegment: function(buttonAdded) {
+            var htmlButton = '<section>';
+            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+            htmlButton += 'Show extended statistics of effort';
+            htmlButton += '</a>';
+            htmlButton += '</section>';
+
+            if ($('[data-xtd-seg-effort-stats]').length === 0)  {
+                $('.raceshape-btn').last().after(htmlButton).each(function() {
+                    base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+                }.bind(this));
+            }
+        },
+
         setDataViewsNeeded: function() {
 
             base.setDataViewsNeeded.call(this);
@@ -68,6 +68,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
                 speedDataView.setAppResources(this.appResources_);
                 speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(speedDataView);
             }
 
@@ -75,6 +76,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(powerDataView);
             }
 
@@ -82,6 +84,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
                 cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingCadenceDataView);
             }
 
@@ -89,6 +92,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var cyclingGradeDataView = new CyclingGradeDataView(this.analysisData_.gradeData, '%');
                 cyclingGradeDataView.setAppResources(this.appResources_);
                 cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingGradeDataView);
             }
 
@@ -96,6 +100,7 @@ var CyclingExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
 
                 var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');

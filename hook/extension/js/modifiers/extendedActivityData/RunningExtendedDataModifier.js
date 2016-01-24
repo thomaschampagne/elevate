@@ -1,26 +1,11 @@
-var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.extend(function(base) {
+var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(base) {
 
     return {
 
 
-        init: function(analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos) {
-            base.init.call(this, analysisData, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos);
+        init: function(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type) {
+            base.init.call(this, activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
         },
-
-        modify: function() {
-            base.modify.call(this); // Super call
-
-            this.placeSummaryPanel(function() {
-                // Summary panel has been placed...
-                // Add Show extended statistics to page
-
-                this.placeExtendedStatsButton(function() {
-                    // Button has been placed...
-                });
-
-            }.bind(this));
-        },
-
 
         insertContentSummaryGridContent: function() {
 
@@ -48,6 +33,23 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
             }
         },
 
+        placeExtendedStatsButtonSegment: function(buttonAdded) {
+            setTimeout(function() { // Execute at the end to make sure DOM is ready
+
+                var htmlButton = '<section>';
+                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+                htmlButton += 'Show extended statistics of effort';
+                htmlButton += '</a>';
+                htmlButton += '</section>';
+
+                if ($('[data-xtd-seg-effort-stats]').length === 0)  {
+                    $('.leaderboard-summary').after(htmlButton).each(function() {
+                        base.placeExtendedStatsButtonSegment.call(this, buttonAdded); // Super call
+                    }.bind(this));
+                }
+            }.bind(this));
+        },
+
         setDataViewsNeeded: function() {
 
             base.setDataViewsNeeded.call(this);
@@ -61,6 +63,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var paceDataView = new PaceDataView(this.analysisData_.paceData, units);
                 paceDataView.setAppResources(this.appResources_);
                 paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(paceDataView);
             }
 
@@ -68,6 +71,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var runningCadenceDataView = new RunningCadenceDataView(this.analysisData_.cadenceData, 'spm', this.userSettings_);
                 runningCadenceDataView.setAppResources(this.appResources_);
                 runningCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                runningCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(runningCadenceDataView);
             }
 
@@ -75,6 +79,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var runnningGradeDataView = new RunnningGradeDataView(this.analysisData_.gradeData, '%');
                 runnningGradeDataView.setAppResources(this.appResources_);
                 runnningGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                runnningGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(runnningGradeDataView);
             }
 
@@ -82,6 +87,7 @@ var RunningExtendedActivityDataModifier = AbstractExtendedActivityDataModifier.e
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
             }
 

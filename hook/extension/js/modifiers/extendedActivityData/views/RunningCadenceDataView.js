@@ -33,10 +33,10 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
         },
 
         render: function() {
-            
-            // Add legs cadence type to view title
-            this.viewTitle += ' // ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a style="font-size: 16px;" target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings">(customize)</a>';
 
+            // Add legs cadence type to view title
+            this.viewTitle += '<img src="' + this.appResources.circleNotchIcon + '" style="vertical-align: baseline; height:20px;"/> CADENCE @ ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=runningCadence" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>';
+            
             // Call super AbstractCadenceDataView.render()
             base.render.call(this);
 

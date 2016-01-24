@@ -92,4 +92,9 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
         $scope.displayOptionHelper(viewOptionHelperId);
     }
 
+    // Apply search text if searchText GET param exist
+    if ($location.search().searchText) {
+        $scope.searchText = $location.search().searchText;
+    }
+
 }]);

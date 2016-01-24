@@ -7,9 +7,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
         init: function(analysisData, userSettings, basicInfos) {
 
             this.setViewId('FeaturedDataView_0as19sdqfd7f98q');
-
             base.init.call(this);
-
             this.hasGraph = false;
 
             if (!analysisData || !userSettings) {
@@ -17,10 +15,12 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             }
 
             this.analysisData = analysisData;
-
             this.userSettings = userSettings;
-
             this.basicInfos = basicInfos;
+
+            if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) {
+                this.mainColor = [252, 76, 2];
+            }
         },
 
         render: function() {
@@ -34,10 +34,17 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
                 this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
-                // Add a title
-                // this.content += this.generateSectionTitle('Highlighted Stats');
-                this.content += this.generateSectionTitle('Highlighted Stats for ' + ' <i>"' + this.basicInfos.activityName + '" @ ' + this.basicInfos.activityTime + "</i>");
+                var title = '<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/>';
 
+                if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
+                    title += ' EFFORT STATS on <i>&lt;' + this.basicInfos.segmentEffort.name + '&gt;</i> SEGMENT // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec);
+                    this.content += this.generateSectionTitle(title);
+                } else { // Complete activity
+                    title += ' STATS on <i>&lt;' + this.basicInfos.activityName + '&gt;</i> ACTIVITY';
+                    this.content += this.generateSectionTitle(title);
+                }
+
+                // Add a title
                 this.makeGrid(7, 1); // (col, row)
 
                 this.insertFeaturedDataIntoGrid();
@@ -52,7 +59,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             var speedUnitPerhour = speedUnitsData[0];
             var speedUnitFactor = speedUnitsData[1];
 
-            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
+            if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfos.segmentEffort)) {
                 this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio'); // Move ratio
             }
 

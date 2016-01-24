@@ -68,9 +68,12 @@ StravistiX.prototype = {
 
         // Bike
         this.handleExtendedActivityData_();
+        this.handleExtendedSegmentEffortData_();
         this.handleNearbySegments_();
         this.handleActivityBikeOdo_();
-        this.handleActivitySegmentTimeComparison_();
+        setTimeout(function() {
+            this.handleActivitySegmentTimeComparison_();
+        }.bind(this), 1000);
         this.handleActivityBestSplits_();
 
         // Run
@@ -141,29 +144,20 @@ StravistiX.prototype = {
     handleUpdatePopup_: function() {
 
         var updateMessageObj = {
-            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                'Fixed javascript syntax error while processing activities extended stats. No crash from now for users getting this in the past'
-            ],
+            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
+            hotFixes: [],
             features: [
-                'Added option to count <strong>Virtual Rides (e.g. Zwift rides)</strong> into athlete yearly progression (Into "My profile").',
-                'Improved <strong>Ascent speed</strong> extended statistics for cyclists: altitude smoothness accuracy improved again.',
-                'Improved Best Splits computation for <strong>elevation gain and drop</strong>: altitude smoothness accuracy improved again.'
+                'Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
             ],
-            fixes: [
-                'Counting of activities for athlete yearly progression could be wrong in some cases.',
-                'Major issue: Extended stats may not displayed on some activities. Error in local storage cache management.',
-            ],
+            fixes: [],
             upcommingFeatures: [
-                'V3: "<i>Extended statistics on segments efforts</i>" delayed after new year :). Doing my best to release this on time during my holidays'
+                'V4: A new big feature already started ;) Stay tunned via https://twitter.com/champagnethomas at the moment.'
             ]
         };
 
         var message = '';
 
-
-
-        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance in 2.2.X...</strong></h3><h3>Fixed javascript syntax error while processing activities extended stats.</h3><h3>Fixed major issue: Extended stats could disappear.</h3><h3>Added VirtualRides in yearly progression (into "My Profile")</h3><h3>Altitude accuracy improved</h3><h3>Road is now open for v3 (see upcomming features below)</h3></div>';
+        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>- Big Feature: Extended stats on segment efforts !!</h3><h4><i><u>How to?</u> Just go to an activity, choose a crossed segment, then click "Show extended statistics of effort" button</i></h4><h3>- Extended stats panel relooking</h3></div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
@@ -220,6 +214,18 @@ StravistiX.prototype = {
         athleteStatsModifier.modify();
     },
     
+    handleActivitiesSummary: function() {
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivitiesSummary()");
+
+        var activitiesSummaryModifier = new ActivitiesSummaryModifier();
+        activitiesSummaryModifier.modify();
+    },
+
     handleActivitiesSummary: function() {
         // If we are not on the athletes page then return...
         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
@@ -442,46 +448,46 @@ StravistiX.prototype = {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleExtendedActivityData_()");
+        if (env.debugMode) console.log("Execute handleExtendedData_()");
 
-        this.activityProcessor_.setActivityType(activityType);
+        var basicInfos = {
+            activityName: this.vacuumProcessor_.getActivityName(),
+            activityTime: this.vacuumProcessor_.getActivityTime()
+        }
 
-        this.activityProcessor_.getAnalysisData(
-            this.activityId_,
-            this.userSettings_.userGender,
-            this.userSettings_.userRestHr,
-            this.userSettings_.userMaxHr,
-            this.userSettings_.userFTP,
+        var extendedDataModifier = null;
 
-            function(analysisData) { // Callback when analysis data has been computed
-
-                var extendedActivityDataModifier = null;
-
-                var basicInfos = {
-                    activityName: this.vacuumProcessor_.getActivityName(),
-                    activityTime: this.vacuumProcessor_.getActivityTime()
-                }
-
-                switch (activityType) {
-                    case 'Ride':
-                        extendedActivityDataModifier = new CyclingExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
-                        break;
-                    case 'Run':
-                        extendedActivityDataModifier = new RunningExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_, basicInfos);
-                        break;
-                    default:
-                        // extendedActivityDataModifier = new GenericExtendedActivityDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
-                        var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
-                        $('.inline-stats.section').parent().children().last().after(html);
-                        break;
-                }
-
-                if (extendedActivityDataModifier) {
-                    extendedActivityDataModifier.modify();
-                }
-
-            }.bind(this)
-        );
+        switch (activityType) {
+            case 'Ride':
+                extendedDataModifier = new CyclingExtendedDataModifier(
+                    this.activityProcessor_,
+                    this.activityId_,
+                    activityType,
+                    this.appResources_,
+                    this.userSettings_,
+                    this.athleteId_,
+                    this.athleteIdAuthorOfActivity_,
+                    basicInfos,
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            case 'Run':
+                extendedDataModifier = new RunningExtendedDataModifier(
+                    this.activityProcessor_,
+                    this.activityId_,
+                    activityType,
+                    this.appResources_,
+                    this.userSettings_,
+                    this.athleteId_,
+                    this.athleteIdAuthorOfActivity_,
+                    basicInfos,
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            default:
+                // extendedDataModifier = new GenericExtendedDataModifier(analysisData, this.appResources_, this.userSettings_, this.athleteId_, this.athleteIdAuthorOfActivity_); // DELAYED_FOR_TESTING
+                // var html = '<p style="padding: 10px;background: #FFF0A0;font-size: 12px;color: rgb(103, 103, 103);">StravistiX don\'t support <strong>Extended Data Features</strong> for this type of activity at the moment. Feature will be available in version 0.6.x. Working hard! Please wait... ;).</br></br>Stay tunned via <a href="https://twitter.com/champagnethomas">@champagnethomas</a></p>';
+                // $('.inline-stats.section').parent().children().last().after(html);
+                break;
+        }
 
         // Send opened activity type to ga for stats
         var updatedToEvent = {
@@ -489,7 +495,84 @@ StravistiX.prototype = {
             action: 'openedActivityType',
             name: activityType
         };
+
         _spTrack('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+    },
+
+    handleExtendedSegmentEffortData_: function() {
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        if (!Strava.Labs) {
+            return;
+        }
+
+        var activityType = pageView.activity().get('type');
+
+        // Skip manual activities
+        if (activityType === 'Manual') {
+            return;
+        }
+
+        this.activityProcessor_.setActivityType(activityType);
+
+        var view = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
+
+        if (activityType === ('Run' || 'Hike' || 'Walk')) {
+            view = Strava.Labs.Activities.SegmentEffortDetailView;
+        }
+
+        if (!view) {
+            return;
+        }
+
+        var functionRender = view.prototype.render;
+
+        var self = this;
+
+        view.prototype.render = function() {
+
+            var r = functionRender.apply(this, Array.prototype.slice.call(arguments));
+
+            var basicInfos = {
+                activityName: self.vacuumProcessor_.getActivityName(),
+                activityTime: self.vacuumProcessor_.getActivityTime()
+            }
+
+            var extendedDataModifier = null;
+
+            switch (activityType) {
+                case 'Ride':
+                    extendedDataModifier = new CyclingExtendedDataModifier(
+                        self.activityProcessor_,
+                        self.activityId_,
+                        activityType,
+                        self.appResources_,
+                        self.userSettings_,
+                        self.athleteId_,
+                        self.athleteIdAuthorOfActivity_,
+                        basicInfos,
+                        AbstractExtendedDataModifier.TYPE_SEGMENT);
+                    break;
+                case 'Run':
+                    extendedDataModifier = new RunningExtendedDataModifier(
+                        self.activityProcessor_,
+                        self.activityId_,
+                        activityType,
+                        self.appResources_,
+                        self.userSettings_,
+                        self.athleteId_,
+                        self.athleteIdAuthorOfActivity_,
+                        basicInfos,
+                        AbstractExtendedDataModifier.TYPE_SEGMENT);
+                    break;
+                default:
+                    break;
+            }
+            return r;
+        };
     },
 
     /**
@@ -584,7 +667,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
 
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_);
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_);
         activitySegmentTimeComparisonModifier.modify();
     },
 
