@@ -55,16 +55,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         if (self.showDifferenceToCurrentYearPR) {
             timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
         }
-       
-        if (self.showDifferenceToPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
-        }
-
-        starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
-
-        if (self.showDifferenceToCurrentYearPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
-        }
 
         if (self.showDifferenceToPR) {
             timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
