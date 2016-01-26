@@ -1,6 +1,8 @@
+build.bat
 *.git/
 */.gitignore
 **/node_modules/
 dist/
 builds/
 chrome-win32/
+typings/

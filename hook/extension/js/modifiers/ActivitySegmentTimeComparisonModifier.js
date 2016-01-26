@@ -48,8 +48,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             if (isFemale) {
                 deltaKomLabel = "&Delta;QOM";
             }
-        }
-
+        }        
+        
         starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
 
         if (self.showDifferenceToCurrentYearPR) {
@@ -97,6 +97,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 if (!data) {
                     return;
                 }
+                
+                positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
 
                 positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
 
@@ -132,7 +134,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         }
                     }
 
-                    if (!currentSegmentEfforDateTime) {
+                    if (!currentSegmentEfforDateTime) {                        
                         return;
                     }
 
