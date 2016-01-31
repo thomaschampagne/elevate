@@ -10,7 +10,6 @@ function ActivityProcessor(vacuumProcessor, userHrrZones, zones) {
 ActivityProcessor.movingThresholdKph = 3.5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.cadenceLimitRpm = 125;
-ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravistix_activity_';
 ActivityProcessor.gradeClimbingLimit = 1.6;
 ActivityProcessor.gradeDownHillLimit = -1.6;
@@ -437,7 +436,8 @@ ActivityProcessor.prototype = {
 
         var variabilityIndex = weightedPower / avgWatts;
         var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
-        var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
+        var weightedWattsPerKg = weightedPower / athleteWeight;
+        var avgWattsPerKg = avgWatts / athleteWeight;
 
         var percentiles = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
@@ -447,6 +447,7 @@ ActivityProcessor.prototype = {
         return {
             'hasPowerMeter': hasPowerMeter,
             'avgWatts': avgWatts,
+            'avgWattsPerKg': avgWattsPerKg,
             'weightedPower': weightedPower,
             'variabilityIndex': variabilityIndex,
             'punchFactor': punchFactor,
