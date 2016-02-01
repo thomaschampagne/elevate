@@ -2,8 +2,6 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
     return {
 
-        cadenceData: null,
-
         mainColor: [213, 0, 195],
 
         init: function(cadenceData, units, userSettings) {
@@ -16,27 +14,32 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             if (this.userSettings.enableBothLegsCadence) {
 
-                // Then multiply cadence per 2
-                cadenceData.averageCadenceMoving *= 2;
-                cadenceData.lowerQuartileCadence *= 2;
-                cadenceData.medianCadence *= 2;
-                cadenceData.upperQuartileCadence *= 2;
+                var cadenceDataClone = $.extend(true, {}, cadenceData); // Create a deep clone in memory to avoid values doubled on each reload
 
-                for (zone in cadenceData.cadenceZones) {
-                    cadenceData.cadenceZones[zone].from *= 2;
-                    cadenceData.cadenceZones[zone].to *= 2;
+                // Then multiply cadence per 2
+                cadenceDataClone.averageCadenceMoving *= 2;
+                cadenceDataClone.lowerQuartileCadence *= 2;
+                cadenceDataClone.medianCadence *= 2;
+                cadenceDataClone.upperQuartileCadence *= 2;
+
+                for (zone in cadenceDataClone.cadenceZones) {
+                    cadenceDataClone.cadenceZones[zone].from *= 2;
+                    cadenceDataClone.cadenceZones[zone].to *= 2;
                 }
 
+                base.init.call(this, cadenceDataClone);
+
+            } else {
+                base.init.call(this, cadenceData);
             }
 
-            base.init.call(this, cadenceData);
         },
 
         render: function() {
 
             // Add legs cadence type to view title
             this.viewTitle += '<img src="' + this.appResources.circleNotchIcon + '" style="vertical-align: baseline; height:20px;"/> CADENCE @ ' + ((this.userSettings.enableBothLegsCadence) ? '2 legs' : '1 leg') + ' <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=runningCadence" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>';
-            
+
             // Call super AbstractCadenceDataView.render()
             base.render.call(this);
 
