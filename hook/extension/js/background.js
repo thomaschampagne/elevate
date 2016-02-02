@@ -123,7 +123,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 console.log(data);
                 // Disable Segment Time Comparison Features while https://github.com/thomaschampagne/stravistix/issues/179 unfixed
                 // We while re-enable Segment Time Comparison when https://github.com/thomaschampagne/stravistix/issues/179 FIXED
-                disableSegmentTimeComparisonFeature('*', thisVersion, storageManager, function() {});
+                disableSegmentTimeComparisonFeature(details.previousVersion, thisVersion, storageManager, function() {});
                 // End Disable Segment Time Comparison
             }.bind(this)
         );
