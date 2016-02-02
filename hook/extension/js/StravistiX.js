@@ -142,19 +142,31 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                'Running cadence were mutiplied twice in graph/table on every segment effort stats button click (with both legs option enabled)'
+            ],
             features: [
                 'Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
             ],
             fixes: [],
+            upcommingFixes: [
+                '"VAM / Ascent Speed" mismatches between strava and stravistix (on segment efforts)',
+                'Performance issues on Segment Time Comparison',
+            ],
             upcommingFeatures: [
-                'V4: A new big feature already started ;) Stay tunned via https://twitter.com/champagnethomas at the moment.'
+                'Add average W/KG in extended stats both activity and efforts: Already done... released in next v3.1.0',
+                'Just take care cyclist weight for every W/KG computation (forget bike weight !): Already done... released in next v3.1.0',
+                'V4.0.0 Suprise... stay tunned via https://twitter.com/champagnethomas at the moment.'
             ]
         };
 
         var message = '';
 
-        message += '<div style="background: #eee; padding: 10px;"><h3><strong>At a glance...</strong></h3><h3>- Big Feature: Extended stats on segment efforts !!</h3><h4><i><u>How to?</u> Just go to an activity, choose a crossed segment, then click "Show extended statistics of effort" button</i></h4><h3>- Extended stats panel relooking</h3></div>';
+        message += '<div style="background: #eee; padding: 10px;">';
+        message += '<h3><strong>At a glance...</strong></h3>';
+        message += '<h3>- Hotfix release. Read "hotfixes" section below...</h3>';
+        message += '<h3>- Major bugs of current V3 are being fixed... Please wait... Read "Upcomming Fixes" below...</h3>';
+        message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
@@ -180,8 +192,15 @@ StravistiX.prototype = {
             });
         };
 
+        if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
+            message += '<h4><strong>Upcomming Fixes:</strong></h4>';
+            _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
+                message += '<h5>- ' + upcommingFixes + '</h5>';
+            });
+        };
+
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
-            message += '<h4><strong>Upcomming features:</strong></h4>';
+            message += '<h4><strong>Upcomming Features:</strong></h4>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h5>- ' + upcommingFeatures + '</h5>';
             });
