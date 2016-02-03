@@ -329,7 +329,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             var measurementPreference = currentAthlete.get('measurement_preference');
             var units = (measurementPreference == 'meters') ? 'km' : 'mi';
             var speedUnitPerhour = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
-            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.62137;
+            var speedUnitFactor = (speedUnitPerhour == 'km/h') ? 1 : 0.621371;
             return [speedUnitPerhour, speedUnitFactor, units];
         },
     }
