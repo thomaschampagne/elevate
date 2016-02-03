@@ -79,6 +79,7 @@ StravistiX.prototype = {
         // Run
         this.handleRunningGradeAdjustedPace_();
         this.handleRunningHeartRate_();
+        this.handleRunningTemperature_();
 
         // All activities
         this.handleActivityQRCodeDisplay_();
@@ -773,6 +774,33 @@ StravistiX.prototype = {
         var runningHeartRateModifier = new RunningHeartRateModifier();
         runningHeartRateModifier.modify();
     },
+
+    handleRunningTemperature_: function() {
+
+        if (!this.userSettings_.activateRunningTemperature) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningHeartRate_()");
+
+        var runningTemperatureModifier = new RunningTemperatureModifier();
+        runningTemperatureModifier.modify();
+    },
+
 
     /**
      *

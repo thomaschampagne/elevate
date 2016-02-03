@@ -70,13 +70,19 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Enable Grade Adjusted Pace graph',
         optionLabels: ['Running'],
-        optionHtml: 'Activate running "Grade Adjusted Pace" by default in running activity analysis.<br /><br /><img src="img/activateRunningGradeAdjustedPace.png"/>',
+        optionHtml: 'Activate running "Grade Adjusted Pace" graph by default in running activity analysis.<br /><br /><img src="img/activateRunningGradeAdjustedPace.png"/>',
     }, {
         optionKey: 'activateRunningHeartRate',
         optionType: 'checkbox',
         optionTitle: 'Enable Heart Rate graph',
         optionLabels: ['Running'],
-        optionHtml: 'Activate running heart rate by default in running activity analysis.<br /><br /><img src="img/activateRunningHeartRate.png"/>',
+        optionHtml: 'Activate running heart rate graph by default in running activity analysis.<br /><br /><img src="img/activateRunningHeartRate.png"/>',
+    },{
+        optionKey: 'activateRunningTemperature',
+        optionType: 'checkbox',
+        optionTitle: 'Enable Temperature graph',
+        optionLabels: ['Running'],
+        optionHtml: 'Activate temperature graph by default in running activity analysis',
     }, {
         optionKey: 'activityGoogleMapType',
         optionType: 'list',
