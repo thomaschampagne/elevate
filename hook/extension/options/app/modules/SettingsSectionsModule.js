@@ -211,7 +211,19 @@ settingsSectionsModule.data = [{
         optionTitle: 'Hide created routes',
         optionLabels: ['All'],
         optionHtml: 'This will hide all routes created in the dashboard feed.',
-    }, ]
+    }, {
+        optionKey: 'feedHideRideActivitiesUnderDistance',
+        optionType: 'integer',
+        optionTitle: 'Hide rides activities under distance. Value "0" hide nothing',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This will hide all cycling rides (also virtual rides) in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+    }, {
+        optionKey: 'feedHideRunActivitiesUnderDistance',
+        optionType: 'integer',
+        optionTitle: 'Hide running activities under distance. Value "0" hide nothing',
+        optionLabels: ['Running'],
+        optionHtml: 'This will hide all running activities in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+    }]
 }, {
     sectionTitle: 'Weather units',
     sectionContent: [{
