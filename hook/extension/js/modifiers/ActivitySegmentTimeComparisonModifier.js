@@ -48,8 +48,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             if (isFemale) {
                 deltaKomLabel = "&Delta;QOM";
             }
-        }
-
+        }        
+        
         starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
 
         if (self.showDifferenceToCurrentYearPR) {
@@ -64,115 +64,124 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             timeColumnHeader.after("<th title='Column shows the difference between the current " + (isFemale ? "QOM" : "KOM") + " time and the acitivity segment time.'>" + deltaKomLabel + "</th>");
         }
 
-        $("tr[data-segment-effort-id]").each(function() {
-            var $row = $(this),
-                $timeCell = $row.find("td.time-col"),
-                $starCell = $row.find("td.starred-col"),
-                segmentEffortId = $row.data("segment-effort-id"),
-                url = "/segment_efforts/" + segmentEffortId,
-                positionCell,
-                deltaKomCell,
-                deltaPRCell,
-                deltaYearPRCell;
+        $("tr[data-segment-effort-id]").appear().on("appear", function(e, $items) {
+            $items.each(function() {
+                var $row = $(this),
+                    $timeCell = $row.find("td.time-col"),
+                    $starCell = $row.find("td.starred-col"),
+                    segmentEffortId = $row.data("segment-effort-id"),
+                    url = "/segment_efforts/" + segmentEffortId,
+                    positionCell,
+                    deltaKomCell,
+                    deltaPRCell,
+                    deltaYearPRCell;
 
-            positionCell = $("<td><span class='ajax-loading-image'></span></td>");
-            $starCell.after(positionCell);
-
-            if (self.showDifferenceToCurrentYearPR) {
-                deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
-                $timeCell.after(deltaYearPRCell);
-            }
-
-            if (self.showDifferenceToPR) {
-                deltaPRCell = $("<td><span class='ajax-loading-image'></span></td>");
-                $timeCell.after(deltaPRCell);
-            }
-
-            if (self.showDifferenceToKOM) {
-                deltaKomCell = $("<td><span class='ajax-loading-image'></span></td>");
-                $timeCell.after(deltaKomCell);
-            }
-
-            $.getJSON(url, function(data) {
-                if (!data) {
+                if ($row.hasClass("selected") || $row.data("segment-time-comparison")) {
                     return;
                 }
+                $row.data("segment-time-comparison", true);
 
-                positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
+                positionCell = $("<td><span class='ajax-loading-image'></span></td>");
+                $starCell.after(positionCell);
 
-                var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
-                    seconds = data.elapsed_time_raw,
-                    difference = (seconds - komSeconds);
+                if (self.showDifferenceToCurrentYearPR) {
+                    deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $timeCell.after(deltaYearPRCell);
+                }
+
+                if (self.showDifferenceToPR) {
+                    deltaPRCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $timeCell.after(deltaPRCell);
+                }
 
                 if (self.showDifferenceToKOM) {
-                    deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                    deltaKomCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $timeCell.after(deltaKomCell);
                 }
 
-                if (!self.showDifferenceToPR && !self.showDifferenceToCurrentYearPR) {
-                    return;
-                }
+                $.getJSON(url, function(data) {
+                    if (!data) {
+                        return;
+                    }
+                    
+                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
 
-                $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
-                    data.top_results.sort(function(left, right) {
-                        return left.start_date_local_raw - right.start_date_local_raw;
-                    });
+                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
 
-                    var currentSegmentEfforDateTime,
-                        previousPersonalSeconds,
-                        previousPersonalDate,
-                        currentYearPRSeconds,
-                        currentYearPRDate,
-                        i,
-                        max;
+                    var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
+                        seconds = data.elapsed_time_raw,
+                        difference = (seconds - komSeconds);
 
-                    for (i = 0, max = data.top_results.length; i < max; i++) {
-                        data.top_results[i].__dateTime = new Date(data.top_results[i].start_date_local_raw);
-                        if (data.top_results[i].id == segmentEffortId) {
-                            currentSegmentEfforDateTime = data.top_results[i].__dateTime;
-                        }
+                    if (self.showDifferenceToKOM) {
+                        deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                     }
 
-                    if (!currentSegmentEfforDateTime) {
+                    if (!self.showDifferenceToPR && !self.showDifferenceToCurrentYearPR) {
                         return;
                     }
 
-                    data.top_results.sort(function(left, right) {
-                        return left.rank - right.rank;
+                    $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
+                        data.top_results.sort(function(left, right) {
+                            return left.start_date_local_raw - right.start_date_local_raw;
+                        });
+
+                        var currentSegmentEfforDateTime,
+                            previousPersonalSeconds,
+                            previousPersonalDate,
+                            currentYearPRSeconds,
+                            currentYearPRDate,
+                            i,
+                            max;
+
+                        for (i = 0, max = data.top_results.length; i < max; i++) {
+                            data.top_results[i].__dateTime = new Date(data.top_results[i].start_date_local_raw);
+                            if (data.top_results[i].id == segmentEffortId) {
+                                currentSegmentEfforDateTime = data.top_results[i].__dateTime;
+                            }
+                        }
+
+                        if (!currentSegmentEfforDateTime) {                        
+                            return;
+                        }
+
+                        data.top_results.sort(function(left, right) {
+                            return left.rank - right.rank;
+                        });
+
+                        if (self.showDifferenceToPR) {
+                            for (i = 0, max = data.top_results.length; i < max; i++) {
+                                if (data.top_results[i].__dateTime < currentSegmentEfforDateTime) {
+                                    previousPersonalSeconds = data.top_results[i].elapsed_time_raw;
+                                    previousPersonalDate = data.top_results[i].start_date_local;
+                                    break;
+                                }
+                            }
+
+                            if (previousPersonalSeconds) {
+                                difference = (seconds - previousPersonalSeconds);
+                                deltaPRCell.html("<span title='Time difference with your PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                            } else {
+                                deltaPRCell.html("n/a");
+                            }
+                        }
+
+                        if (self.showDifferenceToCurrentYearPR) {
+                            for (i = 0, max = data.top_results.length; i < max; i++) {
+                                if (data.top_results[i].__dateTime.getFullYear() == currentSegmentEfforDateTime.getFullYear()) {
+                                    currentYearPRSeconds = data.top_results[i].elapsed_time_raw;
+                                    currentYearPRDate = data.top_results[i].start_date_local;
+                                    break;
+                                }
+                            }
+
+                            if (currentYearPRSeconds) {
+                                difference = (seconds - currentYearPRSeconds);
+                                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                            } else {
+                                deltaYearPRCell.html("n/a");
+                            }
+                        }
                     });
-
-                    if (self.showDifferenceToPR) {
-                        for (i = 0, max = data.top_results.length; i < max; i++) {
-                            if (data.top_results[i].__dateTime < currentSegmentEfforDateTime) {
-                                previousPersonalSeconds = data.top_results[i].elapsed_time_raw;
-                                previousPersonalDate = data.top_results[i].start_date_local;
-                                break;
-                            }
-                        }
-
-                        if (previousPersonalSeconds) {
-                            difference = (seconds - previousPersonalSeconds);
-                            deltaPRCell.html("<span title='Time difference with your PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
-                        } else {
-                            deltaPRCell.html("n/a");
-                        }
-                    }
-
-                    if (self.showDifferenceToCurrentYearPR) {
-                        for (i = 0, max = data.top_results.length; i < max; i++) {
-                            if (data.top_results[i].__dateTime.getFullYear() == currentSegmentEfforDateTime.getFullYear()) {
-                                currentYearPRSeconds = data.top_results[i].elapsed_time_raw;
-                                currentYearPRDate = data.top_results[i].start_date_local;
-                                break;
-                            }
-                        }
-
-                        if (currentYearPRSeconds) {
-                            difference = (seconds - currentYearPRSeconds);
-                            deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (difference > 0 ? "red" : "green") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
-                        } else {
-                            deltaYearPRCell.html("n/a");
-                        }
-                    }
                 });
             });
         });
