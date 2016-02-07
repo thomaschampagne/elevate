@@ -53,15 +53,15 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
 
         if (self.showDifferenceToCurrentYearPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
+            timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
         }
 
         if (self.showDifferenceToPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the acitivity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
+            timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
         }
 
         if (self.showDifferenceToKOM) {
-            timeColumnHeader.after("<th title='Column shows the difference between the current " + (isFemale ? "QOM" : "KOM") + " time and the acitivity segment time.'>" + deltaKomLabel + "</th>");
+            timeColumnHeader.after("<th title='Column shows the difference between the current " + (isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + deltaKomLabel + "</th>");
         }
 
         $("tr[data-segment-effort-id]").appear().on("appear", function(e, $items) {
