@@ -104,9 +104,10 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         return;
                     }
 
-                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
+                    data.overall_rank = parseInt(data.overall_rank);
+                    var percentRank = (data.overall_rank / data.overall_count * 100).toFixed(1);
 
-                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "</span>");
+                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "<br/>" + percentRank + "%</span>");
 
                     var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
                         seconds = data.elapsed_time_raw,
@@ -199,4 +200,5 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         waitForSegmentsSectionRemoved();
 
     },
+
 };
