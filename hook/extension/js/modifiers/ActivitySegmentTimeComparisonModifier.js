@@ -100,6 +100,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 }
 
                 $.getJSON(url, function(data) {
+
                     if (!data) {
                         return;
                     }
@@ -122,6 +123,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     }
 
                     $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
+
                         data.top_results.sort(function(left, right) {
                             return left.start_date_local_raw - right.start_date_local_raw;
                         });
@@ -142,6 +144,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         }
 
                         if (!currentSegmentEfforDateTime) {
+                            // We are going are a place is shared by several people. Use current activity date instead?!
+                            // Or find on page 2... @ "/segments/" + data.segment_id + "/leaderboard?raw=true&page=2
                             deltaPRCell.html("n/a");
                             deltaYearPRCell.html("n/a");
                             return;
@@ -162,7 +166,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                             if (previousPersonalSeconds) {
                                 difference = (seconds - previousPersonalSeconds);
-                                deltaPRCell.html("<span title='Time difference with your PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                                deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
                             } else {
                                 deltaPRCell.html("n/a");
                             }
