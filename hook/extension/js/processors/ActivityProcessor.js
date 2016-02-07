@@ -16,7 +16,6 @@ ActivityProcessor.gradeDownHillLimit = -1.6;
 ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
 ActivityProcessor.gradeProfileFlat = 'FLAT';
 ActivityProcessor.gradeProfileHilly = 'HILLY';
-ActivityProcessor.ascentSpeedGradeLimit = 0.03;
 
 
 /**
@@ -60,7 +59,7 @@ ActivityProcessor.prototype = {
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
             // Append altitude_smooth to fetched strava activity stream before compute analysis data on
-            activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
+            // activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
 
             // Slices array if activity bounds given. It's mainly used for segment effort extended stats
             if (bounds && bounds[0] && bounds[1]) {
@@ -99,11 +98,11 @@ ActivityProcessor.prototype = {
                 if (!_.isEmpty(activityStream.distance)) {
                     activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
                 }
-
-                if (!_.isEmpty(activityStream.altitude_smooth)) {
-                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
-                }
-
+                /*
+                                if (!_.isEmpty(activityStream.altitude_smooth)) {
+                                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
+                                }
+                */
             }
 
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
@@ -174,7 +173,7 @@ ActivityProcessor.prototype = {
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        var elevationData = this.elevationData_(activityStream, activityStatsMap);
+        var elevationData = this.elevationData_(activityStream.altitude, activityStream.distance, activityStream.time);
 
         // Return an array with all that shit...
         return {
@@ -756,186 +755,182 @@ ActivityProcessor.prototype = {
     },
 
 
-    elevationData_: function(activityStream, activityStatsMap) {
-        var distanceArray = activityStream.distance;
-        var timeArray = activityStream.time;
-        var velocityArray = activityStream.velocity_smooth;
-        var altitudeArray = activityStream.altitude_smooth;
+    elevationData_: function(altitudeArray, distanceArray, timeArray) {
 
-        if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
+        if (_.isEmpty(distanceArray) || _.isEmpty(altitudeArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
-        var accumulatedElevation = 0;
-        var accumulatedElevationAscent = 0;
-        var accumulatedElevationDescent = 0;
-        var accumulatedDistance = 0;
+        // altitudeArray = this.lowPassDataSmoothing_(altitudeArray, distanceArray, 100);
 
-        // specials arrays for ascent speeds
+        var timeDeltaBuffer = 0;
+
+        var distanceDeltaBuffer = 0;
+        var deltaDistanceSamples = [];
+
+        var elevationSamples = [];
+        var elevationSamplesSum = 0;
+        var elevationSamplesCount = 0;
+        var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
+        var distanceCutSize = 110; // 110 meters TODO Move this outside
+        var elevationDeltaBuffer = 0;
+
+        var totalAscent = 0;
+        var totalDescent = 0;
+
+        var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
         var ascentSpeedMeterPerHourSamples = [];
-        var ascentSpeedMeterPerHourDistance = [];
-        var ascentSpeedMeterPerHourTime = [];
+        var ascentSpeedMeterPerHourDeltaTimes = [];
         var ascentSpeedMeterPerHourSum = 0;
 
-        var elevationSampleCount = 0;
-        var elevationSamples = [];
-        var elevationSamplesDistance = [];
-        var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
-        var ascentSpeedZones = this.prepareZonesForDistribComputation(this.zones.ascent);
-        var durationInSeconds = 0;
-        var distance = 0;
-        var ascentDurationInSeconds = 0;
+        for (var i = 0; i < distanceArray.length; i++) { // Loop on samples
 
-        for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
+            if (i > 0) {
 
-            // Compute distribution for graph/table
-            if (i > 0 && velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph) {
+                // Time 
+                var deltaTime = timeArray[i] - timeArray[i - 1];
+                timeDeltaBuffer += deltaTime;
 
-                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
-                distance = distanceArray[i] - distanceArray[i - 1];
+                // Distance
+                var distanceDelta = distanceArray[i] - distanceArray[i - 1];
+                distanceDeltaBuffer += distanceDelta;
+                deltaDistanceSamples.push(distanceDelta);
 
-                // Compute average and normalized 
+                // Elevation
+                var currentAltitude = altitudeArray[i];
+                elevationSamplesSum += currentAltitude;
+                elevationSamples.push(currentAltitude);
+                elevationSamplesCount++;
+                elevationDeltaBuffer += altitudeArray[i] - altitudeArray[i - 1]; // add elevationDelta to window
 
-                // average elevation over distance
-                accumulatedElevation += this.valueForSum_(altitudeArray[i], altitudeArray[i - 1], distance);
-                elevationSampleCount += distance;
-                elevationSamples.push(altitudeArray[i]);
-                elevationSamplesDistance.push(distance);
-
-                var elevationZoneId = this.getZoneId(this.zones.elevation, altitudeArray[i]);
+                var elevationZoneId = this.getZoneId(this.zones.elevation, currentAltitude);
 
                 if (!_.isUndefined(elevationZoneId) && !_.isUndefined(elevationZones[elevationZoneId])) {
-                    elevationZones[elevationZoneId]['s'] += durationInSeconds;
+                    elevationZones[elevationZoneId]['s'] += deltaTime;
                 }
 
-                // Meters climbed between current and previous
-                var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
+                // Compare elevation gained or loose every "distanceCutSize"
+                // The goal behind is to avoid small variations of elevation gain or loose 
+                // which produce differents result if GPS Altimeter used or std smartphone app                
+                if (distanceDeltaBuffer >= distanceCutSize) {
 
-                // If previous altitude lower than current then => climbing
-                if (elevationDiff > 0) {
+                    if (elevationDeltaBuffer >= 0) {
+                        // We are ascending...
+                        totalAscent += elevationDeltaBuffer;
 
-                    accumulatedElevationAscent += elevationDiff;
-                    ascentDurationInSeconds = timeArray[i] - timeArray[i - 1];
-
-                    var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
-
-                    // only if grade is > 3%
-                    if (distance > 0 && (elevationDiff / distance) > ActivityProcessor.ascentSpeedGradeLimit) {
-                        accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
-                        ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
-                        ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
-                        ascentSpeedMeterPerHourTime.push(ascentDurationInSeconds);
+                        var ascentSpeedMeterPerHour = elevationDeltaBuffer / timeDeltaBuffer * 3600;
                         ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+                        ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
+
+                        ascentSpeedMeterPerHourDeltaTimes.push(timeDeltaBuffer);
+                    } else {
+                        // We are descending...
+                        totalDescent += elevationDeltaBuffer;
                     }
-                } else {
-                    accumulatedElevationDescent -= elevationDiff;
+
+                    timeDeltaBuffer = 0; // Reset for next loop
+                    elevationDeltaBuffer = 0; // Reset for next loop
+                    distanceDeltaBuffer = 0; // Reset for next loop
                 }
 
             }
+
         }
-
-        var ascentSpeedArray = ascentSpeedMeterPerHourSamples; //this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
-        var j = 0;
-        for (j = 0; j < ascentSpeedArray.length; j++) {
-            var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedArray[j]);
-
-            if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
-                ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentSpeedMeterPerHourTime[j];
-            }
-        }
-
-        // Finalize compute of Elevation
-        var avgElevation = accumulatedElevation / elevationSampleCount;
-
-        var ascentSpeedMeterPerHourSamplesSorted = ascentSpeedMeterPerHourSamples.sort(function(a, b) {
-            return a - b;
-        });
-
-        var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
-
 
         // Update zone distribution percentage
         elevationZones = this.finalizeDistribComputationZones(elevationZones);
         ascentSpeedZones = this.finalizeDistribComputationZones(ascentSpeedZones);
 
-        var percentilesElevation = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
-        var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
+        // Do latest calculations...
+        var avgElevation = elevationSamplesSum / elevationSamplesCount;
+        var percentilesElevation = Helper.weightedPercentiles(elevationSamples, deltaDistanceSamples, [0.25, 0.5, 0.75]);
+        var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDeltaTimes, [0.25, 0.5, 0.75]);
+        var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
-        return {
+
+        var r = {
             'avgElevation': avgElevation.toFixed(0),
-            'accumulatedElevationAscent': accumulatedElevationAscent,
-            'accumulatedElevationDescent': accumulatedElevationDescent,
+            'accumulatedElevationAscent': totalAscent,
+            'accumulatedElevationDescent': totalDescent,
             'lowerQuartileElevation': percentilesElevation[0].toFixed(0),
             'medianElevation': percentilesElevation[1].toFixed(0),
             'upperQuartileElevation': percentilesElevation[2].toFixed(0),
-            'elevationZones': elevationZones, // Only while moving
+            'elevationZones': elevationZones,
             'ascentSpeedZones': ascentSpeedZones, // Only while moving
             'ascentSpeed': {
-                'avg': _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
+                'avg': avgAscentSpeed,
                 'lowerQuartile': percentilesAscent[0].toFixed(0),
                 'median': percentilesAscent[1].toFixed(0),
                 'upperQuartile': percentilesAscent[2].toFixed(0)
             }
+
         };
+
+        console.debug('r.accumulatedElevationAscent: ' + r.accumulatedElevationAscent);
+        console.debug('r.accumulatedElevationDescent: ' + r.accumulatedElevationDescent);
+        console.debug('r.ascentSpeed.avg: ' + r.ascentSpeed.avg);
+        console.debug(r);
+
+        return r;
     },
+    /*
+        smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
 
-    smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
+            if (!activityStream.altitude) {
+                return null;
+            }
 
-        if (!activityStream.altitude) {
-            return null;
-        }
-
-        var activityAltitudeArray = activityStream.altitude;
-        var distanceArray = activityStream.distance;
-        //  var timeArray = activityStream.time;  // for smoothing by time
-        var velocityArray = activityStream.velocity_smooth;
-        var smoothingL = 10;
-        var smoothingH = 600;
-        var smoothing;
-        var altitudeArray;
-        while (smoothingH - smoothingL >= 1) {
-            smoothing = smoothingL + (smoothingH - smoothingL) / 2;
-            altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
-            // altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
-            var totalElevation = 0;
-            for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
-                if (i > 0 && velocityArray[i] * 3.6 > VacuumProcessor.movingThresholdKph) {
-                    var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
-                    if (elevationDiff > 0) {
-                        totalElevation += elevationDiff;
+            var activityAltitudeArray = activityStream.altitude;
+            var distanceArray = activityStream.distance;
+            //  var timeArray = activityStream.time;  // for smoothing by time
+            var velocityArray = activityStream.velocity_smooth;
+            var smoothingL = 10;
+            var smoothingH = 600;
+            var smoothing;
+            var altitudeArray;
+            while (smoothingH - smoothingL >= 1) {
+                smoothing = smoothingL + (smoothingH - smoothingL) / 2;
+                altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
+                // altitudeArray = this.lowPassDataSmoothing_(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
+                var totalElevation = 0;
+                for (var i = 0; i < altitudeArray.length; i++) { // Loop on samples
+                    if (i > 0 && velocityArray[i] * 3.6 > VacuumProcessor.movingThresholdKph) {
+                        var elevationDiff = altitudeArray[i] - altitudeArray[i - 1];
+                        if (elevationDiff > 0) {
+                            totalElevation += elevationDiff;
+                        }
                     }
                 }
-            }
 
-            if (totalElevation < stravaElevation) {
-                smoothingH = smoothing;
-            } else {
-                smoothingL = smoothing;
-            }
-        }
-        return altitudeArray;
-    },
-
-    lowPassDataSmoothing_: function(data, distance, smoothing) {
-        // Below algorithm is applied in this method
-        // http://phrogz.net/js/framerate-independent-low-pass-filter.html
-        // value += (currentValue - value) / (smoothing / timeSinceLastSample);
-        // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
-        if (data && distance) {
-            var smooth_factor = 0;
-            var result = [];
-            result[0] = data[0];
-            for (i = 1, max = data.length; i < max; i++) {
-                if (smoothing === 0) {
-                    result[i] = data[i];
+                if (totalElevation < stravaElevation) {
+                    smoothingH = smoothing;
                 } else {
-                    smooth_factor = smoothing / (distance[i] - distance[i - 1]);
-                    // only apply filter if smooth_factor > 1, else this leads to instability !!!
-                    result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
-                    // result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
+                    smoothingL = smoothing;
                 }
             }
-            return result;
-        }
-    }
+            return altitudeArray;
+        },
+
+        lowPassDataSmoothing_: function(data, distance, smoothing) {
+            // Below algorithm is applied in this method
+            // http://phrogz.net/js/framerate-independent-low-pass-filter.html
+            // value += (currentValue - value) / (smoothing / timeSinceLastSample);
+            // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
+            if (data && distance) {
+                var smooth_factor = 0;
+                var result = [];
+                result[0] = data[0];
+                for (i = 1, max = data.length; i < max; i++) {
+                    if (smoothing === 0) {
+                        result[i] = data[i];
+                    } else {
+                        smooth_factor = smoothing / (distance[i] - distance[i - 1]);
+                        // only apply filter if smooth_factor > 1, else this leads to instability !!!
+                        result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
+                        // result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
+                    }
+                }
+                return result;
+            }
+        }*/
 };
