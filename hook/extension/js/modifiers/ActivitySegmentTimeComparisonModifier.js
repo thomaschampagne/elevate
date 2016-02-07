@@ -142,6 +142,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         }
 
                         if (!currentSegmentEfforDateTime) {
+                            deltaPRCell.html("n/a");
+                            deltaYearPRCell.html("n/a");
                             return;
                         }
 
