@@ -65,12 +65,14 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         }
 
         $("tr[data-segment-effort-id]").appear().on("appear", function(e, $items) {
+
             $items.each(function() {
+
                 var $row = $(this),
                     $timeCell = $row.find("td.time-col"),
                     $starCell = $row.find("td.starred-col"),
                     segmentEffortId = $row.data("segment-effort-id"),
-                    url = "/segment_efforts/" + segmentEffortId,
+                    segmentEffortInfoUrl = "/segment_efforts/" + segmentEffortId,
                     positionCell,
                     deltaKomCell,
                     deltaPRCell,
@@ -79,6 +81,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 if ($row.hasClass("selected") || $row.data("segment-time-comparison")) {
                     return;
                 }
+
                 $row.data("segment-time-comparison", true);
 
                 positionCell = $("<td><span class='ajax-loading-image'></span></td>");
@@ -99,96 +102,44 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     $timeCell.after(deltaKomCell);
                 }
 
-                $.getJSON(url, function(data) {
+                // Retreive segment effort infos
+                $.getJSON(segmentEffortInfoUrl, function(segmentEffortInfo) {
 
-                    if (!data) {
+                    if (!segmentEffortInfo) {
                         return;
                     }
 
-                    data.overall_rank = parseInt(data.overall_rank);
-                    var percentRank = (data.overall_rank / data.overall_count * 100).toFixed(1);
+                    // If flagged segment then '-'
+                    if (segmentEffortInfo.hazard_segment) {
+                        positionCell.html("-");
+                        deltaKomCell.html("-");
+                        deltaPRCell.html("-");
+                        deltaYearPRCell.html("-");
+                        return;
+                    }
 
-                    positionCell.html("<span title=\"Your position\">" + data.overall_rank + "<br/>" + percentRank + "%</span>");
+                    segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
+                    var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
 
-                    var komSeconds = Helper.HHMMSStoSeconds((isFemale ? data.qom_time : data.kom_time).replace(/[^0-9:]/gi, "")),
-                        seconds = data.elapsed_time_raw,
-                        difference = (seconds - komSeconds);
+                    positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+
+                    var komSeconds = Helper.HHMMSStoSeconds((isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
+                        elapsedTime = segmentEffortInfo.elapsed_time_raw,
+                        komDiffTime = (elapsedTime - komSeconds);
 
                     if (self.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (difference > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
+                        deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!self.showDifferenceToPR && !self.showDifferenceToCurrentYearPR) {
                         return;
                     }
 
-                    $.getJSON("/segments/" + data.segment_id + "/leaderboard?raw=true&page=1&per_page=1000000&viewer_context=false&filter=my_results", function(data) {
-
-                        data.top_results.sort(function(left, right) {
-                            return left.start_date_local_raw - right.start_date_local_raw;
-                        });
-
-                        var currentSegmentEfforDateTime,
-                            previousPersonalSeconds,
-                            previousPersonalDate,
-                            currentYearPRSeconds,
-                            currentYearPRDate,
-                            i,
-                            max;
-
-                        for (i = 0, max = data.top_results.length; i < max; i++) {
-                            data.top_results[i].__dateTime = new Date(data.top_results[i].start_date_local_raw);
-                            if (data.top_results[i].id == segmentEffortId) {
-                                currentSegmentEfforDateTime = data.top_results[i].__dateTime;
-                            }
-                        }
-
-                        if (!currentSegmentEfforDateTime) {
-                            // We are going are a place is shared by several people. Use current activity date instead?!
-                            // Or find on page 2... @ "/segments/" + data.segment_id + "/leaderboard?raw=true&page=2
-                            deltaPRCell.html("n/a");
-                            deltaYearPRCell.html("n/a");
-                            return;
-                        }
-
-                        data.top_results.sort(function(left, right) {
-                            return left.rank - right.rank;
-                        });
-
-                        if (self.showDifferenceToPR) {
-                            for (i = 0, max = data.top_results.length; i < max; i++) {
-                                if (data.top_results[i].__dateTime < currentSegmentEfforDateTime) {
-                                    previousPersonalSeconds = data.top_results[i].elapsed_time_raw;
-                                    previousPersonalDate = data.top_results[i].start_date_local;
-                                    break;
-                                }
-                            }
-
-                            if (previousPersonalSeconds) {
-                                difference = (seconds - previousPersonalSeconds);
-                                deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (difference > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
-                            } else {
-                                deltaPRCell.html("n/a");
-                            }
-                        }
-
-                        if (self.showDifferenceToCurrentYearPR) {
-                            for (i = 0, max = data.top_results.length; i < max; i++) {
-                                if (data.top_results[i].__dateTime.getFullYear() == currentSegmentEfforDateTime.getFullYear()) {
-                                    currentYearPRSeconds = data.top_results[i].elapsed_time_raw;
-                                    currentYearPRDate = data.top_results[i].start_date_local;
-                                    break;
-                                }
-                            }
-
-                            if (currentYearPRSeconds) {
-                                difference = (seconds - currentYearPRSeconds);
-                                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (difference > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(difference) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(difference), true) + "</span>");
-                            } else {
-                                deltaYearPRCell.html("n/a");
-                            }
-                        }
+                    // Get leader board from segment id
+                    self.findCurrentSegmentEffortDate(segmentEffortInfo.segment_id, segmentEffortId).then(function(currentSegmentEffortDateTime, leaderboardData) {
+                        self.handleTimeDiffenceAlongUserLeaderboard.call(self, leaderboardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell);
                     });
+
                 });
             });
         });
@@ -207,4 +158,111 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
     },
 
+
+    findCurrentSegmentEffortDate: function(segmentId, segmentEffortId, page, deferred, fetchedLeaderboardData) {
+
+        if (!page) {
+            page = 1;
+        }
+        if (!deferred) {
+            deferred = $.Deferred();
+        }
+
+        if (!fetchedLeaderboardData) {
+            fetchedLeaderboardData = [];
+        }
+
+        var perPage = 50;
+
+        var jqxhr = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
+
+        var currentSegmentEffortDateTime = null;
+
+        jqxhr.done(function(leaderboardData) {
+
+            // Make any recursive leaderboardData fetched flatten with previous one 
+            var max;
+            for (var i = 0, max = leaderboardData.top_results.length; i < max; i++) {
+
+                leaderboardData.top_results[i].__dateTime = new Date(leaderboardData.top_results[i].start_date_local_raw);
+
+                if (leaderboardData.top_results[i].id == segmentEffortId) {
+                    currentSegmentEffortDateTime = leaderboardData.top_results[i].__dateTime;
+                    // no break !
+                }
+            }
+
+            fetchedLeaderboardData = _.flatten(_.union(leaderboardData.top_results, fetchedLeaderboardData));
+
+            if (currentSegmentEffortDateTime) { // Not yet resolved then seek recursive on next page
+                deferred.resolve(currentSegmentEffortDateTime, fetchedLeaderboardData);
+            } else {
+                this.findCurrentSegmentEffortDate(segmentId, segmentEffortId, page + 1, deferred, fetchedLeaderboardData);
+            }
+
+        }.bind(this)).fail(function(error) {
+
+            deferred.reject(error);
+
+        }.bind(this));
+
+        return deferred.promise();
+    },
+
+    handleTimeDiffenceAlongUserLeaderboard: function(leaderboardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell) {
+
+        var previousPersonalSeconds,
+            previousPersonalDate,
+            currentYearPRSeconds,
+            currentYearPRDate,
+            i,
+            max;
+
+        if (!currentSegmentEffortDateTime) {
+            // We are going are a place is shared by several people. Use current activity date instead?!
+            // Or find on page 2... @ "/segments/" + leaderboardData.segment_id + "/leaderboard?raw=true&page=2
+            deltaPRCell.html("-");
+            deltaYearPRCell.html("-");
+            return;
+        }
+
+        // Sort results from best to worst
+        leaderboardData.sort(function(left, right) {
+            return left.rank - right.rank;
+        });
+
+        if (this.showDifferenceToPR) {
+            for (i = 0, max = leaderboardData.length; i < max; i++) {
+                if (leaderboardData[i].__dateTime < currentSegmentEffortDateTime) {
+                    previousPersonalSeconds = leaderboardData[i].elapsed_time_raw;
+                    previousPersonalDate = leaderboardData[i].start_date_local;
+                    break;
+                }
+            }
+
+            if (previousPersonalSeconds) {
+                komDiffTime = (elapsedTime - previousPersonalSeconds);
+                deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+            } else {
+                deltaPRCell.html("-");
+            }
+        }
+
+        if (this.showDifferenceToCurrentYearPR) {
+            for (i = 0, max = leaderboardData.length; i < max; i++) {
+                if (leaderboardData[i].__dateTime.getFullYear() == currentSegmentEffortDateTime.getFullYear()) {
+                    currentYearPRSeconds = leaderboardData[i].elapsed_time_raw;
+                    currentYearPRDate = leaderboardData[i].start_date_local;
+                    break;
+                }
+            }
+
+            if (currentYearPRSeconds) {
+                komDiffTime = (elapsedTime - currentYearPRSeconds);
+                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+            } else {
+                deltaYearPRCell.html("-");
+            }
+        }
+    }
 };
