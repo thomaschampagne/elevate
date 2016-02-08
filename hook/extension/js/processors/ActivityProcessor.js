@@ -36,9 +36,11 @@ ActivityProcessor.prototype = {
             console.error('No activity type set for ActivityProcessor');
         }
 
+        this.bounds = bounds;
+
         // We are not using cache when bounds are given
         var useCache = true;
-        if (!_.isEmpty(bounds)) {
+        if (!_.isEmpty(this.bounds)) {
             useCache = false;
         }
 
@@ -58,51 +60,44 @@ ActivityProcessor.prototype = {
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
         this.vacuumProcessor_.getActivityStream(function(activityStatsMap, activityStream, athleteWeight, hasPowerMeter) { // Get stream on page
 
-            // Append altitude_smooth to fetched strava activity stream before compute analysis data on
-            // activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
-
             // Slices array if activity bounds given. It's mainly used for segment effort extended stats
-            if (bounds && bounds[0] && bounds[1]) {
+            if (this.bounds && this.bounds[0] && this.bounds[1]) {
 
                 if (!_.isEmpty(activityStream.velocity_smooth)) {
-                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(this.bounds[0], this.bounds[1]);
                 }
                 if (!_.isEmpty(activityStream.time)) {
-                    activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+                    activityStream.time = activityStream.time.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.heartrate)) {
-                    activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+                    activityStream.heartrate = activityStream.heartrate.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.watts)) {
-                    activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+                    activityStream.watts = activityStream.watts.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.watts_calc)) {
-                    activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+                    activityStream.watts_calc = activityStream.watts_calc.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.cadence)) {
-                    activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+                    activityStream.cadence = activityStream.cadence.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.grade_smooth)) {
-                    activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+                    activityStream.grade_smooth = activityStream.grade_smooth.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.altitude)) {
-                    activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+                    activityStream.altitude = activityStream.altitude.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.distance)) {
-                    activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+                    activityStream.distance = activityStream.distance.slice(this.bounds[0], this.bounds[1]);
                 }
-                /*
-                                if (!_.isEmpty(activityStream.altitude_smooth)) {
-                                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
-                                }
-                */
+
             }
 
             var result = this.computeAnalysisData_(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream);
@@ -761,7 +756,7 @@ ActivityProcessor.prototype = {
             return null;
         }
 
-        // altitudeArray = this.lowPassDataSmoothing_(altitudeArray, distanceArray, 100);
+        var doWecomputeAscentSpeed = !_.isEmpty(this.bounds);
 
         var timeDeltaBuffer = 0;
 
@@ -772,7 +767,7 @@ ActivityProcessor.prototype = {
         var elevationSamplesSum = 0;
         var elevationSamplesCount = 0;
         var elevationZones = this.prepareZonesForDistribComputation(this.zones.elevation);
-        var distanceCutSize = 110; // 110 meters TODO Move this outside
+        var distanceCutSize = 10; // 110 meters TODO Move this outside
         var elevationDeltaBuffer = 0;
 
         var totalAscent = 0;
@@ -819,10 +814,16 @@ ActivityProcessor.prototype = {
                         totalAscent += elevationDeltaBuffer;
 
                         var ascentSpeedMeterPerHour = elevationDeltaBuffer / timeDeltaBuffer * 3600;
+
                         ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
                         ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
-
                         ascentSpeedMeterPerHourDeltaTimes.push(timeDeltaBuffer);
+
+                        var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedMeterPerHour);
+                        if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
+                            ascentSpeedZones[ascentSpeedZoneId]['s'] += timeDeltaBuffer;
+                        }
+
                     } else {
                         // We are descending...
                         totalDescent += elevationDeltaBuffer;
@@ -848,7 +849,7 @@ ActivityProcessor.prototype = {
         var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
 
-        var r = {
+        var result = {
             'avgElevation': avgElevation.toFixed(0),
             'accumulatedElevationAscent': totalAscent,
             'accumulatedElevationDescent': totalDescent,
@@ -866,12 +867,18 @@ ActivityProcessor.prototype = {
 
         };
 
-        console.debug('r.accumulatedElevationAscent: ' + r.accumulatedElevationAscent);
-        console.debug('r.accumulatedElevationDescent: ' + r.accumulatedElevationDescent);
-        console.debug('r.ascentSpeed.avg: ' + r.ascentSpeed.avg);
-        console.debug(r);
+        console.debug('result.accumulatedElevationAscent: ' + result.accumulatedElevationAscent);
+        console.debug('result.accumulatedElevationDescent: ' + result.accumulatedElevationDescent);
+        console.debug('result.ascentSpeed.avg: ' + result.ascentSpeed.avg);
 
-        return r;
+        if (doWecomputeAscentSpeed) {
+            result = _.omit(result, 'ascentSpeedZones');
+            result = _.omit(result, 'ascentSpeed');
+        }
+
+        console.debug(result);
+
+        return result;
     },
     /*
         smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {
