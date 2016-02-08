@@ -37,35 +37,38 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         $("#segments #segment-filter").show();
         $("#segments").addClass("time-comparison-enabled");
 
-        var isFemale = false,
-            deltaKomLabel = "&Delta;KOM",
-            deltaPRLabel = "&Delta;PR",
-            deltaYearPRLabel = "&Delta;yPR",
-            timeColumnHeader = $("#segments table.segments th.time-col"),
-            starColumnHeader = $("#segments table.segments th.starred-col");
+        // Find sex of current acitivity athlete
+        self.findOutGender();
 
-        if (!_.isUndefined(window.pageView)) {
-            isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
-            if (isFemale) {
-                deltaKomLabel = "&Delta;QOM";
-            }
-        }
+        // Asign new labels values
+        self.setNewLabelsValues();
 
-        starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
-
-        if (self.showDifferenceToCurrentYearPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + deltaYearPRLabel + "</th>");
-        }
-
-        if (self.showDifferenceToPR) {
-            timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your previous PR on that segment.'>" + deltaPRLabel + "</th>");
-        }
-
-        if (self.showDifferenceToKOM) {
-            timeColumnHeader.after("<th title='Column shows the difference between the current " + (isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + deltaKomLabel + "</th>");
-        }
+        // Used to update header with new columns names when first item has appear
+        self.firstAppearDone = false;
 
         $("tr[data-segment-effort-id]").appear().on("appear", function(e, $items) {
+
+            if (!self.firstAppearDone) {
+
+                var timeColumnHeader = $("#segments table.segments th.time-col");
+                var starColumnHeader = $("#segments table.segments th.starred-col");
+
+                starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
+
+                if (self.showDifferenceToCurrentYearPR) {
+                    timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
+                }
+
+                if (self.showDifferenceToPR) {
+                    timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your previous PR on that segment.'>" + self.deltaPRLabel + "</th>");
+                }
+
+                if (self.showDifferenceToKOM) {
+                    timeColumnHeader.after("<th title='Column shows the difference between the current " + (self.isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
+                }
+
+                self.firstAppearDone = true;
+            }
 
             $items.each(function() {
 
@@ -124,12 +127,12 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                     positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
 
-                    var komSeconds = Helper.HHMMSStoSeconds((isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
+                    var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - komSeconds);
 
                     if (self.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                        deltaKomCell.html("<span title=\"Time difference with current " + self.deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!self.showDifferenceToPR && !self.showDifferenceToCurrentYearPR) {
@@ -159,6 +162,18 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
     },
 
+    findOutGender: function() {
+        this.isFemale = false;
+        if (!_.isUndefined(window.pageView)) {
+            this.isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
+        }
+    },
+
+    setNewLabelsValues: function() {
+        this.deltaKomLabel = (this.isFemale) ? "&Delta;QOM" : "&Delta;KOM";
+        this.deltaPRLabel = "&Delta;PR";
+        this.deltaYearPRLabel = "&Delta;yPR";
+    },
 
     findCurrentSegmentEffortDate: function(segmentId, segmentEffortId, page, deferred, fetchedLeaderboardData) {
 
