@@ -96,19 +96,19 @@ settingsSectionsModule.data = [{
     }, {
         optionKey: 'displaySegmentTimeComparisonToKOM',
         optionType: 'checkbox',
-        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to KOM/QOM display',
+        optionTitle: 'Enabled segment time comparison to KOM/QOM display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allows you to display the time difference between segment KOM/QOM time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToPR',
         optionType: 'checkbox',
-        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to PR display',
+        optionTitle: 'Enabled segment time comparison to PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allows you to display the time difference between segment PR time and the time from the activity for that segment.',
     }, {
         optionKey: 'displaySegmentTimeComparisonToCurrentYearPR',
         optionType: 'checkbox',
-        optionTitle: '[BETA: Performance issues] Enabled segment time comparison to current year PR display',
+        optionTitle: 'Enabled segment time comparison to current year PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
     }, {
