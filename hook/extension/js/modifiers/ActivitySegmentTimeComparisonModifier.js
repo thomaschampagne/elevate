@@ -43,6 +43,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             deltaYearPRLabel = "&Delta;yPR",
             timeColumnHeader = $("#segments table.segments th.time-col"),
             starColumnHeader = $("#segments table.segments th.starred-col");
+
         if (!_.isUndefined(window.pageView)) {
             isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
             if (isFemale) {
@@ -180,23 +181,21 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
         jqxhr.done(function(leaderboardData) {
 
-            // Make any recursive leaderboardData fetched flatten with previous one 
             var max;
             for (var i = 0, max = leaderboardData.top_results.length; i < max; i++) {
-
                 leaderboardData.top_results[i].__dateTime = new Date(leaderboardData.top_results[i].start_date_local_raw);
-
                 if (leaderboardData.top_results[i].id == segmentEffortId) {
                     currentSegmentEffortDateTime = leaderboardData.top_results[i].__dateTime;
                     // no break !
                 }
             }
 
+            // Make any recursive leaderboardData fetched flatten with previous one 
             fetchedLeaderboardData = _.flatten(_.union(leaderboardData.top_results, fetchedLeaderboardData));
 
-            if (currentSegmentEffortDateTime) { // Not yet resolved then seek recursive on next page
+            if (currentSegmentEffortDateTime) {
                 deferred.resolve(currentSegmentEffortDateTime, fetchedLeaderboardData);
-            } else {
+            } else { // Not yet resolved then seek recursive on next page
                 this.findCurrentSegmentEffortDate(segmentId, segmentEffortId, page + 1, deferred, fetchedLeaderboardData);
             }
 
@@ -214,9 +213,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         var previousPersonalSeconds,
             previousPersonalDate,
             currentYearPRSeconds,
-            currentYearPRDate,
-            i,
-            max;
+            currentYearPRDate;
 
         if (!currentSegmentEffortDateTime) {
             // We are going are a place is shared by several people. Use current activity date instead?!
@@ -232,7 +229,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         });
 
         if (this.showDifferenceToPR) {
-            for (i = 0, max = leaderboardData.length; i < max; i++) {
+            for (var i = 0; i < leaderboardData.length; i++) {
                 if (leaderboardData[i].__dateTime < currentSegmentEffortDateTime) {
                     previousPersonalSeconds = leaderboardData[i].elapsed_time_raw;
                     previousPersonalDate = leaderboardData[i].start_date_local;
@@ -241,15 +238,15 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             }
 
             if (previousPersonalSeconds) {
-                komDiffTime = (elapsedTime - previousPersonalSeconds);
-                deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                var deltaTime = (elapsedTime - previousPersonalSeconds);
+                deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
             } else {
                 deltaPRCell.html("-");
             }
         }
 
         if (this.showDifferenceToCurrentYearPR) {
-            for (i = 0, max = leaderboardData.length; i < max; i++) {
+            for (var i = 0; i < leaderboardData.length; i++) {
                 if (leaderboardData[i].__dateTime.getFullYear() == currentSegmentEffortDateTime.getFullYear()) {
                     currentYearPRSeconds = leaderboardData[i].elapsed_time_raw;
                     currentYearPRDate = leaderboardData[i].start_date_local;
@@ -258,8 +255,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             }
 
             if (currentYearPRSeconds) {
-                komDiffTime = (elapsedTime - currentYearPRSeconds);
-                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                var deltaTime = (elapsedTime - currentYearPRSeconds);
+                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
             } else {
                 deltaYearPRCell.html("-");
             }
