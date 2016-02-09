@@ -669,6 +669,12 @@ ActivityProcessor.prototype = {
             down: 0
         };
 
+        var upFlatDownDistanceData = {
+            up: 0,
+            flat: 0,
+            down: 0
+        };
+
         var durationInSeconds, durationCount = 0;
         var distance = 0;
         var currentSpeed;
@@ -706,17 +712,20 @@ ActivityProcessor.prototype = {
                         // time
                         upFlatDownInSeconds.up += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.up += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.up += distance;
+
                     } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
                         // time
                         upFlatDownInSeconds.down += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.down += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.down += distance;
+
                     } else { // FLAT
                         // time
                         upFlatDownInSeconds.flat += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.flat += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.flat += distance;
+
                     }
                 }
             }
@@ -733,9 +742,14 @@ ActivityProcessor.prototype = {
         }
 
         // Compute speed while up, flat down
-        upFlatDownMoveData.up = upFlatDownMoveData.up / upFlatDownInSeconds.up;
-        upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownInSeconds.down;
-        upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownInSeconds.flat;
+        upFlatDownMoveData.up = upFlatDownDistanceData.up / upFlatDownInSeconds.up * 3.6;
+        upFlatDownMoveData.down = upFlatDownDistanceData.down / upFlatDownInSeconds.down * 3.6;
+        upFlatDownMoveData.flat = upFlatDownDistanceData.flat / upFlatDownInSeconds.flat * 3.6;        
+
+        // Convert distance to KM
+        upFlatDownDistanceData.up = upFlatDownDistanceData.up / 1000;
+        upFlatDownDistanceData.down = upFlatDownDistanceData.down / 1000;
+        upFlatDownDistanceData.flat = upFlatDownDistanceData.flat / 1000;
 
         var avgGrade = gradeSum / gradeCount;
 
@@ -752,6 +766,7 @@ ActivityProcessor.prototype = {
             'gradeZones': gradeZones,
             'upFlatDownInSeconds': upFlatDownInSeconds,
             'upFlatDownMoveData': upFlatDownMoveData,
+            'upFlatDownDistanceData': upFlatDownDistanceData,
             'gradeProfile': gradeProfile
         };
 
