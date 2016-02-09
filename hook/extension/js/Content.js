@@ -239,6 +239,7 @@ var jsDependencies = [
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
+    'js/modifiers/RunningCadenceModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
     'js/modifiers/GoogleMapsComeBackModifier.js'
 ];

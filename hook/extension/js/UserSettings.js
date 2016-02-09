@@ -359,6 +359,7 @@ var userSettings = {
     defaultLeaderboardFilter: 'overall',
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
+    activateRunningCadence: true,
     activityGoogleMapType: 'terrain',
     hidePremiumFeatures: true,
     displaySegmentRankPercentage: true,

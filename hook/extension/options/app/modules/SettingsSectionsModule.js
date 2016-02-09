@@ -78,6 +78,12 @@ settingsSectionsModule.data = [{
         optionLabels: ['Running'],
         optionHtml: 'Activate running heart rate by default in running activity analysis.<br /><br /><img src="img/activateRunningHeartRate.png"/>',
     }, {
+        optionKey: 'activateRunningCadence',
+        optionType: 'checkbox',
+        optionTitle: 'Enable Cadence graph',
+        optionLabels: ['Running'],
+        optionHtml: 'Activate running cadence graph by default in running activity analysis.',
+    }, {
         optionKey: 'activityGoogleMapType',
         optionType: 'list',
         optionLabels: ['All'],
