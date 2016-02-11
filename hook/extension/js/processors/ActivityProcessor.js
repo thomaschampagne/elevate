@@ -406,7 +406,7 @@ ActivityProcessor.prototype = {
 
             if (velocityArray[i] * 3.6 > ActivityProcessor.movingThresholdKph && i > 0) {
                 // Compute average and normalized power
-                accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.925);
+                accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.970);
                 // Compute distribution for graph/table
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
@@ -428,13 +428,7 @@ ActivityProcessor.prototype = {
         // Finalize compute of Power
         var avgWatts = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-        var weightedPower;
-
-        if (hasPowerMeter) {
-            weightedPower = activityStatsMap.weightedPower;
-        } else {
-            weightedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
-        }
+        var weightedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
 
         var variabilityIndex = weightedPower / avgWatts;
         var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
@@ -744,7 +738,7 @@ ActivityProcessor.prototype = {
         // Compute speed while up, flat down
         upFlatDownMoveData.up = upFlatDownDistanceData.up / upFlatDownInSeconds.up * 3.6;
         upFlatDownMoveData.down = upFlatDownDistanceData.down / upFlatDownInSeconds.down * 3.6;
-        upFlatDownMoveData.flat = upFlatDownDistanceData.flat / upFlatDownInSeconds.flat * 3.6;        
+        upFlatDownMoveData.flat = upFlatDownDistanceData.flat / upFlatDownInSeconds.flat * 3.6;
 
         // Convert distance to KM
         upFlatDownDistanceData.up = upFlatDownDistanceData.up / 1000;

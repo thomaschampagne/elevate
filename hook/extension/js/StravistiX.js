@@ -144,7 +144,9 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                
+            ],
             features: [
                 'Added climb, flat & downhill distance for cyclists in extended stats (grade panel)',
                 'Added average W/Kg in power extended stats',
@@ -152,8 +154,9 @@ StravistiX.prototype = {
             ],
             fixes: [
                 'Fixed performance issues on segment time comparison. The feature has been re-enabled by default. This can be disabled here: <a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">here</a>',
-                'Fixed Ascent speed stats VAM mismatch with strava. Note that sscent speed stats are no longer displayed on segment efforts stats',
                 'Fixed "W/KG" computations: bike weight has been removed from "KG". Only rider weight is considered.',
+                'Fixed Ascent speed stats VAM mismatch with strava. Note that sscent speed stats are no longer displayed on segment efforts stats',
+                'Fixed Weighted power all same on efforts stats. Only cyclists having a power meter were touched by this bug',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
