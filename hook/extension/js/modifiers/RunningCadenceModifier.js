@@ -1,18 +1,18 @@
 /**
- *   RunningHeartRateModifier is responsible of ...
+ *   RunningCadenceModifier is responsible of ...
  */
-function RunningHeartRateModifier() {}
+function RunningCadenceModifier() {}
 
 /**
  * Define prototype
  */
-RunningHeartRateModifier.prototype = {
+RunningCadenceModifier.prototype = {
 
     modify: function modify() {
 
-        var dataWatch = 'heartrate';
+        var dataWatch = 'cadence';
 
-        var runningHeartRateModifier = function() {
+        var runningCadenceModifier = function() {
 
             var element = $('#elevation-profile td[data-type=' + dataWatch + '] .toggle-button')
                 .not('.once-only')
@@ -25,7 +25,6 @@ RunningHeartRateModifier.prototype = {
 
         }.bind(this);
 
-        var modifierLoop = setInterval(runningHeartRateModifier, 750);
-        
+        var modifierLoop = setInterval(runningCadenceModifier, 750);
     },
 };

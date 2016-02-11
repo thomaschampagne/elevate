@@ -7,7 +7,7 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
         mainColor: [0, 128, 0],
 
         init: function(gradeData, units) {
-            
+
             base.init.call(this);
 
             this.units = units;
@@ -27,10 +27,10 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.areaChartIcon + '" style="vertical-align: baseline; height:20px;"/> GRADE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.areaChartIcon + '" style="vertical-align: baseline; height:20px;"/> GRADE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=grade" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
-            this.makeGrid(3, 5); // (col, row)
+            this.makeGrid(3, 6); // (col, row)
 
             this.insertGradeDataIntoGrid();
             this.generateCanvasForGraph();
@@ -53,10 +53,22 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 2, (this.gradeData.upFlatDownInSeconds.flat / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% flat', '%', 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 2, (this.gradeData.upFlatDownInSeconds.down / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), '% downhill ', '%', 'displayAdvancedGradeData');
 
-            this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), 'Time climbing', '', 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(1, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat), 'Time flat', '', 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(2, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.down), 'Time downhill', '', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), 'Climbing time', '', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(1, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat), 'Flat time', '', 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(2, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.down), 'Downhill time', '', 'displayAdvancedGradeData');
 
+            var speedUnitPerhour = this.speedUnitsData[0];
+            var speedUnitFactor = this.speedUnitsData[1];
+            var distanceUnits = this.speedUnitsData[2];
+
+            var distanceUp = (this.gradeData.upFlatDownDistanceData.up * speedUnitFactor).toFixed(1);
+            var distanceFlat = (this.gradeData.upFlatDownDistanceData.flat * speedUnitFactor).toFixed(1);
+            var distanceDown = (this.gradeData.upFlatDownDistanceData.down * speedUnitFactor).toFixed(1);
+
+
+            this.insertContentAtGridPosition(0, 5, ((distanceUp != 0) ? distanceUp : '-'), 'Climbing distance', distanceUnits, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(1, 5, ((distanceFlat != 0) ? distanceFlat : '-'), 'Flat distance', distanceUnits, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(2, 5, ((distanceDown != 0) ? distanceDown : '-'), 'Downhill distance', distanceUnits, 'displayAdvancedGradeData');
         }
     }
 });

@@ -1,7 +1,7 @@
 /**
  *   RunningGradeAdjustedPaceModifier is responsible of ...
  */
-function RunningGradeAdjustedPaceModifier () {}
+function RunningGradeAdjustedPaceModifier() {}
 
 /**
  * Define prototype
@@ -10,13 +10,21 @@ RunningGradeAdjustedPaceModifier.prototype = {
 
     modify: function modify() {
 
-        var runningGradeAdjustedPace = function() {
-            var element = $('#elevation-profile td[data-type=grade_adjusted_pace] .toggle-button')
+        var dataWatch = 'grade_adjusted_pace';
+
+        var runningGradeAdjustedPaceModifier = function() {
+
+            var element = $('#elevation-profile td[data-type=' + dataWatch + '] .toggle-button')
                 .not('.once-only')
                 .addClass('once-only');
             element.click();
-         }.bind(this);
 
-        setInterval(runningGradeAdjustedPace, 750);
+            if ($('#elevation-profile td[data-type=' + dataWatch + ']').find('.active').length) {
+                clearInterval(modifierLoop);
+            }
+
+        }.bind(this);
+
+        var modifierLoop = setInterval(runningGradeAdjustedPaceModifier, 750);
     },
 };

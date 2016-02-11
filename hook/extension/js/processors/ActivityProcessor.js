@@ -10,14 +10,13 @@ function ActivityProcessor(vacuumProcessor, userHrrZones, zones) {
 ActivityProcessor.movingThresholdKph = 3.5; // Kph
 ActivityProcessor.cadenceThresholdRpm = 35; // RPMs
 ActivityProcessor.cadenceLimitRpm = 125;
-ActivityProcessor.defaultBikeWeight = 10; // KGs
 ActivityProcessor.cachePrefix = 'stravistix_activity_';
 ActivityProcessor.gradeClimbingLimit = 1.6;
 ActivityProcessor.gradeDownHillLimit = -1.6;
 ActivityProcessor.gradeProfileFlatPercentageDetected = 60;
 ActivityProcessor.gradeProfileFlat = 'FLAT';
 ActivityProcessor.gradeProfileHilly = 'HILLY';
-ActivityProcessor.ascentSpeedGradeLimit = 0.03;
+ActivityProcessor.ascentSpeedGradeLimit = ActivityProcessor.gradeClimbingLimit;
 
 
 /**
@@ -38,9 +37,11 @@ ActivityProcessor.prototype = {
             console.error('No activity type set for ActivityProcessor');
         }
 
+        this.bounds = bounds;
+
         // We are not using cache when bounds are given
         var useCache = true;
-        if (!_.isEmpty(bounds)) {
+        if (!_.isEmpty(this.bounds)) {
             useCache = false;
         }
 
@@ -64,45 +65,45 @@ ActivityProcessor.prototype = {
             activityStream.altitude_smooth = this.smoothAltitude_(activityStream, activityStatsMap.elevation);
 
             // Slices array if activity bounds given. It's mainly used for segment effort extended stats
-            if (bounds && bounds[0] && bounds[1]) {
+            if (this.bounds && this.bounds[0] && this.bounds[1]) {
 
                 if (!_.isEmpty(activityStream.velocity_smooth)) {
-                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+                    activityStream.velocity_smooth = activityStream.velocity_smooth.slice(this.bounds[0], this.bounds[1]);
                 }
                 if (!_.isEmpty(activityStream.time)) {
-                    activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+                    activityStream.time = activityStream.time.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.heartrate)) {
-                    activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+                    activityStream.heartrate = activityStream.heartrate.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.watts)) {
-                    activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+                    activityStream.watts = activityStream.watts.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.watts_calc)) {
-                    activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+                    activityStream.watts_calc = activityStream.watts_calc.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.cadence)) {
-                    activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+                    activityStream.cadence = activityStream.cadence.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.grade_smooth)) {
-                    activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+                    activityStream.grade_smooth = activityStream.grade_smooth.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.altitude)) {
-                    activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+                    activityStream.altitude = activityStream.altitude.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.distance)) {
-                    activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+                    activityStream.distance = activityStream.distance.slice(this.bounds[0], this.bounds[1]);
                 }
 
                 if (!_.isEmpty(activityStream.altitude_smooth)) {
-                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
+                    activityStream.altitude_smooth = activityStream.altitude_smooth.slice(this.bounds[0], this.bounds[1]);
                 }
 
             }
@@ -437,7 +438,8 @@ ActivityProcessor.prototype = {
 
         var variabilityIndex = weightedPower / avgWatts;
         var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
-        var weightedWattsPerKg = weightedPower / (athleteWeight + ActivityProcessor.defaultBikeWeight);
+        var weightedWattsPerKg = weightedPower / athleteWeight;
+        var avgWattsPerKg = avgWatts / athleteWeight;
 
         var percentiles = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
@@ -447,6 +449,7 @@ ActivityProcessor.prototype = {
         return {
             'hasPowerMeter': hasPowerMeter,
             'avgWatts': avgWatts,
+            'avgWattsPerKg': avgWattsPerKg,
             'weightedPower': weightedPower,
             'variabilityIndex': variabilityIndex,
             'punchFactor': punchFactor,
@@ -666,6 +669,12 @@ ActivityProcessor.prototype = {
             down: 0
         };
 
+        var upFlatDownDistanceData = {
+            up: 0,
+            flat: 0,
+            down: 0
+        };
+
         var durationInSeconds, durationCount = 0;
         var distance = 0;
         var currentSpeed;
@@ -703,17 +712,20 @@ ActivityProcessor.prototype = {
                         // time
                         upFlatDownInSeconds.up += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.up += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.up += distance;
+
                     } else if (gradeArray[i] < ActivityProcessor.gradeDownHillLimit) { // DOWNHILL
                         // time
                         upFlatDownInSeconds.down += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.down += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.down += distance;
+
                     } else { // FLAT
                         // time
                         upFlatDownInSeconds.flat += durationInSeconds;
                         // distance
-                        upFlatDownMoveData.flat += currentSpeed * durationInSeconds;
+                        upFlatDownDistanceData.flat += distance;
+
                     }
                 }
             }
@@ -730,9 +742,14 @@ ActivityProcessor.prototype = {
         }
 
         // Compute speed while up, flat down
-        upFlatDownMoveData.up = upFlatDownMoveData.up / upFlatDownInSeconds.up;
-        upFlatDownMoveData.down = upFlatDownMoveData.down / upFlatDownInSeconds.down;
-        upFlatDownMoveData.flat = upFlatDownMoveData.flat / upFlatDownInSeconds.flat;
+        upFlatDownMoveData.up = upFlatDownDistanceData.up / upFlatDownInSeconds.up * 3.6;
+        upFlatDownMoveData.down = upFlatDownDistanceData.down / upFlatDownInSeconds.down * 3.6;
+        upFlatDownMoveData.flat = upFlatDownDistanceData.flat / upFlatDownInSeconds.flat * 3.6;        
+
+        // Convert distance to KM
+        upFlatDownDistanceData.up = upFlatDownDistanceData.up / 1000;
+        upFlatDownDistanceData.down = upFlatDownDistanceData.down / 1000;
+        upFlatDownDistanceData.flat = upFlatDownDistanceData.flat / 1000;
 
         var avgGrade = gradeSum / gradeCount;
 
@@ -749,6 +766,7 @@ ActivityProcessor.prototype = {
             'gradeZones': gradeZones,
             'upFlatDownInSeconds': upFlatDownInSeconds,
             'upFlatDownMoveData': upFlatDownMoveData,
+            'upFlatDownDistanceData': upFlatDownDistanceData,
             'gradeProfile': gradeProfile
         };
 
@@ -764,6 +782,8 @@ ActivityProcessor.prototype = {
         if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
             return null;
         }
+
+        var skipAscentSpeedCompute = !_.isEmpty(this.bounds);
 
         var accumulatedElevation = 0;
         var accumulatedElevationAscent = 0;
@@ -818,28 +838,24 @@ ActivityProcessor.prototype = {
 
                     var ascentSpeedMeterPerHour = elevationDiff / ascentDurationInSeconds * 3600; // m climbed / seconds
 
-                    // only if grade is > 3%
-                    if (distance > 0 && (elevationDiff / distance) > ActivityProcessor.ascentSpeedGradeLimit) {
+                    // Only if grade is > "ascentSpeedGradeLimit"
+                    if (distance > 0 && (elevationDiff / distance * 100) > ActivityProcessor.ascentSpeedGradeLimit) {
                         accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
                         ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
                         ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
                         ascentSpeedMeterPerHourTime.push(ascentDurationInSeconds);
                         ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
+
+                        var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedMeterPerHour);
+                        if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
+                            ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentDurationInSeconds;
+                        }
                     }
+
                 } else {
                     accumulatedElevationDescent -= elevationDiff;
                 }
 
-            }
-        }
-
-        var ascentSpeedArray = ascentSpeedMeterPerHourSamples; //this.filterData_(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, 200);
-        var j = 0;
-        for (j = 0; j < ascentSpeedArray.length; j++) {
-            var ascentSpeedZoneId = this.getZoneId(this.zones.ascent, ascentSpeedArray[j]);
-
-            if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
-                ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentSpeedMeterPerHourTime[j];
             }
         }
 
@@ -852,7 +868,6 @@ ActivityProcessor.prototype = {
 
         var avgAscentSpeed = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
 
-
         // Update zone distribution percentage
         elevationZones = this.finalizeDistribComputationZones(elevationZones);
         ascentSpeedZones = this.finalizeDistribComputationZones(ascentSpeedZones);
@@ -860,7 +875,7 @@ ActivityProcessor.prototype = {
         var percentilesElevation = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
         var percentilesAscent = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
 
-        return {
+        var result = {
             'avgElevation': avgElevation.toFixed(0),
             'accumulatedElevationAscent': accumulatedElevationAscent,
             'accumulatedElevationDescent': accumulatedElevationDescent,
@@ -876,6 +891,14 @@ ActivityProcessor.prototype = {
                 'upperQuartile': percentilesAscent[2].toFixed(0)
             }
         };
+
+        if (skipAscentSpeedCompute) {
+            result = _.omit(result, 'ascentSpeedZones');
+            result = _.omit(result, 'ascentSpeed');
+        }
+
+        return result;
+
     },
 
     smoothAltitude_: function smoothAltitude(activityStream, stravaElevation) {

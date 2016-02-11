@@ -103,10 +103,12 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
 
-                var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
-                ascentSpeedDataView.setAppResources(this.appResources_);
-                ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-                this.dataViews.push(ascentSpeedDataView);
+                if (this.analysisData_.elevationData.ascentSpeed && this.analysisData_.elevationData.ascentSpeedZones) {
+                    var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
+                    ascentSpeedDataView.setAppResources(this.appResources_);
+                    ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                    this.dataViews.push(ascentSpeedDataView);
+                }
             }
 
         }

@@ -97,5 +97,4 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
         $scope.searchText = $location.search().searchText;
     }
 
-
 }]);

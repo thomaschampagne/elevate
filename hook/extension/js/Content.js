@@ -190,6 +190,7 @@ var jsDependencies = [
     'modules/latlong.js',
     'modules/qrcode.min.js',
     'modules/vv.mapFlipper.js',
+    'modules/jquery.appear.js',
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',
@@ -206,6 +207,7 @@ var jsDependencies = [
     'js/modifiers/ActivityGoogleMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
     'js/modifiers/AthleteStatsModifier.js',
+    'js/modifiers/ActivitiesSummaryModifier.js',
     'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
     'js/modifiers/ActivityBestSplitsModifier.js',
 
@@ -237,6 +239,7 @@ var jsDependencies = [
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
+    'js/modifiers/RunningCadenceModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
     'js/modifiers/GoogleMapsComeBackModifier.js'
 ];

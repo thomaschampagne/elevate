@@ -77,6 +77,7 @@ StravistiX.prototype = {
         // Run
         this.handleRunningGradeAdjustedPace_();
         this.handleRunningHeartRate_();
+        this.handleRunningCadence_();
 
         // All activities
         this.handleActivityQRCodeDisplay_();
@@ -84,6 +85,7 @@ StravistiX.prototype = {
         this.handleVirtualPartner_();
 
         this.handleAthletesStats();
+        this.handleActivitiesSummary();
 
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
@@ -142,31 +144,35 @@ StravistiX.prototype = {
 
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
-            hotFixes: [
-                'Running cadence were mutiplied twice in graph/table on every segment effort stats button click (with both legs option enabled)'
-            ],
+            hotFixes: [],
             features: [
-                'Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button',
+                'Added climb, flat & downhill distance for cyclists in extended stats (grade panel)',
+                'Added average W/Kg in power extended stats',
+                'Added option to get running cadence graph automatically enabled in running activity. Can be disabled in option here: <a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enable%20Cadence%20graph" target="_blank">here</a>',
             ],
-            fixes: [],
-            upcommingFixes: [
-                '"VAM / Ascent Speed" mismatches between strava and stravistix (on segment efforts)',
-                'Performance issues on Segment Time Comparison',
+            fixes: [
+                'Fixed performance issues on segment time comparison. The feature has been re-enabled by default. This can be disabled here: <a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">here</a>',
+                'Fixed Ascent speed stats VAM mismatch with strava. Note that sscent speed stats are no longer displayed on segment efforts stats',
+                'Fixed "W/KG" computations: bike weight has been removed from "KG". Only rider weight is considered.',
             ],
+            upcommingFixes: [],
             upcommingFeatures: [
-                'Add average W/KG in extended stats both activity and efforts: Already done... released in next v3.1.0',
-                'Just take care cyclist weight for every W/KG computation (forget bike weight !): Already done... released in next v3.1.0',
-                'V4.0.0 Suprise... stay tunned via https://twitter.com/champagnethomas at the moment.'
+                'Mute "not enough engaged" cycling or running activities in dashboard (e.g Hide cycling activities under X km). Done => In testing',
+                'Year progression improvement: Be able to get a "zoom" for the last 30 day. Done => In testing',
+                'New Input/Output fitness extended stats panel & Human Performance Modeling graphs. Brainstorm with me <a href="https://docs.google.com/spreadsheets/d/1tRE9EaW1MPUXbkDm9qv06isCYIuSoP5V8MzVtz-OVY0/edit#gid=0" target="_blank">on this google sheet</a>',
+                '3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
+                'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]
         };
 
         var message = '';
 
-        message += '<div style="background: #eee; padding: 10px;">';
-        message += '<h3><strong>At a glance...</strong></h3>';
-        message += '<h3>- Hotfix release. Read "hotfixes" section below...</h3>';
-        message += '<h3>- Major bugs of current V3 are being fixed... Please wait... Read "Upcomming Fixes" below...</h3>';
-        message += '</div>';
+        // message += '<div style="background: #eee; padding: 10px;">';
+        // message += '<h3><strong>At a glance...</strong></h3>';
+        // message += '<h3>- New data: Avg W/KG, Climb + flat + downhill distance.</h3>';
+        // message += '<h3>- Segment time comparison come back. Performance issue fixed !</h3>';
+        // message += '<h3>- Sticky bugs fixed :)</h3>';
+        // message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
@@ -228,6 +234,18 @@ StravistiX.prototype = {
 
         var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
         athleteStatsModifier.modify();
+    },
+
+    handleActivitiesSummary: function() {
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId_ + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivitiesSummary()");
+
+        var activitiesSummaryModifier = new ActivitiesSummaryModifier();
+        activitiesSummaryModifier.modify();
     },
 
     /**
@@ -757,6 +775,32 @@ StravistiX.prototype = {
 
         var runningHeartRateModifier = new RunningHeartRateModifier();
         runningHeartRateModifier.modify();
+    },
+
+    handleRunningCadence_: function() {
+
+        if (!this.userSettings_.activateRunningCadence) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningCadence_()");
+
+        var runningCadenceModifier = new RunningCadenceModifier();
+        runningCadenceModifier.modify();
     },
 
     /**

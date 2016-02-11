@@ -40,33 +40,40 @@ chrome.runtime.onMessageExternal.addListener(
 chrome.runtime.onInstalled.addListener(function(details) {
 
     // Disable Segment Time Comparison Features while https://github.com/thomaschampagne/stravistix/issues/179 unfixed
-    var disableSegmentTimeComparisonFeature = function(previousInstalledVersion, currentVersion, storageManager, finished) {
+    var enableSegmentTimeComparisonFeature = function(previousInstalledVersion, currentVersion, storageManager, finished) {
 
-        var disable = !previousInstalledVersion || previousInstalledVersion == '*' || (parseInt(previousInstalledVersion.split('.')[0]) < parseInt(currentVersion.split('.')[0]));
+        var enable = previousInstalledVersion == '3.0.0' || previousInstalledVersion == '3.0.1' || (parseInt(previousInstalledVersion.split('.')[0]) < 3);
 
-        if (disable) {
+        if (enable) {
 
-            console.debug('Disable Segment Time Comparison Feature...');
+            console.debug('Enable Segment Time Comparison Feature...');
 
             storageManager.setToStorage(
                 'displaySegmentTimeComparisonToKOM',
-                false,
+                true,
                 function(data) {
                     console.log(data);
 
                     storageManager.setToStorage(
                         'displaySegmentTimeComparisonToPR',
-                        false,
+                        true,
                         function(data) {
                             console.log(data);
-                            finished();
+                            storageManager.setToStorage(
+                                'displaySegmentTimeComparisonToCurrentYearPR',
+                                true,
+                                function(data) {
+                                    console.log(data);
+                                    finished();
+                                }.bind(this)
+                            );
                         }.bind(this)
                     );
                 }.bind(this)
             );
 
         } else {
-            console.debug('Disable nothing...');
+            console.debug('Enable nothing...');
         }
     };
 
@@ -83,22 +90,16 @@ chrome.runtime.onInstalled.addListener(function(details) {
             true,
             function(data) {
                 console.log(data);
-
-                // Disable Segment Time Comparison Features while https://github.com/thomaschampagne/stravistix/issues/179 unfixed
-                // We while re-enable Segment Time Comparison when https://github.com/thomaschampagne/stravistix/issues/179 FIXED !
-                disableSegmentTimeComparisonFeature(false, thisVersion, storageManager, function() {
+                chrome.tabs.create({
+                    url: 'http://thomaschampagne.github.io/stravistix/'
+                }, function(tab) {
+                    console.log("First install. Display site");
                     chrome.tabs.create({
-                        url: 'http://thomaschampagne.github.io/stravistix/'
+                        url: chrome.extension.getURL('/options/app/index.html#/')
                     }, function(tab) {
-                        console.log("First install. Display site");
-                        chrome.tabs.create({
-                            url: chrome.extension.getURL('/options/app/index.html#/')
-                        }, function(tab) {
-                            console.log("First install. Display settings");
-                        });
+                        console.log("First install. Display settings");
                     });
                 });
-                // End Disable Segment Time Comparison
             }.bind(this)
         );
 
@@ -113,10 +114,11 @@ chrome.runtime.onInstalled.addListener(function(details) {
             'extensionHasJustUpdated',
             true,
             function(data) {
+                console.log('Updated');
                 console.log(data);
                 // Disable Segment Time Comparison Features while https://github.com/thomaschampagne/stravistix/issues/179 unfixed
                 // We while re-enable Segment Time Comparison when https://github.com/thomaschampagne/stravistix/issues/179 FIXED
-                disableSegmentTimeComparisonFeature(details.previousVersion, thisVersion, storageManager, function() {});
+                enableSegmentTimeComparisonFeature(details.previousVersion, thisVersion, storageManager, function() {});
                 // End Disable Segment Time Comparison
             }.bind(this)
         );

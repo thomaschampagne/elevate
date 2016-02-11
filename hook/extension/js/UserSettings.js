@@ -359,6 +359,7 @@ var userSettings = {
     defaultLeaderboardFilter: 'overall',
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
+    activateRunningCadence: true,
     activityGoogleMapType: 'terrain',
     hidePremiumFeatures: true,
     displaySegmentRankPercentage: true,
@@ -378,6 +379,7 @@ var userSettings = {
     highLightStravistiXFeature: false, // For heartrate related data.
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
+	displaySegmentTimeComparisonToCurrentYearPR: true,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,
