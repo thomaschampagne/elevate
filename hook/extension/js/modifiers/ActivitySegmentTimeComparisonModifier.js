@@ -5,6 +5,7 @@ function ActivitySegmentTimeComparisonModifier(userSettings, appResources) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
     this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
     this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+    this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
 }
 
@@ -48,7 +49,9 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 var timeColumnHeader = $("#segments table.segments th.time-col");
                 var starColumnHeader = $("#segments table.segments th.starred-col");
 
-                starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
+                if (self.displaySegmentTimeComparisonPosition) {
+                    starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
+                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
@@ -83,8 +86,10 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 $row.data("segment-time-comparison", true);
 
-                positionCell = $("<td><span class='ajax-loading-image'></span></td>");
-                $starCell.after(positionCell);
+                if (self.displaySegmentTimeComparisonPosition) {
+                    positionCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $starCell.after(positionCell);
+                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
@@ -117,10 +122,11 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         return;
                     }
 
-                    segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
-                    var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
-
-                    positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+                    if (self.displaySegmentTimeComparisonPosition) {
+                        segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
+                        var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
+                        positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+                    }
 
                     var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,

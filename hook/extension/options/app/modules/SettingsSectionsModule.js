@@ -117,6 +117,12 @@ settingsSectionsModule.data = [{
         optionTitle: 'Enabled segment time comparison to current year PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
+    },{
+        optionKey: 'displaySegmentTimeComparisonPosition',
+        optionType: 'checkbox',
+        optionTitle: 'Enabled segment time comparison position column (rank & percentage) ',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This option allow you to display as "fast reading" your current position & rank percentage in a new column on segments efforts rows.',
     }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',

@@ -376,10 +376,11 @@ var userSettings = {
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
-    highLightStravistiXFeature: false, // For heartrate related data.
+    highLightStravistiXFeature: false,
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,
-	displaySegmentTimeComparisonToCurrentYearPR: true,
+    displaySegmentTimeComparisonToCurrentYearPR: true,
+    displaySegmentTimeComparisonPosition: true,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,
