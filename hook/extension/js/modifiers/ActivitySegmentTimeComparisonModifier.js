@@ -16,7 +16,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
     modify: function modify() {
 
-        if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
+        if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR && !this.displaySegmentTimeComparisonPosition) {
             return;
         }
 
