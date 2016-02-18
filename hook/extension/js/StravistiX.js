@@ -7,7 +7,7 @@ function StravistiX(userSettings, appResources) {
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
+    this.activityProcessor_ = new ActivityProcessor(this.appResources_, this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -145,7 +145,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-                
+
             ],
             features: [
                 'Added climb, flat & downhill distance for cyclists in extended stats (grade panel)',
@@ -455,11 +455,15 @@ StravistiX.prototype = {
         }
 
         var activityType = pageView.activity().get('type');
+        var isTrainer = pageView.activity().get('trainer');
 
         // Skip manual activities
         if (activityType === 'Manual') {
             return;
         }
+
+        this.activityProcessor_.setActivityType(activityType);
+        this.activityProcessor_.setTrainer(isTrainer);
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
@@ -523,6 +527,7 @@ StravistiX.prototype = {
         }
 
         var activityType = pageView.activity().get('type');
+        var isTrainer = pageView.activity().get('trainer');
 
         // Skip manual activities
         if (activityType === 'Manual') {
@@ -530,6 +535,7 @@ StravistiX.prototype = {
         }
 
         this.activityProcessor_.setActivityType(activityType);
+        this.activityProcessor_.setTrainer(isTrainer);
 
         var view = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
 
