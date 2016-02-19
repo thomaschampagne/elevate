@@ -93,18 +93,21 @@ ActivityProcessor.prototype = {
 
     computeAnalysisThroughDedicatedThread: function(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream, bounds, callback) {
 
-        // Create a blob from 'ComputeAnalysisWorker' function variable as a string
-        var blob = new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], { type: 'application/javascript' });
+        // Create worker blob URL if not exist
+        if (!this.computeAnalysisWorkerBlobURL) {
+            // Create a blob from 'ComputeAnalysisWorker' function variable as a string
+            var blob = new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], { type: 'application/javascript' });
 
-        // Keep track of blob URL to revoke it once worker/thread is created
-        var blobURL = URL.createObjectURL(blob);
+            // Keep track of blob URL to reuse it
+            this.computeAnalysisWorkerBlobURL = URL.createObjectURL(blob);
+        }
 
         // Lets create that worker/thread!
-        var computeAnalysisThread = new Worker(blobURL);
+        this.computeAnalysisThread = new Worker(this.computeAnalysisWorkerBlobURL);
 
         // Send user and activity data to the thread
         // He will compute them in the background
-        computeAnalysisThread.postMessage({
+        this.computeAnalysisThread.postMessage({
             activityType: this.activityType,
             isTrainer: this.isTrainer,
             appResources: this.appResources,
@@ -126,16 +129,13 @@ ActivityProcessor.prototype = {
         });
 
         // Listen messages from thread. Thread will send to us the result of computation
-        computeAnalysisThread.onmessage = function(messageFromThread) {
+        this.computeAnalysisThread.onmessage = function(messageFromThread) {
 
             callback(messageFromThread.data);
 
             // Finish and kill thread
-            computeAnalysisThread.terminate();
-        };
+            this.computeAnalysisThread.terminate();
 
-        // Tell to browser to remove the URL including worker js script
-        URL.revokeObjectURL(blobURL);
-
+        }.bind(this);
     }
 };
