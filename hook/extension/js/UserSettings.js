@@ -376,6 +376,8 @@ var userSettings = {
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+    feedHideRideActivitiesUnderDistance: 0,
+    feedHideRunActivitiesUnderDistance: 0,
     highLightStravistiXFeature: false, // For heartrate related data.
     displaySegmentTimeComparisonToKOM: true,
     displaySegmentTimeComparisonToPR: true,

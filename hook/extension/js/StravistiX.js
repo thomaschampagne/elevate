@@ -422,13 +422,17 @@ StravistiX.prototype = {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleHideFeed_()");
 
-        if (!this.userSettings_.feedHideChallenges && !this.userSettings_.feedHideCreatedRoutes) {
+        if (!this.userSettings_.feedHideChallenges &&
+            !this.userSettings_.feedHideCreatedRoutes &&
+            !this.userSettings_.feedHideRideActivitiesUnderDistance &&
+            !this.userSettings_.feedHideRunActivitiesUnderDistance) {
             return;
         }
 
-        var hideFeedModifier = new HideFeedModifier(this.userSettings_.feedHideChallenges, this.userSettings_.feedHideCreatedRoutes);
+        if (env.debugMode) console.log("Execute handleHideFeed_()");
+        
+        var hideFeedModifier = new HideFeedModifier(this.userSettings_);
         hideFeedModifier.modify();
     },
 
