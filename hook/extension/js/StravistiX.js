@@ -61,7 +61,7 @@ StravistiX.prototype = {
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
-        this.handleActivityGoogleMapType_();
+        this.handleActivityStravaMapType_();
         this.handleHidePremium_();
         this.handleHideFeed_();
         this.handleDisplayFlyByFeedModifier_();
@@ -382,17 +382,17 @@ StravistiX.prototype = {
     /**
      *
      */
-    handleActivityGoogleMapType_: function() {
+    handleActivityStravaMapType_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleActivityGoogleMapType_()");
+        if (env.debugMode) console.log("Execute handleActivityStravaMapType_()");
 
-        var activityGoogleMapTypeModifier = new ActivityGoogleMapTypeModifier(this.userSettings_.activityGoogleMapType);
-        activityGoogleMapTypeModifier.modify();
+        var activityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings_.activityStravaMapType);
+        activityStravaMapTypeModifier.modify();
     },
 
     /**

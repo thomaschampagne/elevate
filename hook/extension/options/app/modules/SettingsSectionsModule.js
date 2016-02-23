@@ -90,7 +90,7 @@ settingsSectionsModule.data = [{
         optionLabels: ['Running'],
         optionHtml: 'Activate running cadence graph by default in running activity analysis.',
     }, {
-        optionKey: 'activityGoogleMapType',
+        optionKey: 'activityStravaMapType',
         optionType: 'list',
         optionLabels: ['All'],
         optionList: [{
@@ -103,7 +103,7 @@ settingsSectionsModule.data = [{
             key: 'satellite',
             name: 'Satellite'
         }],
-        optionTitle: 'Default Map type in activity page',
+        optionTitle: 'Default Strava Map type displayed in activities',
         optionHtml: 'Do what title describes...',
     }, {
         optionKey: 'displaySegmentTimeComparisonToKOM',

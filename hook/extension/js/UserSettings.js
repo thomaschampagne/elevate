@@ -361,7 +361,7 @@ var userSettings = {
     activateRunningHeartRate: true,
     activateRunningCadence: true,
     activateRunningTemperature: true,
-    activityGoogleMapType: 'terrain',
+    activityStravaMapType: 'terrain',
     hidePremiumFeatures: true,
     displaySegmentRankPercentage: true,
     displayNearbySegments: true,

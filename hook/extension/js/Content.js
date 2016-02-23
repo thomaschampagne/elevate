@@ -204,7 +204,7 @@ var jsDependencies = [
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',
     'js/modifiers/VirtualPartnerModifier.js',
-    'js/modifiers/ActivityGoogleMapTypeModifier.js',
+    'js/modifiers/ActivityStravaMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
     'js/modifiers/AthleteStatsModifier.js',
     'js/modifiers/ActivitiesSummaryModifier.js',
