@@ -360,6 +360,7 @@ var userSettings = {
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
     activateRunningCadence: true,
+    activateRunningTemperature: true,
     activityGoogleMapType: 'terrain',
     hidePremiumFeatures: true,
     displaySegmentRankPercentage: true,

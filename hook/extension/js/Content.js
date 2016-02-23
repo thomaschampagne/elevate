@@ -240,6 +240,7 @@ var jsDependencies = [
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
     'js/modifiers/RunningCadenceModifier.js',
+    'js/modifiers/RunningTemperatureModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
     'js/modifiers/GoogleMapsComeBackModifier.js'
 ];
