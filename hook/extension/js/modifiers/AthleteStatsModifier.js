@@ -612,12 +612,6 @@ AthleteStatsModifier.prototype = {
                                 values: createArrayOfValues(numberOfDays)
                             };
                         }
-                        if (currentDataType > 3 && !data[activity.y + 1]) {
-                            data[activity.y + 1] = {
-                                year: activity.y + 1,
-                                values: createArrayOfValues(numberOfDays)
-                            };
-                        }
                         var yearlyData = data[activity.y];
                         var activityDate = new Date(activity.y, activity.m, activity.d);
                         var activityTime = activityDate.getTime();
@@ -644,14 +638,19 @@ AthleteStatsModifier.prototype = {
                             }
                         } else {
                             for (j = 0; j < numberOfDays; j++) {
+                                if (activity.y == currentYear && j > currentDayOfYear) {
+                                    continue;
+                                }
                                 switch (currentDataType) {
                                     case 4:
                                         if (j == day) {
                                             data[activity.y].values[j] += activity.di;
-                                            data[activity.y + 1].values[j] += activity.di;
+                                            if (activity.y < currentYear) {
+                                                data[activity.y + 1].values[j] += activity.di;
+                                            }
                                         } else if (j > day) {
                                             data[activity.y].values[j] += activity.di;
-                                        } else {
+                                        } else if (activity.y < currentYear) {
                                             data[activity.y + 1].values[j] += activity.di;
                                         }
                                         break;
@@ -660,9 +659,11 @@ AthleteStatsModifier.prototype = {
                                         if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
                                             data[activity.y].values[j] += activity.di;
                                         }
-                                        jDate = new Date(activity.y + 1, 0, j).getTime();
-                                        if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
-                                            data[activity.y + 1].values[j] += activity.di;
+                                        if (activity.y < currentYear) {
+                                            jDate = new Date(activity.y + 1, 0, j).getTime();
+                                            if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                                data[activity.y + 1].values[j] += activity.di;
+                                            }
                                         }
                                         break;
                                     default:
