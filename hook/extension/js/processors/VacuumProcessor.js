@@ -5,7 +5,6 @@ function VacuumProcessor() {
 
 }
 
-VacuumProcessor.movingThresholdKph = 3.5; // Kph
 VacuumProcessor.cachePrefix = 'stravistix_activityStream_';
 
 /**

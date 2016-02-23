@@ -242,7 +242,10 @@ var jsDependencies = [
     'js/modifiers/RunningCadenceModifier.js',
     'js/modifiers/RunningTemperatureModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
-    'js/modifiers/GoogleMapsComeBackModifier.js'
+    'js/modifiers/GoogleMapsComeBackModifier.js',
+
+    // workers
+    'js/processors/workers/ComputeAnalysisWorker.js'
 ];
 
 var cssDependencies = [
