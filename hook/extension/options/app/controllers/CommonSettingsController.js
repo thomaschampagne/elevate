@@ -24,6 +24,10 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
                     option.active = _.findWhere(option.optionList, {
                         key: userSettingsSynced[option.optionKey]
                     });
+                } else if (option.optionType === 'integer') {
+                    option.value = userSettingsSynced[option.optionKey];
+                } else {
+                    console.error('Option type not supported');
                 }
             });
         });
@@ -61,6 +65,28 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
 
         ChromeStorageModule.updateUserSetting(option.optionKey, option.active.key, function() {
             console.log(option.optionKey + ' has been updated to ' + option.active);
+        });
+    };
+
+
+    $scope.toggleIntegerOption = function(option) {
+
+        $scope.$watch('option.value', function() {
+
+            if (option.value < 0) {
+                if (option.value == -1) {
+                    option.value = 0;
+                } else {
+                    option.value = Math.abs(option.value);
+                }
+            }
+
+        });
+
+        var saveValue = (_.isNull(option.value) || _.isUndefined(option.value)) ? 0 : option.value;
+
+        ChromeStorageModule.updateUserSetting(option.optionKey, saveValue, function() {
+            console.log(option.optionKey + ' has been updated to ' + saveValue);
         });
     };
 

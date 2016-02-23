@@ -1,14 +1,14 @@
 /**
- *   ActivityGoogleMapTypeModifier is responsible of ...
+ *   ActivityStravaMapTypeModifier is responsible of ...
  */
-function ActivityGoogleMapTypeModifier(mapType) {
+function ActivityStravaMapTypeModifier(mapType) {
     this.mapType = mapType;
 }
 
 /**
  * Define prototype
  */
-ActivityGoogleMapTypeModifier.prototype = {
+ActivityStravaMapTypeModifier.prototype = {
 
     modify: function modify() {
 

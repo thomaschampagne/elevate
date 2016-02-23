@@ -7,7 +7,7 @@ function StravistiX(userSettings, appResources) {
     this.appResources_ = appResources;
     this.extensionId_ = this.appResources_.extensionId;
     this.vacuumProcessor_ = new VacuumProcessor();
-    this.activityProcessor_ = new ActivityProcessor(this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
+    this.activityProcessor_ = new ActivityProcessor(this.appResources_, this.vacuumProcessor_, this.userSettings_.userHrrZones, this.userSettings_.zones);
     this.athleteId_ = this.vacuumProcessor_.getAthleteId();
     this.athleteName_ = this.vacuumProcessor_.getAthleteName();
     this.athleteIdAuthorOfActivity_ = this.vacuumProcessor_.getAthleteIdAuthorOfActivity();
@@ -61,7 +61,7 @@ StravistiX.prototype = {
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
-        this.handleActivityGoogleMapType_();
+        this.handleActivityStravaMapType_();
         this.handleHidePremium_();
         this.handleHideFeed_();
         this.handleDisplayFlyByFeedModifier_();
@@ -78,6 +78,7 @@ StravistiX.prototype = {
         this.handleRunningGradeAdjustedPace_();
         this.handleRunningHeartRate_();
         this.handleRunningCadence_();
+        this.handleRunningTemperature_();
 
         // All activities
         this.handleActivityQRCodeDisplay_();
@@ -145,7 +146,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-                
+
             ],
             features: [
                 'Added climb, flat & downhill distance for cyclists in extended stats (grade panel)',
@@ -381,17 +382,17 @@ StravistiX.prototype = {
     /**
      *
      */
-    handleActivityGoogleMapType_: function() {
+    handleActivityStravaMapType_: function() {
 
         // Test where are on an activity...
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleActivityGoogleMapType_()");
+        if (env.debugMode) console.log("Execute handleActivityStravaMapType_()");
 
-        var activityGoogleMapTypeModifier = new ActivityGoogleMapTypeModifier(this.userSettings_.activityGoogleMapType);
-        activityGoogleMapTypeModifier.modify();
+        var activityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings_.activityStravaMapType);
+        activityStravaMapTypeModifier.modify();
     },
 
     /**
@@ -422,13 +423,17 @@ StravistiX.prototype = {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleHideFeed_()");
 
-        if (!this.userSettings_.feedHideChallenges && !this.userSettings_.feedHideCreatedRoutes) {
+        if (!this.userSettings_.feedHideChallenges &&
+            !this.userSettings_.feedHideCreatedRoutes &&
+            !this.userSettings_.feedHideRideActivitiesUnderDistance &&
+            !this.userSettings_.feedHideRunActivitiesUnderDistance) {
             return;
         }
 
-        var hideFeedModifier = new HideFeedModifier(this.userSettings_.feedHideChallenges, this.userSettings_.feedHideCreatedRoutes);
+        if (env.debugMode) console.log("Execute handleHideFeed_()");
+        
+        var hideFeedModifier = new HideFeedModifier(this.userSettings_);
         hideFeedModifier.modify();
     },
 
@@ -455,11 +460,15 @@ StravistiX.prototype = {
         }
 
         var activityType = pageView.activity().get('type');
+        var isTrainer = pageView.activity().get('trainer');
 
         // Skip manual activities
         if (activityType === 'Manual') {
             return;
         }
+
+        this.activityProcessor_.setActivityType(activityType);
+        this.activityProcessor_.setTrainer(isTrainer);
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
@@ -523,6 +532,7 @@ StravistiX.prototype = {
         }
 
         var activityType = pageView.activity().get('type');
+        var isTrainer = pageView.activity().get('trainer');
 
         // Skip manual activities
         if (activityType === 'Manual') {
@@ -530,6 +540,7 @@ StravistiX.prototype = {
         }
 
         this.activityProcessor_.setActivityType(activityType);
+        this.activityProcessor_.setTrainer(isTrainer);
 
         var view = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
 
@@ -804,6 +815,32 @@ StravistiX.prototype = {
 
         var runningCadenceModifier = new RunningCadenceModifier();
         runningCadenceModifier.modify();
+    },
+
+    handleRunningTemperature_: function() {
+
+        if (!this.userSettings_.activateRunningTemperature) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningHeartRate_()");
+
+        var runningTemperatureModifier = new RunningTemperatureModifier();
+        runningTemperatureModifier.modify();
     },
 
     /**

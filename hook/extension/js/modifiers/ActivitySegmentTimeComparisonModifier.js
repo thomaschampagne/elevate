@@ -5,6 +5,7 @@ function ActivitySegmentTimeComparisonModifier(userSettings, appResources) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
     this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
     this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+    this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
 }
 
@@ -15,12 +16,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
     modify: function modify() {
 
-        // Display temporary disable message
-        if (!StorageManager.getCookie('stravistix_hide_seg_time_compare_disabled_message')) {
-            $('body').before('<div id="hide_seg_time_compare_disabled_message" style="text-align: center; padding: 10px; background-color: #FFF397;font-family: sans-serif;font-size: 14px;color: #333;"><strong style="font-size: 16px;">Important note</strong><br /><br /><strong>Segment Time Comparison features</strong> have been <strong>disabled</strong> by default due to <strong>performance issues</strong>.<br />You can still <strong><a target="_blank" href="' + this.appResources.settingsLink + '#/commonSettings?searchText=segment%20time%20comparison">re-enable them in options by clicking here</a></strong> <strong>but it will work but slowy</strong>...<br />This issue is being fixed and Segment Time Comparison features will be automatically re-enabled when fixed.<br /><br /><a onclick="javascript:StorageManager.setCookie(\'stravistix_hide_seg_time_compare_disabled_message\', true, 365);$(\'#hide_seg_time_compare_disabled_message\').slideUp();"><strong>[Close and hide this message on this computer]</strong></a></div>');
-        }
-
-        if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
+        if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR && !this.displaySegmentTimeComparisonPosition) {
             return;
         }
 
@@ -53,7 +49,9 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 var timeColumnHeader = $("#segments table.segments th.time-col");
                 var starColumnHeader = $("#segments table.segments th.starred-col");
 
-                starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
+                if (self.displaySegmentTimeComparisonPosition) {
+                    starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
+                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
@@ -88,8 +86,10 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 $row.data("segment-time-comparison", true);
 
-                positionCell = $("<td><span class='ajax-loading-image'></span></td>");
-                $starCell.after(positionCell);
+                if (self.displaySegmentTimeComparisonPosition) {
+                    positionCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $starCell.after(positionCell);
+                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
@@ -122,10 +122,11 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         return;
                     }
 
-                    segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
-                    var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
-
-                    positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+                    if (self.displaySegmentTimeComparisonPosition) {
+                        segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
+                        var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
+                        positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+                    }
 
                     var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
