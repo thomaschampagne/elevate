@@ -1,34 +1,31 @@
 {
-  "name": "stravistix",
-  "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
-  "keywords": [
-    "strava",
-    "cycling",
-    "running",
-    "tracking"
-  ],
-  "maintainers": [
-    {
-      "name": "Thomas Champagne",
-      "email": "th.champagne@gmail.com",
-      "web": "http://thomaschampagne.github.io"
-    }
-  ],
-  "dependencies": {
-    "angular": "1.5.0",
-    "angular-bootstrap": "0.12.2",
-    "angular-route": "1.5.0",
-    "bootstrap": "3.3.6",
-    "chart.js": "1.0.*",
-    "fiber": "1.0.4",
-    "fancybox": "3.0.0",
-    "underscore": "1.8.3"
-  },
-  "repository": [
-    {
-      "type": "git",
-      "url": "https://github.com/thomaschampagne/stravistix"
-    }
-  ],
-  "readme": "None"
+    "name": "stravistix",
+    "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
+    "keywords": [
+        "strava",
+        "cycling",
+        "running",
+        "tracking"
+    ],
+    "maintainers": [{
+        "name": "Thomas Champagne",
+        "email": "th.champagne@gmail.com",
+        "web": "http://thomaschampagne.github.io"
+    }],
+    "dependencies": {
+        "angular": "1.5.0",
+        "angular-bootstrap": "0.12.2",
+        "angular-route": "1.5.0",
+        "bootstrap": "3.3.6",
+        "chart.js": "1.0.*",
+        "fancybox": "3.0.0",
+        "fiber": "1.0.4",
+        "fuckadblock": "3.*.*",
+        "underscore": "1.8.3"
+    },
+    "repository": [{
+        "type": "git",
+        "url": "https://github.com/thomaschampagne/stravistix"
+    }],
+    "readme": "None"
 }
