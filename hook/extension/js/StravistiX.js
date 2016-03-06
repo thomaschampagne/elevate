@@ -92,6 +92,7 @@ StravistiX.prototype = {
         this.handleTrackTodayIncommingConnection_();
         this.handleGoogleMapsComeBackModifier();
 
+
     },
 
     /**
@@ -431,7 +432,7 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleHideFeed_()");
-
+        
         var hideFeedModifier = new HideFeedModifier(this.userSettings_);
         hideFeedModifier.modify();
     },
@@ -895,24 +896,6 @@ StravistiX.prototype = {
      * Launch a track event once a day (is user use it once a day), to follow is account type
      */
     handleTrackTodayIncommingConnection_: function() {
-
-        if (!env.debugMode) {
-            var followBlocking = new FollowBlocking();
-            followBlocking.onChecked(function(bool) {
-
-                var trackEvent = {
-                    categorie: 'Analyse',
-                    action: 'followBlocking',
-                    name: (bool) ? 'yes' : 'no'
-                };
-
-                console.debug('Follow Blocking: ' + trackEvent.name);
-                console.debug('<Event>');
-                console.debug(trackEvent);
-                // _spTrack('send', 'event', trackEvent.categorie, trackEvent.action, trackEvent.name);
-                console.debug('</Event>');
-            });
-        }
 
         var userHasConnectSince24Hour = StorageManager.getCookie('stravistix_daily_connection_done');
 
