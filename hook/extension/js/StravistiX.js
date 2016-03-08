@@ -149,19 +149,17 @@ StravistiX.prototype = {
 
             ],
             features: [
-                'Added climb, flat & downhill distance for cyclists in extended stats (grade panel)',
-                'Added average W/Kg in power extended stats',
-                'Added option to get running cadence graph automatically enabled in running activity. Can be disabled in option here: <a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enable%20Cadence%20graph" target="_blank">here</a>',
+                'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
+                'Added extended stats for runners: climbing/descending distance (inside grade section of extended stats panel). Cyclists already have this...',
+                'Added option to mute "not enough engaged" cycling or running activities in dashboard feed (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=activitiesUnderDistance" target="_blank">customize this here</a>).',
+                'Added option to activate temperature by default on running activities.',
+                'Added option to hide the "Pos." column on the segments table (in activities).',
             ],
             fixes: [
-                'Fixed performance issues on segment time comparison. The feature has been re-enabled by default. This can be disabled here: <a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">here</a>',
-                'Fixed "W/KG" computations: bike weight has been removed from "KG". Only rider weight is considered.',
-                'Fixed Ascent speed stats VAM mismatch with strava. Note that sscent speed stats are no longer displayed on segment efforts stats',
-                'Fixed Weighted power all same on efforts stats. Only cyclists having a power meter were touched by this bug',
+                'Fixed miles/km ratio not applied in activities summary (My profile page)',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
-                'Mute "not enough engaged" cycling or running activities in dashboard (e.g Hide cycling activities under X km). Done => In testing',
                 'Year progression improvement: Be able to get a "zoom" for the last 30 day. Done => In testing',
                 'New Input/Output fitness extended stats panel & Human Performance Modeling graphs. Brainstorm with me <a href="https://docs.google.com/spreadsheets/d/1tRE9EaW1MPUXbkDm9qv06isCYIuSoP5V8MzVtz-OVY0/edit#gid=0" target="_blank">on this google sheet</a>',
                 '3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
@@ -171,12 +169,12 @@ StravistiX.prototype = {
 
         var message = '';
 
-        // message += '<div style="background: #eee; padding: 10px;">';
-        // message += '<h3><strong>At a glance...</strong></h3>';
-        // message += '<h3>- New data: Avg W/KG, Climb + flat + downhill distance.</h3>';
-        // message += '<h3>- Segment time comparison come back. Performance issue fixed !</h3>';
-        // message += '<h3>- Sticky bugs fixed :)</h3>';
-        // message += '</div>';
+        message += '<div style="background: #eee; padding: 10px;">';
+        message += '<h3><strong>At a glance...</strong></h3>';
+        message += '<h3>- Performance improvement on extended stats computation.</h3>';
+        message += '<h3>- Some new cool options</h3>';
+        message += '<h3>- Segment time comparison re-activated for all (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h3>';
+        message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
@@ -432,7 +430,7 @@ StravistiX.prototype = {
         }
 
         if (env.debugMode) console.log("Execute handleHideFeed_()");
-        
+
         var hideFeedModifier = new HideFeedModifier(this.userSettings_);
         hideFeedModifier.modify();
     },
