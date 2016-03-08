@@ -15,12 +15,12 @@
     }
   ],
   "dependencies": {
-    "angular": "1.4.8",
+    "angular": "1.5.0",
     "angular-bootstrap": "0.12.2",
-    "angular-route": "1.4.8",
-    "bootstrap": "3.3.5",
+    "angular-route": "1.5.0",
+    "bootstrap": "3.3.6",
     "chart.js": "1.0.*",
-    "fiber": "^1.0.4",
+    "fiber": "1.0.4",
     "fancybox": "3.0.0",
     "underscore": "1.8.3"
   },

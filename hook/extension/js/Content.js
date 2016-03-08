@@ -204,7 +204,7 @@ var jsDependencies = [
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',
     'js/modifiers/VirtualPartnerModifier.js',
-    'js/modifiers/ActivityGoogleMapTypeModifier.js',
+    'js/modifiers/ActivityStravaMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
     'js/modifiers/AthleteStatsModifier.js',
     'js/modifiers/ActivitiesSummaryModifier.js',
@@ -240,8 +240,12 @@ var jsDependencies = [
     'js/modifiers/RunningGradeAdjustedPaceModifier.js',
     'js/modifiers/RunningHeartRateModifier.js',
     'js/modifiers/RunningCadenceModifier.js',
+    'js/modifiers/RunningTemperatureModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
-    'js/modifiers/GoogleMapsComeBackModifier.js'
+    'js/modifiers/GoogleMapsComeBackModifier.js',
+
+    // workers
+    'js/processors/workers/ComputeAnalysisWorker.js'
 ];
 
 var cssDependencies = [

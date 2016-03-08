@@ -70,13 +70,19 @@ settingsSectionsModule.data = [{
         optionType: 'checkbox',
         optionTitle: 'Enable Grade Adjusted Pace graph',
         optionLabels: ['Running'],
-        optionHtml: 'Activate running "Grade Adjusted Pace" by default in running activity analysis.<br /><br /><img src="img/activateRunningGradeAdjustedPace.png"/>',
+        optionHtml: 'Activate running "Grade Adjusted Pace" graph by default in running activity analysis.<br /><br /><img src="img/activateRunningGradeAdjustedPace.png"/>',
     }, {
         optionKey: 'activateRunningHeartRate',
         optionType: 'checkbox',
         optionTitle: 'Enable Heart Rate graph',
         optionLabels: ['Running'],
-        optionHtml: 'Activate running heart rate by default in running activity analysis.<br /><br /><img src="img/activateRunningHeartRate.png"/>',
+        optionHtml: 'Activate running heart rate graph by default in running activity analysis.<br /><br /><img src="img/activateRunningHeartRate.png"/>',
+    },{
+        optionKey: 'activateRunningTemperature',
+        optionType: 'checkbox',
+        optionTitle: 'Enable Temperature graph',
+        optionLabels: ['Running'],
+        optionHtml: 'Activate temperature graph by default in running activity analysis',
     }, {
         optionKey: 'activateRunningCadence',
         optionType: 'checkbox',
@@ -84,7 +90,7 @@ settingsSectionsModule.data = [{
         optionLabels: ['Running'],
         optionHtml: 'Activate running cadence graph by default in running activity analysis.',
     }, {
-        optionKey: 'activityGoogleMapType',
+        optionKey: 'activityStravaMapType',
         optionType: 'list',
         optionLabels: ['All'],
         optionList: [{
@@ -97,7 +103,7 @@ settingsSectionsModule.data = [{
             key: 'satellite',
             name: 'Satellite'
         }],
-        optionTitle: 'Default Map type in activity page',
+        optionTitle: 'Default Strava Map type displayed in activities',
         optionHtml: 'Do what title describes...',
     }, {
         optionKey: 'displaySegmentTimeComparisonToKOM',
@@ -117,6 +123,12 @@ settingsSectionsModule.data = [{
         optionTitle: 'Enabled segment time comparison to current year PR display',
         optionLabels: ['Cycling'],
         optionHtml: 'This option allow you to display the time difference between segment current year PR time and the time from the activity for that segment.',
+    },{
+        optionKey: 'displaySegmentTimeComparisonPosition',
+        optionType: 'checkbox',
+        optionTitle: 'Enabled segment time comparison position column (rank & percentage) ',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This option allow you to display as "fast reading" your current position & rank percentage in a new column on segments efforts rows.',
     }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',
@@ -217,7 +229,19 @@ settingsSectionsModule.data = [{
         optionTitle: 'Hide created routes',
         optionLabels: ['All'],
         optionHtml: 'This will hide all routes created in the dashboard feed.',
-    }, ]
+    }, {
+        optionKey: 'feedHideRideActivitiesUnderDistance',
+        optionType: 'integer',
+        optionTitle: 'Hide rides activities under distance. Value "0" hide nothing',
+        optionLabels: ['Cycling'],
+        optionHtml: 'This will hide all cycling rides (also virtual rides) in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+    }, {
+        optionKey: 'feedHideRunActivitiesUnderDistance',
+        optionType: 'integer',
+        optionTitle: 'Hide running activities under distance. Value "0" hide nothing',
+        optionLabels: ['Running'],
+        optionHtml: 'This will hide all running activities in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+    }]
 }, {
     sectionTitle: 'Weather units',
     sectionContent: [{

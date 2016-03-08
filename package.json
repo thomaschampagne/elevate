@@ -3,7 +3,7 @@
   "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
   "dependencies": {
-    "archiver": "0.16.0",
+    "archiver": "0.21.0",
     "ncp": "2.0.0"
   },
   "scripts": {

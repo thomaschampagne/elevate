@@ -22,6 +22,8 @@ ActivitiesSummaryModifier.prototype = {
             elevationUnit = "m",
             speedUnit = "km/h",
             paceUnit = "/km";
+            speedUnitRatio = 1; // Default Kilometers
+            elevationUnitRatio = 1; // Default Kilometers
 
         var averageSpeedOrPace = function(pace, distance, time) {
             time /= 60;
@@ -54,6 +56,8 @@ ActivitiesSummaryModifier.prototype = {
             elevationUnit = "ft";
             speedUnit = "mph";
             paceUnit = "/mi";
+            speedUnitRatio = 0.62137;
+            elevationUnitRatio = 3.281;
         }
 
         $totals.show();
@@ -89,9 +93,9 @@ ActivitiesSummaryModifier.prototype = {
                 };
             for (i in requests) {
                 var data = requests[i].responseJSON,
-                    distance = data.distance_raw / 1000,
+                    distance = data.distance_raw / 1000 * speedUnitRatio,
                     movingTime = data.moving_time_raw,
-                    elevation = data.elevation_gain_raw,
+                    elevation = data.elevation_gain_raw * elevationUnitRatio,
                     calories = data.calories || 0,
                     type = data.display_type,
                     summary;
@@ -128,7 +132,7 @@ ActivitiesSummaryModifier.prototype = {
             if (activityTypes.length > 2) {
                 activityTypes.push(total);
             }
-
+            console.warn(activityTypes);
             var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
             activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
