@@ -36,7 +36,7 @@ HideFeedModifier.prototype = {
                 $('div.feed>.activity ').each(function() {
                     var type = $(this).find('div').first().attr('title');
                     var distance = $(this).find('[title*=Distance]').text();
-                    distance = parseInt(distance);
+                    distance = parseFloat(distance);
 
                     // Remove Ride activities if distance lower than "minRideDistanceToHide", if minRideDistanceToHide equal 0, then keep all.
                     if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && type == "Ride" || type == "Virtual Ride") {
