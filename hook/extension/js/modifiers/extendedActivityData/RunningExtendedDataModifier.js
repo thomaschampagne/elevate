@@ -25,10 +25,17 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             // Avg climb pace
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
-                var seconds = parseInt((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0));
-                if (seconds) {
-                    climbSpeed = Helper.secondsToHHMMSS(seconds).replace('00:', '');
+
+                // Convert speed to pace
+                this.analysisData_.gradeData.upFlatDownMoveData.up = this.convertSpeedToPace(this.analysisData_.gradeData.upFlatDownMoveData.up);
+
+                if(this.analysisData_.gradeData.upFlatDownMoveData.up !== 'infinite') {
+                    var seconds = parseInt((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0));
+                    if (seconds) {
+                        climbSpeed = Helper.secondsToHHMMSS(seconds).replace('00:', '');
+                    }
                 }
+
                 this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', '/' + distanceUnits, 'displayAdvancedGradeData');
             }
         },
