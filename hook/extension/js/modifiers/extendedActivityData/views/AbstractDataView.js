@@ -236,6 +236,6 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
-        },
+        }
     }
 });
