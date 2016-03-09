@@ -146,7 +146,8 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-
+                'Hide activities under distance errors on others languages than EN/FR (Introduced in v3.2.0)',
+                'Wrong climbing pace running on summary panel (Introduced in v3.2.0)'
             ],
             features: [
                 'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
@@ -169,17 +170,17 @@ StravistiX.prototype = {
 
         var message = '';
 
-        message += '<div style="background: #eee; padding: 10px;">';
-        message += '<h3><strong>At a glance...</strong></h3>';
-        message += '<h3>- Performance improvement on extended stats computation.</h3>';
-        message += '<h3>- Some new cool options</h3>';
-        message += '<h3>- Segment time comparison re-activated for all (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h3>';
+        message += '<div style="background: #eee; padding: 8px;">';
+        message += '<h5><strong>AT A GLANCE...</strong></h5>';
+        message += '<h5>- Performance improvement on extended stats computation.</h5>';
+        message += '<h5>- Some new cool options</h5>';
+        message += '<h5>- Segment time comparison re-activated for all (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h5>';
         message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
-            message += '<h4><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h4>';
+            message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
             _.each(updateMessageObj.hotFixes, function(hotFix) {
-                message += '<h5>- ' + hotFix + '</h5>';
+                message += '<h6>- ' + hotFix + '</h6>';
             });
         };
 
@@ -187,30 +188,30 @@ StravistiX.prototype = {
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
 
         if (!_.isEmpty(updateMessageObj.features)) {
-            message += '<h4><strong>NEW in ' + baseVersion + ':</strong></h4>';
+            message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.features, function(feature) {
-                message += '<h5>- ' + feature + '</h5>';
+                message += '<h6>- ' + feature + '</h6>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.fixes)) {
-            message += '<h4><strong>FIXED in ' + baseVersion + ':</strong></h4>';
+            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
-                message += '<h5>- ' + fix + '</h5>';
+                message += '<h6>- ' + fix + '</h6>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
-            message += '<h4><strong>Upcomming Fixes:</strong></h4>';
+            message += '<h5><strong>Upcomming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
-                message += '<h5>- ' + upcommingFixes + '</h5>';
+                message += '<h6>- ' + upcommingFixes + '</h6>';
             });
         };
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
-            message += '<h4><strong>Upcomming Features:</strong></h4>';
+            message += '<h5><strong>Upcomming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
-                message += '<h5>- ' + upcommingFeatures + '</h5>';
+                message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
         };
 
