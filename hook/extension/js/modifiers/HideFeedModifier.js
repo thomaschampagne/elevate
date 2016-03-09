@@ -33,18 +33,24 @@ HideFeedModifier.prototype = {
                 var minRideDistanceToHide = this.userSettings.feedHideRideActivitiesUnderDistance;
                 var minRunDistanceToHide = this.userSettings.feedHideRunActivitiesUnderDistance;
 
-                $('div.feed>.activity ').each(function() {
-                    var type = $(this).find('div').first().attr('title');
-                    var distance = $(this).find('[title*=Distance]').text();
+                $('div.feed>.activity').each(function() {
+                    var type = $(this).find('div').first().attr('class').replace('icon-sm', '').replace('  ', ' ').split(' ')[1].replace('icon-sm', '').replace('icon-', '');
+
+                    var distanceEl = _.filter($(this).find('ul.inline-stats').find('[class=unit]'), function (item) {
+                    	return ($(item).html() == 'km' || $(item).html() == 'mi');
+                    });
+
+                    distance = $(distanceEl).parent().text().replace(',', '.');
+                    
                     distance = parseFloat(distance);
 
                     // Remove Ride activities if distance lower than "minRideDistanceToHide", if minRideDistanceToHide equal 0, then keep all.
-                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && type == "Ride" || type == "Virtual Ride") {
+                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (type == "ride" || type == "virtualride")) {
                         $(this).remove();
                     }
 
                     // Remove Run activities if distance lower than "minRunDistanceToHide", if minRunDistanceToHide equal 0, then keep all.
-                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type == "Run") {
+                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type == "run") {
                         $(this).remove();
                     }
                 });
