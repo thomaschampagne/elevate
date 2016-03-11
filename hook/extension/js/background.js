@@ -42,7 +42,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     // Disable Segment Time Comparison Features while https://github.com/thomaschampagne/stravistix/issues/179 unfixed
     var enableSegmentTimeComparisonFeature = function(previousInstalledVersion, currentVersion, storageManager, finished) {
 
-        var enable = true; // For re-enable for all at current 3.2.0 version //previousInstalledVersion == '3.0.0' || previousInstalledVersion == '3.0.1' || (parseInt(previousInstalledVersion.split('.')[0]) < 3);
+        var enable = (previousInstalledVersion != '3.2.0' && previousInstalledVersion != '3.2.1'); // For re-enable for all at current 3.2.0 version //previousInstalledVersion == '3.0.0' || previousInstalledVersion == '3.0.1' || (parseInt(previousInstalledVersion.split('.')[0]) < 3);
 
         if (enable) {
 
