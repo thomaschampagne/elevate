@@ -27,10 +27,10 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
 
                 // Convert speed to pace
-                this.analysisData_.gradeData.upFlatDownMoveData.up = this.convertSpeedToPace(this.analysisData_.gradeData.upFlatDownMoveData.up);
+                var avgClimbPace = this.convertSpeedToPace(this.analysisData_.gradeData.upFlatDownMoveData.up);
 
-                if(this.analysisData_.gradeData.upFlatDownMoveData.up !== 'infinite') {
-                    var seconds = parseInt((this.analysisData_.gradeData.upFlatDownMoveData.up / speedUnitFactor).toFixed(0));
+                if(avgClimbPace !== 'infinite') {
+                    var seconds = parseInt((avgClimbPace / speedUnitFactor).toFixed(0));
                     if (seconds) {
                         climbSpeed = Helper.secondsToHHMMSS(seconds).replace('00:', '');
                     }

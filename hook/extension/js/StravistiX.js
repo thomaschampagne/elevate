@@ -146,8 +146,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-                'Hide activities under distance errors on others languages than EN/FR (Introduced in v3.2.0)',
-                'Wrong climbing pace running on summary panel (Introduced in v3.2.0)'
+                'Hotfix Wrong running climbing pace on extended panel (Introduced in v3.2.1)'
             ],
             features: [
                 'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
@@ -171,10 +170,10 @@ StravistiX.prototype = {
         var message = '';
 
         message += '<div style="background: #eee; padding: 8px;">';
-        message += '<h5><strong>AT A GLANCE...</strong></h5>';
+        message += '<h5><strong>AT A GLANCE... </strong><br/><i>(Hotfixing again version 3.2 sry :/...)</i></h5>';
         message += '<h5>- Performance improvement on extended stats computation.</h5>';
         message += '<h5>- Some new cool options</h5>';
-        message += '<h5>- Segment time comparison re-activated for all (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h5>';
+        message += '<h5>- Segment time comparison re-activated if you come from 3.1.x or under (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h5>';
         message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
