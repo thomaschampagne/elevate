@@ -192,7 +192,7 @@ ActivityBestSplitsModifier.prototype = {
             }
         );
 
-        // Set Strava blue links color on bestsplits + segments links 
+        // Set Strava blue links color on bestsplits + segments links
         $(".bestsplits-header-title").css("color", "#007FB6");
         $(".segments-header-title").css("color", "#007FB6");
 
@@ -585,7 +585,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var begin = start;
                                         for (; start <= end; start++) {
                                             if (array[start] > previous) {
-                                                if (maxValueEnd == 0 || array[start] - maxValueEnd > 5) {
+                                                if (maxValueEnd === 0 || array[start] - maxValueEnd > 5) {
                                                     currentMax = array[start];
                                                     begin = start;
                                                 }
@@ -621,7 +621,7 @@ ActivityBestSplitsModifier.prototype = {
                                         var begin = start;
                                         for (; start <= end; start++) {
                                             if (array[start] < previous) {
-                                                if (maxValueEnd == 0 || maxValueEnd - array[start] > 5) {
+                                                if (maxValueEnd === 0 || maxValueEnd - array[start] > 5) {
                                                     // restart
                                                     currentMin = array[start];
                                                     begin = start;

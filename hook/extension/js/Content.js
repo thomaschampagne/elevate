@@ -1,4 +1,4 @@
-var Loader = function() {}
+var Loader = function() {};
 
 Loader.prototype = {
 
@@ -13,7 +13,6 @@ Loader.prototype = {
     },
     loaded: function(evt) {
         this.loadCount++;
-
         if (this.loadCount == this.totalRequired && typeof this.callback == 'function') this.callback.call();
     },
     writeScript: function(src) {
@@ -21,6 +20,8 @@ Loader.prototype = {
         var ext = src.substr(src.lastIndexOf('.') + 1);
 
         var self = this;
+
+        var head = document.getElementsByTagName('head')[0];
 
         if (ext === 'js') {
             var s = document.createElement('script');
@@ -30,7 +31,6 @@ Loader.prototype = {
             s.addEventListener('load', function(e) {
                 self.loaded(e);
             }, false);
-            var head = document.getElementsByTagName('head')[0];
             head.appendChild(s);
         } else if (ext === 'css') {
             var link = document.createElement('link');
@@ -41,11 +41,10 @@ Loader.prototype = {
             link.async = false;
             link.type = 'text/css';
             link.rel = 'stylesheet';
-            var head = document.getElementsByTagName('head')[0];
             head.appendChild(link);
         }
     }
-}
+};
 
 /**
  *   Content is responsible of ...

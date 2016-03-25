@@ -122,7 +122,7 @@ var dist = function(callback) {
                 }
                 return true;
             }
-        }
+        };
 
         // Copy extension/ folder to ../dist/ folder
         nodeCopy(EXT_FOLDER, DIST_FOLDER, options, function(err) {
@@ -220,7 +220,7 @@ var cleanDistributionFolder = function() {
         console.log('Create distribution folder');
         fs.mkdirSync(DIST_FOLDER);
     }
-}
+};
 
 /**
  *

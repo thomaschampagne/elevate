@@ -181,7 +181,7 @@ StravistiX.prototype = {
             _.each(updateMessageObj.hotFixes, function(hotFix) {
                 message += '<h6>- ' + hotFix + '</h6>';
             });
-        };
+        }
 
         var baseVersion = this.appResources_.extVersion.split('.');
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
@@ -191,28 +191,28 @@ StravistiX.prototype = {
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h6>- ' + feature + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.fixes)) {
             message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h6>- ' + fix + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
             message += '<h5><strong>Upcomming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
                 message += '<h6>- ' + upcommingFixes + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
             message += '<h5><strong>Upcomming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
-        };
+        }
 
         // Donate button
         message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
@@ -473,7 +473,7 @@ StravistiX.prototype = {
         var basicInfos = {
             activityName: this.vacuumProcessor_.getActivityName(),
             activityTime: this.vacuumProcessor_.getActivityTime()
-        }
+        };
 
         var extendedDataModifier = null;
 
@@ -561,7 +561,7 @@ StravistiX.prototype = {
             var basicInfos = {
                 activityName: self.vacuumProcessor_.getActivityName(),
                 activityTime: self.vacuumProcessor_.getActivityTime()
-            }
+            };
 
             var extendedDataModifier = null;
 
