@@ -127,4 +127,4 @@ StorageManager.prototype = {
             console.error('Storage type not available');
         }
     },
-}
+};

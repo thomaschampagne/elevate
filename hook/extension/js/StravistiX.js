@@ -91,8 +91,6 @@ StravistiX.prototype = {
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
         this.handleGoogleMapsComeBackModifier();
-
-
     },
 
     /**
@@ -146,7 +144,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-                'Hotfix Wrong running climbing pace on extended panel (Introduced in v3.2.1)'
+                'Disable stravistix on new strava store'
             ],
             features: [
                 'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
@@ -173,7 +171,6 @@ StravistiX.prototype = {
         message += '<h5><strong>AT A GLANCE... </strong><br/><i>(Hotfixing again version 3.2 sry :/...)</i></h5>';
         message += '<h5>- Performance improvement on extended stats computation.</h5>';
         message += '<h5>- Some new cool options</h5>';
-        message += '<h5>- Segment time comparison re-activated if you come from 3.1.x or under (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h5>';
         message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
@@ -181,7 +178,7 @@ StravistiX.prototype = {
             _.each(updateMessageObj.hotFixes, function(hotFix) {
                 message += '<h6>- ' + hotFix + '</h6>';
             });
-        };
+        }
 
         var baseVersion = this.appResources_.extVersion.split('.');
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
@@ -191,28 +188,28 @@ StravistiX.prototype = {
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h6>- ' + feature + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.fixes)) {
             message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h6>- ' + fix + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
             message += '<h5><strong>Upcomming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
                 message += '<h6>- ' + upcommingFixes + '</h6>';
             });
-        };
+        }
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
             message += '<h5><strong>Upcomming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
-        };
+        }
 
         // Donate button
         message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
@@ -473,7 +470,7 @@ StravistiX.prototype = {
         var basicInfos = {
             activityName: this.vacuumProcessor_.getActivityName(),
             activityTime: this.vacuumProcessor_.getActivityTime()
-        }
+        };
 
         var extendedDataModifier = null;
 
@@ -561,7 +558,7 @@ StravistiX.prototype = {
             var basicInfos = {
                 activityName: self.vacuumProcessor_.getActivityName(),
                 activityTime: self.vacuumProcessor_.getActivityTime()
-            }
+            };
 
             var extendedDataModifier = null;
 

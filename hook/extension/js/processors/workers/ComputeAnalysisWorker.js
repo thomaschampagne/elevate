@@ -48,7 +48,7 @@ function ComputeAnalysisWorker() {
                     // Append altitude_smooth to fetched strava activity stream before compute analysis data
                     this.params.activityStream.altitude_smooth = this.smoothAltitudeStream(this.params.activityStream, this.params.activityStatsMap);
 
-                    // Slices array stream if activity bounds are given. 
+                    // Slices array stream if activity bounds are given.
                     // It's mainly used for segment effort extended stats
                     this.sliceStreamFromBounds(this.params.activityStream, this.params.bounds);
 
@@ -180,7 +180,7 @@ function ComputeAnalysisWorker() {
                 moveRatio_: function(activityStatsMap, activityStream) {
 
                     if (_.isNull(activityStatsMap.movingTime) || _.isNull(activityStatsMap.elapsedTime)) {
-                        Helper.log('WARN', 'Unable to compute ActivityRatio on this activity with following data: ' + JSON.stringify(activityStatsMap))
+                        Helper.log('WARN', 'Unable to compute ActivityRatio on this activity with following data: ' + JSON.stringify(activityStatsMap));
                         return null;
                     }
 
@@ -232,7 +232,7 @@ function ComputeAnalysisWorker() {
                  */
                 prepareZonesForDistribComputation: function(sourceZones) {
                     var preparedZones = [];
-                    for (zone in sourceZones) {
+                    for (var zone in sourceZones) {
                         sourceZones[zone].s = 0;
                         sourceZones[zone].percentDistrib = null;
                         preparedZones.push(sourceZones[zone]);
@@ -242,20 +242,21 @@ function ComputeAnalysisWorker() {
 
                 finalizeDistribComputationZones: function(zones) {
                     var total = 0;
+                    var zone;
                     for (var i = 0; i < zones.length; i++) {
 
-                        var zone = zones[i];
-                        if (zone['s']) {
-                            total += zone['s'];
+                        zone = zones[i];
+                        if (zone.s) {
+                            total += zone.s;
                         }
-                        zone['percentDistrib'] = 0;
+                        zone.percentDistrib = 0;
                     }
                     if (total > 0) {
-                        for (var i = 0; i < zones.length; i++) {
-                            var zone = zones[i];
+                        for (i = 0; i < zones.length; i++) {
+                            zone = zones[i];
 
-                            if (zone['s']) {
-                                zone['percentDistrib'] = ((zone['s'] / total).toFixed(4) * 100);
+                            if (zone.s) {
+                                zone.percentDistrib = ((zone.s / total).toFixed(4) * 100);
                             }
                         }
                     }
@@ -292,7 +293,7 @@ function ComputeAnalysisWorker() {
                     for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
 
                         // Compute speed
-                        currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
+                        currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
 
                         if (currentSpeed > 0) { // If moving...
 
@@ -315,13 +316,13 @@ function ComputeAnalysisWorker() {
                                 // Find speed zone id
                                 var speedZoneId = this.getZoneId(this.userSettings.zones.speed, currentSpeed);
                                 if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
-                                    speedZones[speedZoneId]['s'] += durationInSeconds;
+                                    speedZones[speedZoneId].s += durationInSeconds;
                                 }
 
                                 // Find pace zone
                                 var paceZoneId = this.getZoneId(this.userSettings.zones.pace, this.convertSpeedToPace(currentSpeed));
                                 if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
-                                    paceZones[paceZoneId]['s'] += durationInSeconds;
+                                    paceZones[paceZoneId].s += durationInSeconds;
                                 }
 
                             }
@@ -402,7 +403,7 @@ function ComputeAnalysisWorker() {
                             var powerZoneId = this.getZoneId(this.userSettings.zones.power, powerArray[i]);
 
                             if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZones[powerZoneId])) {
-                                powerZones[powerZoneId]['s'] += durationInSeconds;
+                                powerZones[powerZoneId].s += durationInSeconds;
                             }
                         }
                     }
@@ -458,12 +459,12 @@ function ComputeAnalysisWorker() {
 
                     // Find HR for each Hrr of each zones
                     for (var zone in this.userSettings.userHrrZones) {
-                        this.userSettings.userHrrZones[zone]['fromHr'] = parseFloat(Helper.heartrateFromHeartRateReserve(this.userSettings.userHrrZones[zone]['fromHrr'], userMaxHr, userRestHr));
-                        this.userSettings.userHrrZones[zone]['toHr'] = parseFloat(Helper.heartrateFromHeartRateReserve(this.userSettings.userHrrZones[zone]['toHrr'], userMaxHr, userRestHr));
-                        this.userSettings.userHrrZones[zone]['fromHrr'] = parseFloat(this.userSettings.userHrrZones[zone]['fromHrr']);
-                        this.userSettings.userHrrZones[zone]['toHrr'] = parseFloat(this.userSettings.userHrrZones[zone]['toHrr']);
-                        this.userSettings.userHrrZones[zone]['s'] = 0;
-                        this.userSettings.userHrrZones[zone]['percentDistrib'] = null;
+                        this.userSettings.userHrrZones[zone].fromHr = parseFloat(Helper.heartrateFromHeartRateReserve(this.userSettings.userHrrZones[zone].fromHrr, userMaxHr, userRestHr));
+                        this.userSettings.userHrrZones[zone].toHr = parseFloat(Helper.heartrateFromHeartRateReserve(this.userSettings.userHrrZones[zone].toHrr, userMaxHr, userRestHr));
+                        this.userSettings.userHrrZones[zone].fromHrr = parseFloat(this.userSettings.userHrrZones[zone].fromHrr);
+                        this.userSettings.userHrrZones[zone].toHrr = parseFloat(this.userSettings.userHrrZones[zone].toHrr);
+                        this.userSettings.userHrrZones[zone].s = 0;
+                        this.userSettings.userHrrZones[zone].percentDistrib = null;
                     }
 
                     for (var i = 0; i < heartRateArray.length; i++) { // Loop on samples
@@ -488,7 +489,7 @@ function ComputeAnalysisWorker() {
                             zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
 
                             if (!_.isUndefined(zoneId)) {
-                                this.userSettings.userHrrZones[zoneId]['s'] += durationInSeconds;
+                                this.userSettings.userHrrZones[zoneId].s += durationInSeconds;
                             }
                         }
                     }
@@ -523,7 +524,7 @@ function ComputeAnalysisWorker() {
 
                 getHrrZoneId: function(hrrZonesCount, hrrValue) {
                     for (zoneId = 0; zoneId < hrrZonesCount; zoneId++) {
-                        if (hrrValue <= this.userSettings.userHrrZones[zoneId]['toHrr']) {
+                        if (hrrValue <= this.userSettings.userHrrZones[zoneId].toHrr) {
                             return zoneId;
                         }
                     }
@@ -585,7 +586,7 @@ function ComputeAnalysisWorker() {
                                 var cadenceZoneId = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
 
                                 if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
-                                    cadenceZones[cadenceZoneId]['s'] += durationInSeconds;
+                                    cadenceZones[cadenceZoneId].s += durationInSeconds;
                                 }
                             }
                         }
@@ -660,7 +661,7 @@ function ComputeAnalysisWorker() {
                     for (var i = 0; i < gradeArray.length; i++) { // Loop on samples
 
                         if (i > 0) {
-                            currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph; 
+                            currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
                             // Compute distribution for graph/table
                             if (currentSpeed > 0) { // If moving...
                                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -677,7 +678,7 @@ function ComputeAnalysisWorker() {
                                 var gradeZoneId = this.getZoneId(this.userSettings.zones.grade, gradeArray[i]);
 
                                 if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
-                                    gradeZones[gradeZoneId]['s'] += durationInSeconds;
+                                    gradeZones[gradeZoneId].s += durationInSeconds;
                                 }
 
                                 durationCount += durationInSeconds;
@@ -749,7 +750,7 @@ function ComputeAnalysisWorker() {
 
 
                 elevationData_: function(activityStream, activityStatsMap) {
-                	
+
                     var distanceArray = activityStream.distance;
                     var timeArray = activityStream.time;
                     var velocityArray = activityStream.velocity_smooth;
@@ -789,7 +790,7 @@ function ComputeAnalysisWorker() {
                             durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                             distance = distanceArray[i] - distanceArray[i - 1];
 
-                            // Compute average and normalized 
+                            // Compute average and normalized
 
                             // average elevation over distance
                             accumulatedElevation += this.valueForSum_(altitudeArray[i], altitudeArray[i - 1], distance);
@@ -800,7 +801,7 @@ function ComputeAnalysisWorker() {
                             var elevationZoneId = this.getZoneId(this.userSettings.zones.elevation, altitudeArray[i]);
 
                             if (!_.isUndefined(elevationZoneId) && !_.isUndefined(elevationZones[elevationZoneId])) {
-                                elevationZones[elevationZoneId]['s'] += durationInSeconds;
+                                elevationZones[elevationZoneId].s += durationInSeconds;
                             }
 
                             // Meters climbed between current and previous
@@ -824,7 +825,7 @@ function ComputeAnalysisWorker() {
 
                                     var ascentSpeedZoneId = this.getZoneId(this.userSettings.zones.ascent, ascentSpeedMeterPerHour);
                                     if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
-                                        ascentSpeedZones[ascentSpeedZoneId]['s'] += ascentDurationInSeconds;
+                                        ascentSpeedZones[ascentSpeedZoneId].s += ascentDurationInSeconds;
                                     }
                                 }
 
@@ -956,7 +957,7 @@ function ComputeAnalysisWorker() {
 
         // Result to main thread
         postMessage(result);
-    }
+    };
 
     this.importRequiredLibraries = function(libsFromExtensionPath, chromeExtensionId) {
         for (var i = 0; i < libsFromExtensionPath.length; i++) {
