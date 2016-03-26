@@ -91,8 +91,6 @@ StravistiX.prototype = {
         // Must be done at the end
         this.handleTrackTodayIncommingConnection_();
         this.handleGoogleMapsComeBackModifier();
-
-
     },
 
     /**
@@ -146,7 +144,7 @@ StravistiX.prototype = {
         var updateMessageObj = {
             title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
             hotFixes: [
-                'Hotfix Wrong running climbing pace on extended panel (Introduced in v3.2.1)'
+                'Disable stravistix on new strava store'
             ],
             features: [
                 'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
@@ -173,7 +171,6 @@ StravistiX.prototype = {
         message += '<h5><strong>AT A GLANCE... </strong><br/><i>(Hotfixing again version 3.2 sry :/...)</i></h5>';
         message += '<h5>- Performance improvement on extended stats computation.</h5>';
         message += '<h5>- Some new cool options</h5>';
-        message += '<h5>- Segment time comparison re-activated if you come from 3.1.x or under (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=Enabled%20segment%20time" target="_blank">customize</a>)</h5>';
         message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
