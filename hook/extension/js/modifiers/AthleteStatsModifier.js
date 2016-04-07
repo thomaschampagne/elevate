@@ -21,7 +21,7 @@ AthleteStatsModifier.prototype = {
 
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
-            setTimeout(function() {
+            setTimeout(function () {
                 modify.call(self);
             }, 500);
             return;
@@ -40,7 +40,7 @@ AthleteStatsModifier.prototype = {
             progress = $("#progress-goals"),
             progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
-        var formatData = function(activities) {
+        var formatData = function (activities) {
 
             var includeVirtualRide = (StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
 
@@ -67,7 +67,7 @@ AthleteStatsModifier.prototype = {
             return formattedData;
         };
 
-        var renderTrendArrow = function(value, formatFunction) {
+        var renderTrendArrow = function (value, formatFunction) {
             if (value === undefined) {
                 return "";
             }
@@ -75,7 +75,7 @@ AthleteStatsModifier.prototype = {
             return "<span title='" + (value < 0 ? "-" : (value > 0 ? "+" : "")) + formatted + "' style='cursor: help; color:" + (value < 0 ? "red" : (value > 0 ? "green" : "black")) + "'>" + (value < 0 ? "\u25BC" : (value > 0 ? "\u25B2" : "=")) + "</span>";
         };
 
-        var processData = function(activities) {
+        var processData = function (activities) {
             var types = [],
                 years,
                 yearsList = [],
@@ -125,9 +125,9 @@ AthleteStatsModifier.prototype = {
                 yearsList = [];
                 var $table = $("<table class='athletesStatTable' id='athletesStatActivityType" + i + "' style='display: none;'><thead><tr><th>Year</th><th>Distance</th><th>Elevation</th><th>Time</th></tr></thead><tbody></tbody></table>");
 
-                years = years.sort(function(left, right) {
+                years = years.sort(function (left, right) {
                     return right.year - left.year;
-                }).forEach(function(item) {
+                }).forEach(function (item) {
                     if (!self.distanceInKilometers) {
                         item.distance = item.distance * metersTo1000thOfMileFactor;
                     }
@@ -152,20 +152,20 @@ AthleteStatsModifier.prototype = {
                     $table.find("tbody").append($(
                         "<tr class='" + (isCurrentYear ? 'currentyear' : '') + "'>" +
                         "<td><div style='white-space: nowrap;'>" + item.year + "</div><div style='white-space: nowrap;'><small>" + (isCurrentYear ? ('0' + (currentMonth + 1)).slice(-2) + "/" + ('0' + currentDay).slice(-2) : "") + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + self.distanceUnit + renderTrendArrow(distanceDifference, function(value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + self.distanceUnit + renderTrendArrow(distanceDifference, function (value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + self.distanceUnit;
-                        }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function(value) {
+                        }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function (value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + (i == 0 ? "Rides" : "Runs");
                         }) + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + self.elevationUnit + renderTrendArrow(elevationDifference, function(value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + self.elevationUnit + renderTrendArrow(elevationDifference, function (value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + self.elevationUnit;
                         }) + "</div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + renderTrendArrow(timeDifference, function(value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + renderTrendArrow(timeDifference, function (value) {
                             return Helper.secondsToDHM(Math.abs(value));
                         }) + "</div></td>" +
                         "</tr>"
                     ));
-                };
+                }
                 progressThisYear.append($table);
                 progressThisYear.find("a[data-activity-type=" + i + "]").show();
                 progressThisYear.find("#athleteStatsShowChart").show();
@@ -174,10 +174,10 @@ AthleteStatsModifier.prototype = {
             progressThisYear.find(".switches .button:visible").first().click();
         };
 
-        var init = function(activities) {
+        var init = function (activities) {
             processData(activities);
             progressThisYear.find("#athleteStatsLoading").remove();
-            progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click(function(e) {
+            progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click(function (e) {
                 e.preventDefault();
                 self.handleProgressStatsForceRefresh_();
             });
@@ -185,7 +185,7 @@ AthleteStatsModifier.prototype = {
 
             progressThisYear.find('#stravistix_yearProgress_incVirtualRides').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
 
-            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', function() {
+            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', function () {
 
                 StorageManager.setCookie('stravistix_yearProgress_incVirtualRides', $('#stravistix_yearProgress_incVirtualRides').prop('checked'), 365);
                 self.handleProgressStatsForceRefresh_();
@@ -193,7 +193,7 @@ AthleteStatsModifier.prototype = {
             });
         };
 
-        $(progressThisYear).on("click", "a[data-activity-type]", function(e) {
+        $(progressThisYear).on("click", "a[data-activity-type]", function (e) {
             e.preventDefault();
             var $this = $(this),
                 activityType = $this.data("activity-type");
@@ -203,7 +203,7 @@ AthleteStatsModifier.prototype = {
             $this.addClass("selected");
         });
 
-        $(progressThisYear).on("click", "#athleteStatsShowChart a", function(e) {
+        $(progressThisYear).on("click", "#athleteStatsShowChart a", function (e) {
             e.preventDefault();
             var activityType = progressThisYear.find("a[data-activity-type].selected").data("activity-type");
             var size = [
@@ -219,6 +219,8 @@ AthleteStatsModifier.prototype = {
                 '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /><label style="display: inline" for="asrdt1">Activity count</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /><label style="display: inline" for="asrdt2">Elevation</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /><label style="display: inline" for="asrdt3">Time</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /><label style="display: inline" for="asrdt4">Distance last year</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /><label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
@@ -230,12 +232,12 @@ AthleteStatsModifier.prototype = {
                 'transitionIn': 'fade',
                 'transitionOut': 'fade'
             });
-            prepareChart(currentActivities.filter(function(activity) {
+            prepareChart(currentActivities.filter(function (activity) {
                 return activity.t == activityType;
             }));
         });
 
-        var prepareChart = function(activities) {
+        var prepareChart = function (activities) {
             var i,
                 j,
                 numberOfDays = 366,
@@ -252,13 +254,13 @@ AthleteStatsModifier.prototype = {
                 currentDate = new Date(),
                 currentYear = currentDate.getFullYear(),
                 oneDayInMiliseconds = 1000 * 60 * 60 * 24,
-                dayOfYear = function(date) {
+                dayOfYear = function (date) {
                     var now = new Date(leapYear, date.getMonth(), date.getDate(), 12);
                     var diff = now - firstDayDate;
                     var day = Math.floor(diff / oneDayInMiliseconds);
                     return day;
                 },
-                createArrayOfValues = function(length, value) {
+                createArrayOfValues = function (length, value) {
                     var result = [];
                     while (length--) {
                         result.push(value || 0);
@@ -266,28 +268,28 @@ AthleteStatsModifier.prototype = {
                     return result;
                 },
                 currentDayOfYear = dayOfYear(currentDate),
-                formatValue = function(value) {
+                formatValue = function (value) {
                     switch (currentDataType) {
-                        case 1:
-                            if (!self.distanceInKilometers) {
-                                value *= metersTo1000thOfMileFactor;
-                            }
-                            return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
+                    case 1:
+                        if (!self.distanceInKilometers) {
+                            value *= metersTo1000thOfMileFactor;
+                        }
+                        return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
 
-                        case 2:
-                            if (!self.elevationInMeters) {
-                                value *= metersToFeetsFactor;
-                            }
-                            return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
+                    case 2:
+                        if (!self.elevationInMeters) {
+                            value *= metersToFeetsFactor;
+                        }
+                        return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
 
-                        case 3:
-                            return Helper.secondsToDHM(value, true);
+                    case 3:
+                        return Helper.secondsToDHM(value, true);
 
-                        default:
-                            return Helper.formatNumber(value, 0);
+                    default:
+                        return Helper.formatNumber(value, 0);
                     }
                 },
-                processData = function() {
+                processData = function () {
                     data = [];
                     for (i = 0, max = activities.length; i < max; i++) {
                         activity = activities[i];
@@ -301,21 +303,21 @@ AthleteStatsModifier.prototype = {
                         day = dayOfYear(new Date(activity.y, activity.m, activity.d));
                         for (j = day; j < numberOfDays; j++) {
                             switch (currentDataType) {
-                                case 1:
-                                    yearlyData.values[j] += activity.di;
-                                    break;
+                            case 1:
+                                yearlyData.values[j] += activity.di;
+                                break;
 
-                                case 2:
-                                    yearlyData.values[j] += activity.el;
-                                    break;
+                            case 2:
+                                yearlyData.values[j] += activity.el;
+                                break;
 
-                                case 3:
-                                    yearlyData.values[j] += activity.ti;
-                                    break;
+                            case 3:
+                                yearlyData.values[j] += activity.ti;
+                                break;
 
-                                default:
-                                    yearlyData.values[j] += 1;
-                                    break;
+                            default:
+                                yearlyData.values[j] += 1;
+                                break;
                             }
                         }
                     }
@@ -324,12 +326,12 @@ AthleteStatsModifier.prototype = {
                         data[currentYear].values = data[currentYear].values.slice(0, currentDayOfYear + 1);
                     }
 
-                    data.sort(function(left, right) {
+                    data.sort(function (left, right) {
                         return left.year - right.year;
                     });
 
                     maxValue = 0;
-                    data.forEach(function(item) {
+                    data.forEach(function (item) {
                         i = d3.max(item.values);
                         if (i > maxValue) {
                             maxValue = i;
@@ -360,7 +362,7 @@ AthleteStatsModifier.prototype = {
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
-                .tickFormat(function(d) {
+                .tickFormat(function (d) {
                     return formatValue(d);
                 });
 
@@ -396,10 +398,10 @@ AthleteStatsModifier.prototype = {
                 .attr("y", 6);
 
             var line = d3.svg.line()
-                .y(function(d, i) {
+                .y(function (d, i) {
                     return y(d) + margin.top;
                 })
-                .x(function(d, i) {
+                .x(function (d, i) {
                     var dateFrom = new Date(firstDayDate.getTime());
                     if (i > 0) {
                         dateFrom.setHours(23, 59, 59);
@@ -411,11 +413,11 @@ AthleteStatsModifier.prototype = {
             var color = d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
-            var generateLines = function() {
+            var generateLines = function () {
                 var i = 0;
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
-                data.forEach(function(yearData) {
+                data.forEach(function (yearData) {
                     var year = yearData.year,
                         id = "ascy" + year,
                         liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + year + "</label></li>"),
@@ -434,16 +436,16 @@ AthleteStatsModifier.prototype = {
             };
             generateLines();
 
-            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
+            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function () {
                 var year = $(this).val();
-                data.filter(function(item) {
+                data.filter(function (item) {
                     return item.year == year;
-                }).forEach(function(item) {
+                }).forEach(function (item) {
                     item.element.classed("hide", !item.element.classed("hide"));
                 });
             });
 
-            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function() {
+            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function () {
                 currentDataType = +$(this).val();
                 hoverLine.classed("hide", true);
                 hoverLineText.classed("hide", true);
@@ -482,7 +484,7 @@ AthleteStatsModifier.prototype = {
             hoverLineText.classed("date", true);
             hoverLineText.classed("hide", true);
 
-            var handleMouseOverGraph = function(event) {
+            var handleMouseOverGraph = function (event) {
                 var mouseX = event.pageX - hoverLineXOffset,
                     mouseY = event.pageY - hoverLineYOffset;
 
@@ -493,7 +495,7 @@ AthleteStatsModifier.prototype = {
                     var date = x.invert(mouseX),
                         day = dayOfYear(date);
 
-                    data.forEach(function(item) {
+                    data.forEach(function (item) {
                         if (day < item.values.length) {
                             item.$value.text(formatValue(item.values[day]));
                         } else {
@@ -507,12 +509,12 @@ AthleteStatsModifier.prototype = {
                 }
             };
 
-            $(container).mousemove(function(event) {
+            $(container).mousemove(function (event) {
                 handleMouseOverGraph(event);
             });
         };
 
-        $(progressThisYear).on("click", "#athleteStatsShowChart a", function(e) {
+        $(progressThisYear).on("click", "#athleteStatsShowChart a", function (e) {
             e.preventDefault();
             var activityType = progressThisYear.find("a[data-activity-type].selected").data("activity-type");
             var size = [
@@ -524,10 +526,12 @@ AthleteStatsModifier.prototype = {
                 '<div id="athleteStatChart" style="float: left; width: ' + (size[0] - 200) + 'px;height:' + (size[1] - 100) + 'px;"></div>' +
                 '<div style="float:right; width: 180px; text-align: left;" id="athleteStatChartLegend">' +
                 '<div>Chart of:</div><ul id="athleteStatChartTypes">' +
-                '<li style="margin: 8px"><input id="asrdt0" type="radio" checked name="data-type" value="1" /><label style="display: inline" for="asrdt0">Distance</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /><label style="display: inline" for="asrdt1">Activity count</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /><label style="display: inline" for="asrdt2">Elevation</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /><label style="display: inline" for="asrdt3">Time</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt0" type="radio" checked name="data-type" value="1" /> <label style="display: inline" for="asrdt0">Distance</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /> <label style="display: inline" for="asrdt1">Activity count</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /> <label style="display: inline" for="asrdt2">Elevation</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3">Time</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4">Distance last year</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
@@ -539,12 +543,12 @@ AthleteStatsModifier.prototype = {
                 'transitionIn': 'fade',
                 'transitionOut': 'fade'
             });
-            prepareChart(currentActivities.filter(function(activity) {
+            prepareChart(currentActivities.filter(function (activity) {
                 return activity.t == activityType;
             }));
         });
 
-        var prepareChart = function(activities) {
+        var prepareChart = function (activities) {
             var i,
                 j,
                 numberOfDays = 366,
@@ -561,13 +565,13 @@ AthleteStatsModifier.prototype = {
                 currentDate = new Date(),
                 currentYear = currentDate.getFullYear(),
                 oneDayInMiliseconds = 1000 * 60 * 60 * 24,
-                dayOfYear = function(date) {
+                dayOfYear = function (date) {
                     var now = new Date(leapYear, date.getMonth(), date.getDate(), 12);
                     var diff = now - firstDayDate;
                     var day = Math.floor(diff / oneDayInMiliseconds);
                     return day;
                 },
-                createArrayOfValues = function(length, value) {
+                createArrayOfValues = function (length, value) {
                     var result = [];
                     while (length--) {
                         result.push(value || 0);
@@ -575,28 +579,30 @@ AthleteStatsModifier.prototype = {
                     return result;
                 },
                 currentDayOfYear = dayOfYear(currentDate),
-                formatValue = function(value) {
+                formatValue = function (value) {
                     switch (currentDataType) {
-                        case 1:
-                            if (!self.distanceInKilometers) {
-                                value *= metersTo1000thOfMileFactor;
-                            }
-                            return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
+                    case 1:
+                    case 4:
+                    case 5:
+                        if (!self.distanceInKilometers) {
+                            value *= metersTo1000thOfMileFactor;
+                        }
+                        return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
 
-                        case 2:
-                            if (!self.elevationInMeters) {
-                                value *= metersToFeetsFactor;
-                            }
-                            return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
+                    case 2:
+                        if (!self.elevationInMeters) {
+                            value *= metersToFeetsFactor;
+                        }
+                        return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
 
-                        case 3:
-                            return Helper.secondsToDHM(value, true);
+                    case 3:
+                        return Helper.secondsToDHM(value, true);
 
-                        default:
-                            return Helper.formatNumber(value, 0);
+                    default:
+                        return Helper.formatNumber(value, 0);
                     }
                 },
-                processData = function() {
+                processData = function () {
                     data = [];
                     for (i = 0, max = activities.length; i < max; i++) {
                         activity = activities[i];
@@ -607,9 +613,12 @@ AthleteStatsModifier.prototype = {
                             };
                         }
                         var yearlyData = data[activity.y];
-                        day = dayOfYear(new Date(activity.y, activity.m, activity.d));
-                        for (j = day; j < numberOfDays; j++) {
-                            switch (currentDataType) {
+                        var activityDate = new Date(activity.y, activity.m, activity.d);
+                        var activityTime = activityDate.getTime();
+                        day = dayOfYear(activityDate);
+                        if (currentDataType < 4) {
+                            for (j = day; j < numberOfDays; j++) {
+                                switch (currentDataType) {
                                 case 1:
                                     yearlyData.values[j] += activity.di;
                                     break;
@@ -625,6 +634,41 @@ AthleteStatsModifier.prototype = {
                                 default:
                                     yearlyData.values[j] += 1;
                                     break;
+                                }
+                            }
+                        } else {
+                            for (j = 0; j < numberOfDays; j++) {
+                                if (activity.y == currentYear && j > currentDayOfYear) {
+                                    continue;
+                                }
+                                switch (currentDataType) {
+                                case 4:
+                                    if (j == day) {
+                                        data[activity.y].values[j] += activity.di;
+                                        if (activity.y < currentYear) {
+                                            data[activity.y + 1].values[j] += activity.di;
+                                        }
+                                    } else if (j > day) {
+                                        data[activity.y].values[j] += activity.di;
+                                    } else if (activity.y < currentYear) {
+                                        data[activity.y + 1].values[j] += activity.di;
+                                    }
+                                    break;
+                                case 5:
+                                    var jDate = new Date(activity.y, 0, j).getTime();
+                                    if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                        data[activity.y].values[j] += activity.di;
+                                    }
+                                    if (activity.y < currentYear) {
+                                        jDate = new Date(activity.y + 1, 0, j).getTime();
+                                        if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                            data[activity.y + 1].values[j] += activity.di;
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
                             }
                         }
                     }
@@ -633,12 +677,12 @@ AthleteStatsModifier.prototype = {
                         data[currentYear].values = data[currentYear].values.slice(0, currentDayOfYear + 1);
                     }
 
-                    data.sort(function(left, right) {
+                    data.sort(function (left, right) {
                         return left.year - right.year;
                     });
 
                     maxValue = 0;
-                    data.forEach(function(item) {
+                    data.forEach(function (item) {
                         i = d3.max(item.values);
                         if (i > maxValue) {
                             maxValue = i;
@@ -669,7 +713,7 @@ AthleteStatsModifier.prototype = {
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
-                .tickFormat(function(d) {
+                .tickFormat(function (d) {
                     return formatValue(d);
                 });
 
@@ -705,10 +749,10 @@ AthleteStatsModifier.prototype = {
                 .attr("y", 6);
 
             var line = d3.svg.line()
-                .y(function(d, i) {
+                .y(function (d, i) {
                     return y(d) + margin.top;
                 })
-                .x(function(d, i) {
+                .x(function (d, i) {
                     var dateFrom = new Date(firstDayDate.getTime());
                     if (i > 0) {
                         dateFrom.setHours(23, 59, 59);
@@ -720,11 +764,11 @@ AthleteStatsModifier.prototype = {
             var color = d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
-            var generateLines = function() {
+            var generateLines = function () {
                 var i = 0;
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
-                data.forEach(function(yearData) {
+                data.forEach(function (yearData) {
                     var year = yearData.year,
                         id = "ascy" + year,
                         liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + year + "</label></li>"),
@@ -743,16 +787,16 @@ AthleteStatsModifier.prototype = {
             };
             generateLines();
 
-            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
+            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function () {
                 var year = $(this).val();
-                data.filter(function(item) {
+                data.filter(function (item) {
                     return item.year == year;
-                }).forEach(function(item) {
+                }).forEach(function (item) {
                     item.element.classed("hide", !item.element.classed("hide"));
                 });
             });
 
-            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function() {
+            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function () {
                 currentDataType = +$(this).val();
                 hoverLine.classed("hide", true);
                 hoverLineText.classed("hide", true);
@@ -791,7 +835,7 @@ AthleteStatsModifier.prototype = {
             hoverLineText.classed("date", true);
             hoverLineText.classed("hide", true);
 
-            var handleMouseOverGraph = function(event) {
+            var handleMouseOverGraph = function (event) {
                 var mouseX = event.pageX - hoverLineXOffset,
                     mouseY = event.pageY - hoverLineYOffset;
 
@@ -802,7 +846,7 @@ AthleteStatsModifier.prototype = {
                     var date = x.invert(mouseX),
                         day = dayOfYear(date);
 
-                    data.forEach(function(item) {
+                    data.forEach(function (item) {
                         if (day < item.values.length) {
                             item.$value.text(formatValue(item.values[day]));
                         } else {
@@ -816,7 +860,7 @@ AthleteStatsModifier.prototype = {
                 }
             };
 
-            $(container).mousemove(function(event) {
+            $(container).mousemove(function (event) {
                 handleMouseOverGraph(event);
             });
         };
@@ -837,11 +881,11 @@ AthleteStatsModifier.prototype = {
         if (total != activitiesFromCacheObject.length) {
             requests.push($.ajax({
                 url: url + "1",
-                success: function(data) {
+                success: function (data) {
                     for (i = 2, max = Math.ceil(data.total / data.perPage); i <= max; i++) {
                         requests.push($.ajax(url + i));
                     }
-                    $.when.apply(self, requests).done(function() {
+                    $.when.apply(self, requests).done(function () {
                         for (i in requests) {
                             var request = requests[i];
                             if (request.responseJSON.models) {
