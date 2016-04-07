@@ -110,29 +110,30 @@ function ComputeAnalysisWorker() {
 
                 computeAnalysisData: function(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream) {
 
-                    // Move ratio
-                    var moveRatio = this.moveRatio_(activityStatsMap, activityStream);
-
-                    // Toughness score
-                    var toughnessScore = this.toughnessScore_(activityStatsMap, activityStream, moveRatio);
 
                     // Include speed and pace
-                    var moveData = [null, null];
+                    this.moveData = null;
+
                     if (activityStream.velocity_smooth) {
-                        moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
+                        this.moveData = this.moveData_(activityStatsMap, activityStream.velocity_smooth, activityStream.time);
                     }
 
                     // Q1 Speed
                     // Median Speed
                     // Q3 Speed
                     // Standard deviation Speed
-                    var speedData = (_.isEmpty(moveData)) ? null : moveData[0];
+                    var speedData = (_.isEmpty(this.moveData)) ? null : this.moveData.speed;
 
                     // Q1 Pace
                     // Median Pace
                     // Q3 Pace
                     // Standard deviation Pace
-                    var paceData = (_.isEmpty(moveData)) ? null : moveData[1];
+                    var paceData = (_.isEmpty(this.moveData)) ? null : this.moveData.pace;
+
+                    var moveRatio = (_.isEmpty(this.moveData)) ? null : this.moveRatio_(this.moveData.movingTime, this.moveData.elapsedTime);
+
+                    // Toughness score
+                    var toughnessScore = this.toughnessScore_(activityStatsMap, activityStream, moveRatio);
 
                     // Estimated Normalized power
                     // Estimated Variability index
@@ -177,14 +178,14 @@ function ComputeAnalysisWorker() {
 
                 },
 
-                moveRatio_: function(activityStatsMap, activityStream) {
+                moveRatio_: function(movingTime, elapsedTime) {
 
-                    if (_.isNull(activityStatsMap.movingTime) || _.isNull(activityStatsMap.elapsedTime)) {
+                    if (_.isNull(movingTime) || _.isNull(elapsedTime)) {
                         Helper.log('WARN', 'Unable to compute ActivityRatio on this activity with following data: ' + JSON.stringify(activityStatsMap));
                         return null;
                     }
 
-                    var ratio = activityStatsMap.movingTime / activityStatsMap.elapsedTime;
+                    var ratio = movingTime / elapsedTime;
 
                     if (_.isNaN(ratio)) {
                         return null;
@@ -287,42 +288,45 @@ function ComputeAnalysisWorker() {
                     var speedZones = this.prepareZonesForDistribComputation(this.userSettings.zones.speed);
                     var paceZones = this.prepareZonesForDistribComputation(this.userSettings.zones.pace);
 
-                    var durationInSeconds = 0;
+                    var movingSeconds = 0;
+                    var elapsedSeconds = 0;
 
                     // End Preparing zone
                     for (var i = 0; i < velocityArray.length; i++) { // Loop on samples
 
-                        // Compute speed
-                        currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
+                        // Compute distribution for graph/table
+                        if (i > 0) {
 
-                        if (currentSpeed > 0) { // If moving...
+                            elapsedSeconds += (timeArray[i] - timeArray[i - 1]);
 
-                            // Compute distribution for graph/table
-                            if (i > 0) {
+                            // Compute speed
+                            currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
 
-                                durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+                            if (currentSpeed > 0) { // If moving...
+
+                                movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
                                 speedsNonZero.push(currentSpeed);
-                                speedsNonZeroDuration.push(durationInSeconds);
+                                speedsNonZeroDuration.push(movingSeconds);
 
                                 // Compute variance speed
                                 speedVarianceSum += Math.pow(currentSpeed, 2);
 
                                 // distance
-                                genuineAvgSpeedSum += this.valueForSum_(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, durationInSeconds);
+                                genuineAvgSpeedSum += this.valueForSum_(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
                                 // time
-                                genuineAvgSpeedSumCount += durationInSeconds;
+                                genuineAvgSpeedSumCount += movingSeconds;
 
                                 // Find speed zone id
                                 var speedZoneId = this.getZoneId(this.userSettings.zones.speed, currentSpeed);
                                 if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
-                                    speedZones[speedZoneId].s += durationInSeconds;
+                                    speedZones[speedZoneId].s += movingSeconds;
                                 }
 
                                 // Find pace zone
                                 var paceZoneId = this.getZoneId(this.userSettings.zones.pace, this.convertSpeedToPace(currentSpeed));
                                 if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
-                                    paceZones[paceZoneId].s += durationInSeconds;
+                                    paceZones[paceZoneId].s += movingSeconds;
                                 }
 
                             }
@@ -339,23 +343,28 @@ function ComputeAnalysisWorker() {
                     var standardDeviationSpeed = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
                     var percentiles = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
-                    return [{
-                        'genuineAvgSpeed': genuineAvgSpeed,
-                        'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
-                        'lowerQuartileSpeed': percentiles[0],
-                        'medianSpeed': percentiles[1],
-                        'upperQuartileSpeed': percentiles[2],
-                        'varianceSpeed': varianceSpeed,
-                        'standardDeviationSpeed': standardDeviationSpeed,
-                        'speedZones': speedZones
-                    }, {
-                        'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
-                        'lowerQuartilePace': this.convertSpeedToPace(percentiles[0]),
-                        'medianPace': this.convertSpeedToPace(percentiles[1]),
-                        'upperQuartilePace': this.convertSpeedToPace(percentiles[2]),
-                        'variancePace': this.convertSpeedToPace(varianceSpeed),
-                        'paceZones': paceZones
-                    }];
+                    return {
+                        movingTime: genuineAvgSpeedSumCount,
+                        elapsedTime: elapsedSeconds,
+                        speed: {
+                            'genuineAvgSpeed': genuineAvgSpeed,
+                            'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+                            'lowerQuartileSpeed': percentiles[0],
+                            'medianSpeed': percentiles[1],
+                            'upperQuartileSpeed': percentiles[2],
+                            'varianceSpeed': varianceSpeed,
+                            'standardDeviationSpeed': standardDeviationSpeed,
+                            'speedZones': speedZones
+                        },
+                        pace: {
+                            'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+                            'lowerQuartilePace': this.convertSpeedToPace(percentiles[0]),
+                            'medianPace': this.convertSpeedToPace(percentiles[1]),
+                            'upperQuartilePace': this.convertSpeedToPace(percentiles[2]),
+                            'variancePace': this.convertSpeedToPace(varianceSpeed),
+                            'paceZones': paceZones
+                        }
+                    };
                 },
 
                 /**
@@ -606,7 +615,7 @@ function ComputeAnalysisWorker() {
 
                     return {
                         'cadencePercentageMoving': cadenceRatioOnMovingTime * 100,
-                        'cadenceTimeMoving': (cadenceRatioOnMovingTime * activityStatsMap.movingTime),
+                        'cadenceTimeMoving': cadenceSumDurationOnMoving,
                         'averageCadenceMoving': averageCadenceOnMovingTime,
                         'standardDeviationCadence': standardDeviationCadence.toFixed(1),
                         'crankRevolutions': crankRevolutions,
