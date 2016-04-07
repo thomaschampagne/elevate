@@ -219,6 +219,8 @@ AthleteStatsModifier.prototype = {
                 '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /><label style="display: inline" for="asrdt1">Activity count</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /><label style="display: inline" for="asrdt2">Elevation</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /><label style="display: inline" for="asrdt3">Time</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /><label style="display: inline" for="asrdt4">Distance last year</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /><label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
@@ -269,6 +271,8 @@ AthleteStatsModifier.prototype = {
                 formatValue = function(value) {
                     switch (currentDataType) {
                         case 1:
+                        case 4:
+                        case 5:
                             if (!self.distanceInKilometers) {
                                 value *= metersTo1000thOfMileFactor;
                             }
@@ -297,25 +301,62 @@ AthleteStatsModifier.prototype = {
                                 values: createArrayOfValues(numberOfDays)
                             };
                         }
+                        if (currentDataType > 3 && !data[activity.y + 1]) {
+                            data[activity.y + 1] = {
+                                year: activity.y + 1,
+                                values: createArrayOfValues(numberOfDays)
+                            };
+                        }
                         var yearlyData = data[activity.y];
-                        day = dayOfYear(new Date(activity.y, activity.m, activity.d));
-                        for (j = day; j < numberOfDays; j++) {
-                            switch (currentDataType) {
-                                case 1:
-                                    yearlyData.values[j] += activity.di;
-                                    break;
+                        var activityDate = new Date(activity.y, activity.m, activity.d);
+                        var activityTime = activityDate.getTime();
+                        day = dayOfYear(activityDate);
+                        if (currentDataType < 4) {
+                            for (j = day; j < numberOfDays; j++) {
+                                switch (currentDataType) {
+                                    case 1:
+                                        yearlyData.values[j] += activity.di;
+                                        break;
 
-                                case 2:
-                                    yearlyData.values[j] += activity.el;
-                                    break;
+                                    case 2:
+                                        yearlyData.values[j] += activity.el;
+                                        break;
 
-                                case 3:
-                                    yearlyData.values[j] += activity.ti;
-                                    break;
+                                    case 3:
+                                        yearlyData.values[j] += activity.ti;
+                                        break;
 
-                                default:
-                                    yearlyData.values[j] += 1;
-                                    break;
+                                    default:
+                                        yearlyData.values[j] += 1;
+                                        break;
+                                }
+                            }
+                        } else {
+                            for (j = 0; j < numberOfDays; j++) {
+                                switch (currentDataType) {
+                                    case 4:
+                                        if (j == day) {
+                                            data[activity.y].values[j] += activity.di;
+                                            data[activity.y + 1].values[j] += activity.di;
+                                        } else if (j > day) {
+                                            data[activity.y].values[j] += activity.di;
+                                        } else {
+                                            data[activity.y + 1].values[j] += activity.di;
+                                        }
+                                        break;
+                                    case 5:
+                                        var jDate = new Date(activity.y, 0, j).getTime();
+                                        if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                            data[activity.y].values[j] += activity.di;
+                                        }
+                                        jDate = new Date(activity.y + 1, 0, j).getTime();
+                                        if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                            data[activity.y + 1].values[j] += activity.di;
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
