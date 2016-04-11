@@ -1,0 +1,11 @@
+<div id="previewImages_{{index}}" class="previewImages">
+    <span ng-repeat="image in data.images">
+            <a href="{{image}}" class="swipebox" rel="preview_{{index}}" >
+                <img class="screenshot" ng-src="{{image}}" ng-class="(data.images.length === 3) ? 'small' : 'medium'"/>
+            </a>
+        </span>
+</div>
+<div id="caption_{{index}}" class="caption ng-carriage-returns">{{data.caption}}</div>
+<div id="goToNextFromPreview_{{index}}" class="downArrow previewArrows">
+    <a href="#" ng-click="nextPreview()"><img src="img/arrows/arrow-down.svg" class="img-responsive" /></a>
+</div>

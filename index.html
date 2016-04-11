@@ -1,117 +1,110 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!--
+StravistiX for Strava Landing page
+Author: Thomas Champagne
+Github: https://github.com/thomaschampagne/stravistix-landingpage
+ -->
+<!doctype html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Stravistix for Strava by thomaschampagne</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#E94E1B">
+    <meta name="description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
+    <meta name="author" content="Thomas Champagne">
+    <meta name="keywords" content="strava, extension, plugin, chrome, cycling, running">
+    <meta property="og:site_name" content="StravistiX for Strava">
+    <meta property="og:url" content="http://thomaschampagne.github.io/stravistix/">
+    <meta property="og:image" content="http://thomaschampagne.github.io/stravistix/img/share/banner.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="StravistiX for Strava">
+    <meta property="og:description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="http://thomaschampagne.github.io/stravistix/">
+    <meta name="twitter:creator" content="@champagnethomas">
+    <meta name="twitter:title" content="StravistiX for Strava">
+    <meta name="twitter:description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
+    <meta name="twitter:image" content="http://thomaschampagne.github.io/stravistix/img/share/banner.jpg">
+    <title>StravistiX for Strava</title>
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" type="text/css" href="style/main.css" />
+    <script type="text/javascript" src="js/script.js"></script>
 </head>
 
-<body>
-    <section class="page-header">
-        <!-- <h1 class="project-name"> -->
-        <img src="images/stravistix_logo.png" class="smallResolution" />
-        <!-- </h1> -->
-        <h2 class="project-tagline">Chrome/Opera extension adding features for Strava website with new performances data and improved ergonomics. Options made with AngularJS</h2>
-        <br/>
-        <br/>
-        <br/>
-        <a href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn" target="_blank" style="font-size: 24px;">Download from chrome store...</a>
-        <br/>
-        <br/>
-        <a href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn" target="_blank"><img style="box-shadow: 0 0 10px #555;" src="images/ChromeWebStore_Badge_v2.png" /></a>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <a href="donate.html" target="_blank" class="btn">Donate</a>
-        <a href="https://www.facebook.com/stravistixforstrava" target="_blank" class="btn">Facebook</a>
-        <a href="https://twitter.com/champagnethomas" target="_blank" class="btn">Twitter</a>
-        <a href="https://github.com/thomaschampagne/stravistix" target="_blank" class="btn">GitHub</a>
-    </section>
-    <section class="main-content">
-        <h3>
-<a id="activities-improvements" class="anchor" href="#activities-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Activity improvements</h3>
-        <ul>
-            <li>Zone distribution through charts and tables of
-                <ul>
-                    <li>Speed/Pace: Quartiles, standard deviation, ...</li>
-                    <li>Cadence: Quartiles, Pedaling/freewheel time, Crank Revolutions</li>
-                    <li>Heart rate reserve: Quartiles, Training Impulse</li>
-                    <li>Power: Quartiles, Variability Index, Punch Factor, Weighted Watts/Kg</li>
-                    <li>Grade: Quartiles, Grade Profile, Times and percentages during climbs, flats and downhills</li>
-                </ul>
-            </li>
-            <li>Each zones for each data type is customizable in Stravisitix Options.</li>
-            <li>TRIMP (Training Impulse) score. The TRIMP is a number calculated according to the time spent in heart zone, to determine the training load. ( <a href="http://fellrnr.com/wiki/TRIMP" target="_blank">http://fellrnr.com/wiki/TRIMP</a> )</li>
-            <li>TRIMP / Hour</li>
-            <li>Ratio of activity: time moving over total time of an activity.</li>
-            <li>Thoughness Score: global involvement score into in the activity. It represents your motivation into activity. This score is based on the ratio of activity, elevation, average speed, and distance. (Coming soon for running)</li>
-            <li>Weighted power cycling</li>
-            <li>Weighted power / kg in cycling</li>
-            <li>Cycling variability index. This index shows activity smoothness in terms of effort Cycling intensity index or Punch Factor.This index indicates you were below or beyond of your current power capacity (Functionnal Power Threshold)</li>
-            <li>Distance display for each bike in activities</li>
-            <li>Choosing the type of default Google map</li>
-            <li>Integration VeloViewer in each of your activities</li>
-            <li>"FlyBy" integration: People who make sports with you.</li>
-            <li>OpenStreetMap flipper. Available osm maps: Cycle, Landscape, Street, Os, Outdoors. Garmin TCX export.</li>
-            <li>Weather for cycling activities</li>
-        </ul>
-        <h3>
-<a id="segments-improvements" class="anchor" href="#segments-improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Segments improvements</h3>
-        <ul>
-            <li>Exporting cycling segment effort as Virtual Partner course for your Garmin device or other compatible GPS. File format: .crs, .tcx, .gpx</li>
-            <li>% rank in segments</li>
-            <li>Nearby segments around watching segment.</li>
-            <li>Default order in segments: All, Man, Woman, People I am, My results</li>
-        </ul>
-        <h3>
-<a id="other-cool-things" class="anchor" href="#other-cool-things" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other cool things</h3>
-        <ul>
-            <li>Integration KOM/CR map</li>
-            <li>Integration of Heat Map Global Strava</li>
-            <li>Hidden challenges or/and roads created in the Dashboard</li>
-            <li>...</li>
-        </ul>
-        <footer class="site-footer">
-            <span class="site-footer-owner"><a href="https://github.com/thomaschampagne/stravistix">Stravistix for Strava</a> is maintained by <a href="https://github.com/thomaschampagne">thomaschampagne</a>.</span>
-        </footer>
-    </section>
-    <script type="text/javascript">
-    window.onload = function() {
+<body data-ng-app="App" data-ng-controller="BehaviourController">
+    <div id="outsideIcons" class="outsideLinks">
+        <a href="#" ng-click="goToDownloadPage()"><i class="outsideIcons fa fa-download importantIcon"></i></a>
+        <a href="#" ng-click="goToDonatePage()"><i class="outsideIcons fa fa-heart-o"></i></a>
+        <a target="_blank" href="https://twitter.com/champagnethomas"><i class="outsideIcons fa fa-petitOiseauBleu"></i></a>
+        <a target="_blank" href="https://www.facebook.com/stravistixforstrava"><i class="outsideIcons fa fa-faceDeBouc"></i></a>
+        <a target="_blank" href="https://github.com/thomaschampagne/stravistix"><i class="outsideIcons fa fa-github"></i></a>
+    </div>
 
-        var param = window.location.search.replace("?", "");
-
-        if (param.includes('update')) {
-
-            var version = param.split('=')[1];
-            console.log('update to ' + version);
-
-            alert('StravistiX extension has been updated to ' + version + '. For your information here is the dedicated website you can share to your sports mates ;)');
-        }
-    }
-    </script>
+    <div id="fullpage">
+        <!-- Section Download -->
+        <div data-anchor="downloadPage" class="section landingBgCentering">
+            <div id="logo" class="logo">
+                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">
+                    <img src="img/logos/logo_stravistix_no_circle.svg" class="img-responsive" />
+                </a>
+            </div>
+            <div id="valueProposal" class="valueProposal">
+                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">
+                    enhance your <img class="stravaLogoDownload" src="img/logos/strava_logo.svg" /> experience !
+                </a>
+            </div>
+            <div id="downloadButton" class="downloadButton">
+                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">download <i class="fa fa-chrome"></i> plugin</a>
+            </div>
+            <div id="goToQuote" class="downArrow">
+                <a href="#" ng-click="nextSection()"><img src="img/arrows/arrow-down.svg" class="img-responsive" /></a>
+            </div>
+            <div class="ribbon"></div>
+        </div>
+        <!-- Section Preview -->
+        <div data-anchor="{{previewData.id}}" class="section" ng-repeat="previewData in previewsData">
+            <!-- Inject Angular Directive of preview  -->
+            <preview class="preview" data="previewData" index="$index" trigger-preview-sections-ready />
+        </div>
+        <div data-anchor="andMorePage" class="section">
+            <!-- Inject Angular Directive?...  -->
+            <div id="andMore" class="andMore">
+                <div><u>Also included</u></div>
+                <div>* best splits *</div>
+                <div>* years progressions *</div>
+                <div>* Weather data for cycling *</div>
+                <div>* Google Maps + street view *</div>
+                <div>* Segments GPS Virtual Partner *</div>
+                <div>* Nearby segments *</div>
+                <div><i>and more...</i></div>
+            </div>
+            <div id="goToDonate" class="downArrow">
+                <a href="#" ng-click="nextSection()"><img src="img/arrows/arrow-down.svg" class="img-responsive" /></a>
+            </div>
+        </div>
+        <div data-anchor="donatePage" class="section">
+            <!-- Inject Angular Directive of donation  -->
+            <paypal-donate></paypal-donate>
+            <div id="goToTop" class="upArrow">
+                <a href="#" ng-click="goTo('downloadPage')"><img src="img/arrows/arrow-up.svg" class="img-responsive" /></a>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
-(function(i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-ga('create', 'UA-51167057-6', 'auto');
-ga('send', 'pageview');
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-51167057-6', 'auto');
+    ga('send', 'pageview');
 </script>
 
 </html>
