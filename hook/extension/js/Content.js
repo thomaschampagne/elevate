@@ -138,6 +138,7 @@ Content.prototype = {
 
 var appResources = {
     settingsLink: chrome.extension.getURL('/options/app/index.html'),
+    logoStravistix: chrome.extension.getURL('/icons/logo_stravistix_no_circle.svg'),
     menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),
     menuIconOrange: chrome.extension.getURL('/icons/ic_menu_24px_orange.svg'),
     remoteViewIcon: chrome.extension.getURL('/icons/ic_open_in_new_24px.svg'),
