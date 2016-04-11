@@ -142,19 +142,15 @@ StravistiX.prototype = {
     handleUpdatePopup_: function() {
 
         var updateMessageObj = {
-            title: 'StravistiX updated/installed to <strong>v' + this.appResources_.extVersionName + '</strong>',
-            hotFixes: [
-                'Disable stravistix on new strava store'
-            ],
+            logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
+            title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
+            hotFixes: [],
             features: [
-                'Improved performance on extended activity stats processing. Extended stats computation is now done through a separate thread/webworker.',
-                'Added extended stats for runners: climbing/descending distance (inside grade section of extended stats panel). Cyclists already have this...',
-                'Added option to mute "not enough engaged" cycling or running activities in dashboard feed (<a href="chrome-extension://' + this.appResources_.extensionId + '/options/app/index.html#/commonSettings?searchText=activitiesUnderDistance" target="_blank">customize this here</a>).',
-                'Added option to activate temperature by default on running activities.',
-                'Added option to hide the "Pos." column on the segments table (in activities).',
+                'Introducing new year progressions charts: "Distance last year" and "Distance last 30d" (Go to My Profile)',
+                'Integrating new StravistiX logo design by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a>',
             ],
             fixes: [
-                'Fixed miles/km ratio not applied in activities summary (My profile page)',
+                'Fix cadence time on segments efforts (global activity value was shown).',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
@@ -166,11 +162,10 @@ StravistiX.prototype = {
         };
 
         var message = '';
-
         message += '<div style="background: #eee; padding: 8px;">';
-        message += '<h5><strong>AT A GLANCE... </strong><br/><i>(Hotfixing again version 3.2 sry :/...)</i></h5>';
-        message += '<h5>- Performance improvement on extended stats computation.</h5>';
-        message += '<h5>- Some new cool options</h5>';
+        message += '<h5><strong>AT A GLANCE... </strong></h5>';
+        message += '<h5>- New year progressions charts: "Distance last year" and "Distance last 30d".</h5>';
+        message += '<h5>- StravistiX has now a logo. Designed by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a></h5>';
         message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
@@ -216,7 +211,7 @@ StravistiX.prototype = {
         message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
         message += '</a>';
 
-        $.fancybox('<h2>' + updateMessageObj.title + '</h2>' + message);
+        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 30%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
     },
 
     /**
