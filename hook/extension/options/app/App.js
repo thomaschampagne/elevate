@@ -1,7 +1,7 @@
 /**
  * Declaring Angular App
  */
-var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'ui.checkbox', 'SettingsSectionsModule']);
+var app = angular.module("App", ['ngRoute', 'ui.bootstrap', 'ui.checkbox']);
 
 app.config(['$routeProvider', function($routeProvider) {
 
@@ -39,5 +39,5 @@ app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.otherwise({
         redirectTo: routeMap.commonSettingsRoute
-    })
+    });
 }]);

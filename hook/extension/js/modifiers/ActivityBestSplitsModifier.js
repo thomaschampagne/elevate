@@ -173,30 +173,6 @@ ActivityBestSplitsModifier.prototype = {
             removeSplitSelection();
         });
 
-        // Set underline on titles only when hovered
-        $(".segments-header-title").hover(
-            function() {
-                $(this).css("text-decoration", "underline");
-            },
-            function() {
-                $(this).css("text-decoration", "none");
-            }
-        );
-
-        $(".bestsplits-header-title").hover(
-            function() {
-                $(this).css("text-decoration", "underline");
-            },
-            function() {
-                $(this).css("text-decoration", "none");
-            }
-        );
-
-        // Set Strava blue links color on bestsplits + segments links
-        $(".bestsplits-header-title").css("color", "#007FB6");
-        $(".segments-header-title").css("color", "#007FB6");
-
-
         $(document).on("click", "[data-activity-points]", {}, function() {
             if (map) {
                 $("[data-activity-points].selected").removeClass("selected").css({

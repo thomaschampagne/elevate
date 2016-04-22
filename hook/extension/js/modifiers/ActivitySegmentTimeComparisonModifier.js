@@ -47,11 +47,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             if (!self.firstAppearDone) {
 
                 var timeColumnHeader = $("#segments table.segments th.time-col");
-                var starColumnHeader = $("#segments table.segments th.starred-col");
-
-                if (self.displaySegmentTimeComparisonPosition) {
-                    starColumnHeader.after("<th title='Column shows your current position on that segment.'>Pos.</th>");
-                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
@@ -65,6 +60,10 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     timeColumnHeader.after("<th title='Column shows the difference between the current " + (self.isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
                 }
 
+                if (self.displaySegmentTimeComparisonPosition) {
+                    timeColumnHeader.after("<th title='Column shows your current position on that segment.'>Rank</th>");
+                }
+
                 self.firstAppearDone = true;
             }
 
@@ -72,7 +71,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 var $row = $(this),
                     $timeCell = $row.find("td.time-col"),
-                    $starCell = $row.find("td.starred-col"),
                     segmentEffortId = $row.data("segment-effort-id"),
                     segmentEffortInfoUrl = "/segment_efforts/" + segmentEffortId,
                     positionCell,
@@ -85,11 +83,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 }
 
                 $row.data("segment-time-comparison", true);
-
-                if (self.displaySegmentTimeComparisonPosition) {
-                    positionCell = $("<td><span class='ajax-loading-image'></span></td>");
-                    $starCell.after(positionCell);
-                }
 
                 if (self.showDifferenceToCurrentYearPR) {
                     deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
@@ -104,6 +97,11 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 if (self.showDifferenceToKOM) {
                     deltaKomCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(deltaKomCell);
+                }
+
+                if (self.displaySegmentTimeComparisonPosition) {
+                    positionCell = $("<td><span class='ajax-loading-image'></span></td>");
+                    $timeCell.after(positionCell);
                 }
 
                 // Retreive segment effort infos
@@ -124,8 +122,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                     if (self.displaySegmentTimeComparisonPosition) {
                         segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
-                        var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count * 100).toFixed(1);
-                        positionCell.html("<span title=\"Your position\">" + segmentEffortInfo.overall_rank + "<br/>" + percentRank + "%</span>");
+                        var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count);
+                        positionCell.html("<div title=\"Your position\" style=\"text-align: center;padding: 2px; background-color: #565656; color:" + self.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "</div>");
                     }
 
                     var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
@@ -197,7 +195,6 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
         jqxhr.done(function(leaderboardData) {
 
-            var max;
             for (var i = 0, max = leaderboardData.top_results.length; i < max; i++) {
                 leaderboardData.top_results[i].__dateTime = new Date(leaderboardData.top_results[i].start_date_local_raw);
                 if (leaderboardData.top_results[i].id == segmentEffortId) {
@@ -206,7 +203,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 }
             }
 
-            // Make any recursive leaderboardData fetched flatten with previous one 
+            // Make any recursive leaderboardData fetched flatten with previous one
             fetchedLeaderboardData = _.flatten(_.union(leaderboardData.top_results, fetchedLeaderboardData));
 
             if (currentSegmentEffortDateTime) {
@@ -277,5 +274,53 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 deltaYearPRCell.html("-");
             }
         }
+    },
+
+    getColorForPercentage: function(pct) {
+
+        // invert percentage
+        pct = 1 - pct;
+
+        var percentColors = [{
+            pct: 0.0,
+            color: {
+                r: 0xff,
+                g: 0x55,
+                b: 0x55
+            }
+        }, {
+            pct: 0.5,
+            color: {
+                r: 0xff,
+                g: 0xff,
+                b: 0
+            }
+        }, {
+            pct: 1.0,
+            color: {
+                r: 0x00,
+                g: 0xff,
+                b: 0x00
+            }
+        }];
+
+        for (var i = 1; i < percentColors.length - 1; i++) {
+            if (pct < percentColors[i].pct) {
+                break;
+            }
+        }
+        var lower = percentColors[i - 1];
+        var upper = percentColors[i];
+        var range = upper.pct - lower.pct;
+        var rangePct = (pct - lower.pct) / range;
+        var pctLower = 1 - rangePct;
+        var pctUpper = rangePct;
+        var color = {
+            r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+            g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+        };
+        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        // or output as hex if preferred
     }
 };

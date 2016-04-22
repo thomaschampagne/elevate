@@ -1,9 +1,9 @@
-app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$location', function($scope, Notifier, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'NotifierService', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, NotifierService, $timeout, $location) {
 
     // Define options structure
-    $scope.sections = settingsSectionsModule.data;
+    $scope.sections = CommonSettingsService.provideSections();
 
-    ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {
+    ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
 
         $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
         $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);
@@ -39,7 +39,7 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
 
         var bool = option.active;
 
-        ChromeStorageModule.updateUserSetting(option.optionKey, bool, function() {
+        ChromeStorageService.updateUserSetting(option.optionKey, bool, function() {
             console.log(option.optionKey + ' has been updated to ' + bool);
         });
 
@@ -63,7 +63,7 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
 
     $scope.toggleSelectOption = function(option) {
 
-        ChromeStorageModule.updateUserSetting(option.optionKey, option.active.key, function() {
+        ChromeStorageService.updateUserSetting(option.optionKey, option.active.key, function() {
             console.log(option.optionKey + ' has been updated to ' + option.active);
         });
     };
@@ -85,7 +85,7 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
 
         var saveValue = (_.isNull(option.value) || _.isUndefined(option.value)) ? 0 : option.value;
 
-        ChromeStorageModule.updateUserSetting(option.optionKey, saveValue, function() {
+        ChromeStorageService.updateUserSetting(option.optionKey, saveValue, function() {
             console.log(option.optionKey + ' has been updated to ' + saveValue);
         });
     };
@@ -107,9 +107,9 @@ app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$
         });
 
         if (option) {
-            Notifier(option.optionTitle, option.optionHtml);
+            NotifierService(option.optionTitle, option.optionHtml);
         }
-    }
+    };
 
     // Trigger auto click on activity page extended data click
     var viewOptionHelperId = $location.search().viewOptionHelperId;
