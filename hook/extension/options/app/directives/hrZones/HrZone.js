@@ -1,4 +1,4 @@
-app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
+app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService) {
 
     var linkFunction = function($scope, element, attrs) {
         $scope.printableZoneId = parseInt($scope.hrZoneId) + 1;
@@ -7,7 +7,7 @@ app.directive('hrZone', ['AvoidInputKeys', function(avoidInputKeys) {
     var controllerFunction = function($scope) {
 
         $scope.avoidInputKeyEdit = function(evt) {
-            avoidInputKeys(evt);
+            AvoidInputKeysService(evt);
         };
 
         $scope.$watch('hrZone', function(newHrZone, oldHrZone) {

@@ -1,4 +1,4 @@
-app.controller("HealthSettingsController", ['$scope', 'ChromeStorageService', 'Notifier', 'AvoidInputKeys', function($scope, ChromeStorageService, Notifier, avoidInputKeys) {
+app.controller("HealthSettingsController", ['$scope', 'ChromeStorageService', 'Notifier', 'AvoidInputKeysService', function($scope, ChromeStorageService, Notifier, AvoidInputKeysService) {
 
     ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
         $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
@@ -79,7 +79,7 @@ app.controller("HealthSettingsController", ['$scope', 'ChromeStorageService', 'N
     };
 
     $scope.avoidInputKeyEdit = function(evt) {
-        avoidInputKeys(evt);
+        AvoidInputKeysService(evt);
     };
 
 }]);
