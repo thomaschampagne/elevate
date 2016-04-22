@@ -1,4 +1,4 @@
-app.directive('healthCustomZones', ['Notifier', 'ChromeStorageService', function(Notifier, ChromeStorageService) {
+app.directive('healthCustomZones', ['NotifierService', 'ChromeStorageService', function(NotifierService, ChromeStorageService) {
 
     var maxHrZonesCount = 10;
     var minHrZonesCount = 3;
@@ -11,7 +11,7 @@ app.directive('healthCustomZones', ['Notifier', 'ChromeStorageService', function
 
             if ($scope.hrZones.length >= maxHrZonesCount) {
 
-                Notifier('Oups!', 'You can\'t add more than 10 heart rate zones...');
+                NotifierService('Oups!', 'You can\'t add more than 10 heart rate zones...');
 
             } else {
 
@@ -39,7 +39,7 @@ app.directive('healthCustomZones', ['Notifier', 'ChromeStorageService', function
 
             if ($scope.hrZones.length <= minHrZonesCount) {
 
-                Notifier('Oups!', 'You can\'t remove more than 3 heart rate zones...');
+                NotifierService('Oups!', 'You can\'t remove more than 3 heart rate zones...');
 
             } else {
                 var oldLastHrZone = $scope.hrZones[$scope.hrZones.length - 1];

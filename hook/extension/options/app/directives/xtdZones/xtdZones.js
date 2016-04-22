@@ -1,4 +1,4 @@
-app.directive('xtdZones', ['Notifier', 'ChromeStorageService', function(Notifier, ChromeStorageService) {
+app.directive('xtdZones', ['NotifierService', 'ChromeStorageService', function(NotifierService, ChromeStorageService) {
 
     var maxZonesCount = 20;
     var minZonesCount = 3;
@@ -11,7 +11,7 @@ app.directive('xtdZones', ['Notifier', 'ChromeStorageService', function(Notifier
 
             if ($scope.xtdZones.length >= maxZonesCount) {
 
-                Notifier('Oups!', 'You can\'t add more than ' + maxZonesCount + ' xtdZones...');
+                NotifierService('Oups!', 'You can\'t add more than ' + maxZonesCount + ' xtdZones...');
 
             } else {
 
@@ -40,7 +40,7 @@ app.directive('xtdZones', ['Notifier', 'ChromeStorageService', function(Notifier
 
             if ($scope.xtdZones.length <= minZonesCount) {
 
-                Notifier('Oups!', 'You can\'t remove more than ' + minZonesCount + ' xtdZones...');
+                NotifierService('Oups!', 'You can\'t remove more than ' + minZonesCount + ' xtdZones...');
 
             } else {
                 var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];

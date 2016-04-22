@@ -1,4 +1,4 @@
-app.factory('Notifier', function($modal) {
+app.factory('NotifierService', function($modal) {
 
     return function(title, content) {
 

@@ -1,4 +1,4 @@
-app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'Notifier', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, Notifier, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'NotifierService', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, NotifierService, $timeout, $location) {
 
     // Define options structure
     $scope.sections = CommonSettingsService.provideSections();
@@ -107,7 +107,7 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
         });
 
         if (option) {
-            Notifier(option.optionTitle, option.optionHtml);
+            NotifierService(option.optionTitle, option.optionHtml);
         }
     };
 
