@@ -1,4 +1,4 @@
-app.directive('xtdZones', ['Notifier', function(Notifier) {
+app.directive('xtdZones', ['NotifierService', 'ChromeStorageService', function(NotifierService, ChromeStorageService) {
 
     var maxZonesCount = 20;
     var minZonesCount = 3;
@@ -11,7 +11,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
             if ($scope.xtdZones.length >= maxZonesCount) {
 
-                Notifier('Oups!', 'You can\'t add more than ' + maxZonesCount + ' xtdZones...');
+                NotifierService('Oups!', 'You can\'t add more than ' + maxZonesCount + ' xtdZones...');
 
             } else {
 
@@ -40,7 +40,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
             if ($scope.xtdZones.length <= minZonesCount) {
 
-                Notifier('Oups!', 'You can\'t remove more than ' + minZonesCount + ' xtdZones...');
+                NotifierService('Oups!', 'You can\'t remove more than ' + minZonesCount + ' xtdZones...');
 
             } else {
                 var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
@@ -69,13 +69,13 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
 
             if (!_.isUndefined($scope.xtdZones)) {
 
-                ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {
+                ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
                     // Update zones with new one
                     var zones = userSettingsSynced.zones;
                     zones[$scope.xtdDataSelected.value] = angular.fromJson(angular.toJson($scope.xtdZones));
 
                     chrome.storage.sync.set(userSettingsSynced, function() {
-                        ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function() {
                             console.log('localStorageMustBeCleared has been updated to: ' + true);
                         });
                         alert($scope.xtdDataSelected.name + ' zone saved');
@@ -100,7 +100,7 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
                     var jsonImportData = angular.fromJson(importData);
 
                     if ($scope.areZonesCompliant(jsonImportData)) {
-                        
+
                         $scope.xtdZones = jsonImportData;
                         $scope.saveZones();
 
@@ -122,13 +122,13 @@ app.directive('xtdZones', ['Notifier', function(Notifier) {
                 return false;
             }
 
-            if(zones.length > maxZonesCount) {
+            if (zones.length > maxZonesCount) {
                 return false;
             }
 
             for (var i = 0; i < zones.length; i++) {
 
-                if (i == 0) {
+                if (i === 0) {
                     if (zones[i].to != zones[i + 1].from) {
                         return false;
                     }

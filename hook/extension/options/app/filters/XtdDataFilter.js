@@ -14,7 +14,7 @@ app.filter('xtdDataFilter', function() {
             result = ' or ' + mph.toFixed(2) + ' mph';
         } else if (type === 'pace') {
             result = formatTime(value) + '/km or ' + formatTime(value / 0.621371192) + '/mi';
-        };
+        }
         return result;
     };
 });
