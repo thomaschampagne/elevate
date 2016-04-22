@@ -146,27 +146,27 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Introducing new year progressions charts: "Distance last year" and "Distance last 30d" (Go to My Profile)',
-                'Integrating new StravistiX logo design by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a>',
+                'Updated "colored" rank position in segments efforts list (on a cycling activity page)'
             ],
             fixes: [
-                'Fix cadence time on segments efforts (global activity value was shown).',
+                'Fixed time comparaison flickering in segments effort list (on a cycling activity page)',
+                'Fixed nearby segments vanished on segment pages',
+                'Fixed rank percentage display problem on segment pages'
             ],
             upcommingFixes: [],
             upcommingFeatures: [
-                'Year progression improvement: Be able to get a "zoom" for the last 30 day. Done => In testing',
-                'New Input/Output fitness extended stats panel & Human Performance Modeling graphs. Brainstorm with me <a href="https://docs.google.com/spreadsheets/d/1tRE9EaW1MPUXbkDm9qv06isCYIuSoP5V8MzVtz-OVY0/edit#gid=0" target="_blank">on this google sheet</a>',
+                'Currently coding => new Input/Output fitness extended stats panel & Human Performance Modeling graphs. Brainstorm with me <a href="https://docs.google.com/spreadsheets/d/1tRE9EaW1MPUXbkDm9qv06isCYIuSoP5V8MzVtz-OVY0/edit#gid=0" target="_blank">on this google sheet</a>',
                 '3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]
         };
 
         var message = '';
-        message += '<div style="background: #eee; padding: 8px;">';
-        message += '<h5><strong>AT A GLANCE... </strong></h5>';
-        message += '<h5>- New year progressions charts: "Distance last year" and "Distance last 30d".</h5>';
-        message += '<h5>- StravistiX has now a logo. Designed by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a></h5>';
-        message += '</div>';
+        // message += '<div style="background: #eee; padding: 8px;">';
+        // message += '<h5><strong>AT A GLANCE... </strong></h5>';
+        // message += '<h5>- New year progressions charts: "Distance last year" and "Distance last 30d".</h5>';
+        // message += '<h5>- StravistiX has now a logo. Designed by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a></h5>';
+        // message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
