@@ -1,4 +1,4 @@
-app.controller("XtdZonesSettingsController", function($scope, $location) {
+app.controller("XtdZonesSettingsController", ['$scope', '$location', 'ChromeStorageService', function($scope, $location, ChromeStorageService) {
 
     // List of Xtended data to be customize
     $scope.xtdListOptions = [{
@@ -59,7 +59,7 @@ app.controller("XtdZonesSettingsController", function($scope, $location) {
         max: 9999
     }];
 
-    ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {
+    ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
 
         $scope.zones = userSettingsSynced.zones;
 
@@ -90,4 +90,4 @@ app.controller("XtdZonesSettingsController", function($scope, $location) {
         }
 
     }.bind(this));
-});
+}]);

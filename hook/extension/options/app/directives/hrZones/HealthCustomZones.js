@@ -1,4 +1,4 @@
-app.directive('healthCustomZones', ['Notifier', function(Notifier) {
+app.directive('healthCustomZones', ['Notifier', 'ChromeStorageService', function(Notifier, ChromeStorageService) {
 
     var maxHrZonesCount = 10;
     var minHrZonesCount = 3;
@@ -6,15 +6,6 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
     var linkFunction = function($scope, element, attrs) {};
 
     var controllerFunction = function($scope) {
-
-        // $scope.$watch('hrZones', function(newHrZones, oldHrZone) {
-
-        //     // Save if hrZones are compliant and model has well changed (old and new hrZones are equals when the tab is loaded)
-        //     if ($scope.areHrZonesCompliant() && (angular.toJson(newHrZones) !== angular.toJson(oldHrZone))) {
-        //         $scope.saveHrZones();
-        //     }
-
-        // }, true);
 
         $scope.addHrZone = function() {
 
@@ -74,54 +65,16 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
             }
 
             if (!_.isUndefined($scope.hrZones)) {
-                ChromeStorageModule.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), function() {
-                    
+                ChromeStorageService.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), function() {
+
                     console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrZones));
 
-                    ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+                    ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function() {
                         console.log('localStorageMustBeCleared has been updated to: ' + true);
                     });
                 });
             }
         };
-
-        /*
-        $scope.lastSavedTime = 0;
-        $scope.saveHrZones = function() {
-
-            var currentTime = (new Date()).getTime();
-
-            if (currentTime - $scope.lastSavedTime < 1000) {
-                console.log('Avoiding chrome storage save flooding');
-
-                // Delay saving...
-
-                // setTimeout(function() {
-                //     $scope.saveHrZones();
-                // }, 1000);
-
-                return;
-            }
-
-            // TODO Limit number of request to chrome storage
-            // setTimeout(function() {
-
-            if (!_.isUndefined($scope.hrZones)) {
-
-                $scope.lastSavedTime = (new Date()).getTime();
-                
-                ChromeStorageModule.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), function() {
-                    console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrZones));
-
-                    ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
-                        console.log('localStorageMustBeCleared has been updated to: ' + true);
-                    });
-                });
-            }
-            // }, 250);
-
-
-        };*/
 
         $scope.areHrZonesCompliant = function() {
 
@@ -131,7 +84,7 @@ app.directive('healthCustomZones', ['Notifier', function(Notifier) {
 
             for (var i = 0; i < $scope.hrZones.length; i++) {
 
-                if (i == 0) {
+                if (i === 0) {
                     if ($scope.hrZones[i].toHrr != $scope.hrZones[i + 1].fromHrr) {
                         return false;
                     }

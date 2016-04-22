@@ -1,6 +1,6 @@
-app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKeys', function($scope, Notifier, avoidInputKeys) {
+app.controller("HealthSettingsController", ['$scope', 'ChromeStorageService', 'Notifier', 'AvoidInputKeys', function($scope, ChromeStorageService, Notifier, avoidInputKeys) {
 
-    ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {
+    ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
         $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
         $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);
         $scope.userFTP = parseInt(userSettingsSynced.userFTP);
@@ -9,7 +9,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
     });
 
     $scope.localStorageMustBeCleared = function() {
-        ChromeStorageModule.updateUserSetting('localStorageMustBeCleared', true, function() {
+        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function() {
             console.log('localStorageMustBeCleared has been updated to ' + true);
         });
     };
@@ -24,7 +24,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
                     $scope.$apply();
 
                 } else {
-                    ChromeStorageModule.updateUserSetting('userMaxHr', $scope.userMaxHr, function() {
+                    ChromeStorageService.updateUserSetting('userMaxHr', $scope.userMaxHr, function() {
                         console.log('userMaxHr has been updated to ' + $scope.userMaxHr);
                         $scope.localStorageMustBeCleared();
                     });
@@ -44,7 +44,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
                     $scope.healthCommonForm.userRestHr.$invalid = true;
                     $scope.$apply();
                 } else {
-                    ChromeStorageModule.updateUserSetting('userRestHr', $scope.userRestHr, function() {
+                    ChromeStorageService.updateUserSetting('userRestHr', $scope.userRestHr, function() {
                         console.log('userRestHr has been updated to ' + $scope.userRestHr);
                         $scope.localStorageMustBeCleared();
                     });
@@ -58,7 +58,7 @@ app.controller("HealthSettingsController", ['$scope', 'Notifier', 'AvoidInputKey
 
         setTimeout(function() {
             if (!_.isUndefined($scope.userFTP)) {
-                ChromeStorageModule.updateUserSetting('userFTP', $scope.userFTP, function() {
+                ChromeStorageService.updateUserSetting('userFTP', $scope.userFTP, function() {
                     console.log('userFTP has been updated to ' + $scope.userFTP);
                     $scope.localStorageMustBeCleared();
                 });
