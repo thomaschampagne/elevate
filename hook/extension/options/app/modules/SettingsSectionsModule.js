@@ -126,9 +126,9 @@ settingsSectionsModule.data = [{
     },{
         optionKey: 'displaySegmentTimeComparisonPosition',
         optionType: 'checkbox',
-        optionTitle: 'Enabled segment time comparison position column (rank & percentage) ',
+        optionTitle: 'Enabled segment time comparison rank column',
         optionLabels: ['Cycling'],
-        optionHtml: 'This option allow you to display as "fast reading" your current position & rank percentage in a new column on segments efforts rows.',
+        optionHtml: 'This option allow you to display as "fast reading" your current rank on segments in a new column on segments efforts rows.',
     }, {
         optionKey: 'reviveGoogleMaps',
         optionType: 'checkbox',
