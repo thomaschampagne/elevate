@@ -1,7 +1,7 @@
-app.controller("CommonSettingsController", ['$scope', 'Notifier', '$timeout', '$location', function($scope, Notifier, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'Notifier', '$timeout', '$location', function($scope, CommonSettingsService, Notifier, $timeout, $location) {
 
     // Define options structure
-    $scope.sections = settingsSectionsModule.data;
+    $scope.sections = CommonSettingsService.provideSections();
 
     ChromeStorageModule.fetchUserSettings(function(userSettingsSynced) {
 
