@@ -298,9 +298,9 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         }, {
             pct: 1.0,
             color: {
-                r: 0x2e,
-                g: 0xb9,
-                b: 0x2e
+                r: 0x00,
+                g: 0xff,
+                b: 0x00
             }
         }];
 
