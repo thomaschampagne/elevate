@@ -59,6 +59,6 @@ NearbySegmentsModifier.prototype = {
         html += "</div>";
         html += "</div>";
 
-        $(html).prependTo('.sidebar.spans5');
+        $(html).prependTo('.col-md-3.spans5');
     }
 };
