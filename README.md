@@ -78,3 +78,5 @@ This will clean **dist/**, **release/** & **hook/extension/node_modules/** folde
 4/ Code Editor and Indentation plugin used
 ==========
 I used [**Atom**](https://atom.io/) editor with [**atom-beautify**](https://atom.io/packages/atom-beautify) plugin for code indentation.
+
+[**My Atom plugin list ;)**](https://gist.github.com/thomaschampagne/fa8fa9615b2fac236ac3)
