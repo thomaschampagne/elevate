@@ -83,7 +83,7 @@ WindyTyModifier.prototype = {
         ];
 
         var htmlWheather = "<li class='group'>";
-        htmlWheather += "<div class='title'><span style='font-size: 14px;'><a id='stravistix_weather_title'>Weather</a></span> <img style='vertical-align:middle;width:16px' src='" + this.appResources.wheatherIcon + "'/></div>";
+        htmlWheather += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
         htmlWheather += "<ul style='display: none;' id='stravistix_weatherList'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlWheather += "<li>";

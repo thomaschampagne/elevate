@@ -36,7 +36,7 @@ RemoteLinksModifier.prototype = {
         // Activity page
         // Adding remote view links on left panel
         var htmlRemoteViewForActivity = "<li class='group'>";
-        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'><a id='stravistix_remote_title'>Remote Views</a></span> <img style='vertical-align:middle;width:16px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
+        htmlRemoteViewForActivity += "<div class='title' id='stravistix_remote_title' style='font-size: 14px; cursor: pointer;'>Remote Views</div>";
         htmlRemoteViewForActivity += "<ul style='display: none;' id='stravistix_remoteViews'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
@@ -118,7 +118,7 @@ RemoteLinksModifier.prototype = {
         html += "<ul class='options'>";
 
         $.each(remoteViewSegmentLinksArray, function() {
-            html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "' style='" + this.htmlRemoteViewTextStyle + "'>" + this[0] + "</a></li>";
+            html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "'>" + this[0] + "</a></li>";
         });
         html += "</ul>";
         html += "</div>";
