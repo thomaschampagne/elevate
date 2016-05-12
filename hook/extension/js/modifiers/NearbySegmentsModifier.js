@@ -1,10 +1,9 @@
 /**
  *   NearbySegmentsModifier is responsible of ...
  */
-function NearbySegmentsModifier(jsonSegments, appResources, highLightStravistiXFeature) {
+function NearbySegmentsModifier(jsonSegments, appResources) {
     this.segments_ = jsonSegments;
     this.appResources_ = appResources;
-    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
 }
 
 /**
@@ -14,19 +13,10 @@ NearbySegmentsModifier.prototype = {
 
     modify: function modify() {
 
-
-        var dropDownStyle = '',
-            optionStyle = '';
-
-        if (this.highLightStravistiXFeature_) {
-            dropDownStyle = 'background: #fc4c02; color: #333;'; // TODO Make colors global
-            optionStyle = 'background: #fc4c02; color: white;'; // TODO Make colors global
-        }
-
         var html = "<div class='module' style='padding-bottom: 10px;'>";
         html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;' >";
-        html += "<div class='selection' style='" + optionStyle + "'><img style='vertical-align:middle' src='" + this.appResources_.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span></div>";
-        html += "<ul class='options' style='max-height: 800px;" + dropDownStyle + "'>";
+        html += "<div class='selection'><img style='vertical-align:middle' src='" + this.appResources_.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span></div>";
+        html += "<ul class='options' style='max-height: 800px;'>";
 
         var segment;
         var segmentName;

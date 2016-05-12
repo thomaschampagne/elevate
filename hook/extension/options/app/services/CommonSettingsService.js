@@ -287,12 +287,6 @@ app.factory('CommonSettingsService', function() {
         }, {
             sectionTitle: 'Miscellaneous',
             sectionContent: [{
-                optionKey: 'highLightStravistiXFeature',
-                optionType: 'checkbox',
-                optionTitle: 'Highlight StravistiX',
-                optionLabels: ['All'],
-                optionHtml: 'This option highlights StravistiX features in bright Strava orange color.',
-            }, {
                 optionKey: 'hidePremiumFeatures',
                 optionType: 'checkbox',
                 optionTitle: 'Hide Premium visuals',

@@ -258,7 +258,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleMenu_()");
 
-        var menuModifier = new MenuModifier(this.athleteId_, this.userSettings_.highLightStravistiXFeature, this.appResources_);
+        var menuModifier = new MenuModifier(this.athleteId_, this.appResources_);
         menuModifier.modify();
     },
 
@@ -278,7 +278,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks_()");
 
-        this.remoteLinksModifier = new RemoteLinksModifier(this.userSettings_.highLightStravistiXFeature, this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
+        this.remoteLinksModifier = new RemoteLinksModifier(this.appResources_, (this.athleteIdAuthorOfActivity_ === this.athleteId_));
         this.remoteLinksModifier.modify();
     },
 
@@ -615,7 +615,7 @@ StravistiX.prototype = {
 
             if (env.debugMode) console.log(jsonSegments);
 
-            var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_, this.userSettings_.highLightStravistiXFeature);
+            var nearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources_);
             nearbySegmentsModifier.modify();
 
         }.bind(this));
