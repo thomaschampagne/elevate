@@ -12,20 +12,9 @@
   "author": "Thomas Champagne",
   "readme": "None",
   "devDependencies": {
-    "gulp": "*",
-    "gulp-autoprefixer": "*",
+    "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
-    "gulp-clean-css": "^2.0.3",
-    "gulp-concat": "^2.6.0",
-    "gulp-cssbeautify": "*",
-    "gulp-csscomb": "*",
-    "gulp-csso": "*",
-    "gulp-if": "^2.0.0",
-    "gulp-less": "*",
-    "gulp-load-plugins": "*",
-    "gulp-param": "^1.0.3",
-    "gulp-rename": "*",
-    "gulp-uglify": "^1.5.3",
+    "gulp-load-plugins": "^1.2.2",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.2.0"
   }

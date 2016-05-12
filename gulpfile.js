@@ -1,17 +1,25 @@
+/**
+ * Required node module for running gulp tasks
+ */
 var fs = require('fs');
 var gulp = require('gulp');
-// var gulp = require('gulp-param')(require('gulp'), process.argv);
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
 
+/**
+ * Global folder variable
+ */
 var ROOT_FOLDER = __dirname;
 var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var RELEASE_FOLDER = ROOT_FOLDER + '/release/';
 
-var scripts = [
+/**
+ * Global folder variable
+ */
+var EXT_SCRIPTS = [
     'hook/extension/config/env.js',
     'hook/extension/modules/*.js',
     'hook/extension/node_modules/chart.js/Chart.min.js',
@@ -21,17 +29,20 @@ var scripts = [
     'hook/extension/js/**/*.js'
 ];
 
-var styles = [
+var EXT_STYLESHEETS = [
     'hook/extension/node_modules/fancybox/dist/css/jquery.fancybox.css',
     'hook/extension/css/extendedData.css'
 ];
 
-var resources = [
+var EXT_RESSOURCES = [
     'hook/extension/manifest.json',
     'hook/extension/icons/*',
     'hook/extension/node_modules/fancybox/dist/img/*.*',
 ];
 
+/**
+ * Gulp Tasks
+ */
 gulp.task('build', ['installExtNpmDependencies'], function() {
 
 
@@ -40,24 +51,18 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
     /**
      * Extension core
      */
-    gulp.src(scripts, {
+    gulp.src(EXT_SCRIPTS, {
             base: 'hook/extension'
         })
-        // .pipe(plugins.concat('script.js'))
-        // .pipe(plugins.if(prod, plugins.uglify()))
         .pipe(gulp.dest(DIST_FOLDER));
 
-    gulp.src(styles, {
+    gulp.src(EXT_STYLESHEETS, {
             base: 'hook/extension'
         })
-        // .pipe(plugins.less())
-        // .pipe(plugins.csscomb())
-        // .pipe(plugins.concat('style/main.css'))
-        // .pipe(plugins.if(prod, plugins.cleanCss()))
         .pipe(gulp.dest(DIST_FOLDER));
 
 
-    gulp.src(resources, {
+    gulp.src(EXT_RESSOURCES, {
             base: 'hook/extension'
         })
         .pipe(gulp.dest(DIST_FOLDER));
