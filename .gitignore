@@ -2,5 +2,5 @@
 */.gitignore
 **/node_modules/
 dist/
-builds/
+release/
 chrome-win32/
