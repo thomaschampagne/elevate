@@ -26,6 +26,7 @@
     "gulp-param": "^1.0.3",
     "gulp-rename": "*",
     "gulp-uglify": "^1.5.3",
-    "gulp-util": "^3.0.7"
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "^3.2.0"
   }
 }

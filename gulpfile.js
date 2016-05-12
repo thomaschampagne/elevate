@@ -1,3 +1,4 @@
+var fs = require('fs');
 var gulp = require('gulp-param')(require('gulp'), process.argv);
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
@@ -110,6 +111,28 @@ gulp.task('init', function() {
     });
 });
 
+/**
+ * Archiving
+ */
+gulp.task('makeArchive', function() {
+
+    util.log('Now creating release archive');
+
+    var generateBuildName = function(manifestFile) {
+        var manifestData = JSON.parse(fs.readFileSync(manifestFile).toString());
+        var d = new Date();
+        return 'StravistiX_v' + manifestData.version + '_' + d.toDateString().split(' ').join('_') + '_' + d.toLocaleTimeString().split(':').join('_') + '.zip';
+    };
+
+    var buildName = generateBuildName(DIST_FOLDER + '/manifest.json');
+
+    return gulp.src(DIST_FOLDER + '/**')
+        .pipe(plugins.zip(buildName))
+        .pipe(gulp.dest(BUILD_FOLDER));
+
+});
+
+
 
 /**
  * Cleaning task
@@ -118,6 +141,15 @@ gulp.task('cleanDist', function() {
 
     util.log('Cleaning dist/ folder');
     return gulp.src(DIST_FOLDER)
+        .pipe(plugins.clean({
+            force: true
+        }));
+});
+
+gulp.task('cleanBuilds', function() {
+
+    util.log('Cleaning dist/ folder');
+    return gulp.src(BUILD_FOLDER)
         .pipe(plugins.clean({
             force: true
         }));
@@ -138,11 +170,11 @@ gulp.task('cleanNodeModules', ['cleanDist'], function() {
  */
 gulp.task('default', ['init']);
 
-gulp.task('clean', ['cleanDist', 'cleanNodeModules']);
+gulp.task('clean', ['cleanBuilds', 'cleanDist', 'cleanNodeModules']);
 
 gulp.task('build', ['extension', 'options']);
 
-gulp.task('archive', ['build', 'makeZip']);
+gulp.task('release', ['build', 'makeArchive']);
 
 gulp.task('watch', function() {
     gulp.watch('hook/extension/**/*', ['build']);
@@ -156,6 +188,14 @@ gulp.task('watch', function() {
 // gulp archive
 
 
+
+// Create release:
+/*
+gulp clean
+gulp init
+gulp build
+gulp release
+*/
 
 
 // Old Usage:
