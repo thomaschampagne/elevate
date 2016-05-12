@@ -3,8 +3,21 @@
   "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
   "dependencies": {
-    "archiver": "0.21.0",
-    "ncp": "2.0.0"
+    "gulp": "*",
+    "gulp-autoprefixer": "*",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.3",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssbeautify": "*",
+    "gulp-csscomb": "*",
+    "gulp-csso": "*",
+    "gulp-if": "^2.0.0",
+    "gulp-less": "*",
+    "gulp-load-plugins": "*",
+    "gulp-param": "^1.0.3",
+    "gulp-rename": "*",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7"
   },
   "scripts": {
     "test": "echo \"No test specified\""
