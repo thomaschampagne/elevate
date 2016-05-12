@@ -1,14 +1,15 @@
 var fs = require('fs');
-var gulp = require('gulp-param')(require('gulp'), process.argv);
+var gulp = require('gulp');
+// var gulp = require('gulp-param')(require('gulp'), process.argv);
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
 
-
-var HOOK_FOLDER = './hook/';
-var EXT_FOLDER = HOOK_FOLDER + 'extension/';
-var DIST_FOLDER = './dist/';
-var BUILD_FOLDER = './builds/';
+var ROOT_FOLDER = __dirname;
+var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
+var EXT_FOLDER = HOOK_FOLDER + '/extension/';
+var DIST_FOLDER = ROOT_FOLDER + '/dist/';
+var RELEASE_FOLDER = ROOT_FOLDER + '/release/';
 
 var scripts = [
     'hook/extension/config/env.js',
@@ -31,8 +32,14 @@ var resources = [
     'hook/extension/node_modules/fancybox/dist/img/*.*',
 ];
 
-gulp.task('extension', function(prod) {
+gulp.task('build', ['installExtNpmDependencies'], function() {
 
+
+    util.log('Start extension core and options files copy');
+
+    /**
+     * Extension core
+     */
     gulp.src(scripts, {
             base: 'hook/extension'
         })
@@ -49,20 +56,17 @@ gulp.task('extension', function(prod) {
         // .pipe(plugins.if(prod, plugins.cleanCss()))
         .pipe(gulp.dest(DIST_FOLDER));
 
-    return gulp.src(resources, {
+
+    gulp.src(resources, {
             base: 'hook/extension'
         })
         .pipe(gulp.dest(DIST_FOLDER));
 
-});
 
+    /**
+     * Options
+     */
 
-/**
- * Option page
- */
-gulp.task('options', function(prod) {
-
-    // External files
     gulp.src([
         'hook/extension/node_modules/bootstrap/dist/**/*.*',
         'hook/extension/node_modules/angular/angular.min.js',
@@ -74,23 +78,23 @@ gulp.task('options', function(prod) {
         base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
 
-    // Options files
-    return gulp.src('hook/extension/options/**/*.*', {
+    return gulp.src("hook/extension/options/**/*.*", {
             base: 'hook/extension'
         })
         .pipe(gulp.dest(DIST_FOLDER));
+
 });
 
 /**
  * Init task
  */
-gulp.task('init', function() {
+gulp.task('installExtNpmDependencies', function(initDone) {
 
     util.log('Installing extension NPM dependencies');
 
     process.chdir(EXT_FOLDER);
 
-    var child = exec('npm install', function(error, stdout, stderr) {
+    exec('npm install', function(error, stdout, stderr) {
 
         if (error) {
             util.log(error);
@@ -107,6 +111,8 @@ gulp.task('init', function() {
             util.log('Or... use "dist/" as unpacked extension folder. You will have to execute "gulp build" command before.');
             util.log('Note: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
             util.log('Done.');
+            process.chdir(ROOT_FOLDER); // Go back to root folder !
+            initDone();
         }
     });
 });
@@ -114,24 +120,23 @@ gulp.task('init', function() {
 /**
  * Archiving
  */
-gulp.task('makeArchive', function() {
+gulp.task('makeArchive', ['build'], function() {
 
     util.log('Now creating release archive');
 
-    var generateBuildName = function(manifestFile) {
+    var generateReleaseName = function(manifestFile) {
         var manifestData = JSON.parse(fs.readFileSync(manifestFile).toString());
         var d = new Date();
         return 'StravistiX_v' + manifestData.version + '_' + d.toDateString().split(' ').join('_') + '_' + d.toLocaleTimeString().split(':').join('_') + '.zip';
     };
 
-    var buildName = generateBuildName(DIST_FOLDER + '/manifest.json');
+    var buildName = generateReleaseName(DIST_FOLDER + '/manifest.json');
 
     return gulp.src(DIST_FOLDER + '/**')
         .pipe(plugins.zip(buildName))
-        .pipe(gulp.dest(BUILD_FOLDER));
+        .pipe(gulp.dest(RELEASE_FOLDER));
 
 });
-
 
 
 /**
@@ -149,13 +154,13 @@ gulp.task('cleanDist', function() {
 gulp.task('cleanBuilds', function() {
 
     util.log('Cleaning dist/ folder');
-    return gulp.src(BUILD_FOLDER)
+    return gulp.src(RELEASE_FOLDER)
         .pipe(plugins.clean({
             force: true
         }));
 });
 
-gulp.task('cleanNodeModules', ['cleanDist'], function() {
+gulp.task('cleanExtNodeModules', ['cleanDist'], function() {
 
     util.log('Cleaning extension node_modules/ folder');
 
@@ -165,41 +170,30 @@ gulp.task('cleanNodeModules', ['cleanDist'], function() {
         }));
 });
 
+gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
+
+    util.log('Cleaning root extension node_modules/ folder');
+
+    return gulp.src('node_modules/')
+        .pipe(plugins.clean({
+            force: true
+        }));
+});
+
 /**
  * Defining tasks
  */
-gulp.task('default', ['init']);
+// Do init install and build to dist/
+gulp.task('default', ['build']);
 
-gulp.task('clean', ['cleanBuilds', 'cleanDist', 'cleanNodeModules']);
-
-gulp.task('build', ['extension', 'options']);
-
-gulp.task('release', ['build', 'makeArchive']);
+// Result in a zip file into builds/
+gulp.task('release', ['clean', 'makeArchive']);
 
 gulp.task('watch', function() {
     gulp.watch('hook/extension/**/*', ['build']);
 });
 
-// Usage:
-// npm install
-// gulp init
-// gulp build
-// gulp watch
-// gulp archive
+// Clean dist/, release/, hook/extension/node_modules/
+gulp.task('clean', ['cleanBuilds', 'cleanDist', 'cleanExtNodeModules']);
 
-
-
-// Create release:
-/*
-gulp clean
-gulp init
-gulp build
-gulp release
-*/
-
-
-// Old Usage:
-// gulp dist               # Create dist/ and move files to dist/ folder (default task)
-// gulp archive            # create archive of dist/ folder
-// gulp clean              # clean...
-// gulp watch              # watch ext sources and move changes to dist/
+gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
