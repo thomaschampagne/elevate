@@ -2,7 +2,16 @@
   "name": "Make",
   "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
-  "dependencies": {
+  "scripts": {
+    "test": "echo \"No test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaschampagne/stravistix"
+  },
+  "author": "Thomas Champagne",
+  "readme": "None",
+  "devDependencies": {
     "gulp": "*",
     "gulp-autoprefixer": "*",
     "gulp-clean": "^0.3.2",
@@ -18,14 +27,5 @@
     "gulp-rename": "*",
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7"
-  },
-  "scripts": {
-    "test": "echo \"No test specified\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/thomaschampagne/stravistix"
-  },
-  "author": "Thomas Champagne",
-  "readme": "None"
+  }
 }
