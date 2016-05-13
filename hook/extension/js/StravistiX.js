@@ -146,17 +146,18 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Updated "colored" rank position in segments efforts list (on a cycling activity page)'
+                'Globally improved segment time comparaison for cycling activities. See also related fixes in "fixes" section below.',
+                'Removed useless stravistix highlight feature. It\'s not a feature... it\'s not a bug... it\'s a cleaning ;)',
+                'Invisible improvements (gulpjs task runner). Nothing for you ! A lot for me ;)',
             ],
             fixes: [
-                'Fixed time comparaison flickering in segments effort list (on a cycling activity page)',
-                'Fixed nearby segments vanished on segment pages',
-                'Fixed rank percentage display problem on segment pages'
+                'Fixed segment time comparaison "-0s" when activity beats year\'s record on a segment',
+                'Fixed segment time comparaison "-0s" when the year record beats global previous record',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
-                'Currently coding => new Input/Output fitness extended stats panel & Human Performance Modeling graphs. Brainstorm with me <a href="https://docs.google.com/spreadsheets/d/1tRE9EaW1MPUXbkDm9qv06isCYIuSoP5V8MzVtz-OVY0/edit#gid=0" target="_blank">on this google sheet</a>',
-                '3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
+                'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
+                //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]
         };
