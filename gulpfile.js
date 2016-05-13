@@ -14,7 +14,7 @@ var ROOT_FOLDER = __dirname;
 var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
-var RELEASE_FOLDER = ROOT_FOLDER + '/release/';
+var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
 
 /**
  * Global folder variable
@@ -127,7 +127,7 @@ gulp.task('installExtNpmDependencies', function(initDone) {
  */
 gulp.task('makeArchive', ['build'], function() {
 
-    util.log('Now creating release archive');
+    util.log('Now creating package archive');
 
     var generateReleaseName = function(manifestFile) {
         var manifestData = JSON.parse(fs.readFileSync(manifestFile).toString());
@@ -139,7 +139,7 @@ gulp.task('makeArchive', ['build'], function() {
 
     return gulp.src(DIST_FOLDER + '/**')
         .pipe(plugins.zip(buildName))
-        .pipe(gulp.dest(RELEASE_FOLDER));
+        .pipe(gulp.dest(PACKAGE_FOLDER));
 
 });
 
@@ -158,8 +158,8 @@ gulp.task('cleanDist', function() {
 
 gulp.task('cleanRelease', function() {
 
-    util.log('Cleaning release/ folder');
-    return gulp.src(RELEASE_FOLDER)
+    util.log('Cleaning package/ folder');
+    return gulp.src(PACKAGE_FOLDER)
         .pipe(plugins.clean({
             force: true
         }));
@@ -188,17 +188,18 @@ gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
 /**
  * Defining tasks
  */
+
 // Do init install and build to dist/
 gulp.task('default', ['build']);
 
 // Result in a zip file into builds/
-gulp.task('release', ['clean', 'makeArchive']);
+gulp.task('package', ['clean', 'makeArchive']);
 
 gulp.task('watch', function() {
     gulp.watch('hook/extension/**/*', ['build']);
 });
 
-// Clean dist/, release/, hook/extension/node_modules/
+// Clean dist/, package/, hook/extension/node_modules/
 gulp.task('clean', ['cleanRelease', 'cleanDist', 'cleanExtNodeModules']);
 
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
