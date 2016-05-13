@@ -144,7 +144,9 @@ StravistiX.prototype = {
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                'Hotfixed disappearance of "My year progressions to current month/day". Bug introduced few hours before in 3.5.0. Sry :/.'
+            ],
             features: [
                 'Globally improved segment time comparaison for cycling activities. See also related fixes in "fixes" section below.',
                 'Removed useless stravistix highlight feature. It\'s not a feature... it\'s not a bug... it\'s a cleaning ;)',

@@ -25,7 +25,7 @@ ActivitiesSummaryModifier.prototype = {
         speedUnitRatio = 1; // Default Kilometers
         elevationUnitRatio = 1; // Default Kilometers
 
-        var averageSpeedOrPace = function (pace, distance, time) {
+        var averageSpeedOrPace = function(pace, distance, time) {
             time /= 60;
             if (pace) {
                 var result = time / distance;
@@ -38,9 +38,9 @@ ActivitiesSummaryModifier.prototype = {
             }
         };
 
-        var waitForTotalActivitiesCountRemove = function () {
+        var waitForTotalActivitiesCountRemove = function() {
             if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function () {
+                setTimeout(function() {
                     waitForTotalActivitiesCountRemove();
                 }, 1000);
                 return;
@@ -64,25 +64,33 @@ ActivitiesSummaryModifier.prototype = {
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
 
-        $("#interval-rides a[href='/athletes/" + currentAthlete.id + "'].athlete-name").each(function () {
+        $("#interval-rides a[href='/athletes/" + currentAthlete.id + "'].athlete-name").each(function() {
             var $this = $(this),
                 $activityUrl = $this.prev(".entry-title").find("a[href^='/activities/']"),
                 icon = $this.closest("div.entity-details").find("div.app-icon"),
                 pace = icon.hasClass("icon-walk") || icon.hasClass("icon-run");
             if ($activityUrl.attr("href") !== null) {
-                url = "/athlete/training_activities/" + $activityUrl.attr("href").substr("/activities/".length);
-                requests.push($.ajax({
-                    url: url,
-                    type: "GET",
-                    dataType: "json",
-                    context: {
-                        pace: pace
-                    }
-                }));
+
+                var href = $activityUrl.attr("href");
+
+                if ($activityUrl.attr("href")) {
+
+                    var activityId = _.last($activityUrl.attr("href").split('/'));
+                    url = "/athlete/training_activities/" + activityId;
+
+                    requests.push($.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        context: {
+                            pace: pace
+                        }
+                    }));
+                }
             }
         });
 
-        $.when.apply(self, requests).done(function () {
+        $.when.apply(self, requests).done(function() {
             var index = 0,
                 total = {
                     type: "Total",
@@ -127,7 +135,7 @@ ActivitiesSummaryModifier.prototype = {
                 total.calories += calories;
             }
 
-            activityTypes.sort(function (left, right) {
+            activityTypes.sort(function(left, right) {
                 return left.type.localeCompare(right.type);
             });
 
@@ -135,7 +143,7 @@ ActivitiesSummaryModifier.prototype = {
                 activityTypes.push(total);
             }
             var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
-            activityTypes.forEach(function (type) {
+            activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
                 $row.append("<td style='text-align: right'>" + type.count + "</td>");
