@@ -16,6 +16,7 @@
     "gulp-clean": "^0.3.2",
     "gulp-load-plugins": "^1.2.2",
     "gulp-util": "^3.0.7",
-    "gulp-zip": "^3.2.0"
+    "gulp-zip": "^3.2.0",
+    "underscore": "^1.8.3"
   }
 }

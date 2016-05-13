@@ -2,6 +2,7 @@
  * Required node module for running gulp tasks
  */
 var fs = require('fs');
+var _ = require('underscore');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
@@ -44,7 +45,6 @@ var EXT_RESSOURCES = [
  * Gulp Tasks
  */
 gulp.task('build', ['installExtNpmDependencies'], function() {
-
 
     util.log('Start extension core and options files copy');
 
@@ -188,7 +188,6 @@ gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
 /**
  * Defining tasks
  */
-
 // Do init install and build to dist/
 gulp.task('default', ['build']);
 
@@ -203,3 +202,26 @@ gulp.task('watch', function() {
 gulp.task('clean', ['cleanRelease', 'cleanDist', 'cleanExtNodeModules']);
 
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
+
+/**
+ * Homemade gulp params manager
+ */
+var params = {
+    params: null,
+    read: function(argv) {
+        var paramsClean = [];
+        _.each(argv.slice(3, argv.length), function(p) {
+            if (p.startsWith('--') && p.length !== 2) {
+                paramsClean.push(p.replace('--', ''));
+            }
+        });
+        return paramsClean;
+    },
+
+    has: function(param) {
+        if (!this.params) {
+            this.params = this.read(process.argv);
+        }
+        return (_.indexOf(this.params, param) !== -1);
+    }
+};
