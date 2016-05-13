@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "StravistiX for Strava",
     "short_name": "StravistiX",
-    "description": "Strava Enhanced ! StravistiX adds the missing features of Strava website with new performances data and improved ergonomics",
+    "description": "Enhance your Strava experience with StravistiX. An opensource chrome plugin which analyse deeper your activities and segments efforts!",
     "version": "3.5.1",
     "version_name": "3.5.1 Stable",
     "background": {
