@@ -156,9 +156,9 @@ gulp.task('cleanDist', function() {
         }));
 });
 
-gulp.task('cleanBuilds', function() {
+gulp.task('cleanRelease', function() {
 
-    util.log('Cleaning dist/ folder');
+    util.log('Cleaning release/ folder');
     return gulp.src(RELEASE_FOLDER)
         .pipe(plugins.clean({
             force: true
@@ -199,6 +199,6 @@ gulp.task('watch', function() {
 });
 
 // Clean dist/, release/, hook/extension/node_modules/
-gulp.task('clean', ['cleanBuilds', 'cleanDist', 'cleanExtNodeModules']);
+gulp.task('clean', ['cleanRelease', 'cleanDist', 'cleanExtNodeModules']);
 
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
