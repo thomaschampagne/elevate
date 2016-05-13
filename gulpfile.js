@@ -1,4 +1,22 @@
 /**
+ * * * * * * * * *
+ * TASKS GRAPH
+ * * * * * * * * *
+ * clean        => cleanRelease => cleanDist => cleanExtNodeModules
+ * cleanAll     => cleanRelease => cleanDist => cleanExtNodeModules => cleanRootNodeModules
+ * build        => installExtNpmDependencies
+ * makeArchive  => build
+ * package      => clean => makeArchive
+ *
+ * * * * * * * * *
+ * COMMANDS
+ * * * * * * * * *
+ * gulp clean
+ * gulp build [--debug, --release]
+ * gulp package [--debug, --release]
+ */
+
+/**
  * Required node module for running gulp tasks
  */
 var fs = require('fs');
@@ -16,7 +34,6 @@ var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
-
 /**
  * Global folder variable
  */
@@ -47,6 +64,10 @@ var EXT_RESSOURCES = [
 gulp.task('build', ['installExtNpmDependencies'], function() {
 
     util.log('Start extension core and options files copy');
+
+    util.log('++++++++++');
+    util.log(params.has('debug'));
+    util.log('++++++++++');
 
     /**
      * Extension core
@@ -210,7 +231,7 @@ var params = {
     params: null,
     read: function(argv) {
         var paramsClean = [];
-        _.each(argv.slice(3, argv.length), function(p) {
+        _.each(argv.slice(2, argv.length), function(p) {
             if (p.startsWith('--') && p.length !== 2) {
                 paramsClean.push(p.replace('--', ''));
             }
