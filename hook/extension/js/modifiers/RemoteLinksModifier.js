@@ -1,11 +1,8 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-function RemoteLinksModifier(highLightStravistiXFeature, appResources, authorOfActivity) {
+function RemoteLinksModifier(appResources, authorOfActivity) {
     this.appResources_ = appResources;
-    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
-    this.htmlRemoteViewForActivityStyle = '';
-    this.htmlRemoteViewForSegmentStyle = '';
     this.authorOfActivity = authorOfActivity;
 }
 
@@ -15,12 +12,6 @@ function RemoteLinksModifier(highLightStravistiXFeature, appResources, authorOfA
 RemoteLinksModifier.prototype = {
 
     modify: function modify() {
-
-        if (this.highLightStravistiXFeature_) {
-            this.htmlRemoteViewForActivityStyle = 'background: #fc4c02; color: #333;'; // TODO Make colors global
-            this.htmlRemoteViewForSegmentStyle = 'background: #fc4c02; color: white;'; // TODO Make colors global
-            this.htmlRemoteViewTextStyle = 'color: white;'; // TODO Make colors global
-        }
 
         if (!_.isUndefined(window.pageView)) {
             this.modifyActivityPage_();
@@ -44,8 +35,8 @@ RemoteLinksModifier.prototype = {
 
         // Activity page
         // Adding remote view links on left panel
-        var htmlRemoteViewForActivity = "<li class='group' style='" + this.htmlRemoteViewForActivityStyle + "'>";
-        htmlRemoteViewForActivity += "<div class='title'><span style='font-size: 14px;" + this.htmlRemoteViewTextStyle + "'><a id='stravistix_remote_title'>Remote Views</a></span> <img style='vertical-align:middle;width:16px' src='" + this.appResources_.remoteViewIcon + "'/></div>";
+        var htmlRemoteViewForActivity = "<li class='group'>";
+        htmlRemoteViewForActivity += "<div class='title' id='stravistix_remote_title' style='font-size: 14px; cursor: pointer;'>Remote Views</div>";
         htmlRemoteViewForActivity += "<ul style='display: none;' id='stravistix_remoteViews'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlRemoteViewForActivity += "<li>";
@@ -96,7 +87,7 @@ RemoteLinksModifier.prototype = {
             document.getElementsByTagName('head')[0].appendChild(s);
             s.onload = function() {
                 vv_getData();
-            }
+            };
         } else {
             vv_getData();
         }
@@ -110,7 +101,7 @@ RemoteLinksModifier.prototype = {
         // // Segment external links
         var segmentData = window.location.pathname.match(/^\/segments\/(\d+)$/);
 
-        if (segmentData == null) {
+        if (segmentData === null) {
             return;
         }
 
@@ -123,11 +114,11 @@ RemoteLinksModifier.prototype = {
         ];
         var html = "<div class='module' style='padding-bottom: 10px;'>";
         html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;'>";
-        html += "<div class='selection' style='" + this.htmlRemoteViewForSegmentStyle + "'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
-        html += "<ul class='options' style='" + this.htmlRemoteViewForActivityStyle + "'>";
+        html += "<div class='selection'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
+        html += "<ul class='options'>";
 
         $.each(remoteViewSegmentLinksArray, function() {
-            html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "' style='" + this.htmlRemoteViewTextStyle + "'>" + this[0] + "</a></li>";
+            html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "'>" + this[0] + "</a></li>";
         });
         html += "</ul>";
         html += "</div>";

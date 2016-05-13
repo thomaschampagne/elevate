@@ -1,10 +1,9 @@
 /**
  *   MenuModifier is responsible of ...
  */
-function MenuModifier(athleteId, highLightStravistiXFeature, appResources) {
+function MenuModifier(athleteId, appResources) {
     this.athleteId_ = athleteId;
     this.appResources_ = appResources;
-    this.highLightStravistiXFeature_ = highLightStravistiXFeature;
 }
 
 /**
@@ -21,13 +20,9 @@ MenuModifier.prototype = {
         var menuStyle = null;
         var menuIcon;
 
-        if (this.highLightStravistiXFeature_) {
-            menuStyle = "style='font-size:20px; background-color: #fc4c02; color: white;'"; //TODO Globalize colors
-            menuIcon = this.appResources_.menuIconBlack;
-        } else {
-            menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors
-            menuIcon = this.appResources_.menuIconOrange;
-        }
+        menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors
+        menuIcon = this.appResources_.menuIconOrange;
+
 
         var styleSideRight = 'display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;';
         var styleSideLeft = 'border-top: 1px solid #DDD; width: 50%;';
@@ -60,7 +55,7 @@ MenuModifier.prototype = {
                     $('#splus_menu_heatmap').find('a').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
                 },
                 function(error) {
-                    if (error != null) {
+                    if (error !== null) {
                         $('#splus_menu_heatmap').find('a').attr('href', '#');
                         $('#splus_menu_heatmap').find('a').attr('target', '_self');
                         $('#splus_menu_heatmap').find('a').attr('onclick', 'alert("Some StravistiX functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');

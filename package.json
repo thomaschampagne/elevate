@@ -2,10 +2,6 @@
   "name": "Make",
   "description": "Make StravistiX distribution structure and builds archive",
   "main": "make.js",
-  "dependencies": {
-    "archiver": "0.21.0",
-    "ncp": "2.0.0"
-  },
   "scripts": {
     "test": "echo \"No test specified\""
   },
@@ -14,5 +10,12 @@
     "url": "https://github.com/thomaschampagne/stravistix"
   },
   "author": "Thomas Champagne",
-  "readme": "None"
+  "readme": "None",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-load-plugins": "^1.2.2",
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "^3.2.0"
+  }
 }

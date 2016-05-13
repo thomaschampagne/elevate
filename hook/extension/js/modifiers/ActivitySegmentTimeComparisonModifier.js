@@ -48,7 +48,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 var timeColumnHeader = $("#segments table.segments th.time-col");
 
-                if (self.showDifferenceToCurrentYearPR) {
+                if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
                 }
 
@@ -84,7 +84,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 $row.data("segment-time-comparison", true);
 
-                if (self.showDifferenceToCurrentYearPR) {
+                if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
                     deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(deltaYearPRCell);
                 }
@@ -237,9 +237,11 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         }
 
         // Sort results from best to worst
-        leaderboardData.sort(function(left, right) {
+        leaderboardData = leaderboardData.sort(function(left, right) {
             return left.rank - right.rank;
         });
+
+        var deltaTime;
 
         if (this.showDifferenceToPR) {
             for (var i = 0; i < leaderboardData.length; i++) {
@@ -251,27 +253,79 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             }
 
             if (previousPersonalSeconds) {
-                var deltaTime = (elapsedTime - previousPersonalSeconds);
+                deltaTime = (elapsedTime - previousPersonalSeconds);
                 deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
             } else {
-                deltaPRCell.html("-");
+                deltaPRCell.html("<span title='First cross' style='color: grey;'>1X</span>");
             }
         }
 
-        if (this.showDifferenceToCurrentYearPR) {
-            for (var i = 0; i < leaderboardData.length; i++) {
-                if (leaderboardData[i].__dateTime.getFullYear() == currentSegmentEffortDateTime.getFullYear()) {
-                    currentYearPRSeconds = leaderboardData[i].elapsed_time_raw;
-                    currentYearPRDate = leaderboardData[i].start_date_local;
-                    break;
+        if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
+
+            var resultsThisYear = [];
+
+            for (var j = 0; j < leaderboardData.length; j++) {
+                if (leaderboardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
+                    currentYearPRSeconds = leaderboardData[j].elapsed_time_raw;
+                    currentYearPRDate = leaderboardData[j].start_date_local;
+                    resultsThisYear.push(leaderboardData[j]);
                 }
             }
 
+            // Sort results by elapsed_time_raw ascending
+            resultsThisYear = resultsThisYear.sort(function(left, right) {
+                return left.elapsed_time_raw - right.elapsed_time_raw;
+            });
+
+            var currentActivityResult = _.findWhere(resultsThisYear, {
+                __dateTime: currentSegmentEffortDateTime
+            });
+
+            var previousBestResultThisYear = null;
+            _.some(resultsThisYear, function (result) {
+                if(result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
+                    previousBestResultThisYear = result;
+                    return true;
+                }
+            });
+
             if (currentYearPRSeconds) {
-                var deltaTime = (elapsedTime - currentYearPRSeconds);
-                deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
+
+                if (!previousPersonalSeconds) {
+
+                    // No Previous PR here, so no Y previous PR..
+                    deltaYearPRCell.html("<span title='First cross this year' style='color: grey;'>1X</span>");
+
+                } else if (currentYearPRSeconds - previousPersonalSeconds < 0) {
+
+                    // Current Year activity beat PR
+                    if (previousBestResultThisYear) {
+                        deltaTime = currentActivityResult.elapsed_time_raw - previousBestResultThisYear.elapsed_time_raw;
+                        deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
+                    } else {
+                        // NEW PR This ride of Current Year
+                        deltaYearPRCell.html("<span title='This time beats previous PR. Time difference with your previous PR time  (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='color: grey;'>&#9733;</span>");
+                    }
+
+                } else {
+
+                    if (previousBestResultThisYear) {
+                        deltaTime = currentActivityResult.elapsed_time_raw - previousBestResultThisYear.elapsed_time_raw;
+                        deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
+                    } else {
+
+                        deltaTime = (elapsedTime - currentYearPRSeconds);
+
+                        if (deltaTime) {
+                            deltaYearPRCell.html("<span title='Time difference with your current year PR time (" + Helper.secondsToHHMMSS(currentYearPRSeconds, true) + " on " + currentYearPRDate + ")' style='color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "</span>");
+                        } else {
+                            deltaYearPRCell.html("<span title='First cross this year' style='color: grey;'>1X</span>");
+                        }
+                    }
+                }
+
             } else {
-                deltaYearPRCell.html("-");
+                deltaYearPRCell.html("<span title='First cross this year' style='color: grey;'>1X</span>");
             }
         }
     },
