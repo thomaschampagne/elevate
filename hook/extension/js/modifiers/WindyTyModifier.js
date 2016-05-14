@@ -20,7 +20,7 @@ WindyTyModifier.prototype = {
 
         this.getActivityBaryCenter(function(baryCenterPosition) {
 
-            if(!baryCenterPosition) {
+            if (!baryCenterPosition) {
                 console.log('Skipping WindyTyModifier execution, no baryCenterPosition available');
                 return;
             }
@@ -122,20 +122,23 @@ WindyTyModifier.prototype = {
     showWeather: function(type) {
 
         var date = new Date(pageView.activity().get('startDateLocal') * 1000);
+        var defaultZoomLevel = 11;
         var windyTyHour = Math.round(date.getUTCHours() / 6) * 6;
         var windUnitConfig = 'metric.wind.' + this.userSettings.windUnit;
         var temperatureUnitConfig = 'metric.temp.' + this.userSettings.temperatureUnit;
         windyTyHour = this.pad(windyTyHour, 2);
-      var url = 'https://embed.windyty.com/?surface,' +
-            type + ',' +
-            date.toISOString().split('T')[0] + '-' + windyTyHour + ',' +
-            this.baryCenterPosition.lat() + ',' +
-            this.baryCenterPosition.lon() +
-            ',20,' +
-            windUnitConfig + ',' +
-            temperatureUnitConfig +
-            ',message,';
 
+        var url = 'https://embed.windyty.com/?' +
+            this.baryCenterPosition.lat() + ',' +
+            this.baryCenterPosition.lon() + ',' +
+            defaultZoomLevel + ',' +
+            date.toISOString().split('T')[0] + '-' + windyTyHour + ',' +
+            type + ',' +
+            windUnitConfig + ',' +
+            temperatureUnitConfig;
+
+        console.debug('Load wheather url: ' + url);
+        
         $.fancybox({
             'width': '100%',
             'height': '100%',
@@ -143,7 +146,7 @@ WindyTyModifier.prototype = {
             'transitionIn': 'fade',
             'transitionOut': 'fade',
             'type': 'iframe',
-            'content': '<iframe src="' + url + '" width="1000" height="700" frameborder="0"></iframe>'
+            'content': '<iframe src="' + url + '" width="' + window.innerWidth * 0.950 + '" height="' + window.innerHeight * 0.875 + '" frameborder="0"></iframe>'
         });
     },
 
