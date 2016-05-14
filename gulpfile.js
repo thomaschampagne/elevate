@@ -24,7 +24,7 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
-var params = require('./modules/gulp-params');
+var options = require('gulp-options');
 
 /**
  * Global folder variable
@@ -71,7 +71,7 @@ var OPT_FILES = [
 /**
  * Detect DEBUG & REALEASE MODES
  */
-var REALEASE_MODE = (params.has('release')) ? true : false;
+var REALEASE_MODE = (options.has('release')) ? true : false;
 
 var DEBUG_MODE = !REALEASE_MODE;
 
@@ -111,7 +111,7 @@ gulp.task('build', ['cleanDistSrcOnly', 'installExtNpmDependencies'], function()
         .pipe(gulp.dest(DIST_FOLDER));
 
     /**
-     * Options
+     * Options JS and Css Mixed
      */
     gulp.src(OPT_FILES, {
         base: 'hook/extension'
