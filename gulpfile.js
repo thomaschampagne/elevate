@@ -2,9 +2,9 @@
  * * * * * * * * *
  * TASKS GRAPH
  * * * * * * * * *
- * clean        => cleanRelease => cleanDist => cleanExtNodeModules
- * cleanAll     => cleanRelease => cleanDist => cleanExtNodeModules => cleanRootNodeModules
- * build        => installExtNpmDependencies
+ * clean        => cleanRelease => cleanDistAll => cleanExtNodeModules
+ * cleanAll     => cleanRelease => cleanDistAll => cleanExtNodeModules => cleanRootNodeModules
+ * build        => cleanDistSrcOnly => installExtNpmDependencies
  * makeArchive  => build
  * package      => clean => makeArchive
  *
@@ -58,16 +58,21 @@ var EXT_RESSOURCES = [
     'hook/extension/node_modules/fancybox/dist/img/*.*',
 ];
 
+var OPT_FILES = [
+    'hook/extension/node_modules/bootstrap/dist/**/*.*',
+    'hook/extension/node_modules/angular/angular.min.js',
+    'hook/extension/node_modules/angular-route/angular-route.min.js',
+    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
+    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
+    'hook/extension/node_modules/underscore/underscore-min.js'
+];
+
 /**
  * Gulp Tasks
  */
-gulp.task('build', ['installExtNpmDependencies'], function() {
+gulp.task('build', ['cleanDistSrcOnly', 'installExtNpmDependencies'], function() {
 
     util.log('Start extension core and options files copy');
-
-    util.log('++++++++++');
-    util.log(params.has('debug'));
-    util.log('++++++++++');
 
     /**
      * Extension core
@@ -75,6 +80,8 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
     gulp.src(EXT_SCRIPTS, {
             base: 'hook/extension'
         })
+        // .pipe(plugins.if(releaseMode, plugins.concat('script.js'))) // Concat if release
+        // .pipe(plugins.if(releaseMode, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
         .pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {
@@ -88,19 +95,10 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         })
         .pipe(gulp.dest(DIST_FOLDER));
 
-
     /**
      * Options
      */
-
-    gulp.src([
-        'hook/extension/node_modules/bootstrap/dist/**/*.*',
-        'hook/extension/node_modules/angular/angular.min.js',
-        'hook/extension/node_modules/angular-route/angular-route.min.js',
-        'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
-        'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
-        'hook/extension/node_modules/underscore/underscore-min.js'
-    ], {
+    gulp.src(OPT_FILES, {
         base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
 
@@ -118,6 +116,7 @@ gulp.task('installExtNpmDependencies', function(initDone) {
 
     util.log('Installing extension NPM dependencies');
 
+    // Switch to ./hook/extension folder
     process.chdir(EXT_FOLDER);
 
     exec('npm install', function(error, stdout, stderr) {
@@ -132,12 +131,11 @@ gulp.task('installExtNpmDependencies', function(initDone) {
             } else {
                 util.log('Nothing to install');
             }
-            util.log('You can develop into "hook/extension/" folder.');
-            util.log('Use "hook/extension/" as unpacked extension folder.');
-            util.log('Or... use "dist/" as unpacked extension folder. You will have to execute "gulp build" command before.');
-            util.log('Note: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
-            util.log('Done.');
-            process.chdir(ROOT_FOLDER); // Go back to root folder !
+
+            util.log('Use generated "dist/" folder as chrome unpacked extension folder. You will have to execute "gulp build" command before. Helper: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
+
+            // Switch back to ./hook/extension/../.. aka "root" folder
+            process.chdir(ROOT_FOLDER);
             initDone();
         }
     });
@@ -168,9 +166,22 @@ gulp.task('makeArchive', ['build'], function() {
 /**
  * Cleaning task
  */
-gulp.task('cleanDist', function() {
 
-    util.log('Cleaning dist/ folder');
+gulp.task('cleanDistSrcOnly', function() {
+
+    util.log('Cleaning dist/ folder, except dist/node_modules folder');
+    return gulp.src([
+            DIST_FOLDER + '/*',
+            '!' + DIST_FOLDER + '/node_modules/',
+        ])
+        .pipe(plugins.clean({
+            force: true
+        }));
+});
+
+gulp.task('cleanDistAll', function() {
+
+    util.log('Cleaning dist/ folder completly');
     return gulp.src(DIST_FOLDER)
         .pipe(plugins.clean({
             force: true
@@ -186,7 +197,7 @@ gulp.task('cleanRelease', function() {
         }));
 });
 
-gulp.task('cleanExtNodeModules', ['cleanDist'], function() {
+gulp.task('cleanExtNodeModules', ['cleanDistAll'], function() {
 
     util.log('Cleaning extension node_modules/ folder');
 
@@ -196,7 +207,7 @@ gulp.task('cleanExtNodeModules', ['cleanDist'], function() {
         }));
 });
 
-gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
+gulp.task('cleanRootNodeModules', ['cleanDistAll'], function() {
 
     util.log('Cleaning root extension node_modules/ folder');
 
@@ -220,9 +231,10 @@ gulp.task('watch', function() {
 });
 
 // Clean dist/, package/, hook/extension/node_modules/
-gulp.task('clean', ['cleanRelease', 'cleanDist', 'cleanExtNodeModules']);
+gulp.task('clean', ['cleanRelease', 'cleanDistAll', 'cleanExtNodeModules']);
 
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
+
 
 /**
  * Homemade gulp params manager
@@ -246,3 +258,14 @@ var params = {
         return (_.indexOf(this.params, param) !== -1);
     }
 };
+
+var releaseMode = (params.has('release')) ? true : false;
+var debugMode = !releaseMode;
+
+if (releaseMode) {
+    util.log('RELEASE MODE ENABLED.');
+}
+
+if (debugMode) {
+    util.log('DEBUG MODE ENABLED.');
+}

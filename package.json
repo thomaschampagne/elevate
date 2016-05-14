@@ -14,6 +14,8 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-if": "^2.0.1",
     "gulp-load-plugins": "^1.2.2",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.2.0",
