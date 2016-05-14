@@ -20,11 +20,11 @@
  * Required node module for running gulp tasks
  */
 var fs = require('fs');
-var _ = require('underscore');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
+var params = require('./modules/gulp-params');
 
 /**
  * Global folder variable
@@ -34,6 +34,7 @@ var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
+
 /**
  * Global folder variable
  */
@@ -68,6 +69,20 @@ var OPT_FILES = [
 ];
 
 /**
+ * Detect DEBUG & REALEASE MODES
+ */
+var REALEASE_MODE = (params.has('release')) ? true : false;
+
+var DEBUG_MODE = !REALEASE_MODE;
+
+if (REALEASE_MODE) {
+    util.log('RELEASE MODE ENABLED.');
+}
+if (DEBUG_MODE) {
+    util.log('DEBUG MODE ENABLED.');
+}
+
+/**
  * Gulp Tasks
  */
 gulp.task('build', ['cleanDistSrcOnly', 'installExtNpmDependencies'], function() {
@@ -80,8 +95,8 @@ gulp.task('build', ['cleanDistSrcOnly', 'installExtNpmDependencies'], function()
     gulp.src(EXT_SCRIPTS, {
             base: 'hook/extension'
         })
-        // .pipe(plugins.if(releaseMode, plugins.concat('script.js'))) // Concat if release
-        // .pipe(plugins.if(releaseMode, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
+        // .pipe(plugins.if(REALEASE_MODE, plugins.concat('script.js'))) // Concat if release
+        // .pipe(plugins.if(REALEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
         .pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {
@@ -234,38 +249,3 @@ gulp.task('watch', function() {
 gulp.task('clean', ['cleanRelease', 'cleanDistAll', 'cleanExtNodeModules']);
 
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
-
-
-/**
- * Homemade gulp params manager
- */
-var params = {
-    params: null,
-    read: function(argv) {
-        var paramsClean = [];
-        _.each(argv.slice(2, argv.length), function(p) {
-            if (p.startsWith('--') && p.length !== 2) {
-                paramsClean.push(p.replace('--', ''));
-            }
-        });
-        return paramsClean;
-    },
-
-    has: function(param) {
-        if (!this.params) {
-            this.params = this.read(process.argv);
-        }
-        return (_.indexOf(this.params, param) !== -1);
-    }
-};
-
-var releaseMode = (params.has('release')) ? true : false;
-var debugMode = !releaseMode;
-
-if (releaseMode) {
-    util.log('RELEASE MODE ENABLED.');
-}
-
-if (debugMode) {
-    util.log('DEBUG MODE ENABLED.');
-}
