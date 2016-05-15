@@ -290,7 +290,7 @@ gulp.task('ftpPublish', ['package'], function() {
             host: ftpConfig.host,
             user: ftpConfig.user,
             password: ftpConfig.pass,
-            log: util.log
+            //log: util.log
         });
 
         return gulp.src(globs, {
