@@ -25,6 +25,7 @@ var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
 var options = require('gulp-options');
+var ftp = require('vinyl-ftp');
 
 /**
  * Global folder variable
@@ -253,7 +254,7 @@ gulp.task('ftpPublish', ['package'], function() {
             host: 'yours',
             user: 'yours',
             pass: 'yours',
-            remotePath: 'yours'
+            remotePath: '/'
         };
 
         if (!options.has('env') && !options.has('json')) {
@@ -262,7 +263,7 @@ gulp.task('ftpPublish', ['package'], function() {
 
         } else if (options.has('json')) {
 
-            if(fs.existsSync('./ftpConfig.json')) {
+            if (fs.existsSync('./ftpConfig.json')) {
                 util.log('Using ftp config from ./ftpConfig.json file');
                 ftpConfig = JSON.parse(fs.readFileSync('./ftpConfig.json'));
             } else {
@@ -283,12 +284,19 @@ gulp.task('ftpPublish', ['package'], function() {
 
         util.log('FTP Upload in progress...');
 
-        return gulp.src(PACKAGE_FOLDER + '/' + PACKAGE_NAME)
-            .pipe(plugins.ftp(ftpConfig))
-            // you need to have some kind of stream after gulp-ftp to make sure it's flushed
-            // this can be a gulp plugin, gulp.dest, or any kind of stream
-            // here we use a passthrough stream
-            .pipe(util.noop());
+        var globs = [PACKAGE_FOLDER + '/**'];
+
+        var conn = ftp.create({
+            host: ftpConfig.host,
+            user: ftpConfig.user,
+            password: ftpConfig.pass,
+            log: util.log
+        });
+
+        return gulp.src(globs, {
+                base: PACKAGE_FOLDER,
+                buffer: false
+            }).pipe(conn.dest(ftpConfig.remotePath));
 
     } else {
         throw new Error('No package name found. Unable to publish');
