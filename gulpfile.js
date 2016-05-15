@@ -294,9 +294,9 @@ gulp.task('ftpPublish', ['package'], function() {
         });
 
         return gulp.src(globs, {
-            base: '.',
-            buffer: false
-        }).pipe(conn.dest(ftpConfig.remotePath));
+                base: './package/',
+                buffer: false
+            }).pipe(conn.dest(ftpConfig.remotePath));
 
     } else {
         throw new Error('No package name found. Unable to publish');
