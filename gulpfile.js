@@ -284,7 +284,7 @@ gulp.task('ftpPublish', ['package'], function() {
 
         util.log('FTP Upload in progress...');
 
-        var globs = [PACKAGE_FOLDER + '/**'];
+        var globs = [PACKAGE_FOLDER + '/' + PACKAGE_NAME];
 
         var conn = ftp.create({
             host: ftpConfig.host,
@@ -294,9 +294,9 @@ gulp.task('ftpPublish', ['package'], function() {
         });
 
         return gulp.src(globs, {
-                base: './package/',
-                buffer: false
-            }).pipe(conn.dest(ftpConfig.remotePath));
+            base: '.',
+            buffer: false
+        }).pipe(conn.dest(ftpConfig.remotePath));
 
     } else {
         throw new Error('No package name found. Unable to publish');
