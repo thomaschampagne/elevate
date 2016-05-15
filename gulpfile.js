@@ -272,10 +272,10 @@ gulp.task('ftpPublish', ['package'], function() {
         } else if (options.has('env')) {
 
             if (process.env.FTP_HOST && process.env.FTP_USER && process.env.FTP_PASSWORD) {
-                ftpConfig.host = FTP_HOST;
-                ftpConfig.user = FTP_USER;
-                ftpConfig.pass = FTP_PASSWORD;
-                ftpConfig.remotePath = FTP_REMOTE_PATH;
+                ftpConfig.host = process.env.FTP_HOST;
+                ftpConfig.user = process.env.FTP_USER;
+                ftpConfig.pass = process.env.FTP_PASSWORD;
+                ftpConfig.remotePath = process.env.FTP_REMOTE_PATH;
             } else {
                 throw new Error('Missing FTP_HOST, FTP_USER or FTP_PASSWORD environnement variables. FTP_REMOTE_PATH can be also specified');
             }
