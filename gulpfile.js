@@ -290,11 +290,11 @@ gulp.task('ftpPublish', ['package'], function() {
             host: ftpConfig.host,
             user: ftpConfig.user,
             password: ftpConfig.pass,
-            //log: util.log
+            log: util.log
         });
 
         return gulp.src(globs, {
-                base: PACKAGE_FOLDER,
+                base: './package/',
                 buffer: false
             }).pipe(conn.dest(ftpConfig.remotePath));
 
