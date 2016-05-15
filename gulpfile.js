@@ -240,5 +240,57 @@ gulp.task('watch', function() {
 
 // Clean dist/, package/, hook/extension/node_modules/
 gulp.task('clean', ['cleanPackage', 'cleanDistAll', 'cleanExtNodeModules']);
-
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
+
+// FTP publish
+gulp.task('ftpPublish', ['package'], function() {
+
+    if (PACKAGE_NAME) {
+
+        util.log('FTP Publish of ' + PACKAGE_NAME);
+
+        var ftpConfig = {
+            host: 'yours',
+            user: 'yours',
+            pass: 'yours',
+            remotePath: 'yours'
+        };
+
+        if (!options.has('env') && !options.has('json')) {
+
+            throw new Error('Make sure to specify option "--json" or "--env"');
+
+        } else if (options.has('json')) {
+
+            if(fs.existsSync('./ftpConfig.json')) {
+                util.log('Using ftp config from ./ftpConfig.json file');
+                ftpConfig = JSON.parse(fs.readFileSync('./ftpConfig.json'));
+            } else {
+                throw new Error('Make sure to create ./ftpConfig.json with following config: ' + JSON.stringify(ftpConfig));
+            }
+
+        } else if (options.has('env')) {
+
+            if (process.env.FTP_HOST && process.env.FTP_USER && process.env.FTP_PASSWORD) {
+                ftpConfig.host = FTP_HOST;
+                ftpConfig.user = FTP_USER;
+                ftpConfig.pass = FTP_PASSWORD;
+                ftpConfig.remotePath = FTP_REMOTE_PATH;
+            } else {
+                throw new Error('Missing FTP_HOST, FTP_USER or FTP_PASSWORD environnement variables. FTP_REMOTE_PATH can be also specified');
+            }
+        }
+
+        util.log('FTP Upload in progress...');
+
+        return gulp.src(PACKAGE_FOLDER + '/' + PACKAGE_NAME)
+            .pipe(plugins.ftp(ftpConfig))
+            // you need to have some kind of stream after gulp-ftp to make sure it's flushed
+            // this can be a gulp plugin, gulp.dest, or any kind of stream
+            // here we use a passthrough stream
+            .pipe(util.noop());
+
+    } else {
+        throw new Error('No package name found. Unable to publish');
+    }
+});
