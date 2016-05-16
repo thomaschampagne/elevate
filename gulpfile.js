@@ -12,8 +12,8 @@
  * COMMANDS
  * * * * * * * * *
  * gulp clean
- * gulp build [--debug, --release]
- * gulp package [--debug, --release]
+ * gulp build [--debug, --release] // Options no handled at the moment
+ * gulp package [--debug, --release] // Options no handled at the moment
  */
 
 /**
