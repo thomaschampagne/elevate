@@ -655,12 +655,14 @@ AthleteStatsModifier.prototype = {
                                     }
                                     break;
                                 case 5:
-                                    var jDate = new Date(activity.y, 0, j).getTime();
+                                    // Get midnight at the end of the day in question
+                                    var jDate = new Date(activity.y, 0, j + 1).getTime();
                                     if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
                                         data[activity.y].values[j] += activity.di;
                                     }
                                     if (activity.y < currentYear) {
-                                        jDate = new Date(activity.y + 1, 0, j).getTime();
+                                        // Get midnight at the end of the day in question
+                                        jDate = new Date(activity.y + 1, 0, j + 1).getTime();
                                         if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
                                             data[activity.y + 1].values[j] += activity.di;
                                         }
