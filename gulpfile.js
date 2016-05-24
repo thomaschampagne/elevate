@@ -73,17 +73,18 @@ var OPT_FILES = [
 /**
  * Detect DEBUG & REALEASE MODES
  */
-var REALEASE_MODE = (options.has('release')) ? true : false;
+ /*
+var RELEASE_MODE = (options.has('release')) ? true : false;
 
-var DEBUG_MODE = !REALEASE_MODE;
+var DEBUG_MODE = !RELEASE_MODE;
 
-if (REALEASE_MODE) {
+if (RELEASE_MODE) {
     util.log('RELEASE MODE ENABLED.');
 }
 if (DEBUG_MODE) {
     util.log('DEBUG MODE ENABLED.');
 }
-
+*/
 /**
  * Gulp Tasks
  */
@@ -97,8 +98,8 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
     gulp.src(EXT_SCRIPTS, {
             base: 'hook/extension'
         })
-        // .pipe(plugins.if(REALEASE_MODE, plugins.concat('script.js'))) // Concat if release
-        // .pipe(plugins.if(REALEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
+        // .pipe(plugins.if(RELEASE_MODE, plugins.concat('script.js'))) // Concat if release
+        // .pipe(plugins.if(RELEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
         .pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {
