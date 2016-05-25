@@ -75,8 +75,12 @@ gulp clean
 ```
 This will clean **dist/**, **package/** & **hook/extension/node_modules/** folders
 
-4/ Code Editor and Indentation plugin used
+4/ Git repository structure and GitFlow
+==========
+This project repository is fitted for **GitFlow** branches management workflow. Learn more @  http://nvie.com/posts/a-successful-git-branching-model/
+
+5/ Code Editor and Indentation plugin used
 ==========
 I used [**Atom**](https://atom.io/) editor with [**atom-beautify**](https://atom.io/packages/atom-beautify) plugin for code indentation.
 
-[**My Atom plugin list ;)**](https://gist.github.com/thomaschampagne/fa8fa9615b2fac236ac3)
+**Atom plugin list used @ :** https://gist.github.com/thomaschampagne/fa8fa9615b2fac236ac3
