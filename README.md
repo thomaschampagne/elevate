@@ -83,4 +83,4 @@ This project repository is fitted for **GitFlow** branches management workflow. 
 ==========
 I used [**Atom**](https://atom.io/) editor with [**atom-beautify**](https://atom.io/packages/atom-beautify) plugin for code indentation.
 
-[**My Atom plugin list ;)**](https://gist.github.com/thomaschampagne/fa8fa9615b2fac236ac3)
+**Atom plugin list used @ :** https://gist.github.com/thomaschampagne/fa8fa9615b2fac236ac3
