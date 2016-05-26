@@ -123,7 +123,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                     if (self.displaySegmentTimeComparisonPosition) {
                         segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
                         var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count);
-                        positionCell.html("<div title=\"Your position\" style=\"text-align: center;padding: 2px; background-color: #565656; color:" + self.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "</div>");
+                        positionCell.html("<div title=\"Your position\" style=\"text-align: center;padding: 2px; background-color: #565656; color:" + self.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "&nbsp;-&nbsp;" + (percentRank * 100).toFixed(1) + "%</div>");
                     }
 
                     var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
@@ -282,8 +282,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             });
 
             var previousBestResultThisYear = null;
-            _.some(resultsThisYear, function (result) {
-                if(result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
+            _.some(resultsThisYear, function(result) {
+                if (result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
                     previousBestResultThisYear = result;
                     return true;
                 }

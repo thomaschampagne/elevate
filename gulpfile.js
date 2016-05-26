@@ -1,4 +1,22 @@
 /**
+ * * * * * * * * *
+ * TASKS GRAPH
+ * * * * * * * * *
+ * clean        => cleanPackage => cleanDistAll => cleanExtNodeModules
+ * cleanAll     => cleanPackage => cleanDistAll => cleanExtNodeModules => cleanRootNodeModules
+ * build        => cleanDistSrcOnly => installExtNpmDependencies
+ * makeArchive  => build
+ * package      => clean => makeArchive
+ *
+ * * * * * * * * *
+ * COMMANDS
+ * * * * * * * * *
+ * gulp clean
+ * gulp build [--debug, --release] // Options no handled at the moment
+ * gulp package [--debug, --release] // Options no handled at the moment
+ */
+
+/**
  * Required node module for running gulp tasks
  */
 var fs = require('fs');
@@ -6,6 +24,8 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var exec = require('child_process').exec;
+var options = require('gulp-options');
+var ftp = require('vinyl-ftp');
 
 /**
  * Global folder variable
@@ -14,7 +34,8 @@ var ROOT_FOLDER = __dirname;
 var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
-var RELEASE_FOLDER = ROOT_FOLDER + '/release/';
+var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
+var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package" task
 
 /**
  * Global folder variable
@@ -40,11 +61,34 @@ var EXT_RESSOURCES = [
     'hook/extension/node_modules/fancybox/dist/img/*.*',
 ];
 
+var OPT_FILES = [
+    'hook/extension/node_modules/bootstrap/dist/**/*.*',
+    'hook/extension/node_modules/angular/angular.min.js',
+    'hook/extension/node_modules/angular-route/angular-route.min.js',
+    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
+    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
+    'hook/extension/node_modules/underscore/underscore-min.js'
+];
+
+/**
+ * Detect DEBUG & REALEASE MODES
+ */
+ /*
+var RELEASE_MODE = (options.has('release')) ? true : false;
+
+var DEBUG_MODE = !RELEASE_MODE;
+
+if (RELEASE_MODE) {
+    util.log('RELEASE MODE ENABLED.');
+}
+if (DEBUG_MODE) {
+    util.log('DEBUG MODE ENABLED.');
+}
+*/
 /**
  * Gulp Tasks
  */
 gulp.task('build', ['installExtNpmDependencies'], function() {
-
 
     util.log('Start extension core and options files copy');
 
@@ -54,6 +98,8 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
     gulp.src(EXT_SCRIPTS, {
             base: 'hook/extension'
         })
+        // .pipe(plugins.if(RELEASE_MODE, plugins.concat('script.js'))) // Concat if release
+        // .pipe(plugins.if(RELEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
         .pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {
@@ -67,19 +113,10 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         })
         .pipe(gulp.dest(DIST_FOLDER));
 
-
     /**
-     * Options
+     * Options JS and Css Mixed
      */
-
-    gulp.src([
-        'hook/extension/node_modules/bootstrap/dist/**/*.*',
-        'hook/extension/node_modules/angular/angular.min.js',
-        'hook/extension/node_modules/angular-route/angular-route.min.js',
-        'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
-        'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
-        'hook/extension/node_modules/underscore/underscore-min.js'
-    ], {
+    gulp.src(OPT_FILES, {
         base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
 
@@ -97,6 +134,7 @@ gulp.task('installExtNpmDependencies', function(initDone) {
 
     util.log('Installing extension NPM dependencies');
 
+    // Switch to ./hook/extension folder
     process.chdir(EXT_FOLDER);
 
     exec('npm install', function(error, stdout, stderr) {
@@ -111,12 +149,11 @@ gulp.task('installExtNpmDependencies', function(initDone) {
             } else {
                 util.log('Nothing to install');
             }
-            util.log('You can develop into "hook/extension/" folder.');
-            util.log('Use "hook/extension/" as unpacked extension folder.');
-            util.log('Or... use "dist/" as unpacked extension folder. You will have to execute "gulp build" command before.');
-            util.log('Note: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
-            util.log('Done.');
-            process.chdir(ROOT_FOLDER); // Go back to root folder !
+
+            util.log('Use generated "dist/" folder as chrome unpacked extension folder. You will have to execute "gulp build" command before. Helper: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
+
+            // Switch back to ./hook/extension/../.. aka "root" folder
+            process.chdir(ROOT_FOLDER);
             initDone();
         }
     });
@@ -127,45 +164,50 @@ gulp.task('installExtNpmDependencies', function(initDone) {
  */
 gulp.task('makeArchive', ['build'], function() {
 
-    util.log('Now creating release archive');
+    PACKAGE_NAME = 'stravistix_v' + JSON.parse(fs.readFileSync(DIST_FOLDER + '/manifest.json')).version + '_' + (new Date().toISOString().replace(/T/, '_').replace(/\..+/, '').replace(/:/g, '.')) + '.zip';
 
-    var generateReleaseName = function(manifestFile) {
-        var manifestData = JSON.parse(fs.readFileSync(manifestFile).toString());
-        var d = new Date();
-        return 'StravistiX_v' + manifestData.version + '_' + d.toDateString().split(' ').join('_') + '_' + d.toLocaleTimeString().split(':').join('_') + '.zip';
-    };
-
-    var buildName = generateReleaseName(DIST_FOLDER + '/manifest.json');
+    util.log('Now creating package archive: ' + PACKAGE_NAME);
 
     return gulp.src(DIST_FOLDER + '/**')
-        .pipe(plugins.zip(buildName))
-        .pipe(gulp.dest(RELEASE_FOLDER));
+        .pipe(plugins.zip(PACKAGE_NAME))
+        .pipe(gulp.dest(PACKAGE_FOLDER));
 
 });
-
 
 /**
  * Cleaning task
  */
-gulp.task('cleanDist', function() {
+gulp.task('cleanDistSrcOnly', function() {
 
-    util.log('Cleaning dist/ folder');
+    util.log('Cleaning dist/ folder, except dist/node_modules folder');
+    return gulp.src([
+            DIST_FOLDER + '/*',
+            '!' + DIST_FOLDER + '/node_modules/',
+        ])
+        .pipe(plugins.clean({
+            force: true
+        }));
+});
+
+gulp.task('cleanDistAll', function() {
+
+    util.log('Cleaning dist/ folder completly');
     return gulp.src(DIST_FOLDER)
         .pipe(plugins.clean({
             force: true
         }));
 });
 
-gulp.task('cleanRelease', function() {
+gulp.task('cleanPackage', function() {
 
-    util.log('Cleaning release/ folder');
-    return gulp.src(RELEASE_FOLDER)
+    util.log('Cleaning package/ folder');
+    return gulp.src(PACKAGE_FOLDER)
         .pipe(plugins.clean({
             force: true
         }));
 });
 
-gulp.task('cleanExtNodeModules', ['cleanDist'], function() {
+gulp.task('cleanExtNodeModules', ['cleanDistAll'], function() {
 
     util.log('Cleaning extension node_modules/ folder');
 
@@ -175,7 +217,7 @@ gulp.task('cleanExtNodeModules', ['cleanDist'], function() {
         }));
 });
 
-gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
+gulp.task('cleanRootNodeModules', ['cleanDistAll'], function() {
 
     util.log('Cleaning root extension node_modules/ folder');
 
@@ -192,13 +234,72 @@ gulp.task('cleanRootNodeModules', ['cleanDist'], function() {
 gulp.task('default', ['build']);
 
 // Result in a zip file into builds/
-gulp.task('release', ['clean', 'makeArchive']);
+gulp.task('package', ['clean', 'makeArchive']);
 
 gulp.task('watch', function() {
-    gulp.watch('hook/extension/**/*', ['build']);
+    gulp.watch('hook/extension/**/*', ['cleanDistSrcOnly', 'build']);
 });
 
-// Clean dist/, release/, hook/extension/node_modules/
-gulp.task('clean', ['cleanRelease', 'cleanDist', 'cleanExtNodeModules']);
-
+// Clean dist/, package/, hook/extension/node_modules/
+gulp.task('clean', ['cleanPackage', 'cleanDistAll', 'cleanExtNodeModules']);
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
+
+// FTP publish
+gulp.task('ftpPublish', ['package'], function() {
+
+    if (PACKAGE_NAME) {
+
+        util.log('FTP Publish of ' + PACKAGE_NAME);
+
+        var ftpConfig = {
+            host: 'yours',
+            user: 'yours',
+            pass: 'yours',
+            remotePath: '/'
+        };
+
+        if (!options.has('env') && !options.has('json')) {
+
+            throw new Error('Make sure to specify option "--json" or "--env"');
+
+        } else if (options.has('json')) {
+
+            if (fs.existsSync('./ftpConfig.json')) {
+                util.log('Using ftp config from ./ftpConfig.json file');
+                ftpConfig = JSON.parse(fs.readFileSync('./ftpConfig.json'));
+            } else {
+                throw new Error('Make sure to create ./ftpConfig.json with following config: ' + JSON.stringify(ftpConfig));
+            }
+
+        } else if (options.has('env')) {
+
+            if (process.env.FTP_HOST && process.env.FTP_USER && process.env.FTP_PASSWORD) {
+                ftpConfig.host = process.env.FTP_HOST;
+                ftpConfig.user = process.env.FTP_USER;
+                ftpConfig.pass = process.env.FTP_PASSWORD;
+                ftpConfig.remotePath = process.env.FTP_REMOTE_PATH;
+            } else {
+                throw new Error('Missing FTP_HOST, FTP_USER or FTP_PASSWORD environnement variables. FTP_REMOTE_PATH can be also specified');
+            }
+        }
+
+        util.log('FTP Upload in progress...');
+
+        var globs = [PACKAGE_FOLDER + '/' + PACKAGE_NAME];
+
+        var conn = ftp.create({
+            host: ftpConfig.host,
+            user: ftpConfig.user,
+            password: ftpConfig.pass,
+            log: util.log
+        });
+
+        return gulp.src(globs, {
+                base: './package/',
+                buffer: false
+            }).pipe(conn.dest(ftpConfig.remotePath));
+
+    } else {
+        throw new Error('No package name found. Unable to publish');
+    }
+});
