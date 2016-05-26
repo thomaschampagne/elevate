@@ -25,7 +25,7 @@ RemoteLinksModifier.prototype = {
     /**
      * ...
      */
-    modifyActivityPage_: function modifyActivityPage_() {
+    modifyActivityPage_: function() {
 
         var remoteViewActivityLinksArray = [
             ["VV Activity shorcut", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
@@ -96,7 +96,7 @@ RemoteLinksModifier.prototype = {
     /**
      * ...
      */
-    modifySegmentPage_: function modifySegmentPage_() {
+    modifySegmentPage_: function() {
 
         // // Segment external links
         var segmentData = window.location.pathname.match(/^\/segments\/(\d+)$/);
@@ -123,6 +123,6 @@ RemoteLinksModifier.prototype = {
         html += "</ul>";
         html += "</div>";
         html += "</div>";
-        $(html).prependTo('.sidebar.spans5');
+        $(html).prependTo('.col-md-3.spans5');
     },
 };
