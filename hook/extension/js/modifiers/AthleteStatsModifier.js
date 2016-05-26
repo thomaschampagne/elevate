@@ -302,6 +302,14 @@ AthleteStatsModifier.prototype = {
                                 values: createArrayOfValues(numberOfDays)
                             };
                         }
+                        // #219 - If currentDataType is Distance last year pro-actively create data
+                        // for next year as long as it is not in future
+                        if (activity.y + 1 <= currentYear && !data[activity.y + 1]) {
+                            data[activity.y + 1] = {
+                                year: activity.y + 1,
+                                values: createArrayOfValues(numberOfDays)
+                            };
+                        }
                         var yearlyData = data[activity.y];
                         var activityDate = new Date(activity.y, activity.m, activity.d);
                         var activityTime = activityDate.getTime();
