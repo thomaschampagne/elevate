@@ -3,65 +3,54 @@ footer {
     padding: 10px;
     font-style: italic;
 }
-
 #paypal {
     padding: 10px;
 }
-
 #about {
     font-size: 22px;
     font-style: italic;
     padding: 10px;
 }
-
 #donate {
     font-size: 26px;
     text-align: center;
     padding: 75px;
 }
-
 .aboutquote {
     font-size: 48px;
 }
-
 .healthCustomZones {
     text-align: left;
 }
-
-.healthCustomZonesExplanations {
-}
-
+.healthCustomZonesExplanations {}
 .zoneActionButton {
     width: 125px;
 }
-
 .hrZoneAddRemoveTop {
     margin-bottom: 25px;
     margin-top: 25px;
 }
-
 .hrZoneAddRemoveBottom {
     margin-top: 25px;
 }
-
-.hrZone .bpmFilter {
-}
-
+.hrZone .bpmFilter {}
 .hrZone table td {
     width: 125px;
     text-align: center;
 }
-
 .hrZoneBpmDescribe img {
     margin: 10px;
     width: 25px;
 }
-
 .printableZoneId {
     font-weight: bold;
     font-size: 16px;
 }
-
 .hint {
     vertical-align: middle !important;
+}
+.release br {
+    content: " ";
+    display: block;
+    margin: 10px 0px;
 }
