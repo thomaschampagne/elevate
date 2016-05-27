@@ -389,4 +389,8 @@ var userSettings = {
     bestSplitsConfiguration: null,
     temperatureUnit: 'F',
     windUnit: 'mph',
+    supportedLocales: [
+        'en_US',
+        'en_GB'
+    ]
 };

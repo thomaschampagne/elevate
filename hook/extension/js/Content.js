@@ -133,6 +133,17 @@ Content.prototype = {
 
         });
 
+    },
+
+    addTranslationMessages: function addTranslationMessages() {
+        var trnsMsgs = [];
+        var trnsSupported = this.userSettings_.supportedLocales;
+        for (var i = 0; i < trnsSupported.length; i++) {
+            var trnsFilePath = '/locales/' + trnsSupported[i] + '/messages.json';
+            var extPath = chrome.extension.getURL(trnsFilePath);
+            trnsMsgs.push(extPath);
+        }
+        this.appResources_.transRes = trnsMsgs;
     }
 };
 
@@ -179,10 +190,19 @@ var appResources = {
     extVersion: chrome.runtime.getManifest().version,
     extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
+    cldrBase: chrome.extension.getURL('/node_modules/cldr-data/supplemental/likelySubtags.json'),
+    transRes: ['placeholder'],
+    globalizeInstance: ""
 };
 
 var jsDependencies = [
     'config/env.js',
+    'node_modules/cldrjs/dist/cldr.js',
+    'node_modules/cldrjs/dist/cldr/event.js',
+    'node_modules/cldrjs/dist/cldr/supplemental.js',
+    'node_modules/cldrjs/dist/cldr/unresolved.js',
+    'node_modules/globalize/dist/globalize.js',
+    'node_modules/globalize/dist/globalize/message.js',
     'node_modules/chart.js/Chart.min.js',
     'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
@@ -257,3 +277,4 @@ var cssDependencies = [
 
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
+content.addTranslationMessages();

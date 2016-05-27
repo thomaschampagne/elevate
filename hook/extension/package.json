@@ -22,7 +22,10 @@
     "chart.js": "1.0.*",
     "fiber": "1.0.4",
     "fancybox": "3.0.0",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "globalize": "1.1.1",
+    "cldrjs": "0.4.5",
+    "cldr-data": "29.0.1"
   },
   "repository": [
     {

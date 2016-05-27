@@ -54,6 +54,38 @@ StravistiX.prototype = {
             });
         }
 
+        // #10 - Initialization of jQuery Globalize to enable translation
+        var cldrBaseData = {};
+        var locArray = this.appResources_.transRes;
+        var appRes = this.appResources_;
+        var strav = this;
+        $.getJSON(this.appResources_.cldrBase, function (data) {
+            // #10 - Loading CLDR data needed for globalize to work
+            Globalize.load(data);
+            // #10 - Loading translation libraries from locales folder
+            var loadCount = 0;
+            for (var i = 0; i < locArray.length; i++) {
+                $.getJSON(locArray[i], function (data) {
+                    Globalize.loadMessages(data);
+                    loadCount++;
+                    if (loadCount === locArray.length) {
+                        var currentLocale = window.navigator.language || window.navigator.userLanguage;
+                        // We should create a global instance for translation only after loading all messages
+                        appRes.globalizeInstance = Globalize(currentLocale);
+                        // #10 - Moving all the UI generation into function to ensure globalize instance
+                        // is properly built as we need it to translate
+                        strav.handleApp_();
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * Function to build key elements of extension
+     */
+    handleApp_: function () {
+
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();

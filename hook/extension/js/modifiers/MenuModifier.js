@@ -30,8 +30,8 @@ MenuModifier.prototype = {
         stravaMenuHtml += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
         stravaMenuHtml += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
         stravaMenuHtml += "<ul class='options' height='' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
-        stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources_.settingsIcon + "'/> <span>Common Settings</span></a></li>";
-        stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "#/healthSettings'><img style='vertical-align:middle' src='" + this.appResources_.heartIcon + "'> <span>Health Settings</span></a></li>";
+        stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources_.settingsIcon + "'/> <span mssg_id='common_settings'>Common Settings</span></a></li>";
+        stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "#/healthSettings'><img style='vertical-align:middle' src='" + this.appResources_.heartIcon + "'> <span mssg_id='health_settings'>Health Settings</span></a></li>";
         stravaMenuHtml += "<li><a target='_blank' href='" + this.appResources_.settingsLink + "#/zonesSettings'><img style='vertical-align:middle' src='" + this.appResources_.zonesIcon + "'> <span>Zones Settings</span></a></li>";
         stravaMenuHtml += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
         stravaMenuHtml += "<li id='splus_menu_heatmap'><a href='#' target='_blank'><img style='vertical-align:middle' src='" + this.appResources_.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
@@ -47,6 +47,34 @@ MenuModifier.prototype = {
         stravaMenuHtml += "<li style='border-top: 1px solid #DDD;'><a target='_blank' href='" + this.appResources_.settingsLink + "#/share'><img style='vertical-align:middle' src='" + this.appResources_.shareIcon + "'/> <span>Share this extension</span></a></li>";
         stravaMenuHtml += "</ul>";
         stravaMenuHtml += "</li>";
+
+        var gblInstance = this.appResources_.globalizeInstance;
+        // var transStr = gblInstance.formatMessage("common_settings");
+        // console.log(transStr);
+        // #10 - Test method to do brute force translation
+        // We are going to get into really shitty messaging mechanism here as chrome.i18n is not working from content scripts
+        // Step 1: Parse the damn HTML to a DOM node for usage
+        // Change to globalize-webpack-plugin
+        var stravaMenuDOMNode = $($.parseHTML(stravaMenuHtml));
+        var elemWithTrnId = $(stravaMenuDOMNode).find("[mssg_id]");
+        var messageKey = "";
+        for (var i = 0; i < elemWithTrnId.length; i++) {
+            messageKey = $(elemWithTrnId[i]).attr("mssg_id");
+            var transText = gblInstance.formatMessage(messageKey);
+            elemWithTrnId[i].textContent = transText;
+            console.log("Translated text is " + transText);
+        }
+
+        // elemWithTrnId.forEach(function (elem) {
+        //     var messageKey = elem.attr("mssg_id");
+        //     elem.textContent = chrome.i18n.getMessage(messageKey);
+        // });
+        // console.log(elemWithTrnId.length);
+
+        // rootElem.forEach(function (elem) {
+        //     var elemWithTrnId = elem.find("[mssg_id]");
+        //     console.log(elemWithTrnId.length);
+        // });
 
         // TODO Move geolocation permission ask out ?
         if (navigator.geolocation) {
@@ -64,7 +92,7 @@ MenuModifier.prototype = {
             );
         }
 
-        globalNav.children().first().before(stravaMenuHtml);
+        globalNav.children().first().before(stravaMenuDOMNode);
 
         // $.fancybox('<div><h1>Modal example :)</h1><p>Remove this by searching the pattern "5s874d45gfds4ds7s7dsdsq87a7q4s7f7d8ds7f" in code</p></div>');
     },
