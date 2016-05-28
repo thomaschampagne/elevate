@@ -177,17 +177,16 @@ StravistiX.prototype = {
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                'Hotfixed disappearance of "My year progressions to current month/day". Bug introduced few hours before in 3.5.0. Sry :/.'
-            ],
+            hotFixes: [],
             features: [
-                'Globally improved segment time comparaison for cycling activities. See also related fixes in "fixes" section below.',
-                'Removed useless stravistix highlight feature. It\'s not a feature... it\'s not a bug... it\'s a cleaning ;)',
-                'Invisible improvements (gulpjs task runner). Nothing for you ! A lot for me ;)',
+                'Added "% rank" next to "rank labels" in segments list on cycling activity pages. Quick view on where you\'re ranked!',
+                'Added back "jonathanokeeffe" segment details on segment pages',
+                'Added back "veloviewer" segment details on segment pages',
             ],
             fixes: [
-                'Fixed segment time comparaison "-0s" when activity beats year\'s record on a segment',
-                'Fixed segment time comparaison "-0s" when the year record beats global previous record',
+                'Fixed weather maps initialised with no maps. (Available on cycling activities)',
+                'Fixed "Last 30 days" comparaison chart in year progression stats to get the end of each day, rather than the beginning. This avoids the issue where activities from today are not included in the graph',
+                'Fixed not displayed "Distance last year" comparaison chart in year progression stats for some people',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
