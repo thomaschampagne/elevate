@@ -390,7 +390,8 @@ var userSettings = {
     temperatureUnit: 'F',
     windUnit: 'mph',
     supportedLocales: [
-        'en_US',
-        'en_GB'
+        'root',
+        'en-US',
+        'en-GB'
     ]
 };

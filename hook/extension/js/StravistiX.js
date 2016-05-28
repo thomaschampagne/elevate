@@ -55,6 +55,7 @@ StravistiX.prototype = {
         }
 
         // #10 - Initialization of jQuery Globalize to enable translation
+        // Change to globalize-webpack-plugin for better performance
         var cldrBaseData = {};
         var locArray = this.appResources_.transRes;
         var appRes = this.appResources_;

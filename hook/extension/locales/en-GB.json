@@ -1,0 +1,25 @@
+{
+    "en-GB": {
+        "menu": {
+            "common_settings": "########",
+            "health_settings": "########"
+        },
+        "remoteLink": {
+            "section": "########",
+            "vv_act": "########",
+            "vv_seg_comp": "########",
+            "surface": "########",
+            "export_tcx": "########",
+            "vviewer": "########",
+            "seg_stats": "########",
+            "rem_seg_view": "########"
+        },
+        "weather": {
+            "section": "########",
+            "wind": "########",
+            "temp": "########",
+            "clouds": "########",
+            "rh": "########"
+        }
+    }
+}

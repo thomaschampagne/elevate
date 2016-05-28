@@ -139,7 +139,7 @@ Content.prototype = {
         var trnsMsgs = [];
         var trnsSupported = this.userSettings_.supportedLocales;
         for (var i = 0; i < trnsSupported.length; i++) {
-            var trnsFilePath = '/locales/' + trnsSupported[i] + '/messages.json';
+            var trnsFilePath = '/locales/' + trnsSupported[i] + '.json';
             var extPath = chrome.extension.getURL(trnsFilePath);
             trnsMsgs.push(extPath);
         }

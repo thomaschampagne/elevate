@@ -176,3 +176,34 @@ Helper.guid = function() {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
+
+// #10 - Helper method to translate messages
+/**
+ * Input Variables:
+ * globalizeInstance: Current Active instance of Globalize
+ * rootDOMNode: Array of elements where elements need to be translated
+ *
+ * Element Translation: It depends on two attributes on the elements.
+ *      Attribute 1: mssg_id - This provides mechanism to look-up translated text from string library
+ *      Attribute 2: mssg_subStr - This allows to specify substitution strings such as version number
+ * need to be placed in translation and created dynamically
+ **/
+Helper.translateMessage = function(globalizeInstance, rootDOMNode) {
+    var elemWithTrnId = $(rootDOMNode).find("[mssg_id]");
+    var messageKey,
+        transText,
+        subStr,
+        subStrArray;
+    subStrArray = [];
+    for (var i = 0; i < elemWithTrnId.length; i++) {
+        messageKey = $(elemWithTrnId[i]).attr("mssg_id");
+        subStr = $(elemWithTrnId[i]).attr("mssg_subStr");
+        if (subStr != null && subStr != '') {
+            subStrArray = subStr.split(";");
+            transText = globalizeInstance.formatMessage(messageKey, subStrArray);
+        } else {
+            transText = globalizeInstance.formatMessage(messageKey);
+        }
+        elemWithTrnId[i].innerHTML = transText;
+    }
+};

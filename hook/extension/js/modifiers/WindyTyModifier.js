@@ -83,15 +83,18 @@ WindyTyModifier.prototype = {
         ];
 
         var htmlWheather = "<li class='group'>";
-        htmlWheather += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
+        htmlWheather += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_weather_title' mssg_id='weather/section'>Weather</div>";
         htmlWheather += "<ul style='display: none;' id='stravistix_weatherList'>";
         $.each(remoteViewActivityLinksArray, function() {
             htmlWheather += "<li>";
-            htmlWheather += "<a data-wheater-windyty='" + this[1] + "' href='#'>" + this[0] + "</a>";
+            // #10 - For translation using short-names for Wind etc. listed above with weather category
+            htmlWheather += "<a data-wheater-windyty='" + this[1] + "' href='#' mssg_id='weather/" + this[1] + "'>" + this[0] + "</a>";
             htmlWheather += "</li>";
         });
         htmlWheather += "</ul>";
         htmlWheather = $(htmlWheather);
+        // #10 - Translate the html node
+        Helper.translateMessage(this.appResources.globalizeInstance, htmlWheather);
 
         var self = this;
 

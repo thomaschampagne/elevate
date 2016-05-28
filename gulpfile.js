@@ -78,7 +78,7 @@ var OPT_FILES = [
 
 var TRNS_DATA = [
     'hook/extension/node_modules/cldr-data/supplemental/likelySubtags.json',
-    'hook/extension/locales/**/*.json'
+    'hook/extension/locales/*.json'
 ];
 
 /**
