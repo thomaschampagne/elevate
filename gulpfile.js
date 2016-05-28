@@ -237,7 +237,13 @@ gulp.task('default', ['build']);
 gulp.task('package', ['clean', 'makeArchive']);
 
 gulp.task('watch', function() {
-    gulp.watch('hook/extension/**/*', ['cleanDistSrcOnly', 'build']);
+    gulp.watch([
+        'hook/extension/config/*',
+        'hook/extension/css/*',
+        'hook/extension/icons/*',
+        'hook/extension/js/**/*',
+        'hook/extension/modules/*',
+        'hook/extension/options/**/*', ], ['cleanDistSrcOnly', 'build']);
 });
 
 // Clean dist/, package/, hook/extension/node_modules/
