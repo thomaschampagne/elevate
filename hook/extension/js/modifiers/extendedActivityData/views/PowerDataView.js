@@ -57,5 +57,5 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 2, this.powerData.avgWattsPerKg.toFixed(2), 'Avg Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
             this.insertContentAtGridPosition(1, 2, this.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
         }
-    }
+    };
 });
