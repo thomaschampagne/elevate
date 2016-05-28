@@ -124,12 +124,8 @@ RemoteLinksModifier.prototype = {
         html += "</ul>";
         html += "</div>";
         html += "</div>";
-<<<<<<< HEAD
         html = $(html);
         Helper.translateMessage(this.appResources.globalizeInstance, html);
-        $(html).prependTo('.sidebar.spans5');
-=======
         $(html).prependTo('.col-md-3.spans5');
->>>>>>> upstream/develop
     },
 };
