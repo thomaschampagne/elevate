@@ -1,34 +1,36 @@
 {
-    "name": "Make",
-    "description": "Make StravistiX distribution structure and builds archive",
-    "main": "make.js",
-    "scripts": {
-        "test": "echo \"No test specified\""
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/thomaschampagne/stravistix"
-    },
-    "author": {
-        "name": "Thomas Champagne",
-        "email": "th.champagne@gmail.com",
-        "web": "http://thomaschampagne.github.io"
-    },
-    "contributors": {
-        "name": "Thomas Champagne",
-        "email": "th.champagne@gmail.com",
-        "web": "http://thomaschampagne.github.io"
-    },
-    "readme": "None",
-    "devDependencies": {
-        "gulp": "^3.9.1",
-        "gulp-clean": "^0.3.2",
-        "gulp-concat": "^2.6.0",
-        "gulp-if": "^2.0.1",
-        "gulp-load-plugins": "^1.2.2",
-        "gulp-options": "^1.0.2",
-        "gulp-util": "^3.0.7",
-        "gulp-zip": "^3.2.0",
-        "vinyl-ftp": "^0.4.5"
-    }
+  "name": "Make",
+  "description": "Make StravistiX distribution structure and builds archive",
+  "main": "make.js",
+  "scripts": {
+    "test": "echo \"No test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaschampagne/stravistix"
+  },
+  "author": {
+    "name": "Thomas Champagne",
+    "email": "th.champagne@gmail.com",
+    "web": "http://thomaschampagne.github.io"
+  },
+  "contributors": {
+    "name": "Thomas Champagne",
+    "email": "th.champagne@gmail.com",
+    "web": "http://thomaschampagne.github.io"
+  },
+  "readme": "None",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-git": "^1.7.2",
+    "gulp-if": "^2.0.1",
+    "gulp-json-editor": "^2.2.1",
+    "gulp-load-plugins": "^1.2.2",
+    "gulp-options": "^1.0.2",
+    "gulp-util": "^3.0.7",
+    "gulp-zip": "^3.2.0",
+    "vinyl-ftp": "^0.4.5"
+  }
 }
