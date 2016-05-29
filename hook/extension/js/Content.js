@@ -107,6 +107,18 @@ Content.prototype = {
 
         this.loadDependencies(function() {
 
+            // #10 - Populate the list of locales to be loaded by StravistX.js
+            var trnsMsgs = [];
+            var trnsSupported = self.userSettings_.supportedLocales;
+            // Check if current active locale is supported if yes add that path and root
+            // Else add only root path
+            var currentLocale = window.navigator.language || window.navigator.userLanguage;
+            if (trnsSupported.indexOf(currentLocale) != -1) {
+                trnsMsgs.push(chrome.extension.getURL('/locales/' + currentLocale + '.json'));
+            }
+            trnsMsgs.push(chrome.extension.getURL('/locales/root.json'));
+            self.appResources_.transRes = trnsMsgs;
+
             chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
                 var injectedScript = document.createElement('script');
@@ -135,16 +147,6 @@ Content.prototype = {
 
     },
 
-    addTranslationMessages: function addTranslationMessages() {
-        var trnsMsgs = [];
-        var trnsSupported = this.userSettings_.supportedLocales;
-        for (var i = 0; i < trnsSupported.length; i++) {
-            var trnsFilePath = '/locales/' + trnsSupported[i] + '.json';
-            var extPath = chrome.extension.getURL(trnsFilePath);
-            trnsMsgs.push(extPath);
-        }
-        this.appResources_.transRes = trnsMsgs;
-    }
 };
 
 var appResources = {
@@ -277,4 +279,3 @@ var cssDependencies = [
 
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
-content.addTranslationMessages();

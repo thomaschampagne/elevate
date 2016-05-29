@@ -28,7 +28,7 @@ function ComputeAnalysisWorker() {
     this.onmessage = function(mainThreadEvent) {
 
         // Import required dependencies for worker job
-        self.importRequiredLibraries(self.required, mainThreadEvent.data.appResources.extensionId);
+        self.importRequiredLibraries(self.required, mainThreadEvent.data.extnId);
 
         var AnalysisActivityComputer = Fiber.extend(function(base) {
 
