@@ -37,10 +37,12 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 var title = '<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/>';
 
                 if (this.isSegmentEffortView && !_.isEmpty(this.basicInfos.segmentEffort)) { // Segment effort only
-                    title += ' EFFORT STATS on <i>&lt;' + this.basicInfos.segmentEffort.name + '&gt;</i> SEGMENT // TIME ' + Helper.secondsToHHMMSS(this.basicInfos.segmentEffort.elapsedTimeSec);
+                    var transTitle = Helper.formatMessage(this.appResources.globalizeInstance, "extendedStats/feature_data/seg_effort_title", this.basicInfos.segmentEffort.name);
+                    title += transTitle;
                     this.content += this.generateSectionTitle(title);
                 } else { // Complete activity
-                    title += ' STATS on <i>&lt;' + this.basicInfos.activityName + '&gt;</i> ACTIVITY';
+                    var transTitle = Helper.formatMessage(this.appResources.globalizeInstance, "extendedStats/feature_data/section_title", this.basicInfos.activityName);
+                    title += transTitle;
                     this.content += this.generateSectionTitle(title);
                 }
 
@@ -60,28 +62,28 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             var speedUnitFactor = speedUnitsData[1];
 
             if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfos.segmentEffort)) {
-                this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio'); // Move ratio
+                this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio', 'extendedStats/move_ratio'); // Move ratio
             }
 
             if (this.analysisData.toughnessScore && this.userSettings.displayMotivationScore) {
-                this.insertContentAtGridPosition(1, 0, this.analysisData.toughnessScore.toFixed(0), 'Toughness Factor', '', 'displayMotivationScore'); // Toughness score
+                this.insertContentAtGridPosition(1, 0, this.analysisData.toughnessScore.toFixed(0), 'Toughness Factor', '', 'displayMotivationScore', 'extendedStats/feature_data/tough_score'); // Toughness score
             }
 
             if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
-                this.insertContentAtGridPosition(2, 0, (this.analysisData.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData'); // Q3 Speed
+                this.insertContentAtGridPosition(2, 0, (this.analysisData.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData', 'extendedStats/75quartspeed'); // Q3 Speed
             }
 
             if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-                this.insertContentAtGridPosition(3, 0, this.analysisData.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
-                this.insertContentAtGridPosition(4, 0, this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+                this.insertContentAtGridPosition(3, 0, this.analysisData.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData', 'extendedStats/trimp');
+                this.insertContentAtGridPosition(4, 0, this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData', 'extendedStats/heart_reserve_avg');
             }
 
             if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-                this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/kg', 'w/kg', 'displayAdvancedPowerData'); // Avg watt /kg
+                this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/kg', 'w/kg', 'displayAdvancedPowerData', 'extendedStats/feature_data/watt_kg'); // Avg watt /kg
             }
 
             if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-                this.insertContentAtGridPosition(6, 0, this.analysisData.gradeData.gradeProfile, 'Grade Profile', '', 'displayAdvancedGradeData');
+                this.insertContentAtGridPosition(6, 0, this.analysisData.gradeData.gradeProfile, 'Grade Profile', '', 'displayAdvancedGradeData', 'extendedStats/feature_data/grade_profile');
             }
 
             // Remove empty case in grid. This avoid unwanted padding on feature view rendering

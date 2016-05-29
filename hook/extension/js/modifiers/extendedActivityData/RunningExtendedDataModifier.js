@@ -19,7 +19,7 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             var q3Move = '-';
             if (this.analysisData_.speedData && this.userSettings_.displayAdvancedSpeedData) {
                 q3Move = Helper.secondsToHHMMSS((this.analysisData_.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', '');
-                this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+                this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Pace', '/' + distanceUnits, 'displayAdvancedSpeedData', 'extendedStats/75quartpace');
             }
 
             // Avg climb pace
@@ -36,18 +36,22 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                     }
                 }
 
-                this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', '/' + distanceUnits, 'displayAdvancedGradeData');
+                this.insertContentAtGridPosition(1, 2, climbSpeed, 'Avg climbing pace', '/' + distanceUnits, 'displayAdvancedGradeData', 'extendedStats/avg_climb_pace');
             }
+
+            this.translateSummaryGridContent();
         },
 
         placeExtendedStatsButtonSegment: function(buttonAdded) {
             setTimeout(function() { // Execute at the end to make sure DOM is ready
 
                 var htmlButton = '<section>';
-                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+                htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '" mssg_id="extendedStats/extend_button">';
                 htmlButton += 'Show extended statistics of effort';
                 htmlButton += '</a>';
                 htmlButton += '</section>';
+                htmlButton = $(htmlButton);
+                Helper.translateDOMNode(this.appResources_.globalizeInstance, htmlButton);
 
                 if ($('[data-xtd-seg-effort-stats]').length === 0)  {
                     $('.leaderboard-summary').after(htmlButton).each(function() {

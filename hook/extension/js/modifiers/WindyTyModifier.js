@@ -94,7 +94,7 @@ WindyTyModifier.prototype = {
         htmlWheather += "</ul>";
         htmlWheather = $(htmlWheather);
         // #10 - Translate the html node
-        Helper.translateMessage(this.appResources.globalizeInstance, htmlWheather);
+        Helper.translateDOMNode(this.appResources.globalizeInstance, htmlWheather);
 
         var self = this;
 

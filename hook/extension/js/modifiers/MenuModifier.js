@@ -52,7 +52,7 @@ MenuModifier.prototype = {
         // #10 - Test method to do brute force translation
         // Step 1: Parse the damn HTML to a DOM node for usage
         var stravaMenuDOMNode = $($.parseHTML(stravaMenuHtml));
-        Helper.translateMessage(gblInstance, stravaMenuDOMNode);
+        Helper.translateDOMNode(gblInstance, stravaMenuDOMNode);
 
         // TODO Move geolocation permission ask out ?
         if (navigator.geolocation) {

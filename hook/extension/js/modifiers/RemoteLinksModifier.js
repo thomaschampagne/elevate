@@ -45,7 +45,7 @@ RemoteLinksModifier.prototype = {
         htmlRemoteViewForActivity += "</ul>";
         htmlRemoteViewForActivity += "</li>";
         htmlRemoteViewForActivity = $(htmlRemoteViewForActivity);
-        Helper.translateMessage(this.appResources_.globalizeInstance, htmlRemoteViewForActivity);
+        Helper.translateDOMNode(this.appResources_.globalizeInstance, htmlRemoteViewForActivity);
 
         $("#pagenav").append(htmlRemoteViewForActivity).each(function() {
 
@@ -125,7 +125,7 @@ RemoteLinksModifier.prototype = {
         html += "</div>";
         html += "</div>";
         html = $(html);
-        Helper.translateMessage(this.appResources.globalizeInstance, html);
+        Helper.translateDOMNode(this.appResources.globalizeInstance, html);
         $(html).prependTo('.col-md-3.spans5');
     },
 };

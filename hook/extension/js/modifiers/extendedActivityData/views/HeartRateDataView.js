@@ -96,7 +96,8 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.heartBeatIcon + '" style="vertical-align: baseline; height:20px;"/> HEART RATE <a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            var trnsText = Helper.formatMessage(this.appResources.globalizeInstance, 'extendedStats/heart_data/section_title');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.heartBeatIcon + '" style="vertical-align: baseline; height:20px;"/> ' + trnsText + ' <a target="_blank" href="' + this.appResources.settingsLink + '#/healthSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
@@ -119,17 +120,17 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         insertheartRateDataIntoGrid: function() {
 
             // Insert some data inside grid
-            this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(1, 0, this.heartRateData.averageHeartRate.toFixed(0), 'Average Heart Rate', 'bpm', 'displayAdvancedHrData'); // Usefull for running
-            this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), 'TRaining IMPulse', '', 'displayAdvancedHrData', 'extendedStats/trimp');
+            this.insertContentAtGridPosition(1, 0, this.heartRateData.averageHeartRate.toFixed(0), 'Average Heart Rate', 'bpm', 'displayAdvancedHrData', 'extendedStats/heart_data/avg_hr'); // Usefull for running
+            this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData', 'extendedStats/heart_reserve_avg');
 
             // Quartiles
-            this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, '25% Quartile HeartRate', 'bpm', 'displayAdvancedHrData', 'extendedStats/heart_data/quartrate', '25%');
+            this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, '50% Quartile HeartRate', 'bpm', 'displayAdvancedHrData', 'extendedStats/heart_data/quartrate', '50%');
+            this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData', 'extendedStats/heart_data/quartrate','75%');
 
             // Other
-            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData', 'extendedStats/heart_data/trimpphr');
         }
     }
 });

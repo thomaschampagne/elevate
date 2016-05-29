@@ -177,7 +177,7 @@ Helper.guid = function() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
 
-// #10 - Helper method to translate messages
+// #10 - Helper method to translate a DOM node by looking-up all valid children
 /**
  * Input Variables:
  * globalizeInstance: Current Active instance of Globalize
@@ -188,7 +188,7 @@ Helper.guid = function() {
  *      Attribute 2: mssg_subStr - This allows to specify substitution strings such as version number
  * need to be placed in translation and created dynamically
  **/
-Helper.translateMessage = function(globalizeInstance, rootDOMNode) {
+Helper.translateDOMNode = function(globalizeInstance, rootDOMNode) {
     var elemWithTrnId = $(rootDOMNode).find("[mssg_id]");
     var messageKey,
         transText,
@@ -197,13 +197,25 @@ Helper.translateMessage = function(globalizeInstance, rootDOMNode) {
     subStrArray = [];
     for (var i = 0; i < elemWithTrnId.length; i++) {
         messageKey = $(elemWithTrnId[i]).attr("mssg_id");
-        subStr = $(elemWithTrnId[i]).attr("mssg_subStr");
-        if (subStr != null && subStr != '') {
-            subStrArray = subStr.split(";");
-            transText = globalizeInstance.formatMessage(messageKey, subStrArray);
-        } else {
-            transText = globalizeInstance.formatMessage(messageKey);
+        if (messageKey != null || messageKey != 'undefined') {
+            subStr = $(elemWithTrnId[i]).attr("mssg_subStr");
+            if (subStr != null && subStr != '') {
+                subStrArray = subStr.split(";");
+                transText = globalizeInstance.formatMessage(messageKey, subStrArray);
+            } else {
+                transText = globalizeInstance.formatMessage(messageKey);
+            }
+            elemWithTrnId[i].innerHTML = transText;
         }
-        elemWithTrnId[i].innerHTML = transText;
     }
+};
+
+// #10 - Generate a title using the key and substitution Variables
+Helper.formatMessage = function(globalizeInstance, messageKey, subStrVal) {
+    var subStrArray = [];
+    if (subStrVal)
+    {
+        subStrArray = subStrVal.split(";");
+    }
+    return globalizeInstance.formatMessage(messageKey, subStrArray);
 };

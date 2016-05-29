@@ -205,12 +205,16 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.grid = $(grid);
         },
 
-        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
+        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey, translationKey, sub_str) {
 
             var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
             if (this.grid) {
-                var content = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span></span>';
+                var subInsert = "";
+                if (sub_str != "") {
+                    subInsert = 'mssg_subStr="' + sub_str + '"';
+                }
+                var content = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle" mssg_id="' + translationKey + '" ' + subInsert + '>' + title + '</span></span>';
                 this.grid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
             } else {
                 console.error('Grid is not initialized');
