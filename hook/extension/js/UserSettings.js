@@ -389,9 +389,10 @@ var userSettings = {
     bestSplitsConfiguration: null,
     temperatureUnit: 'F',
     windUnit: 'mph',
-    supportedLocales: [
+    supportedLocales: [ // Chrome locales list are https://developer.chrome.com/webstore/i18n#localeTable
         'root',
         'en-US',
-        'en-GB'
+        'en-GB',
+        'fr'
     ]
 };
