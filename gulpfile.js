@@ -84,7 +84,7 @@ var TRNS_DATA = [
 /**
  * Detect DEBUG & REALEASE MODES
  */
- /*
+/*
 var RELEASE_MODE = (options.has('release')) ? true : false;
 
 var DEBUG_MODE = !RELEASE_MODE;
@@ -255,7 +255,10 @@ gulp.task('default', ['build']);
 gulp.task('package', ['clean', 'makeArchive']);
 
 gulp.task('watch', function() {
-    gulp.watch('hook/extension/**/*', ['cleanDistSrcOnly', 'build']);
+    gulp.watch([
+        'hook/extension/**/*',
+        '!hook/extension/node_modules/**/*',
+    ], ['cleanDistSrcOnly', 'build']);
 });
 
 // Clean dist/, package/, hook/extension/node_modules/
@@ -313,9 +316,9 @@ gulp.task('ftpPublish', ['package'], function() {
         });
 
         return gulp.src(globs, {
-                base: './package/',
-                buffer: false
-            }).pipe(conn.dest(ftpConfig.remotePath));
+            base: './package/',
+            buffer: false
+        }).pipe(conn.dest(ftpConfig.remotePath));
 
     } else {
         throw new Error('No package name found. Unable to publish');

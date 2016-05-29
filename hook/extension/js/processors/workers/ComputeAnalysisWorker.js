@@ -376,15 +376,20 @@ function ComputeAnalysisWorker() {
                 },
 
                 /**
-                 * ...
+                 * Andrew Coggan weighted power compute method (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
+                 * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
+                 * 2) raise all the values obtained in step #1 to the 4th power.
+                 * 3) take the average of all of the values obtained in step #2.
+                 * 4) take the 4th root of the value obtained in step #3.
+                 * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program like WKO+ to do the work for you <g>.)
                  */
+
                 powerData_: function(athleteWeight, hasPowerMeter, userFTP, activityStatsMap, powerArray, velocityArray, timeArray) {
 
                     if (_.isEmpty(powerArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
                         return null;
                     }
 
-                    var accumulatedWattsOnMoveFourRoot = 0;
                     var accumulatedWattsOnMove = 0;
                     var wattSampleOnMoveCount = 0;
                     var wattsSamplesOnMove = [];
@@ -394,13 +399,31 @@ function ComputeAnalysisWorker() {
 
                     var durationInSeconds;
 
+                    var AVG_POWER_TIME_WIN_SIZE = 30; // Seconds
+                    var timeWindowValue = 0;
+                    var sumPowerTimeWindow = [];
+                    var sum4thPower = [];
+
                     for (var i = 0; i < powerArray.length; i++) { // Loop on samples
 
                         if (velocityArray[i] * 3.6 > self.constants.movingThresholdKph && i > 0) {
-                            // Compute average and normalized power
-                            accumulatedWattsOnMoveFourRoot += Math.pow(powerArray[i], 3.970);
+
                             // Compute distribution for graph/table
                             durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+
+                            timeWindowValue += durationInSeconds; // Add seconds to time buffer
+                            sumPowerTimeWindow.push(powerArray[i]); // Add power value
+
+                            if (timeWindowValue >= AVG_POWER_TIME_WIN_SIZE) {
+
+                                // Get average of power during these 30 seconds windows & power 4th
+                                sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function(a, b) { // The reduce function and implementation return the sum of array
+                                    return a + b;
+                                }, 0) / sumPowerTimeWindow.length, 4));
+
+                                timeWindowValue = 0; // Reset time window
+                                sumPowerTimeWindow = []; // Reset sum of power window
+                            }
 
                             wattsSamplesOnMove.push(powerArray[i]);
                             wattsSamplesOnMoveDuration.push(durationInSeconds);
@@ -420,7 +443,15 @@ function ComputeAnalysisWorker() {
                     // Finalize compute of Power
                     var avgWatts = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-                    var weightedPower = Math.sqrt(Math.sqrt(accumulatedWattsOnMoveFourRoot / wattSampleOnMoveCount));
+                    var weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function(a, b) { // The reduce function and implementation return the sum of array
+                        return a + b;
+                    }, 0) / sum4thPower.length));
+
+                    /*
+                    // If user has a power meters we prefer use the value given by strava
+                    if (hasPowerMeter) {
+                        weightedPower = activityStatsMap.weightedPower;
+                    }*/
 
                     var variabilityIndex = weightedPower / avgWatts;
                     var punchFactor = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
