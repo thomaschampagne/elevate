@@ -115,6 +115,8 @@ Content.prototype = {
             var currentLocale = window.navigator.language || window.navigator.userLanguage;
             if (trnsSupported.indexOf(currentLocale) != -1) {
                 trnsMsgs.push(chrome.extension.getURL('/locales/' + currentLocale + '.json'));
+            } else {
+                trnsMsgs.push(chrome.extension.getURL('/locales/en-US.json'));
             }
             trnsMsgs.push(chrome.extension.getURL('/locales/root.json'));
             self.appResources_.transRes = trnsMsgs;

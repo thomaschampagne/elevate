@@ -71,7 +71,12 @@ StravistiX.prototype = {
                     if (loadCount === locArray.length) {
                         var currentLocale = window.navigator.language || window.navigator.userLanguage;
                         // We should create a global instance for translation only after loading all messages
-                        appRes.globalizeInstance = Globalize(currentLocale);
+                        if (_.indexOf(strav.userSettings_.supportedLocales) != -1) {
+                            // Current locale is supported by stravistix
+                            appRes.globalizeInstance = Globalize(currentLocale);
+                        } else {
+                            appRes.globalizeInstance = Globalize('en-US');
+                        }
                         // #10 - Moving all the UI generation into function to ensure globalize instance
                         // is properly built as we need it to translate
                         strav.handleApp_();
