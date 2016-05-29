@@ -107,6 +107,18 @@ Content.prototype = {
 
         this.loadDependencies(function() {
 
+            // #10 - Populate the list of locales to be loaded by StravistX.js
+            var trnsMsgs = [];
+            var trnsSupported = self.userSettings_.supportedLocales;
+            // Check if current active locale is supported if yes add that path and root
+            // Else add only root path
+            var currentLocale = window.navigator.language || window.navigator.userLanguage;
+            if (trnsSupported.indexOf(currentLocale) != -1) {
+                trnsMsgs.push(chrome.extension.getURL('/locales/' + currentLocale + '.json'));
+            }
+            trnsMsgs.push(chrome.extension.getURL('/locales/root.json'));
+            self.appResources_.transRes = trnsMsgs;
+
             chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
                 var injectedScript = document.createElement('script');
@@ -133,7 +145,8 @@ Content.prototype = {
 
         });
 
-    }
+    },
+
 };
 
 var appResources = {
@@ -179,10 +192,19 @@ var appResources = {
     extVersion: chrome.runtime.getManifest().version,
     extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
+    cldrBase: chrome.extension.getURL('/node_modules/cldr-data/supplemental/likelySubtags.json'),
+    transRes: ['placeholder'],
+    globalizeInstance: ""
 };
 
 var jsDependencies = [
     'config/env.js',
+    'node_modules/cldrjs/dist/cldr.js',
+    'node_modules/cldrjs/dist/cldr/event.js',
+    'node_modules/cldrjs/dist/cldr/supplemental.js',
+    'node_modules/cldrjs/dist/cldr/unresolved.js',
+    'node_modules/globalize/dist/globalize.js',
+    'node_modules/globalize/dist/globalize/message.js',
     'node_modules/chart.js/Chart.min.js',
     'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',

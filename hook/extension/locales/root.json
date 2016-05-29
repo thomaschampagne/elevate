@@ -1,0 +1,92 @@
+{
+    "root": {
+        "menu": {
+            "common_settings": "Common Settings",
+            "health_settings": "Health Settings",
+            "zone_settings": "Zones Settings",
+            "kom_map": "KOM/CR Map",
+            "heat_map": "Heat Map",
+            "release_notes": "<strong>v {0}</strong> release notes",
+            "rate": "Rate",
+            "what_next": "What's next?",
+            "donate": "Donate",
+            "author_site": "Author site",
+            "share_ext": "Share this extension"
+        },
+        "remoteLink": {
+            "section": "Remote Views",
+            "vv_act": "VV Activity shorcut",
+            "vv_seg_comp": "VV Seg. Compare",
+            "surface": "Surface",
+            "export_tcx": "Export TCX",
+            "vviewer": "VeloViewer",
+            "seg_stats": "Segment Stats",
+            "rem_seg_view": "Remote Segment View"
+        },
+        "weather": {
+            "section": "Weather",
+            "wind": "Wind",
+            "temp": "Temp",
+            "clouds": "Clouds",
+            "rh": "Humidity"
+        },
+        "extendedStats": {
+            "pace": "PACE",
+            "75quartpace": "75% Quartile Pace",
+            "75quartspeed": "75% Quartile Speed",
+            "avg_climb_pace": "Avg climbing pace",
+            "move_ratio": "Move Ratio",
+            "trimp": "TRaining IMPulse",
+            "heart_reserve_avg": "Heart Rate Reserve Avg",
+            "time_climbing": "Time Climbing",
+            "avg_climb_speed": "Avg climbing speed",
+            "median_cadence": "Median Cadence",
+            "pedalig_time": "Pedaling Time",
+            "extend_button": "Show extended statistics",
+            "feature_data": {
+                "section_title": " STATS on <i>&lt;{0}&gt;</i> ACTIVITY ",
+                "seg_effort_title": " EFFORT STATS on <i>&lt;{0}&gt;</i> SEGMENT // TIME ",
+                "tough_score": "Toughness Factor",
+                "watt_kg": "Weighted Watts/kg",
+                "grade_profile": "Grade Profile"
+            },
+            "pace_data": {
+                "quartpace": "{0} Quartile Pace",
+                "avg_pace": "Average pace"
+            },
+            "heart_data": {
+                "section_title": "HEART RATE",
+                "avg_hr": "Average Heart Rate",
+                "quartrate": "{0} Quartile HearRate",
+                "trimpphr": "TRaining IMPulse / Hour"
+            },
+            "cadence_data": {
+                "section_title": "CADENCE",
+                "avg_cdnc": "Average Cadence",
+                "quartcadence": "{0} Quartile Cadence"
+            },
+            "elev_data": {
+                "section_title": "ELEVATION",
+                "avg_elev": "Average Elevation",
+                "ascnt": "Ascent",
+                "dscnt": "Descent",
+                "quartelev": "{0} Quartile Elevation"
+            },
+            "grade_data": {
+                "section_title": "GRADE",
+                "avg_flt_pace": "Avg flat pace",
+                "avg_dwnhill_pace": "Avg downhill pace",
+                "quartgrade": "{0} Quartile Grade",
+                "percent_climb": "% climbing",
+                "percent_flat": "% flat",
+                "percent_dwnhill": "% downhill",
+                "climb_time": "Climbing time",
+                "flat_time": "Flat time",
+                "dwnhill_time": "Downhill Time",
+                "climb_dist": "Climbing distance",
+                "flat_dist": "Flat distance",
+                "dwnhill_dist": "Downhill distance"
+            }
+        }
+    }
+}

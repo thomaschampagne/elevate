@@ -1,0 +1,17 @@
+{
+    "en-US": {
+        "menu": {
+            "common_settings": "Common Settings",
+            "health_settings": "Health Settings",
+            "zone_settings": "Zones Settings",
+            "kom_map": "KOM/CR Map",
+            "heat_map": "Heat Map",
+            "release_notes": "<strong>v {0}</strong> release notes",
+            "rate": "Rate",
+            "what_next": "What's next?",
+            "donate": "Donate",
+            "author_site": "Author site",
+            "share_ext": "Share this extension"
+        }
+    }
+}

@@ -26,7 +26,8 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.logArrowUpIcon + '" style="vertical-align: baseline; height:20px;"/> ELEVATION <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=elevation" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            var transText = Helper.formatMessage(this.appResources.globalizeInstance, 'extendedStats/elev_data/section_title')
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.logArrowUpIcon + '" style="vertical-align: baseline; height:20px;"/> ' + transText + ' <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=elevation" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
@@ -42,13 +43,13 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
 
         insertElevationDataIntoGrid: function() {
 
-            this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, 'Average Elevation', 'm', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), 'Ascent', 'm', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), 'Descent', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, 'Average Elevation', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/avg_elev');
+            this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), 'Ascent', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/ascnt');
+            this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), 'Descent', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/dscnt');
 
-            this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/quartelev', '25%');
+            this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/quartelev', '50%');
+            this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData', 'extendedStats/elev_data/quartelev', '75%');
         }
     }
 });

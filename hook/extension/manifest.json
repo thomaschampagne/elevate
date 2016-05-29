@@ -47,7 +47,8 @@
         "js/*",
         "css/*",
         "options/*",
-        "icons/*"
+        "icons/*",
+        "locales/*"
     ],
     "externally_connectable": {
         "matches": ["*://*.strava.com/*"]

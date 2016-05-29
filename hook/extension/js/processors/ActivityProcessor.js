@@ -110,7 +110,7 @@ ActivityProcessor.prototype = {
         this.computeAnalysisThread.postMessage({
             activityType: this.activityType,
             isTrainer: this.isTrainer,
-            appResources: this.appResources,
+            extnId: this.appResources.extensionId,
             userSettings: {
                 userGender: userGender,
                 userRestHr: userRestHr,

@@ -67,7 +67,18 @@ var OPT_FILES = [
     'hook/extension/node_modules/angular-route/angular-route.min.js',
     'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
     'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
-    'hook/extension/node_modules/underscore/underscore-min.js'
+    'hook/extension/node_modules/underscore/underscore-min.js',
+    'hook/extension/node_modules/cldrjs/dist/cldr.js',
+    'hook/extension/node_modules/cldrjs/dist/cldr/event.js',
+    'hook/extension/node_modules/cldrjs/dist/cldr/supplemental.js',
+    'hook/extension/node_modules/cldrjs/dist/cldr/unresolved.js',
+    'hook/extension/node_modules/globalize/dist/globalize.js',
+    'hook/extension/node_modules/globalize/dist/globalize/message.js'
+];
+
+var TRNS_DATA = [
+    'hook/extension/node_modules/cldr-data/supplemental/likelySubtags.json',
+    'hook/extension/locales/*.json'
 ];
 
 /**
@@ -118,6 +129,13 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
      */
     gulp.src(OPT_FILES, {
         base: 'hook/extension'
+    }).pipe(gulp.dest(DIST_FOLDER));
+
+    /**
+     * Translation messages
+    */
+    gulp.src(TRNS_DATA, {
+            base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
 
     return gulp.src("hook/extension/options/**/*.*", {

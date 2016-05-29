@@ -65,14 +65,19 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         renderViews: function() {
 
-            this.content = '';
+            this.content = '<div class="stravistiXExtendedData"></div>';
+            this.content = $(this.content);
 
             this.setDataViewsNeeded();
+            var self = this;
 
             _.each(this.dataViews, function(view) {
                 // Append result of view.render() to this.content
                 view.render();
-                this.content += view.getContent();
+                var viewDOMNode = $(view.getContent());
+                Helper.translateDOMNode(self.appResources_.globalizeInstance, viewDOMNode);
+
+                this.content.append($(viewDOMNode));
             }.bind(this));
 
         },
@@ -92,10 +97,12 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
         placeExtendedStatsButton: function(buttonAdded) {
 
             var htmlButton = '<section>';
-            htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
+            htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#" mssg_id="extendedStats/extend_button">';
             htmlButton += 'Show extended statistics';
             htmlButton += '</a>';
             htmlButton += '</section>';
+            htmlButton = $(htmlButton);
+            Helper.translateDOMNode(this.appResources_.globalizeInstance, htmlButton);
 
             $('.inline-stats.section').first().after(htmlButton).each(function() {
 
@@ -213,7 +220,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 'transitionOut': 'none',
                 'closeBtn': false,
                 'type': 'iframe',
-                'content': '<div class="stravistiXExtendedData">' + this.content + '</div>'
+                // #10 - Must Change
+                'content': '<div class="stravistiXExtendedData">' + $(this.content).html() + '</div>'
             });
 
             // For each view start making the assossiated graphs
@@ -243,12 +251,12 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             this.summaryGrid = $(summaryGrid);
         },
 
-        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey) {
+        insertContentAtGridPosition: function(columnId, rowId, data, title, units, userSettingKey, translationKey) {
 
             var onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources_.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
             if (this.summaryGrid) {
-                var content = '<span class="summaryGridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="summaryGridUnits">' + units + '</span><br /><span class="summaryGridTitle">' + title + '</span></span>';
+                var content = '<span class="summaryGridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="summaryGridUnits">' + units + '</span><br /><span class="summaryGridTitle" mssg_id="' + translationKey +'">' + title + '</span></span>';
                 this.summaryGrid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
             } else {
                 console.error('Grid is not initialized');
@@ -261,7 +269,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             if (this.analysisData_.moveRatio && this.userSettings_.displayActivityRatio) {
                 moveRatio = this.analysisData_.moveRatio.toFixed(2);
             }
-            this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
+            this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio', 'extendedStats/move_ratio');
 
             // ...
             var TRIMP = activityHeartRateReserve = '-';
@@ -271,8 +279,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
                 activityHeartRateReserveUnit = '%  <span class="summarySubGridTitle">(Max: ' + this.analysisData_.heartRateData.activityHeartRateReserveMax.toFixed(0) + '% @ ' + this.analysisData_.heartRateData.maxHeartRate + 'bpm)</span>';
             }
-            this.insertContentAtGridPosition(0, 1, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData');
-            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', activityHeartRateReserveUnit, 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 1, TRIMP, 'TRaining IMPulse', '', 'displayAdvancedHrData', 'extendedStats/trimp');
+            this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, 'Heart Rate Reserve Avg', activityHeartRateReserveUnit, 'displayAdvancedHrData', 'extendedStats/heart_reserve_avg');
 
             // ...
             var climbTime = '-';
@@ -282,7 +290,15 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 climbTimeExtra = '<span class="summarySubGridTitle">(' + (this.analysisData_.gradeData.upFlatDownInSeconds.up / this.analysisData_.gradeData.upFlatDownInSeconds.total * 100).toFixed(0) + '% of time)</span>';
             }
 
-            this.insertContentAtGridPosition(0, 2, climbTime, 'Time climbing', climbTimeExtra, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 2, climbTime, 'Time climbing', climbTimeExtra, 'displayAdvancedGradeData', 'extendedStats/time_climbing');
+
+        },
+
+        translateSummaryGridContent: function () {
+
+            // #10 - Summary of extended statistics is held in span element with class summaryGrid
+            // Search all elements with attribute mssg_id
+            Helper.translateDOMNode(this.appResources_.globalizeInstance, this.summaryGrid);
 
         },
 

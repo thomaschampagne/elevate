@@ -245,7 +245,8 @@ AthleteStatsModifier.prototype = {
                 max,
                 activity,
                 day,
-                currentDataType = 1, // 0 - count, 1 - distance, 2 - elevation, 3 - time
+                currentTargetType, // 0 - time, 1 - distance
+                currentDataType = 1, // 0 - count, 1 - distance, 2 - elevation, 3 - time, 4 - Distance last year, 5 - Distance last 30d
                 data = [],
                 minValue = 0,
                 maxValue = 0,
@@ -375,6 +376,67 @@ AthleteStatsModifier.prototype = {
 
                     if (data[currentYear]) {
                         data[currentYear].values = data[currentYear].values.slice(0, currentDayOfYear + 1);
+                        // #195 - Get the target for current year as per the activity type
+                        // Create data for trend line only if target is non-zero
+                        // Target is stored against new key value target and year is future year for differentiation
+                        // Query target type while at it
+                        var yearTarget = 0;
+                        switch (activities[0].t) {
+                            // Cycling
+                            case 0:
+                                yearTarget = $("#ride-goals").find("div[data-period=year]").find("#ride-goal").attr("value");
+                                currentTargetType = $("#ride-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
+                                break;
+                            // Running
+                            case 1:
+                                yearTarget = $("#run-goals").find("div[data-period=year]").find("#run-goal").attr("value");
+                                currentTargetType = $("#run-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
+                                break;
+                        }
+                        if (yearTarget > 0 ) {
+                            yearTarget = Number(yearTarget);
+                            // #195 - Line plotting by data type
+                            if (currentTargetType) {
+                                // #195 - Target type is distnace
+                                // #195 - yearTarget would be absolute number. Convert to meters while setting data.values
+                                data[currentYear + 1] = {
+                                    year : currentYear + 1,
+                                    values: createArrayOfValues(2),
+                                    target : yearTarget * 1000
+                                };
+                                switch (currentDataType) {
+                                    // YTD Distance
+                                    case 1:
+                                        data[currentYear + 1].values[0] = 0;
+                                        data[currentYear + 1].values[1] = data[currentYear + 1].target;
+                                        if (!self.distanceInKilometers) {
+                                            data[currentYear + 1].values[1] /= metersTo1000thOfMileFactor;
+                                        }
+                                        break;
+                                    // 30 Day sliding distance
+                                    case 5:
+                                        var avg30DayDistance = data[currentYear + 1].target/numberOfDays*30;
+                                        data[currentYear + 1].values[0] = avg30DayDistance;
+                                        data[currentYear + 1].values[1] = avg30DayDistance;
+                                        if (!self.distanceInKilometers) {
+                                            data[currentYear + 1].values[0] /= metersTo1000thOfMileFactor;
+                                            data[currentYear + 1].values[1] /= metersTo1000thOfMileFactor;
+                                        }
+                                        break;
+                                }
+                            } else {
+                                data[currentYear + 1] = {
+                                    year : currentYear + 1,
+                                    values: createArrayOfValues(2),
+                                    target : yearTarget * 3600
+                                };
+                                // #195 - Target type is time
+                                if (currentDataType == 3) {
+                                    data[currentYear + 1].values[0] = 0;
+                                    data[currentYear + 1].values[1] = data[currentYear + 1].target;
+                                }
+                            }
+                        }
                     }
 
                     data.sort(function (left, right) {
@@ -461,6 +523,19 @@ AthleteStatsModifier.prototype = {
                     return x(dateFrom) + margin.left;
                 }).interpolate("basis");
 
+            // #195 - D3 method for generation of target line
+            var targetProjection = d3.svg.line()
+                .y(function (d, i) {
+                    return y(d) + margin.top;
+                })
+                .x(function (d, i) {
+                    var dateFrom = new Date(firstDayDate.getTime());
+                    if (i > 0) {
+                        dateFrom = lastDayDate;
+                    }
+                    return x(dateFrom) + margin.left;
+                }).interpolate("linear");
+
             var color = d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
@@ -469,20 +544,46 @@ AthleteStatsModifier.prototype = {
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
                 data.forEach(function (yearData) {
+                    var yearIdentifier = yearData.year > currentYear ? "Target" : yearData.year;
                     var year = yearData.year,
                         id = "ascy" + year,
-                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + year + "</label></li>"),
+                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + yearIdentifier + "</label></li>"),
                         liSpan = $("<span style='display: inline-block; margin-left: 10px; width: 80px; text-align: right; color: black;'></span>");
                     liYear.append(liSpan);
                     $("#athleteStatChartYears").prepend(liYear);
-                    yearData.element = trendLinesGroup.append('svg:path')
-                        .attr('d', line(yearData.values))
-                        .attr('stroke', color(i))
-                        .attr('data-year', year)
-                        .attr('class', 'trend-line');
+                    if (!yearData.target) {
+                        yearData.element = trendLinesGroup.append('svg:path')
+                            .attr('d', line(yearData.values))
+                            .attr('stroke', color(i))
+                            .attr('data-year', year)
+                            .attr('class', 'trend-line');
+                    } else {
+                        // #195 - Dashed Line to show trend for the year based on target if set
+                        if (currentTargetType) {
+                            // #195 - Target is of distance type
+                            if (currentDataType === 1 || currentDataType === 5) {
+                                yearData.element = trendLinesGroup.append('svg:path')
+                                    .attr('d', targetProjection(yearData.values))
+                                    .attr('stroke', color(i))
+                                    .attr('stroke-dasharray', '10, 10')
+                                    .attr('data-year', currentYear + 1)
+                                    .attr('class', 'trend-line');
+                            }
+                        } else if (!currentTargetType && currentDataType === 3) {
+                            // #195 - Target is of time type
+                            yearData.element = trendLinesGroup.append('svg:path')
+                                .attr('d', targetProjection(yearData.values))
+                                .attr('stroke', color(i))
+                                .attr('stroke-dasharray', '10, 10')
+                                .attr('data-year', currentYear + 1)
+                                .attr('class', 'trend-line');
+                        }
+                    }
                     i++;
                     yearData.$value = liSpan;
-                    yearData.element.classed("current", year == currentYear);
+                    if (typeof yearData.element != "undefined") {
+                        yearData.element.classed("current", year == currentYear);
+                    }
                 });
             };
             generateLines();
@@ -547,10 +648,23 @@ AthleteStatsModifier.prototype = {
                         day = dayOfYear(date);
 
                     data.forEach(function (item) {
-                        if (day < item.values.length) {
+                        if (day < item.values.length && !item.target) {
                             item.$value.text(formatValue(item.values[day]));
                         } else {
                             item.$value.text("");
+                            // #195 - Handle mouse over event for trend line
+                            if (item.target) {
+                                switch (currentDataType) {
+                                    case 1:
+                                    case 3:
+                                        var showValue = (item.values[1] - item.values[0])/numberOfDays*day;
+                                        item.$value.text(formatValue(showValue));
+                                        break;
+                                    case 5:
+                                        item.$value.text(formatValue(item.values[0]));
+                                        break;
+                                }
+                            }
                         }
                     });
 

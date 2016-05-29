@@ -31,7 +31,8 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> PACE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=pace" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            var pace_text = Helper.formatMessage(this.appResources.globalizeInstance, 'extendedStats/pace');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> ' + pace_text + ' <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=pace" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
@@ -56,12 +57,12 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             paceTimePerDistance = paceTimePerDistance.replace('00:', '');
 
             // Quartiles
-            this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-            this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-            this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-            
+            this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData', 'extendedStats/pace_data/quartpace', '25%');
+            this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData', 'extendedStats/pace_data/quartpace', '50%');
+            this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData', 'extendedStats/pace_data/quartpace', '75%');
+
             if (this.isSegmentEffortView) {
-                this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
+                this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Average pace', '/' + distanceUnits, 'displayAdvancedSpeedData', 'extendedStats/pace_data/avg_pace');
             }
         },
 
