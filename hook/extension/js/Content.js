@@ -107,20 +107,6 @@ Content.prototype = {
 
         this.loadDependencies(function() {
 
-            // #10 - Populate the list of locales to be loaded by StravistX.js
-            var trnsMsgs = [];
-            var trnsSupported = self.userSettings_.supportedLocales;
-            // Check if current active locale is supported if yes add that path and root
-            // Else add only root path
-            var currentLocale = window.navigator.language || window.navigator.userLanguage;
-            if (trnsSupported.indexOf(currentLocale) != -1) {
-                trnsMsgs.push(chrome.extension.getURL('/locales/' + currentLocale + '.json'));
-            } else {
-                trnsMsgs.push(chrome.extension.getURL('/locales/en-US.json'));
-            }
-            trnsMsgs.push(chrome.extension.getURL('/locales/root.json'));
-            self.appResources_.transRes = trnsMsgs;
-
             chrome.storage.sync.get(this.userSettings_, function(chromeSettings) {
 
                 var injectedScript = document.createElement('script');

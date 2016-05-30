@@ -55,25 +55,34 @@ StravistiX.prototype = {
         }
 
         // #10 - Initialization of jQuery Globalize to enable translation
-        // Change to globalize-webpack-plugin for better performance
-        var locArray = this.appResources_.transRes;
+        // DEV CODE - Start
+        // Change to compiled globalize libraries to improve performance and reduce complexity of code
+        var loadArray = [];
         var appRes = this.appResources_;
         var strav = this;
         $.getJSON(this.appResources_.cldrBase, function (data) {
             // #10 - Loading CLDR data needed for globalize to work
             Globalize.load(data);
+            // #10 - Get current locale of Strava
+            var localeString = StorageManager.getCookie('ui_language');
+            if (_.indexOf(strav.userSettings_.supportedLocales, localeString) != -1) {
+                loadArray.push('chrome-extension://' + strav.extensionId_ + '/locales/' + localeString + '.json');
+            } else {
+                loadArray.push('chrome-extension://' + strav.extensionId_ + '/locales/en-US.json');
+            }
+            loadArray.push('chrome-extension://' + strav.extensionId_ + '/locales/root.json');
+            // var urlLocale = 'chrome://' + strav.extensionId_ + '/locales/' + localeString + '.json';
             // #10 - Loading translation libraries from locales folder
             var loadCount = 0;
-            for (var i = 0; i < locArray.length; i++) {
-                $.getJSON(locArray[i], function (data) {
+            for (var i = 0; i < loadArray.length; i++) {
+                $.getJSON(loadArray[i], function (data) {
                     Globalize.loadMessages(data);
                     loadCount++;
-                    if (loadCount === locArray.length) {
-                        var currentLocale = window.navigator.language || window.navigator.userLanguage;
+                    if (loadCount === loadArray.length) {
                         // We should create a global instance for translation only after loading all messages
-                        if (_.indexOf(strav.userSettings_.supportedLocales) != -1) {
+                        if (_.indexOf(strav.userSettings_.supportedLocales, localeString) != -1) {
                             // Current locale is supported by stravistix
-                            appRes.globalizeInstance = Globalize(currentLocale);
+                            appRes.globalizeInstance = Globalize(localeString);
                         } else {
                             appRes.globalizeInstance = Globalize('en-US');
                         }
@@ -84,6 +93,7 @@ StravistiX.prototype = {
                 });
             }
         });
+        // DEV CODE - End
     },
 
     /**

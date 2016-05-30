@@ -1,0 +1,83 @@
+{
+    "fr-FR" :{
+        "menu": {
+            "common_settings": "Paramètres principaux",
+            "health_settings": "Paramètres de santé"
+        },
+        "remoteLink": {
+            "section": "########",
+            "vv_act": "########",
+            "vv_seg_comp": "########",
+            "surface": "########",
+            "export_tcx": "########",
+            "vviewer": "########",
+            "seg_stats": "########",
+            "rem_seg_view": "########"
+        },
+        "weather": {
+            "section": "########",
+            "wind": "########",
+            "temp": "########",
+            "clouds": "########",
+            "rh": "########"
+        },
+        "extendedStats": {
+            "pace": "########",
+            "75quartpace": "########",
+            "75quartspeed": "########",
+            "avg_climb_pace": "########",
+            "move_ratio": "########",
+            "trimp": "########",
+            "heart_reserve_avg": "########",
+            "time_climbing": "########",
+            "avg_climb_speed": "########",
+            "median_cadence": "########",
+            "pedalig_time": "########",
+            "extend_button": "########",
+            "feature_data": {
+                "section_title": "####{0}#####",
+                "seg_effort_title": "####{0}#####",
+                "tough_score": "#########",
+                "watt_kg": "#########",
+                "grade_profile": "#########"
+            },
+            "pace_data": {
+                "quartpace": "{0} #######",
+                "avg_pace": "########"
+            },
+            "heart_data": {
+                "section_title": "########",
+                "avg_hr": "########",
+                "quartrate": "{0} ##########",
+                "trimpphr": "########"
+            },
+            "cadence_data": {
+                "section_title": "########",
+                "avg_cdnc": "########",
+                "quartcadence": "{0} ########"
+            },
+            "elev_data": {
+                "section_title": "########",
+                "avg_elev": "########",
+                "ascnt": "########",
+                "dscnt": "########",
+                "quartelev": "{0} ########"
+            },
+            "grade_data": {
+                "section_title": "########",
+                "avg_flt_pace": "########",
+                "avg_dwnhill_pace": "########",
+                "quartgrade": "{0} ########",
+                "percent_climb": "########",
+                "percent_flat": "########",
+                "percent_dwnhill": "########",
+                "climb_time": "########",
+                "flat_time": "########",
+                "dwnhill_time": "########",
+                "climb_dist": "########",
+                "flat_dist": "########",
+                "dwnhill_dist": "########"
+            }
+        }
+    }
+}
