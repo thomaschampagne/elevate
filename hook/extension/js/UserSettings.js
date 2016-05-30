@@ -389,10 +389,10 @@ var userSettings = {
     bestSplitsConfiguration: null,
     temperatureUnit: 'F',
     windUnit: 'mph',
-    supportedLocales: [ // Chrome locales list are https://developer.chrome.com/webstore/i18n#localeTable
+    supportedLocales: [ // Using locales list that were supported by Strava
         'root',
         'en-US',
         'en-GB',
-        'fr'
+        'fr-FR'
     ]
 };
