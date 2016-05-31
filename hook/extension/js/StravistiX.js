@@ -239,7 +239,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, this.userSettings_.targets.year);
         athleteStatsModifier.modify();
     },
 

@@ -1,13 +1,14 @@
 /**
  *   AthleteStatsModifier is responsible of ...
  */
-function AthleteStatsModifier(appResources) {
+function AthleteStatsModifier(appResources, yearTargets) {
     this.appResources = appResources;
     this.cacheKey_ = 'activitiesHistoryData';
     this.distanceUnit = "km";
     this.distanceInKilometers = true;
     this.elevationUnit = "m";
     this.elevationInMeters = true;
+    this.yearTargets = yearTargets;
 }
 
 /**
@@ -384,12 +385,12 @@ AthleteStatsModifier.prototype = {
                         switch (activities[0].t) {
                             // Cycling
                             case 0:
-                                yearTarget = $("#ride-goals").find("div[data-period=year]").find("#ride-goal").attr("value");
+                                yearTarget = self.yearTargets.Ride;
                                 currentTargetType = $("#ride-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
                                 break;
                             // Running
                             case 1:
-                                yearTarget = $("#run-goals").find("div[data-period=year]").find("#run-goal").attr("value");
+                                yearTarget = self.yearTargets.cycling;
                                 currentTargetType = $("#run-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
                                 break;
                         }
@@ -544,7 +545,7 @@ AthleteStatsModifier.prototype = {
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
                 data.forEach(function (yearData) {
-                    var yearIdentifier = yearData.year > currentYear ? "Target" : yearData.year;
+                    var yearIdentifier = (yearData.year > currentYear) ? "Target" : yearData.year;
                     var year = yearData.year,
                         id = "ascy" + year,
                         liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + yearIdentifier + "</label></li>"),

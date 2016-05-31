@@ -25,7 +25,7 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
                         key: userSettingsSynced[option.optionKey]
                     });
                 } else if (option.optionType === 'integer') {
-                    option.value = userSettingsSynced[option.optionKey];
+                    option.value = $scope.getSettingValueFromKey(userSettingsSynced, option.optionKey);
                 } else {
                     console.error('Option type not supported');
                 }
@@ -34,6 +34,19 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
 
         $scope.$apply();
     });
+
+    $scope.getSettingValueFromKey = function(userSettingsSynced, stringKey) {
+        var keyAsArray = (stringKey).split('.');
+        var value;
+        if (keyAsArray.length) {
+            value = keyAsArray.reduce(function(obj, index) {
+                return obj[index];
+            }, userSettingsSynced);
+        } else {
+            value = userSettingsSynced[stringKey];
+        }
+        return value;
+    };
 
     $scope.toggleCheckOption = function(option) {
 

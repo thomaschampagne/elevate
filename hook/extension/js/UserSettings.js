@@ -351,8 +351,12 @@ var userSettings = {
             from: 2000,
             to: 3000
         }]
-
-
+    },
+    targets: {
+        year: {
+            Ride: 6000,
+            Run: 300
+        }
     },
     remoteLinks: true,
     feedAutoScroll: true,
