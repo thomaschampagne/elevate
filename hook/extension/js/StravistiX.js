@@ -141,6 +141,11 @@ StravistiX.prototype = {
      */
     handleUpdatePopup_: function() {
 
+        var previewBuild = false;
+        if (this.appResources_.extVersionName.startsWith('preview@')) {
+            previewBuild = true;
+        }
+
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
@@ -180,32 +185,38 @@ StravistiX.prototype = {
         var baseVersion = this.appResources_.extVersion.split('.');
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
 
-        if (!_.isEmpty(updateMessageObj.features)) {
+        if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h6>- ' + feature + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.fixes)) {
+        if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
             message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h6>- ' + fix + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
+        if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
             message += '<h5><strong>Upcomming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
                 message += '<h6>- ' + upcommingFixes + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
+        if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
             message += '<h5><strong>Upcomming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
+        }
+
+        if (previewBuild) {
+            updateMessageObj.title = this.appResources_.extVersionName;
+            var shortSha1Commit = this.appResources_.extVersionName.slice(this.appResources_.extVersionName.indexOf('@') + 1);
+            message += '<a href="https://github.com/thomaschampagne/stravistix/compare/master...' + shortSha1Commit + '" target="_blank">Git diff between ' + this.appResources_.extVersionName + ' and master (code in production)</a></br></br> ';
         }
 
         // Donate button

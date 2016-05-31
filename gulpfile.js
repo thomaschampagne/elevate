@@ -26,6 +26,8 @@ var util = require('gulp-util');
 var exec = require('child_process').exec;
 var options = require('gulp-options');
 var ftp = require('vinyl-ftp');
+var git = require('gulp-git');
+var jeditor = require("gulp-json-editor");
 
 /**
  * Global folder variable
@@ -55,8 +57,9 @@ var EXT_STYLESHEETS = [
     'hook/extension/css/extendedData.css'
 ];
 
+var MANIFEST = 'hook/extension/manifest.json';
+
 var EXT_RESSOURCES = [
-    'hook/extension/manifest.json',
     'hook/extension/icons/*',
     'hook/extension/node_modules/fancybox/dist/img/*.*',
 ];
@@ -114,6 +117,41 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         .pipe(gulp.dest(DIST_FOLDER));
 
     /**
+     * Handle manifest file, if preview mode or not... if preview then: version name change to short sha1 HEAD commit and version = 0
+     */
+    if (options.has('preview')) {
+
+        util.log('Preview mode...');
+
+        git.revParse({
+            args: '--short HEAD',
+            quiet: true
+        }, function(err, sha1Short) {
+
+            if (err) {
+                throw new Error(err);
+            }
+
+            gulp.src(MANIFEST, {
+                    base: 'hook/extension'
+                })
+                .pipe(jeditor({
+                    'version': '0',
+                    'version_name': 'preview@' + sha1Short
+                }))
+                .pipe(gulp.dest(DIST_FOLDER));
+
+            util.log('HEAD commit short sha1 is: ' + sha1Short);
+        });
+    } else {
+        gulp.src(MANIFEST, {
+                base: 'hook/extension'
+            })
+            .pipe(gulp.dest(DIST_FOLDER));
+    }
+
+
+    /**
      * Options JS and Css Mixed
      */
     gulp.src(OPT_FILES, {
@@ -124,7 +162,6 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
             base: 'hook/extension'
         })
         .pipe(gulp.dest(DIST_FOLDER));
-
 });
 
 /**
