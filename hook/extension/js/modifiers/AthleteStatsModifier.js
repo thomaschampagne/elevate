@@ -8,7 +8,6 @@ function AthleteStatsModifier(appResources, yearTargets) {
     this.distanceInKilometers = true;
     this.elevationUnit = "m";
     this.elevationInMeters = true;
-    this.elevationInMeters = true;
     this.yearTargets = yearTargets;
 }
 
