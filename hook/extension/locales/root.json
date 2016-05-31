@@ -1,5 +1,14 @@
 {
     "root": {
+        "cycling": "Cycling",
+        "running": "Running",
+        "dist": "Distance",
+        "act_cnt": "Activity count",
+        "elev": "Elevation",
+        "time": "Time",
+        "type": "Type",
+        "num": "Number",
+        "calories": "Calories",
         "menu": {
             "common_settings": "Common Settings",
             "health_settings": "Health Settings",
@@ -11,7 +20,8 @@
             "what_next": "What's next?",
             "donate": "Donate",
             "author_site": "Author site",
-            "share_ext": "Share this extension"
+            "share_ext": "Share this extension",
+            "go_to_flyby": "Go to FlyBy"
         },
         "remoteLink": {
             "section": "Remote Views",
@@ -35,6 +45,7 @@
             "75quartpace": "75% Quartile Pace",
             "75quartspeed": "75% Quartile Speed",
             "avg_climb_pace": "Avg climbing pace",
+            "avg_speed": "Avg speed/pace",
             "move_ratio": "Move Ratio",
             "trimp": "TRaining IMPulse",
             "heart_reserve_avg": "Heart Rate Reserve Avg",
@@ -43,6 +54,7 @@
             "median_cadence": "Median Cadence",
             "pedalig_time": "Pedaling Time",
             "extend_button": "Show extended statistics",
+            "rank": "Rank",
             "feature_data": {
                 "section_title": " STATS on <i>&lt;{0}&gt;</i> ACTIVITY ",
                 "seg_effort_title": " EFFORT STATS on <i>&lt;{0}&gt;</i> SEGMENT // TIME ",
@@ -76,6 +88,8 @@
                 "section_title": "GRADE",
                 "avg_flt_pace": "Avg flat pace",
                 "avg_dwnhill_pace": "Avg downhill pace",
+                "avg_flt_speed": "Avg flat speed",
+                "avg_dwnhill_speed": "Avg downhill speed",
                 "quartgrade": "{0} Quartile Grade",
                 "percent_climb": "% climbing",
                 "percent_flat": "% flat",
@@ -86,7 +100,44 @@
                 "climb_dist": "Climbing distance",
                 "flat_dist": "Flat distance",
                 "dwnhill_dist": "Downhill distance"
+            },
+            "speed_data": {
+                "section_title": "SPEED",
+                "quartspeed": "{0} Quartile Speed",
+                "std_dev": "Std Deviation &sigma;",
+                "avg_speed": "Avg speed"
+            },
+            "power_data": {
+                "section_title": "POWER",
+                "weight_power": "Weighted Power",
+                "var_index": "Variability Index",
+                "punch_factor": "Punch Factor",
+                "quartpower": "{0} Quartile Watts",
+                "avg_power": "Avg Watts/Kg",
+                "weight_pow_kg": "Weighted Watts/Kg"
+            },
+            "cycle_cad_data": {
+                "section_title": "CADENCE",
+                "cad_moving": "Cadence % while moving",
+                "cad_time_moving": "Cadence Time while moving",
+                "crank_rev": "Crank Revolutions",
+                "quartcad": "{0} Quartile Cadence"
+            },
+            "ascnt_speed_data": {
+                "section_title": "ASCENT SPEED",
+                "avg_ascnt_speed": "Avg Ascent Speed or VAM",
+                "quartascnt": "{0} Quartile Ascent Speed"
             }
+        },
+        "ath_stats": {
+            "my_progress": "My year progressions to current month/day",
+            "stat_descrip": ["This panel displays your progress for each beginning of year to current month and day.",
+                "Assuming today is May 25, this panel shows",
+                "\"What I've accomplished by May 25 of this year compared to previous years during the same period.\""],
+            "inc_virt_ride": "Include Virtual Rides",
+            "force_refresh": "Force refresh",
+            "dist_last_yr": "Distance last year",
+            "dist_last_30d": "Distance last 30d"
         }
     }
 }

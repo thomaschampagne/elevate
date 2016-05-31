@@ -21,9 +21,9 @@ var CyclingGradeDataView = AbstractGradeDataView.extend(function(base) {
             var avgFlatSpeed = (this.gradeData.upFlatDownMoveData.flat * speedUnitFactor).toFixed(1);
             var avgDownhillSpeed = (this.gradeData.upFlatDownMoveData.down * speedUnitFactor).toFixed(1);
 
-            this.insertContentAtGridPosition(0, 4, _.isNaN(avgClimbingSpeed) || avgClimbingSpeed == 'NaN' ? '-' : avgClimbingSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(1, 4, _.isNaN(avgFlatSpeed) || avgFlatSpeed == 'NaN' ? '-' : avgFlatSpeed, 'Avg flat speed', speedUnitPerhour, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(2, 4, _.isNaN(avgDownhillSpeed) || avgDownhillSpeed == 'NaN' ? '-' : avgDownhillSpeed, 'Avg downhill speed', speedUnitPerhour, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 4, _.isNaN(avgClimbingSpeed) || avgClimbingSpeed == 'NaN' ? '-' : avgClimbingSpeed, 'Avg climbing speed', speedUnitPerhour, 'displayAdvancedGradeData', 'extendedStats/avg_climb_speed');
+            this.insertContentAtGridPosition(1, 4, _.isNaN(avgFlatSpeed) || avgFlatSpeed == 'NaN' ? '-' : avgFlatSpeed, 'Avg flat speed', speedUnitPerhour, 'displayAdvancedGradeData', 'extendedStats/grade_data/avg_flt_speed');
+            this.insertContentAtGridPosition(2, 4, _.isNaN(avgDownhillSpeed) || avgDownhillSpeed == 'NaN' ? '-' : avgDownhillSpeed, 'Avg downhill speed', speedUnitPerhour, 'displayAdvancedGradeData', 'extendedStats/grade_data/avg_dwnhill_speed');
         }
     }
 });

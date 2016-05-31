@@ -1,8 +1,8 @@
 /**
  *   SegmentRankPercentageModifier is responsible of ...
  */
-function SegmentRankPercentageModifier() {
-
+function SegmentRankPercentageModifier(appResources) {
+    this.appResources = appResources;
 }
 
 /**
@@ -38,7 +38,8 @@ SegmentRankPercentageModifier.prototype = {
         }
 
         // Rewrite percentage after ranking
-        this.standing.after('<td class="percentageRanking"><h3>Rank %</h3></br><strong>' + percentage + '</strong></td>');
+        var transText = Helper.formatMessage(this.appResources.globalizeInstance, 'extendedStats/rank');
+        this.standing.after('<td class="percentageRanking"><h3>' + transText + ' %</h3></br><strong>' + percentage + '</strong></td>');
 
         if ($('.percentageRanking').size()) {
             clearInterval(self.addPercentageRankingLoop);

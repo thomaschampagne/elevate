@@ -27,7 +27,8 @@ var AscentSpeedDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> ASCENT SPEED<a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=ascent" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            var transText = Helper.formatMessage(this.appResources.globalizeInstance, 'extendedStats/ascnt_speed_data/section_title')
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> ' + transText + '<a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=ascent" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 2); // (col, row)
@@ -53,10 +54,10 @@ var AscentSpeedDataView = AbstractDataView.extend(function(base) {
                 }
             }
 
-            this.insertContentAtGridPosition(0, 0, ascentSpeedAvg, 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(0, 1, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(1, 1, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-            this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
+            this.insertContentAtGridPosition(0, 0, ascentSpeedAvg, 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData', 'extendedStats/ascnt_speed_data/avg_ascnt_speed');
+            this.insertContentAtGridPosition(0, 1, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData', 'extendedStats/ascnt_speed_data/quartascnt', '25%');
+            this.insertContentAtGridPosition(1, 1, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData', 'extendedStats/ascnt_speed_data/quartascnt', '50%');
+            this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData', 'extendedStats/ascnt_speed_data/quartascnt', '75%');
 
         }
     }

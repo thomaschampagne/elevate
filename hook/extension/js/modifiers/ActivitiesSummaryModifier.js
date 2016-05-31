@@ -1,7 +1,9 @@
 /**
  *   ActivitiesSummaryModifier is responsible of ...
  */
-function ActivitiesSummaryModifier() {}
+function ActivitiesSummaryModifier(appResources) {
+    this.appResources = appResources;
+}
 
 /**
  * Define prototype
@@ -142,7 +144,8 @@ ActivitiesSummaryModifier.prototype = {
             if (activityTypes.length > 2) {
                 activityTypes.push(total);
             }
-            var $table = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
+            var $table = $("<table class='activitiesSummary'><thead><tr><th mssg_id='type'>Type</th><th style='text-align: right' mssg_id='num'>Number</th><th style='text-align: right' mssg_id='dist'>Distance</th><th style='text-align: right' mssg_id='time'>Time</th><th style='text-align: right' mssg_id='extendedStats/avg_speed'>Avg speed/pace</th><th style='text-align: right' mssg_id='elev'>Elevation</th><th style='text-align: right' mssg_id='calories'>Calories</th></tr></thead><tbody></tbody></table>");
+            Helper.translateDOMNode(self.appResources.globalizeInstance, $table);
             activityTypes.forEach(function(type) {
                 var $row = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
