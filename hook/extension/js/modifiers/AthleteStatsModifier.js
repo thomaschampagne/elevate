@@ -233,10 +233,12 @@ AthleteStatsModifier.prototype = {
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
-                '</div></div></div>' +
-                '<style type="text/css">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>';
+                '</div></div></div>';
+            var style = '<style type="text/css">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>';
             html = $(html);
             Helper.translateDOMNode(self.appResources.globalizeInstance, html);
+            html = '<div style="padding-bottom: 10px; text-align: center;">' + $(html).html() + '</div>';
+            html += style;
 
             $.fancybox(html, {
                 'title': 'Year progression chart',
