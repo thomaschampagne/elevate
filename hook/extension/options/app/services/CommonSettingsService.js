@@ -287,13 +287,13 @@ app.factory('CommonSettingsService', function() {
         }, {
             sectionTitle:  'Year progression targets for ' + (new Date()).getFullYear(),
             sectionContent: [{
-                optionKey: 'targets.year.Ride',
+                optionKey: 'targetsYearRide',
                 optionType: 'integer',
                 optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Cycling'],
                 optionHtml: '',
             },{
-                optionKey: 'targets.year.Run',
+                optionKey: 'targetsYearRun',
                 optionType: 'integer',
                 optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Running'],
