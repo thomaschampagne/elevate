@@ -1,8 +1,27 @@
 {
     "en-GB": {
+        "cycling": "########",
+        "running": "########",
+        "dist": "#########",
+        "act_cnt": "#########",
+        "elev": "#########",
+        "time": "#########",
+        "type": "#########",
+        "num": "#########",
+        "calories": "#########",
         "menu": {
             "common_settings": "########",
-            "health_settings": "########"
+            "health_settings": "########",
+            "zone_settings": "########",
+            "kom_map": "########",
+            "heat_map": "########",
+            "release_notes": "<strong>v {0}</strong> #####",
+            "rate": "########",
+            "what_next": "########",
+            "donate": "########",
+            "author_site": "########",
+            "share_ext": "########",
+            "go_to_flyby": "#########"
         },
         "remoteLink": {
             "section": "########",
@@ -26,6 +45,7 @@
             "75quartpace": "########",
             "75quartspeed": "########",
             "avg_climb_pace": "########",
+            "avg_speed": "#########",
             "move_ratio": "########",
             "trimp": "########",
             "heart_reserve_avg": "########",
@@ -34,6 +54,7 @@
             "median_cadence": "########",
             "pedalig_time": "########",
             "extend_button": "########",
+            "rank": "#########",
             "feature_data": {
                 "section_title": "####{0}#####",
                 "seg_effort_title": "####{0}#####",
@@ -67,6 +88,8 @@
                 "section_title": "########",
                 "avg_flt_pace": "########",
                 "avg_dwnhill_pace": "########",
+                "avg_flt_speed": "########",
+                "avg_dwnhill_speed": "########",
                 "quartgrade": "{0} ########",
                 "percent_climb": "########",
                 "percent_flat": "########",
@@ -77,7 +100,44 @@
                 "climb_dist": "########",
                 "flat_dist": "########",
                 "dwnhill_dist": "########"
+            },
+            "speed_data": {
+                "section_title": "########",
+                "quartspeed": "{0} ########",
+                "std_dev": "########",
+                "avg_speed": "########"
+            },
+            "power_data": {
+                "section_title": "########",
+                "weight_power": "########",
+                "var_index": "########",
+                "punch_factor": "########",
+                "quartpower": "{0} ########",
+                "avg_power": "########",
+                "weight_pow_kg": "########"
+            },
+            "cycle_cad_data": {
+                "section_title": "########",
+                "cad_moving": "########",
+                "cad_time_moving": "########",
+                "crank_rev": "########",
+                "quartcad": "{0} ########"
+            },
+            "ascnt_speed_data": {
+                "section_title": "########",
+                "avg_ascnt_speed": "########",
+                "quartascnt": "{0} ########"
             }
+        },
+        "ath_stats": {
+            "my_progress": "########",
+            "stat_descrip": ["########",
+                "########",
+                "\"########\""],
+            "inc_virt_ride": "########",
+            "force_refresh": "########",
+            "dist_last_yr": "#########",
+            "dist_last_30d": "#########"
         }
     }
 }

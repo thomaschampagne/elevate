@@ -287,7 +287,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivitiesSummary()");
 
-        var activitiesSummaryModifier = new ActivitiesSummaryModifier();
+        var activitiesSummaryModifier = new ActivitiesSummaryModifier(this.appResources_);
         activitiesSummaryModifier.modify();
     },
 
@@ -414,7 +414,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleSegmentRankPercentage_()");
 
-        var segmentRankPercentage = new SegmentRankPercentageModifier();
+        var segmentRankPercentage = new SegmentRankPercentageModifier(this.appResources_);
         segmentRankPercentage.modify();
     },
 
@@ -485,7 +485,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleDisplayFlyByFeedModifier_()");
 
-        var displayFlyByFeedModifier = new DisplayFlyByFeedModifier();
+        var displayFlyByFeedModifier = new DisplayFlyByFeedModifier(this.appResources_);
         displayFlyByFeedModifier.modify();
     },
 

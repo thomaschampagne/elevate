@@ -27,6 +27,14 @@ AthleteStatsModifier.prototype = {
             return;
         }
 
+        // #10 - Translate the text for athlete stats summary
+        var myProgressText = Helper.formatMessage(self.appResources.globalizeInstance, 'ath_stats/my_progress');
+        var athStatsDescription = Helper.formatMessage(self.appResources.globalizeInstance, 'ath_stats/stat_descrip');
+        var incVirtRide = Helper.formatMessage(self.appResources.globalizeInstance, 'ath_stats/inc_virt_ride');
+        var cycling = Helper.formatMessage(self.appResources.globalizeInstance, 'cycling');
+        var running = Helper.formatMessage(self.appResources.globalizeInstance, 'running');
+        var force_refresh = Helper.formatMessage(self.appResources.globalizeInstance, 'ath_stats/force_refresh');
+
         var metersTo1000thOfMileFactor = 0.621371192,
             metersToFeetsFactor = 3.2808399,
             total = 0,
@@ -38,7 +46,7 @@ AthleteStatsModifier.prototype = {
             activitiesFromCache = localStorage.getItem(this.cacheKey_),
             activitiesFromCacheObject = JSON.parse(activitiesFromCache) || [],
             progress = $("#progress-goals-v2"),
-            progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
+            progressThisYear = $("<div class='section'><h3>" + myProgressText + " <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>" + athStatsDescription + "<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> " + incVirtRide + "</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>" + cycling + "</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>" + running + "</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>" + force_refresh + "</a></li></ul></div></div>");
 
         var formatData = function (activities) {
 
@@ -216,17 +224,22 @@ AthleteStatsModifier.prototype = {
                 '<div id="athleteStatChart" style="float: left; width: ' + (size[0] - 200) + 'px;height:' + (size[1] - 100) + 'px;"></div>' +
                 '<div style="float:right; width: 180px; text-align: left;" id="athleteStatChartLegend">' +
                 '<div>Chart of:</div><ul id="athleteStatChartTypes">' +
-                '<li style="margin: 8px"><input id="asrdt0" type="radio" checked name="data-type" value="1" /> <label style="display: inline" for="asrdt0">Distance</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /> <label style="display: inline" for="asrdt1">Activity count</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /> <label style="display: inline" for="asrdt2">Elevation</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3">Time</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4">Distance last year</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt0" type="radio" checked name="data-type" value="1" /> <label style="display: inline" for="asrdt0" mssg_id="dist">Distance</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /> <label style="display: inline" for="asrdt1" mssg_id="act_cnt">Activity count</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /> <label style="display: inline" for="asrdt2" mssg_id="elev">Elevation</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3" mssg_id="time">Time</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4" mssg_id="ath_stats/dist_last_yr">Distance last year</label></li>' +
+                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5" mssg_id="ath_stats/dist_last_30d">Distance last 30d</label></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
-                '</div></div></div>' +
-                '<style type="text/css">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>';
+                '</div></div></div>';
+            var style = '<style type="text/css">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>';
+            html = $(html);
+            Helper.translateDOMNode(self.appResources.globalizeInstance, html);
+            html = '<div style="padding-bottom: 10px; text-align: center;">' + $(html).html() + '</div>';
+            html += style;
+
             $.fancybox(html, {
                 'title': 'Year progression chart',
                 'autoScale': true,
