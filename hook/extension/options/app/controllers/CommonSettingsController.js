@@ -1,38 +1,40 @@
 app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'NotifierService', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, NotifierService, $timeout, $location) {
 
     // Define options structure
-    $scope.sections = CommonSettingsService.provideSections();
+    CommonSettingsService.provideSections(function (sections) {
+        $scope.sections = sections;
 
-    ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
+        ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
 
-        $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
-        $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);
-        $scope.userFTP = parseInt(userSettingsSynced.userFTP);
+            $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
+            $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);
+            $scope.userFTP = parseInt(userSettingsSynced.userFTP);
 
-        _.each($scope.sections, function(section) {
+            _.each($scope.sections, function(section) {
 
-            _.each(section.sectionContent, function(option) {
+                _.each(section.sectionContent, function(option) {
 
-                if (option.optionType === 'checkbox') {
-                    option.active = userSettingsSynced[option.optionKey];
+                    if (option.optionType === 'checkbox') {
+                        option.active = userSettingsSynced[option.optionKey];
 
-                    if (option.optionEnableSub) {
-                        $scope.displaySubOption(option.optionEnableSub, userSettingsSynced[option.optionKey]);
+                        if (option.optionEnableSub) {
+                            $scope.displaySubOption(option.optionEnableSub, userSettingsSynced[option.optionKey]);
+                        }
+
+                    } else if (option.optionType === 'list') {
+                        option.active = _.findWhere(option.optionList, {
+                            key: userSettingsSynced[option.optionKey]
+                        });
+                    } else if (option.optionType === 'integer') {
+                        option.value = userSettingsSynced[option.optionKey];
+                    } else {
+                        console.error('Option type not supported');
                     }
-
-                } else if (option.optionType === 'list') {
-                    option.active = _.findWhere(option.optionList, {
-                        key: userSettingsSynced[option.optionKey]
-                    });
-                } else if (option.optionType === 'integer') {
-                    option.value = userSettingsSynced[option.optionKey];
-                } else {
-                    console.error('Option type not supported');
-                }
+                });
             });
-        });
 
-        $scope.$apply();
+            $scope.$apply();
+        });
     });
 
     $scope.toggleCheckOption = function(option) {
