@@ -1,7 +1,7 @@
 {
     "en-GB": {
-        "cycling": "########",
-        "running": "########",
+        "cycling": "########C",
+        "running": "########R",
         "dist": "#########",
         "act_cnt": "#########",
         "elev": "#########",
@@ -9,6 +9,7 @@
         "type": "#########",
         "num": "#########",
         "calories": "#########",
+        "all": "########",
         "menu": {
             "common_settings": "########",
             "health_settings": "########",
@@ -138,6 +139,51 @@
             "force_refresh": "########",
             "dist_last_yr": "#########",
             "dist_last_30d": "#########"
+        },
+        "settings": {
+            "common": {
+                "extendedStas_section": "########",
+                "disp_active_ratio": "########",
+                "disp_motive_score": "########",
+                "disp_adv_power_data": "########",
+                "disp_adv_hr_data": "########",
+                "disp_adv_speed_data": "########",
+                "disp_cad_data": "########",
+                "disp_adv_grade_data": "########",
+                "disp_adv_elev_data": "########",
+                "act_view_options": "########",
+                "cad_both_legs": "########",
+                "bike_odo_disp": "########",
+                "enable_gap": "########",
+                "enable_hrg": "########",
+                "enable_temp_graph": "########",
+                "enable_cad_graph": "########",
+                "default_map_type": "########",
+                "enable_kom_comp": "########",
+                "enable_seg_prcomp": "########",
+                "enable_seg_yrprcomp": "########",
+                "enable_seg_rank_col": "########",
+                "rev_goog_maps": "########",
+                "rev_goog_maplayer_type": "########",
+                "enable_best_splits": "########",
+                "seg_view_options": "########",
+                "disp_seg_rankpercent": "########",
+                "leaderboard_filter": "########",
+                "nearby_seg": "########",
+                "act_seg_view_opt": "########",
+                "integrate_velo_flyby": "########",
+                "dashboard_opt": "########",
+                "feed_autoscroll": "########",
+                "hide_challenges": "########",
+                "hide_created_routes": "########",
+                "hide_ride_act_under_dist": "########",
+                "hide_run_act_under_dist": "########",
+                "weather_unit": "########",
+                "temperature": "########",
+                "wind_speed": "########",
+                "misc": "########",
+                "hide_premium": "########"
+            }
         }
     }
 }
