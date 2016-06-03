@@ -63,10 +63,9 @@ ActivityBestSplitsModifier.prototype = {
         $("#segments").addClass("best-splits-processed");
 
         var segments = $("#segments"),
-            bestSplitsHeader = $('<h3 class="button btn-block btn-primary bestsplits-header-title" style="padding-right:50px; padding-left:50px;">Best Splits</h3>')
+            bestSplitsHeader = $('<h3 class="button bestsplits-header-title" style="width: 45%; padding-right:50px; padding-left:50px; margin-left:20px;">Best splits</h3>')
             .css("display", "inline")
-            .css("margin-right", "5px")
-            .css("width", "250px"),
+            .css("margin-right", "5px"),
 
             bestSplitsSection = $("<section id='bestsplits' class='pinnable-anchor' style='display: none;'></section>"),
             map,
@@ -112,14 +111,15 @@ ActivityBestSplitsModifier.prototype = {
         self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
         segments.find("h3.segments-header")
+            .html("Segment efforts")
             .css("cursor", "pointer")
             .css("display", "inline")
             .css("padding-right", "50px")
             .css("padding-left", "50px")
-            .css("color", "black")
+            .css("color", "#FC4C02")
             .css("background", "white")
+            .css("margin-right", "5px")
             .addClass("button")
-            .addClass("btn-block")
             .addClass("btn-primary")
             .addClass("segments-header-title")
             .removeClass("inset")
@@ -151,14 +151,17 @@ ActivityBestSplitsModifier.prototype = {
 
         $(".bestsplits-header-title").click(function() {
             $(".bestsplits-header-title")
-                .css("color", "black")
+                .addClass("btn-primary")
+                .css("color", "#FC4C02")
                 .css("background", "white");
 
             $(".segments-header-title")
                 .css("font-weight", "normal")
                 .css("text-decoration", "none")
-                .css("color", "white")
-                .css("background", "#FC4C02");
+                .css("color", "black")
+                .removeClass("btn-primary");
+
+            $("#segment-filter").hide();
 
             segments.find("table.segments").hide();
             segments.find("div.show-hide-segments").hide();
@@ -183,14 +186,16 @@ ActivityBestSplitsModifier.prototype = {
 
         $(".segments-header-title").click(function() {
             $(".segments-header-title")
-                .css("color", "black")
-                .css("background", "white");
+                .css("color", "#FC4C02")
+                .addClass("btn-primary");
 
             $(".bestsplits-header-title")
                 .css("font-weight", "normal")
                 .css("text-decoration", "none")
-                .css("color", "white")
-                .css("background", "#FC4C02");
+                .css("color", "black")
+                .removeClass("btn-primary");
+
+            $("#segment-filter").show();
 
             bestSplitsSection.hide();
             segments.find("table.segments").show();
