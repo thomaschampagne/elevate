@@ -151,17 +151,18 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Added "% rank" next to "rank labels" in segments list on cycling activity pages. Quick view on where you\'re ranked!',
-                'Added back "jonathanokeeffe" segment details on segment pages',
-                'Added back "veloviewer" segment details on segment pages',
+                'Strongly improved estimated "weighted/normalized power" for non power sensor users. Estimated weighted power is now "accurate" for "moneyless" cyclists :p.',
+                'Re-highlight best split feature. Some of the users were not aware this key feature ;)',
+                'Some various improvements',
+
             ],
             fixes: [
-                'Fixed weather maps initialised with no maps. (Available on cycling activities)',
-                'Fixed "Last 30 days" comparaison chart in year progression stats to get the end of each day, rather than the beginning. This avoids the issue where activities from today are not included in the graph',
-                'Fixed not displayed "Distance last year" comparaison chart in year progression stats for some people',
+                'Fixed some of display gitches segments list on cycling activity pages: columns could exceed the size of the segments list table.',
+                'Fixed "weighted/normalized power" for some users having power sensor. An element of calculation of the method specified by Andy R. Coggan was well considered but partially previously.',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
+                'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
                 'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
