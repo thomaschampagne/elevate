@@ -29,7 +29,7 @@ RemoteLinksModifier.prototype = {
 
         var remoteViewActivityLinksArray = [
             ["VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
-            ["VeloViewer Seg. Compare", '#', '', 'onclick="javascript:stravistiX.remoteLinksModifier.veloviewerSegmentCompare(window.event)"'],
+            // ["VeloViewer Seg. Compare", '#', '', 'onclick="javascript:stravistiX.remoteLinksModifier.veloviewerSegmentCompare(window.event)"'],
             ["Surface", 'http://strava-tools.raceshape.com/erea/?url=', '', '']
         ];
 
