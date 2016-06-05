@@ -183,7 +183,7 @@ var appResources = {
 
 var jsDependencies = [
     'config/env.js',
-    'node_modules/chart.js/Chart.min.js',
+    'node_modules/chart.js/dist/Chart.min.js',
     'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'modules/StorageManager.js',
