@@ -110,7 +110,7 @@ RemoteLinksModifier.prototype = {
 
         var remoteViewSegmentLinksArray = [
             ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/', '?referrer=stravistiX'],
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.pollIcon + "'/> <span>Segment Stats</span>", 'http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=', '']
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.pollIcon + "'/> <span>Segment details (Jonathan Okeeffe)</span>", 'http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=', '']
         ];
         var html = "<div class='module' style='padding-bottom: 10px;'>";
         html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;'>";
