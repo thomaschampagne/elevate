@@ -141,22 +141,28 @@ StravistiX.prototype = {
      */
     handleUpdatePopup_: function() {
 
+        var previewBuild = false;
+        if (this.appResources_.extVersionName.startsWith('preview@')) {
+            previewBuild = true;
+        }
+
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Added "% rank" next to "rank labels" in segments list on cycling activity pages. Quick view on where you\'re ranked!',
-                'Added back "jonathanokeeffe" segment details on segment pages',
-                'Added back "veloviewer" segment details on segment pages',
+                'Strongly improved estimated "weighted/normalized power" for non power sensor users. Estimated weighted power is now "accurate" for "moneyless" cyclists :p.',
+                'Re-highlight best split feature. Some of the users were not aware this key feature ;)',
+                'Some various improvements',
+
             ],
             fixes: [
-                'Fixed weather maps initialised with no maps. (Available on cycling activities)',
-                'Fixed "Last 30 days" comparaison chart in year progression stats to get the end of each day, rather than the beginning. This avoids the issue where activities from today are not included in the graph',
-                'Fixed not displayed "Distance last year" comparaison chart in year progression stats for some people',
+                'Fixed some of display gitches segments list on cycling activity pages: columns could exceed the size of the segments list table.',
+                'Fixed "weighted/normalized power" for some users having power sensor. An element of calculation of the method specified by Andy R. Coggan was well considered but partially previously.',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
+                'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
                 'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
@@ -180,32 +186,38 @@ StravistiX.prototype = {
         var baseVersion = this.appResources_.extVersion.split('.');
         baseVersion = baseVersion[0] + '.' + baseVersion[1] + '.x';
 
-        if (!_.isEmpty(updateMessageObj.features)) {
+        if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += '<h5><strong>NEW in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.features, function(feature) {
                 message += '<h6>- ' + feature + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.fixes)) {
+        if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
             message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
             _.each(updateMessageObj.fixes, function(fix) {
                 message += '<h6>- ' + fix + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFixes)) {
+        if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
             message += '<h5><strong>Upcomming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, function(upcommingFixes) {
                 message += '<h6>- ' + upcommingFixes + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFeatures)) {
+        if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
             message += '<h5><strong>Upcomming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, function(upcommingFeatures) {
                 message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
+        }
+
+        if (previewBuild) {
+            updateMessageObj.title = this.appResources_.extVersionName;
+            var shortSha1Commit = this.appResources_.extVersionName.slice(this.appResources_.extVersionName.indexOf('@') + 1);
+            message += '<a href="https://github.com/thomaschampagne/stravistix/compare/master...' + shortSha1Commit + '" target="_blank">Git diff between ' + this.appResources_.extVersionName + ' and master (code in production)</a></br></br> ';
         }
 
         // Donate button
