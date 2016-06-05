@@ -87,5 +87,5 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             // Remove empty case in grid. This avoid unwanted padding on feature view rendering
             this.grid.find('td:empty').remove();
         }
-    }
+    };
 });

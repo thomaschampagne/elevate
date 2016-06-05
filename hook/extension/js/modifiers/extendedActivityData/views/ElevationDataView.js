@@ -13,6 +13,7 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             base.init.call(this);
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.elevationData = elevationData;
 
@@ -50,5 +51,5 @@ var ElevationDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
             this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
         }
-    }
+    };
 });

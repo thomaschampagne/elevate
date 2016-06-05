@@ -25,5 +25,5 @@ var AbstractCadenceDataView = AbstractDataView.extend(function(base) {
             // Add a title
             this.content += this.generateSectionTitle(this.viewTitle);
         }
-    }
+    };
 });

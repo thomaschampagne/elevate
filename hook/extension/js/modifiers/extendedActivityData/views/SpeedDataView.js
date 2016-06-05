@@ -13,6 +13,7 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             base.init.call(this);
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.speedData = speedData;
 
@@ -65,5 +66,5 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
                 this.insertContentAtGridPosition(1, 1, (this.speedData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Average speed', speedUnitPerhour, 'displayAdvancedSpeedData');
             }
         }
-    }
+    };
 });

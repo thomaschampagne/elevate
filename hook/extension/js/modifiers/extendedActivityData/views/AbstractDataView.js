@@ -48,8 +48,8 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.isAuthorOfViewedActivity = bool;
         },
 
-        setGraphTitle: function(title) {
-            this.graphTitle = title.toUpperCase();
+        setGraphTitleFromUnits: function(units) {
+            this.graphTitle = (('' + units).toUpperCase() + ' distribution in minutes');
         },
 
         setAppResources: function(appResources) {
@@ -57,7 +57,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         render: function() {
-            this.setGraphTitle(('' + this.units).toUpperCase() + ' time distribution');
+
         },
 
         getContent: function() {
@@ -78,9 +78,9 @@ var AbstractDataView = Fiber.extend(function(base) {
             var graph = '';
             graph += '<div>';
             graph += '<div>';
-            graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
-            graph += '<canvas id="' + this.viewId + '" height="450" width="450"></canvas>';
-            graph += '</div>';
+            // graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
+            graph += '<canvas id="' + this.viewId + '" height="450" width="' + window.innerWidth * 0.5 + '"></canvas>';
+            // graph += '</div>';
             graph += '</div>';
             this.graph = $(graph);
         },
@@ -106,10 +106,16 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.graphData = {
                 labels: labelsData,
                 datasets: [{
-                    label: "Distribution",
-                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    label: this.graphTitle,
+                    backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    // fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    // strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    // highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+
                     data: distributionArray
                 }]
             };
@@ -127,15 +133,25 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            this.chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
+            /*this.chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
                 barShowStroke: false,
                 scaleGridLineColor: "rgba(0,0,0,.05)",
                 showTooltips: true,
                 tooltipTemplate: this.tooltipTemplate
+            });*/
+
+            var ctx = document.getElementById(this.viewId).getContext("2d");
+            this.chart = new Chart(ctx, {
+                type: 'bar',
+                data: this.graphData,
+                options: {
+                    // barShowStroke: false,
+                    // scaleGridLineColor: "rgba(0,0,0,.05)",
+                    showTooltips: true,
+                    tooltipTemplate: this.tooltipTemplate
+                }
             });
-
             this.chart = this.chart.clear();
-
         },
 
         setupDistributionTable: function(zones, ratio) {

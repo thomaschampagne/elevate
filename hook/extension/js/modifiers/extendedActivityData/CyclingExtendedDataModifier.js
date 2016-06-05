@@ -20,7 +20,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Speed', speedUnitPerhour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData_.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1) + ' )</span>', 'displayAdvancedSpeedData');
             }
 
-            // ... 
+            // ...
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
@@ -110,7 +110,6 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                     this.dataViews.push(ascentSpeedDataView);
                 }
             }
-
         }
-    }
+    };
 });

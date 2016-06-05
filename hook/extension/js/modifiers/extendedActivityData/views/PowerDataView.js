@@ -13,6 +13,7 @@ var PowerDataView = AbstractDataView.extend(function(base) {
             base.init.call(this);
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.powerData = powerData;
 

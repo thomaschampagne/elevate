@@ -15,6 +15,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.heartRateData = heartRateData;
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.userSettings = userSettings;
 
@@ -64,14 +65,15 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
         displayGraph: function() {
 
             var labelsData = [];
-            for (var zone in this.heartRateData.hrrZones) {
+            var zone;
+            for (zone in this.heartRateData.hrrZones) {
                 var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
                 labelsData.push(label);
             }
 
 
             var hrDistributionInMinutesArray = [];
-            for (var zone in this.heartRateData.hrrZones) {
+            for (zone in this.heartRateData.hrrZones) {
                 hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
             }
 
@@ -81,7 +83,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
                     label: "Heart Rate Reserve Distribution",
                     fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
                     strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    // highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
                     highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
                     data: hrDistributionInMinutesArray
                 }]
@@ -131,5 +133,5 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             // Other
             this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
         }
-    }
+    };
 });

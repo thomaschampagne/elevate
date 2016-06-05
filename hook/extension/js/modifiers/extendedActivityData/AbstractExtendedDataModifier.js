@@ -264,7 +264,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
 
             // ...
-            var TRIMP = activityHeartRateReserve = '-';
+            var TRIMP = '-';
+            var activityHeartRateReserve = '-';
             var activityHeartRateReserveUnit = '%';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
@@ -314,15 +315,15 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
-
-            // Heart view
-            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
-                heartRateDataView.setAppResources(this.appResources_);
-                heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-                heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-                this.dataViews.push(heartRateDataView);
-            }
+            /*
+                        // Heart view
+                        if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
+                            var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
+                            heartRateDataView.setAppResources(this.appResources_);
+                            heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                            heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+                            this.dataViews.push(heartRateDataView);
+                        }*/
         },
 
         getSpeedUnitData: function() {
@@ -343,7 +344,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             }
             return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
         }
-    }
+    };
 });
 
 AbstractExtendedDataModifier.TYPE_ACTIVITY = 0;
