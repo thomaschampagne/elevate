@@ -65,6 +65,7 @@ var OPT_FILES = [
     'hook/extension/node_modules/bootstrap/dist/**/*.*',
     'hook/extension/node_modules/angular/angular.min.js',
     'hook/extension/node_modules/angular-route/angular-route.min.js',
+    'hook/extension/node_modules/angular-sanitize/angular-sanitize.min.js',
     'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
     'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
     'hook/extension/node_modules/underscore/underscore-min.js',

@@ -141,6 +141,7 @@
             "dist_last_30d": "#########"
         },
         "settings": {
+            "zone": "########",
             "common": {
                 "extendedStas_section": "########",
                 "disp_active_ratio": "########",
@@ -183,6 +184,47 @@
                 "wind_speed": "########",
                 "misc": "########",
                 "hide_premium": "########"
+            },
+            "healthSettings": {
+                "max_hrr": "########",
+                "rest_hrr": "########",
+                "cyc_func_threshold_pow": "########",
+                "your_hrr_zones": "########",
+                "save_zone": "########",
+                "add_last_zone": "########",
+                "del_last_zone": "########",
+                "reset_zone": "########",
+                "health_zone_explain": [
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########",
+                    "########"
+                ]
+            },
+            "zoneSettings": {
+                "cyc_speed": "########",
+                "run_pace": "########",
+                "cyc_power": "########",
+                "cyc_cadence": "########",
+                "run_cadence": "########",
+                "grade": "########",
+                "elevation": "########",
+                "asc_speed": "########",
+                "export_zone": "########",
+                "import_zone": "########"
             }
         }
     }
