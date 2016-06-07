@@ -141,6 +141,15 @@
             "dist_last_30d": "Distance last 30d"
         },
         "settings": {
+            "common_sec": "Common",
+            "health_sec": "Health",
+            "zone_sec": "Zones",
+            "rel_notes_sec": "Release Notes",
+            "about_sec": "About",
+            "donate_sec": "Donate",
+            "share_sec": "Share",
+            "what_next": "What's next?",
+            "report_bug": "Report",
             "zone": "Zone",
             "common": {
                 "extendedStas_section": "Activities Extended Data",

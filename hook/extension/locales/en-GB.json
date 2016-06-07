@@ -141,6 +141,15 @@
             "dist_last_30d": "#########"
         },
         "settings": {
+            "common_sec": "########",
+            "health_sec": "########",
+            "zone_sec": "########",
+            "rel_notes_sec": "########",
+            "about_sec": "########",
+            "donate_sec": "########",
+            "share_sec": "########",
+            "what_next": "########",
+            "report_bug": "########",
             "zone": "########",
             "common": {
                 "extendedStas_section": "########",
