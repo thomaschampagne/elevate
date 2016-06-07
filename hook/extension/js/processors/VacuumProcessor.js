@@ -380,6 +380,7 @@ VacuumProcessor.prototype = {
 
         $.ajax({
             url: '/stream/segments/' + segmentId,
+            dataType: 'json',
             type: 'GET',
             success: function(xhrResponseText) {
                 callback(xhrResponseText);
@@ -408,7 +409,10 @@ VacuumProcessor.prototype = {
 
         var url = location.protocol + "//www.strava.com/athletes/" + athleteId;
 
-        $.ajax(url).always(function(data) {
+        $.ajax({
+            url: url,
+            dataType: 'json'
+        }).always(function(data) {
 
             var bikeOdoArray = {};
             _.each($(data.responseText).find('div.gear>table>tbody>tr'), function(element) {
