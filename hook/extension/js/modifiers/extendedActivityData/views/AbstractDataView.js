@@ -148,7 +148,31 @@ var AbstractDataView = Fiber.extend(function(base) {
                     // barShowStroke: false,
                     // scaleGridLineColor: "rgba(0,0,0,.05)",
                     showTooltips: true,
-                    tooltipTemplate: this.tooltipTemplate
+                    // tooltipTemplate: this.tooltipTemplate
+
+                    tooltips: {
+                        custom: function(tooltip) {
+
+                            // See sample/line-customTooltips.html for examples on how to get started.
+
+                            // tooltip will be false if tooltip is not visible or should be hidden
+                            if (!tooltip) {
+                                return;
+                            }
+                            // Otherwise, tooltip will be an object with all tooltip properties like:
+
+                            // tooltip.caretSize
+                            // tooltip.caretPadding
+                            // tooltip.chart
+                            // tooltip.cornerRadius
+                            // tooltip.fillColor
+                            // tooltip.font...
+                            // tooltip.text
+                            // tooltip.x
+                            // tooltip.y
+                            // etc...
+                        }
+                    }
                 }
             });
             this.chart = this.chart.clear();
