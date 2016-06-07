@@ -190,7 +190,6 @@ var jsDependencies = [
     'modules/geo.js',
     'modules/latlong.js',
     'modules/qrcode.min.js',
-    'modules/vv.mapFlipper.js',
     'modules/jquery.appear.js',
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
