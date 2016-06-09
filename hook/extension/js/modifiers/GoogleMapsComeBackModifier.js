@@ -197,7 +197,10 @@ GoogleMapsComeBackModifier.prototype = {
 
     fetchPathFromStream: function(activityId, callback) {
         var streamPathUrl = "/activities/" + activityId + "/streams?stream_types[]=latlng";
-        $.ajax(streamPathUrl).done(function(jsonResponse) {
+        $.ajax({
+            url: streamPathUrl,
+            dataType: "json"
+        }).done(function(jsonResponse) {
             callback(jsonResponse.latlng);
         }.bind(this));
     },

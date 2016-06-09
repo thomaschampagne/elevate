@@ -209,9 +209,9 @@ app.factory('CommonSettingsService', function() {
             sectionContent: [{
                 optionKey: 'remoteLinks',
                 optionType: 'checkbox',
-                optionTitle: 'Integration of VeloViewer / FlyBy',
+                optionTitle: 'Enable veloviewer + surface + segment details remote views',
                 optionLabels: ['All'],
-                optionHtml: 'This enables VeloViewer and FlyBy remote links on activities and segments page.<br/><br/>VeloViewer is another Strava connected platform designed to analyze your activities.<br/><br/>FlyBy allows you to see riders/runners having an activity in the same time range as you.',
+                optionHtml: '<strong>This enable on activities page</strong><br /><br />VeloViewer activity shortcut & raceshape activity surface.<br /><br /><strong>And on segments pages...</strong><br /><br />VeloViewer segment shortcut & Jonathan Okeeffe segment details.',
             }],
         }, {
             sectionTitle: 'Dashboard',

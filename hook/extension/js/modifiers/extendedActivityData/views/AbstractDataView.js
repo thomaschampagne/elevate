@@ -44,10 +44,6 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.isSegmentEffortView = bool;
         },
 
-        isSegmentEffortView: function() {
-            return this.isSegmentEffortView;
-        },
-
         setIsAuthorOfViewedActivity: function(bool) {
             this.isAuthorOfViewedActivity = bool;
         },
@@ -61,7 +57,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         render: function() {
-            this.setGraphTitle((new String(this.units)).toUpperCase() + ' time distribution');
+            this.setGraphTitle(('' + this.units).toUpperCase() + ' time distribution');
         },
 
         getContent: function() {
@@ -96,13 +92,14 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             var labelsData = [];
-            for (var zone in zones) {
+            var zone;
+            for (zone in zones) {
                 var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1) + " to " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
                 labelsData.push(label);
             }
 
             var distributionArray = [];
-            for (var zone in zones) {
+            for (zone in zones) {
                 distributionArray.push((zones[zone].s / 60).toFixed(2));
             }
 
@@ -237,5 +234,5 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
         }
-    }
+    };
 });

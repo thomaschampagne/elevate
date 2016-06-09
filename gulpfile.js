@@ -47,6 +47,7 @@ var EXT_SCRIPTS = [
     'hook/extension/modules/*.js',
     'hook/extension/node_modules/chart.js/Chart.min.js',
     'hook/extension/node_modules/fiber/src/fiber.min.js',
+    'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'hook/extension/modules/*.js',
     'hook/extension/js/**/*.js'

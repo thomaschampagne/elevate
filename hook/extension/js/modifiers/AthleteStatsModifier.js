@@ -696,9 +696,13 @@ AthleteStatsModifier.prototype = {
         if (total != activitiesFromCacheObject.length) {
             requests.push($.ajax({
                 url: url + "1",
-                success: function(data) {
+                dataType: "json",
+                success: function (data) {
                     for (i = 2, max = Math.ceil(data.total / data.perPage); i <= max; i++) {
-                        requests.push($.ajax(url + i));
+                        requests.push($.ajax({
+                          url: url + i,
+                          dataType: "json",
+                        }));
                     }
                     $.when.apply(self, requests).done(function() {
                         for (i in requests) {
