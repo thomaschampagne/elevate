@@ -223,6 +223,7 @@ AthleteStatsModifier.prototype = {
                 '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3">Time</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4">Distance last year</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
+                '<li><a style="display: inline" target="_blank" href="' + self.appResources.settingsLink + '#/commonSettings?searchText=distance%20target">Setup '+(new Date()).getFullYear()+' targets here</a></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
@@ -548,7 +549,7 @@ AthleteStatsModifier.prototype = {
                     var yearIdentifier = yearData.year > currentYear ? "Target" : yearData.year;
                     var year = yearData.year,
                         id = "ascy" + year,
-                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + yearIdentifier + "</label></li>"),
+                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/> <label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + yearIdentifier + "</label></li>"),
                         liSpan = $("<span style='display: inline-block; margin-left: 10px; width: 80px; text-align: right; color: black;'></span>");
                     liYear.append(liSpan);
                     $("#athleteStatChartYears").prepend(liYear);
