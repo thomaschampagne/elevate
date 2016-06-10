@@ -285,6 +285,21 @@ app.factory('CommonSettingsService', function() {
                 optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
             }]
         }, {
+            sectionTitle:  'Year progression targets for ' + (new Date()).getFullYear(),
+            sectionContent: [{
+                optionKey: 'targetsYearRide',
+                optionType: 'integer',
+                optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
+                optionLabels: ['Cycling'],
+                optionHtml: '',
+            },{
+                optionKey: 'targetsYearRun',
+                optionType: 'integer',
+                optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
+                optionLabels: ['Running'],
+                optionHtml: '',
+            }]
+        }, {
             sectionTitle: 'Miscellaneous',
             sectionContent: [{
                 optionKey: 'hidePremiumFeatures',
