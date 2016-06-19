@@ -78,9 +78,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
         },
 
         placeSummaryPanel: function(panelAdded) {
-
-            this.makeSummaryGrid(2, 4);
-
+            
             this.insertContentSummaryGridContent();
 
             $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {

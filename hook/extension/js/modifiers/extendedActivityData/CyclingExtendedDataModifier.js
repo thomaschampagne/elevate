@@ -39,6 +39,19 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
                 this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
             }
+
+            var cadenceTimeMoving = '-';
+            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
+                cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
+                this.insertContentAtGridPosition(0, 4, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
+            }
+        },
+
+        placeSummaryPanel: function(panelAdded) {
+
+            this.makeSummaryGrid(2, 6);
+
+            base.placeSummaryPanel.call(this, panelAdded); // Super call
         },
 
         placeExtendedStatsButtonSegment: function(buttonAdded) {
@@ -118,5 +131,5 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             }
 
         }
-    }
+    };
 });
