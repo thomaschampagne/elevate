@@ -75,11 +75,19 @@ var AbstractDataView = Fiber.extend(function(base) {
                 return;
             }
 
+            var graphWidth = window.innerWidth * 0.4;
+            var screenRatio = window.innerWidth / window.innerHeight;
+
+            // Apply bigger graph width if screen over 4/3...
+            if (screenRatio - 0.1 > (4 / 3)) {
+                graphWidth = graphWidth * 1.3;
+            }
+
             var graph = '';
             graph += '<div>';
             graph += '<div>';
             // graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
-            graph += '<canvas id="' + this.viewId + '" height="450" width="' + window.innerWidth * 0.5 + '"></canvas>';
+            graph += '<canvas id="' + this.viewId + '" height="450" width="' + graphWidth + '"></canvas>';
             // graph += '</div>';
             graph += '</div>';
             this.graph = $(graph);
