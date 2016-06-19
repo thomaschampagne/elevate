@@ -107,5 +107,5 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             }
 
         }
-    }
+    };
 });

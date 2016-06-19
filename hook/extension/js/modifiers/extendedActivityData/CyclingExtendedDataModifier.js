@@ -40,10 +40,24 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
             }
 
-            var cadenceTimeMoving = '-';
-            if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
-                cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
-                this.insertContentAtGridPosition(0, 4, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
+            var weightedPower = '-';
+            if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
+                weightedPower = this.analysisData_.powerData.weightedPower.toFixed(0);
+                var labelWeightedPower = 'Weighted Avg Power';
+                if (!this.analysisData_.powerData.hasPowerMeter) {
+                    labelWeightedPower = 'Estimated ' + labelWeightedPower;
+                }
+                this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, ' w <span class="summarySubGridTitle" style="font-size: 11px;">(Dr. A. Coggan formula)</span>', 'displayAdvancedPowerData');
+            }
+
+            var avgWattsPerKg = '-';
+            if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
+                avgWattsPerKg = this.analysisData_.powerData.avgWattsPerKg.toFixed(1);
+                var labelWKg = 'Watts Per Kilograms';
+                if (!this.analysisData_.powerData.hasPowerMeter) {
+                    labelWKg = 'Estimated ' + labelWKg;
+                }
+                this.insertContentAtGridPosition(1, 4, avgWattsPerKg, labelWKg, ' w/kg', 'displayAdvancedPowerData');
             }
         },
 
