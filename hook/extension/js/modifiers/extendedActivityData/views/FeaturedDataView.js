@@ -76,7 +76,7 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
                 this.insertContentAtGridPosition(4, 0, this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0), 'Heart Rate Reserve Avg', '%', 'displayAdvancedHrData');
             }
 
-            if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
+            if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.analysisData.powerData.weightedWattsPerKg) {
                 this.insertContentAtGridPosition(5, 0, this.analysisData.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/kg', 'w/kg', 'displayAdvancedPowerData'); // Avg watt /kg
             }
 
@@ -87,5 +87,5 @@ var FeaturedDataView = AbstractDataView.extend(function(base) {
             // Remove empty case in grid. This avoid unwanted padding on feature view rendering
             this.grid.find('td:empty').remove();
         }
-    }
+    };
 });

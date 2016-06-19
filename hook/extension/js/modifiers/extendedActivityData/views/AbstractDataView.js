@@ -52,6 +52,10 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.graphTitle = title.toUpperCase();
         },
 
+        setActivityType: function (type) {
+            this.activityType = type;
+        },
+
         setAppResources: function(appResources) {
             this.appResources = appResources;
         },

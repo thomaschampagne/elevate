@@ -311,6 +311,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
                 featuredDataView.setAppResources(this.appResources_);
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                featuredDataView.setActivityType(this.activityType);
                 featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
@@ -320,6 +321,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                heartRateDataView.setActivityType(this.activityType);
                 heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(heartRateDataView);
             }

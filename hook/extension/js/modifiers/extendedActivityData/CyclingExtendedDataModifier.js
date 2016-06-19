@@ -20,7 +20,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Speed', speedUnitPerhour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData_.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1) + ' )</span>', 'displayAdvancedSpeedData');
             }
 
-            // ... 
+            // ...
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
@@ -68,6 +68,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
                 speedDataView.setAppResources(this.appResources_);
                 speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                speedDataView.setActivityType(this.activityType);
                 speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(speedDataView);
             }
@@ -76,6 +77,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setActivityType(this.activityType);
                 powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(powerDataView);
             }
@@ -84,6 +86,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
                 cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingCadenceDataView.setActivityType(this.activityType);
                 cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingCadenceDataView);
             }
@@ -92,6 +95,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingGradeDataView = new CyclingGradeDataView(this.analysisData_.gradeData, '%');
                 cyclingGradeDataView.setAppResources(this.appResources_);
                 cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingGradeDataView.setActivityType(this.activityType);
                 cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingGradeDataView);
             }
@@ -100,6 +104,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setActivityType(this.activityType);
                 elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
 
@@ -107,6 +112,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                     var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
                     ascentSpeedDataView.setAppResources(this.appResources_);
                     ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                    ascentSpeedDataView.setActivityType(this.activityType);
                     this.dataViews.push(ascentSpeedDataView);
                 }
             }
