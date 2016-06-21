@@ -29,16 +29,20 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
             // Cadence
             var medianCadence = '-';
+            var standardDeviationCadence = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 medianCadence = this.analysisData_.cadenceData.medianCadence;
-                this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', ' rpm <span class="summarySubGridTitle">(&sigma; :' + this.analysisData_.cadenceData.standardDeviationCadence + ' )</span>', 'displayCadenceData');
+                standardDeviationCadence = this.analysisData_.cadenceData.standardDeviationCadence;
             }
+            this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', (standardDeviationCadence !== '-') ? ' rpm <span class="summarySubGridTitle">(&sigma; :' + standardDeviationCadence + ' )</span>' : '', 'displayCadenceData');
 
             var cadenceTimeMoving = '-';
+            var cadencePercentageMoving = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
-                this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
+                cadencePercentageMoving = this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0);
             }
+            this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', (cadencePercentageMoving !== '-') ? ' <span class="summarySubGridTitle">(' + cadencePercentageMoving + '% of activity)</span>' : '', 'displayCadenceData');
 
             var weightedPower = '-';
             if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
