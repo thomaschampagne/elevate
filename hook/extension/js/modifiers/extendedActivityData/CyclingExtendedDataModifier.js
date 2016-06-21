@@ -56,7 +56,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
             var avgWattsPerKg = '-';
             if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
-                avgWattsPerKg = this.analysisData_.powerData.avgWattsPerKg.toFixed(1);
+                avgWattsPerKg = this.analysisData_.powerData.avgWattsPerKg.toFixed(2);
                 var labelWKg = 'Watts Per Kilograms';
                 if (!this.analysisData_.powerData.hasPowerMeter) {
                     labelWKg = 'Estimated ' + labelWKg;
