@@ -262,7 +262,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
 
             // ...
-            var TRIMP = activityHeartRateReserve = '-';
+            var TRIMP = '-';
+            var activityHeartRateReserve = '-';
             var activityHeartRateReserveUnit = '%';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
