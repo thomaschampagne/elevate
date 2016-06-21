@@ -141,6 +141,16 @@
             "dist_last_30d": "Distance last 30d"
         },
         "settings": {
+            "common_sec": "Common",
+            "health_sec": "Health",
+            "zone_sec": "Zones",
+            "rel_notes_sec": "Release Notes",
+            "about_sec": "About",
+            "donate_sec": "Donate",
+            "share_sec": "Share",
+            "what_next": "What's next?",
+            "report_bug": "Report",
+            "zone": "Zone",
             "common": {
                 "extendedStas_section": "Activities Extended Data",
                 "disp_active_ratio": "Move Ratio",
@@ -183,6 +193,47 @@
                 "wind_speed": "Wind Speed",
                 "misc": "Miscellaneous",
                 "hide_premium": "Hide Premium visuals"
+            },
+            "healthSettings": {
+                "max_hrr": "Max heartrate",
+                "rest_hrr": "Resting heartrate",
+                "cyc_func_threshold_pow": "Cycling Functional Threshold Power",
+                "your_hrr_zones": "Your Heart Rate Reserve (HRR) zones",
+                "save_zone": "Save Zones",
+                "add_last_zone": "Add a Last Zone",
+                "del_last_zone": "Del Last Zone",
+                "reset_zone": "Reset Zones",
+                "health_zone_explain": [
+                    "<h3>How to use custom Heart Rate Reserve zones?</h3><blockquote>",
+                    "<h4>Edit existing zone</h4><blockquote>",
+                    "Click into HRR fields of the zone you want to edit. A zone is always defined between 2 HRR fields.<br/>",
+                    "<br/>Hint: You can use input arrows or keyboard arrows to set the value.</blockquote>",
+                    "<h4>Add a Last HRR zone</h4><blockquote>",
+                    "Click “Add a Last Zone” button to add a new zone at the end of current zones. The previous last zone will be split twice to add the new zone.</blockquote>",
+                    "<h4>Remove HRR zone</h4><blockquote>",
+                    "Click “Del Last Zone” button to remove the zone at the end of current zones. The 2 latest zones will be merged to perform this operation.</blockquote>",
+                    "<h4>Reset HRR zones</h4><blockquote>",
+                    "Click “Reset Zones” to apply default factory zones.</blockquote></blockquote>",
+                    "<h3>What is Heart Rate Reserve?</h3><blockquote>",
+                    "Heart Rate Reserve (HRR) is the difference between your Maximum Heart Rate (Max HR) and Resting Heart Rate (Rest HR). This is basically your global heart capacity :)<br/>",
+                    "<br/>%HRR = 0% is your Rest HR<br/>%HRR = 100% is your Max HR</blockquote>",
+                    "<h3>What are Heart Rate Reserve Zones?</h3><blockquote>",
+                    "Heart Rate Reserve Zones represent a distribution of your heart efforts during an activity into zones. Each zone has a beginning and ending HRR value.</blockquote>",
+                    "<h3>Where to see HRR Zone distribution?</h3><blockquote>",
+                    "Inside a Strava activity. Of course you must have heart rate data associated to your activity.</blockquote>"
+                ]
+            },
+            "zoneSettings": {
+                "cyc_speed": "Cycling Speed",
+                "run_pace": "Running Pace",
+                "cyc_power": "Cycling Power",
+                "cyc_cadence": "Cycling Cadence",
+                "run_cadence": "Running Cadence",
+                "grade": "Grade",
+                "elevation": "Elevation",
+                "asc_speed": "Ascent speed",
+                "export_zone": "Export...",
+                "import_zone": "Import..."
             }
         }
     }
