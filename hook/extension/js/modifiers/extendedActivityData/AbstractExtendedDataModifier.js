@@ -79,8 +79,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         placeSummaryPanel: function(panelAdded) {
 
-            this.makeSummaryGrid(2, 4);
-
             this.insertContentSummaryGridContent();
 
             $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {
@@ -264,7 +262,8 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             this.insertContentAtGridPosition(0, 0, moveRatio, 'Move Ratio', '', 'displayActivityRatio');
 
             // ...
-            var TRIMP = activityHeartRateReserve = '-';
+            var TRIMP = '-';
+            var activityHeartRateReserve = '-';
             var activityHeartRateReserveUnit = '%';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
                 TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
@@ -311,6 +310,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
                 featuredDataView.setAppResources(this.appResources_);
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                featuredDataView.setActivityType(this.activityType);
                 featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
@@ -320,6 +320,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                heartRateDataView.setActivityType(this.activityType);
                 heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(heartRateDataView);
             }

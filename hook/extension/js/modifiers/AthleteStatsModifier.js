@@ -1,13 +1,14 @@
 /**
  *   AthleteStatsModifier is responsible of ...
  */
-function AthleteStatsModifier(appResources) {
+function AthleteStatsModifier(appResources, yearTargets) {
     this.appResources = appResources;
     this.cacheKey_ = 'activitiesHistoryData';
     this.distanceUnit = "km";
     this.distanceInKilometers = true;
     this.elevationUnit = "m";
     this.elevationInMeters = true;
+    this.yearTargets = yearTargets;
 }
 
 /**
@@ -21,7 +22,7 @@ AthleteStatsModifier.prototype = {
 
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
-            setTimeout(function () {
+            setTimeout(function() {
                 modify.call(self);
             }, 500);
             return;
@@ -40,7 +41,7 @@ AthleteStatsModifier.prototype = {
             progress = $("#progress-goals-v2"),
             progressThisYear = $("<div class='section'><h3>My year progressions to current month/day <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
-        var formatData = function (activities) {
+        var formatData = function(activities) {
 
             var includeVirtualRide = (StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
 
@@ -67,7 +68,7 @@ AthleteStatsModifier.prototype = {
             return formattedData;
         };
 
-        var renderTrendArrow = function (value, formatFunction) {
+        var renderTrendArrow = function(value, formatFunction) {
             if (value === undefined) {
                 return "";
             }
@@ -75,7 +76,7 @@ AthleteStatsModifier.prototype = {
             return "<span title='" + (value < 0 ? "-" : (value > 0 ? "+" : "")) + formatted + "' style='cursor: help; color:" + (value < 0 ? "red" : (value > 0 ? "green" : "black")) + "'>" + (value < 0 ? "\u25BC" : (value > 0 ? "\u25B2" : "=")) + "</span>";
         };
 
-        var processData = function (activities) {
+        var processData = function(activities) {
             var types = [],
                 years,
                 yearsList = [],
@@ -125,9 +126,9 @@ AthleteStatsModifier.prototype = {
                 yearsList = [];
                 var $table = $("<table class='athletesStatTable' id='athletesStatActivityType" + i + "' style='display: none;'><thead><tr><th>Year</th><th>Distance</th><th>Elevation</th><th>Time</th></tr></thead><tbody></tbody></table>");
 
-                years = years.sort(function (left, right) {
+                years = years.sort(function(left, right) {
                     return right.year - left.year;
-                }).forEach(function (item) {
+                }).forEach(function(item) {
                     if (!self.distanceInKilometers) {
                         item.distance = item.distance * metersTo1000thOfMileFactor;
                     }
@@ -152,15 +153,15 @@ AthleteStatsModifier.prototype = {
                     $table.find("tbody").append($(
                         "<tr class='" + (isCurrentYear ? 'currentyear' : '') + "'>" +
                         "<td><div style='white-space: nowrap;'>" + item.year + "</div><div style='white-space: nowrap;'><small>" + (isCurrentYear ? ('0' + (currentMonth + 1)).slice(-2) + "/" + ('0' + currentDay).slice(-2) : "") + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + self.distanceUnit + renderTrendArrow(distanceDifference, function (value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + self.distanceUnit + renderTrendArrow(distanceDifference, function(value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + self.distanceUnit;
-                        }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function (value) {
+                        }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + renderTrendArrow(activitiesCountDifference, function(value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + (i == 0 ? "Rides" : "Runs");
                         }) + "</small></div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + self.elevationUnit + renderTrendArrow(elevationDifference, function (value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + self.elevationUnit + renderTrendArrow(elevationDifference, function(value) {
                             return Helper.formatNumber(Math.abs(value), 0) + " " + self.elevationUnit;
                         }) + "</div></td>" +
-                        "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + renderTrendArrow(timeDifference, function (value) {
+                        "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + renderTrendArrow(timeDifference, function(value) {
                             return Helper.secondsToDHM(Math.abs(value));
                         }) + "</div></td>" +
                         "</tr>"
@@ -174,10 +175,10 @@ AthleteStatsModifier.prototype = {
             progressThisYear.find(".switches .button:visible").first().click();
         };
 
-        var init = function (activities) {
+        var init = function(activities) {
             processData(activities);
             progressThisYear.find("#athleteStatsLoading").remove();
-            progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click(function (e) {
+            progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click(function(e) {
                 e.preventDefault();
                 self.handleProgressStatsForceRefresh_();
             });
@@ -185,7 +186,7 @@ AthleteStatsModifier.prototype = {
 
             progressThisYear.find('#stravistix_yearProgress_incVirtualRides').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
 
-            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', function () {
+            progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', function() {
 
                 StorageManager.setCookie('stravistix_yearProgress_incVirtualRides', $('#stravistix_yearProgress_incVirtualRides').prop('checked'), 365);
                 self.handleProgressStatsForceRefresh_();
@@ -193,7 +194,7 @@ AthleteStatsModifier.prototype = {
             });
         };
 
-        $(progressThisYear).on("click", "a[data-activity-type]", function (e) {
+        $(progressThisYear).on("click", "a[data-activity-type]", function(e) {
             e.preventDefault();
             var $this = $(this),
                 activityType = $this.data("activity-type");
@@ -204,7 +205,7 @@ AthleteStatsModifier.prototype = {
         });
 
 
-        $(progressThisYear).on("click", "#athleteStatsShowChart a", function (e) {
+        $(progressThisYear).on("click", "#athleteStatsShowChart a", function(e) {
             e.preventDefault();
             var activityType = progressThisYear.find("a[data-activity-type].selected").data("activity-type");
             var size = [
@@ -222,6 +223,7 @@ AthleteStatsModifier.prototype = {
                 '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3">Time</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4">Distance last year</label></li>' +
                 '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
+                '<li><a style="display: inline" target="_blank" href="' + self.appResources.settingsLink + '#/commonSettings?searchText=distance%20target">Setup '+(new Date()).getFullYear()+' targets here</a></li>' +
                 '</ul>' +
                 '<div style="margin-top: 20px;">Years:</div>' +
                 '<ul id="athleteStatChartYears"></ul>' +
@@ -233,19 +235,20 @@ AthleteStatsModifier.prototype = {
                 'transitionIn': 'fade',
                 'transitionOut': 'fade'
             });
-            prepareChart(currentActivities.filter(function (activity) {
+            prepareChart(currentActivities.filter(function(activity) {
                 return activity.t == activityType;
             }));
         });
 
-        var prepareChart = function (activities) {
+        var prepareChart = function(activities) {
             var i,
                 j,
                 numberOfDays = 366,
                 max,
                 activity,
                 day,
-                currentDataType = 1, // 0 - count, 1 - distance, 2 - elevation, 3 - time
+                currentTargetType, // 0 - time, 1 - distance
+                currentDataType = 1, // 0 - count, 1 - distance, 2 - elevation, 3 - time, 4 - Distance last year, 5 - Distance last 30d
                 data = [],
                 minValue = 0,
                 maxValue = 0,
@@ -255,13 +258,13 @@ AthleteStatsModifier.prototype = {
                 currentDate = new Date(),
                 currentYear = currentDate.getFullYear(),
                 oneDayInMiliseconds = 1000 * 60 * 60 * 24,
-                dayOfYear = function (date) {
+                dayOfYear = function(date) {
                     var now = new Date(leapYear, date.getMonth(), date.getDate(), 12);
                     var diff = now - firstDayDate;
                     var day = Math.floor(diff / oneDayInMiliseconds);
                     return day;
                 },
-                createArrayOfValues = function (length, value) {
+                createArrayOfValues = function(length, value) {
                     var result = [];
                     while (length--) {
                         result.push(value || 0);
@@ -269,30 +272,30 @@ AthleteStatsModifier.prototype = {
                     return result;
                 },
                 currentDayOfYear = dayOfYear(currentDate),
-                formatValue = function (value) {
+                formatValue = function(value) {
                     switch (currentDataType) {
-                    case 1:
-                    case 4:
-                    case 5:
-                        if (!self.distanceInKilometers) {
-                            value *= metersTo1000thOfMileFactor;
-                        }
-                        return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
+                        case 1:
+                        case 4:
+                        case 5:
+                            if (!self.distanceInKilometers) {
+                                value *= metersTo1000thOfMileFactor;
+                            }
+                            return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
 
-                    case 2:
-                        if (!self.elevationInMeters) {
-                            value *= metersToFeetsFactor;
-                        }
-                        return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
+                        case 2:
+                            if (!self.elevationInMeters) {
+                                value *= metersToFeetsFactor;
+                            }
+                            return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
 
-                    case 3:
-                        return Helper.secondsToDHM(value, true);
+                        case 3:
+                            return Helper.secondsToDHM(value, true);
 
-                    default:
-                        return Helper.formatNumber(value, 0);
+                        default:
+                            return Helper.formatNumber(value, 0);
                     }
                 },
-                processData = function () {
+                processData = function() {
                     data = [];
                     for (i = 0, max = activities.length; i < max; i++) {
                         activity = activities[i];
@@ -317,21 +320,21 @@ AthleteStatsModifier.prototype = {
                         if (currentDataType < 4) {
                             for (j = day; j < numberOfDays; j++) {
                                 switch (currentDataType) {
-                                case 1:
-                                    yearlyData.values[j] += activity.di;
-                                    break;
+                                    case 1:
+                                        yearlyData.values[j] += activity.di;
+                                        break;
 
-                                case 2:
-                                    yearlyData.values[j] += activity.el;
-                                    break;
+                                    case 2:
+                                        yearlyData.values[j] += activity.el;
+                                        break;
 
-                                case 3:
-                                    yearlyData.values[j] += activity.ti;
-                                    break;
+                                    case 3:
+                                        yearlyData.values[j] += activity.ti;
+                                        break;
 
-                                default:
-                                    yearlyData.values[j] += 1;
-                                    break;
+                                    default:
+                                        yearlyData.values[j] += 1;
+                                        break;
                                 }
                             }
                         } else {
@@ -340,34 +343,34 @@ AthleteStatsModifier.prototype = {
                                     continue;
                                 }
                                 switch (currentDataType) {
-                                case 4:
-                                    if (j == day) {
-                                        data[activity.y].values[j] += activity.di;
-                                        if (activity.y < currentYear) {
+                                    case 4:
+                                        if (j == day) {
+                                            data[activity.y].values[j] += activity.di;
+                                            if (activity.y < currentYear) {
+                                                data[activity.y + 1].values[j] += activity.di;
+                                            }
+                                        } else if (j > day) {
+                                            data[activity.y].values[j] += activity.di;
+                                        } else if (activity.y < currentYear) {
                                             data[activity.y + 1].values[j] += activity.di;
                                         }
-                                    } else if (j > day) {
-                                        data[activity.y].values[j] += activity.di;
-                                    } else if (activity.y < currentYear) {
-                                        data[activity.y + 1].values[j] += activity.di;
-                                    }
-                                    break;
-                                case 5:
-                                    // Get midnight at the end of the day in question
-                                    var jDate = new Date(activity.y, 0, j + 1).getTime();
-                                    if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
-                                        data[activity.y].values[j] += activity.di;
-                                    }
-                                    if (activity.y < currentYear) {
+                                        break;
+                                    case 5:
                                         // Get midnight at the end of the day in question
-                                        jDate = new Date(activity.y + 1, 0, j + 1).getTime();
+                                        var jDate = new Date(activity.y, 0, j + 1).getTime();
                                         if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
-                                            data[activity.y + 1].values[j] += activity.di;
+                                            data[activity.y].values[j] += activity.di;
                                         }
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                        if (activity.y < currentYear) {
+                                            // Get midnight at the end of the day in question
+                                            jDate = new Date(activity.y + 1, 0, j + 1).getTime();
+                                            if (jDate >= activityTime && jDate <= activityTime + 30 * oneDayInMiliseconds) {
+                                                data[activity.y + 1].values[j] += activity.di;
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                         }
@@ -375,14 +378,75 @@ AthleteStatsModifier.prototype = {
 
                     if (data[currentYear]) {
                         data[currentYear].values = data[currentYear].values.slice(0, currentDayOfYear + 1);
+                        // #195 - Get the target for current year as per the activity type
+                        // Create data for trend line only if target is non-zero
+                        // Target is stored against new key value target and year is future year for differentiation
+                        // Query target type while at it
+                        var yearTarget = 0;
+                        switch (activities[0].t) {
+                            // Cycling
+                            case 0:
+                                yearTarget = self.yearTargets.Ride;
+                                currentTargetType = $("#ride-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
+                                break;
+                                // Running
+                            case 1:
+                                yearTarget = self.yearTargets.Run;
+                                currentTargetType = $("#run-goals").find("div[data-period=year]").find("button[data-type=distance]").hasClass("active");
+                                break;
+                        }
+                        if (yearTarget > 0) {
+                            yearTarget = Number(yearTarget);
+                            // #195 - Line plotting by data type
+                            if (currentTargetType) {
+                                // #195 - Target type is distnace
+                                // #195 - yearTarget would be absolute number. Convert to meters while setting data.values
+                                data[currentYear + 1] = {
+                                    year: currentYear + 1,
+                                    values: createArrayOfValues(2),
+                                    target: yearTarget * 1000
+                                };
+                                switch (currentDataType) {
+                                    // YTD Distance
+                                    case 1:
+                                        data[currentYear + 1].values[0] = 0;
+                                        data[currentYear + 1].values[1] = data[currentYear + 1].target;
+                                        if (!self.distanceInKilometers) {
+                                            data[currentYear + 1].values[1] /= metersTo1000thOfMileFactor;
+                                        }
+                                        break;
+                                        // 30 Day sliding distance
+                                    case 5:
+                                        var avg30DayDistance = data[currentYear + 1].target / numberOfDays * 30;
+                                        data[currentYear + 1].values[0] = avg30DayDistance;
+                                        data[currentYear + 1].values[1] = avg30DayDistance;
+                                        if (!self.distanceInKilometers) {
+                                            data[currentYear + 1].values[0] /= metersTo1000thOfMileFactor;
+                                            data[currentYear + 1].values[1] /= metersTo1000thOfMileFactor;
+                                        }
+                                        break;
+                                }
+                            } else {
+                                data[currentYear + 1] = {
+                                    year: currentYear + 1,
+                                    values: createArrayOfValues(2),
+                                    target: yearTarget * 3600
+                                };
+                                // #195 - Target type is time
+                                if (currentDataType == 3) {
+                                    data[currentYear + 1].values[0] = 0;
+                                    data[currentYear + 1].values[1] = data[currentYear + 1].target;
+                                }
+                            }
+                        }
                     }
 
-                    data.sort(function (left, right) {
+                    data.sort(function(left, right) {
                         return left.year - right.year;
                     });
 
                     maxValue = 0;
-                    data.forEach(function (item) {
+                    data.forEach(function(item) {
                         i = d3.max(item.values);
                         if (i > maxValue) {
                             maxValue = i;
@@ -413,7 +477,7 @@ AthleteStatsModifier.prototype = {
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
-                .tickFormat(function (d) {
+                .tickFormat(function(d) {
                     return formatValue(d);
                 });
 
@@ -449,10 +513,10 @@ AthleteStatsModifier.prototype = {
                 .attr("y", 6);
 
             var line = d3.svg.line()
-                .y(function (d, i) {
+                .y(function(d, i) {
                     return y(d) + margin.top;
                 })
-                .x(function (d, i) {
+                .x(function(d, i) {
                     var dateFrom = new Date(firstDayDate.getTime());
                     if (i > 0) {
                         dateFrom.setHours(23, 59, 59);
@@ -461,42 +525,81 @@ AthleteStatsModifier.prototype = {
                     return x(dateFrom) + margin.left;
                 }).interpolate("basis");
 
+            // #195 - D3 method for generation of target line
+            var targetProjection = d3.svg.line()
+                .y(function(d, i) {
+                    return y(d) + margin.top;
+                })
+                .x(function(d, i) {
+                    var dateFrom = new Date(firstDayDate.getTime());
+                    if (i > 0) {
+                        dateFrom = lastDayDate;
+                    }
+                    return x(dateFrom) + margin.left;
+                }).interpolate("linear");
+
             var color = d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
-            var generateLines = function () {
+            var generateLines = function() {
                 var i = 0;
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
-                data.forEach(function (yearData) {
+                data.forEach(function(yearData) {
+                    var yearIdentifier = yearData.year > currentYear ? "Target" : yearData.year;
                     var year = yearData.year,
                         id = "ascy" + year,
-                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/><label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + year + "</label></li>"),
+                        liYear = $("<li style='margin: 8px'><input id='" + id + "' checked type='checkbox' value='" + year + "'/> <label for='" + id + "' style='display: inline; color: " + color(i) + ";'>" + yearIdentifier + "</label></li>"),
                         liSpan = $("<span style='display: inline-block; margin-left: 10px; width: 80px; text-align: right; color: black;'></span>");
                     liYear.append(liSpan);
                     $("#athleteStatChartYears").prepend(liYear);
-                    yearData.element = trendLinesGroup.append('svg:path')
-                        .attr('d', line(yearData.values))
-                        .attr('stroke', color(i))
-                        .attr('data-year', year)
-                        .attr('class', 'trend-line');
+                    if (!yearData.target) {
+                        yearData.element = trendLinesGroup.append('svg:path')
+                            .attr('d', line(yearData.values))
+                            .attr('stroke', color(i))
+                            .attr('data-year', year)
+                            .attr('class', 'trend-line');
+                    } else {
+                        // #195 - Dashed Line to show trend for the year based on target if set
+                        if (currentTargetType) {
+                            // #195 - Target is of distance type
+                            if (currentDataType === 1 || currentDataType === 5) {
+                                yearData.element = trendLinesGroup.append('svg:path')
+                                    .attr('d', targetProjection(yearData.values))
+                                    .attr('stroke', color(i))
+                                    .attr('stroke-dasharray', '10, 10')
+                                    .attr('data-year', currentYear + 1)
+                                    .attr('class', 'trend-line');
+                            }
+                        } else if (!currentTargetType && currentDataType === 3) {
+                            // #195 - Target is of time type
+                            yearData.element = trendLinesGroup.append('svg:path')
+                                .attr('d', targetProjection(yearData.values))
+                                .attr('stroke', color(i))
+                                .attr('stroke-dasharray', '10, 10')
+                                .attr('data-year', currentYear + 1)
+                                .attr('class', 'trend-line');
+                        }
+                    }
                     i++;
                     yearData.$value = liSpan;
-                    yearData.element.classed("current", year == currentYear);
+                    if (typeof yearData.element != "undefined") {
+                        yearData.element.classed("current", year == currentYear);
+                    }
                 });
             };
             generateLines();
 
-            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function () {
+            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
                 var year = $(this).val();
-                data.filter(function (item) {
+                data.filter(function(item) {
                     return item.year == year;
-                }).forEach(function (item) {
+                }).forEach(function(item) {
                     item.element.classed("hide", !item.element.classed("hide"));
                 });
             });
 
-            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function () {
+            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function() {
                 currentDataType = +$(this).val();
                 hoverLine.classed("hide", true);
                 hoverLineText.classed("hide", true);
@@ -535,7 +638,7 @@ AthleteStatsModifier.prototype = {
             hoverLineText.classed("date", true);
             hoverLineText.classed("hide", true);
 
-            var handleMouseOverGraph = function (event) {
+            var handleMouseOverGraph = function(event) {
                 var mouseX = event.pageX - hoverLineXOffset,
                     mouseY = event.pageY - hoverLineYOffset;
 
@@ -546,11 +649,24 @@ AthleteStatsModifier.prototype = {
                     var date = x.invert(mouseX),
                         day = dayOfYear(date);
 
-                    data.forEach(function (item) {
-                        if (day < item.values.length) {
+                    data.forEach(function(item) {
+                        if (day < item.values.length && !item.target) {
                             item.$value.text(formatValue(item.values[day]));
                         } else {
                             item.$value.text("");
+                            // #195 - Handle mouse over event for trend line
+                            if (item.target) {
+                                switch (currentDataType) {
+                                    case 1:
+                                    case 3:
+                                        var showValue = (item.values[1] - item.values[0]) / numberOfDays * day;
+                                        item.$value.text(formatValue(showValue));
+                                        break;
+                                    case 5:
+                                        item.$value.text(formatValue(item.values[0]));
+                                        break;
+                                }
+                            }
                         }
                     });
 
@@ -560,7 +676,7 @@ AthleteStatsModifier.prototype = {
                 }
             };
 
-            $(container).mousemove(function (event) {
+            $(container).mousemove(function(event) {
                 handleMouseOverGraph(event);
             });
         };
@@ -581,11 +697,15 @@ AthleteStatsModifier.prototype = {
         if (total != activitiesFromCacheObject.length) {
             requests.push($.ajax({
                 url: url + "1",
+                dataType: "json",
                 success: function (data) {
                     for (i = 2, max = Math.ceil(data.total / data.perPage); i <= max; i++) {
-                        requests.push($.ajax(url + i));
+                        requests.push($.ajax({
+                          url: url + i,
+                          dataType: "json",
+                        }));
                     }
-                    $.when.apply(self, requests).done(function () {
+                    $.when.apply(self, requests).done(function() {
                         for (i in requests) {
                             var request = requests[i];
                             if (request.responseJSON.models) {

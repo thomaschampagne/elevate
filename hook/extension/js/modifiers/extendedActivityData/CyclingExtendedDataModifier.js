@@ -20,7 +20,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 this.insertContentAtGridPosition(1, 0, q3Move, '75% Quartile Speed', speedUnitPerhour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData_.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1) + ' )</span>', 'displayAdvancedSpeedData');
             }
 
-            // ... 
+            // ...
             var climbSpeed = '-';
             if (this.analysisData_.gradeData && this.userSettings_.displayAdvancedGradeData) {
                 climbSpeed = (this.analysisData_.gradeData.upFlatDownMoveData.up * speedUnitFactor).toFixed(1);
@@ -29,16 +29,47 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
 
             // Cadence
             var medianCadence = '-';
+            var standardDeviationCadence = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 medianCadence = this.analysisData_.cadenceData.medianCadence;
-                this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', ' rpm <span class="summarySubGridTitle">(&sigma; :' + this.analysisData_.cadenceData.standardDeviationCadence + ' )</span>', 'displayCadenceData');
+                standardDeviationCadence = this.analysisData_.cadenceData.standardDeviationCadence;
             }
+            this.insertContentAtGridPosition(0, 3, medianCadence, 'Median Cadence', (standardDeviationCadence !== '-') ? ' rpm <span class="summarySubGridTitle">(&sigma; :' + standardDeviationCadence + ' )</span>' : '', 'displayCadenceData');
 
             var cadenceTimeMoving = '-';
+            var cadencePercentageMoving = '-';
             if (this.analysisData_.cadenceData && this.userSettings_.displayCadenceData) {
                 cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData_.cadenceData.cadenceTimeMoving);
-                this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', ' <span class="summarySubGridTitle">(' + this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0) + '% of activity)</span>', 'displayCadenceData');
+                cadencePercentageMoving = this.analysisData_.cadenceData.cadencePercentageMoving.toFixed(0);
             }
+            this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, 'Pedaling Time', (cadencePercentageMoving !== '-') ? ' <span class="summarySubGridTitle">(' + cadencePercentageMoving + '% of activity)</span>' : '', 'displayCadenceData');
+
+            var weightedPower = '-';
+            if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
+                weightedPower = this.analysisData_.powerData.weightedPower.toFixed(0);
+                var labelWeightedPower = 'Weighted Avg Power';
+                if (!this.analysisData_.powerData.hasPowerMeter) {
+                    labelWeightedPower = 'Estimated ' + labelWeightedPower;
+                }
+                this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, ' w <span class="summarySubGridTitle" style="font-size: 11px;">(Dr. A. Coggan formula)</span>', 'displayAdvancedPowerData');
+            }
+
+            var avgWattsPerKg = '-';
+            if (this.analysisData_.powerData && this.userSettings_.displayAdvancedPowerData) {
+                avgWattsPerKg = this.analysisData_.powerData.avgWattsPerKg.toFixed(2);
+                var labelWKg = 'Watts Per Kilograms';
+                if (!this.analysisData_.powerData.hasPowerMeter) {
+                    labelWKg = 'Estimated ' + labelWKg;
+                }
+                this.insertContentAtGridPosition(1, 4, avgWattsPerKg, labelWKg, ' w/kg', 'displayAdvancedPowerData');
+            }
+        },
+
+        placeSummaryPanel: function(panelAdded) {
+
+            this.makeSummaryGrid(2, 6);
+
+            base.placeSummaryPanel.call(this, panelAdded); // Super call
         },
 
         placeExtendedStatsButtonSegment: function(buttonAdded) {
@@ -68,6 +99,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var speedDataView = new SpeedDataView(this.analysisData_.speedData, units);
                 speedDataView.setAppResources(this.appResources_);
                 speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                speedDataView.setActivityType(this.activityType);
                 speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(speedDataView);
             }
@@ -76,6 +108,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var powerDataView = new PowerDataView(this.analysisData_.powerData, 'w');
                 powerDataView.setAppResources(this.appResources_);
                 powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setActivityType(this.activityType);
                 powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(powerDataView);
             }
@@ -84,6 +117,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData_.cadenceData, 'rpm');
                 cyclingCadenceDataView.setAppResources(this.appResources_);
                 cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingCadenceDataView.setActivityType(this.activityType);
                 cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingCadenceDataView);
             }
@@ -92,6 +126,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var cyclingGradeDataView = new CyclingGradeDataView(this.analysisData_.gradeData, '%');
                 cyclingGradeDataView.setAppResources(this.appResources_);
                 cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                cyclingGradeDataView.setActivityType(this.activityType);
                 cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(cyclingGradeDataView);
             }
@@ -100,6 +135,7 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                 var elevationDataView = new ElevationDataView(this.analysisData_.elevationData, 'm');
                 elevationDataView.setAppResources(this.appResources_);
                 elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                elevationDataView.setActivityType(this.activityType);
                 elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(elevationDataView);
 
@@ -107,10 +143,11 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                     var ascentSpeedDataView = new AscentSpeedDataView(this.analysisData_.elevationData, 'Vm/h');
                     ascentSpeedDataView.setAppResources(this.appResources_);
                     ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                    ascentSpeedDataView.setActivityType(this.activityType);
                     this.dataViews.push(ascentSpeedDataView);
                 }
             }
 
         }
-    }
+    };
 });

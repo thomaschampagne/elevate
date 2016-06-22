@@ -351,9 +351,9 @@ var userSettings = {
             from: 2000,
             to: 3000
         }]
-
-
     },
+    targetsYearRide: 5000,
+    targetsYearRun: 750,
     remoteLinks: true,
     feedAutoScroll: true,
     defaultLeaderboardFilter: 'overall',
