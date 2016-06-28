@@ -58,6 +58,7 @@ StravistiX.prototype = {
         this.handleMenu_();
         this.handleRemoteLinks_();
         this.handleWindyTyModifier_();
+        this.handleReliveCCModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
@@ -320,6 +321,33 @@ StravistiX.prototype = {
 
         var windyTyModifier = new WindyTyModifier(this.activityId_, this.appResources_, this.userSettings_);
         windyTyModifier.modify();
+    },
+
+    handleReliveCCModifier_: function() {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!window.pageView) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().get('type') != "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleReliveCCModifier_()");
+
+        var reliveCCModifier = new ReliveCCModifier(this.activityId_);
+        reliveCCModifier.modify();
     },
 
 
