@@ -3,8 +3,6 @@
  */
 function ReliveCCModifier(activityId) {
     this.activityId = activityId;
-    // this.appResources = appResources;
-    // this.userSettings = userSettings;
 }
 /**
  * Define prototype
@@ -18,7 +16,7 @@ ReliveCCModifier.prototype = {
         this.htmlRemoteViewTextStyle = 'color: white;';
 
         var htmlReliveCC = "<li class='group'>";
-        htmlReliveCC += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive Ride</div>";
+        htmlReliveCC += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive Ride <sup style='color:#FC4C02; font-size:10px;'>NEW</sup></div>";
         htmlReliveCC = $(htmlReliveCC);
 
         var self = this;
