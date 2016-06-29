@@ -17,7 +17,9 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
                     option.active = userSettingsSynced[option.optionKey];
 
                     if (option.optionEnableSub) {
-                        $scope.displaySubOption(option.optionEnableSub, userSettingsSynced[option.optionKey]);
+                        _.each(option.optionEnableSub, function(subKey) {
+                            $scope.displaySubOption(subKey, userSettingsSynced[option.optionKey]);
+                        });
                     }
 
                 } else if (option.optionType === 'list') {
@@ -46,7 +48,9 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
         // Enable/disable sub option if needed
         if (option.optionEnableSub) {
             // Replace this to find option object from option.optionEnableSub
-            $scope.displaySubOption(option.optionEnableSub, option.active);
+            _.each(option.optionEnableSub, function(subKey) {
+                $scope.displaySubOption(subKey, option.active);
+            });
         }
     };
 

@@ -139,7 +139,7 @@ app.factory('CommonSettingsService', function() {
                 optionTitle: 'Revive Google Maps on activities',
                 optionLabels: ['All'],
                 optionHtml: 'Strava has discontinued Google Maps inside the web version to use "MapBox+OpenStreetMap" maps.<br/><br/>This option allows you revive Google Maps and Street view features with an orange button placed near Strava native maps.<br/><br/><strong>Note:</strong> This feature is currently working only on activity pages at the moment.',
-                optionEnableSub: 'reviveGoogleMapsLayerType'
+                optionEnableSub: ['reviveGoogleMapsLayerType']
             }, {
                 optionKey: 'reviveGoogleMapsLayerType',
                 optionType: 'list',
@@ -285,14 +285,14 @@ app.factory('CommonSettingsService', function() {
                 optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
             }]
         }, {
-            sectionTitle:  'Year progression targets for ' + (new Date()).getFullYear(),
+            sectionTitle: 'Year progression targets for ' + (new Date()).getFullYear(),
             sectionContent: [{
                 optionKey: 'targetsYearRide',
                 optionType: 'integer',
                 optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Cycling'],
                 optionHtml: '',
-            },{
+            }, {
                 optionKey: 'targetsYearRun',
                 optionType: 'integer',
                 optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
@@ -307,6 +307,22 @@ app.factory('CommonSettingsService', function() {
                 optionTitle: 'Hide Premium visuals',
                 optionLabels: ['All'],
                 optionHtml: 'This option is not intended to remove premium features from Strava!<br/><br/>The intention is just to hide them when you aware with "I don\'t want or I will not be able to pay for it"!<br/><br/>It\'s recommended to get <a href="https://www.strava.com/premium" target="_blank">Strava Premium</a> if you can. This extension will not bring premium features to you! It just adds some to enhance the experience.<br/><br/><i>(works for free account only)</i>. ',
+            }]
+        }, {
+            sectionTitle: 'Hidden features',
+            sectionContent: [{
+                optionKey: 'showHiddenFeatures',
+                optionType: 'checkbox',
+                optionTitle: 'Show hidden features',
+                optionLabels: ['All'],
+                optionEnableSub: ['displayReliveCCLink', 'displayReliveCCLink2'],
+                optionHtml: 'Show features which are hidden. Example: BETA features.',
+            }, {
+                optionKey: 'displayReliveCCLink',
+                optionType: 'checkbox',
+                optionTitle: 'Relive your rides',
+                optionLabels: ['Cycling'],
+                optionHtml: 'This will display a link in activity page to relive cycling ride. Make sure to connect your strava account to <a href="http://relive.cc" target="_blank">relive.cc</a>. <br/><br/><strong>Note:</strong> Only rides done after relive.cc registration can get a "Relive".',
             }]
         }];
     };

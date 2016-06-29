@@ -152,10 +152,10 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-              'Added cycling/running distance <strong>targets</strong> graph into year progression graph. Go to "Common Settings" and search for "Year progression targets for 2016" to setup your targets.',
-              'Added "Weighted Avg Power" field in activity summary panel',
-              'Added "Watts Per Kilograms" field in activity summary panel',
-              'Various improvements',
+                'Added cycling/running distance <strong>targets</strong> graph into year progression graph. Go to "Common Settings" and search for "Year progression targets for 2016" to setup your targets.',
+                'Added "Weighted Avg Power" field in activity summary panel',
+                'Added "Watts Per Kilograms" field in activity summary panel',
+                'Various improvements',
             ],
             fixes: [
                 'Fixed a rare case where extended stats couldn\'t open themselve',
@@ -240,7 +240,10 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, {Run: this.userSettings_.targetsYearRun, Ride: this.userSettings_.targetsYearRide});
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, {
+            Run: this.userSettings_.targetsYearRun,
+            Ride: this.userSettings_.targetsYearRide
+        });
         athleteStatsModifier.modify();
     },
 
@@ -324,6 +327,10 @@ StravistiX.prototype = {
     },
 
     handleReliveCCModifier_: function() {
+
+        if (!this.userSettings_.showHiddenFeatures || !this.userSettings_.displayReliveCCLink) {
+            return;
+        }
 
         // If we are not on a segment or activity page then return...
         if (!window.location.pathname.match(/^\/activities/)) {

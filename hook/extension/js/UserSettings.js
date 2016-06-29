@@ -389,4 +389,6 @@ var userSettings = {
     bestSplitsConfiguration: null,
     temperatureUnit: 'F',
     windUnit: 'mph',
+    showHiddenFeatures: false,
+    displayReliveCCLink: true,
 };
