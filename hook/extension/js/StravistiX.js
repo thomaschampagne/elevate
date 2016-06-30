@@ -149,7 +149,9 @@ StravistiX.prototype = {
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                'Hotfixed on Best Splits: feature is re-established.'
+            ],
             features: [
               'Added cycling/running distance <strong>targets</strong> graph into year progression graph. Go to "Common Settings" and search for "Year progression targets for 2016" to setup your targets.',
               'Added "Weighted Avg Power" field in activity summary panel',
@@ -169,11 +171,12 @@ StravistiX.prototype = {
         };
 
         var message = '';
-        message += '<div style="background: #eee; padding: 8px;">';
-        message += '<h5><strong>AT A GLANCE... </strong></h5>';
-        message += '<h5>- New year progressions targets charts for cycling/running !!</h5>';
-        message += '<h5>- New fields in activity summary panel</h5>';
-        message += '</div>';
+        // message += '<div style="background: #eee; padding: 8px;">';
+        // message += '<h5><strong>AT A GLANCE... </strong></h5>';
+        // message += '<h5>- Best splits HotFixed in 3.8.1: feature is re-established.</h5>';
+        // message += '<h5>- New year progressions targets charts for cycling/running !!</h5>';
+        // message += '<h5>- New fields in activity summary panel</h5>';
+        // message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
@@ -220,11 +223,11 @@ StravistiX.prototype = {
         }
 
         // Donate button
-        message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
-        message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
+        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += '<strong>Push this project higher !!!</strong>';
         message += '</a>';
 
-        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 30%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
+        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 25%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
     },
 
     /**
