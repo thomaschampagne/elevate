@@ -129,9 +129,9 @@ ActivityBestSplitsModifier.prototype = {
             if (pageView.contexts) {
                 if (pageView.contexts.contexts) {
                     if (pageView.contexts.contexts.map["converted-elapsed-time"]) {
-                        if (pageView.contexts.contexts.map["converted-elapsed-time"]._activityPolyline) {
-                            if (pageView.contexts.contexts.map["converted-elapsed-time"]._activityPolyline._map) {
-                                map = pageView.contexts.contexts.map["converted-elapsed-time"]._activityPolyline._map.instance;
+                        if (pageView.contexts.contexts.map["converted-elapsed-time"]) {
+                            if (pageView.contexts.contexts.map["converted-elapsed-time"]._map) {
+                                map = pageView.contexts.contexts.map["converted-elapsed-time"]._map.instance;
                             }
                         }
                     }
