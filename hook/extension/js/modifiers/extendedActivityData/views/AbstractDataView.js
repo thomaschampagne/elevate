@@ -102,7 +102,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             var labelsData = [];
             var zone;
             for (zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1) + " to " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
+                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1).replace('.0', '') + " to " + (zones[zone].to * ratio).toFixed(1).replace('.0', '')  + " " + this.units;
                 labelsData.push(label);
             }
 
