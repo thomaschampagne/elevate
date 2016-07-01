@@ -19,7 +19,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
             this.userSettings = userSettings;
 
-            this.setupDistributionGraph(this.heartRateData.hrrZones);
+            this.setupDistributionGraph();
             this.setupDistributionTable();
         },
 
@@ -57,25 +57,32 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         },
 
-        displayGraph: function() {
+        setupDistributionGraph: function() {
 
-            var labelsData = [];
-            var zone;
-            for (zone in this.heartRateData.hrrZones) {
-                var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
-                labelsData.push(label);
-            }
+          var labelsData = [];
+          var zone;
+          for (zone in this.heartRateData.hrrZones) {
+              var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
+              labelsData.push(label);
+          }
 
-            var hrDistributionInMinutesArray = [];
-            for (zone in this.heartRateData.hrrZones) {
-                hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
-            }
+          var hrDistributionInMinutesArray = [];
+          for (zone in this.heartRateData.hrrZones) {
+              hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
+          }
 
-            // Update labels
-            this.graphData.labels = labelsData;
-
-            // Graph it from Abstract
-            base.displayGraph.call(this);
+            this.graphData = {
+                labels: labelsData,
+                datasets: [{
+                    label: this.graphTitle,
+                    backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    data: hrDistributionInMinutesArray
+                }]
+            };
         },
         
         customTooltips: function(tooltip) {
