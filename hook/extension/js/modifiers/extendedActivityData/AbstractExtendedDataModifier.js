@@ -315,15 +315,15 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
-            /*
-                        // Heart view
-                        if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                            var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
-                            heartRateDataView.setAppResources(this.appResources_);
-                            heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-                            heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-                            this.dataViews.push(heartRateDataView);
-                        }*/
+
+            // Heart view
+            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
+                var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
+                heartRateDataView.setAppResources(this.appResources_);
+                heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+                this.dataViews.push(heartRateDataView);
+            }
         },
 
         getSpeedUnitData: function() {

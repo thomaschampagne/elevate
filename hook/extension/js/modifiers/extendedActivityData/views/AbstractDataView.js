@@ -84,9 +84,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             var graph = '';
             graph += '<div>';
             graph += '<div>';
-            // graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
             graph += '<canvas id="' + this.viewId + '" height="450" width="' + graphWidth + '"></canvas>';
-            // graph += '</div>';
             graph += '</div>';
             this.graph = $(graph);
         },
@@ -118,10 +116,6 @@ var AbstractDataView = Fiber.extend(function(base) {
                     borderWidth: 1,
                     hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
                     hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                    // fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                    // strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    // highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
-
                     data: distributionArray
                 }]
             };
@@ -146,24 +140,26 @@ var AbstractDataView = Fiber.extend(function(base) {
                 options: {
                     showTooltips: true,
                     tooltips: {
-                        custom: function(tooltip) {
-
-                            // tooltip will be false if tooltip is not visible or should be hidden
-                            if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
-                                return;
-                            }
-
-                            var lineValue = tooltip.body[0].lines[0];
-                            var timeInMinutes = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map(function(value) {
-                                return parseFloat(value);
-                            }));
-
-                            tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(timeInMinutes * 60);
-                        }
+                        custom: this.customTooltips
                     }
                 }
             });
             this.chart = this.chart.clear();
+        },
+
+        customTooltips: function(tooltip) {
+
+            // tooltip will be false if tooltip is not visible or should be hidden
+            if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
+                return;
+            }
+
+            var lineValue = tooltip.body[0].lines[0];
+            var timeInMinutes = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map(function(value) {
+                return parseFloat(value);
+            }));
+
+            tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(timeInMinutes * 60);
         },
 
         setupDistributionTable: function(zones, ratio) {
