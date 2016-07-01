@@ -132,7 +132,7 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, '75% Quartile HeartRate', 'bpm', 'displayAdvancedHrData');
 
             // Other
-            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(0), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
+            this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(1), 'TRaining IMPulse / Hour', '', 'displayAdvancedHrData');
         }
     };
 });

@@ -40,6 +40,14 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             }
         },
 
+        placeSummaryPanel: function(panelAdded) {
+
+            this.makeSummaryGrid(2, 3);
+
+            base.placeSummaryPanel.call(this, panelAdded); // Super call
+        },
+
+
         placeExtendedStatsButtonSegment: function(buttonAdded) {
             setTimeout(function() { // Execute at the end to make sure DOM is ready
 
@@ -99,5 +107,5 @@ var RunningExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
             }
 
         }
-    }
+    };
 });

@@ -36,7 +36,10 @@ WindyTyModifier.prototype = {
 
         var url = "/activities/" + this.activityId + "/streams?stream_types[]=latlng";
 
-        $.ajax(url).done(function(jsonResponse) {
+        $.ajax({
+            url: url,
+            dataType: 'json'
+        }).done(function(jsonResponse) {
 
             if (_.isEmpty(jsonResponse.latlng)) {
                 callback(null);
@@ -68,8 +71,6 @@ WindyTyModifier.prototype = {
 
         }.bind(this));
     },
-
-
     modifyPage_: function modifyPage_() {
 
         this.htmlWheatherStyle = 'background: #fc4c02; color: #333;';
@@ -138,7 +139,7 @@ WindyTyModifier.prototype = {
             temperatureUnitConfig;
 
         console.debug('Load wheather url: ' + url);
-        
+
         $.fancybox({
             'width': '100%',
             'height': '100%',

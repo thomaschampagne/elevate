@@ -9,5 +9,5 @@ var GenericExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
         modify: function() {
             base.modify.call(this);  // Super call
         }
-    }
+    };
 });

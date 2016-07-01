@@ -149,20 +149,21 @@ StravistiX.prototype = {
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [],
+            hotFixes: [
+                'Hotfixed on Best Splits: feature is re-established.'
+            ],
             features: [
-                'Strongly improved estimated "weighted/normalized power" for non power sensor users. Estimated weighted power is now "accurate" for "moneyless" cyclists :p.',
-                'Re-highlight best split feature. Some of the users were not aware this key feature ;)',
-                'Some various improvements',
-
+              'Added cycling/running distance <strong>targets</strong> graph into year progression graph. Go to "Common Settings" and search for "Year progression targets for 2016" to setup your targets.',
+              'Added "Weighted Avg Power" field in activity summary panel',
+              'Added "Watts Per Kilograms" field in activity summary panel',
+              'Various improvements',
             ],
             fixes: [
-                'Fixed some of display gitches segments list on cycling activity pages: columns could exceed the size of the segments list table.',
-                'Fixed "weighted/normalized power" for some users having power sensor. An element of calculation of the method specified by Andy R. Coggan was well considered but partially previously.',
+                'Fixed a rare case where extended stats couldn\'t open themselve',
             ],
             upcommingFixes: [],
             upcommingFeatures: [
-                'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
+                // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
                 'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
@@ -172,8 +173,9 @@ StravistiX.prototype = {
         var message = '';
         // message += '<div style="background: #eee; padding: 8px;">';
         // message += '<h5><strong>AT A GLANCE... </strong></h5>';
-        // message += '<h5>- New year progressions charts: "Distance last year" and "Distance last 30d".</h5>';
-        // message += '<h5>- StravistiX has now a logo. Designed by <a href="http://paulinevial.fr" target="_blank">paulinevial.fr</a></h5>';
+        // message += '<h5>- Best splits HotFixed in 3.8.1: feature is re-established.</h5>';
+        // message += '<h5>- New year progressions targets charts for cycling/running !!</h5>';
+        // message += '<h5>- New fields in activity summary panel</h5>';
         // message += '</div>';
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
@@ -221,11 +223,11 @@ StravistiX.prototype = {
         }
 
         // Donate button
-        message += '<a style="font-size: 16px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
-        message += '<strong>Donate to help this project to grow up, Thanks :)</strong>';
+        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += '<strong>Push this project higher !!!</strong>';
         message += '</a>';
 
-        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 30%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
+        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 25%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
     },
 
     /**
@@ -240,7 +242,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_);
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, {Run: this.userSettings_.targetsYearRun, Ride: this.userSettings_.targetsYearRide});
         athleteStatsModifier.modify();
     },
 

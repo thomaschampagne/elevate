@@ -79,8 +79,6 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
 
         placeSummaryPanel: function(panelAdded) {
 
-            this.makeSummaryGrid(2, 4);
-
             this.insertContentSummaryGridContent();
 
             $('.inline-stats.section').first().after(this.summaryGrid.html()).each(function() {
@@ -268,7 +266,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             var activityHeartRateReserve = '-';
             var activityHeartRateReserveUnit = '%';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
+                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(1) + ' / hour)</span>';
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
                 activityHeartRateReserveUnit = '%  <span class="summarySubGridTitle">(Max: ' + this.analysisData_.heartRateData.activityHeartRateReserveMax.toFixed(0) + '% @ ' + this.analysisData_.heartRateData.maxHeartRate + 'bpm)</span>';
             }
@@ -312,6 +310,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var featuredDataView = new FeaturedDataView(this.analysisData_, this.userSettings_, this.basicInfos);
                 featuredDataView.setAppResources(this.appResources_);
                 featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                featuredDataView.setActivityType(this.activityType);
                 featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(featuredDataView);
             }
@@ -321,6 +320,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                heartRateDataView.setActivityType(this.activityType);
                 heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
                 this.dataViews.push(heartRateDataView);
             }
