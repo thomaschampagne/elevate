@@ -30,8 +30,6 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         isSegmentEffortView: null,
 
-        tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
-
         init: function() {
 
         },
@@ -141,44 +139,26 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            /*this.chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
-                barShowStroke: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                showTooltips: true,
-                tooltipTemplate: this.tooltipTemplate
-            });*/
-
             var ctx = document.getElementById(this.viewId).getContext("2d");
             this.chart = new Chart(ctx, {
                 type: 'bar',
                 data: this.graphData,
                 options: {
-                    // barShowStroke: false,
-                    // scaleGridLineColor: "rgba(0,0,0,.05)",
                     showTooltips: true,
-                    // tooltipTemplate: this.tooltipTemplate
-
                     tooltips: {
                         custom: function(tooltip) {
 
-                            // See sample/line-customTooltips.html for examples on how to get started.
-
                             // tooltip will be false if tooltip is not visible or should be hidden
-                            if (!tooltip) {
+                            if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
                                 return;
                             }
-                            // Otherwise, tooltip will be an object with all tooltip properties like:
 
-                            // tooltip.caretSize
-                            // tooltip.caretPadding
-                            // tooltip.chart
-                            // tooltip.cornerRadius
-                            // tooltip.fillColor
-                            // tooltip.font...
-                            // tooltip.text
-                            // tooltip.x
-                            // tooltip.y
-                            // etc...
+                            var lineValue = tooltip.body[0].lines[0];
+                            var timeInMinutes = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map(function(value) {
+                                return parseFloat(value);
+                            }));
+
+                            tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(timeInMinutes * 60);
                         }
                     }
                 }
