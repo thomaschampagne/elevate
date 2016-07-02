@@ -110,46 +110,154 @@ var userSettings = {
         }],
         power: [{
             from: 0,
+            to: 25
+        }, {
+            from: 25,
             to: 50
         }, {
             from: 50,
+            to: 75
+        }, {
+            from: 75,
             to: 100
         }, {
             from: 100,
+            to: 125
+        }, {
+            from: 125,
             to: 150
         }, {
             from: 150,
+            to: 175
+        }, {
+            from: 175,
             to: 200
         }, {
             from: 200,
+            to: 225
+        }, {
+            from: 225,
             to: 250
         }, {
             from: 250,
+            to: 275
+        }, {
+            from: 275,
             to: 300
         }, {
             from: 300,
+            to: 325
+        }, {
+            from: 325,
             to: 350
         }, {
             from: 350,
+            to: 375
+        }, {
+            from: 375,
             to: 400
         }, {
             from: 400,
+            to: 425
+        }, {
+            from: 425,
             to: 450
         }, {
             from: 450,
+            to: 475
+        }, {
+            from: 475,
             to: 500
         }, {
             from: 500,
+            to: 525
+        }, {
+            from: 525,
             to: 550
         }, {
             from: 550,
+            to: 575
+        }, {
+            from: 575,
             to: 600
         }, {
             from: 600,
+            to: 625
+        }, {
+            from: 625,
+            to: 650
+        }, {
+            from: 650,
+            to: 675
+        }, {
+            from: 675,
             to: 700
         }, {
             from: 700,
+            to: 725
+        }, {
+            from: 725,
+            to: 750
+        }, {
+            from: 750,
+            to: 775
+        }, {
+            from: 775,
+            to: 800
+        }, {
+            from: 800,
+            to: 825
+        }, {
+            from: 825,
+            to: 850
+        }, {
+            from: 850,
+            to: 875
+        }, {
+            from: 875,
+            to: 900
+        }, {
+            from: 900,
+            to: 925
+        }, {
+            from: 925,
+            to: 950
+        }, {
+            from: 950,
+            to: 975
+        }, {
+            from: 975,
+            to: 1000
+        }, {
+            from: 1000,
+            to: 1025
+        }, {
+            from: 1025,
+            to: 1050
+        }, {
+            from: 1050,
+            to: 1075
+        }, {
+            from: 1075,
             to: 1100
+        }, {
+            from: 1100,
+            to: 1125
+        }, {
+            from: 1125,
+            to: 1150
+        }, {
+            from: 1150,
+            to: 1175
+        }, {
+            from: 1175,
+            to: 1200
+        }, {
+            from: 1200,
+            to: 1225
+        }, {
+            from: 1225,
+            to: 1250
         }],
         cyclingCadence: [{
             from: 0,
