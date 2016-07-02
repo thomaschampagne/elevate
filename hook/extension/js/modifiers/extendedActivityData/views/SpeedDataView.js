@@ -61,9 +61,10 @@ var SpeedDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(2, 0, (this.speedData.upperQuartileSpeed * speedUnitFactor).toFixed(1), '75% Quartile Speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
             this.insertContentAtGridPosition(0, 1, (this.speedData.standardDeviationSpeed * speedUnitFactor).toFixed(1), 'Std Deviation &sigma;', speedUnitPerhour, 'displayAdvancedSpeedData');
+            this.insertContentAtGridPosition(1, 1, (this.speedData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Average speed', speedUnitPerhour, 'displayAdvancedSpeedData');
 
-            if (this.isSegmentEffortView) {
-                this.insertContentAtGridPosition(1, 1, (this.speedData.genuineAvgSpeed * speedUnitFactor).toFixed(1), 'Average speed', speedUnitPerhour, 'displayAdvancedSpeedData');
+            if (!this.isSegmentEffortView) {
+                this.insertContentAtGridPosition(2, 1, (this.speedData.totalAvgSpeed * speedUnitFactor).toFixed(1), 'Full time Avg speed', speedUnitPerhour, 'displayAdvancedSpeedData');
             }
         }
     };
