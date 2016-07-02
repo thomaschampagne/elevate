@@ -11,6 +11,7 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.setViewId('CyclingCadenceDataView_p8a5d4gl56ds4');
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             base.init.call(this, cadenceData);
         },
@@ -20,7 +21,7 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.viewTitle += '<img src="' + this.appResources.circleNotchIcon + '" style="vertical-align: baseline; height:20px;"/> CADENCE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=cyclingCadence" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>';
 
             base.render.call(this);
-                        
+
             // Creates a grid
             this.makeGrid(3, 3); // (col, row)
 
@@ -45,5 +46,5 @@ var CyclingCadenceDataView = AbstractCadenceDataView.extend(function(base) {
 
             this.insertContentAtGridPosition(0, 2, this.cadenceData.standardDeviationCadence, 'Std Deviation &sigma;', 'rpm', 'displayCadenceData');
         }
-    }
+    };
 });

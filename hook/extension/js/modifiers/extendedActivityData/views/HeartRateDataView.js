@@ -15,16 +15,12 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
             this.heartRateData = heartRateData;
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.userSettings = userSettings;
 
+            this.setupDistributionGraph();
             this.setupDistributionTable();
-
-            this.tooltipTemplate = "<%if (label){";
-            this.tooltipTemplate += "var hr = label.split(' ')[1].replace('%','').split('-');";
-            this.tooltipTemplate += "var finalLabel = label + ' @ ' + Helper.heartrateFromHeartRateReserve(hr[0], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + '-' + Helper.heartrateFromHeartRateReserve(hr[1], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + 'bpm';";
-            this.tooltipTemplate += "%><%=finalLabel%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>";
-
         },
 
         setupDistributionTable: function() {
@@ -61,34 +57,48 @@ var HeartRateDataView = AbstractDataView.extend(function(base) {
 
         },
 
-        displayGraph: function() {
+        setupDistributionGraph: function() {
 
-            var labelsData = [];
-            for (var zone in this.heartRateData.hrrZones) {
-                var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
-                labelsData.push(label);
-            }
+          var labelsData = [];
+          var zone;
+          for (zone in this.heartRateData.hrrZones) {
+              var label = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
+              labelsData.push(label);
+          }
 
-
-            var hrDistributionInMinutesArray = [];
-            for (var zone in this.heartRateData.hrrZones) {
-                hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
-            }
+          var hrDistributionInMinutesArray = [];
+          for (zone in this.heartRateData.hrrZones) {
+              hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
+          }
 
             this.graphData = {
                 labels: labelsData,
                 datasets: [{
-                    label: "Heart Rate Reserve Distribution",
-                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    label: this.graphTitle,
+                    backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
                     data: hrDistributionInMinutesArray
                 }]
             };
+        },
+        
+        customTooltips: function(tooltip) {
 
-            // Graph it from Abstract
-            base.displayGraph.call(this);
+            // tooltip will be false if tooltip is not visible or should be hidden
+            if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
+                return;
+            }
+
+            var lineValue = tooltip.body[0].lines[0];
+            var timeInMinutes = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map(function(value) {
+                return parseFloat(value);
+            }));
+
+            var hr = tooltip.title[0].split(' ')[1].replace('%','').split('-');
+            tooltip.body[0].lines[0] = Helper.heartrateFromHeartRateReserve(hr[0], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + ' - ' + Helper.heartrateFromHeartRateReserve(hr[1], stravistiX.userSettings_.userMaxHr, stravistiX.userSettings_.userRestHr) + ' bpm held during ' + Helper.secondsToHHMMSS(timeInMinutes * 60);
         },
 
         render: function() {

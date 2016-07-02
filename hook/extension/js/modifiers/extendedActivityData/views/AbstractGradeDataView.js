@@ -10,7 +10,7 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
 
             base.init.call(this);
 
-            this.units = units;
+            this.units = units; this.setGraphTitleFromUnits(this.units);
 
             this.gradeData = gradeData;
 
@@ -66,9 +66,9 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
             var distanceDown = (this.gradeData.upFlatDownDistanceData.down * speedUnitFactor).toFixed(1);
 
 
-            this.insertContentAtGridPosition(0, 5, ((distanceUp != 0) ? distanceUp : '-'), 'Climbing distance', distanceUnits, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(1, 5, ((distanceFlat != 0) ? distanceFlat : '-'), 'Flat distance', distanceUnits, 'displayAdvancedGradeData');
-            this.insertContentAtGridPosition(2, 5, ((distanceDown != 0) ? distanceDown : '-'), 'Downhill distance', distanceUnits, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(0, 5, ((distanceUp !== 0) ? distanceUp : '-'), 'Climbing distance', distanceUnits, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(1, 5, ((distanceFlat !== 0) ? distanceFlat : '-'), 'Flat distance', distanceUnits, 'displayAdvancedGradeData');
+            this.insertContentAtGridPosition(2, 5, ((distanceDown !== 0) ? distanceDown : '-'), 'Downhill distance', distanceUnits, 'displayAdvancedGradeData');
         }
-    }
+    };
 });
