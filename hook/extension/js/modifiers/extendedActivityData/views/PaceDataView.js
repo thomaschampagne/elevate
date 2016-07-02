@@ -79,7 +79,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div>';
+            table += '<div style="height:500px; overflow:auto;">';
             table += '<table class="distributionTable">';
 
             // Generate table header
