@@ -1,6 +1,6 @@
 app.directive('healthCustomZones', ['NotifierService', 'ChromeStorageService', function(NotifierService, ChromeStorageService) {
 
-    var maxHrZonesCount = 10;
+    var maxHrZonesCount = 50;
     var minHrZonesCount = 3;
 
     var linkFunction = function($scope, element, attrs) {};
