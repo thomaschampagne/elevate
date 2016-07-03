@@ -9,6 +9,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.setViewId('RunningCadenceDataView_dhgfj56ds4');
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.userSettings = userSettings;
 
@@ -22,7 +23,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
                 cadenceDataClone.medianCadence *= 2;
                 cadenceDataClone.upperQuartileCadence *= 2;
 
-                for (zone in cadenceDataClone.cadenceZones) {
+                for (var zone in cadenceDataClone.cadenceZones) {
                     cadenceDataClone.cadenceZones[zone].from *= 2;
                     cadenceDataClone.cadenceZones[zone].to *= 2;
                 }
@@ -64,7 +65,7 @@ var RunningCadenceDataView = AbstractCadenceDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 1, this.cadenceData.medianCadence, '50% Quartile Cadence', this.units, 'displayCadenceData');
             this.insertContentAtGridPosition(2, 1, this.cadenceData.upperQuartileCadence, '75% Quartile Cadence', this.units, 'displayCadenceData');
 
-            // this.insertContentAtGridPosition(0, 1, this.cadenceData.crankRevolutions.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING       
+            // this.insertContentAtGridPosition(0, 1, this.cadenceData.crankRevolutions.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING
         }
-    }
+    };
 });

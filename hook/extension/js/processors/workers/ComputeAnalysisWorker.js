@@ -348,6 +348,7 @@ function ComputeAnalysisWorker() {
                         elapsedTime: elapsedSeconds,
                         speed: {
                             'genuineAvgSpeed': genuineAvgSpeed,
+                            'totalAvgSpeed': genuineAvgSpeed * this.moveRatio_(genuineAvgSpeedSumCount, elapsedSeconds),
                             'avgPace': parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
                             'lowerQuartileSpeed': percentiles[0],
                             'medianSpeed': percentiles[1],
