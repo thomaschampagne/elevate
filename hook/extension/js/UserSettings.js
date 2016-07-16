@@ -6,22 +6,46 @@ var userSettings = {
     userRestHr: 65,
     userFTP: null,
     userHrrZones: [{
+        fromHrr: 10,
+        toHrr: 30,
+    }, {
         fromHrr: 30,
+        toHrr: 40,
+    }, {
+        fromHrr: 40,
         toHrr: 50,
     }, {
         fromHrr: 50,
+        toHrr: 55,
+    }, {
+        fromHrr: 55,
         toHrr: 60,
     }, {
         fromHrr: 60,
+        toHrr: 65,
+    }, {
+        fromHrr: 65,
         toHrr: 70,
     }, {
         fromHrr: 70,
+        toHrr: 75,
+    }, {
+        fromHrr: 75,
         toHrr: 80,
     }, {
         fromHrr: 80,
+        toHrr: 85,
+    }, {
+        fromHrr: 85,
         toHrr: 90,
     }, {
         fromHrr: 90,
+        toHrr: 95
+    }, {
+        fromHrr: 95,
+        toHrr: 100
+    }, {
+        fromHrr: 100,
         toHrr: 110
     }],
     zones: {

@@ -11,7 +11,7 @@ app.directive('healthCustomZones', ['NotifierService', 'ChromeStorageService', f
 
             if ($scope.hrZones.length >= maxHrZonesCount) {
 
-                NotifierService('Oups!', 'You can\'t add more than 10 heart rate zones...');
+                NotifierService('Oups!', 'You can\'t add more than 50 heart rate zones...');
 
             } else {
 
