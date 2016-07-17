@@ -749,9 +749,12 @@ var userSettings = {
             to: -1
         }, {
             from: -1,
-            to: 0
+            to: -0.5
         }, {
-            from: 0,
+            from: -0.5,
+            to: 0.5
+        }, {
+            from: 0.5,
             to: 1
         }, {
             from: 1,
