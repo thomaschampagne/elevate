@@ -266,7 +266,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             var activityHeartRateReserve = '-';
             var activityHeartRateReserveUnit = '%';
             if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
-                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(0) + ' / hour)</span>';
+                TRIMP = this.analysisData_.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData_.heartRateData.TRIMPPerHour.toFixed(1) + ' / hour)</span>';
                 activityHeartRateReserve = this.analysisData_.heartRateData.activityHeartRateReserve.toFixed(0);
                 activityHeartRateReserveUnit = '%  <span class="summarySubGridTitle">(Max: ' + this.analysisData_.heartRateData.activityHeartRateReserveMax.toFixed(0) + '% @ ' + this.analysisData_.heartRateData.maxHeartRate + 'bpm)</span>';
             }
@@ -344,7 +344,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             }
             return (speed === 0) ? 'infinite' : parseInt((1 / speed) * 60 * 60);
         }
-    }
+    };
 });
 
 AbstractExtendedDataModifier.TYPE_ACTIVITY = 0;

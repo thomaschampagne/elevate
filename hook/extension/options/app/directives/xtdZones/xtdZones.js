@@ -1,6 +1,6 @@
 app.directive('xtdZones', ['NotifierService', 'ChromeStorageService', function(NotifierService, ChromeStorageService) {
 
-    var maxZonesCount = 20;
+    var maxZonesCount = 50;
     var minZonesCount = 3;
 
     var linkFunction = function($scope, element, attrs) {};

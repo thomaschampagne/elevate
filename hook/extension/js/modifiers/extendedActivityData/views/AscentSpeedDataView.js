@@ -12,7 +12,7 @@ var AscentSpeedDataView = AbstractDataView.extend(function(base) {
 
             base.init.call(this);
 
-            this.units = units;
+            this.units = units; this.setGraphTitleFromUnits(this.units);
 
             this.elevationData = elevationData;
 
@@ -59,5 +59,5 @@ var AscentSpeedDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
 
         }
-    }
+    };
 });

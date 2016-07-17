@@ -13,6 +13,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             base.init.call(this);
 
             this.units = units;
+            this.setGraphTitleFromUnits(this.units);
 
             this.paceData = paceData;
 
@@ -59,7 +60,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS((this.paceData.lowerQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '25% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS((this.paceData.medianPace / speedUnitFactor).toFixed(0)).replace('00:', ''), '50% Quartile Pace', this.units, 'displayAdvancedSpeedData');
             this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS((this.paceData.upperQuartilePace / speedUnitFactor).toFixed(0)).replace('00:', ''), '75% Quartile Pace', this.units, 'displayAdvancedSpeedData');
-            
+
             if (this.isSegmentEffortView) {
                 this.insertContentAtGridPosition(0, 1, paceTimePerDistance, 'Average pace', '/' + distanceUnits, 'displayAdvancedSpeedData');
             }
@@ -78,7 +79,7 @@ var PaceDataView = AbstractDataView.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div>';
+            table += '<div style="height:500px; overflow:auto;">';
             table += '<table class="distributionTable">';
 
             // Generate table header
@@ -118,27 +119,31 @@ var PaceDataView = AbstractDataView.extend(function(base) {
             }
 
             var labelsData = [];
-            for (var zone in zones) {
+            var zone;
+            for (zone in zones) {
                 var from = (zones[zone].from === 'infinite') ? 'Infinite' : Helper.secondsToHHMMSS((zones[zone].from * ratio).toFixed(0));
                 var label = "Z" + (parseInt(zone) + 1) + ": " + from + " - " + Helper.secondsToHHMMSS((zones[zone].to * ratio).toFixed(0)) + " " + this.units;
                 labelsData.push(label);
             }
 
             var distributionArray = [];
-            for (var zone in zones) {
+            for (zone in zones) {
                 distributionArray.push((zones[zone].s / 60).toFixed(2));
             }
 
+            // Update labels
             this.graphData = {
                 labels: labelsData,
                 datasets: [{
-                    label: "Distribution",
-                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    label: this.graphTitle,
+                    backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
                     data: distributionArray
                 }]
             };
         }
-    }
+    };
 });

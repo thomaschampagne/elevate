@@ -147,7 +147,6 @@ var CyclingExtendedDataModifier = AbstractExtendedDataModifier.extend(function(b
                     this.dataViews.push(ascentSpeedDataView);
                 }
             }
-
         }
     };
 });

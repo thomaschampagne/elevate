@@ -30,8 +30,6 @@ var AbstractDataView = Fiber.extend(function(base) {
 
         isSegmentEffortView: null,
 
-        tooltipTemplate: "<%if (label){%><%=label%> during <%}%><%= Helper.secondsToHHMMSS(value * 60) %>",
-
         init: function() {
 
         },
@@ -48,8 +46,8 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.isAuthorOfViewedActivity = bool;
         },
 
-        setGraphTitle: function(title) {
-            this.graphTitle = title.toUpperCase();
+        setGraphTitleFromUnits: function(units) {
+            this.graphTitle = (('' + units).toUpperCase() + ' distribution in minutes');
         },
 
         setActivityType: function (type) {
@@ -61,7 +59,7 @@ var AbstractDataView = Fiber.extend(function(base) {
         },
 
         render: function() {
-            this.setGraphTitle(('' + this.units).toUpperCase() + ' time distribution');
+
         },
 
         getContent: function() {
@@ -79,12 +77,18 @@ var AbstractDataView = Fiber.extend(function(base) {
                 return;
             }
 
+            var graphWidth = window.innerWidth * 0.4;
+            var screenRatio = window.innerWidth / window.innerHeight;
+
+            // Apply bigger graph width if screen over 4/3...
+            if (screenRatio - 0.1 > (4 / 3)) {
+                graphWidth = graphWidth * 1.3;
+            }
+
             var graph = '';
             graph += '<div>';
             graph += '<div>';
-            graph += '<div class="distributionGraphTitle">' + this.graphTitle + '</div>';
-            graph += '<canvas id="' + this.viewId + '" height="450" width="450"></canvas>';
-            graph += '</div>';
+            graph += '<canvas id="' + this.viewId + '" height="450" width="' + graphWidth + '"></canvas>';
             graph += '</div>';
             this.graph = $(graph);
         },
@@ -98,7 +102,7 @@ var AbstractDataView = Fiber.extend(function(base) {
             var labelsData = [];
             var zone;
             for (zone in zones) {
-                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1) + " to " + (zones[zone].to * ratio).toFixed(1) + " " + this.units;
+                var label = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1).replace('.0', '') + " to " + (zones[zone].to * ratio).toFixed(1).replace('.0', '')  + " " + this.units;
                 labelsData.push(label);
             }
 
@@ -110,10 +114,12 @@ var AbstractDataView = Fiber.extend(function(base) {
             this.graphData = {
                 labels: labelsData,
                 datasets: [{
-                    label: "Distribution",
-                    fillColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                    strokeColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                    highlightFill: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.75)",
+                    label: this.graphTitle,
+                    backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
                     data: distributionArray
                 }]
             };
@@ -131,15 +137,33 @@ var AbstractDataView = Fiber.extend(function(base) {
             }
 
             // Generating the chart
-            this.chart = new Chart(document.getElementById(this.viewId).getContext("2d")).Bar(this.graphData, {
-                barShowStroke: false,
-                scaleGridLineColor: "rgba(0,0,0,.05)",
-                showTooltips: true,
-                tooltipTemplate: this.tooltipTemplate
+            var ctx = document.getElementById(this.viewId).getContext("2d");
+            this.chart = new Chart(ctx, {
+                type: 'bar',
+                data: this.graphData,
+                options: {
+                    showTooltips: true,
+                    tooltips: {
+                        custom: this.customTooltips
+                    }
+                }
             });
-
             this.chart = this.chart.clear();
+        },
 
+        customTooltips: function(tooltip) {
+
+            // tooltip will be false if tooltip is not visible or should be hidden
+            if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
+                return;
+            }
+
+            var lineValue = tooltip.body[0].lines[0];
+            var timeInMinutes = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map(function(value) {
+                return parseFloat(value);
+            }));
+
+            tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(timeInMinutes * 60);
         },
 
         setupDistributionTable: function(zones, ratio) {
@@ -155,7 +179,7 @@ var AbstractDataView = Fiber.extend(function(base) {
 
             var table = '';
             table += '<div>';
-            table += '<div>';
+            table += '<div style="height:500px; overflow:auto;">';
             table += '<table class="distributionTable">';
 
             // Generate table header

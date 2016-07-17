@@ -25,5 +25,5 @@ var CyclingGradeDataView = AbstractGradeDataView.extend(function(base) {
             this.insertContentAtGridPosition(1, 4, _.isNaN(avgFlatSpeed) || avgFlatSpeed == 'NaN' ? '-' : avgFlatSpeed, 'Avg flat speed', speedUnitPerhour, 'displayAdvancedGradeData');
             this.insertContentAtGridPosition(2, 4, _.isNaN(avgDownhillSpeed) || avgDownhillSpeed == 'NaN' ? '-' : avgDownhillSpeed, 'Avg downhill speed', speedUnitPerhour, 'displayAdvancedGradeData');
         }
-    }
+    };
 });

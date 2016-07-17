@@ -149,18 +149,13 @@ StravistiX.prototype = {
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [
-                'Hotfixed on Best Splits: feature is re-established.'
-            ],
+            hotFixes: [],
             features: [
-              'Added cycling/running distance <strong>targets</strong> graph into year progression graph. Go to "Common Settings" and search for "Year progression targets for 2016" to setup your targets.',
-              'Added "Weighted Avg Power" field in activity summary panel',
-              'Added "Watts Per Kilograms" field in activity summary panel',
-              'Various improvements',
+                'Added up to 50 zones in zones settings for each data type: speed, pace, cadence, heartrate, power, grade, ...',
+                'Added full time average speed based on elapsed time.',
+                'Extended stats charts refresh ! Migrated to "Chart.js 2.0"'
             ],
-            fixes: [
-                'Fixed a rare case where extended stats couldn\'t open themselve',
-            ],
+            fixes: [],
             upcommingFixes: [],
             upcommingFeatures: [
                 // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
@@ -242,7 +237,10 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleAthletesStats()");
 
-        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, {Run: this.userSettings_.targetsYearRun, Ride: this.userSettings_.targetsYearRide});
+        var athleteStatsModifier = new AthleteStatsModifier(this.appResources_, {
+            Run: this.userSettings_.targetsYearRun,
+            Ride: this.userSettings_.targetsYearRide
+        });
         athleteStatsModifier.modify();
     },
 
