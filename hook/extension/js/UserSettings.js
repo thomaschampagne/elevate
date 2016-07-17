@@ -54,12 +54,36 @@ var userSettings = {
             to: 5
         }, {
             from: 5,
+            to: 6
+        }, {
+            from: 6,
+            to: 7
+        }, {
+            from: 7,
+            to: 8
+        }, {
+            from: 8,
+            to: 9
+        }, {
+            from: 9,
             to: 10
         }, {
             from: 10,
-            to: 15
+            to: 11
         }, {
-            from: 15,
+            from: 11,
+            to: 12
+        }, {
+            from: 12,
+            to: 14
+        }, {
+            from: 14,
+            to: 16
+        }, {
+            from: 16,
+            to: 18
+        }, {
+            from: 18,
             to: 20
         }, {
             from: 20,
@@ -749,9 +773,12 @@ var userSettings = {
             to: -1
         }, {
             from: -1,
-            to: 0
+            to: -0.5
         }, {
-            from: 0,
+            from: -0.5,
+            to: 0.5
+        }, {
+            from: 0.5,
             to: 1
         }, {
             from: 1,
