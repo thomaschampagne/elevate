@@ -31,7 +31,7 @@ ActivitiesSummaryModifier.prototype = {
                 var result = time / distance;
                 var minutes = Math.floor(result);
                 var seconds = (result - minutes) * 60;
-                return minutes + ":" + (seconds < 10 ? "0" : "") + Helper.formatNumber(seconds, 0);
+                return minutes + ":" + ("00" + Helper.formatNumber(seconds, 0)).slice(-2);
             } else {
                 time /= 60;
                 return Helper.formatNumber(distance / time);
