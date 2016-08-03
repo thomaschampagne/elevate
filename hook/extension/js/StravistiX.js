@@ -155,7 +155,7 @@ StravistiX.prototype = {
                 'Added full time average speed based on elapsed time.',
                 'Extended stats charts refresh ! Migrated to "Chart.js 2.0"'
             ],
-            fixes: [],
+            fixes: ['Fix pace display glitch in athlete summary'],
             upcommingFixes: [],
             upcommingFeatures: [
                 // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
