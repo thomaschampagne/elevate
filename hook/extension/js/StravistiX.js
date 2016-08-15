@@ -326,7 +326,7 @@ StravistiX.prototype = {
 
     handleReliveCCModifier_: function() {
 
-        if (!this.userSettings_.showHiddenFeatures || !this.userSettings_.displayReliveCCLink) {
+        if (!this.userSettings_.showHiddenBetaFeatures || !this.userSettings_.displayReliveCCLink) {
             return;
         }
 

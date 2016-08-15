@@ -309,11 +309,11 @@ app.factory('CommonSettingsService', function() {
                 optionHtml: 'This option is not intended to remove premium features from Strava!<br/><br/>The intention is just to hide them when you aware with "I don\'t want or I will not be able to pay for it"!<br/><br/>It\'s recommended to get <a href="https://www.strava.com/premium" target="_blank">Strava Premium</a> if you can. This extension will not bring premium features to you! It just adds some to enhance the experience.<br/><br/><i>(works for free account only)</i>. ',
             }]
         }, {
-            sectionTitle: 'Hidden features',
+            sectionTitle: 'Hidden/Beta features',
             sectionContent: [{
-                optionKey: 'showHiddenFeatures',
+                optionKey: 'showHiddenBetaFeatures',
                 optionType: 'checkbox',
-                optionTitle: 'Show hidden features',
+                optionTitle: 'Enable Hidden/Beta features',
                 optionLabels: ['All'],
                 optionEnableSub: ['displayReliveCCLink', 'displayReliveCCLink2'],
                 optionHtml: 'Show features which are hidden. Example: BETA features.',
