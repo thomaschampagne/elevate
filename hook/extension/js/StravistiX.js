@@ -58,6 +58,7 @@ StravistiX.prototype = {
         this.handleMenu_();
         this.handleRemoteLinks_();
         this.handleWindyTyModifier_();
+        this.handleReliveCCModifier_();
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
@@ -151,11 +152,10 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Added up to 50 zones in zones settings for each data type: speed, pace, cadence, heartrate, power, grade, ...',
-                'Added full time average speed based on elapsed time.',
-                'Extended stats charts refresh ! Migrated to "Chart.js 2.0"'
+              'Added Hidden/Beta feature section.',
+              'Added integration of <a href="https://www.relive.cc/" target="_blank">Relive.cc</a> as Hidden/Beta feature (must be enabled in settings...). Make sure to register @<a href="https://www.relive.cc/" target="_blank">Relive.cc</a> to get your relives on future rides.'
             ],
-            fixes: ['Fix pace display glitch in athlete summary'],
+            fixes: [],
             upcommingFixes: [],
             upcommingFeatures: [
                 // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
@@ -323,6 +323,37 @@ StravistiX.prototype = {
         windyTyModifier.modify();
     },
 
+    handleReliveCCModifier_: function() {
+
+        if (!this.userSettings_.showHiddenBetaFeatures || !this.userSettings_.displayReliveCCLink) {
+            return;
+        }
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!window.pageView) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().get('type') != "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleReliveCCModifier_()");
+
+        var reliveCCModifier = new ReliveCCModifier(this.activityId_);
+        reliveCCModifier.modify();
+    },
+
 
     /**
      *
@@ -345,15 +376,14 @@ StravistiX.prototype = {
     handleDefaultLeaderboardFilter_: function() {
 
         // If we are not on a segment or activity page then return...
-        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+        if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
 
         // Kick out if we are not on SegmentLeaderboardView
-        try {
-            eval('Strava.Labs.Activities.SegmentLeaderboardView');
-        } catch (err) {
-            if (env.debugMode) console.log('Kick out no Strava.Labs.Activities.SegmentLeaderboardView available');
+        var view = Strava.Labs.Activities.SegmentLeaderboardView;
+
+        if (!view) {
             return;
         }
 
