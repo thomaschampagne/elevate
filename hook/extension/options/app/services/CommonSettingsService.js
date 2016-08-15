@@ -165,15 +165,6 @@ app.factory('CommonSettingsService', function() {
                 optionTitle: 'Enable best splits into your cycling activities',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This option allows to enable best splits into your cycling activities.',
-            }]
-        }, {
-            sectionTitle: 'Segments viewing options',
-            sectionContent: [{
-                optionKey: 'displaySegmentRankPercentage',
-                optionType: 'checkbox',
-                optionTitle: 'Segment Rank %',
-                optionLabels: ['All'],
-                optionHtml: 'Add your segment rank percentage on segment page. <br /><br /><img src="img/displaySegmentRankPercentage.png"/>',
             }, {
                 optionKey: 'defaultLeaderboardFilter',
                 optionType: 'list',
@@ -196,6 +187,15 @@ app.factory('CommonSettingsService', function() {
                 }],
                 optionTitle: 'Default Leaderboard Filter',
                 optionHtml: 'Choose your default leaderboard filter inside related segments pages. Select filter among:<br /><br />&diams; Overall<br />&diams; Men<br />&diams; Women<br />&diams; Your following/followers<br />&diams; Your results',
+            }, ]
+        }, {
+            sectionTitle: 'Segments viewing options',
+            sectionContent: [{
+                optionKey: 'displaySegmentRankPercentage',
+                optionType: 'checkbox',
+                optionTitle: 'Segment Rank %',
+                optionLabels: ['All'],
+                optionHtml: 'Add your segment rank percentage on segment page. <br /><br /><img src="img/displaySegmentRankPercentage.png"/>',
             }, {
                 optionKey: 'displayNearbySegments',
                 optionType: 'checkbox',

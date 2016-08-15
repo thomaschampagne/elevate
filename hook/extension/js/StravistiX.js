@@ -377,15 +377,14 @@ StravistiX.prototype = {
     handleDefaultLeaderboardFilter_: function() {
 
         // If we are not on a segment or activity page then return...
-        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+        if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
 
         // Kick out if we are not on SegmentLeaderboardView
-        try {
-            eval('Strava.Labs.Activities.SegmentLeaderboardView');
-        } catch (err) {
-            if (env.debugMode) console.log('Kick out no Strava.Labs.Activities.SegmentLeaderboardView available');
+        var view = Strava.Labs.Activities.SegmentLeaderboardView;
+
+        if (!view) {
             return;
         }
 
