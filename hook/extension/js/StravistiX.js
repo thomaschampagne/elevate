@@ -152,11 +152,10 @@ StravistiX.prototype = {
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
             hotFixes: [],
             features: [
-                'Added up to 50 zones in zones settings for each data type: speed, pace, cadence, heartrate, power, grade, ...',
-                'Added full time average speed based on elapsed time.',
-                'Extended stats charts refresh ! Migrated to "Chart.js 2.0"'
+              'Added Hidden/Beta feature section.',
+              'Added integration of <a href="https://www.relive.cc/" target="_blank">Relive.cc</a> as Hidden/Beta feature (must be enabled in settings...). Make sure to register @<a href="https://www.relive.cc/" target="_blank">Relive.cc</a> to get your relives on future rides.'
             ],
-            fixes: ['Fix pace display glitch in athlete summary'],
+            fixes: [],
             upcommingFixes: [],
             upcommingFeatures: [
                 // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
