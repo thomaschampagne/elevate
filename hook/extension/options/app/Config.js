@@ -11,3 +11,7 @@ var routeMap = {
     donateRoute: '/donate',
     shareRoute: '/share'
 };
+
+var properties = {
+    donateAmount: '25usd'
+};

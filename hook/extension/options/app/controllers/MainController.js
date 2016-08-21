@@ -145,7 +145,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                 };
 
                 $scope.goToPaypal = function() {
-                    $window.open('https://www.paypal.me/thomaschampagne/25', '_blank');
+                    $window.open('https://www.paypal.me/thomaschampagne/' + properties.donateAmount, '_blank');
                 };
             },
             templateUrl: 'views/donate.html',
