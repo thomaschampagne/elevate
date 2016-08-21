@@ -23,8 +23,13 @@
     <div ng-app="App" ng-controller="MainController" layout="row" layout-fill ng-cloak>
         <md-sidenav class="md-sidenav-left md-whiteframe-5dp" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
             <md-content layout-padding>
-                <div layout="column" layout-align="center start">
-                    <img src="img/logo_stravistix_no_circle.svg" width="40%" />
+                <div layout="row" layout-align="center center">
+                    <div flex="30">
+                        <img src="img/logo_no_text.svg" width="75%" />
+                    </div>
+                    <div flex="70">
+                        <img src="img/logo_text_only.svg" width="75%" />
+                    </div>
                 </div>
                 <md-divider></md-divider>
                 <div>
