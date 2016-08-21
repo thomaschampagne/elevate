@@ -66,11 +66,16 @@ var EXT_RESSOURCES = [
 ];
 
 var OPT_FILES = [
-    'hook/extension/node_modules/bootstrap/dist/**/*.*',
-    'hook/extension/node_modules/angular/angular.min.js',
-    'hook/extension/node_modules/angular-route/angular-route.min.js',
-    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap.min.js',
-    'hook/extension/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js',
+    'hook/extension/node_modules/angular-material/angular-material.css',
+    'hook/extension/node_modules/angular-material-icons/angular-material-icons.css',
+    'hook/extension/node_modules/angular/angular.js',
+    'hook/extension/node_modules/angular-route/angular-route.js',
+    'hook/extension/node_modules/angular-sanitize/angular-sanitize.js',
+    'hook/extension/node_modules/angular-animate/angular-animate.js',
+    'hook/extension/node_modules/angular-aria/angular-aria.js',
+    'hook/extension/node_modules/angular-messages/angular-messages.js',
+    'hook/extension/node_modules/angular-material/angular-material.js',
+    'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/node_modules/underscore/underscore-min.js'
 ];
 
@@ -155,6 +160,7 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
     /**
      * Options JS and Css Mixed
      */
+
     gulp.src(OPT_FILES, {
         base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
@@ -320,7 +326,7 @@ gulp.task('ftpPublish', ['package'], function() {
                 ftpConfig.pass = process.env.FTP_PASSWORD;
                 ftpConfig.remotePath = process.env.FTP_REMOTE_PATH;
             } else {
-                throw new Error('Missing FTP_HOST, FTP_USER or FTP_PASSWORD environnement variables. FTP_REMOTE_PATH can be also specified');
+                throw new Error('Missing FTP_HOST, FTP_USER or FTP_PASSWORD environnment variables. FTP_REMOTE_PATH can be also specified.');
             }
         }
 

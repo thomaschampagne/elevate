@@ -1,4 +1,4 @@
-app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'NotifierService', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, NotifierService, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$timeout', '$location', '$mdDialog', function($scope, CommonSettingsService, ChromeStorageService, $timeout, $location, $mdDialog) {
 
     // Define options structure
     $scope.sections = CommonSettingsService.provideSections();
@@ -94,8 +94,8 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
         });
     };
 
-    $scope.displayOptionHelper = function(optionKeyParam) {
-
+    $scope.displayOptionHelper = function($event, optionKeyParam) {
+      
         var option = null;
 
         _.each($scope.sections, function(section) {
@@ -110,8 +110,19 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
             }
         });
 
+        console.log($event);
+
         if (option) {
-            NotifierService(option.optionTitle, option.optionHtml);
+            $mdDialog.show(
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .clickOutsideToClose(true)
+                .title(option.optionTitle)
+                .htmlContent(option.optionHtml)
+                .ariaLabel(option.optionTitle)
+                .ok('Got it!')
+                .targetEvent($event)
+            );
         }
     };
 

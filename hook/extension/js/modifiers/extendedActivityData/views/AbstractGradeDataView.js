@@ -27,7 +27,7 @@ var AbstractGradeDataView = AbstractDataView.extend(function(base) {
             base.render.call(this);
 
             // Add a title
-            this.content += this.generateSectionTitle('<img src="' + this.appResources.areaChartIcon + '" style="vertical-align: baseline; height:20px;"/> GRADE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings?selectZoneValue=grade" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+            this.content += this.generateSectionTitle('<img src="' + this.appResources.areaChartIcon + '" style="vertical-align: baseline; height:20px;"/> GRADE <a target="_blank" href="' + this.appResources.settingsLink + '#/zonesSettings/grade" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
             // Creates a grid
             this.makeGrid(3, 6); // (col, row)

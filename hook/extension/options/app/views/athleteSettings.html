@@ -1,0 +1,64 @@
+<md-card>
+  <md-card-title>
+      <span class="md-headline">Setup your body specifications</span>
+  </md-card-title>
+    <md-card-content>
+        <form name="healthCommonForm">
+            <div layout="row">
+                <div flex="70">
+                    Max heartrate
+                </div>
+                <div flex="25">
+                    <md-input-container class="md-block">
+                        <label>Enter your max bpm</label>
+                        <input name="userMaxHr" type="number" min="{{userRestHr + 10}}" max="300" ng-model="userMaxHr" ng-change="userMaxHrChanged()" ng-keydown="avoidInputKeyEdit($event)" />
+                        <md-tooltip>Use arrows &#8645; to set your MAX heart rate in beat per minute (bpm).</md-tooltip>
+                    </md-input-container>
+                </div>
+                <div flex>
+                    <md-button class="md-icon-button" ng-click="displayUserMaxHrHelper($event)">
+                        <md-icon aria-label="Help">help</md-icon>
+                    </md-button>
+                </div>
+            </div>
+            <div layout="row">
+                <div flex="70">
+                    Resting heartrate
+                </div>
+                <div flex="25">
+                    <md-input-container class="md-block">
+                        <label>Enter your min bpm</label>
+                        <input name="userRestHr" type="number" min="10" max="{{userMaxHr - 10}}" ng-model="userRestHr" ng-change="userRestHrChanged()" ng-keydown="avoidInputKeyEdit($event)" />
+                        <md-tooltip>Use arrows &#8645; to set your REST heart rate in beat per minute (bpm).</md-tooltip>
+                    </md-input-container>
+                </div>
+                <div flex>
+                    <md-button class="md-icon-button" ng-click="displayUserRestHrHelper($event)">
+                        <md-icon aria-label="Help">help</md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+            <div layout="row">
+                <div flex="70">
+                    Cycling Functional Threshold Power
+                </div>
+                <div flex="25">
+                    <md-input-container class="md-block">
+                        <label>Enter your FTP</label>
+                        <input name="userFTP" type="number" min="10" max="2500" class="form-control input-lg" ng-model="userFTP" ng-pattern="/^[0-9]+$/" ng-change="ftpHasChanged()" />
+                        <md-tooltip>Use arrows &#8645; or numpad to set your Functional Threshold Power in Watts</md-tooltip>
+                    </md-input-container>
+                    <div ng-if="healthCommonForm.userFTP.$invalid">
+                        <div>Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
+                    </div>
+                </div>
+                <div flex>
+                    <md-button class="md-icon-button" ng-click="displayUserFTPHelper($event)">
+                        <md-icon aria-label="Help">help</md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </form>
+    </md-card-content>
+</md-card>

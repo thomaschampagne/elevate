@@ -218,7 +218,7 @@ StravistiX.prototype = {
         }
 
         // Donate button
-        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/?showDonation=true">';
         message += '<strong>Push this project higher !!!</strong>';
         message += '</a>';
 
