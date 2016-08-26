@@ -316,7 +316,7 @@ var AbstractExtendedDataModifier = Fiber.extend(function(base) {
             }
 
             // Heart view
-            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData) {
+            if (this.analysisData_.heartRateData && this.userSettings_.displayAdvancedHrData && this.isAuthorOfViewedActivity) {
                 var heartRateDataView = new HeartRateDataView(this.analysisData_.heartRateData, 'hrr', this.userSettings_);
                 heartRateDataView.setAppResources(this.appResources_);
                 heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
