@@ -162,6 +162,36 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
     }
 
     /**
+     * Sharing
+     */
+    $scope.showSharing = function() {
+
+        $mdDialog.show({
+            controller: function($scope, $window) {
+
+                $scope.hide = function() {
+                    $mdDialog.hide();
+                };
+
+                $scope.shareTwitter = function() {
+                    $window.open('https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravistix%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20http://thomaschampagne.github.io/stravistix/.%20%23cycling%20%23running%20%23geek', '_blank');
+                };
+
+                $scope.shareFacebook = function() {
+                    $window.open('https://www.facebook.com/stravistixforstrava', '_blank');
+                };
+
+                $scope.shareDirect = function() {
+                    $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+                };
+            },
+            templateUrl: 'views/share.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true
+        });
+    };
+
+    /**
      * bug report
      */
     $scope.showBugReport = function() {
