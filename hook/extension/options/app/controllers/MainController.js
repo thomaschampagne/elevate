@@ -1,7 +1,7 @@
 /**
  * Declaring MainController
  */
-app.controller('MainController', function($scope, $location, $mdSidenav, $mdToast, $colors, $mdDialog, $routeParams) {
+app.controller('MainController', function($scope, $location, $mdSidenav, $mdToast, $colors, $mdDialog, $routeParams, $window) {
 
     $scope.$colors = $colors;
 
@@ -135,6 +135,9 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $scope.pageTitle = $scope.findCurrentPageTitle();
     });
 
+    /**
+     * Donations
+     */
     $scope.showDonation = function() {
 
         $mdDialog.show({
@@ -158,6 +161,17 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $scope.showDonation();
     }
 
+    /**
+     * bug report
+     */
+    $scope.showBugReport = function() {
+        $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
+    };
+
+
+    /**
+     * About
+     */
     $scope.showAbout = function() {
         $mdDialog.show({
             controller: function($scope, $window) {
