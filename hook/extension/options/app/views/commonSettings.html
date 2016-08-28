@@ -6,7 +6,7 @@
 <md-list ng-repeat="section in sections">
     <md-subheader class="md-no-sticky">{{section.sectionTitle}}</md-subheader>
 
-    <md-list-item ng-click="displayOptionHelper($event, option.optionKey)" class="noright" ng-repeat="option in section.sectionContent | filter:searchText" ng-hide="option.hidden" ng-cloak>
+    <md-list-item ng-click="displayOptionHelper(option.optionKey)" class="noright" ng-repeat="option in section.sectionContent | filter:searchText" ng-hide="option.hidden" ng-cloak>
         <p flex="10">
             <span ng-repeat="label in option.optionLabels">
               <md-icon ng-if="label == 'Cycling'">directions_bike</md-icon>
