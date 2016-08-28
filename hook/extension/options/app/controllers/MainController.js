@@ -173,12 +173,18 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
      */
     $scope.showReleaseNotes = function() {
         $mdDialog.show({
-            controller: function($scope, ReleaseNotesService) {
+            controller: function($scope, ReleaseNotesService, $window) {
 
-                $scope.releaseNotes = ['toto', 'tata'];
+                $scope.releaseNotes = ReleaseNotesService.data;
 
                 $scope.hide = function() {
                     $mdDialog.hide();
+                };
+
+                $scope.showVersionDiff = function(from, to) {
+                    if (from && to) {
+                        $window.open('https://github.com/thomaschampagne/stravistix/compare/' + from + '...' + to, '_blank');
+                    }
                 };
             },
             templateUrl: 'views/releaseNotes.html',
