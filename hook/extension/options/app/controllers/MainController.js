@@ -158,4 +158,18 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $scope.showDonation();
     }
 
+    $scope.showAbout = function() {
+        $mdDialog.show({
+            controller: function($scope, $window) {
+                $scope.hide = function() {
+                    $mdDialog.hide();
+                };
+            },
+            templateUrl: 'views/about.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true
+        });
+    };
+
+
 });
