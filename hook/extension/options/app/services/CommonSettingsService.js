@@ -1,6 +1,6 @@
 app.factory('CommonSettingsService', function() {
 
-    commonSettingsService = {};
+    var commonSettingsService = {};
 
     commonSettingsService.provideSections = function() {
 

@@ -168,13 +168,31 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
     };
 
+    /**
+     * Release Notes
+     */
+    $scope.showReleaseNotes = function() {
+        $mdDialog.show({
+            controller: function($scope, ReleaseNotesService) {
+
+                $scope.releaseNotes = ['toto', 'tata'];
+
+                $scope.hide = function() {
+                    $mdDialog.hide();
+                };
+            },
+            templateUrl: 'views/releaseNotes.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true
+        });
+    };
 
     /**
      * About
      */
     $scope.showAbout = function() {
         $mdDialog.show({
-            controller: function($scope, $window) {
+            controller: function($scope) {
                 $scope.hide = function() {
                     $mdDialog.hide();
                 };
