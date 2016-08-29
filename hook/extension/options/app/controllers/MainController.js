@@ -201,8 +201,11 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
     };
 
-    $scope.showTwitter = function() {
-        $window.open('https://twitter.com/champagnethomas', '_blank');
+    /**
+     * Project sources
+     */
+    $scope.showProjectSources = function() {
+        $window.open('https://github.com/thomaschampagne/stravistix/', '_blank');
     };
 
     /**
@@ -255,5 +258,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         });
     };
 
-
+    $scope.showTwitter = function() {
+        $window.open('https://twitter.com/champagnethomas', '_blank');
+    };
 });
