@@ -15,7 +15,7 @@
                 <ul ng-repeat="hotFix in releaseNote.hotFixes">
                     <li>{{hotFix}}</li>
                 </ul>
-                <ul ng-repeat="feature in releaseNote.features">
+                <ul ng-if="!releaseNote.hideFeatureReleaseNote" ng-repeat="feature in releaseNote.features">
                     <li>{{feature}}</li>
                 </ul>
                 <ul ng-repeat="fix in releaseNote.fixes">

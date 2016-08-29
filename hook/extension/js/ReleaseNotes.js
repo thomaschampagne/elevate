@@ -4,6 +4,7 @@
      version: 'x.x.x',
      hotFixes: [...],
      features: [...],
+     hideFeatureReleaseNote: boolean, // Say if we display again features. Eg. Fix or hotfix release.
      fixes: [...],
  }
  */
@@ -11,6 +12,7 @@ var releaseNotes = [{
     version: '3.10.1',
     message: 'A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)',
     hotFixes: [],
+    hideFeatureReleaseNote: true,
     features: [
         "Added Hidden/Beta feature section.",
         "Added Relive.cc as Hidden/Beta feature.",
