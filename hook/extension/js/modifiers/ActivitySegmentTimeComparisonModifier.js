@@ -147,6 +147,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             });
         });
 
+        $.force_appear();
+
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run modifier function
         var waitForSegmentsSectionRemoved = function() {
             if ($("#segments.time-comparison-enabled").length !== 0) {
