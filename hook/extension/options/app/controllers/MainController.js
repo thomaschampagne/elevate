@@ -219,6 +219,10 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                         $window.open('https://github.com/thomaschampagne/stravistix/compare/' + from + '...' + to, '_blank');
                     }
                 };
+
+                $scope.showTwitter = function(from, to) {
+                    $window.open('https://twitter.com/champagnethomas', '_blank');
+                };
             },
             templateUrl: 'views/releaseNotes.html',
             parent: angular.element(document.body),
