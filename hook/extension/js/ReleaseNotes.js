@@ -9,9 +9,12 @@
  */
 var releaseNotes = [{
     version: '3.10.1',
-    message: '',
+    message: 'A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)',
     hotFixes: [],
-    features: [],
+    features: [
+        "Added Hidden/Beta feature section.",
+        "Added Relive.cc as Hidden/Beta feature.",
+    ],
     fixes: [
         "Fix HR info in other athlete's activities don't make sense with user max/min HR.",
     ]
