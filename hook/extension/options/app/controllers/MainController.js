@@ -190,6 +190,9 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
             clickOutsideToClose: true
         });
     };
+    if (!_.isEmpty($location.search().showSharing)) {
+        $scope.showSharing();
+    }
 
     /**
      * bug report
@@ -222,6 +225,9 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
             clickOutsideToClose: true
         });
     };
+    if (!_.isEmpty($location.search().showReleaseNotes)) {
+        $scope.showReleaseNotes();
+    }
 
     /**
      * About

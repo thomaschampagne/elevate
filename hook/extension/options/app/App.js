@@ -38,10 +38,6 @@ app.config(['$routeProvider', function($routeProvider /*, $routeParams*/ ) {
         controller: 'XtdZonesSettingsController'
     });
 
-    $routeProvider.when(routeMap.releaseNotesRoute, {
-        templateUrl: 'views/releaseNotes.html'
-    });
-
     $routeProvider.when(routeMap.aboutRoute, {
         templateUrl: 'views/about.html'
     });
