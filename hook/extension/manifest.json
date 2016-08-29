@@ -16,6 +16,7 @@
     "content_scripts": [{
         "js": [
             "node_modules/underscore/underscore-min.js",
+            "modules/Loader.js",
             "js/Helper.js",
             "js/UserSettings.js",
             "js/Content.js"
