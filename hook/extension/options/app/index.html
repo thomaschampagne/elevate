@@ -22,7 +22,7 @@
 
     <div ng-app="App" ng-controller="MainController" layout="row" layout-fill ng-cloak>
         <md-sidenav class="md-sidenav-left md-whiteframe-5dp" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-            <md-content layout-padding>
+            <md-content flex="grow" layout-padding>
                 <div layout="row" layout-align="center center">
                     <div flex="30">
                         <img src="img/logo_no_text.svg" width="75%" />
@@ -46,6 +46,8 @@
                     </md-list>
                 </div>
             </md-content>
+            <md-button class="md-primary md-cornered" ng-click="showTwitter()">Twitter Updates</md-button>
+            <md-button class="md-primary md-cornered" ng-click="showDonation()">Push project higher</md-button>
         </md-sidenav>
         <section layout="column" role="main" flex>
             <md-toolbar role="toolbar">
@@ -82,6 +84,12 @@
                                 <md-button ng-click="showBugReport($event)">
                                     <md-icon>bug_report</md-icon>
                                     Report bug
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="showBugReport($event)">
+                                    <md-icon>build</md-icon>
+                                    Get involved
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>

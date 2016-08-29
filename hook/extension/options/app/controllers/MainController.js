@@ -201,6 +201,10 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
     };
 
+    $scope.showTwitter = function() {
+        $window.open('https://twitter.com/champagnethomas', '_blank');
+    };
+
     /**
      * Release Notes
      */
@@ -220,11 +224,13 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     }
                 };
 
-                $scope.showTwitter = function(from, to) {
-                    $window.open('https://twitter.com/champagnethomas', '_blank');
+                $scope.showTwitter = function() {
+                    $scope.$parent.showTwitter();
                 };
+
             },
             templateUrl: 'views/releaseNotes.html',
+            scope: $scope.$new(),
             parent: angular.element(document.body),
             clickOutsideToClose: true
         });
