@@ -1,34 +1,46 @@
+/**
+ Release note structure:
+ {
+     version: 'x.x.x',
+     hotFixes: [...],
+     features: [...],
+     fixes: [...],
+ }
+ */
 var releaseNotes = [{
     version: '3.10.1',
-    notes: [
+    message: '',
+    hotFixes: [],
+    features: [],
+    fixes: [
         "Fix HR info in other athlete's activities don't make sense with user max/min HR.",
     ]
 }, {
     version: '3.10.0',
-    notes: [
+    features: [
         "Added Hidden/Beta feature section.",
         "Added Relive.cc as Hidden/Beta feature.",
     ]
 }, {
     version: '3.9.1',
-    notes: [
+    features: [
         "Fix pace display glitch in athlete summary",
     ]
 }, {
     version: '3.9.0',
-    notes: [
+    features: [
         "Now up to 50 zones can be defined in zones settings for each data type: speed, pace, cadence, heartrate, power, grade, ...",
         "Added full time average speed based on elapsed time.",
         "Extended stats charts refresh ! Migration to  Chart.js 2.0 done :)"
     ]
 }, {
     version: '3.8.1',
-    notes: [
+    features: [
         "HotFixing best splits",
     ]
 }, {
     version: '3.8.0',
-    notes: [
+    features: [
         "Added cycling/running distance target graph into year progression graph. Go to Common Settings and search for Year progression targets for 2016 to setup your targets.",
         "Added Weighted Avg Power field in activity summary panel",
         "Added Watts Per Kilograms field in activity summary panel",
@@ -37,7 +49,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.7.0',
-    notes: [
+    features: [
         "Strongly improved estimated ",
         "weighted / normalized power for non power sensor users. Estimated weighted power is now accurate for moneyless cyclists :p.",
         "Re-highlight best split feature. Some of the users were not aware this key feature ;)",
@@ -47,7 +59,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.6.0',
-    notes: [
+    features: [
         "Added  %rank next to rank labels in segments list on cycling activity pages. Quick view on where you're ranked!",
         "Added back jonathanokeeffe segment details on segment pages",
         "Added back veloviewer segment details on segment pages",
@@ -58,12 +70,12 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.5.1',
-    notes: [
+    features: [
         "HotFixed disappearance of 'My year progressions to current month / day' (My Profile page)",
     ]
 }, {
     version: '3.5.0',
-    notes: [
+    features: [
         "Globally improved segment time comparaison for cycling activities.",
         "Fixed segment time comparaison '-0s' when activity beats year's record on a segment",
         "Fixed segment time comparaison '-0s' when the year record beats global previous record",
@@ -72,7 +84,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.4.0',
-    notes: [
+    features: [
         "Updated colored  rank position in segments efforts list (on a cycling activity page)",
         "Fixed rank percentage display problem on segment pages",
         "Fixed nearby segments vanished on segment pages",
@@ -81,7 +93,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.3.1',
-    notes: [
+    features: [
         "Introducing new year progressions charts: Distance last year and Distance last 30d (Go to My Profile)",
         "Fix cadence time on segments efforts (global activity value was shown).",
         "Integrating new logo design by paulinevial.fr",
@@ -89,24 +101,24 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.2.3',
-    notes: [
+    features: [
         "Disable stravistix on new strava store",
         "Minors improvements",
     ]
 }, {
     version: '3.2.2',
-    notes: [
+    features: [
         "Hotfix Wrong running climbing pace on extended panel",
     ]
 }, {
     version: '3.2.1',
-    notes: [
+    features: [
         "Hotfix Hide activities under distance errors on others languages than EN/FR",
         "Hotfix Wrong climbing pace running on summary panel",
     ]
 }, {
     version: '3.2.0',
-    notes: [
+    features: [
         "Improved performance on extended activity stats processing. The page should load faster since computation is now done through a separate thread/webworker.",
         "Added extended stats for runners: climbing/descending distance (inside grade section of extended stats panel). Cyclists already have this...",
         "Added option to hide the Pos. column on the segments table (in activities).",
@@ -116,7 +128,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.1.1',
-    notes: [
+    features: [
         "Added climb, flat & downhill distance for cyclists in extended stats (grade panel)",
         "Added average W/Kg in power extended stats",
         "Added option to get running cadence graph automatically enabled in running activity",
@@ -127,23 +139,23 @@ var releaseNotes = [{
     ]
 }, {
     version: '3.0.1',
-    notes: [
+    features: [
         "HotFix: Running cadence were mutiplied twice in graph/table on every segment effort stats button click (with both legs option enabled)",
     ]
 }, {
     version: '3.0.0',
-    notes: [
+    features: [
         "Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button",
         "Extended stats panel relooking",
     ]
 }, {
     version: '2.2.2',
-    notes: [
+    features: [
         "FIX: Javascript syntax error while processing activities extended stats.",
     ]
 }, {
     version: '2.2.1',
-    notes: [
+    features: [
         "Added option to count Virtual Rides (e.g. Zwift rides) into athlete yearly progression.",
         "Improving altitude smoothness for elevation and ascent speed extended stats, also in best splits",
         "FIX: Yearly Progression: wrong counting of activities",
@@ -152,12 +164,12 @@ var releaseNotes = [{
     ]
 }, {
     version: '2.1.1',
-    notes: [
+    features: [
         "FIX: Not getting extension stats on big ride (>300km)",
     ]
 }, {
     version: '2.1.0',
-    notes: [
+    features: [
         "Added new extended statistics for cyclists: Ascent speed.",
         "Best splits can be highlighted from the higher elevation gain or drop",
         "Best splits can be highlighted from the higher heartrate rise or drop",
@@ -173,41 +185,41 @@ var releaseNotes = [{
     ]
 }, {
     version: '2.0.1',
-    notes: [
+    features: [
         "HotFix: Null powers are computed in power best splits. They were removed from computation before.",
     ]
 }, {
     version: '2.0.0',
-    notes: [
+    features: [
         "Best splits on cycling activities. Load a cycling activities. Under elevation chart click Best Splits (Thanks Tomasz Terlecki for the feature)",
         "Fix Pressing multiple times on the current tab adds ",
         "View in Google Maps multiple times.",
     ]
 }, {
     version: '1.2.1',
-    notes: [
+    features: [
         "Fix Year progression chart icon which may invisible",
     ]
 }, {
     version: '1.2.0',
-    notes: [
+    features: [
         "Added Year progression chart on Distance, Activity count, Elevation and Time (credit https://github.com/tazmanska)",
     ]
 }, {
     version: '1.1.0',
-    notes: [
+    features: [
         "User preference for default Google Maps layer type",
         "Search for options in common settings",
         "Fix undefined errors in year progression",
     ]
 }, {
     version: '1.0.2',
-    notes: [
+    features: [
         "Fix map display problem while cropping ride. Google maps API was loaded twice.",
     ]
 }, {
     version: '1.0.1',
-    notes: [
+    features: [
         "Google Maps revived inside activities pages",
         "Add on/off extension settings for the segment time comparison on activities pages",
         "Segment time comparison for QOM (Womens) on activities pages",
@@ -217,93 +229,93 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.8.0',
-    notes: [
+    features: [
         "Add Ascent speed statistics to extended elevation data stats: Average, first quartile, median and third quartile ascent speed",
         "Fixing bug when exporting another riders segment as a virtual partner.",
     ]
 }, {
     version: '0.7.9',
-    notes: [
+    features: [
         "Fixing standard deviation cadence computed and displayed for cycling.",
         "Add standard deviation cadence to extended data popup panel",
     ]
 }, {
     version: '0.7.8',
-    notes: [
+    features: [
         "Add Pedaling time to summary panel",
         "Add median cadence to summary panel",
         "Various bug fixes",
     ]
 }, {
     version: '0.7.7',
-    notes: [
+    features: [
         "Remove OSM remotes maps links on activities",
         "Add flyby link in dashboard feed",
         "Fix extended data compute error on Workouts",
     ]
 }, {
     version: '0.7.6',
-    notes: [
+    features: [
         "Fix (again) Year progress sometimes not visible if strava language is not english (tazmanska credits).",
         "Segments time comparaison with KOM and previous PR inside activity page (tazmanska credits).",
     ]
 }, {
     version: '0.7.5',
-    notes: [
+    features: [
         "Hotfix: Year progress sometimes not visible",
     ]
 }, {
     version: '0.7.4',
-    notes: [
+    features: [
         "Year progressions to current month/day panel. See your progress for each beginning of year to current month and day. Go to My profile to see feature",
         "Veloviewer Segments Comparaison remote link into activities",
     ]
 }, {
     version: '0.7.3',
-    notes: [
+    features: [
         "NEW extended data: Elevation stats, graph and table. Elevation zones customizable in settings.",
         "Bug fixes",
     ]
 }, {
     version: '0.7.2',
-    notes: [
+    features: [
         "Improve weather accuracy",
     ]
 }, {
     version: '0.7.1',
-    notes: [
+    features: [
         "Hotfix: Remove display stravistix chrome tab on update (http://thomaschampagne.github.io/stravistix)",
     ]
 }, {
     version: '0.7.0',
-    notes: [
+    features: [
         "Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.",
         "Added 75% speed/pace and average climbing speed to summary panel (under 'show extended statistics' button)",
     ]
 }, {
     version: '0.6.4',
-    notes: [
+    features: [
         "Provide average speed climbing, flat, downhill for extended grade data",
         "New extended data summary panel in actitivies (below show extended statistics button)",
     ]
 }, {
     version: '0.6.3',
-    notes: [
+    features: [
         "Bug fixes and improvements",
     ]
 }, {
     version: '0.6.2',
-    notes: [
+    features: [
         "Exporting segment effort as Virtual Partner for your GPS through activity page.",
     ]
 }, {
     version: '0.6.1',
-    notes: [
+    features: [
         "OpenStreetMap flipper for activities (from Veloviewer)",
     ]
 }, {
     version: '0.6.0',
-    notes: [
+    features: [
         "Customized zones for each Xtended data",
         "Add TRIMP/Hour",
         "Change extension name from StravPlus to StravistiX",
@@ -311,7 +323,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.5.5',
-    notes: [
+    features: [
         "New extended data: Grade %",
         "Running cadence for one or two legs (option)",
         "Fixed wrong TRIMP calculation. Using 'exp' instead of 'pow'...",
@@ -322,41 +334,41 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.5.4',
-    notes: [
+    features: [
         "Runners can view avanced pace data",
         "Major bugs fixed from 0.5.3",
     ]
 }, {
     version: '0.5.3',
-    notes: [
+    features: [
         "Fix clear cache on extension update/install. This caused extension crash when using old cache with new extension.",
         "Add export of your activities as TCX.",
     ]
 }, {
     version: '0.5.2',
-    notes: [
+    features: [
         "HotFix for 0.5.1: some dependencies could not be loaded resulting in extension crash.",
     ]
 }, {
     version: '0.5.1',
-    notes: [
+    features: [
         "Add extended stats for running",
         "Extended stats now includes: Speed, Power, HR and Cadence graph distribution + table result on 15 zones",
         "New extended stats panel design for running and cycling",
     ]
 }, {
     version: '0.4.10',
-    notes: [
+    features: [
         "Add share extension links to twitter",
     ]
 }, {
     version: '0.4.9',
-    notes: [
+    features: [
         "Add Segment Details remote link on segment page",
     ]
 }, {
     version: '0.4.8',
-    notes: [
+    features: [
         "Add Surface Area of your activities (raceshape EREA)",
         "Normalized Power (TrainingPeaks trademarked term) removed. Profit to Weighted Power data now",
         "Intensity Factor (TrainingPeaks trademarked term) removed. Profit to Punch Factor data now",
@@ -365,45 +377,45 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.4.7',
-    notes: [
+    features: [
         "Inform runners about: Running Extended Data Features(like current cycling features) will be very soon available in version 0.5.x",
     ]
 }, {
     version: '0.4.6',
-    notes: [
+    features: [
         "Activity flash code in activities for Strava mobile App",
         "Fix bug wheere miles displayed even if metrics chosen in activities",
     ]
 }, {
     version: '0.4.5',
-    notes: [
+    features: [
         "Fast fix from version 0.4.4. Sry for this...",
     ]
 }, {
     version: '0.4.4',
-    notes: [
+    features: [
         "Fix unable to remove FTP value in options page",
         "Improving code to save time later... Invisible on your screen :)",
     ]
 }, {
     version: '0.4.3',
-    notes: [
+    features: [
         "Minor fixes",
     ]
 }, {
     version: '0.4.2',
-    notes: [
+    features: [
         "Minor fixes",
     ]
 }, {
     version: '0.4.1',
-    notes: [
+    features: [
         "Options GUI look better especially on checkboxes",
         "Minor fixes",
     ]
 }, {
     version: '0.4.0',
-    notes: [
+    features: [
         "Heart Rate Reserve zones distribution now customizable",
         "New options UI made with angularjs and bootstrap",
         "Fix Unable to fetch athlete bike odo",
@@ -411,17 +423,17 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.3.9',
-    notes: [
+    features: [
         "Fix kom-map to achievement-map",
     ]
 }, {
     version: '0.3.8',
-    notes: [
+    features: [
         "Fix nearby segment icons away",
     ]
 }, {
     version: '0.3.7',
-    notes: [
+    features: [
         "Add nearby cycling+running segments added on segment page",
         "Add average pace in cycling activities",
         "Add lower quartile power, median power and upper quartile power in cycling activities",
@@ -429,21 +441,21 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.3.6',
-    notes: [
+    features: [
         "Cadence/Cadence extended data is now computed while moving.",
         "Fix wrong Harmonized Power for riders with power meter.",
         "Others minor bug fixes",
     ]
 }, {
     version: '0.3.2 to 0.3.5',
-    notes: [
+    features: [
         "Fixed display text glitches on some pages",
         "StravistiX menu icon orange",
         "Others minor bug fixes",
     ]
 }, {
     version: '0.3.1',
-    notes: [
+    features: [
         "Big changes in extension core: Ext recoded from scratch in order to fix memory leaks from v0.2.0 and make new evolutions easier",
         "Bike activities extended data new look. Possibility to get the activity extended data panel hidden on load",
         "Cache management of bike Odo for bike activities, force refresh possible",
@@ -453,7 +465,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.2.0',
-    notes: [
+    features: [
         "Add TRIMP (TRaining IMPulse) value to cycling activities. The old stress score has been removed, not relevant any more now.",
         "Add Heart Rate Reserve (%HRR) value to cycling activities.",
         "Add Octo zones distribution of Heart Rate Reserve (%HRR) in minutes to cycling activities.",
@@ -462,38 +474,38 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.1.13',
-    notes: [
+    features: [
         "Add standard deviation speed data for cycling activities",
         "Add Cadence data for cycling activities: cadence %, cadence Time and crank revolutions. A cadence meter needed to get that",
     ]
 }, {
     version: '0.1.12',
-    notes: [
+    features: [
         "Add Lower Quartile, Median and Upper Quartile speed data for cycling activities",
         "Add helpers when click on added data in cycling activities",
         "Add cache system to store analysis data in localStorage which may are long to be computed. The cache is reused when you reload an activity which has one.",
     ]
 }, {
     version: '0.1.11',
-    notes: [
+    features: [
         "More Stable",
         "Prepare future for big features...",
     ]
 }, {
     version: '0.1.10',
-    notes: [
+    features: [
         "Add Watts/KG for cycling activities",
         "Add VeloViewer Challenges Trophy Cabinet to StravistiX menu",
     ]
 }, {
     version: '0.1.9',
-    notes: [
+    features: [
         "Bike odo on activities back",
         "Weighted Power calculation adjusted for cycling activities",
     ]
 }, {
     version: '0.1.8',
-    notes: [
+    features: [
         "Add Estimated Weighted Power for cycling activities",
         "Add Estimated Variability Index for cycling activities",
         "Add Estimated Punch Factor for cycling activities",
@@ -501,7 +513,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.1.7',
-    notes: [
+    features: [
         "Hide the challenges in dashboard feed",
         "Hide the created routes in dashboard feed",
         "Bug fixing",
@@ -509,7 +521,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.1.6',
-    notes: [
+    features: [
         "Add this about page",
         "StravistiX placed first in header",
         "Add icons in StravistiX menu",
@@ -518,7 +530,7 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.1.5',
-    notes: [
+    features: [
         "Segment Rank percentage now working on all leaderboards (Clubs, following, ...)",
         "Add bike odo display or not as an option",
         "Come back to Strava Classic color style",
@@ -526,13 +538,13 @@ var releaseNotes = [{
     ]
 }, {
     version: '0.1.4',
-    notes: [
+    features: [
         "Display bike odo on activity page",
         "Bugs fixing",
     ]
 }, {
     version: '0.1.3',
-    notes: [
+    features: [
         "Add Motivation Score for cycling activities",
         "Add Stress Score for cycling activities",
         "Add Move ratio for cycling activities",

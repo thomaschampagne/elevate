@@ -12,8 +12,14 @@
         <div class="md-dialog-content">
             <md-list ng-repeat="releaseNote in releaseNotes">
                 <md-button class="md-primary" ng-click="showVersionDiff(releaseNotes[$index + 1].version, releaseNote.version)">Version {{releaseNote.version}}</md-button>
-                <ul ng-repeat="note in releaseNote.notes">
-                    <li>{{note}}</li>
+                <ul ng-repeat="hotFix in releaseNote.hotFixes">
+                    <li>{{hotFix}}</li>
+                </ul>
+                <ul ng-repeat="feature in releaseNote.features">
+                    <li>{{feature}}</li>
+                </ul>
+                <ul ng-repeat="fix in releaseNote.fixes">
+                    <li>{{fix}}</li>
                 </ul>
             </md-list>
         </div>

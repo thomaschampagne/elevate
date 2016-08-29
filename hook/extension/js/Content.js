@@ -147,6 +147,7 @@ var jsDependencies = [
     'modules/latlong.js',
     'modules/jquery.appear.js',
 
+
     // Plugin stuff...
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
@@ -202,7 +203,10 @@ var jsDependencies = [
     'js/modifiers/GoogleMapsComeBackModifier.js',
 
     // ... workers
-    'js/processors/workers/ComputeAnalysisWorker.js'
+    'js/processors/workers/ComputeAnalysisWorker.js',
+
+    // Release notes...
+    'js/ReleaseNotes.js'
 ];
 
 var cssDependencies = [
