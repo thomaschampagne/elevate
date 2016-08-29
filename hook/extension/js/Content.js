@@ -182,7 +182,11 @@ var appResources = {
 };
 
 var jsDependencies = [
+
+    // Config
     'config/env.js',
+
+    // Modules
     'node_modules/chart.js/dist/Chart.bundle.js',
     'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
@@ -191,6 +195,8 @@ var jsDependencies = [
     'modules/geo.js',
     'modules/latlong.js',
     'modules/jquery.appear.js',
+
+    // Plugin stuff...
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',
@@ -212,7 +218,7 @@ var jsDependencies = [
     'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
     'js/modifiers/ActivityBestSplitsModifier.js',
 
-    // Extended data views
+    // ... with ... extended data views
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
     'js/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'js/modifiers/extendedActivityData/views/SpeedDataView.js',
@@ -228,12 +234,11 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/CyclingGradeDataView.js',
     'js/modifiers/extendedActivityData/views/RunnningGradeDataView.js',
 
-    // Extended data modifiers
+    // ... Extended data modifiers
     'js/modifiers/extendedActivityData/AbstractExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/CyclingExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/RunningExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/GenericExtendedDataModifier.js',
-
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/DisplayFlyByFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
@@ -245,7 +250,7 @@ var jsDependencies = [
     'js/modifiers/NearbySegmentsModifier.js',
     'js/modifiers/GoogleMapsComeBackModifier.js',
 
-    // workers
+    // ... workers
     'js/processors/workers/ComputeAnalysisWorker.js'
 ];
 
