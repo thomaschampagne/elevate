@@ -3,10 +3,15 @@
  */
 var routeMap = {
     commonSettingsRoute: '/commonSettings',
-    healthSettingsRoute: '/healthSettings',
+    athleteSettingsRoute: '/athleteSettings',
+    hrrZonesSettingsRoute: '/hrrZonesSettings',
     zonesSettingsRoute: '/zonesSettings',
     releaseNotesRoute: '/releaseNotes',
     aboutRoute: '/about',
     donateRoute: '/donate',
     shareRoute: '/share'
+};
+
+var properties = {
+    donateAmount: '25usd'
 };

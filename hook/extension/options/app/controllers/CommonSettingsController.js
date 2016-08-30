@@ -1,4 +1,4 @@
-app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', 'NotifierService', '$timeout', '$location', function($scope, CommonSettingsService, ChromeStorageService, NotifierService, $timeout, $location) {
+app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$timeout', '$location', '$mdDialog', '$sce', function($scope, CommonSettingsService, ChromeStorageService, $timeout, $location, $mdDialog, $sce) {
 
     // Define options structure
     $scope.sections = CommonSettingsService.provideSections();
@@ -111,7 +111,19 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
         });
 
         if (option) {
-            NotifierService(option.optionTitle, option.optionHtml);
+
+            // Mark the html as "trusted" with Strict Contextual Escaping ($sce)
+            var trustedHtml = $sce.trustAsHtml(option.optionHtml);
+
+            $mdDialog.show(
+                $mdDialog.alert()
+                .parent(angular.element(document.body))
+                .clickOutsideToClose(true)
+                .title(option.optionTitle)
+                .htmlContent(trustedHtml)
+                .ariaLabel(option.optionTitle)
+                .ok('Got it!')
+            );
         }
     };
 
