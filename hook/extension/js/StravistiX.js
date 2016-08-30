@@ -730,7 +730,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
 
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_);
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true);
         activitySegmentTimeComparisonModifier.modify();
     },
 
@@ -760,7 +760,7 @@ StravistiX.prototype = {
 
         if (env.debugMode) console.log("Execute handleActivityRunSegmentTimeComparison_()");
 
-        var activityRunSegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_);
+        var activityRunSegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, false);
         activityRunSegmentTimeComparisonModifier.modify();
     },
 

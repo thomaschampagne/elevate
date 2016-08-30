@@ -1,18 +1,23 @@
 /**
  *   ActivitySegmentTimeComparisonModifier is responsible of ...
  */
-function ActivitySegmentTimeComparisonModifier(userSettings, appResources) {
+function ActivitySegmentTimeComparisonModifier(userSettings, appResources, bike) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
     this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
     this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
     this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
+    this.isBike = bike;
 }
 
 /**
  * Define prototype
  */
 ActivitySegmentTimeComparisonModifier.prototype = {
+
+    crTitle: function crTitle() {
+        return this.isBike ? this.isFemale ? "QOM" : "KOM" : "CR";
+    },
 
     modify: function modify() {
 
@@ -59,7 +64,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 }
 
                 if (self.showDifferenceToKOM) {
-                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + (self.isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
+                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + self.crTitle() + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
                 }
 
                 if (self.displaySegmentTimeComparisonPosition) {
@@ -173,7 +178,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
     },
 
     setNewLabelsValues: function() {
-        this.deltaKomLabel = (this.isFemale) ? "&Delta;QOM" : "&Delta;KOM";
+        this.deltaKomLabel = "&Delta;" + this.crTitle();
         this.deltaPRLabel = "&Delta;PR";
         this.deltaYearPRLabel = "&Delta;yPR";
     },
