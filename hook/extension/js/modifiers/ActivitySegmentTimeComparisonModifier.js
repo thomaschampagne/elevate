@@ -23,15 +23,16 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         var self = this;
 
         // wait for Segments section load
-        if ($("#segments").length === 0) {
+        var segments = $("#segments");
+        if (segments.length === 0) {
             setTimeout(function() {
                 modify.call(self);
             }, 500);
             return;
         }
 
-        $("#segments #segment-filter").show();
-        $("#segments").addClass("time-comparison-enabled");
+        segments.find("#segment-filter").show();
+        segments.addClass("time-comparison-enabled");
 
         // Find sex of current acitivity athlete
         self.findOutGender();
@@ -46,7 +47,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
             if (!self.firstAppearDone) {
 
-                var timeColumnHeader = $("#segments table.segments th.time-col");
+
+                var timeColumnHeader = segments.find("table.segments th.time-col");
 
                 if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
