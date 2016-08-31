@@ -724,13 +724,11 @@ StravistiX.prototype = {
         }
 
         // Only for own activities
-        if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
-            return;
-        }
+        var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
 
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true);
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true, isMyOwn);
         activitySegmentTimeComparisonModifier.modify();
     },
 
@@ -754,9 +752,7 @@ StravistiX.prototype = {
         }
 
         // Only for own activities
-        if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
-            return;
-        }
+        var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
 
         if (env.debugMode) console.log("Execute handleActivityRunSegmentTimeComparison_()");
 

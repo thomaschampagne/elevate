@@ -1,10 +1,10 @@
 /**
  *   ActivitySegmentTimeComparisonModifier is responsible of ...
  */
-function ActivitySegmentTimeComparisonModifier(userSettings, appResources, bike) {
+function ActivitySegmentTimeComparisonModifier(userSettings, appResources, bike, isMyOwn) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
-    this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
-    this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+    this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
+    this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
     this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
     this.isBike = bike;
