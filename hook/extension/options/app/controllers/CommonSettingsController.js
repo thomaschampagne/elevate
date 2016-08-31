@@ -112,18 +112,18 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
 
         if (option) {
 
-            // Mark the html as "trusted" with Strict Contextual Escaping ($sce)
-            var trustedHtml = $sce.trustAsHtml(option.optionHtml);
-
-            $mdDialog.show(
-                $mdDialog.alert()
-                .parent(angular.element(document.body))
-                .clickOutsideToClose(true)
-                .title(option.optionTitle)
-                .htmlContent(trustedHtml)
-                .ariaLabel(option.optionTitle)
-                .ok('Got it!')
-            );
+            $mdDialog.show({
+                controller: function($scope) {
+                    $scope.title = option.optionTitle;
+                    $scope.htmlContent = $sce.trustAsHtml(option.optionHtml); // Mark the html as "trusted" with Strict Contextual Escaping ($sce)
+                    $scope.hide = function() {
+                        $mdDialog.hide();
+                    };
+                },
+                templateUrl: 'views/modals/settingHint.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true
+            });
         }
     };
 
