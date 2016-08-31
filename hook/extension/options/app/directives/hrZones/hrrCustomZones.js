@@ -226,8 +226,14 @@ app.directive('hrrCustomZones', ['ChromeStorageService', '$mdDialog', '$location
         };
 
         $scope.showHelper = function($event) {
+
+
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog) {
+                controller: function DialogController($scope, $mdDialog, userMaxHr, userRestHr) {
+
+                    $scope.userMaxHr = userMaxHr;
+                    $scope.userRestHr = userRestHr;
+
                     $scope.hide = function() {
                         $mdDialog.hide();
                     };
@@ -238,6 +244,10 @@ app.directive('hrrCustomZones', ['ChromeStorageService', '$mdDialog', '$location
                 templateUrl: 'directives/hrZones/templates/hrrZonesHelper.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
+                locals: {
+                    userMaxHr: $scope.userMaxHr,
+                    userRestHr: $scope.userRestHr
+                },
                 clickOutsideToClose: true,
                 fullscreen: false
             });
