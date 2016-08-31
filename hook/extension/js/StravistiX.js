@@ -704,40 +704,9 @@ StravistiX.prototype = {
         }.bind(this));
     },
 
-    /**
-     *
-     */
-    handleActivitySegmentTimeComparison_: function() {
 
-        // Test where are on an activity...
-        if (!window.location.pathname.match(/^\/activities/)) {
-            return;
-        }
-
-        if (_.isUndefined(window.pageView)) {
-            return;
-        }
-
-        // Only cycling is supported
-        if (window.pageView.activity().attributes.type != "Ride") {
-            return;
-        }
-
-        // Only for own activities
-        var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
-
-        if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
-
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true, isMyOwn);
-        activitySegmentTimeComparisonModifier.modify();
-    },
-
-    /**
-     *
-     */
-    handleActivityRunSegmentTimeComparison_: function() {
-
-        // Test where are on an activity page... (this includes activities/XXX/segments)
+    handleActivityOfKindSegmentTimeComparison: function (activityType) {
+        // Test where are on an activity page... (note this includes activities/XXX/segments)
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
@@ -747,17 +716,33 @@ StravistiX.prototype = {
         }
 
         // Only running is supported
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type != activityType) {
             return;
         }
 
-        // Only for own activities
+        // PR only for my own activities
         var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
 
-        if (env.debugMode) console.log("Execute handleActivityRunSegmentTimeComparison_()");
+        if (env.debugMode) console.log("Execute handleActivityOfKindSegmentTimeComparison(" + activityType + ")");
 
-        var activityRunSegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, false);
-        activityRunSegmentTimeComparisonModifier.modify();
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true, isMyOwn);
+        activitySegmentTimeComparisonModifier.modify();
+    },
+
+    /**
+     *
+     */
+    handleActivitySegmentTimeComparison_: function() {
+
+        this.handleActivityOfKindSegmentTimeComparison("Ride");
+    },
+
+    /**
+     *
+     */
+    handleActivityRunSegmentTimeComparison_: function() {
+
+        this.handleActivityOfKindSegmentTimeComparison("Run");
     },
 
     /**
