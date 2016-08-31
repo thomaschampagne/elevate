@@ -112,10 +112,10 @@ RemoteLinksModifier.prototype = {
             ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/', '?referrer=stravistiX'],
             ["<img width='24px' style='vertical-align:middle' src='" + this.appResources_.pollIcon + "'/> <span>Segment details (Jonathan Okeeffe)</span>", 'http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=', '']
         ];
-        var html = "<div class='module' style='padding-bottom: 10px;'>";
-        html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;'>";
-        html += "<div class='selection'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span></div>";
-        html += "<ul class='options'>";
+        var html = "<div class='dropdown' style='padding-bottom: 10px;'>";
+        html += "<div class='drop-down-menu' style='width: 100%;' >";
+        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources_.remoteViewIcon + "'/> <span>Remote Segment View</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
+        html += "<ul class='options' style='z-index: 999;'>";
 
         $.each(remoteViewSegmentLinksArray, function() {
             html += "<li><a target='_blank' href='" + this[1] + segmentId + this[2] + "'>" + this[0] + "</a></li>";
@@ -123,6 +123,6 @@ RemoteLinksModifier.prototype = {
         html += "</ul>";
         html += "</div>";
         html += "</div>";
-        $(html).prependTo('.col-md-3.spans5');
+        $(html).prependTo('.segment-activity-my-efforts');
     },
 };
