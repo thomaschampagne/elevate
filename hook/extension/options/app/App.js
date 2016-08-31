@@ -38,14 +38,6 @@ app.config(['$routeProvider', function($routeProvider /*, $routeParams*/ ) {
         controller: 'XtdZonesSettingsController'
     });
 
-    $routeProvider.when(routeMap.aboutRoute, {
-        templateUrl: 'views/about.html'
-    });
-
-    $routeProvider.when(routeMap.shareRoute, {
-        templateUrl: 'views/share.html'
-    });
-
     $routeProvider.otherwise({
         redirectTo: routeMap.commonSettingsRoute
     });
