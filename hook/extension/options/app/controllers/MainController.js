@@ -151,7 +151,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     $window.open('https://www.paypal.me/thomaschampagne/' + properties.donateAmount, '_blank');
                 };
             },
-            templateUrl: 'views/donate.html',
+            templateUrl: 'views/modals/donate.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true
         });
@@ -185,7 +185,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
                 };
             },
-            templateUrl: 'views/share.html',
+            templateUrl: 'views/modals/share.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true
         });
@@ -232,7 +232,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                 };
 
             },
-            templateUrl: 'views/releaseNotes.html',
+            templateUrl: 'views/modals/releaseNotes.html',
             scope: $scope.$new(),
             parent: angular.element(document.body),
             clickOutsideToClose: true
@@ -252,7 +252,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     $mdDialog.hide();
                 };
             },
-            templateUrl: 'views/about.html',
+            templateUrl: 'views/modals/about.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true
         });
