@@ -16,7 +16,7 @@ app.config(function($mdThemingProvider, $colors) {
     $mdThemingProvider.theme('default').primaryPalette('stravaOrange');
 });
 
-app.config(['$routeProvider', function($routeProvider /*, $routeParams*/ ) {
+app.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider.when(routeMap.commonSettingsRoute, {
         templateUrl: 'views/commonSettings.html',
@@ -36,6 +36,11 @@ app.config(['$routeProvider', function($routeProvider /*, $routeParams*/ ) {
     $routeProvider.when(routeMap.zonesSettingsRoute + '/:zoneValue', {
         templateUrl: 'views/zonesSettings.html',
         controller: 'XtdZonesSettingsController'
+    });
+
+    $routeProvider.when(routeMap.fitnessTrendRoute, {
+        templateUrl: 'views/fitnessTrend.html',
+        controller: 'FitnessTrendController'
     });
 
     $routeProvider.otherwise({

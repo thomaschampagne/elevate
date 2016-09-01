@@ -20,9 +20,24 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         mainTitle: 'Stravistix',
         sidenav: {
             sections: [{
-                name: 'Common Settings',
-                icon: 'settings',
-                link: routeMap.commonSettingsRoute
+                name: 'Fitness Trend',
+                icon: 'fitness_center',
+                link: routeMap.fitnessTrendRoute,
+            }, {
+                name: 'Activities Grid',
+                icon: 'grid_on',
+                link: 'link',
+                hide: true
+            }, {
+                name: 'Targets',
+                icon: 'adjust',
+                link: 'link',
+                hide: true
+            }, {
+                name: 'Year progression',
+                icon: 'show_chart',
+                link: 'link',
+                hide: true
             }, {
                 name: 'Fitness Trend',
                 icon: 'fitness_center',
@@ -43,6 +58,10 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                 icon: 'show_chart',
                 link: 'link',
                 hide: true
+            }, {
+                name: 'Common Settings',
+                icon: 'settings',
+                link: routeMap.commonSettingsRoute
             }, {
                 name: 'Athlete Settings',
                 icon: 'accessibility',

@@ -6,6 +6,7 @@ var routeMap = {
     athleteSettingsRoute: '/athleteSettings',
     hrrZonesSettingsRoute: '/hrrZonesSettings',
     zonesSettingsRoute: '/zonesSettings',
+    fitnessTrendRoute: '/fitnessTrend',
     releaseNotesRoute: '/releaseNotes',
     aboutRoute: '/about',
     donateRoute: '/donate',
