@@ -35,3 +35,19 @@
   from { opacity:1; }
   to { opacity:0; }
 }
+
+/* link */
+a:link {
+    color: #e94e1b;
+    text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+    color: #e94e1b;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
