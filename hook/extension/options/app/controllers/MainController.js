@@ -69,7 +69,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
             }, {
                 name: 'Zones Settings',
                 icon: 'format_line_spacing',
-                expand: true,
+                expand: false,
                 link: 'link',
                 actions: [{
                     name: 'Heart rate reserve',
@@ -200,9 +200,10 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     $window.open('https://www.facebook.com/stravistixforstrava', '_blank');
                 };
 
-                $scope.shareDirect = function() {
-                    $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+                $scope.openPluginPage = function() {
+                    $scope.$parent().openPluginPage();
                 };
+
             },
             templateUrl: 'views/modals/share.html',
             parent: angular.element(document.body),
@@ -214,16 +215,23 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
     }
 
     /**
+     * Plugin page
+     */
+    $scope.openPluginPage = function() {
+        $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+    };
+
+    /**
      * bug report
      */
-    $scope.showBugReport = function() {
+    $scope.openBugReport = function() {
         $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
     };
 
     /**
      * Project sources
      */
-    $scope.showProjectSources = function() {
+    $scope.openProjectSources = function() {
         $window.open('https://github.com/thomaschampagne/stravistix/', '_blank');
     };
 
@@ -246,8 +254,8 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     }
                 };
 
-                $scope.showTwitter = function() {
-                    $scope.$parent.showTwitter();
+                $scope.openTwitter = function() {
+                    $scope.$parent.openTwitter();
                 };
 
             },
@@ -277,7 +285,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         });
     };
 
-    $scope.showTwitter = function() {
+    $scope.openTwitter = function() {
         $window.open('https://twitter.com/champagnethomas', '_blank');
     };
 });
