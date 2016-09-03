@@ -1,9 +1,5 @@
 app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService) {
 
-    var linkFunction = function($scope, element, attrs) {
-        $scope.printableZoneId = parseInt($scope.hrZoneId) + 1;
-    };
-
     var controllerFunction = function($scope) {
 
         $scope.avoidInputKeyEdit = function(evt) {
@@ -15,6 +11,10 @@ app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService
             $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);
 
         }, true);
+
+        $scope.removeZone = function($event) {
+            $scope.$parent.removeHrZone($event, parseInt($scope.hrZoneId));
+        };
     };
 
     return {
@@ -28,9 +28,9 @@ app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService
             hrZoneFirst: '@hrZoneFirst',
             hrZoneLast: '@hrZoneLast',
             userMaxHr: '@userMaxHr',
-            userRestHr: '@userRestHr'
+            userRestHr: '@userRestHr',
+            step: '@zoneStep'
         },
-        controller: controllerFunction,
-        link: linkFunction
+        controller: controllerFunction
     };
 }]);

@@ -147,17 +147,14 @@ StravistiX.prototype = {
             previewBuild = true;
         }
 
+        var latestRelease = _.first(releaseNotes);
+
         var updateMessageObj = {
             logo: '<img src="' + this.appResources_.logoStravistix + '"></img>',
             title: 'Update <strong>v' + this.appResources_.extVersion + '</strong>',
-            hotFixes: [],
-            features: [
-                'Added Hidden/Beta feature section.',
-                'Added integration of <a href="https://www.relive.cc/" target="_blank">Relive.cc</a> as Hidden/Beta feature (must be enabled in settings...). Make sure to register @<a href="https://www.relive.cc/" target="_blank">Relive.cc</a> to get your relives on future rides.'
-            ],
-            fixes: [
-                'Fix HR info in other athlete\'s activities don\'t make sense with user max/min HR.'
-            ],
+            hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
+            features: (latestRelease.features) ? latestRelease.features : [],
+            fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
                 // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
@@ -168,12 +165,11 @@ StravistiX.prototype = {
         };
 
         var message = '';
-        message += '<div style="background: #eee; padding: 8px;">';
-        message += 'A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)';
-        // message += '<h5>- Best splits HotFixed in 3.8.1: feature is re-established.</h5>';
-        // message += '<h5>- New year progressions targets charts for cycling/running !!</h5>';
-        // message += '<h5>- New fields in activity summary panel</h5>';
-        message += '</div>';
+        if(!_.isEmpty(latestRelease.message)) {
+            message += '<div style="background: #eee; padding: 8px;">';
+            message += latestRelease.message;
+            message += '</div>';
+        }
 
         if (!_.isEmpty(updateMessageObj.hotFixes)) {
             message += '<h5><strong>HOTFIXES ' + this.appResources_.extVersion + ':</strong></h5>';
@@ -220,7 +216,7 @@ StravistiX.prototype = {
         }
 
         // Donate button
-        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/donate">';
+        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources_.settingsLink + '#/?showDonation=true">';
         message += '<strong>Push this project higher !!!</strong>';
         message += '</a>';
 

@@ -339,7 +339,7 @@ function ComputeAnalysisWorker() {
 
                     // Finalize compute of Speed
                     var genuineAvgSpeed = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
-                    var varianceSpeed = (speedVarianceSum / speedsNonZero.length) - Math.pow(activityStatsMap.averageSpeed, 2);
+                    var varianceSpeed = (speedVarianceSum / speedsNonZero.length) - Math.pow(genuineAvgSpeed, 2);
                     var standardDeviationSpeed = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
                     var percentiles = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 

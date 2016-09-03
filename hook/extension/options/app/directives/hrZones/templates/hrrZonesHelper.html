@@ -1,0 +1,57 @@
+<md-dialog ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>How to use custom Heart Rate Reserve zones</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon aria-label="Close dialog">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <blockquote>
+            <h3 class="md-title">What is Heartrate Reserve?</h3>
+            <blockquote>
+                Heart Rate Reserve (HRR) is the difference between your Maximum Heart Rate (Max HR) and Resting Heart Rate (Rest HR). This is basically your global heart capacity :)
+                <br/>
+                <br/>When %HRR is 0% then your Rest HR equals <strong>{{userRestHr}}</strong>
+                <br/>When %HRR is 100% then your Max HR equals <strong>{{userMaxHr}}</strong>
+            </blockquote>
+
+            <h3 class="md-title">What are Heart Rate Reserve Zones?</h3>
+            <blockquote>
+                Heart Rate Reserve Zones represent a distribution of your heart efforts during an activity into zones. Each zone has a beginning and ending HRR value.
+            </blockquote>
+            <h3 class="md-title">Where to see HRR Zone distribution?</h3>
+            <blockquote>
+                Inside a Strava activity. Of course you must have heart rate data associated to your activity.
+            </blockquote>
+            <md-divider></md-divider>
+            <h3 class="md-title">Edit existing zone</h3>
+            <blockquote>
+                Click into HRR fields of the zone you want to edit. A zone is always defined between 2 HRR fields.
+                <br/>
+                <br/>Hint: You can use input arrows or keyboard arrows to set the value.
+            </blockquote>
+
+            <h4 class="md-title">Add a Last Heartrate Reserve Zone</h4>
+            <blockquote>
+                Click <md-icon style="color: grey;">add</md-icon> button to add a new zone at the end of current zones. The previous last zone will be split twice to add the new zone.
+            </blockquote>
+
+            <h4 class="md-title">Remove Heartrate Reserve Zone</h4>
+            <blockquote>
+                Click <md-icon style="color: grey;">delete</md-icon> button to remove the zone at the end of current zones. The 2 latest zones will be merged to perform this operation.
+            </blockquote>
+
+            <h4 class="md-title">Reset Heartrate Reserve Zones</h4>
+            <blockquote>
+                Click <md-icon style="color: grey;">refresh</md-icon> to apply default factory zones.
+            </blockquote>
+            <h4 class="md-title">Save Heartrate Reserve Zones</h4>
+            <blockquote>
+                Click <md-icon style="color: grey;">save</md-icon> to save zones
+            </blockquote>
+        </blockquote>
+    </md-dialog-content>
+</md-dialog>

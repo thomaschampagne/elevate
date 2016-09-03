@@ -1,0 +1,35 @@
+<md-dialog>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{zoneType}} Zone Step</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="hide()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <span flex="30">
+                    Enter step precision for increase/decrease zone start/end values
+                </span>
+                <span flex="30">
+                    For example 0.1, 0.01, 0.001, 0.25, ...
+                </span>
+                <span flex="30">
+                    <md-input-container>
+                        <label>Step value</label>
+                        <input type="number" ng-model="step" min="0" />
+                    </md-input-container>
+                </span>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="answer(step)">
+                Confirm.
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

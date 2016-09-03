@@ -1,0 +1,28 @@
+<md-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Release Notes</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="hide()">
+                <md-icon aria-label="Close dialog">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-button class="md-primary md-cornered" ng-click="showTwitter()">Follow stravistix updates @champagnethomas</md-button>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <md-list ng-repeat="releaseNote in releaseNotes">
+                <md-button class="md-primary" ng-click="showVersionDiff(releaseNotes[$index + 1].version, releaseNote.version)">Version {{releaseNote.version}}</md-button>
+                <ul ng-repeat="hotFix in releaseNote.hotFixes">
+                    <li>{{hotFix}}</li>
+                </ul>
+                <ul ng-if="!releaseNote.hideFeatureReleaseNote" ng-repeat="feature in releaseNote.features">
+                    <li>{{feature}}</li>
+                </ul>
+                <ul ng-repeat="fix in releaseNote.fixes">
+                    <li>{{fix}}</li>
+                </ul>
+            </md-list>
+        </div>
+    </md-dialog-content>
+</md-dialog>

@@ -1,50 +1,34 @@
-<div id="settingsContainer">
-<input ng-model="searchText" placeholder="Search for an option" class="form-control input-lg">
-    <div data-ng-repeat="section in sections">
-        <h3 data-ng-hide="false"><span class="label label-default">{{ section.sectionTitle }}</span></h3>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th width="50%"></th>
-                    <th width="15%"></th>
-                    <th width="15%"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr data-ng-repeat="option in section.sectionContent | filter:searchText" data-ng-hide="option.hidden">
-                    <td>
-                        <button id="{{option.optionKey}}" data-popover="Click for help" data-popover-trigger="mouseenter" class="btn btn-default" data-ng-click="displayOptionHelper(option.optionKey)">{{ option.optionTitle }}</button>
-                    </td>
-                    <td>
-                        <span data-ng-repeat="label in option.optionLabels">
-                            <span data-ng-switch on="label">
-                                <span data-ng-switch-when="Cycling">
-                                    <span class="label label-default" style="background-color: #FC4C02;">{{label}}</span>
-                                </span>
-                                <span data-ng-switch-when="Running">
-                                    <span class="label label-default"style="background-color: #2DAA35;">{{label}}</span>
-                                </span>
-                                <span data-ng-switch-default>
-                                    <span class="label label-default" >{{label}}</span>
-                                </span>
-                            </span>
-                        </span>
-                    </td>
-                    <td class="text-right">
-                        <div data-ng-switch on="option.optionType">
-                            <div data-ng-switch-when="list">
-                                <select class="form-control" data-ng-model="option.active" data-ng-options="listItem.name for listItem in option.optionList" data-ng-change="toggleSelectOption(option)"></select>
-                            </div>
-                            <div data-ng-switch-when="integer">
-                                <input class="form-control" data-ng-model="option.value" type="number" data-ng-change="toggleIntegerOption(option)" data-popover="{{option.optionHtml}}" data-popover-trigger="mouseenter"></input>
-                            </div>
-                            <div data-ng-switch-default>
-                                <checkbox large class="btn-primary" data-ng-model="option.active" data-ng-change="toggleCheckOption(option)"></checkbox>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<md-input-container flex-gt-sm class="md-block">
+    <md-icon>search</md-icon>
+    <input ng-model="searchText" type="text" placeholder="Search for an option">
+</md-input-container>
+
+<md-list ng-repeat="section in sections">
+    <md-subheader class="md-no-sticky">{{section.sectionTitle}}</md-subheader>
+
+    <md-list-item ng-click="displayOptionHelper(option.optionKey)" class="noright" ng-repeat="option in section.sectionContent | filter:searchText" ng-hide="option.hidden" ng-cloak>
+        <p flex="10">
+            <span ng-repeat="label in option.optionLabels">
+              <md-icon ng-if="label == 'Cycling'">directions_bike</md-icon>
+              <md-icon ng-if="label == 'Running'">directions_walk</md-icon>
+              <md-icon ng-if="label == 'All'">settings</md-icon>
+            </span>
+        </p>
+        <p> {{option.optionTitle}}</p>
+
+        <md-switch ng-if="option.optionType == 'checkbox'" class="md-primary" ng-model="option.active" ng-change="toggleCheckOption(option)" aria-label="{{ option.optionTitle }}"></md-switch>
+
+        <md-select ng-if="option.optionType == 'list'" class="md-primary" ng-model="option.active" ng-change="toggleSelectOption(option)" aria-label="{{ option.optionTitle }}" layout="row" layout-align="end center">
+            <md-option ng-value="listItem" ng-repeat="listItem in option.optionList">{{ listItem.name }}</md-option>
+        </md-select>
+
+        <md-input-container ng-if="option.optionType == 'integer'" class="md-primary" layout="row" layout-align="end center">
+            <input type="number" step="any" name="rate" ng-model="option.value" ng-change="toggleIntegerOption(option)" aria-label="{{ option.optionTitle }}" />
+            <md-tooltip md-direction="top">
+                {{option.optionHtml}}
+            </md-tooltip>
+        </md-input-container>
+
+    </md-list-item>
+    <md-divider></md-divider>
+</md-list>
