@@ -6,6 +6,7 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
     this.cssDependencies = cssDependencies;
     this.userSettings_ = userSettings;
     this.appResources_ = appResources;
+    this.loader = new Loader();
 }
 
 /**
@@ -15,9 +16,8 @@ Content.prototype = {
 
     loadDependencies: function loadDependencies(finishLoading) {
 
-        var loader = new Loader();
         var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
-        loader.require(dependencies, function() {
+        this.loader.require(dependencies, function() {
             finishLoading();
         });
     },
@@ -84,6 +84,10 @@ Content.prototype = {
 
         });
 
+    },
+
+    getLoader: function() {
+        return this.loader;
     }
 };
 
@@ -217,3 +221,13 @@ var cssDependencies = [
 
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
+
+var constantsStr = '';
+constantsStr += 'var Constants = {';
+constantsStr += 'VERSION: "' + chrome.runtime.getManifest().version + '",';
+constantsStr += 'EXTENSION_ID: "' + chrome.runtime.id + '",';
+constantsStr += 'OPTIONS_URL: "chrome-extension://' + chrome.runtime.id + '/options/app/index.html",';
+constantsStr += '}';
+
+// Inject constants
+content.getLoader().injectJS(constantsStr);

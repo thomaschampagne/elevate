@@ -43,5 +43,18 @@ Loader.prototype = {
             link.rel = 'stylesheet';
             head.appendChild(link);
         }
+    },
+
+    injectJS: function (string) {
+
+        var inner = document.createElement('script');
+
+        inner.textContent = string;
+
+        inner.onload = function() {
+            this.parentNode.removeChild(this);
+        };
+
+        (document.head || document.documentElement).appendChild(inner);
     }
 };
