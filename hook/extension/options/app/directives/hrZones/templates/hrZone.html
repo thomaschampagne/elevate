@@ -1,62 +1,68 @@
-<div class="hrZone">
-    <!-- Display first zone -->
-    <table data-ng-switch data-on="hrZoneFirst">
-        <tr data-ng-switch-when="true">
-            <td><i>%HRR &#10142;</i>
-            </td>
-            <td>
-                <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="0" max="{{hrZone.toHrr}}" step="0.1" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." />
-            </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
-        </tr>
-        <tr data-ng-switch-default>
-            <td><i>%HRR &#10142;</i>
-            </td>
-            <td>
-                <input class="form-control input-lg" type="number" data-ng-model="hrZone.fromHrr" min="{{previousFromHrr}}" step="0.1" max="{{hrZone.toHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
-            </td>
-            <td class="bpmFilter"><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
-        </tr>
-    </table>
-
-    <!-- Display zone Id -->
-    <table class="hrZoneBpmDescribe">
-        <tr>
-            <td align="center" colspan="3">
-                <img src="img/ic_more_vert_24px.svg" />
-            </td>
-        </tr>
-        <tr>
-            <td align="center"></td>
-            <td>
-                <span class="printableZoneId">Zone {{printableZoneId}}</span>
-            </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td align="center" colspan="3">
-                <img src="img/ic_more_vert_24px.svg" />
-            </td>
-        </tr>
-    </table>
-
-    <!-- Display last zone -->
-    <table data-ng-switch data-on="hrZoneLast">
-        <tr data-ng-switch-when="true">
-            <td><i>%HRR &#10142;</i>
-            </td>
-            <td>
-                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="0.1" max="125" data-ng-keydown="avoidInputKeyEdit($event)" data-popover="Use arrows &#8645; to set %HRR value." data-popover-trigger="mouseenter" />
-            </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
-        </tr>
-        <tr data-ng-switch-default data-ng-hide="true">
-            <td><i>%HRR &#10142;</i>
-            </td>
-            <td>
-                <input class="form-control input-lg" type="number" data-ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="0.1" max="{{nextToHrr}}" data-ng-keydown="avoidInputKeyEdit($event)" />
-            </td>
-            <td><img src="img/ic_favorite_24px.svg" /> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm</td>
-        </tr>
-    </table>
-</div>
+<md-card>
+  <md-card-title class="md-default" aria-hidden="true">
+      <div>
+          <span class="md-subhead">Zone {{1 * hrZoneId + 1}}</span>
+      </div>
+      <div flex></div>
+      <div>
+          <md-button ng-click="removeZone($event)">
+              <md-icon>close</md-icon>
+          </md-button>
+      </div>
+  </md-card-title>
+    <md-card-content layout="row">
+        <div flex layout="column"></div>
+        <div flex="30" layout="column">
+            <div flex="50">
+                <div data-ng-switch data-on="hrZoneFirst">
+                    <div data-ng-switch-when="true">
+                        <md-input-container class="md-block">
+                            <label>Enter %HRR Start</label>
+                            <md-icon>keyboard_arrow_right</md-icon>
+                            <input type="number" ng-model="hrZone.fromHrr" min="0" max="{{hrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
+                            <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-switch-default>
+                        <md-input-container class="md-block">
+                            <label>Enter %HRR Start</label>
+                            <md-icon>keyboard_arrow_right</md-icon>
+                            <input type="number" ng-model="hrZone.fromHrr" min="{{previousFromHrr}}" max="{{hrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
+                            <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="50">
+                <md-icon>favorite</md-icon> {{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm
+            </div>
+        </div>
+        <div flex="20" layout="column"></div>
+        <div flex="30" layout="column">
+            <div flex="50">
+                <div data-ng-switch data-on="hrZoneLast">
+                    <div data-ng-switch-when="true">
+                        <md-input-container class="md-block">
+                            <label>Enter %HRR End</label>
+                            <md-icon>keyboard_arrow_right</md-icon>
+                            <input type="number" ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="{{step}}" max="9999" ng-keydown="avoidInputKeyEdit($event)" />
+                            <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
+                        </md-input-container>
+                    </div>
+                    <div data-ng-switch-default>
+                        <md-input-container class="md-block">
+                            <label>Enter %HRR End</label>
+                            <md-icon>keyboard_arrow_right</md-icon>
+                            <input type="number" ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="{{step}}" max="{{nextToHrr}}" ng-keydown="avoidInputKeyEdit($event)" />
+                            <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div flex="50">
+                <md-icon>favorite</md-icon> {{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm
+            </div>
+        </div>
+        <div flex layout="column"></div>
+    </md-card-content>
+</md-card>

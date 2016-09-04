@@ -1,51 +1,3 @@
-var Loader = function() {};
-
-Loader.prototype = {
-
-    require: function(scripts, callback) {
-        this.loadCount = 0;
-        this.totalRequired = scripts.length;
-        this.callback = callback;
-
-        for (var i = 0; i < scripts.length; i++) {
-            this.writeScript(chrome.extension.getURL(scripts[i]));
-        }
-    },
-    loaded: function(evt) {
-        this.loadCount++;
-        if (this.loadCount == this.totalRequired && typeof this.callback == 'function') this.callback.call();
-    },
-    writeScript: function(src) {
-
-        var ext = src.substr(src.lastIndexOf('.') + 1);
-
-        var self = this;
-
-        var head = document.getElementsByTagName('head')[0];
-
-        if (ext === 'js') {
-            var s = document.createElement('script');
-            s.type = "text/javascript";
-            s.async = false;
-            s.src = src;
-            s.addEventListener('load', function(e) {
-                self.loaded(e);
-            }, false);
-            head.appendChild(s);
-        } else if (ext === 'css') {
-            var link = document.createElement('link');
-            link.href = src;
-            link.addEventListener('load', function(e) {
-                self.loaded(e);
-            }, false);
-            link.async = false;
-            link.type = 'text/css';
-            link.rel = 'stylesheet';
-            head.appendChild(link);
-        }
-    }
-};
-
 /**
  *   Content is responsible of ...
  */
@@ -54,6 +6,7 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
     this.cssDependencies = cssDependencies;
     this.userSettings_ = userSettings;
     this.appResources_ = appResources;
+    this.loader = new Loader();
 }
 
 /**
@@ -63,10 +16,8 @@ Content.prototype = {
 
     loadDependencies: function loadDependencies(finishLoading) {
 
-
-        var loader = new Loader();
         var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
-        loader.require(dependencies, function() {
+        this.loader.require(dependencies, function() {
             finishLoading();
         });
     },
@@ -133,6 +84,10 @@ Content.prototype = {
 
         });
 
+    },
+
+    getLoader: function() {
+        return this.loader;
     }
 };
 
@@ -182,7 +137,11 @@ var appResources = {
 };
 
 var jsDependencies = [
+
+    // Config
     'config/env.js',
+
+    // Modules
     'node_modules/chart.js/dist/Chart.bundle.js',
     'node_modules/fiber/src/fiber.min.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
@@ -191,6 +150,9 @@ var jsDependencies = [
     'modules/geo.js',
     'modules/latlong.js',
     'modules/jquery.appear.js',
+
+
+    // Plugin stuff...
     'js/processors/VacuumProcessor.js',
     'js/processors/ActivityProcessor.js',
     'js/processors/BikeOdoProcessor.js',
@@ -212,7 +174,7 @@ var jsDependencies = [
     'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
     'js/modifiers/ActivityBestSplitsModifier.js',
 
-    // Extended data views
+    // ... with ... extended data views
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
     'js/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'js/modifiers/extendedActivityData/views/SpeedDataView.js',
@@ -228,12 +190,11 @@ var jsDependencies = [
     'js/modifiers/extendedActivityData/views/CyclingGradeDataView.js',
     'js/modifiers/extendedActivityData/views/RunnningGradeDataView.js',
 
-    // Extended data modifiers
+    // ... Extended data modifiers
     'js/modifiers/extendedActivityData/AbstractExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/CyclingExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/RunningExtendedDataModifier.js',
     'js/modifiers/extendedActivityData/GenericExtendedDataModifier.js',
-
     'js/modifiers/HideFeedModifier.js',
     'js/modifiers/DisplayFlyByFeedModifier.js',
     'js/modifiers/ActivityBikeOdoModifier.js',
@@ -245,8 +206,11 @@ var jsDependencies = [
     'js/modifiers/NearbySegmentsModifier.js',
     'js/modifiers/GoogleMapsComeBackModifier.js',
 
-    // workers
-    'js/processors/workers/ComputeAnalysisWorker.js'
+    // ... workers
+    'js/processors/workers/ComputeAnalysisWorker.js',
+
+    // Release notes...
+    'js/ReleaseNotes.js'
 ];
 
 var cssDependencies = [
@@ -254,6 +218,9 @@ var cssDependencies = [
     'css/extendedData.css'
 ];
 
-
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
+
+// Inject constants
+var constantsStr = 'var Constants = ' + JSON.stringify(Constants) + ';';
+content.getLoader().injectJS(constantsStr);

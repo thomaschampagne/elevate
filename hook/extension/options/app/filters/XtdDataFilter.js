@@ -11,7 +11,7 @@ app.filter('xtdDataFilter', function() {
         var result = '';
         if (type === 'speed') {
             var mph = value * 0.621371192;
-            result = ' or ' + mph.toFixed(2) + ' mph';
+            result = mph.toFixed(2) + ' mph';
         } else if (type === 'pace') {
             result = formatTime(value) + '/km or ' + formatTime(value / 0.621371192) + '/mi';
         }

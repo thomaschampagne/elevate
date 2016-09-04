@@ -13,10 +13,10 @@ NearbySegmentsModifier.prototype = {
 
     modify: function modify() {
 
-        var html = "<div class='module' style='padding-bottom: 10px;'>";
-        html += "<div class='drop-down-menu' style='width: 100%; background: #fc4c02; color: white;' >";
-        html += "<div class='selection'><img style='vertical-align:middle' src='" + this.appResources_.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span></div>";
-        html += "<ul class='options' style='max-height: 800px;'>";
+        var html = "<div class='dropdown' style='padding-bottom: 10px;'>";
+        html += "<div class='drop-down-menu' style='width: 100%;' >";
+        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources_.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
+        html += "<ul class='options' style='max-height: 800px; z-index: 999;'>";
 
         var segment;
         var segmentName;
@@ -49,6 +49,6 @@ NearbySegmentsModifier.prototype = {
         html += "</div>";
         html += "</div>";
 
-        $(html).prependTo('.col-md-3.spans5');
+        $(html).prependTo('.segment-activity-my-efforts');
     }
 };

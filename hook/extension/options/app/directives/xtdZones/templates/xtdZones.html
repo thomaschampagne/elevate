@@ -1,29 +1,97 @@
-<div>
-    <div data-ng-hide="true">
-        <strong>Zones debug:</strong>
-        <div>{{xtdZones | json}}</div>
+<md-toolbar id="tools_top" style="background-color: transparent;" ng-cloak>
+    <div class="md-toolbar-tools">
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="setupStep($event)" aria-label="setup step">
+            <md-icon style="color: grey;">line_weight</md-icon>
+            <md-tooltip md-direction="bottom">
+                Setup step
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="addZone($event)" aria-label="add">
+            <md-icon style="color: grey;">add</md-icon>
+            <md-tooltip md-direction="bottom">
+                Add a last zone
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="removeZone($event)" aria-label="delete">
+            <md-icon style="color: grey;">delete</md-icon>
+            <md-tooltip md-direction="bottom">
+                Remove current last zone
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="saveZones($event)" aria-label="save">
+            <md-icon style="color: grey;">save</md-icon>
+            <md-tooltip md-direction="bottom">
+                Save {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="resetZone($event)" aria-label="reset">
+            <md-icon style="color: grey;">refresh</md-icon>
+            <md-tooltip md-direction="bottom">
+                Reset {{xtdDataSelected.name}} zones to default.
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="export($event)" aria-label="reset">
+            <md-icon style="color: grey;">arrow_upwards</md-icon>
+            <md-tooltip md-direction="bottom">
+                Export {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="import($event)" aria-label="reset">
+            <md-icon style="color: grey;">arrow_downward</md-icon>
+            <md-tooltip md-direction="bottom">
+                Import {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
     </div>
-    <div class="hrZoneAddRemoveTop">
-        Step
-        <input class="form-control input-md" type="number" data-ng-model="xtdDataSelected.step" min="0" data-popover="Enter step for zone precision eg 0.1, 0.01, 0.001, 0.25, ..." style="width: 120px; display: inline;" />
-        <button type="button" class="btn btn-primary zoneActionButton" data-ng-click="saveZones()">Save Zones</button>
-        <button type="button" class="btn btn-success zoneActionButton" data-ng-click="addZone()">Add a Last Zone</button>
-        <button type="button" class="btn btn-danger zoneActionButton" data-ng-click="removeZone()">Del Last Zone</button>
-        <button type="button" class="btn btn-warning zoneActionButton" data-ng-click="resetZone()">Reset Zones</button>
-        <button type="button" class="btn btn-default zoneActionButton" data-ng-click="export()">Export...</button>
-        <button type="button" class="btn btn-default zoneActionButton" data-ng-click="import()">Import...</button>
-    </div>
-    <div data-ng-repeat="xtdZone in xtdZones">
-        <div data-xtd-zone="xtdZone" data-zone-id="{{$index}}" data-previous-from="{{xtdZones[$index - 1].from}}" data-next-to="{{xtdZones[$index + 1].to}}" data-xtd-zone-first="{{$index == 0}}" data-xtd-zone-last="{{$index == (xtdZones.length - 1)}}" data-xtd-data-selected="xtdDataSelected"></div>
-    </div>
-    <div class="hrZoneAddRemoveBottom">
-        Step
-        <input class="form-control input-md" type="number" data-ng-model="xtdDataSelected.step" min="0" data-popover="Enter step for zone precision eg 0.1, 0.01, 0.001, 0.25, ..." style="width: 120px; display: inline;" />
-        <button type="button" class="btn btn-primary zoneActionButton" data-ng-click="saveZones()">Save Zones</button>
-        <button type="button" class="btn btn-success zoneActionButton" data-ng-click="addZone()">Add a Last Zone</button>
-        <button type="button" class="btn btn-danger zoneActionButton" data-ng-click="removeZone()">Del Last Zone</button>
-        <button type="button" class="btn btn-warning zoneActionButton" data-ng-click="resetZone()">Reset Zones</button>
-        <button type="button" class="btn btn-default zoneActionButton" data-ng-click="export()">Export...</button>
-        <button type="button" class="btn btn-default zoneActionButton" data-ng-click="import()">Import...</button>
-    </div>
+</md-toolbar>
+<div ng-repeat="xtdZone in xtdZones" class="repeated-item">
+    <div xtd-zone="xtdZone" zone-id="{{$index}}" previous-from="{{xtdZones[$index - 1].from}}" next-to="{{xtdZones[$index + 1].to}}" xtd-zone-first="{{$index == 0}}" xtd-zone-last="{{$index == (xtdZones.length - 1)}}" xtd-data-selected="xtdDataSelected"></div>
 </div>
+<md-toolbar id="tools_bottom" style="background-color: transparent;" ng-cloak>
+    <div class="md-toolbar-tools">
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="setupStep($event)" aria-label="setup step">
+            <md-icon style="color: grey;">line_weight</md-icon>
+            <md-tooltip md-direction="top">
+                Setup step
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="addZone($event)" aria-label="add">
+            <md-icon style="color: grey;">add</md-icon>
+            <md-tooltip md-direction="top">
+                Add a last zone
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="removeZone($event)" aria-label="delete">
+            <md-icon style="color: grey;">delete</md-icon>
+            <md-tooltip md-direction="top">
+                Remove current last zone
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="saveZones($event)" aria-label="save">
+            <md-icon style="color: grey;">save</md-icon>
+            <md-tooltip md-direction="top">
+                Save {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="resetZone($event)" aria-label="reset">
+            <md-icon style="color: grey;">refresh</md-icon>
+            <md-tooltip md-direction="top">
+                Reset {{xtdDataSelected.name}} zones to default.
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="export($event)" aria-label="reset">
+            <md-icon style="color: grey;">arrow_upwards</md-icon>
+            <md-tooltip md-direction="top">
+                Export {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
+        <md-button class="md-icon-button" ng-click="import($event)" aria-label="reset">
+            <md-icon style="color: grey;">arrow_downward</md-icon>
+            <md-tooltip md-direction="top">
+                Import {{xtdDataSelected.name}} zones
+            </md-tooltip>
+        </md-button>
+    </div>
+</md-toolbar>

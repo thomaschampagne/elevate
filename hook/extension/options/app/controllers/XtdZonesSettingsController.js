@@ -1,4 +1,4 @@
-app.controller("XtdZonesSettingsController", ['$scope', '$location', 'ChromeStorageService', function($scope, $location, ChromeStorageService) {
+app.controller("XtdZonesSettingsController", ['$scope', '$location', '$routeParams', 'ChromeStorageService', function($scope, $location, $routeParams, ChromeStorageService) {
 
     // List of Xtended data to be customize
     $scope.xtdListOptions = [{
@@ -59,35 +59,32 @@ app.controller("XtdZonesSettingsController", ['$scope', '$location', 'ChromeStor
         max: 9999
     }];
 
+    $scope.switchZonesFromXtdItem = function(xtdData) {
+
+        // Select cycling speed by default
+        $scope.xtdData = xtdData;
+        $scope.xtdZones = $scope.zones[$scope.xtdData.value];
+        $scope.$apply();
+    };
+
+    $scope.toggleSelectOption = function(listItem) {
+        // Load source on toggle option
+        // And inject
+        // Mocking xtd source
+        $scope.switchZonesFromXtdItem(listItem);
+    };
+
     ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
 
         $scope.zones = userSettingsSynced.zones;
 
-        $scope.switchZonesFromXtdItem = function(xtdData) {
+        var zoneValue = $routeParams.zoneValue; //$location.search().selectZoneValue;
 
-            // Select cycling speed by default
-            $scope.xtdData = xtdData;
-            $scope.xtdZones = $scope.zones[$scope.xtdData.value];
-        };
+        var item = _.findWhere($scope.xtdListOptions, {
+            value: zoneValue
+        });
 
-        $scope.toggleSelectOption = function(listItem) {
-            // Load source on toggle option
-            // And inject
-            // Mocking xtd source
-            $scope.switchZonesFromXtdItem(listItem);
-        };
-
-        // // Apply search text if searchText GET param exist
-        if ($location.search().selectZoneValue) {
-
-            var selectZoneValue = $location.search().selectZoneValue;
-
-            var item = _.findWhere($scope.xtdListOptions, {
-                value: selectZoneValue
-            });
-
-            $scope.switchZonesFromXtdItem(item);
-        }
+        $scope.switchZonesFromXtdItem(item);
 
     }.bind(this));
 }]);

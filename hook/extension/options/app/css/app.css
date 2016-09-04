@@ -1,56 +1,53 @@
-footer {
-    text-align: center;
-    padding: 10px;
-    font-style: italic;
+
+/* Animation of repeated-item for ngrepeat items*/
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+  transition: all 0.35s linear;
+  opacity: 0;
 }
-#paypal {
-    padding: 10px;
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+  opacity: 1;
 }
-#about {
-    font-size: 22px;
-    font-style: italic;
-    padding: 10px;
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+  animation: 0.35s fadeAnimation;
 }
-#donate {
-    font-size: 26px;
-    text-align: center;
-    padding: 75px;
+
+@keyframes fadeAnimation {
+  from { opacity:1; }
+  to { opacity:0; }
 }
-.aboutquote {
-    font-size: 48px;
+
+/* link */
+a:link {
+    color: #e94e1b;
+    text-decoration: none;
 }
-.healthCustomZones {
-    text-align: left;
+
+/* visited link */
+a:visited {
+    color: #e94e1b;
 }
-.healthCustomZonesExplanations {}
-.zoneActionButton {
-    width: 125px;
-}
-.hrZoneAddRemoveTop {
-    margin-bottom: 25px;
-    margin-top: 25px;
-}
-.hrZoneAddRemoveBottom {
-    margin-top: 25px;
-}
-.hrZone .bpmFilter {}
-.hrZone table td {
-    width: 125px;
-    text-align: center;
-}
-.hrZoneBpmDescribe img {
-    margin: 10px;
-    width: 25px;
-}
-.printableZoneId {
-    font-weight: bold;
-    font-size: 16px;
-}
-.hint {
-    vertical-align: middle !important;
-}
-.release br {
-    content: " ";
-    display: block;
-    margin: 10px 0px;
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
 }
