@@ -76,7 +76,8 @@ var OPT_FILES = [
     'hook/extension/node_modules/angular-messages/angular-messages.js',
     'hook/extension/node_modules/angular-material/angular-material.js',
     'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
-    'hook/extension/node_modules/underscore/underscore-min.js'
+    'hook/extension/node_modules/underscore/underscore-min.js',
+    'hook/extension/options/**/*'
 ];
 
 /**
@@ -156,16 +157,10 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
             .pipe(gulp.dest(DIST_FOLDER));
     }
 
-
     /**
      * Options JS and Css Mixed
      */
-
-    gulp.src(OPT_FILES, {
-        base: 'hook/extension'
-    }).pipe(gulp.dest(DIST_FOLDER));
-
-    return gulp.src("hook/extension/options/**/*.*", {
+    return gulp.src(OPT_FILES, {
             base: 'hook/extension'
         })
         .pipe(gulp.dest(DIST_FOLDER));
