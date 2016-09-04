@@ -218,16 +218,9 @@ var cssDependencies = [
     'css/extendedData.css'
 ];
 
-
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
 
-var constantsStr = '';
-constantsStr += 'var Constants = {';
-constantsStr += 'VERSION: "' + chrome.runtime.getManifest().version + '",';
-constantsStr += 'EXTENSION_ID: "' + chrome.runtime.id + '",';
-constantsStr += 'OPTIONS_URL: "chrome-extension://' + chrome.runtime.id + '/options/app/index.html",';
-constantsStr += '}';
-
 // Inject constants
+var constantsStr = 'var Constants = ' + JSON.stringify(Constants) + ';';
 content.getLoader().injectJS(constantsStr);
