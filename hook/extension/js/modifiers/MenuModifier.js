@@ -54,6 +54,7 @@ MenuModifier.prototype = {
                 },
                 function(error) {
                     if (error !== null) {
+                        console.log(error);
                         $('#splus_menu_heatmap').find('a').attr('href', '#');
                         $('#splus_menu_heatmap').find('a').attr('target', '_self');
                         $('#splus_menu_heatmap').find('a').attr('onclick', 'alert("Some StravistiX functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');

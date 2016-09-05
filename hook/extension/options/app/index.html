@@ -46,7 +46,7 @@
                     </md-list>
                 </div>
             </md-content>
-            <md-button class="md-primary md-cornered" ng-click="showTwitter()">Twitter Updates</md-button>
+            <md-button class="md-primary md-cornered" ng-click="openTwitter()">Twitter Updates</md-button>
             <md-button class="md-primary md-cornered" ng-click="showDonation()">Push project higher</md-button>
         </md-sidenav>
         <section layout="column" role="main" flex>
@@ -81,15 +81,21 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="showBugReport($event)">
+                                <md-button ng-click="openBugReport($event)">
                                     <md-icon>bug_report</md-icon>
-                                    Report bug
+                                    Report a bug
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="showProjectSources($event)">
+                                <md-button ng-click="openProjectSources($event)">
                                     <md-icon>code</md-icon>
                                     Project sources
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="openPluginPage($event)">
+                                    <md-icon>public</md-icon>
+                                    Plugin page
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
@@ -111,6 +117,7 @@
     </div>
 
     <!-- Specifics StravistiX includes -->
+    <script src="../../js/Constants.js"></script>
     <script src="../../js/UserSettings.js"></script>
     <script src="../../js/ReleaseNotes.js"></script>
     <script src="../../js/Helper.js"></script>

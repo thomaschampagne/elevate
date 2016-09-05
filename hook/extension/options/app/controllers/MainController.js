@@ -11,7 +11,6 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
 
     $scope.forward = function(target) {
         // Update title page
-        // $scope.updateTitle(target);
         $scope.pageTitle = (target.subname) ? target.subname : target.name;
         $location.path(target.link);
     };
@@ -20,56 +19,43 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         mainTitle: 'Stravistix',
         sidenav: {
             sections: [{
+                id: 'FITNESS_TREND',
                 name: 'Fitness Trend',
                 icon: 'fitness_center',
                 link: routeMap.fitnessTrendRoute,
             }, {
+                id: 'ACTIVITIES_GRID',
                 name: 'Activities Grid',
                 icon: 'grid_on',
                 link: 'link',
                 hide: true
             }, {
+                id: 'TARGETS',
                 name: 'Targets',
                 icon: 'adjust',
                 link: 'link',
                 hide: true
             }, {
+                id: 'YEAR_PROGRESSION',
                 name: 'Year progression',
                 icon: 'show_chart',
                 link: 'link',
                 hide: true
             }, {
-                name: 'Fitness Trend',
-                icon: 'fitness_center',
-                link: 'link',
-                hide: true
-            }, {
-                name: 'Activities Grid',
-                icon: 'grid_on',
-                link: 'link',
-                hide: true
-            }, {
-                name: 'Targets',
-                icon: 'adjust',
-                link: 'link',
-                hide: true
-            }, {
-                name: 'Year progression',
-                icon: 'show_chart',
-                link: 'link',
-                hide: true
-            }, {
+                id: 'COMMON_SETTINGS',
                 name: 'Common Settings',
                 icon: 'settings',
                 link: routeMap.commonSettingsRoute
             }, {
+                id: 'ATHLETE_SETTINGS',
                 name: 'Athlete Settings',
                 icon: 'accessibility',
                 link: routeMap.athleteSettingsRoute
             }, {
+                id: 'ZONES_SETTINGS',
                 name: 'Zones Settings',
                 icon: 'format_line_spacing',
-                expand: true,
+                expand: false,
                 link: 'link',
                 actions: [{
                     name: 'Heart rate reserve',
@@ -121,7 +107,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         }
     };
 
-    $scope.findCurrentPageTitle = function() {
+    $scope.updateMenuAndToolbarAlongPageLoaded = function() {
 
         var path = $location.path();
 
@@ -129,29 +115,44 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
             path = routeMap.commonSettingsRoute;
         }
 
-        // Find subname or nam to auto put title on load
+        // Find subname or name to auto put title on load
         var sectionFound = _.findWhere($scope.uiStructure.sidenav.sections, {
             link: $location.path()
         });
 
         if (sectionFound) {
-            return (sectionFound.subname) ? sectionFound.subname : sectionFound.name;
+            $scope.pageTitle = (sectionFound.subname) ? sectionFound.subname : sectionFound.name;
         } else {
 
-            var zonesSection = _.findWhere($scope.uiStructure.sidenav.sections, {
-                name: 'Zones Settings'
+            // Actions... of a section
+            var sectionsWithActions = _.filter($scope.uiStructure.sidenav.sections, function(section) {
+                return !_.isEmpty(section.actions);
             });
 
-            var actionFound = _.findWhere(zonesSection.actions, {
-                link: path
-            });
+            var actionFound;
+            for (var i = 0; i < sectionsWithActions.length; i++) {
 
-            return (actionFound.subname) ? actionFound.subname : actionFound.name;
+                var section = sectionsWithActions[i];
+                actionFound = _.findWhere(section.actions, {
+                    link: path
+                });
+
+                if (actionFound) {
+                    section.expand = true; // Ensure to open menu of selected sub-actions
+                    break;
+                }
+            }
+
+            if (!actionFound) {
+                $scope.pageTitle = '';
+            } else {
+                $scope.pageTitle = (actionFound.subname) ? actionFound.subname : actionFound.name;
+            }
         }
     };
 
     setTimeout(function() { // When loaded..
-        $scope.pageTitle = $scope.findCurrentPageTitle();
+        $scope.updateMenuAndToolbarAlongPageLoaded();
     });
 
     /**
@@ -200,9 +201,10 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     $window.open('https://www.facebook.com/stravistixforstrava', '_blank');
                 };
 
-                $scope.shareDirect = function() {
-                    $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+                $scope.openPluginPage = function() {
+                    $scope.$parent().openPluginPage();
                 };
+
             },
             templateUrl: 'views/modals/share.html',
             parent: angular.element(document.body),
@@ -214,16 +216,23 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
     }
 
     /**
+     * Plugin page
+     */
+    $scope.openPluginPage = function() {
+        $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+    };
+
+    /**
      * bug report
      */
-    $scope.showBugReport = function() {
+    $scope.openBugReport = function() {
         $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
     };
 
     /**
      * Project sources
      */
-    $scope.showProjectSources = function() {
+    $scope.openProjectSources = function() {
         $window.open('https://github.com/thomaschampagne/stravistix/', '_blank');
     };
 
@@ -246,8 +255,8 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     }
                 };
 
-                $scope.showTwitter = function() {
-                    $scope.$parent.showTwitter();
+                $scope.openTwitter = function() {
+                    $scope.$parent.openTwitter();
                 };
 
             },
@@ -277,7 +286,7 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
         });
     };
 
-    $scope.showTwitter = function() {
+    $scope.openTwitter = function() {
         $window.open('https://twitter.com/champagnethomas', '_blank');
     };
 });

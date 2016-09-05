@@ -3,8 +3,8 @@
     "name": "StravistiX for Strava O",
     "short_name": "StravistiX O",
     "description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
-    "version": "3.10.1",
-    "version_name": "3.10.1 Fork O",
+    "version": "4.0.1",
+    "version_name": "4.0.1 Fork O",
     "background": {
         "scripts": [
             "js/UserSettings.js",
@@ -17,6 +17,7 @@
         "js": [
             "node_modules/underscore/underscore-min.js",
             "modules/Loader.js",
+            "js/Constants.js",
             "js/Helper.js",
             "js/UserSettings.js",
             "js/Content.js"

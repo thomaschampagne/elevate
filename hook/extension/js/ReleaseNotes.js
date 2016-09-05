@@ -2,13 +2,24 @@
  Release note structure:
  {
      version: 'x.x.x',
-     hotFixes: [...],
-     features: [...],
-     hideFeatureReleaseNote: boolean, // Say if we display again features. Eg. Fix or hotfix release.
-     fixes: [...],
+     message: '',
+     hotFixes: [],
+     features: [],
+     hideFeatureReleaseNote: false, // Say if we display again features. Eg. Fix or hotfix release. Default: false
+     fixes: [],
  }
  */
 var releaseNotes = [{
+    version: '4.0.1',
+    message: 'NEW options user interface <a href="' + Constants.OPTIONS_URL + '" target="_blank">(link)</a> ! A NEW perspective is open for upcoming big features (WIP) ;)',
+    hotFixes: [],
+    features: ['Re-made options UI <a href="' + Constants.OPTIONS_URL + '" target="_blank">(link)</a> to prepare future of plugin! Google material design applied!'],
+    hideFeatureReleaseNote: false, // Say if we display again features. Eg. Fix or hotfix release. Default: false
+    fixes: [
+        'Fixed vanished "segment veloviewer" and "nearby segments" links on segments pages',
+        'Fixed wrong standard deviation speed when using MPH units'
+    ],
+}, {
     version: '3.10.1',
     message: 'A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)',
     hotFixes: [],

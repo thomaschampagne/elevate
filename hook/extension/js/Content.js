@@ -6,6 +6,7 @@ function Content(jsDependencies, cssDependencies, userSettings, appResources) {
     this.cssDependencies = cssDependencies;
     this.userSettings_ = userSettings;
     this.appResources_ = appResources;
+    this.loader = new Loader();
 }
 
 /**
@@ -15,9 +16,8 @@ Content.prototype = {
 
     loadDependencies: function loadDependencies(finishLoading) {
 
-        var loader = new Loader();
         var dependencies = _.union(this.jsDependencies_, this.cssDependencies);
-        loader.require(dependencies, function() {
+        this.loader.require(dependencies, function() {
             finishLoading();
         });
     },
@@ -84,6 +84,10 @@ Content.prototype = {
 
         });
 
+    },
+
+    getLoader: function() {
+        return this.loader;
     }
 };
 
@@ -214,6 +218,9 @@ var cssDependencies = [
     'css/extendedData.css'
 ];
 
-
 var content = new Content(jsDependencies, cssDependencies, userSettings, appResources);
 content.start();
+
+// Inject constants
+var constantsStr = 'var Constants = ' + JSON.stringify(Constants) + ';';
+content.getLoader().injectJS(constantsStr);
