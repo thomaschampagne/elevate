@@ -1,4 +1,7 @@
-
+.zone-input-margin {
+  margin-top: 2;
+  margin-bottom:0;
+}
 /* Animation of repeated-item for ngrepeat items*/
 /*
   We're using CSS transitions for when
