@@ -82,7 +82,6 @@ StravistiX.prototype = {
         this.handleRunningHeartRate_();
         this.handleRunningCadence_();
         this.handleRunningTemperature_();
-        this.handleActivityRunSegmentTimeComparison_();
 
         // All activities
         this.handleActivityQRCodeDisplay_();
@@ -168,7 +167,7 @@ StravistiX.prototype = {
         };
 
         var message = '';
-        if(!_.isEmpty(latestRelease.message)) {
+        if (!_.isEmpty(latestRelease.message)) {
             message += '<div style="background: #eee; padding: 8px;">';
             message += latestRelease.message;
             message += '</div>';
@@ -701,7 +700,7 @@ StravistiX.prototype = {
     },
 
 
-    handleActivityOfKindSegmentTimeComparison: function (activityType) {
+    handleActivitySegmentTimeComparison_: function() {
         // Test where are on an activity page... (note this includes activities/XXX/segments)
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
@@ -712,33 +711,18 @@ StravistiX.prototype = {
         }
 
         // Only running is supported
-        if (window.pageView.activity().attributes.type != activityType) {
+        var activityType = window.pageView.activity().attributes.type;
+        if (activityType !== "Ride" && activityType !== "Run") {
             return;
         }
 
         // PR only for my own activities
-        var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
+        var isMyOwn = (this.athleteId_ == this.athleteIdAuthorOfActivity_);
 
         if (env.debugMode) console.log("Execute handleActivityOfKindSegmentTimeComparison(" + activityType + ")");
 
         var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true, isMyOwn);
         activitySegmentTimeComparisonModifier.modify();
-    },
-
-    /**
-     *
-     */
-    handleActivitySegmentTimeComparison_: function() {
-
-        this.handleActivityOfKindSegmentTimeComparison("Ride");
-    },
-
-    /**
-     *
-     */
-    handleActivityRunSegmentTimeComparison_: function() {
-
-        this.handleActivityOfKindSegmentTimeComparison("Run");
     },
 
     /**
