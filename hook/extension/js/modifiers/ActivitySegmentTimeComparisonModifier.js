@@ -1,18 +1,23 @@
 /**
  *   ActivitySegmentTimeComparisonModifier is responsible of ...
  */
-function ActivitySegmentTimeComparisonModifier(userSettings, appResources) {
+function ActivitySegmentTimeComparisonModifier(userSettings, appResources, bike, isMyOwn) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
-    this.showDifferenceToPR = userSettings.displaySegmentTimeComparisonToPR;
-    this.showDifferenceToCurrentYearPR = userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+    this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
+    this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
     this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
+    this.isBike = bike;
 }
 
 /**
  * Define prototype
  */
 ActivitySegmentTimeComparisonModifier.prototype = {
+
+    crTitle: function crTitle() {
+        return this.isBike ? this.isFemale ? "QOM" : "KOM" : "CR";
+    },
 
     modify: function modify() {
 
@@ -23,15 +28,16 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         var self = this;
 
         // wait for Segments section load
-        if ($("#segments").length === 0) {
+        var segments = $("#segments");
+        if (segments.length === 0) {
             setTimeout(function() {
                 modify.call(self);
             }, 500);
             return;
         }
 
-        $("#segments #segment-filter").show();
-        $("#segments").addClass("time-comparison-enabled");
+        segments.find("#segment-filter").show();
+        segments.addClass("time-comparison-enabled");
 
         // Find sex of current acitivity athlete
         self.findOutGender();
@@ -46,7 +52,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
             if (!self.firstAppearDone) {
 
-                var timeColumnHeader = $("#segments table.segments th.time-col");
+
+                var timeColumnHeader = segments.find("table.segments th.time-col");
 
                 if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
@@ -57,7 +64,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 }
 
                 if (self.showDifferenceToKOM) {
-                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + (self.isFemale ? "QOM" : "KOM") + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
+                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + self.crTitle() + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
                 }
 
                 if (self.displaySegmentTimeComparisonPosition) {
@@ -147,6 +154,8 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             });
         });
 
+        $.force_appear();
+
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run modifier function
         var waitForSegmentsSectionRemoved = function() {
             if ($("#segments.time-comparison-enabled").length !== 0) {
@@ -169,7 +178,7 @@ ActivitySegmentTimeComparisonModifier.prototype = {
     },
 
     setNewLabelsValues: function() {
-        this.deltaKomLabel = (this.isFemale) ? "&Delta;QOM" : "&Delta;KOM";
+        this.deltaKomLabel = "&Delta;" + this.crTitle();
         this.deltaPRLabel = "&Delta;PR";
         this.deltaYearPRLabel = "&Delta;yPR";
     },

@@ -54,6 +54,8 @@ StravistiX.prototype = {
             });
         }
 
+        if (env.debugMode) console.log("Handling " + window.location.pathname);
+
         // Common
         this.handleMenu_();
         this.handleRemoteLinks_();
@@ -80,6 +82,7 @@ StravistiX.prototype = {
         this.handleRunningHeartRate_();
         this.handleRunningCadence_();
         this.handleRunningTemperature_();
+        this.handleActivityRunSegmentTimeComparison_();
 
         // All activities
         this.handleActivityQRCodeDisplay_();
@@ -697,12 +700,9 @@ StravistiX.prototype = {
         }.bind(this));
     },
 
-    /**
-     *
-     */
-    handleActivitySegmentTimeComparison_: function() {
 
-        // Test where are on an activity...
+    handleActivityOfKindSegmentTimeComparison: function (activityType) {
+        // Test where are on an activity page... (note this includes activities/XXX/segments)
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
@@ -711,20 +711,34 @@ StravistiX.prototype = {
             return;
         }
 
-        // Only cycling is supported
-        if (window.pageView.activity().attributes.type != "Ride") {
+        // Only running is supported
+        if (window.pageView.activity().attributes.type != activityType) {
             return;
         }
 
-        // Only for own activities
-        if (this.athleteId_ != this.athleteIdAuthorOfActivity_) {
-            return;
-        }
+        // PR only for my own activities
+        var isMyOwn = this.athleteId_ == this.athleteIdAuthorOfActivity_;
 
-        if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison_()");
+        if (env.debugMode) console.log("Execute handleActivityOfKindSegmentTimeComparison(" + activityType + ")");
 
-        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_);
+        var activitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings_, this.appResources_, true, isMyOwn);
         activitySegmentTimeComparisonModifier.modify();
+    },
+
+    /**
+     *
+     */
+    handleActivitySegmentTimeComparison_: function() {
+
+        this.handleActivityOfKindSegmentTimeComparison("Ride");
+    },
+
+    /**
+     *
+     */
+    handleActivityRunSegmentTimeComparison_: function() {
+
+        this.handleActivityOfKindSegmentTimeComparison("Run");
     },
 
     /**
