@@ -34,7 +34,7 @@ app.config(['$routeProvider', function($routeProvider) {
     });
 
     $routeProvider.when(routeMap.zonesSettingsRoute + '/:zoneValue', {
-        templateUrl: 'views/zonesSettings.html',
+        templateUrl: 'views/XtdZonesSettingsController.html',
         controller: 'XtdZonesSettingsController'
     });
 
