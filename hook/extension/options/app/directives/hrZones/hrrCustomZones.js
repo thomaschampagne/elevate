@@ -83,7 +83,8 @@ app.directive('hrrCustomZones', ['ChromeStorageService', '$mdDialog', '$location
                     // Delete last zone
                     var oldLastZone = $scope.hrZones[$scope.hrZones.length - 1];
                     $scope.hrZones.pop();
-                    $scope.hrZones[$scope.hrZones.length - 1].to = oldLastZone.to;
+                    // Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
+                    // $scope.hrZones[$scope.hrZones.length - 1].to = oldLastZone.to;
                     $scope.scrollToBottom();
                 }
 

@@ -10,6 +10,17 @@
  }
  */
 var releaseNotes = [{
+    version: '4.1.0',
+    message: '',
+    hotFixes: [],
+    features: [
+        'Segment time comparison now live for RUNNING ! Just open a running activity to see changes.',
+        'Improved zones customization in options: More thinner and explicit.'],
+    hideFeatureReleaseNote: false, // Say if we display again features. Eg. Fix or hotfix release. Default: false
+    fixes: [
+        'Fixed technical error which occured in plugin packaging with gulp',
+    ],
+}, {
     version: '4.0.1',
     message: 'NEW options user interface <a href="' + Constants.OPTIONS_URL + '" target="_blank">(link)</a> ! A NEW perspective is open for upcoming big features (WIP) ;)',
     hotFixes: [],

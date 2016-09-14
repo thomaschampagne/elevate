@@ -7,14 +7,16 @@ app.controller("XtdZonesSettingsController", ['$scope', '$location', '$routePara
         units: 'KPH',
         step: 0.1,
         min: 0,
-        max: 9999
+        max: 9999,
+        hasConvertion: true
     }, {
         name: 'Running Pace',
         value: 'pace',
         units: 'Seconds', // s/mi?!
         step: 1,
         min: 0,
-        max: 9999
+        max: 9999,
+        hasConvertion: true
     }, {
         name: 'Cycling Power',
         value: 'power',
