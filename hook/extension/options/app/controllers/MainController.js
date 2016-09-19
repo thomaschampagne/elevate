@@ -68,8 +68,8 @@ app.controller('MainController', function($scope, $location, $mdSidenav, $mdToas
                     icon: 'directions_bike',
                     link: routeMap.zonesSettingsRoute + '/speed'
                 }, {
-                    name: 'Runing Pace',
-                    subname: 'Customize Runing Pace zones',
+                    name: 'Running Pace',
+                    subname: 'Customize Running Pace zones',
                     icon: 'directions_walk',
                     link: routeMap.zonesSettingsRoute + '/pace'
                 }, {
