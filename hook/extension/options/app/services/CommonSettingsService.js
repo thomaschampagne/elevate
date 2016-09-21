@@ -134,6 +134,12 @@ app.factory('CommonSettingsService', function() {
                 optionLabels: ['Cycling'],
                 optionHtml: 'This option allow you to display as "fast reading" your current rank on segments in a new column on segments efforts rows.',
             }, {
+                optionKey: 'displayRecentEffortsHRAdjustedPace',
+                optionType: 'checkbox',
+                optionTitle: 'Enabled heart rate adjusted results in "Your recent efforts"',
+                optionLabels: ['All'],
+                optionHtml: 'This option allow you to display heart rate adjusted pace in "Your recent efforts" graph, can be useful to estimate a fitness trend.',
+            }, {
                 optionKey: 'reviveGoogleMaps',
                 optionType: 'checkbox',
                 optionTitle: 'Revive Google Maps on activities',
