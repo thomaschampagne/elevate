@@ -5,5 +5,3 @@ dist/
 package/
 chrome-win32/
 ftpConfig.json
-/.idea
-/*.iml

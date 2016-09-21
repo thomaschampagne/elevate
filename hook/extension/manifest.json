@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "StravistiX for Strava O",
-    "short_name": "StravistiX O",
+    "name": "StravistiX for Strava",
+    "short_name": "StravistiX",
     "description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
     "version": "4.0.1",
-    "version_name": "4.0.1 Fork O",
+    "version_name": "4.0.1 Stable",
     "background": {
         "scripts": [
             "js/UserSettings.js",
