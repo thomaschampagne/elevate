@@ -96,3 +96,16 @@
     font-size: small;
     font-weight: normal;
 }
+
+#athlete-history-chart .hra-time-mark {
+    stroke: rgb(150, 30, 30)
+}
+
+#athlete-history-chart .hra-line {
+    stroke: rgb(255, 130, 130);
+    stroke-dasharray: 5,5;
+}
+
+#athlete-history-chart .hra-axis {
+    fill: rgb(150, 30, 30);
+}
