@@ -176,3 +176,13 @@ Helper.guid = function() {
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 };
+
+Helper.safeMax = function safeMin(a,b) {
+    return typeof a == "undefined" ? b : Math.max(a, b);
+};
+
+Helper.safeMin = function safeMax(a,b) {
+    return typeof a == "undefined" ? b : Math.min(a, b);
+};
+
+
