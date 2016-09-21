@@ -62,6 +62,7 @@ StravistiX.prototype = {
         this.handleActivityScrolling_();
         this.handleDefaultLeaderboardFilter_();
         this.handleSegmentRankPercentage_();
+        this.handleSegmentHRAP_();
         this.handleActivityStravaMapType_();
         this.handleHidePremium_();
         this.handleHideFeed_();
@@ -374,6 +375,7 @@ StravistiX.prototype = {
     handleDefaultLeaderboardFilter_: function() {
 
         // If we are not on a segment or activity page then return...
+        // note: this does not work for run efforts, they use /segments instead of /activities
         if (!window.location.pathname.match(/^\/activities/)) {
             return;
         }
@@ -409,6 +411,28 @@ StravistiX.prototype = {
 
         var segmentRankPercentage = new SegmentRankPercentageModifier();
         segmentRankPercentage.modify();
+    },
+
+    /**
+     *
+     */
+    handleSegmentHRAP_: function() {
+
+        if (!this.userSettings_.displaySegmentRankPercentage) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleSegmentHRAP_()");
+
+        var segmentId = /^\/segments\/(\d+)$/.exec(window.location.pathname)[1];
+
+        var segmentHRATime = new SegmentRecentEffortsHRATimeModifier(this.userSettings_, this.athleteId_, segmentId);
+        segmentHRATime.modify();
     },
 
     /**
