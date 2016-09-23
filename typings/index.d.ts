@@ -1,3 +1,4 @@
+/// <reference path="globals/angular/index.d.ts" />
 /// <reference path="globals/chart.js/index.d.ts" />
 /// <reference path="globals/chrome/index.d.ts" />
 /// <reference path="globals/google.analytics/ga/index.d.ts" />

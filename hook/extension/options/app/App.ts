@@ -1,14 +1,13 @@
-/**
- * Declaring Angular App
- */
-var app = angular.module("App", ['ngRoute', 'ngMaterial', 'ngSanitize', 'ngAnimate']);
+import IModule = angular.IModule;
+
+let app: IModule = angular.module("App", ['ngRoute', 'ngMaterial', 'ngSanitize', 'ngAnimate']);
 
 app.constant('$colors', {
     strava: '#e94e1b'
 });
 
-app.config(function($mdThemingProvider, $colors) {
-    var stravaOrange = $mdThemingProvider.extendPalette('orange', {
+app.config(($mdThemingProvider: any, $colors: any) => {
+    let stravaOrange: any = $mdThemingProvider.extendPalette('orange', {
         '500': $colors.strava,
         'contrastDefaultColor': 'light'
     });
@@ -16,7 +15,8 @@ app.config(function($mdThemingProvider, $colors) {
     $mdThemingProvider.theme('default').primaryPalette('stravaOrange');
 });
 
-app.config(['$routeProvider', function($routeProvider) {
+
+app.config(['$routeProvider', ($routeProvider: any) => {
 
     $routeProvider.when(routeMap.commonSettingsRoute, {
         templateUrl: 'views/commonSettings.html',

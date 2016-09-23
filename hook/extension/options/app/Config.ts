@@ -1,7 +1,7 @@
 /**
  * Declaring Angular App Properties
  */
-var routeMap = {
+let routeMap: any = {
     commonSettingsRoute: '/commonSettings',
     athleteSettingsRoute: '/athleteSettings',
     hrrZonesSettingsRoute: '/hrrZonesSettings',
@@ -13,6 +13,6 @@ var routeMap = {
     shareRoute: '/share'
 };
 
-var properties = {
+let properties: any = {
     donateAmount: '25usd'
 };

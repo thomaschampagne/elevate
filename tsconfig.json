@@ -56,7 +56,9 @@
     "hook/extension/js/modifiers/HideFeedModifier.ts",
     "hook/extension/js/modifiers/DisplayFlyByFeedModifier.ts",
     "hook/extension/js/processors/ActivityComputer.ts",
-    "hook/extension/modules/StorageManager.ts"
+    "hook/extension/modules/StorageManager.ts",
+    "hook/extension/options/app/App.ts",
+    "hook/extension/options/app/Config.ts"
   ],
   "exclude": [
     "node_modules/",

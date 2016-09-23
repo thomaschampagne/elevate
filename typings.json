@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160922195358",
     "chart.js": "registry:dt/chart.js#0.0.0+20160914124927",
     "chrome": "registry:dt/chrome#0.0.0+20160724063844",
     "google.analytics/ga": "registry:dt/google.analytics/ga#0.0.0+20160317120654",
