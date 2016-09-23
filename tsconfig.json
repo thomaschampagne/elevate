@@ -58,7 +58,8 @@
     "hook/extension/js/processors/ActivityComputer.ts",
     "hook/extension/modules/StorageManager.ts",
     "hook/extension/options/app/App.ts",
-    "hook/extension/options/app/Config.ts"
+    "hook/extension/options/app/Config.ts",
+    "hook/extension/options/app/controllers/AthleteSettingsController.ts"
   ],
   "exclude": [
     "node_modules/",

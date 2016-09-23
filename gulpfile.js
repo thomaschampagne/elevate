@@ -77,7 +77,8 @@ var OPT_FILES = [
     'hook/extension/node_modules/angular-material/angular-material.js',
     'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/node_modules/underscore/underscore-min.js',
-    'hook/extension/options/**/*'
+    'hook/extension/options/**/*', // TODO Can be removed once option TS migrated done?!
+    '!hook/extension/options/**/*.ts' // NO TS files copied // TODO Can be removed once option TS migrated done?!
 ];
 
 /**
