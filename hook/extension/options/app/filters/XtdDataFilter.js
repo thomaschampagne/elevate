@@ -4,7 +4,7 @@
 app.filter('xtdDataFilter', function() {
 
     var formatTime = function(seconds) {
-        return Helper.secondsToHHMMSS(seconds).replace('00:', '');
+        return Helper.secondsToHHMMSS(seconds, true);
     };
 
     return function(value, type) {
