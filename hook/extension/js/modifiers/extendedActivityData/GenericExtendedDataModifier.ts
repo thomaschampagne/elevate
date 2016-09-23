@@ -1,0 +1,3 @@
+class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
+
+}

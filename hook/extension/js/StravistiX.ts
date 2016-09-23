@@ -1,0 +1,991 @@
+/// <reference path="../../../typings/index.d.ts" />
+/// <reference path="../../../typings/plugin.d.ts" />
+/// <reference path="../../../typings/stravistix.ts.migration.d.ts" />
+
+/**
+ *   StravistiX is responsible of linking processors with modfiers and user settings/health data
+ */
+class StravistiX {
+
+    public static instance: StravistiX = null;
+
+    protected isPro: boolean;
+    protected isPremium: boolean;
+    protected athleteName: string;
+    protected athleteIdAuthorOfActivity: number;
+    protected activityId: number;
+    protected athleteId: number;
+    protected activityProcessor: ActivityProcessor;
+    protected extensionId: string;
+    protected appResources: AppResources;
+    protected _userSettings: UserSettings;
+    protected vacuumProcessor: VacuumProcessor;
+
+    constructor(userSettings: UserSettings, appResources: AppResources) {
+
+        this._userSettings = userSettings;
+        this.appResources = appResources;
+        this.extensionId = this.appResources.extensionId;
+        this.vacuumProcessor = new VacuumProcessor();
+        this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings);
+        this.athleteId = this.vacuumProcessor.getAthleteId();
+        this.athleteName = this.vacuumProcessor.getAthleteName();
+        this.athleteIdAuthorOfActivity = this.vacuumProcessor.getAthleteIdAuthorOfActivity();
+        this.isPremium = this.vacuumProcessor.getPremiumStatus();
+        this.isPro = this.vacuumProcessor.getProStatus();
+        this.activityId = this.vacuumProcessor.getActivityId();
+
+        this.init();
+
+        if (StravistiX.instance == null) {
+            StravistiX.instance = this;
+        }
+    }
+
+    /**
+     * Make the work...
+     */
+    protected init(): void {
+
+        // Redirect app.strava.com/* to www.strava.com/*
+        if (this.handleForwardToWWW()) {
+            return; // Skip rest of init to be compliant with www.strava.com/* on next reload
+        }
+
+        // Handle some tasks to od when update occurs
+        if (this._userSettings.extensionHasJustUpdated || env.forceUpdated) {
+            this.handleExtensionHasJustUpdated();
+        }
+
+        if (env.preview) {
+            this.handlePreviewRibbon();
+        }
+
+        if (this._userSettings.localStorageMustBeCleared) {
+            localStorage.clear();
+
+            Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, (response: any) => {
+                console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
+            });
+        }
+
+        if (env.debugMode) console.log("Handling " + window.location.pathname);
+
+        // Common
+        this.handleMenu();
+        this.handleRemoteLinks();
+        this.handleWindyTyModifier();
+        this.handleReliveCCModifier();
+        this.handleActivityScrolling();
+        this.handleDefaultLeaderboardFilter();
+        this.handleSegmentRankPercentage();
+        this.handleActivityStravaMapType();
+        this.handleHidePremium();
+        this.handleHideFeed();
+        this.handleDisplayFlyByFeedModifier();
+
+        // Bike
+        this.handleExtendedActivityData();
+        this.handleExtendedSegmentEffortData();
+        this.handleNearbySegments();
+        this.handleActivityBikeOdo();
+        this.handleActivitySegmentTimeComparison();
+        this.handleActivityBestSplits();
+
+        // Run
+        this.handleRunningGradeAdjustedPace();
+        this.handleRunningHeartRate();
+        this.handleRunningCadence();
+        this.handleRunningTemperature();
+
+        // All activities
+        this.handleActivityQRCodeDisplay();
+
+        this.handleVirtualPartner();
+
+        this.handleAthletesStats();
+        this.handleActivitiesSummary();
+
+        // Must be done at the end
+        this.handleTrackTodayIncomingConnection();
+        this.handleGoogleMapsComeBackModifier();
+    }
+
+    /**
+     *
+     */
+    protected handleForwardToWWW(): boolean {
+
+        if (_.isEqual(window.location.hostname, 'app.strava.com')) {
+            let forwardUrl: string = window.location.protocol + "//www.strava.com" + window.location.pathname;
+            window.location.href = forwardUrl;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     */
+    protected handleExtensionHasJustUpdated(): void {
+
+        // Clear localstorage
+        // Especially for activies data stored in cache
+        console.log("ExtensionHasJustUpdated, localstorage clear");
+        localStorage.clear();
+
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
+
+        // Display ribbon update message
+        this.handleUpdatePopup();
+
+        // Send update info to ga
+        let updatedToEvent: any = {
+            categorie: 'Exploitation',
+            action: 'updatedVersion',
+            name: this.appResources.extVersion
+        };
+
+        follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+
+        // Now mark extension "just updated" to false...
+        Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, 'extensionHasJustUpdated', false);
+    }
+
+    /**
+     *
+     */
+    protected handleUpdatePopup(): void {
+
+        let previewBuild: boolean = false;
+        if (this.appResources.extVersionName.indexOf('preview@') !== -1) {
+            previewBuild = true;
+        }
+
+        let latestRelease: ReleaseNote = _.first(releaseNotes);
+
+        let updateMessageObj: any = {
+            logo: '<img src="' + this.appResources.logoStravistix + '"/>',
+            title: 'Update <strong>v' + this.appResources.extVersion + '</strong>',
+            hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
+            features: (latestRelease.features) ? latestRelease.features : [],
+            fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
+            upcommingFixes: [],
+            upcommingFeatures: [
+                // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
+                'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
+                //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
+                'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
+            ]
+        };
+
+        let message: string = '';
+        if (!_.isEmpty(latestRelease.message)) {
+            message += '<div style="background: #eee; padding: 8px;">';
+            message += latestRelease.message;
+            message += '</div>';
+        }
+
+        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+            message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
+            _.each(updateMessageObj.hotFixes, (hotFix: string) => {
+                message += '<h6>- ' + hotFix + '</h6>';
+            });
+        }
+
+        let baseVersion: Array<string> = this.appResources.extVersion.split('.');
+        if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
+            message += '<h5><strong>NEW in ' + baseVersion[0] + '.' + baseVersion[1] + '.x' + ':</strong></h5>';
+            _.each(updateMessageObj.features, (feature: string) => {
+                message += '<h6>- ' + feature + '</h6>';
+            });
+        }
+
+        if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
+            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            _.each(updateMessageObj.fixes, (fix: string) => {
+                message += '<h6>- ' + fix + '</h6>';
+            });
+        }
+
+        if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
+            message += '<h5><strong>Upcomming Fixes:</strong></h5>';
+            _.each(updateMessageObj.upcommingFixes, (upcommingFixes: string) => {
+                message += '<h6>- ' + upcommingFixes + '</h6>';
+            });
+        }
+
+        if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
+            message += '<h5><strong>Upcomming Features:</strong></h5>';
+            _.each(updateMessageObj.upcommingFeatures, (upcommingFeatures: string) => {
+                message += '<h6>- ' + upcommingFeatures + '</h6>';
+            });
+        }
+
+        if (previewBuild) {
+            updateMessageObj.title = this.appResources.extVersionName;
+            let shortSha1Commit: string = this.appResources.extVersionName.slice(this.appResources.extVersionName.indexOf('@') + 1);
+            message += '<a href="https://github.com/thomaschampagne/stravistix/compare/master...' + shortSha1Commit + '" target="_blank">Git diff between ' + this.appResources.extVersionName + ' and master (code in production)</a></br></br> ';
+        }
+
+        // Donate button
+        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#/?showDonation=true">';
+        message += '<strong>Push this project higher !!!</strong>';
+        message += '</a>';
+
+        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 25%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
+    }
+
+    /**
+     *
+     */
+    protected handleAthletesStats(): void {
+
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleAthletesStats()");
+
+        let athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources, {
+            Run: this._userSettings.targetsYearRun,
+            Ride: this._userSettings.targetsYearRide
+        });
+        athleteStatsModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleActivitiesSummary(): void {
+        // If we are not on the athletes page then return...
+        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivitiesSummary()");
+
+        let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
+        activitiesSummaryModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handlePreviewRibbon(): void {
+        let globalStyle: string = 'background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; text-align: center;';
+        let html: string = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
+        $('body').before(html);
+    }
+
+    /**
+     *
+     */
+    protected handleMenu(): void {
+
+        if (env.debugMode) console.log("Execute handleMenu()");
+
+        let menuModifier: MenuModifier = new MenuModifier(this.athleteId, this.appResources);
+        menuModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleRemoteLinks(): void {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!this._userSettings.remoteLinks) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRemoteLinks()");
+
+        let remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.athleteIdAuthorOfActivity === this.athleteId), this.activityId);
+        remoteLinksModifier.modify();
+    }
+
+    protected handleWindyTyModifier(): void {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!window.pageView) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().get('type') !== "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleWindyTyModifier()");
+
+        let windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this._userSettings);
+        windyTyModifier.modify();
+    }
+
+    protected handleReliveCCModifier(): void {
+
+        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayReliveCCLink) {
+            return;
+        }
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (!window.pageView) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().get('type') != "Ride") {
+            return;
+        }
+
+        // If home trainer skip (it will use gps data to locate weather data)
+        if (window.pageView.activity().get('trainer')) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleReliveCCModifier()");
+
+        let reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
+        reliveCCModifier.modify();
+    }
+
+
+    /**
+     *
+     */
+    protected handleActivityScrolling(): void {
+
+        if (!this._userSettings.feedAutoScroll) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivityScrolling_()");
+
+
+        let activityScrollingModifier: ActivityScrollingModifier = new ActivityScrollingModifier();
+        activityScrollingModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleDefaultLeaderboardFilter(): void {
+
+        // If we are not on a segment or activity page then return...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        // Kick out if we are not on SegmentLeaderboardView
+        let view: any = Strava.Labs.Activities.SegmentLeaderboardView;
+
+        if (!view) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleDefaultLeaderboardFilter()");
+
+        let defaultLeaderboardFilterModifier: DefaultLeaderboardFilterModifier = new DefaultLeaderboardFilterModifier(this._userSettings.defaultLeaderboardFilter);
+        defaultLeaderboardFilterModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleSegmentRankPercentage(): void {
+
+        if (!this._userSettings.displaySegmentRankPercentage) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleSegmentRankPercentage()");
+
+        let segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
+        segmentRankPercentage.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleActivityStravaMapType(): void {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivityStravaMapType()");
+
+        let activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this._userSettings.activityStravaMapType);
+        activityStravaMapTypeModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleHidePremium(): void {
+
+        // Eject premium users of this "Hiding" feature
+        // Even if they checked "ON" the hide premium option
+        if (this.isPremium) {
+            return;
+        }
+
+        if (!this._userSettings.hidePremiumFeatures) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleHidePremium()");
+
+        let hidePremiumModifier: HidePremiumModifier = new HidePremiumModifier();
+        hidePremiumModifier.modify();
+    }
+
+    protected handleHideFeed(): void {
+
+        // Test if where are on dashboard page
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
+
+
+        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleHideFeed()");
+
+        let hideFeedModifier: HideFeedModifier = new HideFeedModifier(this._userSettings);
+        hideFeedModifier.modify();
+    }
+
+    protected handleDisplayFlyByFeedModifier(): void {
+
+        // Test if where are on dashboard page
+        if (!window.location.pathname.match(/^\/dashboard/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleDisplayFlyByFeedModifier()");
+
+        let displayFlyByFeedModifier: DisplayFlyByFeedModifier = new DisplayFlyByFeedModifier();
+        displayFlyByFeedModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleExtendedActivityData(): void {
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        let activityType: string = window.pageView.activity().get('type');
+        let isTrainer: boolean = window.pageView.activity().get('trainer');
+
+        // Skip manual activities
+        if (activityType === 'Manual') {
+            return;
+        }
+
+        this.activityProcessor.setActivityType(activityType);
+        this.activityProcessor.setTrainer(isTrainer);
+
+        if (env.debugMode) console.log("Execute handleExtendedData_()");
+
+        let basicInfo: ActivityBasicInfo = {
+            activityName: this.vacuumProcessor.getActivityName(),
+            activityTime: this.vacuumProcessor.getActivityTime()
+        };
+
+        let extendedDataModifier: AbstractExtendedDataModifier;
+
+        switch (activityType) {
+            case 'Ride':
+                extendedDataModifier = new CyclingExtendedDataModifier(
+                    this.activityProcessor,
+                    this.activityId,
+                    activityType,
+                    this.appResources,
+                    this._userSettings,
+                    this.athleteId,
+                    this.athleteIdAuthorOfActivity,
+                    basicInfo,
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            case 'Run':
+                extendedDataModifier = new RunningExtendedDataModifier(
+                    this.activityProcessor,
+                    this.activityId,
+                    activityType,
+                    this.appResources,
+                    this._userSettings,
+                    this.athleteId,
+                    this.athleteIdAuthorOfActivity,
+                    basicInfo,
+                    AbstractExtendedDataModifier.TYPE_ACTIVITY);
+                break;
+            default:
+                break;
+        }
+
+        // Send opened activity type to ga for stats
+        let updatedToEvent: any = {
+            categorie: 'Analyse',
+            action: 'openedActivityType',
+            name: activityType
+        };
+
+        follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+    }
+
+    protected handleExtendedSegmentEffortData(): void {
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        if (!Strava.Labs) {
+            return;
+        }
+
+        let activityType: string = window.pageView.activity().get('type');
+        let isTrainer: boolean = window.pageView.activity().get('trainer');
+
+        // Skip manual activities
+        if (activityType === 'Manual') {
+            return;
+        }
+
+        this.activityProcessor.setActivityType(activityType);
+        this.activityProcessor.setTrainer(isTrainer);
+
+        let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
+
+        if (activityType === ('Run' || 'Hike' || 'Walk')) {
+            view = Strava.Labs.Activities.SegmentEffortDetailView;
+        }
+
+        if (!view) {
+            return;
+        }
+
+        let functionRender: any = view.prototype.render;
+
+        let that: StravistiX = this;
+
+        view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
+
+            let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
+
+            let basicInfo: ActivityBasicInfo = {
+                activityName: that.vacuumProcessor.getActivityName(),
+                activityTime: that.vacuumProcessor.getActivityTime()
+            };
+
+            let extendedDataModifier: AbstractExtendedDataModifier;
+
+            switch (activityType) {
+                case 'Ride':
+                    extendedDataModifier = new CyclingExtendedDataModifier(
+                        that.activityProcessor,
+                        that.activityId,
+                        activityType,
+                        that.appResources,
+                        that._userSettings,
+                        that.athleteId,
+                        that.athleteIdAuthorOfActivity,
+                        basicInfo,
+                        AbstractExtendedDataModifier.TYPE_SEGMENT);
+                    break;
+                case 'Run':
+                    extendedDataModifier = new RunningExtendedDataModifier(
+                        that.activityProcessor,
+                        that.activityId,
+                        activityType,
+                        that.appResources,
+                        that._userSettings,
+                        that.athleteId,
+                        that.athleteIdAuthorOfActivity,
+                        basicInfo,
+                        AbstractExtendedDataModifier.TYPE_SEGMENT);
+                    break;
+                default:
+                    break;
+            }
+            return r;
+        };
+    }
+
+    /**
+     *
+     */
+    protected handleNearbySegments(): void {
+
+        if (!this._userSettings.displayNearbySegments) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        let segmentData: Array<string> = window.location.pathname.match(/^\/segments\/(\d+)$/);
+        if (_.isNull(segmentData)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleNearbySegments()");
+
+        // Getting segment id
+        let segmentId: number = parseInt(segmentData[1]);
+
+        let segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
+        segmentProcessor.getNearbySegmentsAround((jsonSegments: Array<SegmentInfo>) => {
+
+            if (env.debugMode) console.log(jsonSegments);
+
+            let nearbySegmentsModifier: NearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources);
+            nearbySegmentsModifier.modify();
+
+        });
+    }
+
+    /**
+     *
+     */
+    protected handleActivityBikeOdo(): void {
+
+        if (!this._userSettings.displayBikeOdoInActivity) {
+            return;
+        }
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid running Extended data at the moment
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivityBikeOdo()");
+
+        let bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.athleteIdAuthorOfActivity);
+        bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: Array<string>) => {
+            let activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
+            activityBikeOdoModifier.modify();
+        });
+    }
+
+    /**
+     *
+     */
+    protected handleActivitySegmentTimeComparison(): void {
+
+        // Test where are on an activity page... (note this includes activities/XXX/segments)
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Only running is supported
+        let activityType: string = window.pageView.activity().get('type');
+        if (activityType !== "Ride" && activityType !== "Run") {
+            return;
+        }
+
+        // PR only for my own activities
+        let isMyOwn: boolean = (this.athleteId == this.athleteIdAuthorOfActivity);
+
+        if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
+
+        let activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources);
+
+        activitySegmentTimeComparisonModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleActivityBestSplits(): void {
+
+        if (!this._userSettings.displayActivityBestSplits) {
+            return;
+        }
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Only cycling is supported
+        if (window.pageView.activity().attributes.type != "Ride") {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleActivityBestSplits()");
+
+        // TODO Implement cache here: get stream from cache if exist
+        this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, hasPowerMeter: boolean) => {
+
+            Helper.getFromStorage(this.extensionId, StorageManager.storageSyncType, 'bestSplitsConfiguration', (response: any) => {
+
+                let activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this._userSettings, jsonResponse, hasPowerMeter, response.data, (splitsConfiguration: any) => {
+                    Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, 'bestSplitsConfiguration', splitsConfiguration);
+                });
+
+                activityBestSplitsModifier.modify();
+
+            });
+
+        });
+    }
+
+    /**
+     *
+     */
+    protected handleRunningGradeAdjustedPace(): void {
+
+        if (!this._userSettings.activateRunningGradeAdjustedPace) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningGradeAdjustedPace()");
+
+        let runningGradeAdjustedPace: RunningGradeAdjustedPaceModifier = new RunningGradeAdjustedPaceModifier();
+        runningGradeAdjustedPace.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleRunningHeartRate(): void {
+
+        if (!this._userSettings.activateRunningHeartRate) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningHeartRate()");
+
+        let runningHeartRateModifier: RunningHeartRateModifier = new RunningHeartRateModifier();
+        runningHeartRateModifier.modify();
+    }
+
+    protected handleRunningCadence(): void {
+
+        if (!this._userSettings.activateRunningCadence) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningCadence()");
+
+        let runningCadenceModifier: RunningCadenceModifier = new RunningCadenceModifier();
+        runningCadenceModifier.modify();
+    }
+
+    protected handleRunningTemperature(): void {
+
+        if (!this._userSettings.activateRunningTemperature) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        // Avoid bike activity
+        if (window.pageView.activity().attributes.type != "Run") {
+            return;
+        }
+
+
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleRunningHeartRate()");
+
+        let runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
+        runningTemperatureModifier.modify();
+    }
+
+    /**
+     *
+     */
+    protected handleActivityQRCodeDisplay(): void {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        if (_.isUndefined(window.pageView)) {
+            return;
+        }
+
+        let activityQRCodeDisplayModifier: ActivityQRCodeDisplayModifier = new ActivityQRCodeDisplayModifier(this.appResources, this.activityId);
+        activityQRCodeDisplayModifier.modify();
+
+    }
+
+    protected handleVirtualPartner(): void {
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        let virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId);
+        virtualPartnerModifier.modify();
+    }
+
+    protected handleGoogleMapsComeBackModifier(): void {
+
+        if (window.location.pathname.match(/\/truncate/)) { // Skipping on activity cropping
+            return;
+        }
+
+        if (!this._userSettings.reviveGoogleMaps) {
+            return;
+        }
+
+        // Test where are on an activity...
+        if (!window.location.pathname.match(/^\/activities/)) {
+            return;
+        }
+
+        let googleMapsComeBackModifier: GoogleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId, this.appResources, this._userSettings);
+        googleMapsComeBackModifier.modify();
+    }
+
+    /**
+     * Launch a track event once a day (is user use it once a day), to follow is account type
+     */
+    protected handleTrackTodayIncomingConnection(): void {
+
+        let userHasConnectSince24Hour: boolean = (StorageManager.getCookie('stravistix_daily_connection_done') == 'true');
+
+        if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+
+        if (_.isNull(this.athleteId)) {
+            if (env.debugMode) console.log("athleteId is empty value: " + this.athleteId);
+            return;
+        }
+
+        if (!userHasConnectSince24Hour) {
+
+            let accountType: string = 'Free';
+            let accountName: string = this.athleteName;
+
+            // We enter in that condition if user is premium or pro
+            if (!_.isNull(this.isPremium) && this.isPremium === true) {
+                accountType = 'Premium';
+            }
+
+            // accountType is overridden with "pro" if that condition is true
+            if (!_.isNull(this.isPro) && this.isPro === true) {
+                accountType = 'Pro';
+            }
+
+            let eventAction: string = 'DailyConnection_Account_' + accountType;
+
+            // Push IncomingConnection
+            let eventName: string = accountName + ' #' + this.athleteId + ' v' + this.appResources.extVersion;
+
+            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+
+            if (!env.debugMode) {
+                follow('send', 'event', 'DailyConnection', eventAction, eventName);
+            }
+
+            // Create cookie to avoid push during 1 day
+            StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
+
+        } else {
+            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+        }
+    }
+
+    public get userSettings(): UserSettings {
+        return this._userSettings;
+    }
+}

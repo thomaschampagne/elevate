@@ -1,4 +1,4 @@
-app.controller("HrrZonesSettingsController", ['$scope', 'ChromeStorageService', 'AvoidInputKeysService', function($scope, ChromeStorageService, AvoidInputKeysService) { // TODO rename to HRRZoneController...
+app.controller("HrrZonesSettingsController", ['$scope', 'ChromeStorageService', 'AvoidInputKeysService', function ($scope, ChromeStorageService, AvoidInputKeysService) {
 
     ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
         $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);

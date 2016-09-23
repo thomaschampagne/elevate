@@ -29,6 +29,7 @@
     "gulp-json-editor": "^2.2.1",
     "gulp-load-plugins": "^1.2.4",
     "gulp-options": "^1.0.2",
+    "gulp-typescript": "^2.13.6",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.2.0",
     "vinyl-ftp": "^0.4.5"

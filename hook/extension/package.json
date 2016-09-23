@@ -33,7 +33,6 @@
     "angular-sanitize": "^1.5.8",
     "chart.js": "^2.2.2",
     "fancybox": "^3.0.0",
-    "fiber": "^1.0.4",
     "qrcode-js-package": "^1.0.4",
     "underscore": "^1.8.3"
   }

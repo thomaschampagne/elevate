@@ -14,7 +14,7 @@ function GoogleMapsComeBackModifier(activityId, appResources, userSettings) {
 // Setup callback in window object when gmaps ready
 window.googleMapsApiLoaded = function() {
     $(window).trigger('gMapsLoaded');
-}
+};
 
 GoogleMapsComeBackModifier.prototype = {
 
