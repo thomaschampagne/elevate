@@ -1,6 +1,6 @@
 module.exports = function (config) {
     config.set({
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         frameworks: ['jasmine'],
         files: [
             'dist/js/processors/*.js',
