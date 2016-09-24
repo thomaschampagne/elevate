@@ -128,7 +128,7 @@ class VacuumProcessor {
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
-    protected getActivityCommonStats(): ActivityCommonStats {
+    protected getActivityStatsMap(): ActivityStatsMap {
 
         let actStatsContainer: JQuery = $(".activity-summary-container");
 
@@ -208,14 +208,14 @@ class VacuumProcessor {
             false, false, false, false);
 
         // Create activityData Map
-        let activityCommonStats: ActivityCommonStats = {
+        let activityCommonStats: ActivityStatsMap = {
             distance: distance,
-            movingTime: movingTime,
+            // movingTime: movingTime,
             elevation: elevation,
             avgPower: avgPower,
-            weightedPower: weightedPower,
-            energyOutput: energyOutput,
-            elapsedTime: elapsedTime,
+            // weightedPower: weightedPower,
+            // energyOutput: energyOutput,
+            // elapsedTime: elapsedTime,
             averageSpeed: averageSpeed,
             averageHeartRate: averageHeartRate,
             maxHeartRate: maxHeartRate
@@ -271,7 +271,7 @@ class VacuumProcessor {
     /**
      * @returns activity stream in callback
      */
-    public getActivityStream(callback: (activityCommonStats: ActivityCommonStats, activityStream: ActivityStream, athleteWeight: number, hasPowerMeter: boolean) => void): void {
+    public getActivityStream(callback: (activityCommonStats: ActivityStatsMap, activityStream: ActivityStream, athleteWeight: number, hasPowerMeter: boolean) => void): void {
 
         let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
 
@@ -295,7 +295,7 @@ class VacuumProcessor {
             try {
                 // Save result to cache
                 localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
-                    activityCommonStats: this.getActivityCommonStats(),
+                    activityCommonStats: this.getActivityStatsMap(),
                     stream: activityStream,
                     athleteWeight: this.getAthleteWeight(),
                     hasPowerMeter: hasPowerMeter
@@ -305,7 +305,7 @@ class VacuumProcessor {
                 localStorage.clear();
             }
 
-            callback(this.getActivityCommonStats(), activityStream, this.getAthleteWeight(), hasPowerMeter);
+            callback(this.getActivityStatsMap(), activityStream, this.getAthleteWeight(), hasPowerMeter);
         });
     }
 
