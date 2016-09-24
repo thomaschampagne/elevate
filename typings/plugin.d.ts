@@ -1,12 +1,9 @@
 declare let Strava: any;
 
 // Class declaration for chrome typing
-declare class MediaStream {
-}
-declare class MediaStreamConstraints {
-}
-declare class DirectoryEntry {
-}
+declare class MediaStream {}
+declare class MediaStreamConstraints {}
+declare class DirectoryEntry {}
 
 interface JQueryStatic {
     fancybox: (str: any) => void;
