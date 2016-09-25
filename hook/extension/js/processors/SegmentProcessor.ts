@@ -39,7 +39,7 @@ class SegmentProcessor {
         this.getSegmentAroundSearchPoint((searchPoint: LatLon) => {
 
             // Prepare Bounding box 2 km around search point
-            let boundingBox: Array<number> = searchPoint.boundingBox(2.0);
+            let boundingBox: Array<number> = this.getBoundingBox(searchPoint, 2000);
 
             // Find segments in bounding box
             this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: Array<SegmentInfo>) => {
@@ -54,6 +54,16 @@ class SegmentProcessor {
                 callback(segmentsInBounds);
             });
         });
+    }
+
+    getBoundingBox(point: LatLon, distance: number): Array<number> {
+
+        return [
+            point.destinationPoint(distance, 180).lat,
+            point.destinationPoint(distance, -90).lon,
+            point.destinationPoint(distance, 0).lat,
+            point.destinationPoint(distance, 90).lon,
+        ];
     }
 
     getSegmentsInBoundingBox(boundingBox: Array<number>, callback: (segmentsData: Array<SegmentInfo>) => void): void {

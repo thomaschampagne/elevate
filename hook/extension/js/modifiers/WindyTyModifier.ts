@@ -119,8 +119,8 @@ class WindyTyModifier implements Modifier {
         let temperatureUnitConfig: string = 'metric.temp.' + this.userSettings.temperatureUnit;
 
         let url: string = 'https://embed.windyty.com/?' +
-            this.baryCenterPosition.lat() + ',' +
-            this.baryCenterPosition.lon() + ',' +
+            this.baryCenterPosition.lat + ',' +
+            this.baryCenterPosition.lon + ',' +
             defaultZoomLevel + ',' +
             date.toISOString().split('T')[0] + '-' + this.pad(windyTyHour, 2) + ',' +
             type + ',' +

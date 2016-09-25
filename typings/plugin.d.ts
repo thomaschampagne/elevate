@@ -25,9 +25,11 @@ interface RegExpConstructor {
 
 declare class LatLon {
     constructor(lat: number, lon: number);
-    lat(): number;
-    lon(): number;
-    boundingBox(number: number): Array<number>;
+
+    lat: number;
+    lon: number;
+
+    destinationPoint(distance: number, number: number): LatLon;
 }
 
 interface Env {

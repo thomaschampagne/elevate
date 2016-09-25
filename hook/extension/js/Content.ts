@@ -141,9 +141,9 @@ let jsDependencies: Array<string> = [
     'node_modules/chart.js/dist/Chart.bundle.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'node_modules/qrcode-js-package/qrcode.min.js',
+    'node_modules/geodesy/dms.js',
+    'node_modules/geodesy/latlon-spherical.js',
     'modules/StorageManager.js',
-    'modules/geo.js',
-    'modules/latlong.js',
     'modules/jquery.appear.js',
 
 

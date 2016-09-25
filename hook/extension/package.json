@@ -34,6 +34,7 @@
     "chart.js": "^2.2.2",
     "fancybox": "^3.0.0",
     "qrcode-js-package": "^1.0.4",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "geodesy": "^1.1.1"
   }
 }

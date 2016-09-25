@@ -47,6 +47,8 @@ var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package"
 var EXT_SCRIPTS = [
     'hook/extension/config/env.js',
     'hook/extension/modules/*.js',
+    'hook/extension/node_modules/geodesy/dms.js',
+    'hook/extension/node_modules/geodesy/latlon-spherical.js',
     'hook/extension/node_modules/chart.js/dist/Chart.bundle.js',
     'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
