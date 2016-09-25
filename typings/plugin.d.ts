@@ -1,6 +1,8 @@
+/// <reference path="../hook/extension/config/env.ts" />
 /// <reference path="../hook/extension/js/UserSettings.ts" />
 /// <reference path="../hook/extension/js/Helper.ts" />
 /// <reference path="../hook/extension/js/interfaces/ActivityData.ts" />
+/// <reference path="../hook/extension/js/processors/VacuumProcessor.ts" />
 /// <reference path="../hook/extension/js/processors/ActivityComputer.ts" />
 
 declare let Strava: any;

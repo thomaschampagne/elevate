@@ -57,7 +57,8 @@
     "hook/extension/js/modifiers/DisplayFlyByFeedModifier.ts",
     "hook/extension/js/processors/ActivityComputer.ts",
     "hook/extension/modules/StorageManager.ts",
-    "specs/processors/ActivityComputer.spec.ts"
+    "specs/processors/ActivityComputer.spec.ts",
+    "specs/processors/VacuumProcessor.spec.ts"
   ],
   "exclude": [
     "node_modules/",

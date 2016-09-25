@@ -3,7 +3,7 @@ module.exports = function (config) {
         browsers: ['PhantomJS'],
         frameworks: ['jasmine'],
         files: [
-            'dist/config/**/*.js',
+            'dist/config/env.js',
             'dist/modules/**/*.js',
             'dist/js/modifiers/extendedActivityData/views/AbstractDataView.js',
             'dist/js/**/*.js',
