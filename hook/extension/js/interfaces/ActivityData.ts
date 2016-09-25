@@ -1,15 +1,3 @@
-interface ActivityCommonStats {
-    distance: number;
-    movingTime: number;
-    elevation: number;
-    avgPower: number;
-    weightedPower: number;
-    energyOutput: number;
-    elapsedTime: number;
-    averageSpeed: number;
-    averageHeartRate: number;
-    maxHeartRate: number;
-}
 interface ActivityStatsMap {
     maxHeartRate: number;
     averageHeartRate: number;

@@ -12,6 +12,14 @@ interface ReleaseNote {
 }
 
 let releaseNotes: Array<ReleaseNote> = [{
+    version: '4.2.0',
+    hotFixes: [],
+    features: [
+        'Extended stats on Trainer Rides (where speed was not recorded)',
+        'Invisible enhancement to prepare future: Moved 50% of the JS code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a> (Geeks and developers could understand ;))'],
+    hideFeatureReleaseNote: false,
+    fixes: [],
+},{
     version: '4.1.0',
     message: '',
     hotFixes: [],
