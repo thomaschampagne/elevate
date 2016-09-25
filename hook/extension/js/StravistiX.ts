@@ -732,7 +732,7 @@ class StravistiX {
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
 
-        let activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources);
+        let activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources, activityType, isMyOwn);
 
         activitySegmentTimeComparisonModifier.modify();
     }
