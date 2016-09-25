@@ -1,10 +1,16 @@
-/// <reference path="../../typings/index.d.ts" />
-/// <reference path="../../typings/plugin.d.ts" />
+describe('ActivityComputer', () => {
 
-describe('ActivityComputer', function () {
-    it('should be true', function () {
-        // expect(greet('World')).toEqual('Hello, World!');
-        expect(true).toEqual(true);
+    it('should be not null', () => {
+        let activityComputer: ActivityComputer = new ActivityComputer('Ride', false, userSettings, 71, false, null, null, null);
+        let result: AnalysisData = activityComputer.compute();
+        expect(activityComputer).not.toBeNull();
     });
+
+    it('should have result null', () => {
+        let activityComputer: ActivityComputer = new ActivityComputer('Ride', false, userSettings, 71, false, null, null, null);
+        let result: AnalysisData = activityComputer.compute();
+        expect(result).toBeNull();
+    });
+    
 });
 

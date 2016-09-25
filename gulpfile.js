@@ -110,8 +110,7 @@ gulp.task('build', ['installExtNpmDependencies'], function () {
      */
     gulp.src(EXT_SCRIPTS, {
         base: 'hook/extension'
-    })
-        .pipe(gulp.dest(DIST_FOLDER));
+    }).pipe(gulp.dest(DIST_FOLDER));
 
     /**
      * Compile Typescript and copy them to DIST_FOLDER
@@ -224,9 +223,9 @@ gulp.task('makeArchive', ['build'], function () {
  */
 gulp.task('buildSpecs', ['build'], function () {
     // Compile TS spec files
-    return gulp.src([SPECS_FOLDER + '/**/*.ts'])
-        .pipe(typeScript(tsProject))
-        .pipe(gulp.dest(SPECS_DIST_FOLDER));
+    return gulp.src([SPECS_FOLDER + '/**/*.ts'], {
+        base: '../'
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest(SPECS_DIST_FOLDER));
 });
 
 gulp.task('runSpecs', ['buildSpecs'], function (done) {
