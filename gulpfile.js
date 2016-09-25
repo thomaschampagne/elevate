@@ -214,27 +214,32 @@ gulp.task('makeArchive', ['build'], function () {
  * Specs
  */
 gulp.task('buildSpecs', ['build'], function () {
-    // Compile TS spec files
+
+    util.log('Compile TypeScript specs to JS for Karma testing');
+
     return gulp.src([SPECS_FOLDER + '/**/*.ts'], {
         base: '../'
     }).pipe(typeScript(tsProject)).pipe(gulp.dest(SPECS_DIST_FOLDER));
+
 });
 
-gulp.task('runSpecs', ['buildSpecs'], function (done) {
+gulp.task('specs', ['buildSpecs'], function () {
     util.log('Running jasmine tests through Karma server');
     new karmaServer({
+
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
-    }, done).start();
-});
 
-gulp.task('specs', ['runSpecs'], function () {
-    util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
-    return gulp.src([
-        SPECS_DIST_FOLDER,
-    ]).pipe(plugins.clean({
-        force: true
-    }));
+    }, function () {
+
+        util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
+        return gulp.src([
+            SPECS_DIST_FOLDER,
+        ]).pipe(plugins.clean({
+            force: true
+        }));
+
+    }).start();
 });
 
 /**
