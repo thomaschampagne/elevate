@@ -1,8 +1,8 @@
 import Jasmine = jasmine.Jasmine;
 import Spy = jasmine.Spy;
-describe('VacuumProcessor', function () {
+describe('VacuumProcessor', () => {
 
-    it('should be a pro', function () {
+    it('should be a pro', () => {
 
         let vacuumProcessor: VacuumProcessor = new VacuumProcessor();
 
