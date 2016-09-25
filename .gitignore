@@ -1,3 +1,4 @@
+.idea/
 *.git/
 */.gitignore
 **/node_modules/
@@ -5,4 +6,3 @@ dist/
 package/
 chrome-win32/
 ftpConfig.json
-.idea/

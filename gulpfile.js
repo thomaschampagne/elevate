@@ -28,6 +28,8 @@ var options = require('gulp-options');
 var ftp = require('vinyl-ftp');
 var git = require('gulp-git');
 var jeditor = require("gulp-json-editor");
+var typeScript = require("gulp-typescript");
+var tsProject = typeScript.createProject("tsconfig.json");
 
 /**
  * Global folder variable
@@ -46,10 +48,8 @@ var EXT_SCRIPTS = [
     'hook/extension/config/env.js',
     'hook/extension/modules/*.js',
     'hook/extension/node_modules/chart.js/dist/Chart.bundle.js',
-    'hook/extension/node_modules/fiber/src/fiber.min.js',
     'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
-    'hook/extension/modules/*.js',
     'hook/extension/js/**/*.js'
 ];
 
@@ -110,6 +110,15 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         })
         // .pipe(plugins.if(RELEASE_MODE, plugins.concat('script.js'))) // Concat if release
         // .pipe(plugins.if(RELEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
+        .pipe(gulp.dest(DIST_FOLDER));
+
+    /**
+     * Compile Typescript and copy them to DIST_FOLDER
+     */
+    gulp.src(['hook/extension/**/*.ts'], {
+            base: 'hook/extension'
+        })
+        .pipe(typeScript(tsProject))
         .pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {

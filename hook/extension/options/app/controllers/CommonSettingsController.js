@@ -106,7 +106,7 @@ app.controller("CommonSettingsController", ['$scope', 'CommonSettingsService', '
 
             if (optionSearch) {
                 option = optionSearch;
-                return;
+                
             }
         });
 
