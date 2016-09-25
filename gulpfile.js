@@ -30,6 +30,7 @@ var git = require('gulp-git');
 var jeditor = require("gulp-json-editor");
 var typeScript = require("gulp-typescript");
 var tsProject = typeScript.createProject("tsconfig.json");
+var karmaServer = require('karma').Server;
 
 /**
  * Global folder variable
@@ -39,6 +40,8 @@ var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
+var SPECS_FOLDER = 'specs/';
+var SPECS_DIST_FOLDER = 'specsDist/';
 var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package" task
 
 /**
@@ -81,24 +84,18 @@ var OPT_FILES = [
 ];
 
 /**
- * Detect DEBUG & REALEASE MODES
+ * Detect DEBUG & RELEASE MODES
  */
 /*
-var RELEASE_MODE = (options.has('release')) ? true : false;
-
-var DEBUG_MODE = !RELEASE_MODE;
-
-if (RELEASE_MODE) {
-    util.log('RELEASE MODE ENABLED.');
-}
-if (DEBUG_MODE) {
-    util.log('DEBUG MODE ENABLED.');
-}
-*/
+ var RELEASE_MODE = (options.has('release')) ? true : false;
+ var DEBUG_MODE = !RELEASE_MODE;
+ if (RELEASE_MODE) { util.log('RELEASE MODE ENABLED.'); }
+ if (DEBUG_MODE) { util.log('DEBUG MODE ENABLED.'); }
+ */
 /**
  * Gulp Tasks
  */
-gulp.task('build', ['installExtNpmDependencies'], function() {
+gulp.task('build', ['installExtNpmDependencies'], function () {
 
     util.log('Start extension core and options files copy');
 
@@ -106,31 +103,24 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
      * Extension core
      */
     gulp.src(EXT_SCRIPTS, {
-            base: 'hook/extension'
-        })
-        // .pipe(plugins.if(RELEASE_MODE, plugins.concat('script.js'))) // Concat if release
-        // .pipe(plugins.if(RELEASE_MODE, gulp.dest(DIST_FOLDER + '/js/'), gulp.dest(DIST_FOLDER)));
-        .pipe(gulp.dest(DIST_FOLDER));
+        base: 'hook/extension'
+    }).pipe(gulp.dest(DIST_FOLDER));
 
     /**
      * Compile Typescript and copy them to DIST_FOLDER
      */
     gulp.src(['hook/extension/**/*.ts'], {
-            base: 'hook/extension'
-        })
-        .pipe(typeScript(tsProject))
-        .pipe(gulp.dest(DIST_FOLDER));
+        base: 'hook/extension'
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest(DIST_FOLDER));
 
     gulp.src(EXT_STYLESHEETS, {
-            base: 'hook/extension'
-        })
-        .pipe(gulp.dest(DIST_FOLDER));
+        base: 'hook/extension'
+    }).pipe(gulp.dest(DIST_FOLDER));
 
 
     gulp.src(EXT_RESSOURCES, {
-            base: 'hook/extension'
-        })
-        .pipe(gulp.dest(DIST_FOLDER));
+        base: 'hook/extension'
+    }).pipe(gulp.dest(DIST_FOLDER));
 
     /**
      * Handle manifest file, if preview mode or not... if preview then: version name change to short sha1 HEAD commit and version = 0
@@ -142,15 +132,15 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         git.revParse({
             args: '--short HEAD',
             quiet: true
-        }, function(err, sha1Short) {
+        }, function (err, sha1Short) {
 
             if (err) {
                 throw new Error(err);
             }
 
             gulp.src(MANIFEST, {
-                    base: 'hook/extension'
-                })
+                base: 'hook/extension'
+            })
                 .pipe(jeditor({
                     'version': '0',
                     'version_name': 'preview@' + sha1Short
@@ -161,31 +151,29 @@ gulp.task('build', ['installExtNpmDependencies'], function() {
         });
     } else {
         gulp.src(MANIFEST, {
-                base: 'hook/extension'
-            })
-            .pipe(gulp.dest(DIST_FOLDER));
+            base: 'hook/extension'
+        }).pipe(gulp.dest(DIST_FOLDER));
     }
 
     /**
      * Options JS and Css Mixed
      */
     return gulp.src(OPT_FILES, {
-            base: 'hook/extension'
-        })
-        .pipe(gulp.dest(DIST_FOLDER));
+        base: 'hook/extension'
+    }).pipe(gulp.dest(DIST_FOLDER));
 });
 
 /**
  * Init task
  */
-gulp.task('installExtNpmDependencies', function(initDone) {
+gulp.task('installExtNpmDependencies', function (initDone) {
 
     util.log('Installing extension NPM dependencies');
 
     // Switch to ./hook/extension folder
     process.chdir(EXT_FOLDER);
 
-    exec('npm install', function(error, stdout, stderr) {
+    exec('npm install', function (error, stdout, stderr) {
 
         if (error) {
             util.log(error);
@@ -210,7 +198,7 @@ gulp.task('installExtNpmDependencies', function(initDone) {
 /**
  * Archiving
  */
-gulp.task('makeArchive', ['build'], function() {
+gulp.task('makeArchive', ['build'], function () {
 
     PACKAGE_NAME = 'stravistix_v' + JSON.parse(fs.readFileSync(DIST_FOLDER + '/manifest.json')).version + '_' + (new Date().toISOString().replace(/T/, '_').replace(/\..+/, '').replace(/:/g, '.')) + '.zip';
 
@@ -223,21 +211,47 @@ gulp.task('makeArchive', ['build'], function() {
 });
 
 /**
+ * Specs
+ */
+gulp.task('buildSpecs', ['build'], function () {
+    // Compile TS spec files
+    return gulp.src([SPECS_FOLDER + '/**/*.ts'], {
+        base: '../'
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest(SPECS_DIST_FOLDER));
+});
+
+gulp.task('runSpecs', ['buildSpecs'], function (done) {
+    util.log('Running jasmine tests through Karma server');
+    new karmaServer({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});
+
+gulp.task('specs', ['runSpecs'], function () {
+    util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
+    return gulp.src([
+        SPECS_DIST_FOLDER,
+    ]).pipe(plugins.clean({
+        force: true
+    }));
+});
+
+/**
  * Cleaning task
  */
-gulp.task('cleanDistSrcOnly', function() {
+gulp.task('cleanDistSrcOnly', function () {
 
     util.log('Cleaning dist/ folder, except dist/node_modules folder');
     return gulp.src([
-            DIST_FOLDER + '/*',
-            '!' + DIST_FOLDER + '/node_modules/',
-        ])
-        .pipe(plugins.clean({
-            force: true
-        }));
+        DIST_FOLDER + '/*',
+        '!' + DIST_FOLDER + '/node_modules/',
+    ]).pipe(plugins.clean({
+        force: true
+    }));
 });
 
-gulp.task('cleanDistAll', function() {
+gulp.task('cleanDistAll', function () {
 
     util.log('Cleaning dist/ folder completly');
     return gulp.src(DIST_FOLDER)
@@ -246,16 +260,15 @@ gulp.task('cleanDistAll', function() {
         }));
 });
 
-gulp.task('cleanPackage', function() {
+gulp.task('cleanPackage', function () {
 
     util.log('Cleaning package/ folder');
-    return gulp.src(PACKAGE_FOLDER)
-        .pipe(plugins.clean({
-            force: true
-        }));
+    return gulp.src(PACKAGE_FOLDER).pipe(plugins.clean({
+        force: true
+    }));
 });
 
-gulp.task('cleanExtNodeModules', ['cleanDistAll'], function() {
+gulp.task('cleanExtNodeModules', ['cleanDistAll'], function () {
 
     util.log('Cleaning extension node_modules/ folder');
 
@@ -265,7 +278,7 @@ gulp.task('cleanExtNodeModules', ['cleanDistAll'], function() {
         }));
 });
 
-gulp.task('cleanRootNodeModules', ['cleanDistAll'], function() {
+gulp.task('cleanRootNodeModules', ['cleanDistAll'], function () {
 
     util.log('Cleaning root extension node_modules/ folder');
 
@@ -284,7 +297,7 @@ gulp.task('default', ['build']);
 // Result in a zip file into builds/
 gulp.task('package', ['clean', 'makeArchive']);
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch([
         'hook/extension/**/*',
         '!hook/extension/node_modules/**/*',
@@ -296,7 +309,7 @@ gulp.task('clean', ['cleanPackage', 'cleanDistAll', 'cleanExtNodeModules']);
 gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
 
 // FTP publish
-gulp.task('ftpPublish', ['package'], function() {
+gulp.task('ftpPublish', ['package'], function () {
 
     if (PACKAGE_NAME) {
 

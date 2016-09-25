@@ -1,12 +1,14 @@
+/// <reference path="../hook/extension/js/UserSettings.ts" />
+/// <reference path="../hook/extension/js/Helper.ts" />
+/// <reference path="../hook/extension/js/interfaces/ActivityData.ts" />
+/// <reference path="../hook/extension/js/processors/ActivityComputer.ts" />
+
 declare let Strava: any;
 
 // Class declaration for chrome typing
-declare class MediaStream {
-}
-declare class MediaStreamConstraints {
-}
-declare class DirectoryEntry {
-}
+declare class MediaStream {}
+declare class MediaStreamConstraints {}
+declare class DirectoryEntry {}
 
 interface JQueryStatic {
     fancybox: (str: any) => void;
