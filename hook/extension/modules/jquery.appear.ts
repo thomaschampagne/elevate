@@ -7,54 +7,57 @@
  * https://github.com/morr/jquery.appear/
  *
  * Version: 0.3.6
+ *
+ * Converted to TypeScript By Thomas Champagne
  */
-(function ($) {
-    var selectors = [];
+(function ($: JQueryStatic) {
+    let selectors: Array<JQuery> = [];
 
-    var check_binded = false;
-    var check_lock = false;
-    var defaults = {
+    let check_binded: boolean = false;
+    let check_lock: boolean = false;
+    let defaults: any = {
         interval: 250,
         force_process: false
     };
-    var $window = $(window);
 
-    var $prior_appeared = [];
+    let $window: JQuery = $(window);
+
+    let $prior_appeared: Array<JQuery> = [];
 
     function process() {
         check_lock = false;
-        for (var index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
-            var $appeared = $(selectors[index]).filter(function () {
+        for (let index: number = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
+            let $appeared = $(selectors[index]).filter(function () {
                 return $(this).is(':appeared');
             });
 
             $appeared.trigger('appear', [$appeared]);
 
             if ($prior_appeared[index]) {
-                var $disappeared = $prior_appeared[index].not($appeared);
+                let $disappeared: JQuery = $prior_appeared[index].not($appeared);
                 $disappeared.trigger('disappear', [$disappeared]);
             }
             $prior_appeared[index] = $appeared;
         }
     };
 
-    function add_selector(selector) {
+    function add_selector(selector: JQuery) {
         selectors.push(selector);
         $prior_appeared.push();
     }
 
     // "appeared" custom filter
-    $.expr[':']['appeared'] = function (element) {
-        var $element = $(element);
+    $.expr[':']['appeared'] = function (element: HTMLElement) {
+        let $element: JQuery = $(element);
         if (!$element.is(':visible')) {
             return false;
         }
 
-        var window_left = $window.scrollLeft();
-        var window_top = $window.scrollTop();
-        var offset = $element.offset();
-        var left = offset.left;
-        var top = offset.top;
+        let window_left: number = $window.scrollLeft();
+        let window_top: number = $window.scrollTop();
+        let offset: any = $element.offset();
+        let left: number = offset.left;
+        let top: number = offset.top;
 
         if (top + $element.height() >= window_top &&
             top - ($element.data('appear-top-offset') || 0) <= window_top + $window.height() &&
@@ -68,11 +71,11 @@
 
     $.fn.extend({
         // watching for element's appearance in browser viewport
-        appear: function (options) {
-            var opts = $.extend({}, defaults, options || {});
-            var selector = this.selector || this;
+        appear: function (options: any) {
+            let opts: any = $.extend({}, defaults, options || {});
+            let selector = this.selector || this;
             if (!check_binded) {
-                var on_check = function () {
+                let on_check = function () {
                     if (check_lock) {
                         return;
                     }
@@ -104,10 +107,5 @@
         }
     });
 })(function () {
-    if (typeof module !== 'undefined') {
-        // Node
-        return require('jquery');
-    } else {
-        return jQuery;
-    }
+    return jQuery;
 }());
