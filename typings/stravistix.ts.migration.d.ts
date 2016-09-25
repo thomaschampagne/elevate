@@ -28,6 +28,7 @@
 
 // TMP TypeScript declaration
 
+///<reference path="./google.maps.d.ts"/> // TODO use definition from definitely typed
 
 declare class AthleteStatsModifier {
     constructor(a: any, b: any);
@@ -84,11 +85,11 @@ declare class ActivityQRCodeDisplayModifier {
 }
 
 
-declare class GoogleMapsComeBackModifier {
-    constructor(a: any, b: any, c: any);
-
-    modify(): Function;
-}
+// declare class GoogleMapsModifier {
+//     constructor(a: any, b: any, c: any);
+//
+//     modify(): Function;
+// }
 
 
 ///

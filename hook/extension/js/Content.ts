@@ -196,7 +196,7 @@ let jsDependencies: Array<string> = [
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningDataModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
-    'js/modifiers/GoogleMapsComeBackModifier.js',
+    'js/modifiers/GoogleMapsModifier.js',
 
     // ... workers
     'js/processors/ActivityComputer.js',

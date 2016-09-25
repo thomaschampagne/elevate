@@ -9,13 +9,14 @@ declare class DirectoryEntry {
 }
 
 interface JQueryStatic {
-    fancybox: (str: any) => void;
+    fancybox: (str: any, options?: any) => void;
 }
 
 interface Window {
     currentAthlete: any;
     pageView: any; // Allow access of window.pageView where page wiew
     unescape(str: string): string; // Allow access of window.pageView where page wiew
+    googleMapsApiLoaded: () => void;
 }
 
 interface RegExpConstructor {

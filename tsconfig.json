@@ -60,7 +60,8 @@
     "hook/extension/modules/jquery.appear.ts",
     "hook/extension/options/app/App.ts",
     "hook/extension/options/app/Config.ts",
-    "hook/extension/options/app/controllers/AthleteSettingsController.ts"
+    "hook/extension/options/app/controllers/AthleteSettingsController.ts",
+    "hook/extension/js/modifiers/GoogleMapsModifier.ts"
   ],
   "exclude": [
     "node_modules/",

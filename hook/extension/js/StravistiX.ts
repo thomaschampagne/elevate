@@ -933,8 +933,8 @@ class StravistiX {
             return;
         }
 
-        let googleMapsComeBackModifier: GoogleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId, this.appResources, this._userSettings);
-        googleMapsComeBackModifier.modify();
+        let googleMapsModifier: GoogleMapsModifier = new GoogleMapsModifier(this.activityId, this.appResources, this._userSettings);
+        googleMapsModifier.modify();
     }
 
     /**
