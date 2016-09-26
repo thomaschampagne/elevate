@@ -4,6 +4,7 @@
     "chart.js": "registry:dt/chart.js#0.0.0+20160914124927",
     "chrome": "registry:dt/chrome#0.0.0+20160724063844",
     "google.analytics/ga": "registry:dt/google.analytics/ga#0.0.0+20160317120654",
+    "google.maps": "registry:dt/google.maps#3.20.0+20160914131659",
     "jquery": "registry:dt/jquery#1.10.0+20160908203239",
     "underscore": "registry:dt/underscore#1.8.3+20160908111004"
   }

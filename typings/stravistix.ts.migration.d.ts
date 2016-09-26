@@ -1,7 +1,7 @@
 /*
 
  // Install new typings:
-
+ typings search xxxxx
  typings install dt~XXXXXX --global --save
 
 
@@ -27,8 +27,6 @@
  */
 
 // TMP TypeScript declaration
-
-///<reference path="./google.maps.d.ts"/> // TODO use definition from definitely typed
 
 declare class AthleteStatsModifier {
     constructor(a: any, b: any);
