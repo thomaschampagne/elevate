@@ -62,7 +62,8 @@
     "hook/extension/options/app/Config.ts",
     "hook/extension/options/app/controllers/AthleteSettingsController.ts",
     "hook/extension/js/modifiers/GoogleMapsModifier.ts",
-    "hook/extension/js/modifiers/DefaultLeaderBoardFilterModifier.ts"
+    "hook/extension/js/modifiers/DefaultLeaderBoardFilterModifier.ts",
+    "hook/extension/js/modifiers/ActivityStravaMapTypeModifier.ts"
   ],
   "exclude": [
     "node_modules/",

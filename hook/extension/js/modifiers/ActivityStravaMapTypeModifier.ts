@@ -1,25 +1,20 @@
-/**
- *   ActivityStravaMapTypeModifier is responsible of ...
- */
-function ActivityStravaMapTypeModifier(mapType) {
-    this.mapType = mapType;
-}
+class ActivityStravaMapTypeModifier implements Modifier {
 
-/**
- * Define prototype
- */
-ActivityStravaMapTypeModifier.prototype = {
+    protected mapType: string;
 
-    modify: function modify() {
+    constructor(mapType: string) {
+        this.mapType = mapType;
+    }
+
+    modify(): void {
 
         if (this.mapType === 'terrain') {
             return;
         }
 
-        var mapGoal = this.mapType;
+        let mapGoal = this.mapType;
 
-        setInterval(function() {
-
+        setInterval(() => {
             $('a.map-type-selector[data-map-type-id=' + mapGoal + ']')
                 .not('.once-only')
                 .addClass('once-only')
@@ -27,5 +22,5 @@ ActivityStravaMapTypeModifier.prototype = {
                 .parents('.drop-down-menu') // Close menu
                 .click();
         }, 750);
-    },
-};
+    }
+}
