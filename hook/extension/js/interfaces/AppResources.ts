@@ -34,6 +34,7 @@ interface AppResources {
     areaChartIcon: string;
     tachometerIcon: string;
     boltIcon: string;
+    loadingIcon: string;
     circleNotchIcon: string;
     lineChartIcon: string;
     logArrowUpIcon: string;

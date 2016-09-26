@@ -1,8 +1,3 @@
-// Setup callback in window object when gmaps ready
-window.googleMapsApiLoaded = function () {
-    $(window).trigger('gMapsLoaded');
-};
-
 class GoogleMapsModifier implements Modifier {
 
     protected activityId: number;
@@ -25,11 +20,10 @@ class GoogleMapsModifier implements Modifier {
             return;
         }
 
-        // Bind function for be called when Google API loaded
-        $(window).bind('gMapsLoaded', this.googleMapsApiLoaded(this.activityId));
-
         // Next load the Google API from external
         this.getGoogleMapsApi();
+
+        this.googleMapsApiLoaded(this.activityId);
 
         // If segment Item has been clicked then fetch info on segment and display
         /* 
@@ -73,8 +67,9 @@ class GoogleMapsModifier implements Modifier {
     }
 
     protected showWaitLoadingMessage(): void {
-        $.fancybox('<div style="width:100px;height:50px">Loading...</div>', {
-            'autoScale': true
+        $.fancybox('<div style="text-align: center; padding-top: 15px;"><img src="' + this.appResources.loadingIcon + '"/></div>', {
+            autoScale: true,
+            closeBtn: false
         });
     }
 
@@ -196,9 +191,9 @@ class GoogleMapsModifier implements Modifier {
         $.ajax({
             url: streamPathUrl,
             dataType: "json"
-        }).done(function (jsonResponse: any) {
+        }).done((jsonResponse: any) => {
             callback(jsonResponse.latlng);
-        }.bind(this));
+        });
     }
 
     protected fetchSegmentInfoFromEffortId(effortId: number, callback: (segmentInfoResponse: any) => void): void {
@@ -348,7 +343,9 @@ class GoogleMapsModifier implements Modifier {
     protected getGoogleMapsApi(): void {
         let script_tag: HTMLScriptElement = document.createElement('script');
         script_tag.setAttribute("type", "text/javascript");
-        script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=googleMapsApiLoaded");
+        script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false");
+        // script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=googleMapsApiLoaded");
         (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
     }
 }
+

@@ -123,6 +123,7 @@ let appResources: AppResources = {
     areaChartIcon: chrome.extension.getURL('/icons/fa-area-chart.png'),
     tachometerIcon: chrome.extension.getURL('/icons/fa-tachometer.png'),
     boltIcon: chrome.extension.getURL('/icons/fa-bolt.png'),
+    loadingIcon: chrome.extension.getURL('/icons/loading.gif'),
     circleNotchIcon: chrome.extension.getURL('/icons/fa-circle-o-notch.png'),
     lineChartIcon: chrome.extension.getURL('/icons/fa-line-chart.png'),
     logArrowUpIcon: chrome.extension.getURL('/icons/fa-long-arrow-up.png'),
