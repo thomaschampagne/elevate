@@ -65,7 +65,8 @@
     "hook/extension/js/modifiers/DefaultLeaderBoardFilterModifier.ts",
     "hook/extension/js/modifiers/ActivityStravaMapTypeModifier.ts",
     "hook/extension/js/modifiers/ActivityScrollingModifier.ts",
-    "hook/extension/js/modifiers/ActivityQRCodeDisplayModifier.ts"
+    "hook/extension/js/modifiers/ActivityQRCodeDisplayModifier.ts",
+    "hook/extension/js/modifiers/AthleteStatsModifier.ts"
   ],
   "exclude": [
     "node_modules/",

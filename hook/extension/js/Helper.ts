@@ -126,7 +126,7 @@ class Helper {
         });
     };
 
-    public static formatNumber(n: any, c: any, d: any, t: any): string {
+    public static formatNumber(n: any, c: any, d?: any, t?: any): string {
 
         c = isNaN(c = Math.abs(c)) ? 2 : c,
             d = d == undefined ? "." : d,

@@ -27,12 +27,14 @@
  */
 
 // TMP TypeScript declaration
+//
+// declare class AthleteStatsModifier {
+//     constructor(a: any, b: any);
+//
+//     modify(): Function;
+// }
 
-declare class AthleteStatsModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
+///<reference path="d3.d.ts"/>
 
 declare class ActivitiesSummaryModifier {
     constructor();
