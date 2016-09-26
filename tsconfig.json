@@ -64,7 +64,8 @@
     "hook/extension/js/modifiers/GoogleMapsModifier.ts",
     "hook/extension/js/modifiers/DefaultLeaderBoardFilterModifier.ts",
     "hook/extension/js/modifiers/ActivityStravaMapTypeModifier.ts",
-    "hook/extension/js/modifiers/ActivityScrollingModifier.ts"
+    "hook/extension/js/modifiers/ActivityScrollingModifier.ts",
+    "hook/extension/js/modifiers/ActivityQRCodeDisplayModifier.ts"
   ],
   "exclude": [
     "node_modules/",

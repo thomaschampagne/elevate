@@ -8,6 +8,16 @@ declare class MediaStreamConstraints {
 declare class DirectoryEntry {
 }
 
+declare class QRCode {
+    constructor(elementId: string, options: any);
+    static CorrectLevel: {
+        L: string;
+        M: string;
+        Q: string;
+        H: string;
+    }
+}
+
 interface JQueryStatic {
     fancybox: (str: any, options?: any) => void;
 }

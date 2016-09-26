@@ -58,11 +58,6 @@ declare class ActivityBestSplitsModifier {
     modify(): Function;
 }
 
-declare class ActivityQRCodeDisplayModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
 
 
 // declare class GoogleMapsModifier {

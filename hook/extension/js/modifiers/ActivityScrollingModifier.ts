@@ -1,6 +1,6 @@
 class ActivityScrollingModifier implements Modifier {
 
-    modify(): void {
+    public modify(): void {
 
         if (window.location.pathname.indexOf('/dashboard') === -1) {
             return;
