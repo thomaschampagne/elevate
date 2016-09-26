@@ -47,11 +47,6 @@ declare class ActivityScrollingModifier {
     modify(): Function;
 }
 
-declare class DefaultLeaderboardFilterModifier {
-    constructor(a: any);
-
-    modify(): Function;
-}
 declare class ActivityStravaMapTypeModifier {
     constructor(a: any);
 

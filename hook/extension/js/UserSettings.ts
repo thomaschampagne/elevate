@@ -20,7 +20,7 @@ interface UserSettings {
     targetsYearRun: number;
     remoteLinks: boolean;
     feedAutoScroll: boolean;
-    defaultLeaderboardFilter: string;
+    defaultLeaderBoardFilter: string;
     activateRunningGradeAdjustedPace: boolean;
     activateRunningHeartRate: boolean;
     activateRunningCadence: boolean;
@@ -1186,7 +1186,7 @@ let userSettings: UserSettings = {
     targetsYearRun: 750,
     remoteLinks: true,
     feedAutoScroll: true,
-    defaultLeaderboardFilter: 'overall',
+    defaultLeaderBoardFilter: 'overall',
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
     activateRunningCadence: true,

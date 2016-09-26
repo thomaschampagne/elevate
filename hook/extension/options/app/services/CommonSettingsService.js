@@ -166,7 +166,7 @@ app.factory('CommonSettingsService', function() {
                 optionLabels: ['Cycling'],
                 optionHtml: 'This option allows to enable best splits into your cycling activities.',
             }, {
-                optionKey: 'defaultLeaderboardFilter',
+                optionKey: 'defaultLeaderBoardFilter',
                 optionType: 'list',
                 optionLabels: ['All'],
                 optionList: [{

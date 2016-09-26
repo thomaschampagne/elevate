@@ -406,8 +406,8 @@ class StravistiX {
 
         if (env.debugMode) console.log("Execute handleDefaultLeaderboardFilter()");
 
-        let defaultLeaderboardFilterModifier: DefaultLeaderboardFilterModifier = new DefaultLeaderboardFilterModifier(this._userSettings.defaultLeaderboardFilter);
-        defaultLeaderboardFilterModifier.modify();
+        let defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this._userSettings.defaultLeaderBoardFilter);
+        defaultLeaderBoardFilterModifier.modify();
     }
 
     /**
