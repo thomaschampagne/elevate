@@ -188,18 +188,18 @@ class StravistiX {
             message += '</div>';
         }
 
-        if (!_.isEmpty(updateMessageObj.hotFixes)) {
-            message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
-            _.each(updateMessageObj.hotFixes, (hotFix: string) => {
-                message += '<h6>- ' + hotFix + '</h6>';
-            });
-        }
-
         let baseVersion: Array<string> = this.appResources.extVersion.split('.');
         if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += '<h5><strong>NEW in ' + baseVersion[0] + '.' + baseVersion[1] + '.x' + ':</strong></h5>';
             _.each(updateMessageObj.features, (feature: string) => {
                 message += '<h6>- ' + feature + '</h6>';
+            });
+        }
+
+        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+            message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
+            _.each(updateMessageObj.hotFixes, (hotFix: string) => {
+                message += '<h6>- ' + hotFix + '</h6>';
             });
         }
 
