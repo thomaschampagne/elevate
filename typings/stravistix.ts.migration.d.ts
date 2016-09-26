@@ -1,14 +1,8 @@
 /*
-BUGS:
 
- - scroll table lost
- */
+ // Install new typings:
 
-/*
-
-// Install new typings:
-
-typings install dt~XXXXXX --global --save
+ typings install dt~XXXXXX --global --save
 
 
  // Rename JS to TS
@@ -66,15 +60,13 @@ declare class ActivityStravaMapTypeModifier {
 }
 
 
-
-
 declare class ActivityBikeOdoModifier {
     constructor(a: any, b: any);
 
     modify(): Function;
 }
 declare class ActivitySegmentTimeComparisonModifier {
-    constructor(a: any, b: any);
+    constructor(a: any, b: any, c: any, d: any);
 
     modify(): Function;
 }
