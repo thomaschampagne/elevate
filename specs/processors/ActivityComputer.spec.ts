@@ -11,6 +11,10 @@ describe('ActivityComputer', () => {
         let result: AnalysisData = activityComputer.compute();
         expect(result).toBeNull();
     });
-    
+
+    it('should load user settings from mocks...', () => {
+        let userSettings: UserSettings = window.__mocks__['mock/userSettings'];
+        console.info(userSettings);
+    });
 });
 

@@ -226,10 +226,7 @@ gulp.task('buildSpecs', ['build'], function () {
 gulp.task('specs', ['buildSpecs'], function () {
     util.log('Running jasmine tests through Karma server');
     new karmaServer({
-
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-
+        configFile: __dirname + '/karma.conf.js'
     }, function () {
 
         util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
