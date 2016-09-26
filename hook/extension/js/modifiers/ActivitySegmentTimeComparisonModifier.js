@@ -1,13 +1,13 @@
 /**
  *   ActivitySegmentTimeComparisonModifier is responsible of ...
  */
-function ActivitySegmentTimeComparisonModifier(userSettings, appResources, bike, isMyOwn) {
+function ActivitySegmentTimeComparisonModifier(userSettings, appResources, activityType, isMyOwn) {
     this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
     this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
     this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
     this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
     this.appResources = appResources;
-    this.isBike = bike;
+    this.isBike = (activityType === "Ride");
 }
 
 /**
