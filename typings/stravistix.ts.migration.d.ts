@@ -41,12 +41,6 @@ declare class ActivitiesSummaryModifier {
 }
 
 
-declare class ActivityScrollingModifier {
-    constructor();
-
-    modify(): Function;
-}
-
 declare class ActivityBikeOdoModifier {
     constructor(a: any, b: any);
 
