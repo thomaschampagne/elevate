@@ -42,12 +42,11 @@ declare class ActivitiesSummaryModifier {
     modify(): Function;
 }
 
-
-declare class ActivityBikeOdoModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
+// declare class ActivityBikeOdoModifier {
+//     constructor(a: any, b: any);
+//
+//     modify(): Function;
+// }
 declare class ActivitySegmentTimeComparisonModifier {
     constructor(a: any, b: any, c: any, d: any);
 
