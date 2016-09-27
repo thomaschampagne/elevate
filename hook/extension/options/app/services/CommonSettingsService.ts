@@ -1,10 +1,35 @@
-app.factory('CommonSettingsService', function() {
+interface CommonSettingsService {
+    provideSections: () => Array<Section>;
+}
 
-    var commonSettingsService = {};
+interface Section {
+    sectionTitle: string;
+    sectionContent: Array<SectionContent>;
+}
 
-    commonSettingsService.provideSections = function() {
+interface SectionContent {
+    optionKey: string;
+    optionType: string;
+    optionTitle: string;
+    optionLabels: Array<string>;
+    optionHtml: string;
+    optionList?: Array<ListItem>;
+    optionEnableSub?: Array<string>;
+}
+interface ListItem {
+    key: string;
+    name: string;
+}
 
-        return [{
+app.factory('CommonSettingsService', () => {
+
+    let commonSettingsService: CommonSettingsService = {
+        provideSections: null
+    };
+
+    commonSettingsService.provideSections = () => {
+
+        let sections: Array<Section> = [{
             sectionTitle: 'Activities Extended Data',
             sectionContent: [{
                 optionKey: 'displayActivityRatio',
@@ -187,7 +212,7 @@ app.factory('CommonSettingsService', function() {
                 }],
                 optionTitle: 'Default Leaderboard Filter',
                 optionHtml: 'Choose your default leaderboard filter inside related segments pages. Select filter among:<br /><br />&diams; Overall<br />&diams; Men<br />&diams; Women<br />&diams; Your following/followers<br />&diams; Your results',
-            }, ]
+            },]
         }, {
             sectionTitle: 'Segments viewing options',
             sectionContent: [{
@@ -202,7 +227,7 @@ app.factory('CommonSettingsService', function() {
                 optionTitle: 'Nearby Segments',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'This option displays cycling and running nearby segments on a segment page.',
-            }, ],
+            },],
 
         }, {
             sectionTitle: 'Activities and Segments viewing options',
@@ -325,6 +350,8 @@ app.factory('CommonSettingsService', function() {
                 optionHtml: 'This will display a link in activity page to relive cycling ride. Make sure to connect your strava account to <a href="http://relive.cc" target="_blank">relive.cc</a>. <br/><br/><strong>Note:</strong> Only rides done after relive.cc registration can get a "Relive".',
             }]
         }];
+
+        return sections;
     };
     return commonSettingsService;
 });
