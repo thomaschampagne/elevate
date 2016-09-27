@@ -125,7 +125,7 @@ SegmentRecentEffortsHRATimeModifier.prototype = {
 
                 fetchedLeaderboardData.forEach(function (r) {
 
-                    if (r.avg_heart_rate != null) {
+                    if (r.avg_heart_rate != null && r.avg_heart_rate > restHR) {
                         var mValue = showWatts ? r.avg_watts : r.elapsed_time_raw;
 
                         var ratio = (r.avg_heart_rate - restHR) / (targetHR - restHR);
