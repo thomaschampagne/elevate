@@ -41,7 +41,6 @@ var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
 var SPECS_FOLDER = 'specs/';
-var SPECS_DIST_FOLDER = 'specsDist/';
 var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package" task
 
 /**
@@ -218,8 +217,8 @@ gulp.task('buildSpecs', ['build'], function () {
     util.log('Compile TypeScript specs to JS for Karma testing');
 
     return gulp.src([SPECS_FOLDER + '/**/*.ts'], {
-        base: '../'
-    }).pipe(typeScript(tsProject)).pipe(gulp.dest(SPECS_DIST_FOLDER));
+        base: './'
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest('./'));
 
 });
 
@@ -229,10 +228,10 @@ gulp.task('specs', ['buildSpecs'], function () {
         configFile: __dirname + '/karma.conf.js'
     }, function (hasError) {
 
-        if(!hasError) {
-            util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
+        if (!hasError) {
+            util.log('Cleaning compiled JS files inside ' + SPECS_FOLDER + ' folder');
             return gulp.src([
-                SPECS_DIST_FOLDER,
+                SPECS_FOLDER + '/**/*.js'
             ]).pipe(plugins.clean({
                 force: true
             }));

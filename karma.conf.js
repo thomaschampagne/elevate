@@ -8,7 +8,7 @@ module.exports = function (config) {
             'dist/node_modules/underscore/underscore-min.js',
             'dist/js/modifiers/extendedActivityData/views/AbstractDataView.js',
             'dist/js/**/*.js',
-            'specsDist/**/*.js',
+            'specs/**/*.js',
             'specs/fixtures/**/*.json'
         ],
         exclude: [
