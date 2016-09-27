@@ -2,9 +2,6 @@
 /// <reference path="../../../typings/plugin.d.ts" />
 /// <reference path="../../../typings/stravistix.ts.migration.d.ts" />
 
-/**
- *   StravistiX is responsible of linking processors with modfiers and user settings/health data
- */
 class StravistiX {
 
     public static instance: StravistiX = null;

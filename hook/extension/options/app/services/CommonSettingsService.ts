@@ -15,6 +15,9 @@ interface SectionContent {
     optionHtml: string;
     optionList?: Array<ListItem>;
     optionEnableSub?: Array<string>;
+    active?: any;
+    hidden?: boolean;
+    value?: any;
 }
 interface ListItem {
     key: string;

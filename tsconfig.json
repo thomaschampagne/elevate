@@ -68,6 +68,7 @@
     "hook/extension/js/modifiers/ActivityBikeOdoModifier.ts",
     "hook/extension/options/app/App.ts",
     "hook/extension/options/app/Config.ts",
+    "hook/extension/options/app/controllers/MainController.ts",
     "hook/extension/options/app/services/AvoidInputKeysService.ts",
     "hook/extension/options/app/services/ChromeStorageService.ts",
     "hook/extension/options/app/services/CommonSettingsService.ts",

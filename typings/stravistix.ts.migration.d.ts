@@ -36,6 +36,8 @@
 
 ///<reference path="d3.d.ts"/>
 
+///<reference path="angular-material.d.ts"/>
+
 declare class ActivitiesSummaryModifier {
     constructor();
 
