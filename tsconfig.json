@@ -71,7 +71,9 @@
     "hook/extension/options/app/services/AvoidInputKeysService.ts",
     "hook/extension/options/app/services/ChromeStorageService.ts",
     "hook/extension/options/app/services/CommonSettingsService.ts",
-    "hook/extension/options/app/services/ReleaseNotesService.ts"
+    "hook/extension/options/app/services/ReleaseNotesService.ts",
+    "hook/extension/options/app/filters/XtdDataFilter.ts",
+    "hook/extension/options/app/filters/HrrToBpmFilter.ts"
   ],
   "exclude": [
     "node_modules/",
