@@ -5,6 +5,7 @@ module.exports = function (config) {
         files: [
             'dist/config/env.js',
             'dist/modules/**/*.js',
+            'dist/node_modules/underscore/underscore-min.js',
             'dist/js/modifiers/extendedActivityData/views/AbstractDataView.js',
             'dist/js/**/*.js',
             'specsDist/**/*.js',
@@ -22,11 +23,11 @@ module.exports = function (config) {
         },
         jsonFixturesPreprocessor: {
             // strip this from the file path \ fixture name
-            stripPrefix: 'specs/fixtures/',
+            stripPrefix: 'specs/',
             // strip this to the file path \ fixture name
-            prependPrefix: 'mock/',
+            prependPrefix: '',
             // change the global fixtures variable name
-            variableName: '__mocks__',
+            variableName: '__fixtures__',
             // camelize fixture filenames (e.g 'fixtures/aa-bb_cc.json' becames __fixtures__['fixtures/aaBbCc'])
             camelizeFilenames: true,
             // transform the filename

@@ -1,20 +1,36 @@
 describe('ActivityComputer', () => {
 
-    it('should be not null', () => {
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', false, userSettings, 71, false, null, null, null);
-        let result: AnalysisData = activityComputer.compute();
-        expect(activityComputer).not.toBeNull();
-    });
+    it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
 
-    it('should have result null', () => {
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', false, userSettings, 71, false, null, null, null);
-        let result: AnalysisData = activityComputer.compute();
-        expect(result).toBeNull();
-    });
+        const athleteWeight: number = 71.9;
+        const powerMeter: boolean = false;
 
-    it('should load user settings from mocks...', () => {
-        let userSettings: UserSettings = window.__mocks__['mock/userSettings'];
-        console.info(userSettings);
+        let userSettingsMock: UserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
+        let stream: ActivityStream = window.__fixtures__['fixtures/activities/723224273/stream'];
+        let statsMap: ActivityStatsMap = window.__fixtures__['fixtures/activities/723224273/statsMap'];
+
+        stream.watts = stream.watts_calc; // because powerMeter is false
+
+        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, athleteWeight, powerMeter, statsMap, stream, null);
+        let result: AnalysisData = activityComputer.compute();
+
+        expect(result).not.toBeNull();
+        expect(result.speedData).not.toBeNull();
+        expect(result.cadenceData).not.toBeNull();
+        expect(result.heartRateData).not.toBeNull();
+        expect(result.powerData).not.toBeNull();
+        expect(result.gradeData).not.toBeNull();
+        expect(result.elevationData).not.toBeNull();
+        expect(result.paceData).not.toBeNull();
+        // ...
+        // ...
+
+        expect(result.heartRateData.TRIMP).toEqual(228.4808665769995);
+        // ...
+        // ...
+        // ...
+        // ...
+
     });
 });
 

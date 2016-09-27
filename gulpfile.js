@@ -227,14 +227,16 @@ gulp.task('specs', ['buildSpecs'], function () {
     util.log('Running jasmine tests through Karma server');
     new karmaServer({
         configFile: __dirname + '/karma.conf.js'
-    }, function () {
+    }, function (hasError) {
 
-        util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
-        return gulp.src([
-            SPECS_DIST_FOLDER,
-        ]).pipe(plugins.clean({
-            force: true
-        }));
+        if(!hasError) {
+            util.log('Cleaning ' + SPECS_DIST_FOLDER + ' folder');
+            return gulp.src([
+                SPECS_DIST_FOLDER,
+            ]).pipe(plugins.clean({
+                force: true
+            }));
+        }
 
     }).start();
 });

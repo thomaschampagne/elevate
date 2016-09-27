@@ -4,7 +4,75 @@
   "activateRunningHeartRate": true,
   "activateRunningTemperature": true,
   "activityStravaMapType": "terrain",
-  "bestSplitsConfiguration": null,
+  "bestSplitsConfiguration": {
+    "splits": [
+      {
+        "id": "17af0c95-2c8a-e2c2-879c-2b6ac8db3c0b",
+        "length": 1,
+        "unit": 0
+      },
+      {
+        "id": "c31d0896-ea22-e8f8-2af9-cd162f46ac80",
+        "length": 5,
+        "unit": 0
+      },
+      {
+        "id": "ff3d4356-2790-de6b-9078-0bee5335eadc",
+        "length": 9,
+        "unit": 0
+      },
+      {
+        "id": "05fc8acd-b3bb-8289-be50-ca4915b92325",
+        "length": 10,
+        "unit": 0
+      },
+      {
+        "id": "cb3a4be4-2be1-758f-a984-0f0fc115b92a",
+        "length": 15,
+        "unit": 0
+      },
+      {
+        "id": "3de0dfeb-89ff-432c-0adf-b84d4213c8de",
+        "length": 20,
+        "unit": 0
+      },
+      {
+        "id": "f628c0d5-5d3e-39b1-49b5-39a5f72d9331",
+        "length": 30,
+        "unit": 0
+      },
+      {
+        "id": "15912191-183d-2172-91a7-48f57f58dbe2",
+        "length": 60,
+        "unit": 0
+      },
+      {
+        "id": "65591b73-594c-2e35-7157-8a18057ef622",
+        "length": 1,
+        "unit": 1
+      },
+      {
+        "id": "101e649b-a109-c38b-3407-7ace26d4c8e1",
+        "length": 10,
+        "unit": 1
+      },
+      {
+        "id": "e15c34cb-6f3a-b572-4195-1df1d599a5fa",
+        "length": 30,
+        "unit": 1
+      },
+      {
+        "id": "e82fcbdb-b9fa-7d81-6698-c7d7c49b1394",
+        "length": 50,
+        "unit": 1
+      },
+      {
+        "id": "cf695c8b-eb15-80e1-ac9d-641075c3ed9e",
+        "length": 3,
+        "unit": 0
+      }
+    ]
+  },
   "defaultLeaderboardFilter": "overall",
   "displayActivityBestSplits": true,
   "displayActivityRatio": true,
@@ -23,23 +91,23 @@
   "displaySegmentTimeComparisonToCurrentYearPR": true,
   "displaySegmentTimeComparisonToKOM": true,
   "displaySegmentTimeComparisonToPR": true,
-  "enableBothLegsCadence": false,
-  "extensionHasJustUpdated": true,
+  "enableBothLegsCadence": true,
+  "extensionHasJustUpdated": false,
   "feedAutoScroll": true,
-  "feedHideChallenges": false,
-  "feedHideCreatedRoutes": false,
-  "feedHideRideActivitiesUnderDistance": 0,
+  "feedHideChallenges": true,
+  "feedHideCreatedRoutes": true,
+  "feedHideRideActivitiesUnderDistance": 20,
   "feedHideRunActivitiesUnderDistance": 0,
   "hidePremiumFeatures": true,
-  "localStorageMustBeCleared": false,
+  "localStorageMustBeCleared": true,
   "remoteLinks": true,
   "reviveGoogleMaps": true,
-  "reviveGoogleMapsLayerType": "hybrid",
-  "showHiddenBetaFeatures": false,
+  "reviveGoogleMapsLayerType": "terrain",
+  "showHiddenBetaFeatures": true,
   "targetsYearRide": 5000,
   "targetsYearRun": 750,
-  "temperatureUnit": "F",
-  "userFTP": null,
+  "temperatureUnit": "C",
+  "userFTP": 240,
   "userGender": "men",
   "userHrrZones": [
     {
@@ -99,9 +167,9 @@
       "toHrr": 110
     }
   ],
-  "userMaxHr": 190,
-  "userRestHr": 65,
-  "windUnit": "mph",
+  "userMaxHr": 200,
+  "userRestHr": 45,
+  "windUnit": "km/h",
   "zones": {
     "ascent": [
       {
@@ -829,7 +897,7 @@
     ],
     "pace": [
       {
-        "from": 60,
+        "from": 0,
         "to": 75
       },
       {

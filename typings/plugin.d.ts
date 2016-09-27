@@ -20,7 +20,7 @@ interface Window {
     currentAthlete: any;
     pageView: any; // Allow access of window.pageView where page wiew
     unescape(str: string): string; // Allow access of window.pageView where page wiew
-    __mocks__: any;
+    __fixtures__: any;
 }
 
 interface RegExpConstructor {
