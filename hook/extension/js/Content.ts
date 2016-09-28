@@ -72,8 +72,8 @@ class Content {
                         chromeSettings = this.userSettings;
                     }
 
-                    inner.textContent = 'let $ = jQuery;';
-                    inner.textContent += 'let stravistiX = new StravistiX(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(this.appResources) + ');';
+                    inner.textContent = 'var $ = jQuery;';
+                    inner.textContent += 'var stravistiX = new StravistiX(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(this.appResources) + ');';
                     inner.onload = () => {
                         inner.remove();
                     };
@@ -216,5 +216,5 @@ let content: Content = new Content(jsDependencies, cssDependencies, userSettings
 content.start();
 
 // Inject constants
-let constantsStr: string = 'let Constants = ' + JSON.stringify(Constants) + ';';
+let constantsStr: string = 'var Constants = ' + JSON.stringify(Constants) + ';';
 Content.loader.injectJS(constantsStr);
