@@ -77,7 +77,8 @@
     "hook/extension/options/app/services/CommonSettingsService.ts",
     "hook/extension/options/app/services/ReleaseNotesService.ts",
     "hook/extension/options/app/filters/XtdDataFilter.ts",
-    "hook/extension/options/app/filters/HrrToBpmFilter.ts"
+    "hook/extension/options/app/filters/HrrToBpmFilter.ts",
+    "hook/extension/js/modifiers/ActivitiesSummaryModifier.ts"
   ],
   "exclude": [
     "node_modules/",
