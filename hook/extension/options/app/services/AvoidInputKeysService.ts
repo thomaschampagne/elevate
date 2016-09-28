@@ -1,7 +1,16 @@
+interface AvoidInputKeysService {
+    apply: (keyboardEvent: KeyboardEvent) => void;
+}
+
 app.factory('AvoidInputKeysService', () => {
-    return (evt: KeyboardEvent) => {
-        if (evt.keyCode !== 38 && evt.keyCode !== 40 && evt.keyCode !== 9 && evt.keyCode !== 16) { // NON key up/down press or SHIFT/TAB
-            evt.preventDefault();
+
+    let avoidInputKeysService: AvoidInputKeysService = {
+        apply: (keyboardEvent: KeyboardEvent) => {
+            if (keyboardEvent.keyCode !== 38 && keyboardEvent.keyCode !== 40 && keyboardEvent.keyCode !== 9 && keyboardEvent.keyCode !== 16) { // NON key up/down press or SHIFT/TAB
+                keyboardEvent.preventDefault();
+            }
         }
-    };
+    }
+
+    return avoidInputKeysService;
 });

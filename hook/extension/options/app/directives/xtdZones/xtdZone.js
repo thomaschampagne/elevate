@@ -5,7 +5,7 @@ app.directive('xtdZone', ['AvoidInputKeysService', function(AvoidInputKeysServic
         $scope.zoneId = parseInt($scope.zoneId);
 
         $scope.avoidInputKeyEdit = function(evt) {
-            AvoidInputKeysService(evt);
+            AvoidInputKeysService.apply(evt);
         };
 
         $scope.$watch('xtdZone', function(newZone, oldZone) {

@@ -3,7 +3,7 @@ app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService
     var controllerFunction = function($scope) {
 
         $scope.avoidInputKeyEdit = function(evt) {
-            AvoidInputKeysService(evt);
+            AvoidInputKeysService.apply(evt);
         };
 
         $scope.$watch('hrZone', function(newHrZone, oldHrZone) {
