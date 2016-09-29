@@ -1,10 +1,10 @@
 class FeaturedDataView extends AbstractDataView {
 
-    protected analysisData: AnalysisData;
-    protected basicInfo: ActivityBasicInfo;
-    protected userSettings: UserSettings;
+    protected analysisData: IAnalysisData;
+    protected basicInfo: IActivityBasicInfo;
+    protected userSettings: IUserSettings;
 
-    constructor(analysisData: AnalysisData, userSettings: UserSettings, basicInfo: any) {
+    constructor(analysisData: IAnalysisData, userSettings: IUserSettings, basicInfo: any) {
 
         super(null);
         this.hasGraph = false;
@@ -51,7 +51,7 @@ class FeaturedDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        let speedUnitsData: SpeedUnitData = Helper.getSpeedUnitData();
+        let speedUnitsData: ISpeedUnitData = Helper.getSpeedUnitData();
 
         if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfo.segmentEffort)) {
             this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), 'Move Ratio', '', 'displayActivityRatio'); // Move ratio

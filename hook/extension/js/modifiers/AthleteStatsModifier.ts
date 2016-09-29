@@ -2,9 +2,9 @@ import Axis = d3.svg.Axis;
 import Linear = d3.scale.Linear;
 import Scale = d3.time.Scale;
 
-class AthleteStatsModifier implements Modifier {
+class AthleteStatsModifier implements IModifier {
 
-    protected appResources: AppResources;
+    protected appResources: IAppResources;
     protected cacheKey_: string;
     protected distanceUnit: string;
     protected distanceInKilometers: boolean;
@@ -17,7 +17,7 @@ class AthleteStatsModifier implements Modifier {
     public static metersTo1000thOfMileFactor: number = 0.621371192;
     public static metersToFeetsFactor: number = 3.2808399;
 
-    constructor(appResources: AppResources, yearTargets: any) {
+    constructor(appResources: IAppResources, yearTargets: any) {
         this.appResources = appResources;
         this.cacheKey_ = 'activitiesHistoryData';
         this.distanceUnit = "km";

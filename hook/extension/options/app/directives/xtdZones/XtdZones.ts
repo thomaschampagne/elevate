@@ -5,7 +5,7 @@ class XtdZones {
 
     public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
 
-    constructor(public $scope: any, public ChromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public ChromeStorageService: IChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         $scope.addZone = ($event: MouseEvent) => {
 
@@ -22,13 +22,13 @@ class XtdZones {
 
             } else {
 
-                let oldLastZone: Zone = $scope.xtdZones[$scope.xtdZones.length - 1];
+                let oldLastZone: IZone = $scope.xtdZones[$scope.xtdZones.length - 1];
 
                 // Computed middle value between oldLastZone.from and oldLastZone.to
                 let betweenValue: number = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
 
                 // Creating new Zone
-                let newLastZone: Zone = {
+                let newLastZone: IZone = {
                     from: betweenValue,
                     to: oldLastZone.to
                 };
@@ -113,7 +113,7 @@ class XtdZones {
 
             if (!_.isUndefined($scope.xtdZones)) {
 
-                ChromeStorageService.fetchUserSettings((userSettingsSynced: UserSettings) => {
+                ChromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
                     // Update zones with new one
                     let zones: any = userSettingsSynced.zones;
                     zones[$scope.xtdDataSelected.value] = angular.fromJson(angular.toJson($scope.xtdZones));
@@ -200,7 +200,7 @@ class XtdZones {
                     if (importData) {
 
                         try {
-                            let jsonImportData: Array<Zone> = angular.fromJson(importData);
+                            let jsonImportData: Array<IZone> = angular.fromJson(importData);
 
                             if ($scope.areZonesCompliant(jsonImportData)) {
 
@@ -227,7 +227,7 @@ class XtdZones {
                 });
         };
 
-        $scope.areZonesCompliant = (zones: Array<Zone>) => {
+        $scope.areZonesCompliant = (zones: Array<IZone>) => {
 
             if (!zones) {
                 return false;
@@ -263,7 +263,7 @@ class XtdZones {
             return true;
         };
 
-        $scope.onZoneChange = (zoneId: number, previousZone: Zone, newZone: Zone) => {
+        $scope.onZoneChange = (zoneId: number, previousZone: IZone, newZone: IZone) => {
 
             let fieldHasChanged: string = $scope.whichFieldHasChanged(previousZone, newZone);
 
@@ -295,7 +295,7 @@ class XtdZones {
         /**
          * @return 'from' or 'to'
          */
-        $scope.whichFieldHasChanged = (previousZone: Zone, newZone: Zone) => {
+        $scope.whichFieldHasChanged = (previousZone: IZone, newZone: IZone) => {
 
             if (previousZone.from !== newZone.from) {
                 return 'from';

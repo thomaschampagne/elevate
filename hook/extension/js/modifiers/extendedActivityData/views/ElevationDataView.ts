@@ -1,9 +1,9 @@
 class ElevationDataView extends AbstractDataView {
 
 
-    protected elevationData: ElevationData;
+    protected elevationData: IElevationData;
 
-    constructor(elevationData: ElevationData, units: string) {
+    constructor(elevationData: IElevationData, units: string) {
         super(units);
         this.mainColor = [216, 212, 38];
         this.elevationData = elevationData;

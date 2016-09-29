@@ -2,20 +2,20 @@ class CommonSettingsController {
 
     static $inject = ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$location', '$mdDialog', '$sce'];
 
-    constructor($scope: any, CommonSettingsService: CommonSettingsService, ChromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: IDialogService, $sce: ISCEService) {
+    constructor($scope: any, CommonSettingsService: ICommonSettingsService, ChromeStorageService: IChromeStorageService, $location: ILocationService, $mdDialog: IDialogService, $sce: ISCEService) {
 
         // Define options structure
         $scope.sections = CommonSettingsService.provideSections();
 
-        ChromeStorageService.fetchUserSettings((userSettingsSynced: UserSettings) => {
+        ChromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
 
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
 
-            _.each($scope.sections, (section: Section) => {
+            _.each($scope.sections, (section: ISection) => {
 
-                _.each(section.sectionContent, (option: SectionContent) => {
+                _.each(section.sectionContent, (option: ISectionContent) => {
 
                     if (option.optionType === 'checkbox') {
 
@@ -44,7 +44,7 @@ class CommonSettingsController {
             $scope.$apply();
         });
 
-        $scope.toggleCheckOption = (option: SectionContent) => {
+        $scope.toggleCheckOption = (option: ISectionContent) => {
 
             ChromeStorageService.updateUserSetting(option.optionKey, option.active, () => {
                 console.log(option.optionKey + ' has been updated to ' + option.active);
@@ -60,8 +60,8 @@ class CommonSettingsController {
         };
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-            _.each($scope.sections, (section: Section) => {
-                let optionFound: SectionContent = _.findWhere(section.sectionContent, {
+            _.each($scope.sections, (section: ISection) => {
+                let optionFound: ISectionContent = _.findWhere(section.sectionContent, {
                     optionKey: subOptionKey
                 });
                 if (optionFound) {
@@ -70,7 +70,7 @@ class CommonSettingsController {
             });
         };
 
-        $scope.toggleSelectOption = (option: SectionContent) => {
+        $scope.toggleSelectOption = (option: ISectionContent) => {
 
             ChromeStorageService.updateUserSetting(option.optionKey, option.active.key, () => {
                 console.log(option.optionKey + ' has been updated to ' + option.active);
@@ -78,7 +78,7 @@ class CommonSettingsController {
         };
 
 
-        $scope.toggleIntegerOption = (option: SectionContent) => {
+        $scope.toggleIntegerOption = (option: ISectionContent) => {
 
             $scope.$watch('option.value', () => {
 
@@ -101,11 +101,11 @@ class CommonSettingsController {
 
         $scope.displayOptionHelper = (optionKeyParam: string) => {
 
-            let option: SectionContent = null;
+            let option: ISectionContent = null;
 
-            _.each($scope.sections, (section: Section) => {
+            _.each($scope.sections, (section: ISection) => {
 
-                let optionSearch: SectionContent = _.findWhere(section.sectionContent, {
+                let optionSearch: ISectionContent = _.findWhere(section.sectionContent, {
                     optionKey: optionKeyParam
                 });
 

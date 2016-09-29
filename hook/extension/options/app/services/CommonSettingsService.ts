@@ -1,38 +1,38 @@
-interface CommonSettingsService {
-    provideSections: () => Array<Section>;
+interface ICommonSettingsService {
+    provideSections: () => Array<ISection>;
 }
 
-interface Section {
+interface ISection {
     sectionTitle: string;
-    sectionContent: Array<SectionContent>;
+    sectionContent: Array<ISectionContent>;
 }
 
-interface SectionContent {
+interface ISectionContent {
     optionKey: string;
     optionType: string;
     optionTitle: string;
     optionLabels: Array<string>;
     optionHtml: string;
-    optionList?: Array<ListItem>;
+    optionList?: Array<IListItem>;
     optionEnableSub?: Array<string>;
     active?: any;
     hidden?: boolean;
     value?: any;
 }
-interface ListItem {
+interface IListItem {
     key: string;
     name: string;
 }
 
 app.factory('CommonSettingsService', () => {
 
-    let commonSettingsService: CommonSettingsService = {
+    let commonSettingsService: ICommonSettingsService = {
         provideSections: null
     };
 
     commonSettingsService.provideSections = () => {
 
-        let sections: Array<Section> = [{
+        let sections: Array<ISection> = [{
             sectionTitle: 'Activities Extended Data',
             sectionContent: [{
                 optionKey: 'displayActivityRatio',

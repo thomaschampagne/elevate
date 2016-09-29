@@ -1,4 +1,4 @@
-class SegmentRankPercentageModifier implements Modifier {
+class SegmentRankPercentageModifier implements IModifier {
 
     protected intervalId: number;
 

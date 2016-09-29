@@ -1,5 +1,5 @@
 interface ReleaseNotesService {
-    data: Array<ReleaseNote>;
+    data: Array<IReleaseNote>;
 }
 
 app.factory('ReleaseNotesService', () => {

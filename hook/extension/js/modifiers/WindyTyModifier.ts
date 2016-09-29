@@ -1,11 +1,11 @@
-class WindyTyModifier implements Modifier {
+class WindyTyModifier implements IModifier {
 
     protected activityId: number;
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected baryCenterPosition: LatLon;
 
-    constructor(activityId: number, appResources: AppResources, userSettings: UserSettings) {
+    constructor(activityId: number, appResources: IAppResources, userSettings: IUserSettings) {
         this.activityId = activityId;
         this.appResources = appResources;
         this.userSettings = userSettings;

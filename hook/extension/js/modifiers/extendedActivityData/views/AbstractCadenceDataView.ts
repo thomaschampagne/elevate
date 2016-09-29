@@ -1,8 +1,8 @@
 abstract class AbstractCadenceDataView extends AbstractDataView {
 
-    protected cadenceData: CadenceData;
+    protected cadenceData: ICadenceData;
 
-    constructor(cadenceData: CadenceData, units: string) {
+    constructor(cadenceData: ICadenceData, units: string) {
         super(units);
         this.cadenceData = cadenceData;
         this.mainColor = [213, 0, 195];

@@ -14,11 +14,11 @@ class StravistiX {
     protected athleteId: number;
     protected activityProcessor: ActivityProcessor;
     protected extensionId: string;
-    protected appResources: AppResources;
-    protected _userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected _userSettings: IUserSettings;
     protected vacuumProcessor: VacuumProcessor;
 
-    constructor(userSettings: UserSettings, appResources: AppResources) {
+    constructor(userSettings: IUserSettings, appResources: IAppResources) {
 
         this._userSettings = userSettings;
         this.appResources = appResources;
@@ -161,7 +161,7 @@ class StravistiX {
             previewBuild = true;
         }
 
-        let latestRelease: ReleaseNote = _.first(releaseNotes);
+        let latestRelease: IReleaseNote = _.first(releaseNotes);
 
         let updateMessageObj: any = {
             logo: '<img src="' + this.appResources.logoStravistix + '"/>',
@@ -517,7 +517,7 @@ class StravistiX {
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
-        let basicInfo: ActivityBasicInfo = {
+        let basicInfo: IActivityBasicInfo = {
             activityName: this.vacuumProcessor.getActivityName(),
             activityTime: this.vacuumProcessor.getActivityTime()
         };
@@ -602,7 +602,7 @@ class StravistiX {
 
             let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            let basicInfo: ActivityBasicInfo = {
+            let basicInfo: IActivityBasicInfo = {
                 activityName: that.vacuumProcessor.getActivityName(),
                 activityTime: that.vacuumProcessor.getActivityTime()
             };
@@ -662,7 +662,7 @@ class StravistiX {
         let segmentId: number = parseInt(segmentData[1]);
 
         let segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
-        segmentProcessor.getNearbySegmentsAround((jsonSegments: Array<SegmentInfo>) => {
+        segmentProcessor.getNearbySegmentsAround((jsonSegments: Array<ISegmentInfo>) => {
 
             if (env.debugMode) console.log(jsonSegments);
 
@@ -982,7 +982,7 @@ class StravistiX {
         }
     }
 
-    public get userSettings(): UserSettings {
+    public get userSettings(): IUserSettings {
         return this._userSettings;
     }
 }

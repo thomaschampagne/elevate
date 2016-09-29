@@ -1,9 +1,9 @@
-class ActivityQRCodeDisplayModifier implements Modifier {
+class ActivityQRCodeDisplayModifier implements IModifier {
 
-    protected appResources: AppResources;
+    protected appResources: IAppResources;
     protected activityId: number;
 
-    constructor(appResources: AppResources, activityId: number) {
+    constructor(appResources: IAppResources, activityId: number) {
         this.appResources = appResources;
         this.activityId = activityId;
     }

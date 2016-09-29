@@ -2,8 +2,8 @@ class HrrZonesSettingsController {
 
     static $inject = ['$scope', 'ChromeStorageService', 'AvoidInputKeysService'];
 
-    constructor($scope: any, ChromeStorageService: ChromeStorageService, AvoidInputKeysService: AvoidInputKeysService) {
-        ChromeStorageService.fetchUserSettings((userSettingsSynced: UserSettings) => {
+    constructor($scope: any, ChromeStorageService: IChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService) {
+        ChromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.zones = userSettingsSynced.userHrrZones;

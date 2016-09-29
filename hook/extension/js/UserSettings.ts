@@ -1,20 +1,20 @@
-interface UserSettings {
+interface IUserSettings {
     extensionHasJustUpdated: boolean;
     localStorageMustBeCleared: boolean;
     userGender: string;
     userMaxHr: number;
     userRestHr: number;
     userFTP: number;
-    userHrrZones: Array<HrrZone>;
+    userHrrZones: Array<IHrrZone>;
     zones: {
-        speed: Array<Zone>;
-        pace: Array<Zone>;
-        power: Array<Zone>;
-        cyclingCadence: Array<Zone>;
-        runningCadence: Array<Zone>;
-        grade: Array<Zone>;
-        elevation: Array<Zone>;
-        ascent: Array<Zone>;
+        speed: Array<IZone>;
+        pace: Array<IZone>;
+        power: Array<IZone>;
+        cyclingCadence: Array<IZone>;
+        runningCadence: Array<IZone>;
+        grade: Array<IZone>;
+        elevation: Array<IZone>;
+        ascent: Array<IZone>;
     }
     targetsYearRide: number;
     targetsYearRun: number;
@@ -57,7 +57,7 @@ interface UserSettings {
     displayReliveCCLink: boolean;
 }
 
-let userSettings: UserSettings = {
+let userSettings: IUserSettings = {
     extensionHasJustUpdated: false,
     localStorageMustBeCleared: false,
     userGender: 'men',

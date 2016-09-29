@@ -1,4 +1,4 @@
-abstract class AbstractRunningDataModifier implements Modifier {
+abstract class AbstractRunningDataModifier implements IModifier {
 
     public static INTERVAL_DELAY: number = 750;
     protected intervalId: number;

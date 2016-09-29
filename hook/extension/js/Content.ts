@@ -2,12 +2,12 @@ class Content {
 
     public static loader: Loader = new Loader();
 
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected cssDependencies: string[];
     protected jsDependencies: string[];
 
-    constructor(jsDependencies: Array<string>, cssDependencies: Array<string>, userSettings: UserSettings, appResources: AppResources) {
+    constructor(jsDependencies: Array<string>, cssDependencies: Array<string>, userSettings: IUserSettings, appResources: IAppResources) {
         this.jsDependencies = jsDependencies;
         this.cssDependencies = cssDependencies;
         this.userSettings = userSettings;
@@ -87,7 +87,7 @@ class Content {
     }
 }
 
-let appResources: AppResources = {
+let appResources: IAppResources = {
     settingsLink: chrome.extension.getURL('/options/app/index.html'),
     logoStravistix: chrome.extension.getURL('/icons/logo_stravistix_no_circle.svg'),
     menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),

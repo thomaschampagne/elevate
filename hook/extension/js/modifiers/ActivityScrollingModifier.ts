@@ -1,4 +1,4 @@
-class ActivityScrollingModifier implements Modifier {
+class ActivityScrollingModifier implements IModifier {
 
     public modify(): void {
 

@@ -1,4 +1,4 @@
-interface ActivityStatsMap {
+interface IActivityStatsMap {
     maxHeartRate: number;
     averageHeartRate: number;
     distance: number;
@@ -7,7 +7,7 @@ interface ActivityStatsMap {
     elevation: number;
 }
 
-interface ActivityStream {
+interface IActivityStream {
     time: Array<number>;
     heartrate: Array<number>;
     velocity_smooth: Array<number>;
@@ -20,26 +20,26 @@ interface ActivityStream {
     altitude_smooth?: Array<number>;
 }
 
-interface AnalysisData {
+interface IAnalysisData {
     moveRatio: number;
     toughnessScore: number;
-    speedData: SpeedData;
-    paceData: PaceData;
-    powerData: PowerData;
-    heartRateData: HeartRateData;
-    cadenceData: CadenceData;
-    gradeData: GradeData;
-    elevationData: ElevationData;
+    speedData: ISpeedData;
+    paceData: IPaceData;
+    powerData: IPowerData;
+    heartRateData: IHeartRateData;
+    cadenceData: ICadenceData;
+    gradeData: IGradeData;
+    elevationData: IElevationData;
 }
 
-interface MoveData {
+interface IMoveData {
     movingTime: number;
     elapsedTime: number;
-    speed: SpeedData;
-    pace: PaceData;
+    speed: ISpeedData;
+    pace: IPaceData;
 }
 
-interface SpeedData {
+interface ISpeedData {
     genuineAvgSpeed: number;
     totalAvgSpeed: number;
     avgPace: number;
@@ -48,20 +48,20 @@ interface SpeedData {
     upperQuartileSpeed: number;
     varianceSpeed: number;
     standardDeviationSpeed: number;
-    speedZones: Array<Zone>;
+    speedZones: Array<IZone>;
 }
 
-interface PaceData {
+interface IPaceData {
     avgPace: number;
     lowerQuartilePace: number;
     medianPace: number;
     upperQuartilePace: number;
     variancePace: number;
-    paceZones: Array<Zone>;
+    paceZones: Array<IZone>;
 
 }
 
-interface PowerData {
+interface IPowerData {
     hasPowerMeter: boolean;
     avgWatts: number;
     avgWattsPerKg: number;
@@ -72,10 +72,10 @@ interface PowerData {
     lowerQuartileWatts: number;
     medianWatts: number;
     upperQuartileWatts: number;
-    powerZones: Array<Zone>;
+    powerZones: Array<IZone>;
 }
 
-interface HeartRateData {
+interface IHeartRateData {
     TRIMP: number;
     TRIMPPerHour: number;
     lowerQuartileHeartRate: number;
@@ -85,9 +85,9 @@ interface HeartRateData {
     maxHeartRate: number;
     activityHeartRateReserve: number;
     activityHeartRateReserveMax: number;
-    hrrZones: Array<HrrZone>;
+    hrrZones: Array<IHrrZone>;
 }
-interface CadenceData {
+interface ICadenceData {
     cadencePercentageMoving: number;
     cadenceTimeMoving: number;
     averageCadenceMoving: number;
@@ -96,9 +96,9 @@ interface CadenceData {
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
-    cadenceZones: Array<Zone>;
+    cadenceZones: Array<IZone>;
 }
-interface GradeData {
+interface IGradeData {
     avgGrade: number;
     lowerQuartileGrade: number;
     medianGrade: number;
@@ -120,35 +120,35 @@ interface GradeData {
         down: number;
     };
     gradeProfile: string;
-    gradeZones: Array<Zone>;
+    gradeZones: Array<IZone>;
 }
 
-interface ElevationData {
+interface IElevationData {
     avgElevation: number;
     accumulatedElevationAscent: number;
     accumulatedElevationDescent: number;
     lowerQuartileElevation: number;
     medianElevation: number;
     upperQuartileElevation: number;
-    elevationZones: Array<Zone>;
-    ascentSpeedZones: Array<Zone>;
-    ascentSpeed: AscentSpeedData;
+    elevationZones: Array<IZone>;
+    ascentSpeedZones: Array<IZone>;
+    ascentSpeed: IAscentSpeedData;
 }
-interface AscentSpeedData {
+interface IAscentSpeedData {
     avg: number;
     lowerQuartile: number;
     median: number;
     upperQuartile: number;
 }
 
-interface Zone {
+interface IZone {
     from: number;
     to: number;
     s?: number;
     percentDistrib?: number;
 }
 
-interface HrrZone {
+interface IHrrZone {
     fromHrr: number;
     toHrr: number;
     percentDistrib?: number;
@@ -157,13 +157,13 @@ interface HrrZone {
     fromHr?: number;
 }
 
-interface SpeedUnitData {
+interface ISpeedUnitData {
     units: string;
     speedUnitPerHour: string;
     speedUnitFactor: number;
 }
 
-interface ActivityBasicInfo {
+interface IActivityBasicInfo {
     activityName: string;
     activityTime: string;
     segmentEffort?: {

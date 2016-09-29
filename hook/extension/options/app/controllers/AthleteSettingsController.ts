@@ -2,7 +2,7 @@ class AthleteSettingsController {
 
     static $inject = ['$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog'];
 
-    constructor($scope: any, ChromeStorageService: ChromeStorageService, AvoidInputKeysService: AvoidInputKeysService, $mdDialog: IDialogService) {
+    constructor($scope: any, ChromeStorageService: IChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService) {
         ChromeStorageService.fetchUserSettings((userSettingsSynced: any) => {
             $scope.userMaxHr = parseInt(userSettingsSynced.userMaxHr);
             $scope.userRestHr = parseInt(userSettingsSynced.userRestHr);

@@ -1,4 +1,4 @@
-interface ReleaseNote {
+interface IReleaseNote {
     version: string; // 'x.x.x'
     message?: string;
     hotFixes?: Array<string>;
@@ -11,7 +11,7 @@ interface ReleaseNote {
     hideFeatureReleaseNote?: boolean;
 }
 
-let releaseNotes: Array<ReleaseNote> = [{
+let releaseNotes: Array<IReleaseNote> = [{
     version: '4.2.2',
     message: 'Another hotfix for new v4.2.x',
     hotFixes: [

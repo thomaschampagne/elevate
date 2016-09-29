@@ -2,7 +2,7 @@ class XtdZone {
 
     static $inject: string[] = ['$scope', 'AvoidInputKeysService'];
 
-    constructor(public $scope: any, public AvoidInputKeysService: AvoidInputKeysService) {
+    constructor(public $scope: any, public AvoidInputKeysService: IAvoidInputKeysService) {
 
         $scope.zoneId = parseInt($scope.zoneId);
 
@@ -10,7 +10,7 @@ class XtdZone {
             AvoidInputKeysService.apply(evt);
         };
 
-        $scope.$watch('xtdZone', (newZone: Zone, oldZone: Zone) => {
+        $scope.$watch('xtdZone', (newZone: IZone, oldZone: IZone) => {
             // Notify parent scope when a zone has changed
             $scope.$parent.onZoneChange(parseInt($scope.zoneId), oldZone, newZone);
         }, true);

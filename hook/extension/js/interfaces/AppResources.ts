@@ -1,4 +1,4 @@
-interface AppResources {
+interface IAppResources {
     settingsLink: string;
     logoStravistix: string;
     menuIconBlack: string;

@@ -1,6 +1,6 @@
 class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResources, userSettings: UserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
         super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
     }
 

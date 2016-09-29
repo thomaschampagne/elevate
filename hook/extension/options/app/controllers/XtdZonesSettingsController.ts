@@ -1,4 +1,4 @@
-interface XtdData {
+interface IXtdData {
     name: string;
     value: string;
     units: string;
@@ -8,19 +8,19 @@ interface XtdData {
     hasConvertion?: boolean;
 }
 
-interface XtdZonesSettingsScope extends IScope {
-    zones: {speed: Array<Zone>, pace: Array<Zone>, power: Array<Zone>, cyclingCadence: Array<Zone>, runningCadence: Array<Zone>, grade: Array<Zone>, elevation: Array<Zone>, ascent: Array<Zone>};
-    xtdZones: Array<Zone>;
-    xtdData: XtdData;
-    switchZonesFromXtdItem: (xtdData: XtdData) => void;
-    xtdListOptions: Array<XtdData>;
+interface IXtdZonesSettingsScope extends IScope {
+    zones: {speed: Array<IZone>, pace: Array<IZone>, power: Array<IZone>, cyclingCadence: Array<IZone>, runningCadence: Array<IZone>, grade: Array<IZone>, elevation: Array<IZone>, ascent: Array<IZone>};
+    xtdZones: Array<IZone>;
+    xtdData: IXtdData;
+    switchZonesFromXtdItem: (xtdData: IXtdData) => void;
+    xtdListOptions: Array<IXtdData>;
 }
 
 class XtdZonesSettingsController {
 
     static $inject = ['$scope', '$location', '$routeParams', 'ChromeStorageService'];
 
-    constructor($scope: XtdZonesSettingsScope, $location: ILocationService, $routeParams: any, ChromeStorageService: ChromeStorageService) {
+    constructor($scope: IXtdZonesSettingsScope, $location: ILocationService, $routeParams: any, ChromeStorageService: IChromeStorageService) {
 
         // List of Xtended data to be customize
         $scope.xtdListOptions = [{
@@ -83,7 +83,7 @@ class XtdZonesSettingsController {
             max: 9999
         }];
 
-        $scope.switchZonesFromXtdItem = (xtdData: XtdData) => {
+        $scope.switchZonesFromXtdItem = (xtdData: IXtdData) => {
 
             // Select cycling speed by default
             $scope.xtdData = xtdData;
@@ -92,13 +92,13 @@ class XtdZonesSettingsController {
             $scope.$apply();
         };
 
-        ChromeStorageService.fetchUserSettings((userSettingsSynced: UserSettings) => {
+        ChromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
 
             $scope.zones = userSettingsSynced.zones;
 
             let zoneValue: string = $routeParams.zoneValue;
 
-            let item: XtdData = _.findWhere($scope.xtdListOptions as Array<XtdData>, {
+            let item: IXtdData = _.findWhere($scope.xtdListOptions as Array<IXtdData>, {
                 value: zoneValue
             });
 

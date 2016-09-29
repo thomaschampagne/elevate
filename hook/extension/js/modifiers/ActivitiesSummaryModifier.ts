@@ -1,4 +1,4 @@
-class ActivitiesSummaryModifier implements Modifier {
+class ActivitiesSummaryModifier implements IModifier {
 
     protected averageSpeedOrPace(pace: number, distance: number, time: number) {
         time /= 60;

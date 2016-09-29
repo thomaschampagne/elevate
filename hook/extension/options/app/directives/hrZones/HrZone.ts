@@ -2,13 +2,13 @@ class HrZone {
 
     static $inject: string[] = ['$scope','AvoidInputKeysService'];
 
-    constructor(public $scope: any, public AvoidInputKeysService: AvoidInputKeysService) {
+    constructor(public $scope: any, public AvoidInputKeysService: IAvoidInputKeysService) {
 
         $scope.avoidInputKeyEdit = (evt: KeyboardEvent) => {
             AvoidInputKeysService.apply(evt);
         };
 
-        $scope.$watch('hrZone', (newHrZone: Zone, oldHrZone: Zone) => {
+        $scope.$watch('hrZone', (newHrZone: IZone, oldHrZone: IZone) => {
             $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);  // Notify parent scope when a zone has changed
         }, true);
 

@@ -1,8 +1,8 @@
 class PowerDataView extends AbstractDataView {
 
-    protected powerData: PowerData;
+    protected powerData: IPowerData;
 
-    constructor(powerData: PowerData, units: string) {
+    constructor(powerData: IPowerData, units: string) {
         super(units);
         this.mainColor = [96, 96, 96];
         this.setGraphTitleFromUnits();

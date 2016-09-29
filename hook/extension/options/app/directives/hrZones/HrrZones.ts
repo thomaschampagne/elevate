@@ -5,7 +5,7 @@ class HrrZones {
 
     public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
 
-    constructor(public $scope: any, public ChromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public ChromeStorageService: IChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         // Setup default step
         $scope.step = 0.1;
@@ -25,7 +25,7 @@ class HrrZones {
 
             } else {
 
-                let oldLastHrZone: HrrZone = $scope.hrZones[$scope.hrZones.length - 1];
+                let oldLastHrZone: IHrrZone = $scope.hrZones[$scope.hrZones.length - 1];
 
                 // Computed middle value between oldLastHrZone.fromHrr and oldLastHrZone.toHrr
                 let betweenHrrValue: number = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
@@ -197,7 +197,7 @@ class HrrZones {
                     if (importData) {
 
                         try {
-                            let jsonImportData: Array<HrrZone> = angular.fromJson(importData);
+                            let jsonImportData: Array<IHrrZone> = angular.fromJson(importData);
 
                             if ($scope.areHrrZonesCompliant(jsonImportData)) {
 
@@ -251,7 +251,7 @@ class HrrZones {
             });
         };
 
-        $scope.areHrrZonesCompliant = (hrrZones: Array<HrrZone>) => {
+        $scope.areHrrZonesCompliant = (hrrZones: Array<IHrrZone>) => {
 
             if (!hrrZones) {
                 return false;
@@ -287,7 +287,7 @@ class HrrZones {
             return true;
         };
 
-        $scope.onZoneChange = (hrrZoneId: number, previousHrrZone: HrrZone, newHrrZone: HrrZone) => {
+        $scope.onZoneChange = (hrrZoneId: number, previousHrrZone: IHrrZone, newHrrZone: IHrrZone) => {
 
             let fieldHasChanged: string = $scope.whichFieldHasChanged(previousHrrZone, newHrrZone);
 
@@ -319,7 +319,7 @@ class HrrZones {
         /**
          * @return 'fromHrr' or 'toHrr'
          */
-        $scope.whichFieldHasChanged = (previousHrZone: HrrZone, newHrZone: HrrZone) => {
+        $scope.whichFieldHasChanged = (previousHrZone: IHrrZone, newHrZone: IHrrZone) => {
 
             if (previousHrZone.fromHrr !== newHrZone.fromHrr) {
                 return 'fromHrr';

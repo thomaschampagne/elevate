@@ -1,4 +1,4 @@
-class ActivityBikeOdoModifier implements Modifier {
+class ActivityBikeOdoModifier implements IModifier {
     private bikeOdoArray: any;
     private cacheKey: string;
 

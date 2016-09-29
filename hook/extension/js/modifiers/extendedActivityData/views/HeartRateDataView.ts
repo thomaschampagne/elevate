@@ -1,10 +1,10 @@
 class HeartRateDataView extends AbstractDataView {
 
-    protected heartRateData: HeartRateData;
+    protected heartRateData: IHeartRateData;
 
-    protected userSettings: UserSettings;
+    protected userSettings: IUserSettings;
 
-    constructor(heartRateData: HeartRateData, units: string, userSettings: UserSettings) {
+    constructor(heartRateData: IHeartRateData, units: string, userSettings: IUserSettings) {
         super(units);
         this.mainColor = [255, 43, 66];
         this.heartRateData = heartRateData;

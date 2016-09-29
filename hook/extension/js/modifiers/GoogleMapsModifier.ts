@@ -1,12 +1,12 @@
-class GoogleMapsModifier implements Modifier {
+class GoogleMapsModifier implements IModifier {
 
     protected activityId: number;
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected pathArray: Array<Array<number>>;
     protected map: google.maps.Map;
 
-    constructor(activityId: number, appResources: AppResources, userSettings: UserSettings) {
+    constructor(activityId: number, appResources: IAppResources, userSettings: IUserSettings) {
         this.activityId = activityId;
         this.appResources = appResources;
         this.userSettings = userSettings;

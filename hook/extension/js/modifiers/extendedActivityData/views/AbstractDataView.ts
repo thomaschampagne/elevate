@@ -12,11 +12,11 @@ abstract class AbstractDataView {
     protected graphTitle: string;
     protected mainColor: Array<number>;
     protected table: JQuery;
-    protected appResources: AppResources;
+    protected appResources: IAppResources;
     protected isAuthorOfViewedActivity: boolean;
     protected isSegmentEffortView: boolean;
     protected activityType: string;
-    protected speedUnitsData: SpeedUnitData;
+    protected speedUnitsData: ISpeedUnitData;
 
     constructor(units: string) {
         this.content = '';
@@ -51,7 +51,7 @@ abstract class AbstractDataView {
         this.activityType = type;
     }
 
-    public setAppResources(appResources: AppResources): void {
+    public setAppResources(appResources: IAppResources): void {
         this.appResources = appResources;
     }
 
@@ -82,7 +82,7 @@ abstract class AbstractDataView {
         this.graph = $(htmlCanvas);
     }
 
-    protected setupDistributionGraph(zones: Array<Zone>, ratio?: number): void {
+    protected setupDistributionGraph(zones: Array<IZone>, ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -165,7 +165,7 @@ abstract class AbstractDataView {
         tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
     }
 
-    protected setupDistributionTable(zones: Array<Zone>, ratio?: number): void {
+    protected setupDistributionTable(zones: Array<IZone>, ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;
