@@ -1,21 +1,25 @@
-app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService) {
+class HrZone {
 
-    var controllerFunction = function($scope) {
+    static $inject: string[] = ['$scope','AvoidInputKeysService'];
 
-        $scope.avoidInputKeyEdit = function(evt) {
+    constructor(public $scope: any, public AvoidInputKeysService: AvoidInputKeysService) {
+
+        $scope.avoidInputKeyEdit = (evt: KeyboardEvent) => {
             AvoidInputKeysService.apply(evt);
         };
 
-        $scope.$watch('hrZone', function(newHrZone, oldHrZone) {
-            // Notify parent scope when a zone has changed
-            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);
-
+        $scope.$watch('hrZone', (newHrZone: Zone, oldHrZone: Zone) => {
+            $scope.$parent.onZoneChange(parseInt($scope.hrZoneId), oldHrZone, newHrZone);  // Notify parent scope when a zone has changed
         }, true);
 
-        $scope.removeZone = function($event) {
+        $scope.removeZone = ($event: Event) => {
             $scope.$parent.removeHrZone($event, parseInt($scope.hrZoneId));
         };
-    };
+
+    }
+}
+
+app.directive('hrZone', [() => {
 
     return {
 
@@ -31,6 +35,7 @@ app.directive('hrZone', ['AvoidInputKeysService', function(AvoidInputKeysService
             userRestHr: '@userRestHr',
             step: '@zoneStep'
         },
-        controller: controllerFunction
+        controller: HrZone
     };
+
 }]);
