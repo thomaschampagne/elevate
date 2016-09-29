@@ -22,7 +22,7 @@ class XtdZone {
     }
 }
 
-app.directive('XtdZone', [() => {
+app.directive('xtdZone', [() => {
 
     return {
         scope: {
@@ -35,7 +35,7 @@ app.directive('XtdZone', [() => {
             xtdZoneLast: '@xtdZoneLast'
         },
         controller: XtdZone,
-        templateUrl: 'directives/xtdZones/templates/XtdZone.html',
+        templateUrl: 'directives/xtdZones/templates/xtdZone.html',
         controllerAs: 'ctrl',
         link: (scope: IScope, element: angular.IAugmentedJQuery, attrs: angular.IAttributes, ctrl: XtdZone) => {
         }

@@ -79,6 +79,7 @@
     "hook/extension/options/app/services/ReleaseNotesService.ts",
     "hook/extension/options/app/filters/XtdDataFilter.ts",
     "hook/extension/options/app/filters/HrrToBpmFilter.ts",
+    "hook/extension/options/app/directives/xtdZones/XtdZones.ts",
     "hook/extension/options/app/directives/xtdZones/XtdZone.ts"
   ],
   "exclude": [

@@ -1,37 +1,40 @@
-app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$anchorScroll', function (ChromeStorageService, $mdDialog, $location, $anchorScroll) {
+import IAnchorScrollService = angular.IAnchorScrollService;
+import IAnchorScrollProvider = angular.IAnchorScrollProvider;
+import IConfirmDialog = angular.material.IConfirmDialog;
 
-    var maxZonesCount = 50;
-    var minZonesCount = 3;
+class XtdZones {
 
-    var linkFunction = function ($scope, element, attrs) {
-    };
+    public static maxZonesCount: number = 50;
+    public static minZonesCount: number = 3;
 
-    var controllerFunction = function ($scope) {
+    public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
 
-        $scope.addZone = function ($event) {
+    constructor(public $scope: any, public ChromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
-            if ($scope.xtdZones.length >= maxZonesCount) {
+        $scope.addZone = ($event: MouseEvent) => {
+
+            if ($scope.xtdZones.length >= XtdZones.maxZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
                         .title('Oups')
-                        .textContent('You can\'t add more than ' + maxZonesCount + ' zones...')
+                        .textContent('You can\'t add more than ' + XtdZones.maxZonesCount + ' zones...')
                         .ok('Got it!')
                         .targetEvent($event)
                 );
 
             } else {
 
-                var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
+                let oldLastZone: Zone = $scope.xtdZones[$scope.xtdZones.length - 1];
 
                 // Computed middle value between oldLastZone.from and oldLastZone.to
-                var betweenValue = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
+                let betweenValue: number = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
 
                 // Creating new Zone
-                var newLastZone = {
-                    "from": betweenValue,
-                    "to": oldLastZone.to
+                let newLastZone: Zone = {
+                    from: betweenValue,
+                    to: oldLastZone.to
                 };
 
                 // Apply middle value computed to previous last zone (to)
@@ -45,15 +48,15 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.removeZone = function ($event, zoneId) {
+        $scope.removeZone = ($event: MouseEvent, zoneId: number) => {
 
-            if ($scope.xtdZones.length <= minZonesCount) {
+            if ($scope.xtdZones.length <= XtdZones.minZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
                         .title('Oups')
-                        .textContent('You can\'t remove more than ' + minZonesCount + ' zones...')
+                        .textContent('You can\'t remove more than ' + XtdZones.minZonesCount + ' zones...')
                         .ok('Got it!')
                         .targetEvent($event)
                 );
@@ -79,7 +82,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 } else {
 
                     // Delete last zone
-                    var oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
+                    let oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
                     $scope.xtdZones.pop();
                     // Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
                     // $scope.xtdZones[$scope.xtdZones.length - 1].to = oldLastZone.to;
@@ -89,21 +92,23 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.resetZone = function ($event) {
+        $scope.resetZone = ($event: MouseEvent) => {
 
-            var confirm = $mdDialog.confirm()
+            let confirm: IConfirmDialog = $mdDialog.confirm()
                 .title('Reset zones')
                 .textContent('You are going to reset ' + $scope.xtdDataSelected.name + ' zones to default factory values. Are you sure?')
                 .targetEvent($event)
                 .ok('Yes. Reset')
                 .cancel('cancel');
-            $mdDialog.show(confirm).then(function () {
-                angular.copy(userSettings.zones[$scope.xtdDataSelected.value], $scope.xtdZones);
+
+            $mdDialog.show(confirm).then(() => {
+                angular.copy(_.propertyOf(userSettings.zones)($scope.xtdDataSelected.value), $scope.xtdZones);
                 $scope.saveZones();
             });
         };
 
-        $scope.saveZones = function ($event) {
+        $scope.saveZones = ($event: MouseEvent) => {
+
             if (!$scope.areZonesCompliant($scope.xtdZones)) {
                 alert('Zones are not compliant');
                 return;
@@ -111,12 +116,12 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
 
             if (!_.isUndefined($scope.xtdZones)) {
 
-                ChromeStorageService.fetchUserSettings(function (userSettingsSynced) {
+                ChromeStorageService.fetchUserSettings((userSettingsSynced: UserSettings) => {
                     // Update zones with new one
-                    var zones = userSettingsSynced.zones;
+                    let zones: any = userSettingsSynced.zones;
                     zones[$scope.xtdDataSelected.value] = angular.fromJson(angular.toJson($scope.xtdZones));
 
-                    chrome.storage.sync.set(userSettingsSynced, function () {
+                    chrome.storage.sync.set(userSettingsSynced, () => {
 
                         $mdDialog.show(
                             $mdDialog.alert()
@@ -124,32 +129,30 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                                 .title('Saved !')
                                 .textContent('Your ' + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
                                 .ok('Got it!')
-                                .openFrom('body')
-                                .closeTo('body')
                                 .targetEvent($event)
                         );
 
-                        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function () {
+                        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, () => {
                             console.log('localStorageMustBeCleared has been updated to: ' + true);
                         });
                     });
-                }.bind(this));
+                });
             }
         };
 
-        $scope.setupStep = function ($event) {
+        $scope.setupStep = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: function DialogController($scope, $mdDialog, localStep, localZoneType) {
+                controller: ($scope: any, $mdDialog: IDialogService, localStep: number, localZoneType: string) => {
 
                     $scope.step = localStep;
                     $scope.zoneType = localZoneType;
 
-                    $scope.hide = function () {
+                    $scope.hide = () => {
                         $mdDialog.hide();
                     };
 
-                    $scope.answer = function (stepChoosen) {
+                    $scope.answer = (stepChoosen: number) => {
                         $mdDialog.hide(stepChoosen);
                     };
                 },
@@ -162,19 +165,18 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                     localStep: $scope.xtdDataSelected.step,
                     localZoneType: $scope.xtdDataSelected.name
                 },
-            })
-                .then(function (stepChoosen) {
-                    if (stepChoosen) {
-                        $scope.xtdDataSelected.step = stepChoosen;
-                    }
-                });
+            }).then((stepChoosen: number) => {
+                if (stepChoosen) {
+                    $scope.xtdDataSelected.step = stepChoosen;
+                }
+            });
         };
 
-        $scope.export = function ($event) {
+        $scope.export = ($event: MouseEvent) => {
 
-            var exportData = angular.toJson($scope.xtdZones);
+            let exportData = angular.toJson($scope.xtdZones);
 
-            var exportPrompt = $mdDialog.prompt()
+            let exportPrompt = $mdDialog.prompt()
                 .title('Exporting ' + $scope.xtdDataSelected.name + ' zones')
                 .textContent('Copy data inside field.')
                 .ariaLabel('Copy data inside field.')
@@ -184,9 +186,9 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             $mdDialog.show(exportPrompt);
         };
 
-        $scope.import = function ($event) {
+        $scope.import = ($event: MouseEvent) => {
 
-            var importPrompt = $mdDialog.prompt()
+            let importPrompt = $mdDialog.prompt()
                 .title('Importing ' + $scope.xtdDataSelected.name + ' zones')
                 .textContent('Paste exported zones in input field.')
                 .ariaLabel('Paste exported zones in input field.')
@@ -196,12 +198,12 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 .ok('Import');
 
             $mdDialog.show(importPrompt)
-                .then(function (importData) {
+                .then((importData) => {
 
                     if (importData) {
 
                         try {
-                            var jsonImportData = angular.fromJson(importData);
+                            let jsonImportData = angular.fromJson(importData);
 
                             if ($scope.areZonesCompliant(jsonImportData)) {
 
@@ -209,7 +211,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                                 $scope.saveZones();
 
                             } else {
-                                throw new error('not compliant');
+                                throw new Error('not compliant');
                             }
 
                         } catch (e) {
@@ -218,7 +220,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                                 $mdDialog.alert()
                                     .clickOutsideToClose(true)
                                     .title('Oups')
-                                    .textContent($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + maxZonesCount)
+                                    .textContent($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + XtdZones.maxZonesCount)
                                     .ok('Got it!')
                                     .targetEvent($event)
                             );
@@ -228,21 +230,21 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 });
         };
 
-        $scope.areZonesCompliant = function (zones) {
+        $scope.areZonesCompliant = (zones: Array<Zone>) => {
 
             if (!zones) {
                 return false;
             }
 
-            if (zones.length > maxZonesCount) {
+            if (zones.length > XtdZones.maxZonesCount) {
                 return false;
             }
 
-            if (zones.length < minZonesCount) {
+            if (zones.length < XtdZones.minZonesCount) {
                 return false;
             }
 
-            for (var i = 0; i < zones.length; i++) {
+            for (let i = 0; i < zones.length; i++) {
 
                 if (i === 0) {
                     if (zones[i].to != zones[i + 1].from) {
@@ -264,9 +266,9 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             return true;
         };
 
-        $scope.onZoneChange = function (zoneId, previousZone, newZone) {
+        $scope.onZoneChange = (zoneId: number, previousZone: Zone, newZone: Zone) => {
 
-            var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
+            let fieldHasChanged: string = $scope.whichFieldHasChanged(previousZone, newZone);
 
             if (_.isUndefined(fieldHasChanged)) {
                 return;
@@ -296,7 +298,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
         /**
          * @return 'from' or 'to'
          */
-        $scope.whichFieldHasChanged = function (previousZone, newZone) {
+        $scope.whichFieldHasChanged = (previousZone: Zone, newZone: Zone) => {
 
             if (previousZone.from !== newZone.from) {
                 return 'from';
@@ -307,21 +309,25 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.handleToChange = function (zoneId) {
+        $scope.handleToChange = (zoneId: number) => {
             $scope.xtdZones[zoneId + 1].from = $scope.xtdZones[zoneId].to; // User has changed to value of the zone
         };
 
-        $scope.handleFromChange = function (zoneId) {
+        $scope.handleFromChange = (zoneId: number) => {
             $scope.xtdZones[zoneId - 1].to = $scope.xtdZones[zoneId].from; // User has changed from value of the zone
         };
 
-        $scope.scrollToBottom = function () {
-            setTimeout(function () {
-                $anchorScroll($location.hash('tools_bottom'));
+        $scope.scrollToBottom = () => {
+
+            setTimeout(() => {
+                $anchorScroll($location.hash('tools_bottom').hash());
             });
         };
 
-    };
+    }
+}
+
+app.directive('xtdZones', [() => {
 
     return {
         templateUrl: 'directives/xtdZones/templates/xtdZones.html',
@@ -329,7 +335,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             xtdZones: "=",
             xtdDataSelected: "="
         },
-        controller: controllerFunction,
-        link: linkFunction
+        controller: XtdZones
     };
+
 }]);
