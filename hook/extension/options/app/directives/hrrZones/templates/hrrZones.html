@@ -52,8 +52,8 @@
     </div>
 </md-toolbar>
 
-<div ng-repeat="zone in hrZones" class="repeated-item">
-    <div hr-zone="zone" hr-zone-id="{{$index}}" previous-from-hrr="{{hrZones[$index - 1].fromHrr}}" next-to-hrr="{{hrZones[$index + 1].toHrr}}" hr-zone-first="{{$index == 0}}" hr-zone-last="{{$index == (hrZones.length - 1)}}" user-max-hr="{{userMaxHr}}" user-rest-hr="{{userRestHr}}" zone-step="{{step}}"></div>
+<div ng-repeat="zone in hrrZones" class="repeated-item">
+    <div hrr-zone="zone" hrr-zone-id="{{$index}}" previous-from-hrr="{{hrrZones[$index - 1].fromHrr}}" next-to-hrr="{{hrrZones[$index + 1].toHrr}}" hrr-zone-first="{{$index == 0}}" hrr-zone-last="{{$index == (hrrZones.length - 1)}}" user-max-hr="{{userMaxHr}}" user-rest-hr="{{userRestHr}}" zone-step="{{step}}"></div>
 </div>
 
 <md-toolbar id="tools_bottom" style="background-color: transparent;" ng-cloak>

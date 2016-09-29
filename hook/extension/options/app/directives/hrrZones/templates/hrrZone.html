@@ -1,7 +1,7 @@
 <md-card aria-hidden="true">
     <md-card-content layout="row" layout-align="center center">
         <div flex="10">
-            <span class="md-subhead">Z{{1 * hrZoneId + 1}}</span>
+            <span class="md-subhead">Z{{1 * hrrZoneId + 1}}</span>
             <!-- </br><span class="md-caption">{{xtdDataSelected.units}}</span> -->
         </div>
         <div flex="35" layout="row" layout-align="start center">
@@ -10,7 +10,7 @@
                     <md-input-container class="md-block zone-input-margin">
                         <label>From %HRR</label>
                         <md-icon>keyboard_arrow_right</md-icon>
-                        <input type="number" ng-model="hrZone.fromHrr" min="0" max="{{hrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
+                        <input type="number" ng-model="hrrZone.fromHrr" min="0" max="{{hrrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
                         <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
                     </md-input-container>
                 </div>
@@ -18,7 +18,7 @@
                     <md-input-container class="md-block zone-input-margin">
                         <label>From %HRR</label>
                         <md-icon>keyboard_arrow_right</md-icon>
-                        <input type="number" ng-model="hrZone.fromHrr" min="{{previousFromHrr}}" max="{{hrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
+                        <input type="number" ng-model="hrrZone.fromHrr" min="{{previousFromHrr}}" max="{{hrrZone.toHrr}}" step="{{step}}" ng-keydown="avoidInputKeyEdit($event)" />
                         <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
                     </md-input-container>
                 </div>
@@ -26,7 +26,7 @@
             <div flex="40">
                 <md-input-container class="md-block zone-input-margin">
                     <md-icon>keyboard_arrow_right</md-icon>
-                    <input type="text" aria-label="{{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm}" value="{{hrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" ng-disabled="true" />
+                    <input type="text" aria-label="{{hrrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm}" value="{{hrrZone.fromHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" ng-disabled="true" />
                 </md-input-container>
             </div>
         </div>
@@ -38,7 +38,7 @@
                     <md-input-container class="md-block zone-input-margin">
                         <label>To %HRR</label>
                         <md-icon>keyboard_arrow_right</md-icon>
-                        <input type="number" ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="{{step}}" max="9999" ng-keydown="avoidInputKeyEdit($event)" />
+                        <input type="number" ng-model="hrrZone.toHrr" min="{{hrrZone.fromHrr}}" step="{{step}}" max="9999" ng-keydown="avoidInputKeyEdit($event)" />
                         <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
                     </md-input-container>
                 </div>
@@ -46,7 +46,7 @@
                     <md-input-container class="md-block zone-input-margin">
                         <label>To %HRR</label>
                         <md-icon>keyboard_arrow_right</md-icon>
-                        <input type="number" ng-model="hrZone.toHrr" min="{{hrZone.fromHrr}}" step="{{step}}" max="{{nextToHrr}}" ng-keydown="avoidInputKeyEdit($event)" />
+                        <input type="number" ng-model="hrrZone.toHrr" min="{{hrrZone.fromHrr}}" step="{{step}}" max="{{nextToHrr}}" ng-keydown="avoidInputKeyEdit($event)" />
                         <md-tooltip md-direction="right">Use arrows &#8645; to set %HRR value.</md-tooltip>
                     </md-input-container>
                 </div>
@@ -54,7 +54,7 @@
             <div flex="40">
                 <md-input-container class="md-block zone-input-margin">
                     <md-icon>keyboard_arrow_right</md-icon>
-                    <input type="text" aria-label="{{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" value="{{hrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" ng-disabled="true" />
+                    <input type="text" aria-label="{{hrrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" value="{{hrrZone.toHrr | hrrToBpmFilter:userMaxHr:userRestHr}} bpm" ng-disabled="true" />
                 </md-input-container>
             </div>
         </div>

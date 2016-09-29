@@ -12,7 +12,7 @@ class HrrZones {
 
         $scope.addHrZone = ($event: MouseEvent) => {
 
-            if ($scope.hrZones.length >= HrrZones.maxHrZonesCount) {
+            if ($scope.hrrZones.length >= HrrZones.maxHrZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -25,7 +25,7 @@ class HrrZones {
 
             } else {
 
-                let oldLastHrZone: IHrrZone = $scope.hrZones[$scope.hrZones.length - 1];
+                let oldLastHrZone: IHrrZone = $scope.hrrZones[$scope.hrrZones.length - 1];
 
                 // Computed middle value between oldLastHrZone.fromHrr and oldLastHrZone.toHrr
                 let betweenHrrValue: number = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
@@ -37,19 +37,19 @@ class HrrZones {
                 };
 
                 // Apply middle value computed to previous last zone (toHrr)
-                $scope.hrZones[$scope.hrZones.length - 1].toHrr = betweenHrrValue;
+                $scope.hrrZones[$scope.hrrZones.length - 1].toHrr = betweenHrrValue;
 
                 // Add the new last zone
-                $scope.hrZones.push(newLastHrZone);
+                $scope.hrrZones.push(newLastHrZone);
 
                 $scope.scrollToBottom();
             }
 
         };
 
-        $scope.removeHrZone = ($event: MouseEvent, hrZoneId: number) => {
+        $scope.removeHrZone = ($event: MouseEvent, hrrZoneId: number) => {
 
-            if ($scope.hrZones.length <= HrrZones.minHrZonesCount) {
+            if ($scope.hrrZones.length <= HrrZones.minHrZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
@@ -62,30 +62,30 @@ class HrrZones {
 
             } else {
 
-                if (hrZoneId === 0) {
+                if (hrrZoneId === 0) {
 
                     // First zone...
                     // just remove it...
-                    $scope.hrZones.splice(hrZoneId, 1);
+                    $scope.hrrZones.splice(hrrZoneId, 1);
 
-                } else if (hrZoneId && hrZoneId !== $scope.hrZones.length - 1) {
+                } else if (hrrZoneId && hrrZoneId !== $scope.hrrZones.length - 1) {
 
                     // Delete middle zone id here...
 
                     // Update next zone
-                    $scope.hrZones[hrZoneId + 1].fromHrr = $scope.hrZones[hrZoneId - 1].toHrr;
+                    $scope.hrrZones[hrrZoneId + 1].fromHrr = $scope.hrrZones[hrrZoneId - 1].toHrr;
 
                     // Remove zone
-                    $scope.hrZones.splice(hrZoneId, 1);
+                    $scope.hrrZones.splice(hrrZoneId, 1);
 
                 } else {
 
                     // Delete last zone
-                    $scope.hrZones.pop();
+                    $scope.hrrZones.pop();
 
                     // Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
-                    // let oldLastZone = $scope.hrZones[$scope.hrZones.length - 1];
-                    // $scope.hrZones[$scope.hrZones.length - 1].to = oldLastZone.to;
+                    // let oldLastZone = $scope.hrrZones[$scope.hrrZones.length - 1];
+                    // $scope.hrrZones[$scope.hrrZones.length - 1].to = oldLastZone.to;
                     $scope.scrollToBottom();
                 }
 
@@ -101,28 +101,28 @@ class HrrZones {
                 .ok('Yes. Reset')
                 .cancel('cancel');
             $mdDialog.show(confirm).then(() => {
-                angular.copy(userSettings.userHrrZones, $scope.hrZones);
+                angular.copy(userSettings.userHrrZones, $scope.hrrZones);
                 $scope.saveHrZones();
             });
         };
 
         $scope.saveHrZones = ($event: MouseEvent) => {
 
-            if (!$scope.areHrrZonesCompliant($scope.hrZones)) {
+            if (!$scope.areHrrZonesCompliant($scope.hrrZones)) {
                 alert('Zones are not compliant');
                 return;
             }
 
-            if (!_.isUndefined($scope.hrZones)) {
-                ChromeStorageService.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrZones)), () => {
+            if (!_.isUndefined($scope.hrrZones)) {
+                ChromeStorageService.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrrZones)), () => {
 
-                    console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrZones));
+                    console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrrZones));
 
                     $mdDialog.show(
                         $mdDialog.alert()
                             .clickOutsideToClose(true)
                             .title('Saved !')
-                            .textContent('Your ' + $scope.hrZones.length + ' Heartrate reserve zones" have been saved.')
+                            .textContent('Your ' + $scope.hrrZones.length + ' Heartrate reserve zones" have been saved.')
                             .ok('Got it!')
                             .targetEvent($event)
                     );
@@ -168,7 +168,7 @@ class HrrZones {
 
         $scope.export = ($event: MouseEvent) => {
 
-            let exportData: string = angular.toJson($scope.hrZones);
+            let exportData: string = angular.toJson($scope.hrrZones);
 
             let exportPrompt: IPromptDialog = $mdDialog.prompt()
                 .title('Exporting Heartrate Reserve Zones')
@@ -201,7 +201,7 @@ class HrrZones {
 
                             if ($scope.areHrrZonesCompliant(jsonImportData)) {
 
-                                $scope.hrZones = jsonImportData;
+                                $scope.hrrZones = jsonImportData;
                                 $scope.saveHrZones();
 
                             } else {
@@ -239,7 +239,7 @@ class HrrZones {
                         $mdDialog.cancel();
                     };
                 },
-                templateUrl: 'directives/hrZones/templates/hrrZonesHelper.html',
+                templateUrl: 'directives/hrrZones/templates/hrrZonesHelper.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
@@ -299,7 +299,7 @@ class HrrZones {
 
                 $scope.handleToHrrChange(hrrZoneId);
 
-            } else if (hrrZoneId < $scope.hrZones.length - 1) { // If middle zone
+            } else if (hrrZoneId < $scope.hrrZones.length - 1) { // If middle zone
 
                 if (fieldHasChanged === 'toHrr') {
 
@@ -330,12 +330,12 @@ class HrrZones {
             }
         };
 
-        $scope.handleToHrrChange = (hrZoneId: number) => {
-            $scope.hrZones[hrZoneId + 1].fromHrr = $scope.hrZones[hrZoneId].toHrr; // User has changed toHrr value of the zone
+        $scope.handleToHrrChange = (hrrZoneId: number) => {
+            $scope.hrrZones[hrrZoneId + 1].fromHrr = $scope.hrrZones[hrrZoneId].toHrr; // User has changed toHrr value of the zone
         };
 
-        $scope.handleFromHrrChange = (hrZoneId: number) => {
-            $scope.hrZones[hrZoneId - 1].toHrr = $scope.hrZones[hrZoneId].fromHrr; // User has changed fromHrr value of the zone
+        $scope.handleFromHrrChange = (hrrZoneId: number) => {
+            $scope.hrrZones[hrrZoneId - 1].toHrr = $scope.hrrZones[hrrZoneId].fromHrr; // User has changed fromHrr value of the zone
         };
 
         $scope.scrollToBottom = () => {
@@ -350,9 +350,9 @@ class HrrZones {
 app.directive('hrrZones', [() => {
 
     return {
-        templateUrl: 'directives/hrZones/templates/hrrZones.html',
+        templateUrl: 'directives/hrrZones/templates/hrrZones.html',
         scope: {
-            hrZones: "=",
+            hrrZones: "=",
             userMaxHr: "@userMaxHr",
             userRestHr: "@userRestHr"
         },
