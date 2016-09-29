@@ -65,6 +65,7 @@
     "hook/extension/js/modifiers/ActivityQRCodeDisplayModifier.ts",
     "hook/extension/js/modifiers/AthleteStatsModifier.ts",
     "hook/extension/js/modifiers/ActivityBikeOdoModifier.ts",
+    "hook/extension/js/modifiers/ActivitiesSummaryModifier.ts",
     "hook/extension/options/app/App.ts",
     "hook/extension/options/app/Config.ts",
     "hook/extension/options/app/controllers/MainController.ts",
@@ -78,7 +79,7 @@
     "hook/extension/options/app/services/ReleaseNotesService.ts",
     "hook/extension/options/app/filters/XtdDataFilter.ts",
     "hook/extension/options/app/filters/HrrToBpmFilter.ts",
-    "hook/extension/js/modifiers/ActivitiesSummaryModifier.ts"
+    "hook/extension/options/app/directives/xtdZones/XtdZone.ts"
   ],
   "exclude": [
     "node_modules/",

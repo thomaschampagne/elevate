@@ -1,23 +1,24 @@
-app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$anchorScroll', function(ChromeStorageService, $mdDialog, $location, $anchorScroll) {
+app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$anchorScroll', function (ChromeStorageService, $mdDialog, $location, $anchorScroll) {
 
     var maxZonesCount = 50;
     var minZonesCount = 3;
 
-    var linkFunction = function($scope, element, attrs) {};
+    var linkFunction = function ($scope, element, attrs) {
+    };
 
-    var controllerFunction = function($scope) {
+    var controllerFunction = function ($scope) {
 
-        $scope.addZone = function($event) {
+        $scope.addZone = function ($event) {
 
             if ($scope.xtdZones.length >= maxZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
-                    .clickOutsideToClose(true)
-                    .title('Oups')
-                    .textContent('You can\'t add more than ' + maxZonesCount + ' zones...')
-                    .ok('Got it!')
-                    .targetEvent($event)
+                        .clickOutsideToClose(true)
+                        .title('Oups')
+                        .textContent('You can\'t add more than ' + maxZonesCount + ' zones...')
+                        .ok('Got it!')
+                        .targetEvent($event)
                 );
 
             } else {
@@ -44,17 +45,17 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.removeZone = function($event, zoneId) {
+        $scope.removeZone = function ($event, zoneId) {
 
             if ($scope.xtdZones.length <= minZonesCount) {
 
                 $mdDialog.show(
                     $mdDialog.alert()
-                    .clickOutsideToClose(true)
-                    .title('Oups')
-                    .textContent('You can\'t remove more than ' + minZonesCount + ' zones...')
-                    .ok('Got it!')
-                    .targetEvent($event)
+                        .clickOutsideToClose(true)
+                        .title('Oups')
+                        .textContent('You can\'t remove more than ' + minZonesCount + ' zones...')
+                        .ok('Got it!')
+                        .targetEvent($event)
                 );
 
             } else {
@@ -88,7 +89,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.resetZone = function($event) {
+        $scope.resetZone = function ($event) {
 
             var confirm = $mdDialog.confirm()
                 .title('Reset zones')
@@ -96,13 +97,13 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 .targetEvent($event)
                 .ok('Yes. Reset')
                 .cancel('cancel');
-            $mdDialog.show(confirm).then(function() {
+            $mdDialog.show(confirm).then(function () {
                 angular.copy(userSettings.zones[$scope.xtdDataSelected.value], $scope.xtdZones);
                 $scope.saveZones();
             });
         };
 
-        $scope.saveZones = function($event) {
+        $scope.saveZones = function ($event) {
             if (!$scope.areZonesCompliant($scope.xtdZones)) {
                 alert('Zones are not compliant');
                 return;
@@ -110,25 +111,25 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
 
             if (!_.isUndefined($scope.xtdZones)) {
 
-                ChromeStorageService.fetchUserSettings(function(userSettingsSynced) {
+                ChromeStorageService.fetchUserSettings(function (userSettingsSynced) {
                     // Update zones with new one
                     var zones = userSettingsSynced.zones;
                     zones[$scope.xtdDataSelected.value] = angular.fromJson(angular.toJson($scope.xtdZones));
 
-                    chrome.storage.sync.set(userSettingsSynced, function() {
+                    chrome.storage.sync.set(userSettingsSynced, function () {
 
                         $mdDialog.show(
                             $mdDialog.alert()
-                            .clickOutsideToClose(true)
-                            .title('Saved !')
-                            .textContent('Your ' + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
-                            .ok('Got it!')
-                            .openFrom('body')
-                            .closeTo('body')
-                            .targetEvent($event)
+                                .clickOutsideToClose(true)
+                                .title('Saved !')
+                                .textContent('Your ' + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
+                                .ok('Got it!')
+                                .openFrom('body')
+                                .closeTo('body')
+                                .targetEvent($event)
                         );
 
-                        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function() {
+                        ChromeStorageService.updateUserSetting('localStorageMustBeCleared', true, function () {
                             console.log('localStorageMustBeCleared has been updated to: ' + true);
                         });
                     });
@@ -136,40 +137,40 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.setupStep = function($event) {
+        $scope.setupStep = function ($event) {
 
             $mdDialog.show({
-                    controller: function DialogController($scope, $mdDialog, localStep, localZoneType) {
+                controller: function DialogController($scope, $mdDialog, localStep, localZoneType) {
 
-                        $scope.step = localStep;
-                        $scope.zoneType = localZoneType;
+                    $scope.step = localStep;
+                    $scope.zoneType = localZoneType;
 
-                        $scope.hide = function() {
-                            $mdDialog.hide();
-                        };
+                    $scope.hide = function () {
+                        $mdDialog.hide();
+                    };
 
-                        $scope.answer = function(stepChoosen) {
-                            $mdDialog.hide(stepChoosen);
-                        };
-                    },
-                    templateUrl: 'directives/templates/dialogs/stepDialog.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: true,
-                    fullscreen: false,
-                    locals: {
-                        localStep: $scope.xtdDataSelected.step,
-                        localZoneType: $scope.xtdDataSelected.name
-                    },
-                })
-                .then(function(stepChoosen) {
+                    $scope.answer = function (stepChoosen) {
+                        $mdDialog.hide(stepChoosen);
+                    };
+                },
+                templateUrl: 'directives/templates/dialogs/stepDialog.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: true,
+                fullscreen: false,
+                locals: {
+                    localStep: $scope.xtdDataSelected.step,
+                    localZoneType: $scope.xtdDataSelected.name
+                },
+            })
+                .then(function (stepChoosen) {
                     if (stepChoosen) {
                         $scope.xtdDataSelected.step = stepChoosen;
                     }
                 });
         };
 
-        $scope.export = function($event) {
+        $scope.export = function ($event) {
 
             var exportData = angular.toJson($scope.xtdZones);
 
@@ -183,7 +184,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             $mdDialog.show(exportPrompt);
         };
 
-        $scope.import = function($event) {
+        $scope.import = function ($event) {
 
             var importPrompt = $mdDialog.prompt()
                 .title('Importing ' + $scope.xtdDataSelected.name + ' zones')
@@ -195,7 +196,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 .ok('Import');
 
             $mdDialog.show(importPrompt)
-                .then(function(importData) {
+                .then(function (importData) {
 
                     if (importData) {
 
@@ -215,11 +216,11 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
 
                             $mdDialog.show(
                                 $mdDialog.alert()
-                                .clickOutsideToClose(true)
-                                .title('Oups')
-                                .textContent($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + maxZonesCount)
-                                .ok('Got it!')
-                                .targetEvent($event)
+                                    .clickOutsideToClose(true)
+                                    .title('Oups')
+                                    .textContent($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + maxZonesCount)
+                                    .ok('Got it!')
+                                    .targetEvent($event)
                             );
                             return;
                         }
@@ -227,7 +228,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
                 });
         };
 
-        $scope.areZonesCompliant = function(zones) {
+        $scope.areZonesCompliant = function (zones) {
 
             if (!zones) {
                 return false;
@@ -263,7 +264,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             return true;
         };
 
-        $scope.onZoneChange = function(zoneId, previousZone, newZone) {
+        $scope.onZoneChange = function (zoneId, previousZone, newZone) {
 
             var fieldHasChanged = $scope.whichFieldHasChanged(previousZone, newZone);
 
@@ -295,7 +296,7 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
         /**
          * @return 'from' or 'to'
          */
-        $scope.whichFieldHasChanged = function(previousZone, newZone) {
+        $scope.whichFieldHasChanged = function (previousZone, newZone) {
 
             if (previousZone.from !== newZone.from) {
                 return 'from';
@@ -306,16 +307,16 @@ app.directive('xtdZones', ['ChromeStorageService', '$mdDialog', '$location', '$a
             }
         };
 
-        $scope.handleToChange = function(zoneId) {
+        $scope.handleToChange = function (zoneId) {
             $scope.xtdZones[zoneId + 1].from = $scope.xtdZones[zoneId].to; // User has changed to value of the zone
         };
 
-        $scope.handleFromChange = function(zoneId) {
+        $scope.handleFromChange = function (zoneId) {
             $scope.xtdZones[zoneId - 1].to = $scope.xtdZones[zoneId].from; // User has changed from value of the zone
         };
 
-        $scope.scrollToBottom = function() {
-            setTimeout(function() {
+        $scope.scrollToBottom = function () {
+            setTimeout(function () {
                 $anchorScroll($location.hash('tools_bottom'));
             });
         };
