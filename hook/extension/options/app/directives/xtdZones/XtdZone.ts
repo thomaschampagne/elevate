@@ -1,6 +1,6 @@
 class XtdZone {
 
-    static $inject: string[] = ['$scope','AvoidInputKeysService'];
+    static $inject: string[] = ['$scope', 'AvoidInputKeysService'];
 
     constructor(public $scope: any, public AvoidInputKeysService: AvoidInputKeysService) {
 
@@ -35,10 +35,7 @@ app.directive('xtdZone', [() => {
             xtdZoneLast: '@xtdZoneLast'
         },
         controller: XtdZone,
-        templateUrl: 'directives/xtdZones/templates/xtdZone.html',
-        controllerAs: 'ctrl',
-        link: (scope: IScope, element: angular.IAugmentedJQuery, attrs: angular.IAttributes, ctrl: XtdZone) => {
-        }
+        templateUrl: 'directives/xtdZones/templates/xtdZone.html'
     };
 
 }]);

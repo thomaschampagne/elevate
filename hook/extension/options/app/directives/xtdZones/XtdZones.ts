@@ -1,7 +1,3 @@
-import IAnchorScrollService = angular.IAnchorScrollService;
-import IAnchorScrollProvider = angular.IAnchorScrollProvider;
-import IConfirmDialog = angular.material.IConfirmDialog;
-
 class XtdZones {
 
     public static maxZonesCount: number = 50;
@@ -82,9 +78,10 @@ class XtdZones {
                 } else {
 
                     // Delete last zone
-                    let oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
                     $scope.xtdZones.pop();
+
                     // Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
+                    // let oldLastZone = $scope.xtdZones[$scope.xtdZones.length - 1];
                     // $scope.xtdZones[$scope.xtdZones.length - 1].to = oldLastZone.to;
                     $scope.scrollToBottom();
                 }
@@ -176,7 +173,7 @@ class XtdZones {
 
             let exportData = angular.toJson($scope.xtdZones);
 
-            let exportPrompt = $mdDialog.prompt()
+            let exportPrompt: IPromptDialog = $mdDialog.prompt()
                 .title('Exporting ' + $scope.xtdDataSelected.name + ' zones')
                 .textContent('Copy data inside field.')
                 .ariaLabel('Copy data inside field.')
@@ -203,7 +200,7 @@ class XtdZones {
                     if (importData) {
 
                         try {
-                            let jsonImportData = angular.fromJson(importData);
+                            let jsonImportData: Array<Zone> = angular.fromJson(importData);
 
                             if ($scope.areZonesCompliant(jsonImportData)) {
 

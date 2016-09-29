@@ -81,6 +81,7 @@
     "hook/extension/options/app/filters/HrrToBpmFilter.ts",
     "hook/extension/options/app/directives/xtdZones/XtdZones.ts",
     "hook/extension/options/app/directives/xtdZones/XtdZone.ts",
+    "hook/extension/options/app/directives/hrZones/HrrZones.ts",
     "hook/extension/options/app/directives/hrZones/HrZone.ts"
   ],
   "exclude": [

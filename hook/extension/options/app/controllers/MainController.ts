@@ -5,6 +5,10 @@ import IWindowService = angular.IWindowService;
 import IScope = angular.IScope;
 import ITimeoutService = angular.ITimeoutService;
 import ISCEService = angular.ISCEService;
+import IAnchorScrollService = angular.IAnchorScrollService;
+import IAnchorScrollProvider = angular.IAnchorScrollProvider;
+import IConfirmDialog = angular.material.IConfirmDialog;
+import IPromptDialog = angular.material.IPromptDialog;
 
 class MainController {
 

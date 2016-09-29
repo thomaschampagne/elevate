@@ -23,7 +23,6 @@ app.directive('hrZone', [() => {
 
     return {
 
-        templateUrl: 'directives/hrZones/templates/hrZone.html',
         scope: {
             hrZoneId: '@hrZoneId',
             hrZone: '=',
@@ -35,7 +34,8 @@ app.directive('hrZone', [() => {
             userRestHr: '@userRestHr',
             step: '@zoneStep'
         },
-        controller: HrZone
+        controller: HrZone,
+        templateUrl: 'directives/hrZones/templates/hrZone.html'
     };
 
 }]);
