@@ -39,6 +39,8 @@ README.md
  typings search xxxxx
  typings install dt~XXXXXX --global --save
 
+ typings install dt~d3 --global --save
+ typings install dt~angular-material --global --save
 
  // Rename JS to TS
  for f in *.js; do
@@ -58,20 +60,7 @@ README.md
 
  // Find JS functions
  \w:\sfunction((.*))\s+\{
-
  */
-
-// TMP TypeScript declaration
-//
-// declare class AthleteStatsModifier {
-//     constructor(a: any, b: any);
-//
-//     modify(): Function;
-// }
-
-///<reference path="d3.d.ts"/>
-///<reference path="angular-material.d.ts"/>
-
 
 declare class ActivitySegmentTimeComparisonModifier {
     constructor(a: any, b: any, c: any, d: any);
