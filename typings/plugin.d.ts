@@ -18,6 +18,10 @@ interface Window {
     unescape(str: string): string; // Allow access of window.pageView where page wiew
 }
 
+interface Math {
+    trunc: (num: number) => number;
+}
+
 interface RegExpConstructor {
     new (pattern: RegExp, flags?: string): RegExp;
     (pattern: RegExp, flags?: string): RegExp;

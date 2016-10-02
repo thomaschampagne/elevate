@@ -85,7 +85,7 @@ class Helper {
     }
 
     public static heartrateFromHeartRateReserve(hrr: number, maxHr: number, restHr: number): number {
-        return parseFloat((hrr / 100 * (maxHr - restHr) + restHr).toFixed(0));
+        return Math.trunc(hrr / 100 * (maxHr - restHr) + restHr);
     };
 
     public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
