@@ -67,9 +67,3 @@ declare class ActivitySegmentTimeComparisonModifier {
 
     modify(): Function;
 }
-
-declare class ActivityBestSplitsModifier {
-    constructor(a: any, b: any, c: any, d: any, e: any, f: any);
-
-    modify(): Function;
-}
