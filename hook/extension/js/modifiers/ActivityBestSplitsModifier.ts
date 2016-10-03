@@ -1,20 +1,20 @@
-declare var L;
+declare let L: any;
 
 function BestSplitWorker() {
 
     class BestSplitComputer {
 
-        protected newSplitValue(value?) {
+        protected newSplitValue(value?: any): any {
             return {
                 value: value || 0,
                 begin: 0,
                 end: -1,
                 samples: 0,
-                timeOrDistance: null
+                timeOrDistance: 0
             };
         }
 
-        protected newDropRiseValue() {
+        protected newDropRiseValue(): any {
             return {
                 value: {
                     value: 0,
@@ -24,18 +24,18 @@ function BestSplitWorker() {
                 begin: 0,
                 end: -1,
                 samples: 0,
-                timeOrDistance: null
+                timeOrDistance: 0
             };
         }
 
-        protected countSamples(value) {
+        protected countSamples(value: any): void {
             value.samples = value.end - value.begin + 1;
         }
 
-        protected averageOfValues(activityJson, start, end, array) {
-            var sumValues = 0;
-            var sumTime = 0;
-            var deltaTime;
+        protected averageOfValues(activityJson: any, start: number, end: number, array: Array<number>): number {
+            let sumValues: number = 0;
+            let sumTime: number = 0;
+            let deltaTime: number;
             start++;
             for (; array && start <= end; start++) {
                 deltaTime = activityJson.time[start] - activityJson.time[start - 1];
@@ -48,14 +48,14 @@ function BestSplitWorker() {
             return sumValues / sumTime;
         }
 
-        protected totalGainOfValues(start, end, array) {
+        protected totalGainOfValues(start: number, end: number, array: Array<number>): number {
             if (!array) {
                 return 0;
             }
-            var result = 0;
-            var previous = array[start++];
+            let result: number = 0;
+            let previous: number = array[start++];
             for (; start <= end; start++) {
-                var value = array[start];
+                let value: number = array[start];
                 if (previous < value) {
                     result += (value - previous);
                 }
@@ -64,14 +64,14 @@ function BestSplitWorker() {
             return result;
         }
 
-        protected totalDropOfValues(start, end, array, distance?, smoothing?) {
+        protected totalDropOfValues(start: number, end: number, array: Array<number>): number {
             if (!array) {
                 return 0;
             }
-            var result = 0;
-            var previous = array[start++];
+            let result: number = 0;
+            let previous: number = array[start++];
             for (; start <= end; start++) {
-                var value = array[start];
+                let value: number = array[start];
                 if (previous > value) {
                     result += (previous - value);
                 }
@@ -81,17 +81,17 @@ function BestSplitWorker() {
         }
 
 
-        protected dropOfValues(start, end, array) {
-            var dropHr = this.newSplitValue();
-            var maxDrop = 0;
-            var maxBegin = 0;
-            var maxEnd = 0;
-            var maxValueBegin = 0;
-            var maxValueEnd = 0;
+        protected dropOfValues(start: number, end: number, array: Array<number>): any {
+            let dropHr: any = this.newSplitValue();
+            let maxDrop: number = 0;
+            let maxBegin: number = 0;
+            let maxEnd: number = 0;
+            let maxValueBegin: number = 0;
+            let maxValueEnd: number = 0;
             if (array) {
-                var previous = array[start++];
-                var currentMax = previous;
-                var begin = start;
+                let previous: number = array[start++];
+                let currentMax: number = previous;
+                let begin = start;
                 for (; start <= end; start++) {
                     if (array[start] > previous) {
                         if (maxValueEnd === 0 || array[start] - maxValueEnd > 5) {
@@ -118,17 +118,17 @@ function BestSplitWorker() {
             return dropHr;
         }
 
-        protected riseOfValues(start, end, array) {
-            var riseHr = this.newSplitValue();
-            var maxRise = 0;
-            var maxBegin = 0;
-            var maxEnd = 0;
-            var maxValueBegin = 0;
-            var maxValueEnd = 0;
+        protected riseOfValues(start: number, end: number, array: Array<number>): any {
+            let riseHr: any = this.newSplitValue();
+            let maxRise: number = 0;
+            let maxBegin: number = 0;
+            let maxEnd: number = 0;
+            let maxValueBegin: number = 0;
+            let maxValueEnd: number = 0;
             if (array) {
-                var previous = array[start++];
-                var currentMin = previous;
-                var begin = start;
+                let previous: number = array[start++];
+                let currentMin: number = previous;
+                let begin: number = start;
                 for (; start <= end; start++) {
                     if (array[start] < previous) {
                         if (maxValueEnd === 0 || maxValueEnd - array[start] > 5) {
@@ -156,8 +156,8 @@ function BestSplitWorker() {
             return riseHr;
         }
 
-        protected coutOfNonZero(start, end, array) {
-            var result = 0;
+        protected coutOfNonZero(start: number, end: number, array: Array<number>): number {
+            let result: number = 0;
             for (; array && start <= end; start++) {
                 if (array[start]) {
                     result += 1;
@@ -167,18 +167,17 @@ function BestSplitWorker() {
         }
 
 
-        compute(split, activityJson, options) {
-            var i,
-                j,
-                max,
-                distance,
-                hr,
-                avgCadence,
-                avgPower,
-                avgSpeed,
-                time,
-                begin,
-                end,
+        compute(split: any, activityJson: any, options: any): any {
+
+            let max: number,
+                distance: number,
+                hr: number,
+                avgCadence: number,
+                avgPower: number,
+                avgSpeed: number,
+                time: number,
+                begin: number,
+                end: number,
 
                 values = {
                     time: this.newSplitValue(999999999),
@@ -191,10 +190,10 @@ function BestSplitWorker() {
                     avgCadence: this.newSplitValue(),
                     elevationGain: this.newSplitValue(),
                     elevationDrop: this.newSplitValue(),
-                    timeOrDistance: null
+                    timeOrDistance: 0
                 },
-                
-                checkValues = (timeOrDistance: number, ratio) => {
+
+                checkValues = (timeOrDistance: number, ratio: number) => {
                     hr = this.averageOfValues(activityJson, begin, end, activityJson.heartrate);
                     if (hr > values.avgHr.value) {
                         values.avgHr.value = hr;
@@ -202,13 +201,13 @@ function BestSplitWorker() {
                         values.avgHr.end = end;
                         values.avgHr.timeOrDistance = timeOrDistance;
                     }
-                    var dropHr = this.dropOfValues(begin, end, activityJson.heartrate);
+                    let dropHr: any = this.dropOfValues(begin, end, activityJson.heartrate);
                     dropHr.value.value = dropHr.value.value * ratio;
                     if (dropHr.value.value > values.dropHr.value.value) {
                         values.dropHr = dropHr;
                     }
 
-                    var riseHr = this.riseOfValues(begin, end, activityJson.heartrate);
+                    let riseHr: any = this.riseOfValues(begin, end, activityJson.heartrate);
                     riseHr.value.value = riseHr.value.value * ratio;
                     if (riseHr.value.value > values.riseHr.value.value) {
                         values.riseHr = riseHr;
@@ -230,8 +229,8 @@ function BestSplitWorker() {
                         values.avgPower.timeOrDistance = timeOrDistance;
                     }
 
-                    var elevationGain = this.totalGainOfValues(begin, end, activityJson.filteredAltitude) * ratio;
-                    var elevationDrop = this.totalDropOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+                    let elevationGain: number = this.totalGainOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+                    let elevationDrop: number = this.totalDropOfValues(begin, end, activityJson.filteredAltitude) * ratio;
                     if (elevationGain > values.elevationGain.value) {
                         values.elevationGain.value = elevationGain;
                         values.elevationGain.begin = begin;
@@ -257,7 +256,7 @@ function BestSplitWorker() {
 
             if (split.unit === options.Minutes || split.unit === options.Seconds) {
 
-                var splitInSeconds;
+                let splitInSeconds: number;
 
                 if (split.unit === options.Minutes) {
                     splitInSeconds = split.length * 60;
@@ -266,7 +265,7 @@ function BestSplitWorker() {
                     splitInSeconds = split.length;
                 }
 
-                for (i = 0, max = activityJson.time.length; i < max; i++) {
+                for (let i: number = 0, max = activityJson.time.length; i < max; i++) {
                     time = 0;
                     begin = i;
                     end = i + 1;
@@ -280,7 +279,7 @@ function BestSplitWorker() {
                     }
 
                     distance = (activityJson.distance[end] - activityJson.distance[begin]);
-                    var ratio = splitInSeconds / time;
+                    let ratio: number = splitInSeconds / time;
                     if (distance * ratio > values.distance.value) {
                         values.distance.value = distance * ratio;
                         values.distance.begin = begin;
@@ -303,9 +302,9 @@ function BestSplitWorker() {
             }
 
             if (split.unit === options.Kilometers || split.unit === options.Miles) {
-                var distanceInMeters = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
-                    distanceInUserUnits;
-                for (i = 0, max = activityJson.distance.length; i < max; i++) {
+                let distanceInMeters: number = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
+                    distanceInUserUnits: number;
+                for (let i: number = 0, max = activityJson.distance.length; i < max; i++) {
                     distance = 0;
                     begin = i;
                     end = i + 1;
@@ -317,7 +316,7 @@ function BestSplitWorker() {
                     if (distance < distanceInMeters) {
                         break;
                     }
-                    var ratio = distanceInMeters / distance;
+                    let ratio: number = distanceInMeters / distance;
                     distanceInUserUnits = distance * (options.distanceUnit === options.Miles ? options.MetersTo0001hMileFactor : 1);
 
                     time = activityJson.time[end] - activityJson.time[begin];
@@ -360,7 +359,7 @@ function BestSplitWorker() {
     }
 
 
-    this.onmessage = (message) => {
+    this.onmessage = (message: MessageEvent) => {
 
         if (message.data && message.data.split && message.data.activity && message.data.options) {
 
@@ -370,7 +369,7 @@ function BestSplitWorker() {
                 this.postMessage(message.data);
             } else {
 
-                var bestSplitComputer: BestSplitComputer = new BestSplitComputer();
+                let bestSplitComputer: BestSplitComputer = new BestSplitComputer();
 
                 message.data.result = bestSplitComputer.compute(message.data.split, message.data.activity, message.data.options);
 
@@ -395,7 +394,7 @@ class ActivityBestSplitsModifier implements IModifier {
         MilesToMetersFactor: 1609.344,
         KilometersToMetersFactor: 1000,
 
-        getLabel: function (unit: number) {
+        getLabel: (unit: number) => {
             switch (unit) {
                 case ActivityBestSplitsModifier.Units.Kilometers:
                     return "km";
@@ -414,17 +413,17 @@ class ActivityBestSplitsModifier implements IModifier {
         }
     };
 
-    private activityId;
-    private userSettings;
-    private activityJson;
-    private hasPowerMeter;
-    private splitsConfiguration;
-    private saveSplitsConfigrationMethod;
-    private distanceUnit;
-    private cacheKeyPrefix;
+    private activityId: number;
+    private userSettings: IUserSettings;
+    private activityJson: any;
+    private hasPowerMeter: boolean;
+    private splitsConfiguration: any;
+    private saveSplitsConfigrationMethod: Function;
+    private distanceUnit: number;
+    private cacheKeyPrefix: string;
 
 
-    constructor(activityId, userSettings, activityJson, hasPowerMeter, splitsConfiguration, saveSplitsConfigrationMethod) {
+    constructor(activityId: number, userSettings: IUserSettings, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
         this.activityId = activityId;
         this.userSettings = userSettings;
         this.activityJson = activityJson;
@@ -436,10 +435,10 @@ class ActivityBestSplitsModifier implements IModifier {
         this.cacheKeyPrefix = 'stravistix_bestsplit_' + this.activityId + '_';
     }
 
-    protected filterData(data, distance, smoothing) {
+    protected filterData(data: Array<number>, distance: Array<number>, smoothing: number): Array<number> {
         /*
          if (data && distance) {
-         var result = [];
+         let result = [];
          result[0] = data[0];
          for (i = 1, max = data.length; i < max; i++) {
          result[i] = result[i - 1] + (distance[i] - distance[i - 1]) * (data[i] - result[i - 1]) / smoothing;
@@ -450,12 +449,12 @@ class ActivityBestSplitsModifier implements IModifier {
         // http://phrogz.net/js/framerate-independent-low-pass-filter.html
         // value += (currentValue - value) / (smoothing / timeSinceLastSample);
         // it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
-        var max;
+        let max: number;
         if (data && distance) {
-            var smooth_factor = 0;
-            var result = [];
+            let smooth_factor: number = 0;
+            let result: Array<number> = [];
             result[0] = data[0];
-            for (var i = 1, max = data.length; i < max; i++) {
+            for (let i: number = 1, max = data.length; i < max; i++) {
                 if (smoothing === 0) {
                     result[i] = data[i];
                 } else {
@@ -467,39 +466,69 @@ class ActivityBestSplitsModifier implements IModifier {
             }
             return result;
         }
-    };
+    }
+
+    protected addSplitToTable(split: any, splitsTableBody: JQuery, activityDistanceInMeters: number, activityDurationInSeconds: number) {
+
+        if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.KilometersToMetersFactor) > activityDistanceInMeters) {
+            return;
+        }
+        if (split.unit === ActivityBestSplitsModifier.Units.Miles && (split.length * ActivityBestSplitsModifier.Units.MilesToMetersFactor) > activityDistanceInMeters) {
+            return;
+        }
+        if (split.unit === ActivityBestSplitsModifier.Units.Minutes && (split.length * 60) > activityDurationInSeconds) {
+            return;
+        }
+
+        if (split.unit === ActivityBestSplitsModifier.Units.Seconds && split.length > activityDurationInSeconds) {
+            return;
+        }
+
+        split.id = split.id || Helper.guid();
+        splitsTableBody.append("<tr id='split-" + split.id + "'>" +
+            "<td style='white-space: nowrap;'>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
+            "<td class='value'><div id='split-" + split.id + "-time'></div><div id='split-" + split.id + "-distance'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-avg-speed'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-avg-hr'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-drop-hr'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-rise-hr'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-avg-power'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-elevation-gain'></div></td>" +
+            "<td class='value'><div id='split-" + split.id + "-elevation-drop'></div></td>" +
+            "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Del</button></td>" +
+            "</tr>");
+    }
 
     modify(): void {
 
-        var self = this;
-
         // wait for Segments section load
         if ($("#segments").length === 0) {
-            setTimeout(function () {
-                self.modify();
+            setTimeout(() => {
+                this.modify();
             }, 500);
             return;
         }
 
         $("#segments").addClass("best-splits-processed");
 
-        var segments = $("#segments"),
+        let segments: JQuery = $("#segments"),
             bestSplitsHeader = $('<h3 class="button bestsplits-header-title" style="width: 45%; padding-right:50px; padding-left:50px; margin-left:20px;">Best splits</h3>')
                 .css("display", "inline")
                 .css("margin-right", "5px"),
 
             bestSplitsSection = $("<section id='bestsplits' class='pinnable-anchor' style='display: none;'></section>"),
-            map,
-            splitPolyline,
-            splitAltitude,
+            map: any,
+            splitPolyLine: any,
+            splitAltitude: any,
             splitColor = "black",
-            selectedSplitId,
+            selectedSplitId: string,
             measurementPreference = window.currentAthlete ? window.currentAthlete.get('measurement_preference') : 'meters';
 
 
-        this.activityJson.filteredAltitude = self.filterData(this.activityJson.altitude, this.activityJson.distance, 22); // fixed smoothing 200 way way too high!
+        this.activityJson.filteredAltitude = this.filterData(this.activityJson.altitude, this.activityJson.distance, 22); // fixed smoothing 200 way way too high!
 
-        self.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
+        this.distanceUnit = (measurementPreference == 'meters') ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
         segments.find("h3.segments-header")
             .html("Segment efforts")
@@ -533,14 +562,14 @@ class ActivityBestSplitsModifier implements IModifier {
         if (segments.find("[data-segment-effort-id]").length) {
             bestSplitsSection.appendTo($("#segments section.segments-list"));
         } else {
-            var container = segments.find(".no-segments");
+            let container: JQuery = segments.find(".no-segments");
             container.find(".icon-segment-marker-white").remove();
             container.append("<h3 class=\"inset segments-header\">Best Splits</h3>");
             container.append(bestSplitsSection);
             bestSplitsSection.show();
         }
 
-        $(".bestsplits-header-title").click(function () {
+        $(".bestsplits-header-title").click(() => {
             $(".bestsplits-header-title")
                 .addClass("btn-primary")
                 .css("color", "#FC4C02")
@@ -560,10 +589,10 @@ class ActivityBestSplitsModifier implements IModifier {
             bestSplitsSection.show();
         });
 
-        var removeSplitSelection = function () {
-            if (map && splitPolyline) {
-                map.removeLayer(splitPolyline);
-                splitPolyline = null;
+        let removeSplitSelection = () => {
+            if (map && splitPolyLine) {
+                map.removeLayer(splitPolyLine);
+                splitPolyLine = null;
             }
             if (splitAltitude) {
                 splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0");
@@ -575,7 +604,7 @@ class ActivityBestSplitsModifier implements IModifier {
             selectedSplitId = undefined;
         };
 
-        $(".segments-header-title").click(function () {
+        $(".segments-header-title").click(() => {
             $(".segments-header-title")
                 .css("color", "#FC4C02")
                 .addClass("btn-primary");
@@ -597,7 +626,7 @@ class ActivityBestSplitsModifier implements IModifier {
             removeSplitSelection();
         });
 
-        $(document).on("click", "[data-activity-points]", {}, function () {
+        $(document).on("click", "[data-activity-points]", {}, (eventObject: JQueryEventObject) => {
 
             if (map) {
 
@@ -605,51 +634,53 @@ class ActivityBestSplitsModifier implements IModifier {
                     "background-color": "",
                     "color": "black"
                 });
-                $(this).addClass("selected").css({
+
+                $(eventObject.currentTarget).addClass("selected").css({
                     "background-color": splitColor,
                     "color": "white"
                 });
 
-                if (splitPolyline) {
-                    map.removeLayer(splitPolyline);
-                    splitPolyline = null;
+                if (splitPolyLine) {
+                    map.removeLayer(splitPolyLine);
+                    splitPolyLine = null;
                 }
-                var range = $(this).attr("data-activity-points").split("-"),
+
+                let range: Array<string> = $(eventObject.currentTarget).attr("data-activity-points").split("-"),
                     start = parseInt(range[0]),
                     stop = parseInt(range[1]);
 
 
-                splitPolyline = L.polyline([], {
+                splitPolyLine = L.polyline([], {
                     color: splitColor
                 });
 
-                for (var i = start; i <= stop; i++) {
-                    splitPolyline.addLatLng(L.latLng(self.activityJson.latlng[i][0], self.activityJson.latlng[i][1]));
+                for (let i: number = start; i <= stop; i++) {
+                    splitPolyLine.addLatLng(L.latLng(this.activityJson.latlng[i][0], this.activityJson.latlng[i][1]));
                 }
 
-                splitPolyline.addTo(map);
+                splitPolyLine.addTo(map);
 
-                var chartRect = $("#grid rect:not([data-split])");
+                let chartRect: JQuery = $("#grid rect:not([data-split])");
                 if (chartRect.length === 0) {
                     return;
                 }
-                var width = parseInt(chartRect.attr("width")),
-                    height = parseInt(chartRect.attr("height"));
-                var xScale = d3.scale.linear().domain([0, self.activityJson.distance[self.activityJson.distance.length - 1]]).range([0, width]);
+                let width: number = parseInt(chartRect.attr("width")),
+                    height: number = parseInt(chartRect.attr("height"));
+                let xScale = d3.scale.linear().domain([0, this.activityJson.distance[this.activityJson.distance.length - 1]]).range([0, width]);
                 if (!splitAltitude) {
                     splitAltitude = d3.select("#grid").insert("rect", "rect").attr("y", "0").attr("style", "fill: " + splitColor + "; opacity: 0").attr("data-split", "true");
                 }
 
-                splitAltitude.attr("x", xScale(self.activityJson.distance[start]));
+                splitAltitude.attr("x", xScale(this.activityJson.distance[start]));
                 splitAltitude.attr("height", height);
-                splitAltitude.attr("width", xScale(self.activityJson.distance[stop] - self.activityJson.distance[start]));
+                splitAltitude.attr("width", xScale(this.activityJson.distance[stop] - this.activityJson.distance[start]));
                 splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0.3");
 
-                selectedSplitId = $(this).data("split-id");
+                selectedSplitId = $(eventObject.currentTarget).data("split-id");
             }
         });
 
-        var splitsTable = $("<table class='dense marginless best-splits' style='text-align: center'>" +
+        let splitsTable: JQuery = $("<table class='dense marginless best-splits' style='text-align: center'>" +
             "<thead>" +
             "<tr>" +
             "<th style='text-align: center; vertical-align: top;'>Split</th>" +
@@ -685,10 +716,11 @@ class ActivityBestSplitsModifier implements IModifier {
             "<tbody class='splits-list'>" +
             "</tbody" +
             "</table>");
-        bestSplitsSection.append(splitsTable);
-        var splitsTableBody = splitsTable.find("tbody");
 
-        var splitsArray = [{
+        bestSplitsSection.append(splitsTable);
+        let splitsTableBody: JQuery = splitsTable.find("tbody");
+
+        let splitsArray: Array<any> = [{
             length: 1,
             unit: ActivityBestSplitsModifier.Units.Kilometers,
             id: Helper.guid()
@@ -722,10 +754,10 @@ class ActivityBestSplitsModifier implements IModifier {
             id: Helper.guid()
         }];
 
-        if (self.splitsConfiguration) {
-            splitsArray = self.splitsConfiguration.splits || splitsArray;
+        if (this.splitsConfiguration) {
+            splitsArray = this.splitsConfiguration.splits || splitsArray;
         }
-        splitsArray.sort(function (left, right) {
+        splitsArray.sort((left, right) => {
             if (left.unit === right.unit) {
                 return left.length - right.length;
             } else {
@@ -733,76 +765,50 @@ class ActivityBestSplitsModifier implements IModifier {
             }
         });
 
-        var i,
-            activityDistanceInMeters = this.activityJson.distance[this.activityJson.distance.length - 1],
-            activityDurationInSeconds = this.activityJson.time[this.activityJson.time.length - 1];
+        let activityDistanceInMeters: number = this.activityJson.distance[this.activityJson.distance.length - 1],
+            activityDurationInSeconds: number = this.activityJson.time[this.activityJson.time.length - 1];
 
-        var addSplitToTable = function (split) {
-            if (split.unit === ActivityBestSplitsModifier.Units.Kilometers && (split.length * ActivityBestSplitsModifier.Units.KilometersToMetersFactor) > activityDistanceInMeters) {
-                return;
-            }
-            if (split.unit === ActivityBestSplitsModifier.Units.Miles && (split.length * ActivityBestSplitsModifier.Units.MilesToMetersFactor) > activityDistanceInMeters) {
-                return;
-            }
-            if (split.unit === ActivityBestSplitsModifier.Units.Minutes && (split.length * 60) > activityDurationInSeconds) {
-                return;
-            }
 
-            if (split.unit === ActivityBestSplitsModifier.Units.Seconds && split.length > activityDurationInSeconds) {
-                return;
-            }
-
-            split.id = split.id || Helper.guid();
-            splitsTableBody.append("<tr id='split-" + split.id + "'>" +
-                "<td style='white-space: nowrap;'>" + split.length + " " + ActivityBestSplitsModifier.Units.getLabel(split.unit) + "</td>" +
-                "<td class='value'><div id='split-" + split.id + "-time'></div><div id='split-" + split.id + "-distance'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-avg-speed'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-avg-hr'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-drop-hr'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-rise-hr'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-avg-power'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-avg-cadence'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-elevation-gain'></div></td>" +
-                "<td class='value'><div id='split-" + split.id + "-elevation-drop'></div></td>" +
-                "<td><button class='compact minimal toggle-effort-visibility best-split-remove' data-split-id='" + split.id + "'>Del</button></td>" +
-                "</tr>");
-        };
-
-        splitsArray.forEach(function (split) {
-            addSplitToTable(split);
+        splitsArray.forEach((split: any) => {
+            this.addSplitToTable(split, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds)
         });
 
-        var saveSplitsConfiguration = function (splitsArray) {
-            self.saveSplitsConfigrationMethod({
+        let saveSplitsConfiguration = (splitsArray: Array<any>) => {
+            this.saveSplitsConfigrationMethod({
                 splits: splitsArray
             });
         };
 
-        $(document).on("click", ".best-split-remove", function (e) {
-            e.preventDefault();
-            var splitId = $(this).data("split-id");
+        $(document).on("click", ".best-split-remove", (event: JQueryEventObject) => {
+
+            event.preventDefault();
+
+            let splitId: string = $(event.currentTarget).data("split-id");
             if (splitId === selectedSplitId) {
                 removeSplitSelection();
             }
-            splitsTableBody.find("#split-" + splitId).fadeOut(function () {
-                $(this).remove();
+
+            splitsTableBody.find("#split-" + splitId).fadeOut(() => {
+                $(event.currentTarget).remove();
             });
-            splitsArray = splitsArray.filter(function (split) {
+
+            splitsArray = splitsArray.filter((split: any) => {
                 return split.id != splitId;
             });
+
             saveSplitsConfiguration(splitsArray);
         });
 
-        $("#best-split-new-add").click(function (e) {
+        $("#best-split-new-add").click((e: Event) => {
             e.preventDefault();
-            var splitLength = parseInt($("#best-split-new-length").val());
+            let splitLength = parseInt($("#best-split-new-length").val());
             if (splitLength < 1) {
                 $("#best-split-new-length").focus();
                 return;
             }
-            var splitType = parseInt($("#best-split-new-unit").val());
+            let splitType = parseInt($("#best-split-new-unit").val());
 
-            var splitAlreadyExist = _.findWhere(splitsArray, {
+            let splitAlreadyExist = _.findWhere(splitsArray, {
                 length: splitLength,
                 unit: splitType
             });
@@ -822,7 +828,7 @@ class ActivityBestSplitsModifier implements IModifier {
                             'transitionOut': 'fade',
                             'type': 'iframe',
                             'content': '<div>The length of the split cannot be longer than the activity time.</div>',
-                            'afterClose': function () {
+                            'afterClose': () => {
                                 $("#best-split-new-length").focus();
                             }
                         });
@@ -838,7 +844,7 @@ class ActivityBestSplitsModifier implements IModifier {
                             'transitionOut': 'fade',
                             'type': 'iframe',
                             'content': '<div>The length of the split cannot be longer than the activity time.</div>',
-                            'afterClose': function () {
+                            'afterClose': () => {
                                 $("#best-split-new-length").focus();
                             }
                         });
@@ -848,7 +854,7 @@ class ActivityBestSplitsModifier implements IModifier {
 
                 case ActivityBestSplitsModifier.Units.Kilometers:
                 case ActivityBestSplitsModifier.Units.Miles:
-                    var valueToCheck = splitLength * (splitType === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
+                    let valueToCheck = splitLength * (splitType === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
                     if (valueToCheck > activityDistanceInMeters) {
                         $.fancybox({
                             'autoScale': true,
@@ -856,7 +862,7 @@ class ActivityBestSplitsModifier implements IModifier {
                             'transitionOut': 'fade',
                             'type': 'iframe',
                             'content': '<div>The length of the split cannot be longer than the activity distance.</div>',
-                            'afterClose': function () {
+                            'afterClose': () => {
                                 $("#best-split-new-length").focus();
                             }
                         });
@@ -869,30 +875,30 @@ class ActivityBestSplitsModifier implements IModifier {
                     return;
             }
 
-            var newSplit = {
+            let newSplit = {
                 id: Helper.guid(),
                 unit: splitType,
                 length: splitLength
             };
             splitsArray.push(newSplit);
             saveSplitsConfiguration(splitsArray);
-            addSplitToTable(newSplit);
+            this.addSplitToTable(newSplit, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds)
             processSplit(newSplit);
         });
 
-        var worker,
-            workerPromises = [];
-        var computeSplit = function (split, activity) {
+        let worker: Worker,
+            workerPromises: Array<JQueryDeferred<any>> = [];
+        let computeSplit = (split: any, activity: any) => {
             // TODO Implement cache for best split here. Avoid computation of split each time to load the page faster
             if (!worker) {
-                var blobURL = URL.createObjectURL(new Blob(['(',
+                let blobURL = URL.createObjectURL(new Blob(['(',
                     BestSplitWorker.toString(),
                     ')()'
                 ], {
                     type: 'application/javascript'
                 }));
                 worker = new Worker(blobURL);
-                worker.onmessage = function (message) {
+                worker.onmessage = (message: MessageEvent) => {
                     workerPromises[message.data.split.id].resolve(message.data.result);
                     delete workerPromises[message.data.split.id];
                 };
@@ -900,11 +906,11 @@ class ActivityBestSplitsModifier implements IModifier {
             }
             workerPromises[split.id] = $.Deferred();
             worker.postMessage({
-                result: localStorage.getItem(self.cacheKeyPrefix + split.id),
+                result: localStorage.getItem(this.cacheKeyPrefix + split.id),
                 split: split,
                 activity: activity,
                 options: {
-                    distanceUnit: self.distanceUnit,
+                    distanceUnit: this.distanceUnit,
                     Minutes: ActivityBestSplitsModifier.Units.Minutes,
                     Seconds: ActivityBestSplitsModifier.Units.Seconds,
                     Kilometers: ActivityBestSplitsModifier.Units.Kilometers,
@@ -918,14 +924,14 @@ class ActivityBestSplitsModifier implements IModifier {
             return workerPromises[split.id].promise();
         };
 
-        var processSplit = function (split) {
-            var splitId = "#split-" + split.id,
+        let processSplit = (split: any) => {
+            let splitId = "#split-" + split.id,
                 splitRow = splitsTableBody.find(splitId),
-                setValue = function (elementId, value, formatFunction, defValue, tooltipFormatFunction) {
-                    var element = $(elementId);
+                setValue = (elementId: string, value: any, formatFunction: Function, defValue: string, tooltipFormatFunction: Function) => {
+                    let element = $(elementId);
                     element.html("");
                     if (value.samples) {
-                        var text = formatFunction ? formatFunction(value.value) : value.value;
+                        let text = formatFunction ? formatFunction(value.value) : value.value;
                         element.text(text);
                         element.attr("data-activity-points", value.begin + "-" + value.end);
                         element.data("split-id", split.id);
@@ -943,92 +949,80 @@ class ActivityBestSplitsModifier implements IModifier {
                 };
             splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
 
-            var formatDistance = function (value) {
-                    return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
+            let formatDistance = (value: any) => {
+                    return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
                 },
-                formatTime = function (value) {
+                formatTime = (value: any) => {
                     return Helper.secondsToHHMMSS(value.timeOrDistance, true);
                 },
                 formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
-                formatTooltipDropRise = function (value) {
-                    var arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
+                formatTooltipDropRise = (value: any) => {
+                    let arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
                     return Helper.formatNumber(value.value.beginValue, 0) + arrow + Helper.formatNumber(value.value.endValue, 0) + " " + formatTooltip(value);
                 },
-                speedLabel = self.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
+                speedLabel = this.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
 
-            computeSplit(split, self.activityJson).done(function (value) {
+            computeSplit(split, this.activityJson).done((value: any) => {
 
                 // Set or update split result in cache
-                if (!localStorage.getItem(self.cacheKeyPrefix + split.id)) {
+                if (!localStorage.getItem(this.cacheKeyPrefix + split.id)) {
                     try {
-                        localStorage.setItem(self.cacheKeyPrefix + split.id, JSON.stringify(value));
+                        localStorage.setItem(this.cacheKeyPrefix + split.id, JSON.stringify(value));
                     } catch (err) {
                         console.warn(err);
                         localStorage.clear();
                     }
                 }
 
-                setValue(splitId + "-time", value.time, function (value) {
+                setValue(splitId + "-time", value.time, (value: any) => {
                     return Helper.secondsToHHMMSS(value, true);
                 }, "", formatDistance);
-                setValue(splitId + "-distance", value.distance, function (value) {
-                    return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(self.distanceUnit);
+                setValue(splitId + "-distance", value.distance, (value: any) => {
+                    return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
                 }, "", formatTime);
-                setValue(splitId + "-avg-speed", value.avgSpeed, function (value) {
+                setValue(splitId + "-avg-speed", value.avgSpeed, (value: any) => {
                     return Helper.formatNumber(value) + speedLabel;
                 }, "n/a", formatTooltip);
-                setValue(splitId + "-avg-hr", value.avgHr, function (value) {
+                setValue(splitId + "-avg-hr", value.avgHr, (value: any) => {
                     return Helper.formatNumber(value, 0) + "bpm";
                 }, "n/a", formatTooltip);
-                setValue(splitId + "-drop-hr", value.dropHr, function (value) {
+                setValue(splitId + "-drop-hr", value.dropHr, (value: any) => {
                     return "-" + Helper.formatNumber(value.value, 0) + "bpm";
                 }, "n/a", formatTooltipDropRise);
-                setValue(splitId + "-rise-hr", value.riseHr, function (value) {
+                setValue(splitId + "-rise-hr", value.riseHr, (value: any) => {
                     return "+" + Helper.formatNumber(value.value, 0) + "bpm";
                 }, "n/a", formatTooltipDropRise);
-                setValue(splitId + "-avg-power", value.avgPower, function (value) {
+                setValue(splitId + "-avg-power", value.avgPower, (value: any) => {
                     return Helper.formatNumber(value, 0) + "W";
                 }, "n/a", formatTooltip);
-                setValue(splitId + "-elevation-gain", value.elevationGain, function (value) {
+                setValue(splitId + "-elevation-gain", value.elevationGain, (value: any) => {
                     return Helper.formatNumber(value, 0) + "m";
                 }, "n/a", formatTooltip);
-                setValue(splitId + "-elevation-drop", value.elevationDrop, function (value) {
+                setValue(splitId + "-elevation-drop", value.elevationDrop, (value: any) => {
                     return Helper.formatNumber(value, 0) + "m";
                 }, "n/a", formatTooltip);
-                setValue(splitId + "-avg-cadence", value.avgCadence, function (value) {
+                setValue(splitId + "-avg-cadence", value.avgCadence, (value: any) => {
                     return Helper.formatNumber(value, 0);
                 }, "n/a", formatTooltip);
                 splitRow.find("td.value span.ajax-loading-image").remove();
             });
         };
 
-        splitsArray.forEach(function (split) {
+        splitsArray.forEach((split: any) => {
             processSplit(split);
         });
 
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run the modify function
-        var waitForSegmentsSectionRemoved = function () {
+        let waitForSegmentsSectionRemoved = () => {
             if ($("#segments.best-splits-processed").length !== 0) {
-                setTimeout(function () {
+                setTimeout(() => {
                     waitForSegmentsSectionRemoved();
                 }, 1000);
                 return;
             }
-            self.modify();
+            this.modify();
         };
         waitForSegmentsSectionRemoved();
     }
 
 }
-
-// ActivityBestSplitsModifier.
-//
-//     /**
-//      * Define prototype
-//      */
-//     ActivityBestSplitsModifier.prototype = {
-//
-//     modify: function modify() {
-//
-//     },
-// };
