@@ -4,7 +4,9 @@
  * * * * * * * * *
  * clean        => cleanPackage => cleanDistAll => cleanExtNodeModules
  * cleanAll     => cleanPackage => cleanDistAll => cleanExtNodeModules => cleanRootNodeModules
- * build        => cleanDistSrcOnly => installExtNpmDependencies
+ * build        => cleanDistSrcOnly => npmInstall
+ * specs        => buildSpecs
+ * buildSpecs   => build
  * makeArchive  => build
  * package      => clean => makeArchive
  *
@@ -12,14 +14,16 @@
  * COMMANDS
  * * * * * * * * *
  * gulp clean
- * gulp build [--debug, --release] // Options no handled at the moment
- * gulp package [--debug, --release] // Options no handled at the moment
+ * gulp build
+ * gulp specs
+ * gulp package
  */
 
 /**
  * Required node module for running gulp tasks
  */
 var fs = require('fs');
+var _ = require('underscore');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
@@ -40,13 +44,16 @@ var HOOK_FOLDER = ROOT_FOLDER + '/hook/';
 var EXT_FOLDER = HOOK_FOLDER + '/extension/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
-var SPECS_FOLDER = 'specs/';
+var SPECS_FOLDER = ROOT_FOLDER + '/specs/';
 var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package" task
 
 /**
  * Global folder variable
  */
-var EXT_SCRIPTS = [
+
+var PLUGIN_TYPESCRIPT_SCRIPTS = ['hook/extension/**/*.ts']; // CORE & OPTIONS
+
+var CORE_JAVASCRIPT_SCRIPTS = [
     'hook/extension/config/env.js',
     'hook/extension/modules/*.js',
     'hook/extension/node_modules/geodesy/dms.js',
@@ -54,22 +61,6 @@ var EXT_SCRIPTS = [
     'hook/extension/node_modules/chart.js/dist/Chart.bundle.js',
     'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
-    'hook/extension/js/**/*.js'
-];
-
-var EXT_STYLESHEETS = [
-    'hook/extension/node_modules/fancybox/dist/css/jquery.fancybox.css',
-    'hook/extension/css/extendedData.css'
-];
-
-var MANIFEST = 'hook/extension/manifest.json';
-
-var EXT_RESSOURCES = [
-    'hook/extension/icons/*',
-    'hook/extension/node_modules/fancybox/dist/img/*.*',
-];
-
-var OPT_FILES = [
     'hook/extension/node_modules/angular-material/angular-material.css',
     'hook/extension/node_modules/angular-material-icons/angular-material-icons.css',
     'hook/extension/node_modules/angular/angular.js',
@@ -81,55 +72,45 @@ var OPT_FILES = [
     'hook/extension/node_modules/angular-material/angular-material.js',
     'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/node_modules/underscore/underscore-min.js',
-    'hook/extension/options/**/*', // TODO Can be removed once option TS migrated done?!
-    '!hook/extension/options/**/*.ts' // NO TS files copied // TODO Can be removed once option TS migrated done?!
+    'hook/extension/js/**/*.js' // Shouldn't copy js files to destination because of TypeScript. Keep it in case of JavaScript files used
+];
+
+var CORE_STYLESHEETS = [
+    'hook/extension/node_modules/fancybox/dist/css/jquery.fancybox.css',
+    'hook/extension/css/extendedData.css'
+];
+
+var MANIFEST = ['hook/extension/manifest.json'];
+
+var CORE_RESOURCES = [
+    'hook/extension/icons/*',
+    'hook/extension/node_modules/fancybox/dist/img/*.*',
+];
+
+var OPTIONS_FILES = [
+    'hook/extension/options/**/*',
+    '!hook/extension/options/**/*.ts' // Do not copy TypeScripts script using "!". They are compiled to JS files which are already copied to destination folder.
 ];
 
 /**
- * Detect DEBUG & RELEASE MODES
- */
-/*
- var RELEASE_MODE = (options.has('release')) ? true : false;
- var DEBUG_MODE = !RELEASE_MODE;
- if (RELEASE_MODE) { util.log('RELEASE MODE ENABLED.'); }
- if (DEBUG_MODE) { util.log('DEBUG MODE ENABLED.'); }
- */
-/**
  * Gulp Tasks
  */
-gulp.task('build', ['installExtNpmDependencies'], function () {
+gulp.task('tsCompile', ['npmInstall'], function () { // Compile Typescript and copy them to DIST_FOLDER
 
-    util.log('Start extension core and options files copy');
+    util.log('Start TypeScript compilation... then copy files to destination folder.');
 
-    /**
-     * Extension core
-     */
-    gulp.src(EXT_SCRIPTS, {
-        base: 'hook/extension'
-    }).pipe(gulp.dest(DIST_FOLDER));
-
-    /**
-     * Compile Typescript and copy them to DIST_FOLDER
-     */
-    gulp.src(['hook/extension/**/*.ts'], {
+    return gulp.src(PLUGIN_TYPESCRIPT_SCRIPTS, {
         base: 'hook/extension'
     }).pipe(typeScript(tsProject)).pipe(gulp.dest(DIST_FOLDER));
 
-    gulp.src(EXT_STYLESHEETS, {
-        base: 'hook/extension'
-    }).pipe(gulp.dest(DIST_FOLDER));
+});
 
+gulp.task('writeManifest', ['tsCompile'], function (done) {
 
-    gulp.src(EXT_RESSOURCES, {
-        base: 'hook/extension'
-    }).pipe(gulp.dest(DIST_FOLDER));
-
-    /**
-     * Handle manifest file, if preview mode or not... if preview then: version name change to short sha1 HEAD commit and version = 0
-     */
+    // Handle manifest file, if preview mode or not... if preview then: version name change to short sha1 HEAD commit and version = 0
     if (options.has('preview')) {
 
-        util.log('Preview mode...');
+        util.log('Generating preview build.');
 
         git.revParse({
             args: '--short HEAD',
@@ -142,33 +123,39 @@ gulp.task('build', ['installExtNpmDependencies'], function () {
 
             gulp.src(MANIFEST, {
                 base: 'hook/extension'
-            })
-                .pipe(jeditor({
-                    'version': '0',
-                    'version_name': 'preview@' + sha1Short
-                }))
-                .pipe(gulp.dest(DIST_FOLDER));
-
-            util.log('HEAD commit short sha1 is: ' + sha1Short);
+            }).pipe(jeditor({
+                'version': '0',
+                'version_name': 'preview@' + sha1Short
+            })).pipe(gulp.dest(DIST_FOLDER)).on('end', function () {
+                util.log('HEAD commit short sha1 is: ' + sha1Short + '. Version name will be: preview@' + sha1Short);
+                done();
+            });
         });
+
     } else {
+
         gulp.src(MANIFEST, {
             base: 'hook/extension'
-        }).pipe(gulp.dest(DIST_FOLDER));
+        }).pipe(gulp.dest(DIST_FOLDER)).on('end', function () {
+            done();
+        });
     }
+});
 
-    /**
-     * Options JS and Css Mixed
-     */
-    return gulp.src(OPT_FILES, {
+gulp.task('build', ['writeManifest'], function () {
+
+    util.log('Building destination folder with others files: core js scripts, stylesheets, common resources, options files');
+
+    return gulp.src(_.union(CORE_JAVASCRIPT_SCRIPTS, CORE_STYLESHEETS, CORE_RESOURCES, OPTIONS_FILES), {
         base: 'hook/extension'
     }).pipe(gulp.dest(DIST_FOLDER));
+
 });
 
 /**
  * Init task
  */
-gulp.task('installExtNpmDependencies', function (initDone) {
+gulp.task('npmInstall', function (initDone) {
 
     util.log('Installing extension NPM dependencies');
 
