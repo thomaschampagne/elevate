@@ -4,13 +4,13 @@ class Helper {
     public static getFromStorageMethod: string = 'getFromStorage';
     public static setToStorageMethod: string = 'setToStorage';
 
-    public static getSpeedUnitData(): SpeedUnitData {
+    public static getSpeedUnitData(): ISpeedUnitData {
         let measurementPreference: string = window.currentAthlete.get('measurement_preference');
         let units: string = (measurementPreference == 'meters') ? 'km' : 'mi';
         let speedUnitPerHour: string = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
         let speedUnitFactor: number = (speedUnitPerHour == 'km/h') ? 1 : Helper.KPH_TO_MPH_RATIO;
 
-        let speedUnitData: SpeedUnitData = {
+        let speedUnitData: ISpeedUnitData = {
             speedUnitPerHour: speedUnitPerHour,
             speedUnitFactor: speedUnitFactor,
             units: units
@@ -18,7 +18,7 @@ class Helper {
         return speedUnitData;
     }
 
-    public static HHMMSStoSeconds(str: string): string {
+    public static HHMMSStoSeconds(str: string): string { // TODO Must return number WTF ?!
 
         let p: Array<string> = str.split(':'),
             s: any = 0,
@@ -126,7 +126,7 @@ class Helper {
         });
     };
 
-    public static formatNumber(n: any, c: any, d: any, t: any): string {
+    public static formatNumber(n: any, c?: any, d?: any, t?: any): string {
 
         c = isNaN(c = Math.abs(c)) ? 2 : c,
             d = d == undefined ? "." : d,

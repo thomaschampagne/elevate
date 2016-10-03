@@ -1,8 +1,8 @@
-class HideFeedModifier implements Modifier {
+class HideFeedModifier implements IModifier {
 
-    protected userSettings: UserSettings;
+    protected userSettings: IUserSettings;
 
-    constructor(userSettings: UserSettings) {
+    constructor(userSettings: IUserSettings) {
         this.userSettings = userSettings;
     }
 

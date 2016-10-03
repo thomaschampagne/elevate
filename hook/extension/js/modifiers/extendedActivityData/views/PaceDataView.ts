@@ -1,8 +1,8 @@
 class PaceDataView extends AbstractDataView {
 
-    protected paceData: PaceData;
+    protected paceData: IPaceData;
 
-    constructor(paceData: PaceData, units: string) {
+    constructor(paceData: IPaceData, units: string) {
         super(units);
         this.mainColor = [9, 123, 219];
         this.setGraphTitleFromUnits();
@@ -40,7 +40,7 @@ class PaceDataView extends AbstractDataView {
         }
     }
 
-    protected setupDistributionTable(zones: Array<Zone>, ratio: number): void {
+    protected setupDistributionTable(zones: Array<IZone>, ratio: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -65,7 +65,7 @@ class PaceDataView extends AbstractDataView {
         htmlTable += '<td>% ZONE</td>'; // % in zone
         htmlTable += '</tr>';
 
-        _.each(zones, (zone: Zone, index: number) => {
+        _.each(zones, (zone: IZone, index: number) => {
             let from: string = (zone.from === 0) ? '&infin;' : Helper.secondsToHHMMSS(zone.from * ratio);
             htmlTable += '<tr>'; // Zone
             htmlTable += '<td>Z' + (index + 1) + '</td>'; // Zone
@@ -82,7 +82,7 @@ class PaceDataView extends AbstractDataView {
         this.table = $(htmlTable);
     }
 
-    protected setupDistributionGraph(zones: Array<Zone>, ratio: number): void {
+    protected setupDistributionGraph(zones: Array<IZone>, ratio: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -91,7 +91,7 @@ class PaceDataView extends AbstractDataView {
         let labelsData: Array<string> = [];
         let distributionArray: Array<string> = [];
 
-        _.each(zones, (zone: Zone, index: number) => {
+        _.each(zones, (zone: IZone, index: number) => {
             let from: string = (zone.from === 0) ? 'Infinite' : Helper.secondsToHHMMSS(zone.from * ratio);
             let label: string = "Z" + (index + 1) + ": " + from + " - " + Helper.secondsToHHMMSS(zone.to * ratio) + " " + this.units;
             labelsData.push(label);

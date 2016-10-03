@@ -12,18 +12,18 @@ class ActivityComputer {
 
     protected activityType: string;
     protected isTrainer: boolean;
-    protected userSettings: UserSettings;
-    protected movementData: MoveData;
+    protected userSettings: IUserSettings;
+    protected movementData: IMoveData;
     protected athleteWeight: number;
     protected hasPowerMeter: boolean;
-    protected activityStatsMap: ActivityStatsMap;
-    protected activityStream: ActivityStream;
+    protected activityStatsMap: IActivityStatsMap;
+    protected activityStream: IActivityStream;
     protected bounds: Array<number>;
 
-    constructor(activityType: string, isTrainer: boolean, userSettings: UserSettings, athleteWeight: number,
+    constructor(activityType: string, isTrainer: boolean, userSettings: IUserSettings, athleteWeight: number,
                 hasPowerMeter: boolean,
-                activityStatsMap: ActivityStatsMap,
-                activityStream: ActivityStream,
+                activityStatsMap: IActivityStatsMap,
+                activityStream: IActivityStream,
                 bounds: Array<number>) {
 
         // Store activityType, isTrainer, input activity params and userSettings
@@ -37,7 +37,7 @@ class ActivityComputer {
         this.bounds = bounds;
     }
 
-    public compute(): AnalysisData {
+    public compute(): IAnalysisData {
 
         if (!this.activityStream) {
             return null;
@@ -53,7 +53,7 @@ class ActivityComputer {
         return this.computeAnalysisData(this.userSettings.userGender, this.userSettings.userRestHr, this.userSettings.userMaxHr, this.userSettings.userFTP, this.athleteWeight, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
     }
 
-    protected sliceStreamFromBounds(activityStream: ActivityStream, bounds: Array<number>): void {
+    protected sliceStreamFromBounds(activityStream: IActivityStream, bounds: Array<number>): void {
 
         // Slices array if activity bounds given. It's mainly used for segment effort extended stats
         if (bounds && bounds[0] && bounds[1]) {
@@ -99,11 +99,11 @@ class ActivityComputer {
         }
     }
 
-    protected smoothAltitudeStream(activityStream: ActivityStream, activityStatsMap: ActivityStatsMap): any {
+    protected smoothAltitudeStream(activityStream: IActivityStream, activityStatsMap: IActivityStatsMap): any {
         return this.smoothAltitude(activityStream, activityStatsMap.elevation);
     }
 
-    protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMap, activityStream: ActivityStream): AnalysisData {
+    protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
 
         // Include speed and pace
         this.movementData = null;
@@ -116,13 +116,13 @@ class ActivityComputer {
         // Median Speed
         // Q3 Speed
         // Standard deviation Speed
-        let speedData: SpeedData = (_.isEmpty(this.movementData)) ? null : this.movementData.speed;
+        let speedData: ISpeedData = (_.isEmpty(this.movementData)) ? null : this.movementData.speed;
 
         // Q1 Pace
         // Median Pace
         // Q3 Pace
         // Standard deviation Pace
-        let paceData: PaceData = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
+        let paceData: IPaceData = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
 
         let moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(this.movementData.movingTime, this.movementData.elapsedTime);
 
@@ -133,7 +133,7 @@ class ActivityComputer {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        let powerData: PowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
+        let powerData: IPowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
 
         // TRaining IMPulse
         // %HRR Avg
@@ -141,25 +141,25 @@ class ActivityComputer {
         // Q1 HR
         // Median HR
         // Q3 HR
-        let heartRateData: HeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth, activityStatsMap);
+        let heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth, activityStatsMap);
 
         // Cadence percentage
         // Time Cadence
         // Crank revolution
-        let cadenceData: CadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.time);
+        let cadenceData: ICadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.time);
 
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        let gradeData: GradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance);
+        let gradeData: IGradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance);
 
         // Avg grade
         // Q1/Q2/Q3 grade
-        let elevationData: ElevationData = this.elevationData(activityStream);
+        let elevationData: IElevationData = this.elevationData(activityStream);
 
         // Return an array with all that shit...
 
-        let analysisData: AnalysisData = {
+        let analysisData: IAnalysisData = {
             moveRatio: moveRatio,
             toughnessScore: toughnessScore,
             speedData: speedData,
@@ -189,7 +189,7 @@ class ActivityComputer {
         return ratio;
     }
 
-    protected toughnessScore(activityStatsMap: ActivityStatsMap, moveRatio: number): number {
+    protected toughnessScore(activityStatsMap: IActivityStatsMap, moveRatio: number): number {
 
         if (_.isNull(activityStatsMap.elevation) || _.isNull(activityStatsMap.avgPower) || _.isNull(activityStatsMap.averageSpeed) || _.isNull(activityStatsMap.distance)) {
             return null;
@@ -211,7 +211,7 @@ class ActivityComputer {
         return ((value - minValue) / distributionStep);
     }
 
-    protected  getZoneId(zones: Array<Zone>, value: number): number {
+    protected  getZoneId(zones: Array<IZone>, value: number): number {
         for (let zoneId: number = 0; zoneId < zones.length; zoneId++) {
             if (value <= zones[zoneId].to) {
                 return zoneId;
@@ -219,9 +219,9 @@ class ActivityComputer {
         }
     }
 
-    protected prepareZonesForDistributionComputation(sourceZones: Array<Zone>): Array<Zone> {
-        let preparedZones: Array<Zone> = [];
-        _.each(sourceZones, (zone: Zone) => {
+    protected prepareZonesForDistributionComputation(sourceZones: Array<IZone>): Array<IZone> {
+        let preparedZones: Array<IZone> = [];
+        _.each(sourceZones, (zone: IZone) => {
             zone.s = 0;
             zone.percentDistrib = null;
             preparedZones.push(zone);
@@ -229,10 +229,10 @@ class ActivityComputer {
         return preparedZones;
     }
 
-    protected finalizeDistributionComputationHrrZones(zones: Array<HrrZone>): Array<HrrZone> {
+    protected finalizeDistributionComputationHrrZones(zones: Array<IHrrZone>): Array<IHrrZone> {
 
         let total: number = 0;
-        let zone: HrrZone;
+        let zone: IHrrZone;
         for (let i: number = 0; i < zones.length; i++) {
             zone = zones[i];
             if (zone.s) {
@@ -252,9 +252,9 @@ class ActivityComputer {
         return zones;
     }
 
-    protected finalizeDistributionComputationZones(zones: Array<Zone>): Array<Zone> {
+    protected finalizeDistributionComputationZones(zones: Array<IZone>): Array<IZone> {
         let total: number = 0;
-        let zone: Zone;
+        let zone: IZone;
 
         for (let i: number = 0; i < zones.length; i++) {
             zone = zones[i];
@@ -280,7 +280,7 @@ class ActivityComputer {
         return currentValue * delta - ((currentValue - previousValue) * delta) / 2;
     }
 
-    protected moveData(velocityArray: Array<number>, timeArray: Array<number>): MoveData {
+    protected moveData(velocityArray: Array<number>, timeArray: Array<number>): IMoveData {
 
         if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -354,7 +354,7 @@ class ActivityComputer {
         let percentiles: Array<number> = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
 
-        let speedData: SpeedData = {
+        let speedData: ISpeedData = {
             genuineAvgSpeed: genuineAvgSpeed,
             totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSumCount, elapsedSeconds),
             avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
@@ -366,7 +366,7 @@ class ActivityComputer {
             speedZones: speedZones
         };
 
-        let paceData: PaceData = {
+        let paceData: IPaceData = {
             avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
             lowerQuartilePace: this.convertSpeedToPace(percentiles[0]),
             medianPace: this.convertSpeedToPace(percentiles[1]),
@@ -375,7 +375,7 @@ class ActivityComputer {
             paceZones: paceZones
         };
 
-        let moveData: MoveData = {
+        let moveData: IMoveData = {
             movingTime: genuineAvgSpeedSumCount,
             elapsedTime: elapsedSeconds,
             speed: speedData,
@@ -405,7 +405,7 @@ class ActivityComputer {
      * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program like WKO+ to do the work for you <g>.)
      */
 
-    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: Array<number>, velocityArray: Array<number>, timeArray: Array<number>): PowerData {
+    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: Array<number>, velocityArray: Array<number>, timeArray: Array<number>): IPowerData {
 
         if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
             return null;
@@ -483,7 +483,7 @@ class ActivityComputer {
         // Update zone distribution percentage
         powerZones = this.finalizeDistributionComputationZones(powerZones);
 
-        let powerData: PowerData = {
+        let powerData: IPowerData = {
             hasPowerMeter: hasPowerMeter,
             avgWatts: avgWatts,
             avgWattsPerKg: avgWattsPerKg,
@@ -500,7 +500,7 @@ class ActivityComputer {
         return powerData;
     }
 
-    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>, velocityArray: Array<number>, activityStatsMap: ActivityStatsMap): HeartRateData {
+    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>, velocityArray: Array<number>, activityStatsMap: IActivityStatsMap): IHeartRateData {
 
         if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
             return null;
@@ -516,7 +516,7 @@ class ActivityComputer {
         let heartRateArrayMovingDuration: Array<any> = [];
 
         // Find HR for each Hrr of each zones
-        _.each(this.userSettings.userHrrZones, (zone: HrrZone) => {
+        _.each(this.userSettings.userHrrZones, (zone: IHrrZone) => {
             zone.fromHr = Helper.heartrateFromHeartRateReserve(zone.fromHrr, userMaxHr, userRestHr);
             zone.toHr = Helper.heartrateFromHeartRateReserve(zone.toHrr, userMaxHr, userRestHr);
             zone.s = 0;
@@ -564,7 +564,7 @@ class ActivityComputer {
         let TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
         let percentiles: Array<number> = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-        let heartRateData: HeartRateData = {
+        let heartRateData: IHeartRateData = {
             TRIMP: trainingImpulse,
             TRIMPPerHour: TRIMPPerHour,
             hrrZones: this.userSettings.userHrrZones,
@@ -588,7 +588,7 @@ class ActivityComputer {
         }
     }
 
-    protected cadenceData(cadenceArray: Array<any>, velocityArray: Array<any>, timeArray: Array<any>): CadenceData {
+    protected cadenceData(cadenceArray: Array<any>, velocityArray: Array<any>, timeArray: Array<any>): ICadenceData {
 
         if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray)) {
             return null;
@@ -603,7 +603,7 @@ class ActivityComputer {
         let cadenceOnMoveSampleCount: number = 0;
         let movingSampleCount: number = 0;
 
-        let cadenceZoneTyped: Array<Zone>;
+        let cadenceZoneTyped: Array<IZone>;
         if (this.activityType === 'Ride') {
             cadenceZoneTyped = this.userSettings.zones.cyclingCadence;
         } else if (this.activityType === 'Run') {
@@ -612,7 +612,7 @@ class ActivityComputer {
             return null;
         }
 
-        let cadenceZones: Array<Zone> = this.prepareZonesForDistributionComputation(cadenceZoneTyped);
+        let cadenceZones: Array<IZone> = this.prepareZonesForDistributionComputation(cadenceZoneTyped);
 
         let durationInSeconds: number = 0;
         let cadenceArrayMoving: Array<any> = [];
@@ -662,7 +662,7 @@ class ActivityComputer {
 
         let percentiles: Array<number> = Helper.weightedPercentiles(cadenceArrayMoving, cadenceArrayDuration, [0.25, 0.5, 0.75]);
 
-        let cadenceData: CadenceData = {
+        let cadenceData: ICadenceData = {
             cadencePercentageMoving: cadenceRatioOnMovingTime * 100,
             cadenceTimeMoving: cadenceSumDurationOnMoving,
             averageCadenceMoving: averageCadenceOnMovingTime,
@@ -677,7 +677,7 @@ class ActivityComputer {
         return cadenceData;
     }
 
-    protected gradeData(gradeArray: Array<number>, velocityArray: Array<number>, timeArray: Array<number>, distanceArray: Array<number>): GradeData {
+    protected gradeData(gradeArray: Array<number>, velocityArray: Array<number>, timeArray: Array<number>, distanceArray: Array<number>): IGradeData {
 
         if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -690,7 +690,7 @@ class ActivityComputer {
         let gradeSum: number = 0,
             gradeCount: number = 0;
 
-        let gradeZones: Array<Zone> = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
+        let gradeZones: Array<IZone> = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
         let upFlatDownInSeconds: any = {
             up: 0,
             flat: 0,
@@ -794,7 +794,7 @@ class ActivityComputer {
 
         let percentiles: Array<number> = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
 
-        let gradeData: GradeData = {
+        let gradeData: IGradeData = {
             avgGrade: avgGrade,
             lowerQuartileGrade: percentiles[0],
             medianGrade: percentiles[1],
@@ -810,7 +810,7 @@ class ActivityComputer {
 
     }
 
-    protected elevationData(activityStream: ActivityStream): ElevationData {
+    protected elevationData(activityStream: IActivityStream): IElevationData {
 
         let distanceArray: any = activityStream.distance;
         let timeArray: any = activityStream.time;
@@ -907,14 +907,14 @@ class ActivityComputer {
         let percentilesElevation: Array<number> = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
         let percentilesAscent: Array<number> = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
 
-        let ascentSpeedData: AscentSpeedData = {
+        let ascentSpeedData: IAscentSpeedData = {
             avg: _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
             lowerQuartile: parseFloat(percentilesAscent[0].toFixed(0)),
             median: parseFloat(percentilesAscent[1].toFixed(0)),
             upperQuartile: parseFloat(percentilesAscent[2].toFixed(0))
         };
 
-        let elevationData: ElevationData = {
+        let elevationData: IElevationData = {
             avgElevation: parseFloat(avgElevation.toFixed(0)),
             accumulatedElevationAscent: accumulatedElevationAscent,
             accumulatedElevationDescent: accumulatedElevationDescent,
@@ -934,7 +934,7 @@ class ActivityComputer {
         return elevationData;
     }
 
-    protected smoothAltitude(activityStream: ActivityStream, stravaElevation: number): Array<number> {
+    protected smoothAltitude(activityStream: IActivityStream, stravaElevation: number): Array<number> {
 
         if (!activityStream || !activityStream.altitude) {
             return null;

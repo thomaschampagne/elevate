@@ -1,4 +1,4 @@
-interface AppResources {
+interface IAppResources {
     settingsLink: string;
     logoStravistix: string;
     menuIconBlack: string;
@@ -34,6 +34,7 @@ interface AppResources {
     areaChartIcon: string;
     tachometerIcon: string;
     boltIcon: string;
+    loadingIcon: string;
     circleNotchIcon: string;
     lineChartIcon: string;
     logArrowUpIcon: string;

@@ -1,12 +1,12 @@
 class RunningCadenceDataView extends AbstractCadenceDataView {
 
-    protected userSettings: UserSettings;
+    protected userSettings: IUserSettings;
 
-    constructor(cadenceData: CadenceData, units: string, userSettings: UserSettings) {
+    constructor(cadenceData: ICadenceData, units: string, userSettings: IUserSettings) {
 
         if (userSettings.enableBothLegsCadence) {
 
-            let cadenceDataClone: CadenceData = $.extend(true, {}, cadenceData); // Create a deep clone in memory to avoid values doubled on each reload
+            let cadenceDataClone: ICadenceData = $.extend(true, {}, cadenceData); // Create a deep clone in memory to avoid values doubled on each reload
 
             // Then multiply cadence per 2
             cadenceDataClone.averageCadenceMoving *= 2;

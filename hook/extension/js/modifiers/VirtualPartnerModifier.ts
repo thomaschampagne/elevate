@@ -1,4 +1,4 @@
-class VirtualPartnerModifier implements Modifier {
+class VirtualPartnerModifier implements IModifier {
 
     protected activityId: number;
 

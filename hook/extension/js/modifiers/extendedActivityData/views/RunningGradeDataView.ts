@@ -1,6 +1,6 @@
 class RunningGradeDataView extends AbstractGradeDataView {
 
-    constructor(gradeData: GradeData, units: string) {
+    constructor(gradeData: IGradeData, units: string) {
         super(gradeData, units);
     }
 

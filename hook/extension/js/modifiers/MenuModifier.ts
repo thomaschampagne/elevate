@@ -1,12 +1,12 @@
 /**
  * Handles main burger menu
  */
-class MenuModifier implements Modifier {
+class MenuModifier implements IModifier {
 
     private athleteId: number;
-    private appResources: AppResources;
+    private appResources: IAppResources;
 
-    constructor(athleteId: number, appResources: AppResources) {
+    constructor(athleteId: number, appResources: IAppResources) {
         this.athleteId = athleteId;
         this.appResources = appResources;
     }

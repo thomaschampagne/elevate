@@ -1,13 +1,13 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-class RemoteLinksModifier implements Modifier {
+class RemoteLinksModifier implements IModifier {
 
-    protected appResources: AppResources;
+    protected appResources: IAppResources;
     protected authorOfActivity: boolean;
     protected activityId: number;
 
-    constructor(appResources: AppResources, authorOfActivity: boolean, activityId: number) {
+    constructor(appResources: IAppResources, authorOfActivity: boolean, activityId: number) {
         this.appResources = appResources;
         this.authorOfActivity = authorOfActivity;
         this.activityId = activityId;

@@ -1,8 +1,8 @@
 class AscentSpeedDataView extends AbstractDataView {
 
-    protected elevationData: ElevationData;
+    protected elevationData: IElevationData;
 
-    constructor(elevationData: ElevationData, units: string) {
+    constructor(elevationData: IElevationData, units: string) {
         super(units);
         this.mainColor = [44, 0, 204];
         this.setGraphTitleFromUnits();

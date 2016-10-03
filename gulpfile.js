@@ -47,6 +47,8 @@ var PACKAGE_NAME = null; // No value at the moment, dynamically set by "package"
 var EXT_SCRIPTS = [
     'hook/extension/config/env.js',
     'hook/extension/modules/*.js',
+    'hook/extension/node_modules/geodesy/dms.js',
+    'hook/extension/node_modules/geodesy/latlon-spherical.js',
     'hook/extension/node_modules/chart.js/dist/Chart.bundle.js',
     'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
@@ -77,7 +79,8 @@ var OPT_FILES = [
     'hook/extension/node_modules/angular-material/angular-material.js',
     'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/node_modules/underscore/underscore-min.js',
-    'hook/extension/options/**/*'
+    'hook/extension/options/**/*', // TODO Can be removed once option TS migrated done?!
+    '!hook/extension/options/**/*.ts' // NO TS files copied // TODO Can be removed once option TS migrated done?!
 ];
 
 /**
