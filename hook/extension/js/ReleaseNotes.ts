@@ -12,6 +12,37 @@ interface ReleaseNote {
 }
 
 let releaseNotes: Array<ReleaseNote> = [{
+    version: '4.2.3',
+    message: '... Again... a hotfix for new v4.2.x ;)',
+    hotFixes: [
+        'Fixed a crash that could occur on several activities opened.'
+    ],
+    features: [
+        'Extended stats on Trainer Rides (where speed was not recorded)',
+        'Invisible enhancement to prepare future: Moved 50% of the JS code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a> (Geeks and developers could understand ;))'],
+    hideFeatureReleaseNote: true,
+    fixes: [],
+}, {
+    version: '4.2.2',
+    message: 'Another hotfix for new v4.2.x',
+    hotFixes: [
+        'Fixed a crash that could occur in older version of chrome (under v53)'
+    ],
+    features: [
+        'Extended stats on Trainer Rides (where speed was not recorded)',
+        'Invisible enhancement to prepare future: Moved 50% of the JS code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a> (Geeks and developers could understand ;))'],
+    hideFeatureReleaseNote: true,
+    fixes: [],
+}, {
+    version: '4.2.1',
+    message: 'Fast hotfix of new v4.2.0',
+    hotFixes: ['Fixed cycling PR/yPR on segment time comparaison: They were displayed as running'],
+    features: [
+        'Extended stats on Trainer Rides (where speed was not recorded)',
+        'Invisible enhancement to prepare future: Moved 50% of the JS code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a> (Geeks and developers could understand ;))'],
+    hideFeatureReleaseNote: true,
+    fixes: [],
+}, {
     version: '4.2.0',
     hotFixes: [],
     features: [
@@ -19,7 +50,7 @@ let releaseNotes: Array<ReleaseNote> = [{
         'Invisible enhancement to prepare future: Moved 50% of the JS code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a> (Geeks and developers could understand ;))'],
     hideFeatureReleaseNote: false,
     fixes: [],
-},{
+}, {
     version: '4.1.0',
     message: '',
     hotFixes: [],

@@ -23,6 +23,10 @@ interface Window {
     __fixtures__: any;
 }
 
+interface Math {
+    trunc: (num: number) => number;
+}
+
 interface RegExpConstructor {
     new (pattern: RegExp, flags?: string): RegExp;
     (pattern: RegExp, flags?: string): RegExp;
