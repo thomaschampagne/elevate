@@ -67,6 +67,7 @@
     "hook/extension/js/modifiers/ActivityBikeOdoModifier.ts",
     "hook/extension/js/modifiers/ActivitiesSummaryModifier.ts",
     "hook/extension/js/modifiers/ActivityBestSplitsModifier.ts",
+    "hook/extension/js/modifiers/ActivitySegmentTimeComparisonModifier.ts",
     "hook/extension/options/app/App.ts",
     "hook/extension/options/app/Config.ts",
     "hook/extension/options/app/controllers/MainController.ts",

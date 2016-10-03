@@ -29,6 +29,11 @@ interface Window {
     googleMapsApiLoaded: () => void;
 }
 
+interface Math {
+    trunc: (num: number) => number;
+    sign: (num: number) => number;
+}
+
 interface RegExpConstructor {
     new (pattern: RegExp, flags?: string): RegExp;
     (pattern: RegExp, flags?: string): RegExp;

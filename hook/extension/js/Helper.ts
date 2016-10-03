@@ -18,7 +18,7 @@ class Helper {
         return speedUnitData;
     }
 
-    public static HHMMSStoSeconds(str: string): string {
+    public static HHMMSStoSeconds(str: string): string { // TODO Must return number WTF ?!
 
         let p: Array<string> = str.split(':'),
             s: any = 0,
@@ -85,7 +85,7 @@ class Helper {
     }
 
     public static heartrateFromHeartRateReserve(hrr: number, maxHr: number, restHr: number): number {
-        return parseFloat((hrr / 100 * (maxHr - restHr) + restHr).toFixed(0));
+        return Math.trunc(hrr / 100 * (maxHr - restHr) + restHr);
     };
 
     public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {

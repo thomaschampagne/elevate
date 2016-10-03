@@ -61,9 +61,3 @@ README.md
  // Find JS functions
  \w:\sfunction((.*))\s+\{
  */
-
-declare class ActivitySegmentTimeComparisonModifier {
-    constructor(a: any, b: any, c: any, d: any);
-
-    modify(): Function;
-}

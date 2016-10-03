@@ -1,37 +1,41 @@
-/**
- *   ActivitySegmentTimeComparisonModifier is responsible of ...
- */
-function ActivitySegmentTimeComparisonModifier(userSettings, appResources, activityType, isMyOwn) {
-    this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
-    this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
-    this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
-    this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
-    this.appResources = appResources;
-    this.isBike = (activityType === "Ride");
-}
+class ActivitySegmentTimeComparisonModifier implements IModifier {
 
-/**
- * Define prototype
- */
-ActivitySegmentTimeComparisonModifier.prototype = {
+    protected showDifferenceToKOM: boolean;
+    protected showDifferenceToPR: boolean;
+    protected showDifferenceToCurrentYearPR: boolean;
+    protected displaySegmentTimeComparisonPosition: boolean;
+    protected appResources: IAppResources;
+    protected isBike: boolean;
+    protected isFemale: boolean;
+    protected firstAppearDone: boolean;
+    protected deltaYearPRLabel: string;
+    protected deltaPRLabel: string;
+    protected deltaKomLabel: string;
 
-    crTitle: function crTitle() {
+    constructor(userSettings: IUserSettings, appResources: IAppResources, activityType: string, isMyOwn: boolean) {
+        this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
+        this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
+        this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
+        this.displaySegmentTimeComparisonPosition = userSettings.displaySegmentTimeComparisonPosition;
+        this.appResources = appResources;
+        this.isBike = (activityType === "Ride");
+    }
+
+    protected crTitle(): string {
         return this.isBike ? this.isFemale ? "QOM" : "KOM" : "CR";
-    },
+    }
 
-    modify: function modify() {
+    public modify(): void {
 
         if (!this.showDifferenceToKOM && !this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR && !this.displaySegmentTimeComparisonPosition) {
             return;
         }
 
-        var self = this;
-
         // wait for Segments section load
-        var segments = $("#segments");
+        let segments: JQuery = $("#segments");
         if (segments.length === 0) {
-            setTimeout(function() {
-                modify.call(self);
+            setTimeout(() => {
+                this.modify();
             }, 500);
             return;
         }
@@ -39,51 +43,51 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         segments.find("#segment-filter").show();
         segments.addClass("time-comparison-enabled");
 
-        // Find sex of current acitivity athlete
-        self.findOutGender();
+        // Find sex of current activity athlete
+        this.findOutGender();
 
         // Asign new labels values
-        self.setNewLabelsValues();
+        this.setNewLabelsValues();
 
         // Used to update header with new columns names when first item has appear
-        self.firstAppearDone = false;
+        this.firstAppearDone = false;
 
-        $("tr[data-segment-effort-id]").appear().on("appear", function(e, $items) {
+        $("tr[data-segment-effort-id]").appear().on("appear", (event: Event, $items: any) => {
 
-            if (!self.firstAppearDone) {
+            if (!this.firstAppearDone) {
 
 
-                var timeColumnHeader = segments.find("table.segments th.time-col");
+                let timeColumnHeader: JQuery = segments.find("table.segments th.time-col");
 
-                if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
-                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + self.deltaYearPRLabel + "</th>");
+                if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
+                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + this.deltaYearPRLabel + "</th>");
                 }
 
-                if (self.showDifferenceToPR) {
-                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your previous PR on that segment.'>" + self.deltaPRLabel + "</th>");
+                if (this.showDifferenceToPR) {
+                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your previous PR on that segment.'>" + this.deltaPRLabel + "</th>");
                 }
 
-                if (self.showDifferenceToKOM) {
-                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + self.crTitle() + " time and the activity segment time.'>" + self.deltaKomLabel + "</th>");
+                if (this.showDifferenceToKOM) {
+                    timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the current " + this.crTitle() + " time and the activity segment time.'>" + this.deltaKomLabel + "</th>");
                 }
 
-                if (self.displaySegmentTimeComparisonPosition) {
+                if (this.displaySegmentTimeComparisonPosition) {
                     timeColumnHeader.after("<th title='Column shows your current position on that segment.'>Rank</th>");
                 }
 
-                self.firstAppearDone = true;
+                this.firstAppearDone = true;
             }
 
-            $items.each(function() {
+            $items.each(() => {
 
-                var $row = $(this),
-                    $timeCell = $row.find("td.time-col"),
-                    segmentEffortId = $row.data("segment-effort-id"),
-                    segmentEffortInfoUrl = "/segment_efforts/" + segmentEffortId,
-                    positionCell,
-                    deltaKomCell,
-                    deltaPRCell,
-                    deltaYearPRCell;
+                let $row: JQuery = $(event.currentTarget),
+                    $timeCell: JQuery = $row.find("td.time-col"),
+                    segmentEffortId: number = $row.data("segment-effort-id"),
+                    segmentEffortInfoUrl: string = "/segment_efforts/" + segmentEffortId,
+                    positionCell: JQuery,
+                    deltaKomCell: JQuery,
+                    deltaPRCell: JQuery,
+                    deltaYearPRCell: JQuery;
 
                 if ($row.hasClass("selected") || $row.data("segment-time-comparison")) {
                     return;
@@ -91,28 +95,28 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
                 $row.data("segment-time-comparison", true);
 
-                if (self.showDifferenceToPR && self.showDifferenceToCurrentYearPR) {
+                if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
                     deltaYearPRCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(deltaYearPRCell);
                 }
 
-                if (self.showDifferenceToPR) {
+                if (this.showDifferenceToPR) {
                     deltaPRCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(deltaPRCell);
                 }
 
-                if (self.showDifferenceToKOM) {
+                if (this.showDifferenceToKOM) {
                     deltaKomCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(deltaKomCell);
                 }
 
-                if (self.displaySegmentTimeComparisonPosition) {
+                if (this.displaySegmentTimeComparisonPosition) {
                     positionCell = $("<td><span class='ajax-loading-image'></span></td>");
                     $timeCell.after(positionCell);
                 }
 
                 // Retreive segment effort infos
-                $.getJSON(segmentEffortInfoUrl, function(segmentEffortInfo) {
+                $.getJSON(segmentEffortInfoUrl, (segmentEffortInfo) => {
 
                     if (!segmentEffortInfo) {
                         return;
@@ -127,27 +131,27 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                         return;
                     }
 
-                    if (self.displaySegmentTimeComparisonPosition) {
+                    if (this.displaySegmentTimeComparisonPosition) {
                         segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
-                        var percentRank = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count);
-                        positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + self.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
+                        let percentRank: number = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count);
+                        positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
                     }
 
-                    var komSeconds = Helper.HHMMSStoSeconds((self.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
+                    let komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
-                        komDiffTime = (elapsedTime - komSeconds);
+                        komDiffTime = (elapsedTime - parseInt(komSeconds));
 
-                    if (self.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + self.deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(komSeconds), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                    if (this.showDifferenceToKOM) {
+                        deltaKomCell.html("<span title=\"Time difference with current " + this.deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
-                    if (!self.showDifferenceToPR && !self.showDifferenceToCurrentYearPR) {
+                    if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
                         return;
                     }
 
                     // Get leader board from segment id
-                    self.findCurrentSegmentEffortDate(segmentEffortInfo.segment_id, segmentEffortId).then(function(currentSegmentEffortDateTime, leaderboardData) {
-                        self.handleTimeDiffenceAlongUserLeaderboard.call(self, leaderboardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell);
+                    this.findCurrentSegmentEffortDate(segmentEffortInfo.segment_id, segmentEffortId).then((currentSegmentEffortDateTime: Date, leaderBoardData: any) => {
+                        this.handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell);
                     });
 
                 });
@@ -157,33 +161,32 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         $.force_appear();
 
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run modifier function
-        var waitForSegmentsSectionRemoved = function() {
+        let waitForSegmentsSectionRemoved = () => {
             if ($("#segments.time-comparison-enabled").length !== 0) {
-                setTimeout(function() {
+                setTimeout(() => {
                     waitForSegmentsSectionRemoved();
                 }, 1000);
                 return;
             }
-            modify.call(self);
+            this.modify();
         };
         waitForSegmentsSectionRemoved();
+    }
 
-    },
-
-    findOutGender: function() {
+    protected findOutGender(): void {
         this.isFemale = false;
         if (!_.isUndefined(window.pageView)) {
-            this.isFemale = pageView.activityAthlete() && pageView.activityAthlete().get('gender') != "M";
+            this.isFemale = window.pageView.activityAthlete() && window.pageView.activityAthlete().get('gender') != "M";
         }
-    },
+    }
 
-    setNewLabelsValues: function() {
+    protected setNewLabelsValues(): void {
         this.deltaKomLabel = "&Delta;" + this.crTitle();
         this.deltaPRLabel = "&Delta;PR";
         this.deltaYearPRLabel = "&Delta;yPR";
-    },
+    }
 
-    findCurrentSegmentEffortDate: function(segmentId, segmentEffortId, page, deferred, fetchedLeaderboardData) {
+    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: any): JQueryPromise<any> {
 
         if (!page) {
             page = 1;
@@ -196,24 +199,24 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             fetchedLeaderboardData = [];
         }
 
-        var perPage = 50;
+        let perPage: number = 50;
 
-        var jqxhr = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
+        let jqxhr: JQueryXHR = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
 
-        var currentSegmentEffortDateTime = null;
+        let currentSegmentEffortDateTime: Date = null;
 
-        jqxhr.done(function(leaderboardData) {
+        jqxhr.done((leaderBoardData: any) => {
 
-            for (var i = 0, max = leaderboardData.top_results.length; i < max; i++) {
-                leaderboardData.top_results[i].__dateTime = new Date(leaderboardData.top_results[i].start_date_local_raw);
-                if (leaderboardData.top_results[i].id == segmentEffortId) {
-                    currentSegmentEffortDateTime = leaderboardData.top_results[i].__dateTime;
+            for (let i = 0, max = leaderBoardData.top_results.length; i < max; i++) {
+                leaderBoardData.top_results[i].__dateTime = new Date(leaderBoardData.top_results[i].start_date_local_raw);
+                if (leaderBoardData.top_results[i].id == segmentEffortId) {
+                    currentSegmentEffortDateTime = leaderBoardData.top_results[i].__dateTime;
                     // no break !
                 }
             }
 
-            // Make any recursive leaderboardData fetched flatten with previous one
-            fetchedLeaderboardData = _.flatten(_.union(leaderboardData.top_results, fetchedLeaderboardData));
+            // Make any recursive leaderBoardData fetched flatten with previous one
+            fetchedLeaderboardData = _.flatten(_.union(leaderBoardData.top_results, fetchedLeaderboardData));
 
             if (currentSegmentEffortDateTime) {
                 deferred.resolve(currentSegmentEffortDateTime, fetchedLeaderboardData);
@@ -221,42 +224,40 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 this.findCurrentSegmentEffortDate(segmentId, segmentEffortId, page + 1, deferred, fetchedLeaderboardData);
             }
 
-        }.bind(this)).fail(function(error) {
-
+        }).fail((error: any) => {
             deferred.reject(error);
-
-        }.bind(this));
+        });
 
         return deferred.promise();
-    },
+    }
 
-    handleTimeDiffenceAlongUserLeaderboard: function(leaderboardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell) {
+    protected handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData: any, currentSegmentEffortDateTime: Date, elapsedTime: number, segmentEffortId: number, deltaPRCell: JQuery, deltaYearPRCell: JQuery): void {
 
-        var previousPersonalSeconds,
-            previousPersonalDate,
-            currentYearPRSeconds,
-            currentYearPRDate;
+        let previousPersonalSeconds: number,
+            previousPersonalDate: Date,
+            currentYearPRSeconds: number,
+            currentYearPRDate: Date;
 
         if (!currentSegmentEffortDateTime) {
             // We are going are a place is shared by several people. Use current activity date instead?!
-            // Or find on page 2... @ "/segments/" + leaderboardData.segment_id + "/leaderboard?raw=true&page=2
+            // Or find on page 2... @ "/segments/" + leaderBoardData.segment_id + "/leaderboard?raw=true&page=2
             deltaPRCell.html("-");
             deltaYearPRCell.html("-");
             return;
         }
 
         // Sort results from best to worst
-        leaderboardData = leaderboardData.sort(function(left, right) {
+        leaderBoardData = leaderBoardData.sort((left: any, right: any) => {
             return left.rank - right.rank;
         });
 
-        var deltaTime;
+        let deltaTime: number;
 
         if (this.showDifferenceToPR) {
-            for (var i = 0; i < leaderboardData.length; i++) {
-                if (leaderboardData[i].__dateTime < currentSegmentEffortDateTime) {
-                    previousPersonalSeconds = leaderboardData[i].elapsed_time_raw;
-                    previousPersonalDate = leaderboardData[i].start_date_local;
+            for (let i: number = 0; i < leaderBoardData.length; i++) {
+                if (leaderBoardData[i].__dateTime < currentSegmentEffortDateTime) {
+                    previousPersonalSeconds = leaderBoardData[i].elapsed_time_raw;
+                    previousPersonalDate = leaderBoardData[i].start_date_local;
                     break;
                 }
             }
@@ -271,27 +272,27 @@ ActivitySegmentTimeComparisonModifier.prototype = {
 
         if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
 
-            var resultsThisYear = [];
+            let resultsThisYear: Array<any> = [];
 
-            for (var j = 0; j < leaderboardData.length; j++) {
-                if (leaderboardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
-                    currentYearPRSeconds = leaderboardData[j].elapsed_time_raw;
-                    currentYearPRDate = leaderboardData[j].start_date_local;
-                    resultsThisYear.push(leaderboardData[j]);
+            for (let j: number = 0; j < leaderBoardData.length; j++) {
+                if (leaderBoardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
+                    currentYearPRSeconds = leaderBoardData[j].elapsed_time_raw;
+                    currentYearPRDate = leaderBoardData[j].start_date_local;
+                    resultsThisYear.push(leaderBoardData[j]);
                 }
             }
 
             // Sort results by elapsed_time_raw ascending
-            resultsThisYear = resultsThisYear.sort(function(left, right) {
+            resultsThisYear = resultsThisYear.sort((left: any, right: any) => {
                 return left.elapsed_time_raw - right.elapsed_time_raw;
             });
 
-            var currentActivityResult = _.findWhere(resultsThisYear, {
+            let currentActivityResult = _.findWhere(resultsThisYear, {
                 __dateTime: currentSegmentEffortDateTime
             });
 
-            var previousBestResultThisYear = null;
-            _.some(resultsThisYear, function(result) {
+            let previousBestResultThisYear: any = null;
+            _.some(resultsThisYear, (result: any) => {
                 if (result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
                     previousBestResultThisYear = result;
                     return true;
@@ -337,14 +338,14 @@ ActivitySegmentTimeComparisonModifier.prototype = {
                 deltaYearPRCell.html("<span title='First cross this year' style='font-size:11px; color: grey;'>1X</span>");
             }
         }
-    },
+    }
 
-    getColorForPercentage: function(pct) {
+    protected getColorForPercentage(pct: number): string {
 
         // invert percentage
         pct = 1 - pct;
 
-        var percentColors = [{
+        let percentColors: Array<any> = [{
             pct: 0.0,
             color: {
                 r: 0xff,
@@ -367,18 +368,19 @@ ActivitySegmentTimeComparisonModifier.prototype = {
             }
         }];
 
-        for (var i = 1; i < percentColors.length - 1; i++) {
+        let i: number;
+        for (i = 1; i < percentColors.length - 1; i++) {
             if (pct < percentColors[i].pct) {
                 break;
             }
         }
-        var lower = percentColors[i - 1];
-        var upper = percentColors[i];
-        var range = upper.pct - lower.pct;
-        var rangePct = (pct - lower.pct) / range;
-        var pctLower = 1 - rangePct;
-        var pctUpper = rangePct;
-        var color = {
+        let lower: any = percentColors[i - 1];
+        let upper: any = percentColors[i];
+        let range: number = upper.pct - lower.pct;
+        let rangePct: number = (pct - lower.pct) / range;
+        let pctLower: number = 1 - rangePct;
+        let pctUpper: number = rangePct;
+        let color: any = {
             r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
             g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
             b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
@@ -386,4 +388,5 @@ ActivitySegmentTimeComparisonModifier.prototype = {
         return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
         // or output as hex if preferred
     }
-};
+
+}

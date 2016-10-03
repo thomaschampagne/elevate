@@ -10,6 +10,15 @@
  *
  * Converted to TypeScript By Thomas Champagne
  */
+
+interface JQuery {
+    appear: Function;
+}
+
+interface JQueryStatic {
+    force_appear: Function;
+}
+
 (function ($: JQueryStatic) {
     let selectors: Array<JQuery> = [];
 
