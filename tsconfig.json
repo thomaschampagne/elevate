@@ -84,7 +84,9 @@
     "hook/extension/options/app/directives/xtdZones/XtdZones.ts",
     "hook/extension/options/app/directives/xtdZones/XtdZone.ts",
     "hook/extension/options/app/directives/hrrZones/HrrZones.ts",
-    "hook/extension/options/app/directives/hrrZones/HrrZone.ts"
+    "hook/extension/options/app/directives/hrrZones/HrrZone.ts",
+    "specs/processors/ActivityComputer.spec.ts",
+    "specs/processors/VacuumProcessor.spec.ts"
   ],
   "exclude": [
     "node_modules/",

@@ -1,12 +1,16 @@
+/// <reference path="../hook/extension/config/env.ts" />
+/// <reference path="../hook/extension/js/UserSettings.ts" />
+/// <reference path="../hook/extension/js/Helper.ts" />
+/// <reference path="../hook/extension/js/interfaces/ActivityData.ts" />
+/// <reference path="../hook/extension/js/processors/VacuumProcessor.ts" />
+/// <reference path="../hook/extension/js/processors/ActivityComputer.ts" />
+
 declare let Strava: any;
 
 // Class declaration for chrome typing
-declare class MediaStream {
-}
-declare class MediaStreamConstraints {
-}
-declare class DirectoryEntry {
-}
+declare class MediaStream {}
+declare class MediaStreamConstraints {}
+declare class DirectoryEntry {}
 
 declare class QRCode {
     constructor(elementId: string, options: any);
@@ -27,10 +31,10 @@ interface Window {
     pageView: any; // Allow access of window.pageView where page wiew
     unescape(str: string): string; // Allow access of window.pageView where page wiew
     googleMapsApiLoaded: () => void;
+ 	__fixtures__: any;
 }
 
 interface Math {
-    trunc: (num: number) => number;
     sign: (num: number) => number;
 }
 

@@ -78,6 +78,10 @@ class VacuumProcessor {
         return premiumStatus;
     }
 
+    public getCurrentAthlete() {
+        return window.currentAthlete;
+    }
+
     /**
      *  Get the strava athlete pro status
      *  @returns the strava pro athlete id
@@ -85,18 +89,11 @@ class VacuumProcessor {
     public getProStatus(): boolean {
 
         let proStatus: boolean = false;
+        let currentAthlete: any = this.getCurrentAthlete();
 
         try {
-
-            if (!_.isUndefined(window.currentAthlete)) {
-
-                if (!_.isUndefined(window.currentAthlete.attributes.pro)) {
-
-                    proStatus = window.currentAthlete.attributes.pro;
-
-                } else {
-                    return false;
-                }
+            if (currentAthlete && currentAthlete.attributes && currentAthlete.attributes.pro) {
+                proStatus = currentAthlete.attributes.pro;
             }
 
         } catch (err) {
@@ -426,4 +423,6 @@ class VacuumProcessor {
         let activityName: string = $(".activity-summary-container").find('.marginless.activity-name').text().trim();
         return (activityName) ? activityName : null;
     }
+
+
 }
