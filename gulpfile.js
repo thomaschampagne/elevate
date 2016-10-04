@@ -61,18 +61,8 @@ var CORE_JAVASCRIPT_SCRIPTS = [
     'hook/extension/node_modules/chart.js/dist/Chart.bundle.js',
     'hook/extension/node_modules/qrcode-js-package/qrcode.min.js',
     'hook/extension/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
-    'hook/extension/node_modules/angular-material/angular-material.css',
-    'hook/extension/node_modules/angular-material-icons/angular-material-icons.css',
-    'hook/extension/node_modules/angular/angular.js',
-    'hook/extension/node_modules/angular-route/angular-route.js',
-    'hook/extension/node_modules/angular-sanitize/angular-sanitize.js',
-    'hook/extension/node_modules/angular-animate/angular-animate.js',
-    'hook/extension/node_modules/angular-aria/angular-aria.js',
-    'hook/extension/node_modules/angular-messages/angular-messages.js',
-    'hook/extension/node_modules/angular-material/angular-material.js',
-    'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/node_modules/underscore/underscore-min.js',
-    'hook/extension/js/**/*.js' // Shouldn't copy js files to destination because of TypeScript. Keep it in case of JavaScript files used
+    'hook/extension/js/**/*.js', // This shouldn't copy js files to destination because of TypeScript (No JS files written anymore). Keep it in case of JavaScript files used by the way.
 ];
 
 var CORE_STYLESHEETS = [
@@ -88,8 +78,18 @@ var CORE_RESOURCES = [
 ];
 
 var OPTIONS_FILES = [
+    'hook/extension/node_modules/angular-material/angular-material.css',
+    'hook/extension/node_modules/angular-material-icons/angular-material-icons.css',
+    'hook/extension/node_modules/angular/angular.js',
+    'hook/extension/node_modules/angular-route/angular-route.js',
+    'hook/extension/node_modules/angular-sanitize/angular-sanitize.js',
+    'hook/extension/node_modules/angular-animate/angular-animate.js',
+    'hook/extension/node_modules/angular-aria/angular-aria.js',
+    'hook/extension/node_modules/angular-messages/angular-messages.js',
+    'hook/extension/node_modules/angular-material/angular-material.js',
+    'hook/extension/node_modules/angular-material-icons/angular-material-icons.js',
     'hook/extension/options/**/*',
-    '!hook/extension/options/**/*.ts' // Do not copy TypeScripts script using "!". They are compiled to JS files which are already copied to destination folder.
+    '!hook/extension/options/**/*.ts' // Do not copy TypeScripts script using "!". They are compiled to JS files which are already copied to destination folder. (@see PLUGIN_TYPESCRIPT_SCRIPTS var)
 ];
 
 /**
@@ -152,9 +152,6 @@ gulp.task('build', ['writeManifest'], function () {
 
 });
 
-/**
- * Init task
- */
 gulp.task('npmInstall', function (initDone) {
 
     util.log('Installing extension NPM dependencies');
@@ -184,9 +181,6 @@ gulp.task('npmInstall', function (initDone) {
     });
 });
 
-/**
- * Archiving
- */
 gulp.task('makeArchive', ['build'], function () {
 
     PACKAGE_NAME = 'stravistix_v' + JSON.parse(fs.readFileSync(DIST_FOLDER + '/manifest.json')).version + '_' + (new Date().toISOString().replace(/T/, '_').replace(/\..+/, '').replace(/:/g, '.')) + '.zip';
@@ -199,9 +193,6 @@ gulp.task('makeArchive', ['build'], function () {
 
 });
 
-/**
- * Specs
- */
 gulp.task('buildSpecs', ['build'], function () {
 
     util.log('Compile TypeScript specs to JS for Karma testing');
@@ -230,9 +221,6 @@ gulp.task('specs', ['buildSpecs'], function () {
     }).start();
 });
 
-/**
- * Cleaning task
- */
 gulp.task('cleanDistSrcOnly', function () {
 
     util.log('Cleaning dist/ folder, except dist/node_modules folder');
