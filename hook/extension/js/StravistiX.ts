@@ -179,7 +179,7 @@ class StravistiX {
         };
 
         let message: string = '';
-        if (!_.isEmpty(latestRelease.message)) {
+        if (!_.isEmpty(latestRelease.message) && !previewBuild) {
             message += '<div style="background: #eee; padding: 8px;">';
             message += latestRelease.message;
             message += '</div>';
@@ -193,7 +193,7 @@ class StravistiX {
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+        if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
             message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
             _.each(updateMessageObj.hotFixes, (hotFix: string) => {
                 message += '<h6>- ' + hotFix + '</h6>';
