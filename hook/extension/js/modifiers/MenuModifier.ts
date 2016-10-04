@@ -28,7 +28,7 @@ class MenuModifier implements IModifier {
         html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/> <span>StravistiX Settings</span></a></li>";
         html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
-        html += "<li id='splus_menu_heatmap'><a href='#' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
+        html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
         html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showReleaseNotes=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/> <span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/stravistix/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.rateIcon + "'/> <span>Rate</span></a></li>";
@@ -41,22 +41,19 @@ class MenuModifier implements IModifier {
         html += "</li>";
 
         if (navigator.geolocation) {
-            // TODO Move geolocation permission ask out ?
-            let splusMenuHeatmap: JQuery = $('#splus_menu_heatmap');
-
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    splusMenuHeatmap.find('a').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
+                (position: Position) => {
+                    $('.sx_menu_heatmap').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
+                    $('.sx_menu_heatmap').attr('target', '_blank');
                 },
                 (error: PositionError) => {
                     console.error(error);
-                    splusMenuHeatmap.find('a').attr('href', '#');
-                    splusMenuHeatmap.find('a').attr('target', '_self');
-                    splusMenuHeatmap.find('a').attr('onclick', 'alert("Some StravistiX functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');
+                    $('.sx_menu_heatmap').attr('href', '#');
+                    $('.sx_menu_heatmap').attr('target', '_self');
+                    $('.sx_menu_heatmap').attr('onclick', 'alert("Some StravistiX functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.")');
                 }
             );
         }
         globalNav.children().first().before(html);
-
     }
 }
