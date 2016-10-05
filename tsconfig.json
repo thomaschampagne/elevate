@@ -22,6 +22,7 @@
     "hook/extension/node_modules/moment/moment.d.ts",
     "typings/stravistix.ts.migration.d.ts",
     "typings/globals/chrome/index.d.ts",
+    "typings/globals/es6-promise/index.d.ts",
     "typings/globals/jquery/index.d.ts",
     "typings/globals/underscore/index.d.ts",
     "typings/index.d.ts",
@@ -55,6 +56,7 @@
     "hook/extension/js/modifiers/HidePremiumModifier.ts",
     "hook/extension/js/modifiers/HideFeedModifier.ts",
     "hook/extension/js/modifiers/DisplayFlyByFeedModifier.ts",
+    "hook/extension/js/modifiers/GoalsModifier.ts",
     "hook/extension/js/processors/ActivityComputer.ts",
     "hook/extension/modules/StorageManager.ts"
   ],

@@ -83,6 +83,7 @@ class StravistiX {
         this.handleHidePremium();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
+        this.handleGoalsModifier();
 
         // Bike
         this.handleExtendedActivityData();
@@ -109,6 +110,19 @@ class StravistiX {
         // Must be done at the end
         this.handleTrackTodayIncomingConnection();
         this.handleGoogleMapsComeBackModifier();
+    }
+
+    /**
+     * Check for goals element and enable GoalsModifier.
+     *
+     * This checks the document for a #progress-goals-v2 element. If
+     * found then the GoalsModifier is enabled and bound to the element.
+     */
+    protected handleGoalsModifier(): void {
+        let goals = $('#progress-goals-v2');
+        if (goals.length > 0) {
+            new GoalsModifier(goals).modify();
+        }
     }
 
     /**

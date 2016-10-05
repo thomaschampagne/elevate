@@ -168,6 +168,7 @@ let jsDependencies: Array<string> = [
     'js/modifiers/ActivitiesSummaryModifier.js',
     'js/modifiers/ActivitySegmentTimeComparisonModifier.js',
     'js/modifiers/ActivityBestSplitsModifier.js',
+    'js/modifiers/GoalsModifier.js',
 
     // ... with ... extended data views
     'js/modifiers/extendedActivityData/views/AbstractDataView.js',
