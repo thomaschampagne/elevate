@@ -1,4 +1,5 @@
 /**
+ * Implements per-week/month annual goal tracking.
  *
  * This modifier adds two additional progress bars to the annual goal
  * tracker found in the #progress-goals-v2 element. The bars track monthly
@@ -50,9 +51,97 @@ class GoalsModifier implements Modifier {
 
                     this.addProgressBarMonthly(
                         $view, activities, activityType, goal);
+                    this.addProgressBarWeekly(
+                        $view, activities, activityType, goal);
                 }
             );
         });
+    }
+
+    /**
+     * Add a progress bar for weekly progress.
+     *
+     * This adds a progress bar to a given .js-view container. The
+     * progress bar will indicate proportional progress towards the
+     * annual goal.
+     *
+     * The weekly target for an activity is determined from the
+     * outstanding annual requirement divided by the number of weeks
+     * remaining in the year.
+     *
+     * @param $view: A jQuery wrapper around a .js-view element.
+     * @param activities: An array of at least the last months
+     *      activities by the current athlete.
+     * @param activityType: The `ActivityResource.type` that the
+     *      progress bar refers to.
+     * @param goal: The current, overall annual goal.
+     */
+    private addProgressBarWeekly = (
+            $view: JQuery,
+            activities: ActivityResource[],
+            activityType: string,
+            goal: Goal): void => {
+        let now = new Date();
+        let weekStart = new Date();
+        let day = weekStart.getDay() || 7;  // week starting on Monday
+        if (day !== 1) {
+            weekStart.setHours(-24 * (day - 1));
+        }
+        weekStart.setHours(0, 0, 0, 0);
+        let weekProgress = day / 7;
+        let weekNumber = this.weekNumber();
+        let weekCount = this.weekCount();
+        let weeksRemaining = this.weekCount() - this.weekNumber() + 1;
+        let scaledGoal: Goal = {
+            value: goal.value / weeksRemaining,
+            units: goal.units,
+        };
+        let actual = this.calculateActual(
+            activities, weekStart, activityType, goal.units);
+        let bar = this.createProgressBar(
+            $view, scaledGoal, actual, weekProgress);
+        $view.append(bar)
+    }
+
+    /**
+     * Determine the current week number.
+     *
+     * The first week of the year starts on January the 1st and lasts
+     * exactly seven days has a week number of one. The last week of the
+     * year has a week number matching the return value of `weekCount`.
+     *
+     * Note that the final week of the year may not be complete. For
+     * example, if the new year started on a Tuesday, then the final
+     * week of the preceeding year only has a single day in it.
+     */
+    private weekNumber = (): number => {
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let counter = new Date(today.getFullYear(), 0, 1);
+        let week = 0;
+        while (counter <= today) {
+            week++;
+            counter.setDate(counter.getDate() + 7);
+        }
+        return week;
+    }
+
+    /**
+     * Determine the number of weeks in the current year.
+     *
+     * A "week" is a seven day period with the first week of the year
+     * starting on the first of January.
+     */
+    private weekCount = (): number => {
+        let now = new Date();
+        let counter = new Date(now.getFullYear(), 0, 1);
+        let newYear = new Date(now.getFullYear() + 1, 0, 1);
+        let week = 0;
+        while (counter < newYear) {
+            week++;
+            counter.setDate(counter.getDate() + 7);
+        }
+        return week;
     }
 
     /**
@@ -77,7 +166,7 @@ class GoalsModifier implements Modifier {
             $view: JQuery,
             activities: ActivityResource[],
             activityType: string,
-            goal: Goal) => {
+            goal: Goal): void => {
         let now = new Date();
         let monthStart = new Date();
         monthStart.setHours(0, 0, 0, 0);
@@ -95,9 +184,9 @@ class GoalsModifier implements Modifier {
         };
         let actual = this.calculateActual(
             activities, monthStart, activityType, goal.units);
-        let barMonthly = this.createProgressBar(
+        let bar = this.createProgressBar(
             $view, scaledGoal, actual, monthProgress);
-        $view.append(barMonthly);
+        $view.append(bar);
     }
 
     /**
@@ -296,11 +385,19 @@ class GoalsModifier implements Modifier {
         let $fill = $svg.find('rect.progress-bar-fill');
         let $marker = $svg.find('line.progress-marker');
         let $markerText = $svg.find('text');
+        let markerNudge = 0;
         let width = parseInt($container.attr('width'), 10);
         $fill.attr('width', width * (actual / goal.value));
+        if (progress >= 1) {
+            progress = 1;
+            markerNudge = -1;
+        } else if (progress <= 0) {
+            progress = 0;
+            markerNudge = 1;
+        }
         $marker
-            .attr('x1', width * progress)
-            .attr('x2', width * progress)
+            .attr('x1', (width * progress) + markerNudge)
+            .attr('x2', (width * progress) + markerNudge)
         ;
         $markerText
             .attr('x', width * progress)
