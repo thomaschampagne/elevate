@@ -47,14 +47,16 @@ class GoalsModifier implements Modifier {
                         activityType[0].toUpperCase() + activityType.slice(1);
                     let $actual = $barYearly.find('.actual');
                     let actual = parseInt($actual.text(), 10);
-                    if (goal.units === GoalUnit.METRES) {
-                        actual = actual * 1000;
+                    if (goal.value !== 0) {
+                        if (goal.units === GoalUnit.METRES) {
+                            actual = actual * 1000;
+                        }
+                        goal.value = Math.max(goal.value - actual, 0);
+                        this.addProgressBarMonthly(
+                            $view, activities, activityType, goal);
+                        this.addProgressBarWeekly(
+                            $view, activities, activityType, goal);
                     }
-                    goal.value = goal.value - actual;
-                    this.addProgressBarMonthly(
-                        $view, activities, activityType, goal);
-                    this.addProgressBarWeekly(
-                        $view, activities, activityType, goal);
                     // Add year label last so it doesn't get cloned
                     this.labelProgressBar($barYearly, '2016');
                 }
@@ -306,6 +308,9 @@ class GoalsModifier implements Modifier {
      *
      * @param $view: A jQuery wrapper around a .js-edit element.
      * @param period: Which period to find the goal for.
+     *
+     * @returns The configured goal, the value of which will be zero
+     *      if no goal has been set.
      */
     private findGoal = ($edit: JQuery, period: GoalPeriod): Goal => {
         let goalString = $edit.find(
@@ -431,7 +436,11 @@ class GoalsModifier implements Modifier {
         let $markerText = $svg.find('text');
         let markerNudge = 0;
         let width = parseInt($container.attr('width'), 10);
-        $fill.attr('width', width * (actual / goal.value));
+        if (goal.value === 0) {
+            $fill.attr('width', width);
+        } else {
+            $fill.attr('width', width * (actual / goal.value));
+        }
         if (progress >= 1) {
             progress = 1;
             markerNudge = -1;
@@ -496,10 +505,10 @@ class GoalsModifier implements Modifier {
         let formattedUnits = '';
         if (units === GoalUnit.METRES) {
             formattedUnits = ' km';
-            formattedValue = (Math.ceil(value / 1000)).toLocaleString();
+            formattedValue = (Math.round(value / 1000)).toLocaleString();
         } else if (units === GoalUnit.HOURS) {
             formattedUnits = 'h';
-            formattedValue = Math.ceil(value).toLocaleString();
+            formattedValue = Math.round(value).toLocaleString();
         }
         if (!includeUnits) {
             formattedUnits = '';
