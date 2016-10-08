@@ -40,22 +40,23 @@ class GoalsModifier implements Modifier {
                     let $tab = $(tab);
                     let $view = $(tab).find('.js-view');
                     let $edit = $(tab).find('.js-edit');
+                    let $barYearly = this.findProgressBar($view);
                     let goal = this.findGoal($edit, 'year');
                     let activityType = $tab.attr('data-sport');
                     activityType =
                         activityType[0].toUpperCase() + activityType.slice(1);
-
-                    let $actual = $view.find(`[id$="-yearly-progress-container"] .actual`);
+                    let $actual = $barYearly.find('.actual');
                     let actual = parseInt($actual.text(), 10);
                     if (goal.units === GoalUnit.METRES) {
                         actual = actual * 1000;
                     }
                     goal.value = goal.value - actual;
-
                     this.addProgressBarMonthly(
                         $view, activities, activityType, goal);
                     this.addProgressBarWeekly(
                         $view, activities, activityType, goal);
+                    // Add year label last so it doesn't get cloned
+                    this.labelProgressBar($barYearly, '2016');
                 }
             );
         });
@@ -103,6 +104,7 @@ class GoalsModifier implements Modifier {
             activities, weekStart, activityType, goal.units);
         let bar = this.createProgressBar(
             $view, scaledGoal, actual, weekProgress);
+        this.labelProgressBar(bar, "this week");
         $view.append(bar)
     }
 
@@ -189,6 +191,23 @@ class GoalsModifier implements Modifier {
             activities, monthStart, activityType, goal.units);
         let bar = this.createProgressBar(
             $view, scaledGoal, actual, monthProgress);
+        this.labelProgressBar(
+            bar,
+            [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ][now.getMonth()]
+        );
         $view.append(bar);
     }
 
@@ -313,6 +332,16 @@ class GoalsModifier implements Modifier {
     }
 
     /**
+     * Find the firts progress bar in a .js-view element.
+     */
+    private findProgressBar = ($view: JQuery): JQuery => {
+        return $view
+            .find('[id$="-yearly-progress-container"]')
+            .first()
+        ;
+    }
+
+    /**
      * Create a new goal tracing progres bar.
      *
      * Specifically, this clones an existing progress bar from the given
@@ -339,10 +368,7 @@ class GoalsModifier implements Modifier {
             goal: Goal,
             actual: number,
             progress: number): JQuery => {
-        let $sourceContainer = $view
-            .find('[id$="-yearly-progress-container"]')
-            .first()
-        ;
+        let $sourceContainer = this.findProgressBar($view);
         let $container = $sourceContainer.clone();
         let formattedGoal = this.formatGoal(goal);
         let formattedActual = this.formatValue(actual / 1000);  // TODO: dont do this iа HOURS
@@ -414,6 +440,23 @@ class GoalsModifier implements Modifier {
             .attr('x', markerX)
             .attr('text-anchor', markerTextAnchor)
         ;
+    }
+
+    /*
+     * Add a label to a progress bar.
+     *
+     * This adds a small label to the progress bar at the top right.
+     */
+    private labelProgressBar = ($bar: JQuery, label: string): void => {
+        let $label = $('<span>');
+        $label
+            .text(label)
+            .css('float', 'right')
+            .css('padding-top', '0.4em')
+            .css('text-transform', 'uppercase')
+            .css('font-size', '0.6em')
+        ;
+        $bar.find('.primary-stats').append($label);
     }
 
     /**
