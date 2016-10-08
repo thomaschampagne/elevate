@@ -1,3 +1,6 @@
+const GOAL_MARKER_TEXT_WIDTH = 40;
+
+
 /**
  * Implements per-week/month annual goal tracking.
  *
@@ -393,15 +396,23 @@ class GoalsModifier implements Modifier {
             markerNudge = -1;
         } else if (progress <= 0) {
             progress = 0;
-            markerNudge = 1;
         }
+        let markerX = (width * progress) + markerNudge;
         $marker
-            .attr('x1', (width * progress) + markerNudge)
-            .attr('x2', (width * progress) + markerNudge)
+            .attr('x1', markerX)
+            .attr('x2', markerX)
         ;
+        let markerTextAnchor = 'middle';
+        // GOAL_MARKER_TEXT_WIDTH is used as we can't know the actual
+        // width until we actually add the <svg> element to the DOM.
+        if (width - markerX < GOAL_MARKER_TEXT_WIDTH) {
+            markerTextAnchor = 'end';
+        } else if (markerX < GOAL_MARKER_TEXT_WIDTH) {
+            markerTextAnchor = 'start';
+        }
         $markerText
-            .attr('x', width * progress)
-            .attr('text-anchor', 'middle')
+            .attr('x', markerX)
+            .attr('text-anchor', markerTextAnchor)
         ;
     }
 
