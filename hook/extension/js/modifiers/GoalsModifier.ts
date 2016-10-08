@@ -370,8 +370,14 @@ class GoalsModifier implements Modifier {
             progress: number): JQuery => {
         let $sourceContainer = this.findProgressBar($view);
         let $container = $sourceContainer.clone();
-        let formattedGoal = this.formatGoal(goal);
-        let formattedActual = this.formatValue(actual / 1000);  // TODO: dont do this iа HOURS
+        let $svg = $container.find('.chart-container svg');
+        let $tooltip = $container.find('.yearly-goal-tooltip');
+        let $tooltipSource = $sourceContainer.find('.yearly-goal-tooltip');
+        let formattedGoal = this.formatValue(goal.value, goal.units);
+        let formattedActual = this.formatValue(actual, goal.units, false);
+        let difference = (goal.value * progress) - actual;
+        let formattedDifference = this.formatValue(
+            Math.abs(difference), goal.units);
         $container
             .find('.primary-stats')
             .contents()
@@ -383,12 +389,21 @@ class GoalsModifier implements Modifier {
             .find('.primary-stats .actual')
             .text(formattedActual)
         ;
-        this.updateProgressBarSVG(
-            $container.find('.chart-container svg'),
-            goal,
-            actual,
-            progress
+        if (difference > 0) {
+            $tooltip.text(`${formattedDifference} behind pace`);
+        } else {
+            $tooltip.text(`${formattedDifference} ahead of pace`);
+        }
+        $svg.find('g').hover(
+            () => {
+                $tooltip.attr('style', $tooltipSource.attr('style'));
+                $tooltip.addClass('yearly-goal-tooltip-visible');
+            },
+            () => {
+                $tooltip.removeClass('yearly-goal-tooltip-visible');
+            }
         );
+        this.updateProgressBarSVG($svg, goal, actual, progress);
         return $container;
     }
 
@@ -460,46 +475,36 @@ class GoalsModifier implements Modifier {
     }
 
     /**
-     * Format a numeric value.
-     *
-     * The given value is rounded up and commas are added to separate
-     * 1000s.
-     *
-     * @param value: The numeric value to format.
-     *
-     * @returns The formatted value as a string.
-     */
-    private formatValue = (value: number): string => {
-        let rounded = Math.ceil(value);
-        return rounded.toString();
-    }
-
-    /**
      * Format a goal, including units.
      *
      * This formats a given goal to match Strava's native formatting of
      * goals within #progress-goals-v2 elements. Specifically this means
      * that the goal values are rounded and commas added to separate 1000s.
      *
-     * For goals with metre goals are scaled to kilometres and "km" is
-     * used as the units with a leading space. Goals using hours use "h"
-     * as the units *without* a leading space.
-     *
-     * @param goal: The goal to format.
+     * @param value: The numeric value to format.
+     * @param units: The units to format the value as.
+     * @param includeUnits: Whether or not to include the actual units
+     *      in the formatted output.
      *
      * @returns The given goal formatted into a string.
      */
-    private formatGoal = (goal: Goal): string => {
-        let value = '';
-        let units = '';
-        if (goal.units === GoalUnit.METRES) {
-            units = ' km';
-            value = this.formatValue(goal.value / 1000);
-        } else if (goal.units === GoalUnit.HOURS) {
-            units = 'h';
-            value = this.formatValue(goal.value);
+    private formatValue = (
+            value: number,
+            units: GoalUnit,
+            includeUnits = true): string => {
+        let formattedValue = '';
+        let formattedUnits = '';
+        if (units === GoalUnit.METRES) {
+            formattedUnits = ' km';
+            formattedValue = (Math.ceil(value / 1000)).toLocaleString();
+        } else if (units === GoalUnit.HOURS) {
+            formattedUnits = 'h';
+            formattedValue = Math.ceil(value).toLocaleString();
         }
-        return `${value}${units}`;
+        if (!includeUnits) {
+            formattedUnits = '';
+        }
+        return `${formattedValue}${formattedUnits}`;
     }
 }
 
