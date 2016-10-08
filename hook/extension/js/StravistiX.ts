@@ -113,19 +113,6 @@ class StravistiX {
     }
 
     /**
-     * Check for goals element and enable GoalsModifier.
-     *
-     * This checks the document for a #progress-goals-v2 element. If
-     * found then the GoalsModifier is enabled and bound to the element.
-     */
-    protected handleGoalsModifier(): void {
-        let goals = $('#progress-goals-v2');
-        if (goals.length > 0) {
-            new GoalsModifier(goals).modify();
-        }
-    }
-
-    /**
      *
      */
     protected handleForwardToWWW(): boolean {
@@ -996,6 +983,26 @@ class StravistiX {
 
         } else {
             if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+        }
+    }
+
+    /**
+     * Check for goals element and enable GoalsModifier.
+     *
+     * This checks the document for a #progress-goals-v2 element. If
+     * found then the GoalsModifier is enabled and bound to the element.
+     * However, note that the modifier only works for the current athelete,
+     * and hence is only enabled on the dashboard and current user's profile
+     * pages.
+     */
+    protected handleGoalsModifier(): void {
+        let goals = $('#progress-goals-v2');
+        if (goals.length > 0) {
+            let pageDashboard = new RegExp('^/dashboard');
+            if (window.location.pathname.match(pageProfile)
+                    || window.location.pathname.match(pageDashboard)) {
+                new GoalsModifier(goals).modify();
+            }
         }
     }
 
