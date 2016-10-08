@@ -234,6 +234,12 @@ app.factory('CommonSettingsService', function() {
                 optionLabels: ['All'],
                 optionHtml: 'This will hide all routes created in the dashboard feed.',
             }, {
+                optionKey: 'displayExtendedGoals',
+                optionType: 'checkbox',
+                optionTitle: 'Enable additional goal progress tracking',
+                optionLabels: ['All'],
+                optionHtml: 'This will add two extra progress bars for annual goals which tracks progress for the current month and week.',
+            },{
                 optionKey: 'feedHideRideActivitiesUnderDistance',
                 optionType: 'integer',
                 optionTitle: 'Hide rides activities under distance.',

@@ -994,10 +994,17 @@ class StravistiX {
      * However, note that the modifier only works for the current athelete,
      * and hence is only enabled on the dashboard and current user's profile
      * pages.
+     *
+     * If the `displayExtendedGoals` user setting is falsey then this
+     * handler does nothing.
      */
     protected handleGoalsModifier(): void {
+        if (!this._userSettings.displayExtendedGoals) {
+            return;
+        }
         let goals = $('#progress-goals-v2');
         if (goals.length > 0) {
+            let pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
             let pageDashboard = new RegExp('^/dashboard');
             if (window.location.pathname.match(pageProfile)
                     || window.location.pathname.match(pageDashboard)) {
