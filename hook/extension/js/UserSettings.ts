@@ -48,6 +48,7 @@ interface IUserSettings {
     displaySegmentTimeComparisonToCurrentYearPR: boolean;
     displaySegmentTimeComparisonPosition: boolean;
     reviveGoogleMaps: boolean;
+    displayRecentEffortsHRAdjustedPace: boolean;
     reviveGoogleMapsLayerType: string;
     displayActivityBestSplits: boolean;
     bestSplitsConfiguration: any; // TODO Type this !
@@ -1213,6 +1214,7 @@ let userSettings: IUserSettings = {
     displaySegmentTimeComparisonToPR: true,
     displaySegmentTimeComparisonToCurrentYearPR: true,
     displaySegmentTimeComparisonPosition: true,
+    displayRecentEffortsHRAdjustedPace: true,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,

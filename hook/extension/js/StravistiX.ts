@@ -76,6 +76,7 @@ class StravistiX {
         this.handleActivityScrolling();
         this.handleDefaultLeaderboardFilter();
         this.handleSegmentRankPercentage();
+        this.handleSegmentHRAP();
         this.handleActivityStravaMapType();
         this.handleHidePremium();
         this.handleHideFeed();
@@ -425,6 +426,25 @@ class StravistiX {
 
         let segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
         segmentRankPercentage.modify();
+    }
+
+    protected handleSegmentHRAP() {
+
+        if (!this.userSettings.displaySegmentRankPercentage) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleSegmentHRAP_()");
+
+        let segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
+
+        let segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings, this.athleteId, segmentId);
+        segmentHRATime.modify();
     }
 
     /**

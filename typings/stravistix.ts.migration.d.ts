@@ -1,35 +1,35 @@
 /*
 
-New expected project structure:
-============
+ New expected project structure:
+ ============
 
-plugin/
-    | -- core/
-    |       | -- config
-    |       | -- modules
-    |       | -- scripts
-    |       | -- ...
-    |
-    | -- options/
-    |       | -- app/
-    |               | -- controllers
-    |               | -- app
-    |               | -- app
-    |       | -- App.ts
-    |       | -- Config.ts
-    |       | -- index.html
-    |
-    | -- manifest.json
-    | -- package.json   => shared between core & options
-    | -- node_modules/  => shared between core & options
-specs/
-typings/
-node_modules/   => Tasks running stuff modules...
-gulpfile.js
-package.json
-tsconfig.json
-typings.json
-README.md
+ plugin/
+ | -- core/
+ |       | -- config
+ |       | -- modules
+ |       | -- scripts
+ |       | -- ...
+ |
+ | -- options/
+ |       | -- app/
+ |               | -- controllers
+ |               | -- app
+ |               | -- app
+ |       | -- App.ts
+ |       | -- Config.ts
+ |       | -- index.html
+ |
+ | -- manifest.json
+ | -- package.json   => shared between core & options
+ | -- node_modules/  => shared between core & options
+ specs/
+ typings/
+ node_modules/   => Tasks running stuff modules...
+ gulpfile.js
+ package.json
+ tsconfig.json
+ typings.json
+ README.md
 
  */
 
@@ -61,3 +61,9 @@ README.md
  // Find JS functions
  \w:\sfunction((.*))\s+\{
  */
+
+declare class SegmentRecentEffortsHRATimeModifier {
+    constructor(a: any, b: any, c: any);
+
+    modify(): void;
+}

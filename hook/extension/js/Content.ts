@@ -162,6 +162,7 @@ let jsDependencies: Array<string> = [
     'js/modifiers/DefaultLeaderBoardFilterModifier.js',
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',
+    'js/modifiers/SegmentRecentEffortsHRATimeModifier.js',
     'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityStravaMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',

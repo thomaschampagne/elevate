@@ -239,4 +239,12 @@ class Helper {
         return 0;
     }
 
+    public static safeMax(a: number, b: number): number {
+        return typeof a == "undefined" ? b : Math.max(a, b);
+    }
+
+    public static safeMin(a: number, b: number): number {
+        return typeof a == "undefined" ? b : Math.min(a, b);
+    }
+
 }
