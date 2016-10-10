@@ -162,12 +162,6 @@ app.factory('CommonSettingsService', () => {
                 optionLabels: ['Cycling'],
                 optionHtml: 'This option allow you to display as "fast reading" your current rank on segments in a new column on segments efforts rows.',
             }, {
-                optionKey: 'displayRecentEffortsHRAdjustedPace',
-                optionType: 'checkbox',
-                optionTitle: 'Enabled heart rate adjusted results in "Your recent efforts"',
-                optionLabels: ['All'],
-                optionHtml: 'This option allow you to display heart rate adjusted pace in "Your recent efforts" graph, can be useful to estimate a fitness trend.',
-            }, {
                 optionKey: 'reviveGoogleMaps',
                 optionType: 'checkbox',
                 optionTitle: 'Revive Google Maps on activities',
@@ -349,7 +343,7 @@ app.factory('CommonSettingsService', () => {
                 optionType: 'checkbox',
                 optionTitle: 'Enable Hidden/Beta features',
                 optionLabels: ['All'],
-                optionEnableSub: ['displayReliveCCLink', 'displayReliveCCLink2'],
+                optionEnableSub: ['displayReliveCCLink', 'displayRecentEffortsHRAdjustedPace'],
                 optionHtml: 'Show features which are hidden. Example: BETA features.',
             }, {
                 optionKey: 'displayReliveCCLink',
@@ -357,6 +351,12 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Relive your rides',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This will display a link in activity page to relive cycling ride. Make sure to connect your strava account to <a href="http://relive.cc" target="_blank">relive.cc</a>. <br/><br/><strong>Note:</strong> Only rides done after relive.cc registration can get a "Relive".',
+            }, {
+                optionKey: 'displayRecentEffortsHRAdjustedPace',
+                optionType: 'checkbox',
+                optionTitle: 'Enable power/heartrate (cycling/running) adjusted results in "Your recent efforts" of segments pages.',
+                optionLabels: ['Cycling', 'Running'],
+                optionHtml: 'This option allow you to display heart rate adjusted pace in "Your recent efforts" graph, can be useful to estimate a fitness trend.',
             }]
         }];
 

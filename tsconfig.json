@@ -86,7 +86,8 @@
     "hook/extension/options/app/directives/hrrZones/HrrZones.ts",
     "hook/extension/options/app/directives/hrrZones/HrrZone.ts",
     "specs/processors/ActivityComputer.spec.ts",
-    "specs/processors/VacuumProcessor.spec.ts"
+    "specs/processors/VacuumProcessor.spec.ts",
+    "hook/extension/js/modifiers/SegmentRecentEffortsHRATimeModifier.ts"
   ],
   "exclude": [
     "node_modules/",

@@ -61,9 +61,3 @@
  // Find JS functions
  \w:\sfunction((.*))\s+\{
  */
-
-declare class SegmentRecentEffortsHRATimeModifier {
-    constructor(a: any, b: any, c: any);
-
-    modify(): void;
-}
