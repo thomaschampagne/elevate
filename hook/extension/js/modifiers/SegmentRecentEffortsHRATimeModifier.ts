@@ -311,10 +311,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let lastLine = lines[lines.length-1];
 
                         let pbLabel = chart.find(".personal-best-label");
-                        let pbValue = chart.find(".personal-best-value");
 
-                        let pbx = parseFloat(pbLabel.attr("x"));
-                        let boxX = pbx;
+                        let boxX = parseFloat(pbLabel.attr("x"));
 
                         let line = createElementSVG(document, "line");
                         line.setAttribute("class", "hra-line");
@@ -377,7 +375,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let infoboxW = 150;
 
                             let infoboxRectG = createElementSVG(document, "g");
-                            infoboxRectG.setAttribute("transform", "translate(" + (34 - infoboxW).toString() + "," + (hoverY + hoverH).toString() +")")
+                            infoboxRectG.setAttribute("transform", "translate(" + (34 - infoboxW).toString() + "," + (hoverY + hoverH).toString() +")");
                             infoboxHoverG.appendChild(infoboxRectG);
 
                             {
@@ -392,25 +390,13 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let textX = 3;
                             let textY = 3;
 
-                            {
+                            let infoText = ["To Be Done - Line 1", "To Be Done - Line 2", "To Be Done - Line 3"];
+
+                            for (let l = 0; l<3; l++) {
                                 let text = createElementSVG(document, "text");
                                 text.setAttribute("x", textX.toString());
-                                text.setAttribute("y", (textY + lineH).toString());
-                                text.textContent = "To Be Done - Line 1";
-                                infoboxRectG.appendChild(text);
-                            }
-                            {
-                                let text = createElementSVG(document, "text");
-                                text.setAttribute("x", textX.toString());
-                                text.setAttribute("y", (textY + lineH * 2).toString());
-                                text.textContent = "To Be Done - Line 2";
-                                infoboxRectG.appendChild(text);
-                            }
-                            {
-                                let text = createElementSVG(document, "text");
-                                text.setAttribute("x", textX.toString());
-                                text.setAttribute("y", (textY + lineH * 3).toString());
-                                text.textContent = "To Be Done - Line 3";
+                                text.setAttribute("y", (textY + lineH *(l+1)).toString());
+                                text.textContent = infoText[l];
                                 infoboxRectG.appendChild(text);
                             }
                         }
