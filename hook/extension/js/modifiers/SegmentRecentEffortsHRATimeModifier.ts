@@ -328,19 +328,50 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let infobox = createElementSVG(document, "g");
                         infobox.setAttribute("transform", "translate(" + (boxX + 2).toFixed(0) + ", 150)");
 
-                        let infoboxValue = createElementSVG(document, "text");
-                        infoboxValue.setAttribute("id", "hra-value");
-                        infoboxValue.setAttribute("x", "5");
-                        infoboxValue.setAttribute("y", "9");
-                        infobox.appendChild(infoboxValue);
-                        infoboxValue.textContent = maxHR.toFixed();
+                        {
+                            let infoboxValue = createElementSVG(document, "text");
+                            infoboxValue.setAttribute("id", "hra-value");
+                            infoboxValue.setAttribute("x", "5");
+                            infoboxValue.setAttribute("y", "9");
+                            infoboxValue.textContent = maxHR.toFixed();
+                            infobox.appendChild(infoboxValue);
+                        }
 
-                        let infoboxRect = createElementSVG(document, "rect");
-                        infoboxRect.setAttribute("id", "hra-box");
-                        infoboxRect.setAttribute("y", "14");
-                        infoboxRect.setAttribute("width", "60");
-                        infoboxRect.setAttribute("height", "60");
-                        infobox.appendChild(infoboxRect);
+                        {
+                            let infoboxHelpRect = createElementSVG(document, "rect");
+                            infoboxHelpRect.setAttribute("id", "hra-box-help");
+                            infoboxHelpRect.setAttribute("x", "25");
+                            infoboxHelpRect.setAttribute("y", "9");
+                            infoboxHelpRect.setAttribute("width", "15");
+                            infoboxHelpRect.setAttribute("height", "15");
+                            infobox.appendChild(infoboxHelpRect);
+
+                            let infoboxHelp = createElementSVG(document, "text");
+                            infoboxHelp.setAttribute("id", "hra-value");
+                            infoboxHelp.setAttribute("x", "30");
+                            infoboxHelp.setAttribute("y", "22");
+                            infoboxHelp.textContent = "?";
+                            infobox.appendChild(infoboxHelp);
+
+                        }
+
+
+                        {
+                            let infoboxHover = createElementSVG(document, "rect");
+                            infoboxHover.setAttribute("id", "hra-hover");
+                            infoboxHover.setAttribute("x", "25");
+                            infoboxHover.setAttribute("y", "9");
+                            infoboxHover.setAttribute("width", "15");
+                            infoboxHover.setAttribute("height", "15");
+                            infobox.appendChild(infoboxHover);
+
+                            let infoboxRect = createElementSVG(document, "rect");
+                            infoboxRect.setAttribute("id", "hra-box");
+                            infoboxRect.setAttribute("y", "14");
+                            infoboxRect.setAttribute("width", "60");
+                            infoboxRect.setAttribute("height", "60");
+                            infoboxHover.appendChild(infoboxRect);
+                        }
 
 
                         lines.push(infobox);

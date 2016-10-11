@@ -111,16 +111,29 @@
     fill: rgb(150, 30, 30);
 }
 
+
+#athlete-history-chart #hra-box-help { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-hover {
+    opacity: 0.0;
+}
+
+#athlete-history-chart #hra-hover:hover {
+    opacity: 0.9;
+}
+
 #athlete-history-chart #hra-box { /* based on css of #effort-box */
     fill: #fff;
     stroke: #ccc;
     stroke-width: 1;
-    opacity: 0.0;
 }
 
-#athlete-history-chart #hra-box:hover {
+#athlete-history-chart #hra-box {
     fill: #f99;
-    opacity: 0.9;
 }
 
 
