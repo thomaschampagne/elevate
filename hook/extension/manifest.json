@@ -4,7 +4,7 @@
     "short_name": "StravistiX",
     "description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
     "version": "4.2.3",
-    "version_name": "4.2.3 Stable",
+    "version_name": "4.2.3 ForkO",
     "background": {
         "scripts": [
             "js/Helper.js",
