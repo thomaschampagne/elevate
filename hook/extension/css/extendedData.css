@@ -115,7 +115,14 @@
     fill: #fff;
     stroke: #ccc;
     stroke-width: 1;
+    opacity: 0.0;
 }
+
+#athlete-history-chart #hra-box:hover {
+    fill: #f99;
+    opacity: 0.9;
+}
+
 
 #athlete-history-chart #hra-value { /* based on css of #effort-box-activity-date */
     fill: #999;
@@ -123,3 +130,4 @@
     display: block;
     box-sizing: border-box;
 }
+
