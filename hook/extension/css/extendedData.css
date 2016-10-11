@@ -110,3 +110,16 @@
 #athlete-history-chart .hra-axis {
     fill: rgb(150, 30, 30);
 }
+
+#athlete-history-chart #hra-box { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-value { /* based on css of #effort-box-activity-date */
+    fill: #999;
+    font-size: 11px;
+    display: block;
+    box-sizing: border-box;
+}

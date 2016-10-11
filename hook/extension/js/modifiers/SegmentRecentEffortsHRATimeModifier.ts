@@ -314,15 +314,36 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let pbValue = chart.find(".personal-best-value");
 
                         let pbx = parseFloat(pbLabel.attr("x"));
+                        let boxX = maxX + 5;
 
                         let line = createElementSVG(document, "line");
                         line.setAttribute("class", "hra-line");
                         line.setAttribute("x1", lastLine.getAttribute("x2"));
                         line.setAttribute("y1", lastLine.getAttribute("y2"));
-                        line.setAttribute("x2", pbx + 50);
+                        line.setAttribute("x2", boxX.toFixed());
                         line.setAttribute("y2", lastLine.getAttribute("y2"));
 
                         lines.push(line);
+
+                        let infobox = createElementSVG(document, "g");
+                        infobox.setAttribute("transform", "translate(" + (boxX + 2).toFixed(0) + ", 150)");
+
+                        let infoboxValue = createElementSVG(document, "text");
+                        infoboxValue.setAttribute("id", "hra-value");
+                        infoboxValue.setAttribute("x", "5");
+                        infoboxValue.setAttribute("y", "9");
+                        infobox.appendChild(infoboxValue);
+                        infoboxValue.textContent = maxHR.toFixed();
+
+                        let infoboxRect = createElementSVG(document, "rect");
+                        infoboxRect.setAttribute("id", "hra-box");
+                        infoboxRect.setAttribute("y", "14");
+                        infoboxRect.setAttribute("width", "60");
+                        infoboxRect.setAttribute("height", "60");
+                        infobox.appendChild(infoboxRect);
+
+
+                        lines.push(infobox);
                     }
 
                     // insert the elements into the SVG
