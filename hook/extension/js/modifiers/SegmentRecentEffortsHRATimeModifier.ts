@@ -307,6 +307,24 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     }
 
 
+                    if (lines.length>0) {
+                        let lastLine = lines[lines.length-1];
+
+                        let pbLabel = chart.find(".personal-best-label");
+                        let pbValue = chart.find(".personal-best-value");
+
+                        let pbx = parseFloat(pbLabel.attr("x"));
+
+                        let line = createElementSVG(document, "line");
+                        line.setAttribute("class", "hra-line");
+                        line.setAttribute("x1", lastLine.getAttribute("x2"));
+                        line.setAttribute("y1", lastLine.getAttribute("y2"));
+                        line.setAttribute("x2", pbx + 50);
+                        line.setAttribute("y2", lastLine.getAttribute("y2"));
+
+                        lines.push(line);
+                    }
+
                     // insert the elements into the SVG
                     let firstMark = chart.find("circle").eq(0);
                     firstMark.before(mappedMarks);
