@@ -59,7 +59,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     protected hraTime(): void {
 
-        function createElementSVG(document: Document, kind: string) {
+        function createElementSVG(kind: string) {
             return document.createElementNS("http://www.w3.org/2000/svg", kind);
         }
 
@@ -205,7 +205,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         let wattAxisX: number = maxX;
 
-                        let gAxis: SVGElement = createElementSVG(document, "g");
+                        let gAxis: SVGElement = createElementSVG("g");
 
                         gAxis.setAttribute("class", "y axis");
                         gAxis.setAttribute("style", "opacity: 1;");
@@ -215,18 +215,18 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let f: number = ( mWatts - fastestValue) / (slowestValue - fastestValue);
                             let mY: number = f * (slowY - fastY) + fastY;
 
-                            let g: SVGElement = createElementSVG(document, "g");
+                            let g: SVGElement = createElementSVG("g");
                             g.setAttribute("class", "tick");
                             g.setAttribute("style", "opacity: 1;");
                             g.setAttribute("transform", "translate(0," + mY.toFixed(0) + ")");
 
-                            let line: SVGElement = createElementSVG(document, "line");
+                            let line: SVGElement = createElementSVG("line");
                             line.setAttribute("x2", "0");
                             line.setAttribute("y2", "0");
                             line.setAttribute("class", "grid");
                             g.appendChild(line);
 
-                            let text: SVGElement = createElementSVG(document, "text");
+                            let text: SVGElement = createElementSVG("text");
                             text.setAttribute("x", "50"); // TODO: copy from y axis markers
                             text.setAttribute("y", "0");
                             text.setAttribute("dy", ".32em");
@@ -272,14 +272,14 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let clampedY = clampY(resY);
 
                         // Cannot create SVG as HTML source - see http://stackoverflow.com/a/6149687/16673
-                        let mark = createElementSVG(document, "circle");
+                        let mark = createElementSVG("circle");
                         mark.setAttribute("class", "hra-time-mark mark");
                         mark.setAttribute("cx", mx.toString());
                         mark.setAttribute("cy", clampedY.toString());
                         mark.setAttribute("r", "3");
 
                         if (resY < topY || resY > bottomY) {
-                            let title: SVGElement = createElementSVG(document, "text");
+                            let title: SVGElement = createElementSVG("text");
                             title.innerHTML = showWatts ? hraValue.toFixed(0) : Helper.secondsToHHMMSS(hraValue, true);
                             title.setAttribute("x", (mx + 4).toString());
                             title.setAttribute("y", (clampedY + 4).toString());
@@ -296,7 +296,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     for (let i = 1; i < markData.length; i++) {
                         let imrPrev: Array<number> = markData[i - 1];
                         let imrNext: Array<number> = markData[i];
-                        let line = createElementSVG(document, "line");
+                        let line = createElementSVG("line");
                         line.setAttribute("class", "hra-line");
                         line.setAttribute("x1", imrPrev[4].toString());
                         line.setAttribute("y1", clampY(imrPrev[2]).toString());
@@ -314,7 +314,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         let boxX = parseFloat(pbLabel.attr("x"));
 
-                        let line = createElementSVG(document, "line");
+                        let line = createElementSVG("line");
                         line.setAttribute("class", "hra-line");
                         line.setAttribute("x1", lastLine.getAttribute("x2"));
                         line.setAttribute("y1", lastLine.getAttribute("y2"));
@@ -323,7 +323,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         lines.push(line);
 
-                        let infobox = createElementSVG(document, "g");
+                        let infobox = createElementSVG("g");
                         infobox.setAttribute("transform", "translate(" + boxX.toString() + ", 150)");
 
                         let hoverX = 20;
@@ -332,7 +332,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let hoverH = 14;
 
                         {
-                            let infoboxValue = createElementSVG(document, "text");
+                            let infoboxValue = createElementSVG("text");
                             infoboxValue.setAttribute("id", "hra-value");
                             infoboxValue.setAttribute("x", "0");
                             infoboxValue.setAttribute("y", (hoverY + hoverH/2).toString());
@@ -342,7 +342,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
 
                         {
-                            let infoboxHelpRect = createElementSVG(document, "rect");
+                            let infoboxHelpRect = createElementSVG("rect");
                             infoboxHelpRect.setAttribute("id", "hra-box-help");
                             infoboxHelpRect.setAttribute("x", hoverX.toString());
                             infoboxHelpRect.setAttribute("y", hoverY.toString());
@@ -350,7 +350,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             infoboxHelpRect.setAttribute("height", hoverH.toString());
                             infobox.appendChild(infoboxHelpRect);
 
-                            let infoboxHelp = createElementSVG(document, "text");
+                            let infoboxHelp = createElementSVG("text");
                             infoboxHelp.setAttribute("id", "hra-value-help");
                             infoboxHelp.setAttribute("x", (hoverX+hoverW/2).toString());
                             infoboxHelp.setAttribute("y", (hoverY+hoverH/2).toString());
@@ -358,12 +358,12 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             infobox.appendChild(infoboxHelp);
                         }
 
-                        let infoboxHoverG = createElementSVG(document, "g");
+                        let infoboxHoverG = createElementSVG("g");
                         infoboxHoverG.setAttribute("id", "hra-hover");
                         infobox.appendChild(infoboxHoverG);
 
                         {
-                            let infoboxHover = createElementSVG(document, "rect");
+                            let infoboxHover = createElementSVG("rect");
                             infoboxHover.setAttribute("id", "hra-hover-box");
                             infoboxHover.setAttribute("x", hoverX.toString());
                             infoboxHover.setAttribute("y", hoverY.toString());
@@ -374,12 +374,12 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let infoboxH = 60;
                             let infoboxW = 150;
 
-                            let infoboxRectG = createElementSVG(document, "g");
+                            let infoboxRectG = createElementSVG("g");
                             infoboxRectG.setAttribute("transform", "translate(" + (34 - infoboxW).toString() + "," + (hoverY + hoverH).toString() +")");
                             infoboxHoverG.appendChild(infoboxRectG);
 
                             {
-                                let infoboxRect = createElementSVG(document, "rect");
+                                let infoboxRect = createElementSVG("rect");
                                 infoboxRect.setAttribute("id", "hra-box");
                                 infoboxRect.setAttribute("width", infoboxW.toString());
                                 infoboxRect.setAttribute("height", infoboxH.toString());
@@ -393,7 +393,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let infoText = ["To Be Done - Line 1", "To Be Done - Line 2", "To Be Done - Line 3"];
 
                             for (let l = 0; l<3; l++) {
-                                let text = createElementSVG(document, "text");
+                                let text = createElementSVG("text");
                                 text.setAttribute("x", textX.toString());
                                 text.setAttribute("y", (textY + lineH *(l+1)).toString());
                                 text.textContent = infoText[l];
