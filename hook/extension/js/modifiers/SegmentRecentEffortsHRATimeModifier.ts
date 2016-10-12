@@ -377,7 +377,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             infoboxHoverG.appendChild(infoboxHover);
 
                             let infoboxH = 60;
-                            let infoboxW = 150;
+                            let infoboxW = 180;
 
                             let infoboxRectG = createElementSVG("g");
                             infoboxRectG.setAttribute("id", "hra-hover-g");
@@ -396,7 +396,11 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let textX = 3;
                             let textY = 3;
 
-                            let infoText = ["To Be Done - Line 1", "To Be Done - Line 2", "To Be Done - Line 3"];
+                            let infoText = [
+                                "Performance estimation",
+                                "at the maximum HR ever",
+                                "reached in this segment."
+                            ];
 
                             for (let l = 0; l<3; l++) {
                                 let text = createElementSVG("text");
