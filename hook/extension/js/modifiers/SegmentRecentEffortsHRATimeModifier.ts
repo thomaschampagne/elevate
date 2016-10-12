@@ -320,24 +320,45 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let lastLine = lines[lines.length-1];
 
                         let pbLabel = chart.find(".personal-best-label");
+                        let pbValue = chart.find(".personal-best-value");
+
+                        let pbLabelBox = (<SVGLocatable><any>pbLabel[0]).getBBox();
+                        let pbLabelValue = (<SVGLocatable><any>pbValue[0]).getBBox();
+
+                        let pbTop = Math.min(pbLabelBox.y, pbLabelValue.y);
+                        let pbBot = Math.max(pbLabelBox.y + pbLabelBox.height, pbLabelValue.y + pbLabelValue.height);
+
+                        let lastHRAY = parseFloat(lastLine.getAttribute("y2"));
+
+                        let hoverW = 14;
+                        let hoverH = 14;
+                        let hoverX = 20;
+                        let hoverY = -hoverH/2;
+
+                        let infoY = lastHRAY;
+
+                        if (infoY + hoverH / 2 < pbTop ) {} // infobox above the PB top
+                        else if (infoY - hoverH / 2 > pbBot) {} // infobox below the PB bottom
+                        else {
+                            // infobox colliding with the PB info
+                            // move it up or down, whichever is closer
+                            if (infoY < (pbTop + pbBot) / 2) infoY = pbTop - hoverH / 2;
+                            else infoY = pbBot + hoverH / 2;
+                        }
 
                         let boxX = parseFloat(pbLabel.attr("x"));
 
                         let line = createElementSVG("line",
                             ["class", "hra-line"],
                             ["x1", lastLine.getAttribute("x2")],
-                            ["y1", lastLine.getAttribute("y2")],
+                            ["y1", lastHRAY.toString()],
                             ["x2", (boxX - 3).toString()],
-                            ["y2", lastLine.getAttribute("y2")]);
+                            ["y2", infoY.toString()]);
 
                         lines.push(line);
 
-                        let infobox = createElementSVG("g", ["transform", "translate(" + boxX.toString() + ", 150)"]);
+                        let infobox = createElementSVG("g", ["transform", "translate(" + boxX.toString() + ", " + infoY.toString() + ")"]);
 
-                        let hoverX = 20;
-                        let hoverY = 9;
-                        let hoverW = 14;
-                        let hoverH = 14;
 
                         {
                             let infoboxValue = createChildElementSVG(infobox, "text",
