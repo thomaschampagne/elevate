@@ -59,8 +59,12 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     protected hraTime(): void {
 
-        function createElementSVG(kind: string) {
-            return document.createElementNS("http://www.w3.org/2000/svg", kind);
+        function createElementSVG(kind: string, ...attribs: String[][]): SVGElement {
+            let ret = document.createElementNS("http://www.w3.org/2000/svg", kind);
+            for (let attrib : String[] of attribs) {
+                ret.setAttribute(attrib[0], attrib[1])
+            }
+            return ret;
         }
 
         let recentEffortsChart: JQuery = $("#athlete-history-chart");
@@ -205,28 +209,27 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         let wattAxisX: number = maxX;
 
-                        let gAxis: SVGElement = createElementSVG("g");
-
-                        gAxis.setAttribute("class", "y axis");
-                        gAxis.setAttribute("style", "opacity: 1;");
-                        gAxis.setAttribute("transform", "translate(" + wattAxisX + ", 0)");
+                        let gAxis = createElementSVG("g",
+                            ["class", "y axis"],
+                            ["style", "opacity: 1;"],
+                            ["transform", "translate(" + wattAxisX + ", 0)"]);
 
                         wattMarks.forEach((mWatts: number) => {
                             let f: number = ( mWatts - fastestValue) / (slowestValue - fastestValue);
                             let mY: number = f * (slowY - fastY) + fastY;
 
-                            let g: SVGElement = createElementSVG("g");
-                            g.setAttribute("class", "tick");
-                            g.setAttribute("style", "opacity: 1;");
-                            g.setAttribute("transform", "translate(0," + mY.toFixed(0) + ")");
+                            let g = createElementSVG("g",
+                                ["class", "tick"],
+                                ["style", "opacity: 1;"],
+                                ["transform", "translate(0," + mY.toFixed(0) + ")"]);
 
-                            let line: SVGElement = createElementSVG("line");
-                            line.setAttribute("x2", "0");
-                            line.setAttribute("y2", "0");
-                            line.setAttribute("class", "grid");
+                            let line = createElementSVG("line",
+                                ["x2", "0"],
+                                ["y2", "0"],
+                                ["class", "grid"]);
                             g.appendChild(line);
 
-                            let text: SVGElement = createElementSVG("text");
+                            let text = createElementSVG("text");
                             text.setAttribute("x", "50"); // TODO: copy from y axis markers
                             text.setAttribute("y", "0");
                             text.setAttribute("dy", ".32em");
