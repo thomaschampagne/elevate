@@ -67,6 +67,12 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
             return ret;
         }
 
+        function createChildElementSVG(parent: Node, kind: string, ...attribs: string[][]): SVGElement {
+            let ch = createElementSVG(kind, ...attribs);
+            parent.appendChild(ch);
+            return ch;
+        }
+
         let recentEffortsChart: JQuery = $("#athlete-history-chart");
 
         if (!recentEffortsChart.hasClass("stravistiXGraph")) {
@@ -220,28 +226,24 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let f = ( mWatts - fastestValue) / (slowestValue - fastestValue);
                             let mY = f * (slowY - fastY) + fastY;
 
-                            let g = createElementSVG("g",
+                            let g = createChildElementSVG(gAxis, "g",
                                 ["class", "tick"],
                                 ["style", "opacity: 1;"],
                                 ["transform", "translate(0," + mY.toFixed(0) + ")"]);
 
-                            let line = createElementSVG("line",
+                            createChildElementSVG(g, "line",
                                 ["x2", "0"],
                                 ["y2", "0"],
                                 ["class", "grid"]);
-                            g.appendChild(line);
 
-                            let text = createElementSVG("text",
+                            let text = createChildElementSVG(g, "text",
                                 ["x", "50"], // TODO: copy from y axis markers
                                 ["y", "0"],
                                 ["dy", ".32em"],
                                 ["class", "hra-axis axis-tick-text"],
                                 ["style", "text-anchor: end;"]);
                             text.textContent = mWatts.toFixed(0) + " W";
-                            g.appendChild(text);
 
-
-                            gAxis.appendChild(g);
                         });
 
                         let insertDOM = chart.find(".y.axis").eq(0);
@@ -338,59 +340,50 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let hoverH = 14;
 
                         {
-                            let infoboxValue = createElementSVG("text",
+                            let infoboxValue = createChildElementSVG(infobox, "text",
                                 ["id", "hra-value"],
                                 ["x", "0"],
                                 ["y", (hoverY + hoverH / 2).toString()]);
                             infoboxValue.textContent = maxHR.toFixed();
-                            infobox.appendChild(infoboxValue);
                         }
 
 
                         {
-                            let infoboxHelpRect = createElementSVG("rect",
+                            createChildElementSVG(infobox, "rect",
                                 ["id", "hra-box-help"],
                                 ["x", hoverX.toString()],
                                 ["y", hoverY.toString()],
                                 ["width", hoverW.toString()],
                                 ["height", hoverH.toString()]);
-                            infobox.appendChild(infoboxHelpRect);
 
-                            let infoboxHelp = createElementSVG("text",
+                            let infoboxHelp = createChildElementSVG(infobox, "text",
                                 ["id", "hra-value-help"],
                                 ["x", (hoverX + hoverW / 2).toString()],
                                 ["y", (hoverY + hoverH / 2).toString()]);
                             infoboxHelp.textContent = "?";
-                            infobox.appendChild(infoboxHelp);
                         }
 
-                        let infoboxHoverG = createElementSVG("g", ["id", "hra-hover"]);
-                        infobox.appendChild(infoboxHoverG);
+                        let infoboxHoverG = createChildElementSVG(infobox, "g", ["id", "hra-hover"]);
 
                         {
-                            let infoboxHover = createElementSVG("rect",
+                            createChildElementSVG(infoboxHoverG, "rect",
                                 ["id", "hra-hover-box"],
                                 ["x", hoverX.toString()],
                                 ["y", hoverY.toString()],
                                 ["width", hoverW.toString()],
                                 ["height", hoverH.toString()]);
-                            infoboxHoverG.appendChild(infoboxHover);
 
                             let infoboxH = 60;
                             let infoboxW = 180;
 
-                            let infoboxRectG = createElementSVG("g",
+                            let infoboxRectG = createChildElementSVG(infoboxHoverG, "g",
                                 ["id", "hra-hover-g"],
                                 ["transform", "translate(" + (34 - infoboxW).toString() + "," + (hoverY + hoverH).toString() + ")"]);
-                            infoboxHoverG.appendChild(infoboxRectG);
 
-                            {
-                                let infoboxRect = createElementSVG("rect",
-                                    ["id", "hra-box"],
-                                    ["width", infoboxW.toString()],
-                                    ["height", infoboxH.toString()]);
-                                infoboxRectG.appendChild(infoboxRect);
-                            }
+                            createChildElementSVG(infoboxRectG, "rect",
+                                ["id", "hra-box"],
+                                ["width", infoboxW.toString()],
+                                ["height", infoboxH.toString()]);
 
                             let lineH = 15;
                             let textX = 3;
@@ -403,11 +396,10 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             ];
 
                             for (let l = 0; l<3; l++) {
-                                let text = createElementSVG("text",
+                                let text = createChildElementSVG(infoboxRectG, "text",
                                     ["x", textX.toString()],
                                     ["y", (textY + lineH * (l + 1)).toString()]);
                                 text.textContent = infoText[l];
-                                infoboxRectG.appendChild(text);
                             }
                         }
 
