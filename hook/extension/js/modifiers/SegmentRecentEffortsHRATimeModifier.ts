@@ -59,9 +59,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     protected hraTime(): void {
 
-        function createElementSVG(kind: string, ...attribs: String[][]): SVGElement {
+        function createElementSVG(kind: string, ...attribs: string[][]): SVGElement {
             let ret = document.createElementNS("http://www.w3.org/2000/svg", kind);
-            for (let attrib : String[] of attribs) {
+            for (let attrib of attribs) {
                 ret.setAttribute(attrib[0], attrib[1])
             }
             return ret;
@@ -296,6 +296,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     // create the SVG lines connecting the marks
                     let lines: Array<SVGElement> = [];
+                    let infos: Array<SVGElement> = [];
+
                     for (let i = 1; i < markData.length; i++) {
                         let imrPrev: Array<number> = markData[i - 1];
                         let imrNext: Array<number> = markData[i];
@@ -406,7 +408,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         }
 
 
-                        lines.push(infobox);
+                        infos.push(infobox);
                     }
 
                     // insert the elements into the SVG
@@ -415,6 +417,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     let bestMark = chart.find("circle").filter(".personal-best-mark");
                     bestMark.after(lines);
+
+                    let selMark = chart.find("#mark-selected");
+                    selMark.after(infos);
                 }
             });
 
