@@ -237,7 +237,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                                 ["dy", ".32em"],
                                 ["class", "hra-axis axis-tick-text"],
                                 ["style", "text-anchor: end;"]);
-                            text.innerHTML = mWatts.toFixed(0) + " W";
+                            text.textContent = mWatts.toFixed(0) + " W";
                             g.appendChild(text);
 
 
