@@ -378,6 +378,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             let infoboxW = 150;
 
                             let infoboxRectG = createElementSVG("g");
+                            infoboxRectG.setAttribute("id", "hra-hover-g");
                             infoboxRectG.setAttribute("transform", "translate(" + (34 - infoboxW).toString() + "," + (hoverY + hoverH).toString() +")");
                             infoboxHoverG.appendChild(infoboxRectG);
 
