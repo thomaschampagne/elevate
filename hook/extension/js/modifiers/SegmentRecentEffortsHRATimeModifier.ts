@@ -394,8 +394,22 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                                 ["width", hoverW.toString()],
                                 ["height", hoverH.toString()]);
 
-                            let infoboxH = 60;
-                            let infoboxW = 180;
+
+                            let lineH = 15;
+                            let textX = 5;
+                            let textY = 3;
+
+                            let performance = showWatts ? "power" : "time";
+
+                            let infoText = [
+                                "Estimation of " + performance + " you could",
+                                "achieve at " + maxHR.toFixed() + "bpm,",
+                                "the highest average HR of",
+                                "all efforts in this segment."
+                            ];
+
+                            let infoboxH = infoText.length * lineH + textY * 2 + 5;
+                            let infoboxW = 200;
 
                             let infoboxRectG = createChildElementSVG(infoboxHoverG, "g",
                                 ["id", "hra-hover-g"],
@@ -406,17 +420,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                                 ["width", infoboxW.toString()],
                                 ["height", infoboxH.toString()]);
 
-                            let lineH = 15;
-                            let textX = 3;
-                            let textY = 3;
-
-                            let infoText = [
-                                "Performance estimation",
-                                "at the maximum HR ever",
-                                "reached in this segment."
-                            ];
-
-                            for (let l = 0; l<3; l++) {
+                            for (let l = 0; l<infoText.length; l++) {
                                 let text = createChildElementSVG(infoboxRectG, "text",
                                     ["x", textX.toString()],
                                     ["y", (textY + lineH * (l + 1)).toString()]);
