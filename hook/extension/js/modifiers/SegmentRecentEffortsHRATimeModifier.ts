@@ -73,9 +73,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
             recentEffortsChart.addClass("stravistiXGraph");
 
-            let chart: JQuery = recentEffortsChart.find("svg");
+            let chart = recentEffortsChart.find("svg");
 
-            let marks: JQuery = chart.find("circle").filter(".mark");
+            let marks = chart.find("circle").filter(".mark");
 
             interface XY {x: number; y: number}
 
@@ -98,8 +98,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 // data come sorted by elapsed time, fastest first - we need them sorted by date
 
                 fetchedLeaderBoardData = fetchedLeaderBoardData.sort((left, right) => {
-                    let lDate: Date = new Date(left.start_date_local_raw);
-                    let rDate: Date = new Date(right.start_date_local_raw);
+                    let lDate = new Date(left.start_date_local_raw);
+                    let rDate = new Date(right.start_date_local_raw);
                     return lDate.getTime() - rDate.getTime();
                 });
 
@@ -109,8 +109,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 }
 
                 // when watts are present, show watts, not time (used for bike activities)
-                let showWatts: boolean = false;
-                fetchedLeaderBoardData.forEach((r: any) => {
+                let showWatts = false;
+                fetchedLeaderBoardData.forEach((r) => {
                     if (r.avg_watts != null) {
                         showWatts = true;
                     }
@@ -180,10 +180,10 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     if (showWatts) {
                         // scan Y-axis (time) to check for the reasonable vertical range to use
                         let translateRegEx: RegExp = /translate\((.*),(.*)\)/;
-                        let yAxis: JQuery = chart.find(".y.axis"); //<g class="y axis" transform="translate(-27.45, 0)">
-                        let ticks: JQuery = yAxis.find(".tick");
+                        let yAxis = chart.find(".y.axis"); //<g class="y axis" transform="translate(-27.45, 0)">
+                        let ticks = yAxis.find(".tick");
 
-                        let ticksY: Array<number> = <Array<number>> ticks.map((index: number, domElement: Element) => {
+                        let ticksY = <Array<number>> ticks.map((index: number, domElement: Element) => {
                             let tickText = $(domElement).attr("transform");
                             let yTick = translateRegEx.exec(tickText)[2];
                             return parseFloat(yTick);
@@ -195,17 +195,17 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         fastY = yTickBot - (yTickBot - yTickTop) * 0.2;
 
                         // produce a few watt labels
-                        let step: number = 25;
+                        let step = 25;
                         if (fastestValue - slowestValue >= 400) {
                             step = 100;
                         } else if (fastestValue - slowestValue >= 200) {
                             step = 50;
                         }
-                        let roundFastestDown: number = Math.floor(fastestValue / step) * step;
-                        let roundSlowestUp: number = Math.ceil(slowestValue / step) * step;
+                        let roundFastestDown = Math.floor(fastestValue / step) * step;
+                        let roundSlowestUp = Math.ceil(slowestValue / step) * step;
 
                         let wattMarks: Array<number> = [];
-                        for (let mWatts: number = roundSlowestUp; mWatts <= roundFastestDown + 1; mWatts += step) {
+                        for (let mWatts = roundSlowestUp; mWatts <= roundFastestDown + 1; mWatts += step) {
                             wattMarks.push(mWatts);
                         }
 
@@ -244,7 +244,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             gAxis.appendChild(g);
                         });
 
-                        let insertDOM: JQuery = chart.find(".y.axis").eq(0);
+                        let insertDOM = chart.find(".y.axis").eq(0);
 
                         insertDOM.before(gAxis);
                     }
@@ -259,7 +259,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     }
 
                     // compute values for marks with HR data
-                    let markData: Array<Array<number>> = <Array<Array<number>>> marks.map((i, m) => {
+                    let markData = <Array<Array<number>>> marks.map((i, m) => {
                         let xy = xyFromMark(m);
 
                         let r = fetchedLeaderBoardData[i];
