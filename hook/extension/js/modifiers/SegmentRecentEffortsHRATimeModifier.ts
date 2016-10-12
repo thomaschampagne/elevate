@@ -77,7 +77,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
             let marks: JQuery = chart.find("circle").filter(".mark");
 
-            function xyFromMark(m: any): any {
+            interface XY {x: number; y: number}
+
+            function xyFromMark(m: any): XY {
                 return {"x": m.cx.baseVal.value, "y": m.cy.baseVal.value};
             }
 
@@ -85,7 +87,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
             let maxY: number, minY: number;
             let minX: number, maxX: number;
             marks.each((i, m) => {
-                let xy: any = xyFromMark(m);
+                let xy = xyFromMark(m);
                 minY = Helper.safeMin(minY, xy.y);
                 maxY = Helper.safeMax(maxY, xy.y);
                 minX = Helper.safeMin(minX, xy.x);
@@ -121,16 +123,16 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     maxHR = Helper.safeMax(maxHR, r.avg_heart_rate);
                 });
 
-                let restHR: number = this.userSettings.userRestHr;
-                let targetHR: number = maxHR;
-                let hrValues: number = 0;
+                let restHR = this.userSettings.userRestHr;
+                let targetHR = maxHR;
+                let hrValues = 0;
 
-                fetchedLeaderBoardData.forEach((r: any) => {
+                fetchedLeaderBoardData.forEach((r) => {
 
                     if (r.avg_heart_rate != null && r.avg_heart_rate > restHR) {
-                        let mValue: number = showWatts ? r.avg_watts : r.elapsed_time_raw;
+                        let mValue = showWatts ? r.avg_watts : r.elapsed_time_raw;
 
-                        let ratio: number = (r.avg_heart_rate - restHR) / (targetHR - restHR);
+                        let ratio = (r.avg_heart_rate - restHR) / (targetHR - restHR);
                         r.hraValue = showWatts ? mValue / ratio : mValue * ratio;
                         hrValues += 1;
                     }
@@ -142,13 +144,13 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     let slowestValue: number;
 
                     if (showWatts) {
-                        fetchedLeaderBoardData.forEach((r: any) => {
+                        fetchedLeaderBoardData.forEach((r) => {
                             let rValue: number = r.hraValue;
                             fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
                             slowestValue = Helper.safeMin(slowestValue, rValue);
                         });
                     } else {
-                        fetchedLeaderBoardData.forEach((r: any) => {
+                        fetchedLeaderBoardData.forEach((r) => {
                             let rValue: number = r.elapsed_time_raw;
                             fastestValue = Helper.safeMin(fastestValue, rValue); // high time -> slow
                             slowestValue = Helper.safeMax(slowestValue, rValue);
@@ -158,8 +160,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     if (showWatts) {
                         // avoid watt range too sensitive, would result in meaningless wild data
-                        let minWattRange: number = 100;
-                        let wattRange: number = fastestValue - slowestValue;
+                        let minWattRange = 100;
+                        let wattRange = fastestValue - slowestValue;
                         if (wattRange < minWattRange) {
                             slowestValue -= (minWattRange - wattRange) / 2;
                             if (slowestValue < 0) {
@@ -169,11 +171,11 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         }
                     }
 
-                    let topY: number = 10;
-                    let bottomY: number = parseInt(chart[0].getAttribute("height")) - 10;
+                    let topY = 10;
+                    let bottomY = parseInt(chart[0].getAttribute("height")) - 10;
 
-                    let slowY: number = maxY;
-                    let fastY: number = minY;
+                    let slowY = maxY;
+                    let fastY = minY;
 
                     if (showWatts) {
                         // scan Y-axis (time) to check for the reasonable vertical range to use
@@ -187,8 +189,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             return parseFloat(yTick);
                         }).valueOf();
 
-                        let yTickTop: number = ticksY[0];
-                        let yTickBot: number = ticksY[ticksY.length - 1];
+                        let yTickTop = ticksY[0];
+                        let yTickBot = ticksY[ticksY.length - 1];
                         slowY = yTickTop + (yTickBot - yTickTop) * 0.25;
                         fastY = yTickBot - (yTickBot - yTickTop) * 0.2;
 
@@ -207,7 +209,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             wattMarks.push(mWatts);
                         }
 
-                        let wattAxisX: number = maxX;
+                        let wattAxisX = maxX;
 
                         let gAxis = createElementSVG("g",
                             ["class", "y axis"],
@@ -215,8 +217,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             ["transform", "translate(" + wattAxisX + ", 0)"]);
 
                         wattMarks.forEach((mWatts: number) => {
-                            let f: number = ( mWatts - fastestValue) / (slowestValue - fastestValue);
-                            let mY: number = f * (slowY - fastY) + fastY;
+                            let f = ( mWatts - fastestValue) / (slowestValue - fastestValue);
+                            let mY = f * (slowY - fastY) + fastY;
 
                             let g = createElementSVG("g",
                                 ["class", "tick"],
@@ -258,19 +260,19 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     // compute values for marks with HR data
                     let markData: Array<Array<number>> = <Array<Array<number>>> marks.map((i, m) => {
-                        let xy: any = xyFromMark(m);
+                        let xy = xyFromMark(m);
 
-                        let r: any = fetchedLeaderBoardData[i];
+                        let r = fetchedLeaderBoardData[i];
 
                         if (r.hraValue != null) {
-                            let resY: number = mapValueToY(r.hraValue);
+                            let resY = mapValueToY(r.hraValue);
                             return [[i, m, resY, r.hraValue, xy.x]];
                         }
                     }).valueOf();
 
                     // create the SVG marks
                     let mappedMarks = $.map(markData, (imr) => {
-                        let i = imr[0], m = imr[1], resY = imr[2], hraValue = imr[3], mx = imr[4];
+                        let [, , resY, hraValue, mx] = imr;
 
                         let clampedY = clampY(resY);
 
@@ -282,7 +284,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         mark.setAttribute("r", "3");
 
                         if (resY < topY || resY > bottomY) {
-                            let title: SVGElement = createElementSVG("text");
+                            let title = createElementSVG("text");
                             title.innerHTML = showWatts ? hraValue.toFixed(0) : Helper.secondsToHHMMSS(hraValue, true);
                             title.setAttribute("x", (mx + 4).toString());
                             title.setAttribute("y", (clampedY + 4).toString());
@@ -299,8 +301,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     let infos: Array<SVGElement> = [];
 
                     for (let i = 1; i < markData.length; i++) {
-                        let imrPrev: Array<number> = markData[i - 1];
-                        let imrNext: Array<number> = markData[i];
+                        let imrPrev = markData[i - 1];
+                        let imrNext = markData[i];
                         let line = createElementSVG("line");
                         line.setAttribute("class", "hra-line");
                         line.setAttribute("x1", imrPrev[4].toString());
