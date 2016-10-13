@@ -150,7 +150,7 @@
 }
 
 #athlete-history-chart #hra-value { /* based on css of #effort-box-activity-date */
-    fill: #999;
+    fill: rgb(150, 30, 30);
     font-size: 11px;
     display: block;
     box-sizing: border-box;
