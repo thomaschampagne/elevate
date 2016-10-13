@@ -57,7 +57,12 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             if (!this.firstAppearDone) {
 
 
-                let timeColumnHeader: JQuery = segments.find("table.segments th.time-col");
+                let timeColumnHeader = segments.find("table.segments th.time-col");
+
+                if (timeColumnHeader.length == 0) {
+                    // activities other than cycling (like nordic ski) miss time-col class, search by text
+                    timeColumnHeader = segments.find("table.segments th:contains('Time')");
+                }
 
                 if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + this.deltaYearPRLabel + "</th>");
