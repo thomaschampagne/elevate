@@ -142,7 +142,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
                     if (this.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + this.deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                        deltaKomCell.html("<span title=\"Time difference with current " + this.crTitle() + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
