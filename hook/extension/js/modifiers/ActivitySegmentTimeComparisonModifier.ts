@@ -1,3 +1,13 @@
+interface EffortInfo {
+    // values obtained from the HTTP request
+    elapsed_time_raw: number;
+    start_date_local: string;
+    activity_id: string;
+    rank: number;
+
+    __dateTime: Date; // start_date_local converted into machine readable format
+}
+
 class ActivitySegmentTimeComparisonModifier implements IModifier {
 
     protected showDifferenceToKOM: boolean;
@@ -247,7 +257,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         }
 
         // Sort results from best to worst
-        leaderBoardData = leaderBoardData.sort((left: any, right: any) => {
+        leaderBoardData = leaderBoardData.sort((left: EffortInfo, right: EffortInfo) => {
             return left.rank - right.rank;
         });
 
@@ -272,7 +282,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
 
         if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
 
-            let resultsThisYear: Array<any> = [];
+            let resultsThisYear: Array<EffortInfo> = [];
 
             for (let j: number = 0; j < leaderBoardData.length; j++) {
                 if (leaderBoardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
@@ -283,7 +293,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             }
 
             // Sort results by elapsed_time_raw ascending
-            resultsThisYear = resultsThisYear.sort((left: any, right: any) => {
+            resultsThisYear = resultsThisYear.sort((left: EffortInfo, right: EffortInfo) => {
                 return left.elapsed_time_raw - right.elapsed_time_raw;
             });
 
@@ -291,8 +301,8 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                 __dateTime: currentSegmentEffortDateTime
             });
 
-            let previousBestResultThisYear: any = null;
-            _.some(resultsThisYear, (result: any) => {
+            let previousBestResultThisYear: EffortInfo = null;
+            _.some(resultsThisYear, (result: EffortInfo) => {
                 if (result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
                     previousBestResultThisYear = result;
                     return true;
