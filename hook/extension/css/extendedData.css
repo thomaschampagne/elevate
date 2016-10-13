@@ -110,3 +110,50 @@
 #athlete-history-chart .hra-axis {
     fill: rgb(150, 30, 30);
 }
+
+
+#athlete-history-chart #hra-box-help { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-hover {
+    opacity: 0.0;
+}
+
+#athlete-history-chart #hra-hover-g {
+    pointer-events: none;
+}
+
+#athlete-history-chart #hra-hover-box {
+    opacity: 0.0;
+}
+
+#athlete-history-chart #hra-hover:hover {
+    opacity: 0.9;
+}
+
+#athlete-history-chart #hra-box { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-value-help { /* based on css of #effort-box-activity-date */
+    fill: #999;
+    font-size: 11px;
+    display: block;
+    box-sizing: border-box;
+    text-anchor: middle;
+    alignment-baseline: central;
+}
+
+#athlete-history-chart #hra-value { /* based on css of #effort-box-activity-date */
+    fill: rgb(150, 30, 30);
+    font-size: 11px;
+    display: block;
+    box-sizing: border-box;
+    alignment-baseline: central;
+}
+
