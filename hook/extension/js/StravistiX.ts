@@ -2,9 +2,6 @@
 /// <reference path="../../../typings/plugin.d.ts" />
 /// <reference path="../../../typings/stravistix.ts.migration.d.ts" />
 
-/**
- *   StravistiX is responsible of linking processors with modfiers and user settings/health data
- */
 class StravistiX {
 
     public static instance: StravistiX = null;
@@ -17,11 +14,11 @@ class StravistiX {
     protected athleteId: number;
     protected activityProcessor: ActivityProcessor;
     protected extensionId: string;
-    protected appResources: AppResources;
-    protected _userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected _userSettings: IUserSettings;
     protected vacuumProcessor: VacuumProcessor;
 
-    constructor(userSettings: UserSettings, appResources: AppResources) {
+    constructor(userSettings: IUserSettings, appResources: IAppResources) {
 
         this._userSettings = userSettings;
         this.appResources = appResources;
@@ -79,6 +76,7 @@ class StravistiX {
         this.handleActivityScrolling();
         this.handleDefaultLeaderboardFilter();
         this.handleSegmentRankPercentage();
+        this.handleSegmentHRAP();
         this.handleActivityStravaMapType();
         this.handleHidePremium();
         this.handleHideFeed();
@@ -164,7 +162,7 @@ class StravistiX {
             previewBuild = true;
         }
 
-        let latestRelease: ReleaseNote = _.first(releaseNotes);
+        let latestRelease: IReleaseNote = _.first(releaseNotes);
 
         let updateMessageObj: any = {
             logo: '<img src="' + this.appResources.logoStravistix + '"/>',
@@ -182,7 +180,7 @@ class StravistiX {
         };
 
         let message: string = '';
-        if (!_.isEmpty(latestRelease.message)) {
+        if (!_.isEmpty(latestRelease.message) && !previewBuild) {
             message += '<div style="background: #eee; padding: 8px;">';
             message += latestRelease.message;
             message += '</div>';
@@ -196,7 +194,7 @@ class StravistiX {
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.hotFixes)) {
+        if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
             message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
             _.each(updateMessageObj.hotFixes, (hotFix: string) => {
                 message += '<h6>- ' + hotFix + '</h6>';
@@ -406,8 +404,8 @@ class StravistiX {
 
         if (env.debugMode) console.log("Execute handleDefaultLeaderboardFilter()");
 
-        let defaultLeaderboardFilterModifier: DefaultLeaderboardFilterModifier = new DefaultLeaderboardFilterModifier(this._userSettings.defaultLeaderboardFilter);
-        defaultLeaderboardFilterModifier.modify();
+        let defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this._userSettings.defaultLeaderBoardFilter);
+        defaultLeaderBoardFilterModifier.modify();
     }
 
     /**
@@ -428,6 +426,25 @@ class StravistiX {
 
         let segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
         segmentRankPercentage.modify();
+    }
+
+    protected handleSegmentHRAP() {
+
+        if (!this.userSettings.displaySegmentRankPercentage) {
+            return;
+        }
+
+        // If we are not on a segment page then return...
+        if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+            return;
+        }
+
+        if (env.debugMode) console.log("Execute handleSegmentHRAP_()");
+
+        let segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
+
+        let segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings, this.athleteId, segmentId);
+        segmentHRATime.modify();
     }
 
     /**
@@ -520,7 +537,7 @@ class StravistiX {
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
-        let basicInfo: ActivityBasicInfo = {
+        let basicInfo: IActivityBasicInfo = {
             activityName: this.vacuumProcessor.getActivityName(),
             activityTime: this.vacuumProcessor.getActivityTime()
         };
@@ -605,7 +622,7 @@ class StravistiX {
 
             let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            let basicInfo: ActivityBasicInfo = {
+            let basicInfo: IActivityBasicInfo = {
                 activityName: that.vacuumProcessor.getActivityName(),
                 activityTime: that.vacuumProcessor.getActivityTime()
             };
@@ -665,7 +682,7 @@ class StravistiX {
         let segmentId: number = parseInt(segmentData[1]);
 
         let segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
-        segmentProcessor.getNearbySegmentsAround((jsonSegments: Array<SegmentInfo>) => {
+        segmentProcessor.getNearbySegmentsAround((jsonSegments: Array<ISegmentInfo>) => {
 
             if (env.debugMode) console.log(jsonSegments);
 
@@ -933,8 +950,8 @@ class StravistiX {
             return;
         }
 
-        let googleMapsComeBackModifier: GoogleMapsComeBackModifier = new GoogleMapsComeBackModifier(this.activityId, this.appResources, this._userSettings);
-        googleMapsComeBackModifier.modify();
+        let googleMapsModifier: GoogleMapsModifier = new GoogleMapsModifier(this.activityId, this.appResources, this._userSettings);
+        googleMapsModifier.modify();
     }
 
     /**
@@ -985,7 +1002,7 @@ class StravistiX {
         }
     }
 
-    public get userSettings(): UserSettings {
+    public get userSettings(): IUserSettings {
         return this._userSettings;
     }
 }

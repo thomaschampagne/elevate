@@ -1,9 +1,9 @@
-class NearbySegmentsModifier implements Modifier {
+class NearbySegmentsModifier implements IModifier {
 
-    protected appResources: AppResources;
-    protected segments: Array<SegmentInfo>;
+    protected appResources: IAppResources;
+    protected segments: Array<ISegmentInfo>;
 
-    constructor(jsonSegments: Array<SegmentInfo>, appResources: AppResources) {
+    constructor(jsonSegments: Array<ISegmentInfo>, appResources: IAppResources) {
         this.segments = jsonSegments;
         this.appResources = appResources;
     }
@@ -14,11 +14,11 @@ class NearbySegmentsModifier implements Modifier {
         html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
         html += "<ul class='options' style='max-height: 800px; z-index: 999;'>";
 
-        let segment: SegmentInfo;
+        let segment: ISegmentInfo;
         let segmentName: string;
         let segmentIconType: string;
 
-        _.each(this.segments, (segment: SegmentInfo) => {
+        _.each(this.segments, (segment: ISegmentInfo) => {
 
             segmentName = segment.name + " <i>@ " + (segment.distance / 1000).toFixed(1) + "k, " + segment.avg_grade.toFixed(1) + "%";
 

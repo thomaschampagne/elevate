@@ -1,8 +1,8 @@
 abstract class AbstractGradeDataView extends AbstractDataView {
 
-    protected gradeData: GradeData;
+    protected gradeData: IGradeData;
 
-    constructor(gradeData: GradeData, units: string) {
+    constructor(gradeData: IGradeData, units: string) {
         super(units);
         this.mainColor = [0, 128, 0];
         this.setGraphTitleFromUnits();

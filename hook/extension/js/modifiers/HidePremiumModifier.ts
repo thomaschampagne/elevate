@@ -1,4 +1,4 @@
-class HidePremiumModifier implements Modifier {
+class HidePremiumModifier implements IModifier {
 
     public modify(): void {
 

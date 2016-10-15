@@ -1,11 +1,11 @@
-interface ComputeActivityThreadMessage {
+interface IComputeActivityThreadMessage {
     activityType: string;
     isTrainer: boolean;
-    appResources: AppResources;
-    userSettings: UserSettings;
+    appResources: IAppResources;
+    userSettings: IUserSettings;
     athleteWeight: number;
     hasPowerMeter: boolean;
-    activityStatsMap: ActivityStatsMap;
-    activityStream: ActivityStream;
+    activityStatsMap: IActivityStatsMap;
+    activityStream: IActivityStream;
     bounds: Array<number>;
 }

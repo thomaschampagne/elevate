@@ -15,7 +15,7 @@ function ComputeAnalysisWorker() {
         this.importRequiredLibraries(this.required, mainThreadEvent.data.appResources.extensionId);
         // Lets exec activity processing on extended stats
 
-        let threadMessage: ComputeActivityThreadMessage = mainThreadEvent.data;
+        let threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
         let analysisComputer: ActivityComputer = new ActivityComputer(
             threadMessage.activityType,
             threadMessage.isTrainer,
@@ -27,7 +27,7 @@ function ComputeAnalysisWorker() {
             threadMessage.bounds
         );
 
-        let result: AnalysisData = analysisComputer.compute();
+        let result: IAnalysisData = analysisComputer.compute();
 
         // Result to main thread
         this.postMessage(result);

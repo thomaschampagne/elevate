@@ -1,8 +1,8 @@
 class SpeedDataView extends AbstractDataView {
 
-    protected speedData: SpeedData;
+    protected speedData: ISpeedData;
 
-    constructor(speedData: SpeedData, units: string) {
+    constructor(speedData: ISpeedData, units: string) {
         super(units);
         this.mainColor = [9, 123, 219];
         this.setGraphTitleFromUnits();

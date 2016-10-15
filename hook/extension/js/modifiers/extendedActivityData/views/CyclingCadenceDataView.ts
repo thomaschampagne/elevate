@@ -1,6 +1,6 @@
 class CyclingCadenceDataView extends AbstractCadenceDataView {
 
-    constructor(cadenceData: CadenceData, units: string) {
+    constructor(cadenceData: ICadenceData, units: string) {
         super(cadenceData, units);
     }
 

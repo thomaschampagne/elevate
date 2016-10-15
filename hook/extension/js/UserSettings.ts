@@ -1,26 +1,26 @@
-interface UserSettings {
+interface IUserSettings {
     extensionHasJustUpdated: boolean;
     localStorageMustBeCleared: boolean;
     userGender: string;
     userMaxHr: number;
     userRestHr: number;
     userFTP: number;
-    userHrrZones: Array<HrrZone>;
+    userHrrZones: Array<IHrrZone>;
     zones: {
-        speed: Array<Zone>;
-        pace: Array<Zone>;
-        power: Array<Zone>;
-        cyclingCadence: Array<Zone>;
-        runningCadence: Array<Zone>;
-        grade: Array<Zone>;
-        elevation: Array<Zone>;
-        ascent: Array<Zone>;
+        speed: Array<IZone>;
+        pace: Array<IZone>;
+        power: Array<IZone>;
+        cyclingCadence: Array<IZone>;
+        runningCadence: Array<IZone>;
+        grade: Array<IZone>;
+        elevation: Array<IZone>;
+        ascent: Array<IZone>;
     }
     targetsYearRide: number;
     targetsYearRun: number;
     remoteLinks: boolean;
     feedAutoScroll: boolean;
-    defaultLeaderboardFilter: string;
+    defaultLeaderBoardFilter: string;
     activateRunningGradeAdjustedPace: boolean;
     activateRunningHeartRate: boolean;
     activateRunningCadence: boolean;
@@ -48,6 +48,7 @@ interface UserSettings {
     displaySegmentTimeComparisonToCurrentYearPR: boolean;
     displaySegmentTimeComparisonPosition: boolean;
     reviveGoogleMaps: boolean;
+    displayRecentEffortsHRAdjustedPace: boolean;
     reviveGoogleMapsLayerType: string;
     displayActivityBestSplits: boolean;
     bestSplitsConfiguration: any; // TODO Type this !
@@ -57,7 +58,7 @@ interface UserSettings {
     displayReliveCCLink: boolean;
 }
 
-let userSettings: UserSettings = {
+let userSettings: IUserSettings = {
     extensionHasJustUpdated: false,
     localStorageMustBeCleared: false,
     userGender: 'men',
@@ -1186,7 +1187,7 @@ let userSettings: UserSettings = {
     targetsYearRun: 750,
     remoteLinks: true,
     feedAutoScroll: true,
-    defaultLeaderboardFilter: 'overall',
+    defaultLeaderBoardFilter: 'overall',
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
     activateRunningCadence: true,
@@ -1213,6 +1214,7 @@ let userSettings: UserSettings = {
     displaySegmentTimeComparisonToPR: true,
     displaySegmentTimeComparisonToCurrentYearPR: true,
     displaySegmentTimeComparisonPosition: true,
+    displayRecentEffortsHRAdjustedPace: true,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,

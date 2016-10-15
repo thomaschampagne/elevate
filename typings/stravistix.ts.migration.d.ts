@@ -1,9 +1,46 @@
 /*
 
- // Install new typings:
+ New expected project structure:
+ ============
 
+ plugin/
+ | -- core/
+ |       | -- config
+ |       | -- modules
+ |       | -- scripts
+ |       | -- ...
+ |
+ | -- options/
+ |       | -- app/
+ |               | -- controllers
+ |               | -- app
+ |               | -- app
+ |       | -- App.ts
+ |       | -- Config.ts
+ |       | -- index.html
+ |
+ | -- manifest.json
+ | -- package.json   => shared between core & options
+ | -- node_modules/  => shared between core & options
+ specs/
+ typings/
+ node_modules/   => Tasks running stuff modules...
+ gulpfile.js
+ package.json
+ tsconfig.json
+ typings.json
+ README.md
+
+ */
+
+/*
+
+ // Install new typings:
+ typings search xxxxx
  typings install dt~XXXXXX --global --save
 
+ typings install dt~d3 --global --save
+ typings install dt~angular-material --global --save
 
  // Rename JS to TS
  for f in *.js; do
@@ -23,138 +60,4 @@
 
  // Find JS functions
  \w:\sfunction((.*))\s+\{
-
- */
-
-// TMP TypeScript declaration
-
-
-declare class AthleteStatsModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
-
-declare class ActivitiesSummaryModifier {
-    constructor();
-
-    modify(): Function;
-}
-
-
-declare class ActivityScrollingModifier {
-    constructor();
-
-    modify(): Function;
-}
-
-declare class DefaultLeaderboardFilterModifier {
-    constructor(a: any);
-
-    modify(): Function;
-}
-declare class ActivityStravaMapTypeModifier {
-    constructor(a: any);
-
-    modify(): Function;
-}
-
-
-declare class ActivityBikeOdoModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
-declare class ActivitySegmentTimeComparisonModifier {
-    constructor(a: any, b: any, c: any, d: any);
-
-    modify(): Function;
-}
-
-declare class ActivityBestSplitsModifier {
-    constructor(a: any, b: any, c: any, d: any, e: any, f: any);
-
-    modify(): Function;
-}
-
-declare class ActivityQRCodeDisplayModifier {
-    constructor(a: any, b: any);
-
-    modify(): Function;
-}
-
-
-declare class GoogleMapsComeBackModifier {
-    constructor(a: any, b: any, c: any);
-
-    modify(): Function;
-}
-
-
-///
-/*
- declare abstract class AbstractDataView {
-
- constructor();
- render: Function;
- getContent: Function;
- setAppResources: Function;
- setIsAuthorOfViewedActivity: Function;
- setActivityType: Function;
- setIsSegmentEffortView: Function;
- displayGraph: Function;
- }*/
-/*
- declare class FeaturedDataView extends AbstractDataView{
- public render(): void
- constructor();
- constructor(a: any, b: any);
- constructor(a: any, b: any, c: any);
-
- }
- declare class HeartRateDataView extends AbstractDataView{
- public render(): void
- constructor();
- constructor(a: any, b: any, c: any);
-
- }
-
- declare class SpeedDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class PowerDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class CyclingCadenceDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class CyclingGradeDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class ElevationDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class AscentSpeedDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
-
- declare class PaceDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
- declare class RunningCadenceDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any, c: any);
- }
- declare class RunningGradeDataView extends AbstractDataView {
- public render(): void
- constructor(a: any, b: any);
- }
-
  */

@@ -1,25 +1,41 @@
+/// <reference path="../hook/extension/config/env.ts" />
+/// <reference path="../hook/extension/js/UserSettings.ts" />
+/// <reference path="../hook/extension/js/Helper.ts" />
+/// <reference path="../hook/extension/js/interfaces/ActivityData.ts" />
+/// <reference path="../hook/extension/js/processors/VacuumProcessor.ts" />
+/// <reference path="../hook/extension/js/processors/ActivityComputer.ts" />
+
 declare let Strava: any;
 
 // Class declaration for chrome typing
-declare class MediaStream {
-}
-declare class MediaStreamConstraints {
-}
-declare class DirectoryEntry {
+declare class MediaStream {}
+declare class MediaStreamConstraints {}
+declare class DirectoryEntry {}
+
+declare class QRCode {
+    constructor(elementId: string, options: any);
+    static CorrectLevel: {
+        L: string;
+        M: string;
+        Q: string;
+        H: string;
+    }
 }
 
 interface JQueryStatic {
-    fancybox: (str: any) => void;
+    fancybox: (str: any, options?: any) => void;
 }
 
 interface Window {
     currentAthlete: any;
     pageView: any; // Allow access of window.pageView where page wiew
     unescape(str: string): string; // Allow access of window.pageView where page wiew
+    googleMapsApiLoaded: () => void;
+ 	__fixtures__: any;
 }
 
 interface Math {
-    trunc: (num: number) => number;
+    sign: (num: number) => number;
 }
 
 interface RegExpConstructor {
@@ -29,9 +45,11 @@ interface RegExpConstructor {
 
 declare class LatLon {
     constructor(lat: number, lon: number);
-    lat(): number;
-    lon(): number;
-    boundingBox(number: number): Array<number>;
+
+    lat: number;
+    lon: number;
+
+    destinationPoint(distance: number, number: number): LatLon;
 }
 
 interface Env {

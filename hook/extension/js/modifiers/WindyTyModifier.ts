@@ -1,11 +1,11 @@
-class WindyTyModifier implements Modifier {
+class WindyTyModifier implements IModifier {
 
     protected activityId: number;
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected baryCenterPosition: LatLon;
 
-    constructor(activityId: number, appResources: AppResources, userSettings: UserSettings) {
+    constructor(activityId: number, appResources: IAppResources, userSettings: IUserSettings) {
         this.activityId = activityId;
         this.appResources = appResources;
         this.userSettings = userSettings;
@@ -119,8 +119,8 @@ class WindyTyModifier implements Modifier {
         let temperatureUnitConfig: string = 'metric.temp.' + this.userSettings.temperatureUnit;
 
         let url: string = 'https://embed.windyty.com/?' +
-            this.baryCenterPosition.lat() + ',' +
-            this.baryCenterPosition.lon() + ',' +
+            this.baryCenterPosition.lat + ',' +
+            this.baryCenterPosition.lon + ',' +
             defaultZoomLevel + ',' +
             date.toISOString().split('T')[0] + '-' + this.pad(windyTyHour, 2) + ',' +
             type + ',' +

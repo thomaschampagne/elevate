@@ -2,12 +2,12 @@ class Content {
 
     public static loader: Loader = new Loader();
 
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected cssDependencies: string[];
     protected jsDependencies: string[];
 
-    constructor(jsDependencies: Array<string>, cssDependencies: Array<string>, userSettings: UserSettings, appResources: AppResources) {
+    constructor(jsDependencies: Array<string>, cssDependencies: Array<string>, userSettings: IUserSettings, appResources: IAppResources) {
         this.jsDependencies = jsDependencies;
         this.cssDependencies = cssDependencies;
         this.userSettings = userSettings;
@@ -87,7 +87,7 @@ class Content {
     }
 }
 
-let appResources: AppResources = {
+let appResources: IAppResources = {
     settingsLink: chrome.extension.getURL('/options/app/index.html'),
     logoStravistix: chrome.extension.getURL('/icons/logo_stravistix_no_circle.svg'),
     menuIconBlack: chrome.extension.getURL('/icons/ic_menu_24px_black.svg'),
@@ -123,6 +123,7 @@ let appResources: AppResources = {
     areaChartIcon: chrome.extension.getURL('/icons/fa-area-chart.png'),
     tachometerIcon: chrome.extension.getURL('/icons/fa-tachometer.png'),
     boltIcon: chrome.extension.getURL('/icons/fa-bolt.png'),
+    loadingIcon: chrome.extension.getURL('/icons/loading.gif'),
     circleNotchIcon: chrome.extension.getURL('/icons/fa-circle-o-notch.png'),
     lineChartIcon: chrome.extension.getURL('/icons/fa-line-chart.png'),
     logArrowUpIcon: chrome.extension.getURL('/icons/fa-long-arrow-up.png'),
@@ -141,9 +142,9 @@ let jsDependencies: Array<string> = [
     'node_modules/chart.js/dist/Chart.bundle.js',
     'node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
     'node_modules/qrcode-js-package/qrcode.min.js',
+    'node_modules/geodesy/dms.js',
+    'node_modules/geodesy/latlon-spherical.js',
     'modules/StorageManager.js',
-    'modules/geo.js',
-    'modules/latlong.js',
     'modules/jquery.appear.js',
 
 
@@ -158,9 +159,10 @@ let jsDependencies: Array<string> = [
     'js/modifiers/RemoteLinksModifier.js',
     'js/modifiers/WindyTyModifier.js',
     'js/modifiers/ReliveCCModifier.js',
-    'js/modifiers/DefaultLeaderboardFilterModifier.js',
+    'js/modifiers/DefaultLeaderBoardFilterModifier.js',
     'js/modifiers/MenuModifier.js',
     'js/modifiers/SegmentRankPercentageModifier.js',
+    'js/modifiers/SegmentRecentEffortsHRATimeModifier.js',
     'js/modifiers/VirtualPartnerModifier.js',
     'js/modifiers/ActivityStravaMapTypeModifier.js',
     'js/modifiers/HidePremiumModifier.js',
@@ -196,7 +198,7 @@ let jsDependencies: Array<string> = [
     'js/modifiers/ActivityQRCodeDisplayModifier.js',
     'js/modifiers/RunningDataModifier.js',
     'js/modifiers/NearbySegmentsModifier.js',
-    'js/modifiers/GoogleMapsComeBackModifier.js',
+    'js/modifiers/GoogleMapsModifier.js',
 
     // ... workers
     'js/processors/ActivityComputer.js',

@@ -1,7 +1,7 @@
 class ActivityProcessor {
 
     public static cachePrefix: string = 'stravistix_activity_';
-    protected appResources: AppResources;
+    protected appResources: IAppResources;
     protected vacuumProcessor: VacuumProcessor;
     protected userHrrZones: any;
     protected zones: any;
@@ -9,9 +9,9 @@ class ActivityProcessor {
     protected isTrainer: boolean;
     private computeAnalysisWorkerBlobURL: string;
     private computeAnalysisThread: Worker;
-    private userSettings: UserSettings;
+    private userSettings: IUserSettings;
 
-    constructor(appResources: AppResources, vacuumProcessor: VacuumProcessor, userSettings: UserSettings) {
+    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings) {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
@@ -33,7 +33,7 @@ class ActivityProcessor {
         }
     }
 
-    public getAnalysisData(activityId: number, userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, bounds: Array<number>, callback: (analysisData: AnalysisData) => void): void {
+    public getAnalysisData(activityId: number, userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
 
         if (!this.activityType) {
             console.error('No activity type set for ActivityProcessor');
@@ -47,7 +47,7 @@ class ActivityProcessor {
 
         if (useCache) {
             // Find in cache first is data exist
-            let cacheResult: AnalysisData = <AnalysisData> JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+            let cacheResult: IAnalysisData = <IAnalysisData> JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
 
             if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
                 console.log("Using existing activity cache mode");
@@ -57,10 +57,10 @@ class ActivityProcessor {
         }
 
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-        this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMap, activityStream: ActivityStream, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
+        this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
 
             // Compute data in a background thread to avoid UI locking
-            this.computeAnalysisThroughDedicatedThread(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream, bounds, (resultFromThread: AnalysisData) => {
+            this.computeAnalysisThroughDedicatedThread(userGender, userRestHr, userMaxHr, userFTP, athleteWeight, hasPowerMeter, activityStatsMap, activityStream, bounds, (resultFromThread: IAnalysisData) => {
 
                 callback(resultFromThread);
 
@@ -80,7 +80,7 @@ class ActivityProcessor {
         });
     }
 
-    protected computeAnalysisThroughDedicatedThread(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMap, activityStream: ActivityStream, bounds: Array<number>, callback: (analysisData: AnalysisData) => void): void {
+    protected computeAnalysisThroughDedicatedThread(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
@@ -96,7 +96,7 @@ class ActivityProcessor {
 
         // Send user and activity data to the thread
         // He will compute them in the background
-        let threadMessage: ComputeActivityThreadMessage = {
+        let threadMessage: IComputeActivityThreadMessage = {
             activityType: this.activityType,
             isTrainer: this.isTrainer,
             appResources: this.appResources,

@@ -78,6 +78,10 @@ class VacuumProcessor {
         return premiumStatus;
     }
 
+    public getCurrentAthlete() {
+        return window.currentAthlete;
+    }
+
     /**
      *  Get the strava athlete pro status
      *  @returns the strava pro athlete id
@@ -85,18 +89,11 @@ class VacuumProcessor {
     public getProStatus(): boolean {
 
         let proStatus: boolean = false;
+        let currentAthlete: any = this.getCurrentAthlete();
 
         try {
-
-            if (!_.isUndefined(window.currentAthlete)) {
-
-                if (!_.isUndefined(window.currentAthlete.attributes.pro)) {
-
-                    proStatus = window.currentAthlete.attributes.pro;
-
-                } else {
-                    return false;
-                }
+            if (currentAthlete && currentAthlete.attributes && currentAthlete.attributes.pro) {
+                proStatus = currentAthlete.attributes.pro;
             }
 
         } catch (err) {
@@ -128,7 +125,7 @@ class VacuumProcessor {
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
-    protected getActivityStatsMap(): ActivityStatsMap {
+    protected getActivityStatsMap(): IActivityStatsMap {
 
         let actStatsContainer: JQuery = $(".activity-summary-container");
 
@@ -208,7 +205,7 @@ class VacuumProcessor {
             false, false, false, false);
 
         // Create activityData Map
-        let activityCommonStats: ActivityStatsMap = {
+        let activityCommonStats: IActivityStatsMap = {
             distance: distance,
             // movingTime: movingTime,
             elevation: elevation,
@@ -271,7 +268,7 @@ class VacuumProcessor {
     /**
      * @returns activity stream in callback
      */
-    public getActivityStream(callback: (activityCommonStats: ActivityStatsMap, activityStream: ActivityStream, athleteWeight: number, hasPowerMeter: boolean) => void): void {
+    public getActivityStream(callback: (activityCommonStats: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => void): void {
 
         let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
 
@@ -283,7 +280,7 @@ class VacuumProcessor {
 
         let url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
 
-        $.ajax(url).done((activityStream: ActivityStream) => {
+        $.ajax(url).done((activityStream: IActivityStream) => {
 
             let hasPowerMeter: boolean = true;
 
@@ -426,4 +423,6 @@ class VacuumProcessor {
         let activityName: string = $(".activity-summary-container").find('.marginless.activity-name').text().trim();
         return (activityName) ? activityName : null;
     }
+
+
 }

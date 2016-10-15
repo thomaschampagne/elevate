@@ -6,22 +6,22 @@ abstract class AbstractExtendedDataModifier {
     protected activityProcessor: ActivityProcessor;
     protected activityId: number;
     protected activityType: string;
-    protected appResources: AppResources;
-    protected userSettings: UserSettings;
+    protected appResources: IAppResources;
+    protected userSettings: IUserSettings;
     protected athleteId: number;
     protected athleteIdAuthorOfActivity: number;
-    protected basicInfo: ActivityBasicInfo;
+    protected basicInfo: IActivityBasicInfo;
     protected isAuthorOfViewedActivity: boolean;
-    protected speedUnitsData: SpeedUnitData;
+    protected speedUnitsData: ISpeedUnitData;
     protected type: number;
-    protected analysisData: AnalysisData;
+    protected analysisData: IAnalysisData;
     protected summaryGrid: JQuery;
     protected segmentEffortButtonId: number;
     protected content: string;
     protected dataViews: Array<AbstractDataView> = [];
 
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResources, userSettings: UserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfo: any, type: number) {
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfo: any, type: number) {
 
         this.activityProcessor = activityProcessor;
         this.activityId = activityId;
@@ -49,7 +49,7 @@ abstract class AbstractExtendedDataModifier {
             this.userSettings.userMaxHr,
             this.userSettings.userFTP,
             null, // No bounds given, full activity requested
-            (analysisData: AnalysisData) => { // Callback when analysis data has been computed
+            (analysisData: IAnalysisData) => { // Callback when analysis data has been computed
 
                 this.analysisData = analysisData;
 
