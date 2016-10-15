@@ -12,6 +12,16 @@ interface IReleaseNote {
 }
 
 let releaseNotes: Array<IReleaseNote> = [{
+    version: '4.3.0',
+    message: 'NEW: Added running heart rate adjusted pace & cycling average power on "Your recent efforts" graph (displayed in segment pages).',
+    hotFixes: [],
+    features: [
+        'Cycling average power for each effort on "Your recent efforts" graph (on a segment page).',
+        'Running heart rate adjusted pace on "Your recent efforts" graph (on a segment page).',
+        'Migrate 100% of the javascript code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement.'],
+    hideFeatureReleaseNote: false,
+    fixes: ['Fixed broken heat map link in StravistiX burger menu'],
+}, {
     version: '4.2.3',
     message: '... Again... a hotfix for new v4.2.x ;)',
     hotFixes: [
