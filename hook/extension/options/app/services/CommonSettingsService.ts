@@ -230,7 +230,13 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Nearby Segments',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'This option displays cycling and running nearby segments on a segment page.',
-            },],
+            }, {
+                optionKey: 'displayRecentEffortsHRAdjustedPace',
+                optionType: 'checkbox',
+                optionTitle: 'Running heart rate adjusted pace & cycling average power on "Your recent efforts" graph',
+                optionLabels: ['Cycling', 'Running'],
+                optionHtml: '<strong>Running:</strong> Display heart rate adjusted pace on "Your recent efforts" graph on segments pages: useful to estimate fitness trend on segments.<br /><br /><strong>Cycling:</strong> Display average power for each effort on "Your recent efforts" graph.',
+            }],
 
         }, {
             sectionTitle: 'Activities and Segments viewing options',
@@ -343,7 +349,7 @@ app.factory('CommonSettingsService', () => {
                 optionType: 'checkbox',
                 optionTitle: 'Enable Hidden/Beta features',
                 optionLabels: ['All'],
-                optionEnableSub: ['displayReliveCCLink', 'displayRecentEffortsHRAdjustedPace'],
+                optionEnableSub: ['displayReliveCCLink'],
                 optionHtml: 'Show features which are hidden. Example: BETA features.',
             }, {
                 optionKey: 'displayReliveCCLink',
@@ -351,12 +357,6 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Relive your rides',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This will display a link in activity page to relive cycling ride. Make sure to connect your strava account to <a href="http://relive.cc" target="_blank">relive.cc</a>. <br/><br/><strong>Note:</strong> Only rides done after relive.cc registration can get a "Relive".',
-            }, {
-                optionKey: 'displayRecentEffortsHRAdjustedPace',
-                optionType: 'checkbox',
-                optionTitle: 'Enable power/heartrate (cycling/running) adjusted results in "Your recent efforts" of segments pages.',
-                optionLabels: ['Cycling', 'Running'],
-                optionHtml: 'This option allow you to display heart rate adjusted pace in "Your recent efforts" graph, can be useful to estimate a fitness trend.',
             }]
         }];
 

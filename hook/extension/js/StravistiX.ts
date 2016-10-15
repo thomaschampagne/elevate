@@ -430,7 +430,7 @@ class StravistiX {
 
     protected handleSegmentHRAP() {
 
-        if (!this._userSettings.showHiddenBetaFeatures || !this.userSettings.displaySegmentRankPercentage) {
+        if (!this.userSettings.displaySegmentRankPercentage) {
             return;
         }
 
