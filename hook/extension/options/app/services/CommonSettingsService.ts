@@ -233,9 +233,9 @@ app.factory('CommonSettingsService', () => {
             }, {
                 optionKey: 'displayRecentEffortsHRAdjustedPace',
                 optionType: 'checkbox',
-                optionTitle: 'Running heart rate adjusted pace & cycling average power on "Your recent efforts" graph',
+                optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment.',
                 optionLabels: ['Cycling', 'Running'],
-                optionHtml: '<strong>Running:</strong> Display heart rate adjusted pace on "Your recent efforts" graph on segments pages: useful to estimate fitness trend on segments.<br /><br /><strong>Cycling:</strong> Display average power for each effort on "Your recent efforts" graph.',
+                optionHtml: 'This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
             }],
 
         }, {
