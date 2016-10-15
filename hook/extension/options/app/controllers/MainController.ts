@@ -254,9 +254,9 @@ class MainController {
          */
         $scope.showReleaseNotes = () => {
             $mdDialog.show({
-                controller: ($scope: any, releaseNotesService: ReleaseNotesService, $window: IWindowService) => {
+                controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
 
-                    $scope.releaseNotes = releaseNotesService.data;
+                    $scope.releaseNotes = ReleaseNotesService.data;
 
                     $scope.hide = () => {
                         $mdDialog.hide();
