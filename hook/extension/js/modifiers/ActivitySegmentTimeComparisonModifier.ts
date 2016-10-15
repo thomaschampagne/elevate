@@ -1,3 +1,28 @@
+interface EffortInfo {
+    // values obtained from the HTTP request
+    id: number; // segment effort id
+    activity_id: number;
+    segment_id: number;
+
+    elapsed_time_raw: number;
+    start_date_local: Date;
+    start_date_local_raw: string;
+    rank: number;
+
+    hazard_segment: boolean;
+    overall_rank: string;
+    overall_count: string;
+
+    qom_time: string;
+    kom_time: string;
+
+    __dateTime: Date; // field added by us: start_date_local_raw converted into machine readable format (how is this different from start_date_local?)
+}
+
+interface LeaderBoardData {
+    top_results: EffortInfo[];
+}
+
 class ActivitySegmentTimeComparisonModifier implements IModifier {
 
     protected showDifferenceToKOM: boolean;
@@ -116,7 +141,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                 }
 
                 // Retreive segment effort infos
-                $.getJSON(segmentEffortInfoUrl, (segmentEffortInfo) => {
+                $.getJSON(segmentEffortInfoUrl, (segmentEffortInfo: EffortInfo) => {
 
                     if (!segmentEffortInfo) {
                         return;
@@ -132,8 +157,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                     }
 
                     if (this.displaySegmentTimeComparisonPosition) {
-                        segmentEffortInfo.overall_rank = parseInt(segmentEffortInfo.overall_rank);
-                        let percentRank: number = (segmentEffortInfo.overall_rank / segmentEffortInfo.overall_count);
+                        let percentRank: number = parseInt(segmentEffortInfo.overall_rank) / parseInt(segmentEffortInfo.overall_count);
                         positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
                     }
 
@@ -150,7 +174,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                     }
 
                     // Get leader board from segment id
-                    this.findCurrentSegmentEffortDate(segmentEffortInfo.segment_id, segmentEffortId).then((currentSegmentEffortDateTime: Date, leaderBoardData: any) => {
+                    this.findCurrentSegmentEffortDate(segmentEffortInfo.segment_id, segmentEffortId).then((currentSegmentEffortDateTime: Date, leaderBoardData: EffortInfo[]) => {
                         this.handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData, currentSegmentEffortDateTime, elapsedTime, segmentEffortId, deltaPRCell, deltaYearPRCell);
                     });
 
@@ -186,7 +210,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         this.deltaYearPRLabel = "&Delta;yPR";
     }
 
-    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: any): JQueryPromise<any> {
+    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<Date>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<Date> {
 
         if (!page) {
             page = 1;
@@ -205,7 +229,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
 
         let currentSegmentEffortDateTime: Date = null;
 
-        jqxhr.done((leaderBoardData: any) => {
+        jqxhr.done((leaderBoardData: LeaderBoardData) => {
 
             for (let i = 0, max = leaderBoardData.top_results.length; i < max; i++) {
                 leaderBoardData.top_results[i].__dateTime = new Date(leaderBoardData.top_results[i].start_date_local_raw);
@@ -231,7 +255,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         return deferred.promise();
     }
 
-    protected handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData: any, currentSegmentEffortDateTime: Date, elapsedTime: number, segmentEffortId: number, deltaPRCell: JQuery, deltaYearPRCell: JQuery): void {
+    protected handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData: EffortInfo[], currentSegmentEffortDateTime: Date, elapsedTime: number, segmentEffortId: number, deltaPRCell: JQuery, deltaYearPRCell: JQuery): void {
 
         let previousPersonalSeconds: number,
             previousPersonalDate: Date,
@@ -247,7 +271,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         }
 
         // Sort results from best to worst
-        leaderBoardData = leaderBoardData.sort((left: any, right: any) => {
+        leaderBoardData = leaderBoardData.sort((left: EffortInfo, right: EffortInfo) => {
             return left.rank - right.rank;
         });
 
@@ -272,7 +296,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
 
         if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
 
-            let resultsThisYear: Array<any> = [];
+            let resultsThisYear: Array<EffortInfo> = [];
 
             for (let j: number = 0; j < leaderBoardData.length; j++) {
                 if (leaderBoardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
@@ -283,7 +307,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             }
 
             // Sort results by elapsed_time_raw ascending
-            resultsThisYear = resultsThisYear.sort((left: any, right: any) => {
+            resultsThisYear = resultsThisYear.sort((left: EffortInfo, right: EffortInfo) => {
                 return left.elapsed_time_raw - right.elapsed_time_raw;
             });
 
@@ -291,8 +315,8 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                 __dateTime: currentSegmentEffortDateTime
             });
 
-            let previousBestResultThisYear: any = null;
-            _.some(resultsThisYear, (result: any) => {
+            let previousBestResultThisYear: EffortInfo = null;
+            _.some(resultsThisYear, (result: EffortInfo) => {
                 if (result.activity_id !== currentActivityResult.activity_id && result.__dateTime < currentActivityResult.__dateTime) {
                     previousBestResultThisYear = result;
                     return true;
