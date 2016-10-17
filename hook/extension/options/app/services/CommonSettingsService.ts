@@ -230,12 +230,6 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Nearby Segments',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'This option displays cycling and running nearby segments on a segment page.',
-            }, {
-                optionKey: 'displayRecentEffortsHRAdjustedPace',
-                optionType: 'checkbox',
-                optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment.',
-                optionLabels: ['Cycling', 'Running'],
-                optionHtml: 'This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
             }],
 
         }, {
@@ -349,7 +343,7 @@ app.factory('CommonSettingsService', () => {
                 optionType: 'checkbox',
                 optionTitle: 'Enable Hidden/Beta features',
                 optionLabels: ['All'],
-                optionEnableSub: ['displayReliveCCLink'],
+                optionEnableSub: ['displayReliveCCLink', 'displayRecentEffortsHRAdjustedPacePower'],
                 optionHtml: 'Show features which are hidden. Example: BETA features.',
             }, {
                 optionKey: 'displayReliveCCLink',
@@ -357,6 +351,12 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Relive your rides',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This will display a link in activity page to relive cycling ride. Make sure to connect your strava account to <a href="http://relive.cc" target="_blank">relive.cc</a>. <br/><br/><strong>Note:</strong> Only rides done after relive.cc registration can get a "Relive".',
+            }, {
+                optionKey: 'displayRecentEffortsHRAdjustedPacePower',
+                optionType: 'checkbox',
+                optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment.',
+                optionLabels: ['Cycling', 'Running'],
+                optionHtml: 'This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
             }]
         }];
 
