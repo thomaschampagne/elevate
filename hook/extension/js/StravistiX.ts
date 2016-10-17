@@ -202,7 +202,7 @@ class StravistiX {
         }
 
         if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
-            message += '<h5><strong>FIXED in ' + baseVersion + ':</strong></h5>';
+            message += '<h5><strong>FIXED in ' + baseVersion[0] + '.' + baseVersion[1] + '.' + baseVersion[2] + ':</strong></h5>';
             _.each(updateMessageObj.fixes, (fix: string) => {
                 message += '<h6>- ' + fix + '</h6>';
             });

@@ -239,7 +239,7 @@ class MainController {
          * bug report
          */
         $scope.openBugReport = () => {
-            let newIssueURL: string = 'https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20**Actual%20Behavior:**%20**Expected%20Behavior:**%20**Steps%20to%20Reproduce:**%20-%20...%20-%20...%20-%20...%20**Chrome%20version**%20**Plugin%20version:**%20**Activities%20links?:**%20**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20```%20put%20console%20errors%20here%20if%20exist%20```%20**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**';
+            let newIssueURL: string = 'https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20%0A%0A**Actual%20Behavior:**%20%0A%0A**Expected%20Behavior:**%20%0A%0A**Steps%20to%20Reproduce:**%20%0A-%20...%0A%20-%20...%0A%20-%20...%0A%0A**Chrome%20version**%20%0A%0A**Plugin%20version:**%20%0A%0A**Activities%20links?:**%20%0A%0A**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20%0A%0A```%20%0Aput%20console%20errors%20here%20if%20exist%20%0A```%20%0A%0A**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**';
             $window.open(newIssueURL, '_blank');
         };
 
