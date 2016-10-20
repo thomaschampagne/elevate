@@ -85,9 +85,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
             interface XY {x: number; y: number}
 
-            function xyFromMark(m: any): XY {
+            const xyFromMark = function(m: any): XY {
                 return {"x": m.cx.baseVal.value, "y": m.cy.baseVal.value};
-            }
+            };
 
             // scan area used by the effort marks
             let maxY: number, minY: number;
@@ -252,13 +252,13 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     }
 
 
-                    function mapValueToY(value: number): number {
+                    const mapValueToY = function(value: number): number {
                         return (value - fastestValue) / (slowestValue - fastestValue) * (slowY - fastY) + fastY;
-                    }
+                    };
 
-                    function clampY(resY: number): number {
+                    const clampY = function(resY: number): number {
                         return Math.min(Math.max(topY, resY), bottomY);
-                    }
+                    };
 
                     // compute values for marks with HR data
                     let markData = <Array<Array<number>>> marks.map((i, m) => {
@@ -300,7 +300,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     // create the SVG lines connecting the marks
                     let lines: Array<SVGElement> = [];
-                    let infos: Array<SVGElement> = [];
+                    let infobox: SVGElement = null;
 
                     for (let i = 1; i < markData.length; i++) {
                         let imrPrev = markData[i - 1];
@@ -357,7 +357,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         lines.push(line);
 
-                        let infobox = createElementSVG("g", ["transform", "translate(" + boxX.toString() + ", " + infoY.toString() + ")"]);
+                        infobox = createElementSVG("g", ["transform", "translate(" + boxX.toString() + ", " + infoY.toString() + ")"]);
 
 
                         {
@@ -428,8 +428,6 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                             }
                         }
 
-
-                        infos.push(infobox);
                     }
 
                     // insert the elements into the SVG
@@ -439,8 +437,14 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     let bestMark = chart.find("circle").filter(".personal-best-mark");
                     bestMark.after(lines);
 
-                    let selMark = chart.find("#mark-selected");
-                    selMark.after(infos);
+                    if (infobox != null) {
+                        let topG = chart.children("g").last();
+
+                        let newG = createChildElementSVG(topG[0], "g", ["transform", topG.attr("transform")]);
+                        newG.appendChild(infobox);
+
+                        topG.after(newG);
+                    }
                 }
             });
 
