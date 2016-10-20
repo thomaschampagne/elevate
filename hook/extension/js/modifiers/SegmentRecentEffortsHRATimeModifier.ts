@@ -85,9 +85,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
             interface XY {x: number; y: number}
 
-            function xyFromMark(m: any): XY {
+            const xyFromMark = function(m: any): XY {
                 return {"x": m.cx.baseVal.value, "y": m.cy.baseVal.value};
-            }
+            };
 
             // scan area used by the effort marks
             let maxY: number, minY: number;
@@ -252,13 +252,13 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     }
 
 
-                    function mapValueToY(value: number): number {
+                    const mapValueToY = function(value: number): number {
                         return (value - fastestValue) / (slowestValue - fastestValue) * (slowY - fastY) + fastY;
-                    }
+                    };
 
-                    function clampY(resY: number): number {
+                    const clampY = function(resY: number): number {
                         return Math.min(Math.max(topY, resY), bottomY);
-                    }
+                    };
 
                     // compute values for marks with HR data
                     let markData = <Array<Array<number>>> marks.map((i, m) => {
