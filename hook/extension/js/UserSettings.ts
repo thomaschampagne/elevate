@@ -1,5 +1,4 @@
 interface IUserSettings {
-    extensionHasJustUpdated: boolean;
     localStorageMustBeCleared: boolean;
     userGender: string;
     userMaxHr: number;
@@ -48,7 +47,7 @@ interface IUserSettings {
     displaySegmentTimeComparisonToCurrentYearPR: boolean;
     displaySegmentTimeComparisonPosition: boolean;
     reviveGoogleMaps: boolean;
-    displayRecentEffortsHRAdjustedPace: boolean;
+    displayRecentEffortsHRAdjustedPacePower: boolean;
     reviveGoogleMapsLayerType: string;
     displayActivityBestSplits: boolean;
     bestSplitsConfiguration: any; // TODO Type this !
@@ -59,7 +58,6 @@ interface IUserSettings {
 }
 
 let userSettings: IUserSettings = {
-    extensionHasJustUpdated: false,
     localStorageMustBeCleared: false,
     userGender: 'men',
     userMaxHr: 190,
@@ -1214,7 +1212,7 @@ let userSettings: IUserSettings = {
     displaySegmentTimeComparisonToPR: true,
     displaySegmentTimeComparisonToCurrentYearPR: true,
     displaySegmentTimeComparisonPosition: true,
-    displayRecentEffortsHRAdjustedPace: true,
+    displayRecentEffortsHRAdjustedPacePower: false,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,

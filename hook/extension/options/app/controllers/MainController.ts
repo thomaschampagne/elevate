@@ -239,7 +239,8 @@ class MainController {
          * bug report
          */
         $scope.openBugReport = () => {
-            $window.open('https://github.com/thomaschampagne/stravistix/issues', '_blank');
+            let newIssueURL: string = 'https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20%0A%0A**Actual%20Behavior:**%20%0A%0A**Expected%20Behavior:**%20%0A%0A**Steps%20to%20Reproduce:**%20%0A-%20...%0A%20-%20...%0A%20-%20...%0A%0A**Chrome%20version**%20%0A%0A**Plugin%20version:**%20%0A%0A**Activities%20links?:**%20%0A%0A**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20%0A%0A```%20%0Aput%20console%20errors%20here%20if%20exist%20%0A```%20%0A%0A**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**';
+            $window.open(newIssueURL, '_blank');
         };
 
         /**
@@ -254,9 +255,9 @@ class MainController {
          */
         $scope.showReleaseNotes = () => {
             $mdDialog.show({
-                controller: ($scope: any, releaseNotesService: ReleaseNotesService, $window: IWindowService) => {
+                controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
 
-                    $scope.releaseNotes = releaseNotesService.data;
+                    $scope.releaseNotes = ReleaseNotesService.data;
 
                     $scope.hide = () => {
                         $mdDialog.hide();

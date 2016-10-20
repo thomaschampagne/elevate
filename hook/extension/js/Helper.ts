@@ -113,7 +113,7 @@ class Helper {
     /**
      * Sending message to get key:value into storageType via background page
      */
-    public static getFromStorage(extensionId: string, storageType: string, key: string, callback: Function) {
+    public static getFromStorage(extensionId: string, storageType: string, key: string, callback: (response: any) => void) {
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.getFromStorageMethod,
