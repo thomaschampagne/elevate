@@ -20,7 +20,6 @@ interface EffortInfo {
     kom_time: string;
 
     __dateTime: Date; // field added by us: start_date_local_raw converted into machine readable format (how is this different from start_date_local?)
-    __hraValue: number; // field added by us: heart rate adjusted performance
 }
 
 interface LeaderBoardData {
