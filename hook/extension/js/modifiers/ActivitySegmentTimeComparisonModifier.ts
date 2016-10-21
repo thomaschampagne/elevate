@@ -5,6 +5,9 @@ interface EffortInfo {
     segment_id: number;
 
     elapsed_time_raw: number;
+    avg_watts: number;
+    avg_heart_rate: number;
+
     start_date_local: Date;
     start_date_local_raw: string;
     rank: number;
@@ -17,6 +20,7 @@ interface EffortInfo {
     kom_time: string;
 
     __dateTime: Date; // field added by us: start_date_local_raw converted into machine readable format (how is this different from start_date_local?)
+    __hraValue: number; // field added by us: heart rate adjusted performance
 }
 
 interface LeaderBoardData {

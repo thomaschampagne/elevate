@@ -23,7 +23,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     }
 
-    protected findCurrentSegmentEfforts(segmentId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderBoardData?: Array<any>): JQueryPromise<any> {
+    protected findCurrentSegmentEfforts(segmentId: number, page?: number, deferred?: JQueryDeferred<Array<EffortInfo>>, fetchedLeaderBoardData?: Array<EffortInfo>): JQueryPromise<Array<EffortInfo>> {
 
         if (!page) {
             page = 1;
@@ -39,7 +39,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
         let jqxhr: JQueryXHR = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
 
-        jqxhr.done((leaderBoardData: any) => {
+        jqxhr.done((leaderBoardData: LeaderBoardData) => {
 
             // Make any recursive leaderboardData fetched flatten with previous one
             fetchedLeaderBoardData = _.flatten(_.union(leaderBoardData.top_results, fetchedLeaderBoardData));
@@ -100,7 +100,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 maxX = Helper.safeMax(maxX, xy.x);
             });
 
-            this.findCurrentSegmentEfforts(this.segmentId).then((fetchedLeaderBoardData: Array<any>) => {
+            this.findCurrentSegmentEfforts(this.segmentId).then((fetchedLeaderBoardData: Array<EffortInfo>) => {
                 // data come sorted by elapsed time, fastest first - we need them sorted by date
 
                 fetchedLeaderBoardData = fetchedLeaderBoardData.sort((left, right) => {
@@ -139,7 +139,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let mValue = showWatts ? r.avg_watts : r.elapsed_time_raw;
 
                         let ratio = (r.avg_heart_rate - restHR) / (targetHR - restHR);
-                        r.hraValue = showWatts ? mValue / ratio : mValue * ratio;
+                        r.__hraValue = showWatts ? mValue / ratio : mValue * ratio;
                         hrValues += 1;
                     }
                 });
@@ -151,7 +151,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     if (showWatts) {
                         fetchedLeaderBoardData.forEach((r) => {
-                            let rValue: number = r.hraValue;
+                            let rValue: number = r.__hraValue;
                             if (rValue != null) {
                                 fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
                                 slowestValue = Helper.safeMin(slowestValue, rValue);
@@ -268,9 +268,9 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         let r = fetchedLeaderBoardData[i];
 
-                        if (r.hraValue != null) {
-                            let resY = mapValueToY(r.hraValue);
-                            return [[i, m, resY, r.hraValue, xy.x]];
+                        if (r.__hraValue != null) {
+                            let resY = mapValueToY(r.__hraValue);
+                            return [[i, m, resY, r.__hraValue, xy.x]];
                         }
                     }).valueOf();
 
