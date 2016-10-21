@@ -123,7 +123,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 });
 
 
-                let minHR: number, maxHR: number;
+                let minHR: number = null, maxHR: number = null;
                 fetchedLeaderBoardData.forEach((r) => {
                     minHR = Helper.safeMin(minHR, r.avg_heart_rate);
                     maxHR = Helper.safeMax(maxHR, r.avg_heart_rate);
@@ -155,8 +155,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                 if (hrValues > 1) {
 
-                    let fastestValue: number;
-                    let slowestValue: number;
+                    let fastestValue: number = null;
+                    let slowestValue: number = null;
 
                     if (showWatts) {
                         hrValuesComputed.forEach((r: HRValueComputed) => {
@@ -276,7 +276,6 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let xy = xyFromMark(m);
 
                         let hraValue = hrValuesComputed[i].hraValue;
-                        let r = hrValuesComputed[i].effort;
 
                         if (hraValue != null) {
                             let resY = mapValueToY(hraValue);
