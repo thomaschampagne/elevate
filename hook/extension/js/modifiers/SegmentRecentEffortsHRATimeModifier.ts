@@ -152,8 +152,10 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     if (showWatts) {
                         fetchedLeaderBoardData.forEach((r) => {
                             let rValue: number = r.hraValue;
-                            fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
-                            slowestValue = Helper.safeMin(slowestValue, rValue);
+                            if (rValue != null) {
+                                fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
+                                slowestValue = Helper.safeMin(slowestValue, rValue);
+                            }
                         });
                     } else {
                         fetchedLeaderBoardData.forEach((r) => {
