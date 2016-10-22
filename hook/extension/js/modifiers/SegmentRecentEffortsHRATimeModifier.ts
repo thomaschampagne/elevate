@@ -23,7 +23,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     }
 
-    protected findCurrentSegmentEfforts(segmentId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderBoardData?: Array<any>): JQueryPromise<any> {
+    protected findCurrentSegmentEfforts(segmentId: number, page?: number, deferred?: JQueryDeferred<Array<EffortInfo>>, fetchedLeaderBoardData?: Array<EffortInfo>): JQueryPromise<Array<EffortInfo>> {
 
         if (!page) {
             page = 1;
@@ -39,7 +39,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
         let jqxhr: JQueryXHR = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
 
-        jqxhr.done((leaderBoardData: any) => {
+        jqxhr.done((leaderBoardData: LeaderBoardData) => {
 
             // Make any recursive leaderboardData fetched flatten with previous one
             fetchedLeaderBoardData = _.flatten(_.union(leaderBoardData.top_results, fetchedLeaderBoardData));
@@ -100,7 +100,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 maxX = Helper.safeMax(maxX, xy.x);
             });
 
-            this.findCurrentSegmentEfforts(this.segmentId).then((fetchedLeaderBoardData: Array<any>) => {
+            this.findCurrentSegmentEfforts(this.segmentId).then((fetchedLeaderBoardData: Array<EffortInfo>) => {
                 // data come sorted by elapsed time, fastest first - we need them sorted by date
 
                 fetchedLeaderBoardData = fetchedLeaderBoardData.sort((left, right) => {
@@ -123,7 +123,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 });
 
 
-                let minHR: number, maxHR: number;
+                let minHR: number = null, maxHR: number = null;
                 fetchedLeaderBoardData.forEach((r) => {
                     minHR = Helper.safeMin(minHR, r.avg_heart_rate);
                     maxHR = Helper.safeMax(maxHR, r.avg_heart_rate);
@@ -131,32 +131,43 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                 let restHR = this.userSettings.userRestHr;
                 let targetHR = maxHR;
-                let hrValues = 0;
 
-                fetchedLeaderBoardData.forEach((r) => {
+                class HRValueComputed {
+                    effort: EffortInfo;
+                    hraValue: number;
 
+                    constructor(effort: EffortInfo, hraValue?: number) {
+                        this.effort = effort;
+                        this.hraValue = hraValue;
+                    }
+                }
+
+                let hrValuesComputed = fetchedLeaderBoardData.map ((r: EffortInfo) => {
                     if (r.avg_heart_rate != null && r.avg_heart_rate > restHR) {
                         let mValue = showWatts ? r.avg_watts : r.elapsed_time_raw;
 
                         let ratio = (r.avg_heart_rate - restHR) / (targetHR - restHR);
-                        r.hraValue = showWatts ? mValue / ratio : mValue * ratio;
-                        hrValues += 1;
-                    }
+                        return new HRValueComputed(r, showWatts ? mValue / ratio : mValue * ratio);
+                    } else return new HRValueComputed(r);
                 });
+
+                let hrValues = hrValuesComputed.filter((h: HRValueComputed) => h.hraValue != null).length;
 
                 if (hrValues > 1) {
 
-                    let fastestValue: number;
-                    let slowestValue: number;
+                    let fastestValue: number = null;
+                    let slowestValue: number = null;
 
                     if (showWatts) {
-                        fetchedLeaderBoardData.forEach((r) => {
+                        hrValuesComputed.forEach((r: HRValueComputed) => {
                             let rValue: number = r.hraValue;
-                            fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
-                            slowestValue = Helper.safeMin(slowestValue, rValue);
+                            if (rValue != null) {
+                                fastestValue = Helper.safeMax(fastestValue, rValue); // high power -> fast
+                                slowestValue = Helper.safeMin(slowestValue, rValue);
+                            }
                         });
                     } else {
-                        fetchedLeaderBoardData.forEach((r) => {
+                        fetchedLeaderBoardData.forEach((r: EffortInfo) => {
                             let rValue: number = r.elapsed_time_raw;
                             fastestValue = Helper.safeMin(fastestValue, rValue); // high time -> slow
                             slowestValue = Helper.safeMax(slowestValue, rValue);
@@ -264,11 +275,11 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     let markData = <Array<Array<number>>> marks.map((i, m) => {
                         let xy = xyFromMark(m);
 
-                        let r = fetchedLeaderBoardData[i];
+                        let hraValue = hrValuesComputed[i].hraValue;
 
-                        if (r.hraValue != null) {
-                            let resY = mapValueToY(r.hraValue);
-                            return [[i, m, resY, r.hraValue, xy.x]];
+                        if (hraValue != null) {
+                            let resY = mapValueToY(hraValue);
+                            return [[i, m, resY, hraValue, xy.x]];
                         }
                     }).valueOf();
 

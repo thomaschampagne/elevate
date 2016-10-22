@@ -3,8 +3,8 @@
  * TASKS GRAPH
  * * * * * * * * *
  * clean        => cleanPackage => cleanDistAll => cleanExtNodeModules
- * cleanAll     => cleanPackage => cleanDistAll => cleanExtNodeModules => cleanRootNodeModules
- * build        => cleanDistSrcOnly => npmInstall
+ * cleanAll     => cleanRootNodeModules => clean
+ * build        => writeManifest => tsCompile => npmInstall
  * specs        => buildSpecs
  * buildSpecs   => build
  * makeArchive  => build
@@ -27,6 +27,7 @@ var _ = require('underscore');
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
+var runSequence = require('run-sequence');
 var exec = require('child_process').exec;
 var options = require('gulp-options');
 var ftp = require('vinyl-ftp');
@@ -241,8 +242,7 @@ gulp.task('cleanDistAll', function () {
         }));
 });
 
-gulp.task('cleanPackage', function () {
-
+gulp.task('cleanPackage', ['cleanDistAll'], function () {
     util.log('Cleaning package/ folder');
     return gulp.src(PACKAGE_FOLDER).pipe(plugins.clean({
         force: true
@@ -259,7 +259,7 @@ gulp.task('cleanExtNodeModules', ['cleanDistAll'], function () {
         }));
 });
 
-gulp.task('cleanRootNodeModules', ['cleanDistAll'], function () {
+gulp.task('cleanRootNodeModules', ['clean'], function () {
 
     util.log('Cleaning root extension node_modules/ folder');
 
@@ -276,7 +276,11 @@ gulp.task('cleanRootNodeModules', ['cleanDistAll'], function () {
 gulp.task('default', ['build']);
 
 // Result in a zip file into builds/
-gulp.task('package', ['clean', 'makeArchive']);
+gulp.task('package', function (done) {
+    runSequence('clean', 'makeArchive', function() {
+        done();
+    });
+});
 
 gulp.task('watch', function () {
     gulp.watch([
@@ -286,8 +290,8 @@ gulp.task('watch', function () {
 });
 
 // Clean dist/, package/, hook/extension/node_modules/
-gulp.task('clean', ['cleanPackage', 'cleanDistAll', 'cleanExtNodeModules']);
-gulp.task('cleanAll', ['clean', 'cleanRootNodeModules']);
+gulp.task('clean', ['cleanPackage']);
+gulp.task('cleanAll', ['cleanRootNodeModules']);
 
 // FTP publish
 gulp.task('ftpPublish', ['package'], function () {
