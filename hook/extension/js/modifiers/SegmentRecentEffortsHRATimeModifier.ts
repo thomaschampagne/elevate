@@ -134,7 +134,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                 class HRValueComputed {
                     effort: EffortInfo;
-                    hraValue?: number;
+                    hraValue: number;
 
                     constructor(effort: EffortInfo, hraValue?: number) {
                         this.effort = effort;
