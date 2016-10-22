@@ -25,7 +25,6 @@ StravistiX is using bellow frameworks/libs/tools:
 You must run **npm** cli command via [nodejs.org](https://nodejs.org) to fetch JS dependencies.
 
 ### 2.2/ Install Gulp task runner and TypeScript via node package manager
-Skip this step if you already have global **gulp-cli** on your computer.
 ```
 npm install --global gulp-cli typescript
 ```
