@@ -49,13 +49,15 @@ class StravistiX {
             return; // Skip rest of init to be compliant with www.strava.com/* on next reload
         }
 
-        // Handle some tasks to od when update occurs
-        if (this._userSettings.extensionHasJustUpdated || env.forceUpdated) {
-            this.handleExtensionHasJustUpdated();
-        }
+        // Handle some tasks when install/update occurs
+        this.handlePluginInstallOrUpgrade();
 
         if (env.preview) {
             this.handlePreviewRibbon();
+        }
+
+        if(env.displayUpdatePopup) {
+            this.handleUpdatePopup();
         }
 
         if (this._userSettings.localStorageMustBeCleared) {
@@ -125,31 +127,75 @@ class StravistiX {
     /**
      *
      */
-    protected handleExtensionHasJustUpdated(): void {
-
-        // Clear localstorage
-        // Especially for activies data stored in cache
-        console.log("ExtensionHasJustUpdated, localstorage clear");
-        localStorage.clear();
+    protected handlePluginInstallOrUpgrade(): void {
 
         if (!window.location.pathname.match(/^\/dashboard/)) {
             return;
         }
 
-        // Display ribbon update message
-        this.handleUpdatePopup();
+        let saveCurrentVersionInstalled = (callback: Function) => {
 
-        // Send update info to ga
-        let updatedToEvent: any = {
-            categorie: 'Exploitation',
-            action: 'updatedVersion',
-            name: this.appResources.extVersion
+            let toBeStored = {
+                version: this.appResources.extVersion,
+                on: Date.now()
+            };
+
+            Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, 'versionInstalled', toBeStored, () => {
+                console.log("Version has been saved to local storage");
+                callback();
+            });
         };
 
-        follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+        // Check for previous version is installed
+        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, 'versionInstalled', (response: any) => {
 
-        // Now mark extension "just updated" to false...
-        Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, 'extensionHasJustUpdated', false);
+            if (!response.data || !response.data.version) {
+
+                // No previous version installed. It's an install of the plugin
+                console.log("No previous version found. Should be an fresh install of " + this.appResources.extVersion);
+
+                // Display ribbon update message
+                this.handleUpdatePopup();
+
+                // Save current version to chrome local storage
+                saveCurrentVersionInstalled(() => {
+                });
+
+            } else {
+
+                // A version is already installed. It's an update
+                if (response.data.version && response.data.version !== this.appResources.extVersion) {
+
+                    // Version has changed...
+                    console.log("Previous install found <" + response.data.version + "> installed on " + new Date(response.data.on));
+                    console.log("Moving to version <" + this.appResources.extVersion + ">");
+
+                    // Clear HTML5 local storage
+                    console.log("Plugin upgraded, clear browser local storage");
+                    localStorage.clear();
+
+                    // Display ribbon update message
+                    this.handleUpdatePopup();
+
+                    // Save current version to chrome local storage
+                    saveCurrentVersionInstalled(() => {
+                    });
+
+                    // Send updated version info to
+                    let updatedToEvent: any = {
+                        categorie: 'Exploitation',
+                        action: 'updatedVersion',
+                        name: this.appResources.extVersion
+                    };
+
+                    follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+
+                } else {
+                    console.log("No install or update detected");
+                }
+
+            }
+        });
     }
 
     /**

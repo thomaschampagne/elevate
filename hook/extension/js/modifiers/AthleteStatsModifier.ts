@@ -83,8 +83,8 @@ class AthleteStatsModifier implements IModifier {
 
     protected processData(activities: Array<any>, progressThisYear: any, distanceInKilometers: any, elevationInMeters: any, distanceUnit: any): void {
 
-        let types: Array<any> = [];
-        let years: Array<any>;
+        let types: Array<Array<any>> = [[], []];
+        let years: Array<any> = [];
         let yearsList: Array<any> = [];
         let i: number;
         let j: number;

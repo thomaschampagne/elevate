@@ -1,5 +1,4 @@
 interface IUserSettings {
-    extensionHasJustUpdated: boolean;
     localStorageMustBeCleared: boolean;
     userGender: string;
     userMaxHr: number;
@@ -59,7 +58,6 @@ interface IUserSettings {
 }
 
 let userSettings: IUserSettings = {
-    extensionHasJustUpdated: false,
     localStorageMustBeCleared: false,
     userGender: 'men',
     userMaxHr: 190,

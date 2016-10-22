@@ -55,52 +55,37 @@ class Background {
                 // On install too: persist that extension has been updated.
                 // This force local storage clear on install
 
-                storageManager.setToStorage(
-                    'extensionHasJustUpdated',
-                    true,
-                    (data: any) => {
-                        console.log('Installed. User settings: ', data);
-                        chrome.tabs.create({
-                            url: 'http://thomaschampagne.github.io/stravistix/'
-                        }, (tab: Tab) => {
-                            console.log("First install. Display website new tab:", tab);
-                            chrome.tabs.create({
-                                url: chrome.extension.getURL('/options/app/index.html#/')
-                            }, (tab: Tab) => {
-                                console.log("First install. Display settings:", tab);
-                            });
-                        });
-                    }
-                );
+                chrome.tabs.create({
+                    url: 'http://thomaschampagne.github.io/stravistix/'
+                }, (tab: Tab) => {
+                    console.log("First install. Display website new tab:", tab);
+                    chrome.tabs.create({
+                        url: chrome.extension.getURL('/options/app/index.html#/')
+                    }, (tab: Tab) => {
+                        console.log("First install. Display settings:", tab);
+                    });
+                });
 
             } else if (details.reason === "update") {
 
                 console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
-                // Persist that extension has been updated
-                storageManager = new StorageManager(StorageManager.storageSyncType);
-                storageManager.setToStorage(
-                    'extensionHasJustUpdated',
-                    true,
-                    (data: any) => {
-                        console.log('Updated. User settings: ', data);
-                        if (Helper.versionCompare('3.9.0', details.previousVersion) === 1) {
+                if (Helper.versionCompare('3.9.0', details.previousVersion) === 1) {
 
-                            console.log('Reset zones...');
-                            // Reset userHrrZones...
-                            storageManager.setToStorage('userHrrZones', userSettings.userHrrZones, (data: any) => {
-                                console.log('userHrrZones revert to ', userSettings.userHrrZones);
-                                console.log(data);
+                    console.log('Reset zones...');
 
-                                // Reset zones..
-                                storageManager.setToStorage('zones', userSettings.zones, (data: any) => {
-                                    console.log('zones revert to ', userSettings.zones);
-                                    console.log(data);
-                                });
-                            });
-                        }
-                    }
-                );
+                    // Reset userHrrZones...
+                    storageManager.setToStorage('userHrrZones', userSettings.userHrrZones, (data: any) => {
+                        console.log('userHrrZones revert to ', userSettings.userHrrZones);
+                        console.log(data);
+
+                        // Reset zones..
+                        storageManager.setToStorage('zones', userSettings.zones, (data: any) => {
+                            console.log('zones revert to ', userSettings.zones);
+                            console.log(data);
+                        });
+                    });
+                }
             }
         });
     }
