@@ -55,7 +55,7 @@ declare class LatLon {
 interface Env {
     preview: boolean;
     analyticsTrackingID: string; // GA ID
-    forceUpdated: boolean; // Must be false in release
+    displayUpdatePopup: boolean; // Must be false in release
     debugMode: boolean; // Must be false in release
     useActivityStreamCache: boolean // Must be true in release
 }
