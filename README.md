@@ -7,26 +7,24 @@ Go to http://thomaschampagne.github.io/stravistix/
 
 2/ Install from sources
 ==========
-_FYI StravistiX is using bellow frameworks/tools. You can jump to **2.1** if you don't plan to develop over the plugin._ 
+
+### 2.0/ Infos
+StravistiX is using bellow frameworks/libs/tools:
 
 * Node package manager (npm) provided by [nodejs.org](https://nodejs.org) to fetch modules from [npmjs.com](https://www.npmjs.com/).
 * [Gulp](http://gulpjs.com/) task runner.
 * [Chart.js](http://www.chartjs.org/) Simple yet flexible JavaScript charting.
 * [underscore.js](http://underscorejs.org/) that provides a whole mess of useful functional programming helpers.
-* [TypeScript](https://www.typescriptlang.org) 's power on plugin core that adds typing and class-based like **Java/C#** then compile to JavaScript (ES5/ES2015/ES6).
-
-_Currently migrate Javascript to the power TypeScript. JS and TS file are mixed during migration_.
-
-_[Here you can learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/). Try it and buy it !_.
-
 * [AngularJS 1.*](https://angularjs.org/) for options page.
-* [Angular material](https://material.angularjs.org) design 1.* for options page.
+* [Angular Material](https://material.angularjs.org) design 1.* for options page.
+* [TypeScript](https://www.typescriptlang.org) that adds typing & class-based syntax over javascript then compile back to JavaScript (ES5/ES2015/ES6).
+
+**[Learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/). Try it and buy it !**.
 
 ### 2.1/ Install NodeJS with node package manager
 You must run **npm** cli command via [nodejs.org](https://nodejs.org) to fetch JS dependencies.
 
 ### 2.2/ Install Gulp task runner and TypeScript via node package manager
-Skip this step if you already have global **gulp-cli** on your computer.
 ```
 npm install --global gulp-cli typescript
 ```
@@ -72,7 +70,7 @@ To apply files changes from **hook/extension/** to **dist/** you must run the bu
 gulp build
 ```
 
-To save time, you can automatically copy files changes from **hook/extension/** to **dist/** using watch command:
+You can automatically execute this task on a file change from with:
 ```
 gulp watch
 ```

@@ -11,17 +11,31 @@ interface IReleaseNote {
     hideFeatureReleaseNote?: boolean;
 }
 
-let releaseNotes: Array<IReleaseNote> = [    {
-        version: '4.3.2',
-        message: '<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on "Your recent efforts" graph displayed in segment pages. <div style="text-align: center;"><a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">> Don\'t forget to activate beta/hidden feature at first <</a></div>',
-        hotFixes: [],
-        features: [
-            'BETA: Cycling estimated powers based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
-            'BETA: Running estimated paces based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
-            'Migrate 100% of the javascript code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement.'],
-        hideFeatureReleaseNote: false,
-        fixes: ['Fixed broken heat map link in StravistiX burger menu'],
-    },{
+let releaseNotes: Array<IReleaseNote> = [{
+    version: '4.3.3',
+    message: 'Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on "Your recent efforts" graph displayed in segment pages. <div style="text-align: center;"><a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">> Don\'t forget to activate beta/hidden feature at first <</a></div>',
+    hotFixes: [],
+    features: [
+        'BETA: Cycling estimated powers based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
+        'BETA: Running estimated paces based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
+        'Migrate 100% of the javascript code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement.'],
+    hideFeatureReleaseNote: true,
+    fixes: [
+        'Fixed year progressions which could be not loaded by users having only running activities.',
+        'Fixed bad axis displayed on running estimated paces & cycling estimated powers.',
+        'Fixed update notification which could be not displayed on plugin update.'
+    ],
+}, {
+    version: '4.3.2',
+    message: '<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on "Your recent efforts" graph displayed in segment pages. <div style="text-align: center;"><a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">> Don\'t forget to activate beta/hidden feature at first <</a></div>',
+    hotFixes: [],
+    features: [
+        'BETA: Cycling estimated powers based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
+        'BETA: Running estimated paces based on your most painful effort on a segment. <a href="' + Constants.OPTIONS_URL + '#/commonSettings" target="_blank">Don\'t forget to activate beta/hidden feature at first</a>',
+        'Migrate 100% of the javascript code to <a href="https://www.typescriptlang.org/" target="_blank">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement.'],
+    hideFeatureReleaseNote: false,
+    fixes: ['Fixed broken heat map link in StravistiX burger menu'],
+}, {
     version: '4.3.1',
     message: 'NEW: Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on "Your recent efforts" graph displayed in segment pages.',
     hotFixes: [],

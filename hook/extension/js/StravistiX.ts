@@ -56,6 +56,10 @@ class StravistiX {
             this.handlePreviewRibbon();
         }
 
+        if(env.displayUpdatePopup) {
+            this.handleUpdatePopup();
+        }
+
         if (this._userSettings.localStorageMustBeCleared) {
             localStorage.clear();
 
