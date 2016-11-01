@@ -115,10 +115,11 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 }
 
                 // when watts are present, show watts, not time (used for bike activities)
-                let showWatts = false;
+                let showWatts = true;
                 fetchedLeaderBoardData.forEach((r) => {
-                    if (r.avg_watts != null) {
-                        showWatts = true;
+                    // detection based only on single avg_watts != null seems unreliable, I have seen a run effort with avg_watts present
+                    if (r.avg_watts == null) {
+                        showWatts = false;
                     }
                 });
 
