@@ -7,6 +7,7 @@ interface EffortInfo {
     elapsed_time_raw: number;
     avg_watts: number;
     avg_heart_rate: number;
+    has_watts: boolean;
 
     start_date_local: Date;
     start_date_local_raw: string;
