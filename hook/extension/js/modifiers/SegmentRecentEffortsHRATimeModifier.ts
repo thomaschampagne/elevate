@@ -117,7 +117,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 // when watts are present, show watts, not time (used for bike activities)
                 let showWatts = false;
                 fetchedLeaderBoardData.forEach((r) => {
-                    if (r.avg_watts != null) {
+                    // detection based only on avg_watts == null seems unreliable, some runs have avg_watts present
+                    if (r.has_watts && r.avg_watts != null) {
                         showWatts = true;
                     }
                 });
