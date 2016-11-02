@@ -240,11 +240,11 @@ class Helper {
     }
 
     public static safeMax(a: number, b: number): number {
-        return typeof a == "undefined" ? b : Math.max(a, b);
+        return a == null ? b : Math.max(a, b);
     }
 
     public static safeMin(a: number, b: number): number {
-        return typeof a == "undefined" ? b : Math.min(a, b);
+        return a == null ? b : Math.min(a, b);
     }
 
 }
