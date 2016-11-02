@@ -16,7 +16,7 @@ class MainController {
 
     constructor($scope: any, $location: ILocationService, $mdSidenav: ISidenavService, $colors: any, $mdDialog: IDialogService, $window: IWindowService) {
 
-        $scope.$colors = $colors;
+        $scope.colors = $colors;
 
         $scope.toggleSidenav = (menu: string) => {
             $mdSidenav(menu).toggle();
