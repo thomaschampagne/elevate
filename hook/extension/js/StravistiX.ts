@@ -784,12 +784,7 @@ class StravistiX {
             return;
         }
 
-        // Only running is supported
         let activityType: string = window.pageView.activity().get('type');
-        if (activityType !== "Ride" && activityType !== "Run") {
-            return;
-        }
-
         // PR only for my own activities
         let isMyOwn: boolean = (this.athleteId == this.athleteIdAuthorOfActivity);
 
