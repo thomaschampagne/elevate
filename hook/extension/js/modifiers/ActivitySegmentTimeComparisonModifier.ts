@@ -85,7 +85,12 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             if (!this.firstAppearDone) {
 
 
-                let timeColumnHeader: JQuery = segments.find("table.segments th.time-col");
+                let timeColumnHeader = segments.find("table.segments th.time-col");
+
+                if (timeColumnHeader.length == 0) {
+                    // activities other than cycling (like nordic ski) miss time-col class, search by text
+                    timeColumnHeader = segments.find("table.segments th:contains('Time')");
+                }
 
                 if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
                     timeColumnHeader.after("<th style='font-size:11px;' title='Column shows the difference between the activity segment time and your current year PR on that segment.'>" + this.deltaYearPRLabel + "</th>");
@@ -169,7 +174,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
                     if (this.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + this.deltaKomLabel + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                        deltaKomCell.html("<span title=\"Time difference with current " + this.crTitle() + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {

@@ -31,10 +31,10 @@
     "angular-mocks": "^1.5.8",
     "angular-route": "^1.5.8",
     "angular-sanitize": "^1.5.8",
-    "chart.js": "^2.2.2",
+    "chart.js": "^2.3.0",
     "fancybox": "^3.0.0",
+    "geodesy": "^1.1.1",
     "qrcode-js-package": "^1.0.4",
-    "underscore": "^1.8.3",
-    "geodesy": "^1.1.1"
+    "underscore": "^1.8.3"
   }
 }

@@ -222,17 +222,6 @@ gulp.task('specs', ['buildSpecs'], function () {
     }).start();
 });
 
-gulp.task('cleanDistSrcOnly', function () {
-
-    util.log('Cleaning dist/ folder, except dist/node_modules folder');
-    return gulp.src([
-        DIST_FOLDER + '/*',
-        '!' + DIST_FOLDER + '/node_modules/',
-    ]).pipe(plugins.clean({
-        force: true
-    }));
-});
-
 gulp.task('cleanDistAll', function () {
 
     util.log('Cleaning dist/ folder completly');
@@ -277,7 +266,7 @@ gulp.task('default', ['build']);
 
 // Result in a zip file into builds/
 gulp.task('package', function (done) {
-    runSequence('clean', 'makeArchive', function() {
+    runSequence('clean', 'makeArchive', function () {
         done();
     });
 });
@@ -286,7 +275,7 @@ gulp.task('watch', function () {
     gulp.watch([
         'hook/extension/**/*',
         '!hook/extension/node_modules/**/*',
-    ], ['cleanDistSrcOnly', 'build']);
+    ], ['build']);
 });
 
 // Clean dist/, package/, hook/extension/node_modules/
