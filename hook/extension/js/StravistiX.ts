@@ -218,8 +218,7 @@ class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                // 'Year distance target curve for free/premium accounts in year progressions charts (Run & Rides) :)',
-                'Currently coding new Input/Output fitness extended stats panel & Human Performance Modeling graphs (CTL, ATL, TSB) with more accuracy.',
+                'MultiSports fitness trends upcoming. <a target="_blank" href="https://twitter.com/champagnethomas/status/788809148381134849">Here you can see a preview</a>',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]
