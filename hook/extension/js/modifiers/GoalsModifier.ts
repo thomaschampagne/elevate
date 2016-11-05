@@ -51,6 +51,8 @@ class GoalsModifier implements Modifier {
                     if (goal.value !== 0) {
                         if (goal.units === GoalUnit.METRES) {
                             actual = actual * 1000;
+                        } else if (goal.units === GoalUnit.YARDS) {
+                            actual = actual * 1760;
                         }
                         goal.value = Math.max(goal.value - actual, 0);
                         this.addProgressBarMonthly(
@@ -292,6 +294,8 @@ class GoalsModifier implements Modifier {
             if (activity.type === type) {
                 if (units === GoalUnit.METRES) {
                     actual = actual + activity.distance_raw;
+                } else if (units === GoalUnit.YARDS) {
+                    actual = actual + (activity.distance_raw * 1.09361);
                 } else if (units === GoalUnit.HOURS) {
                     actual = actual + (activity.moving_time_raw / 3600);
                 }
@@ -324,9 +328,17 @@ class GoalsModifier implements Modifier {
         let units = $units.find('button.active').attr('data-type');
         let goalUnits = GoalUnit.UNKNOWN;
         if (units === 'distance') {
-            goalUnits = GoalUnit.METRES;
-            if ($units.find('button.active').text().trim() === 'km') {
-                goalNumeric = goalNumeric * 1000;
+            let unitsSymbol = $units.find('button.active').text().trim();
+            if (unitsSymbol.charAt(unitsSymbol.length - 1) === "m") {  // Metric
+                goalUnits = GoalUnit.METRES;
+                if (unitsSymbol === 'km') {
+                    goalNumeric = goalNumeric * 1000;
+                }
+            } else {  // Imperial
+                goalUnits = GoalUnit.YARDS;
+                if (unitsSymbol === 'mi') {
+                    goalNumeric = goalNumeric * 1760;
+                }
             }
         } else if (units === 'time') {
             goalUnits = GoalUnit.HOURS;
@@ -507,6 +519,9 @@ class GoalsModifier implements Modifier {
         if (units === GoalUnit.METRES) {
             formattedUnits = ' km';
             formattedValue = (Math.round(value / 1000)).toLocaleString();
+        } else if (units === GoalUnit.YARDS) {
+            formattedUnits = ' mi';
+            formattedValue = (Math.round(value / 1760)).toLocaleString();
         } else if (units === GoalUnit.HOURS) {
             formattedUnits = 'h';
             formattedValue = Math.round(value).toLocaleString();
@@ -525,6 +540,7 @@ class GoalsModifier implements Modifier {
 enum GoalUnit {
     UNKNOWN,
     METRES,
+    YARDS,
     HOURS,
 }
 
