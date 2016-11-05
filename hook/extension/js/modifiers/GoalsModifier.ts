@@ -46,7 +46,8 @@ class GoalsModifier implements Modifier {
                     activityType =
                         activityType[0].toUpperCase() + activityType.slice(1);
                     let $actual = $barYearly.find('.actual');
-                    let actual = parseInt($actual.text(), 10);
+                    let actual = parseInt(
+                        $actual.text().replace(",", ""), 10);
                     if (goal.value !== 0) {
                         if (goal.units === GoalUnit.METRES) {
                             actual = actual * 1000;
