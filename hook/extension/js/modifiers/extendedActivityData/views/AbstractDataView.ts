@@ -143,6 +143,13 @@ abstract class AbstractDataView {
             options: {
                 tooltips: {
                     custom: this.customTooltips,
+                },
+                scales: {
+                    yAxes: [<LinearTickOptions> {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
                 }
             }
         });
@@ -172,7 +179,7 @@ abstract class AbstractDataView {
         }
 
         if (!this.units) {
-            console.error('View must have unit');
+            console.error('View must have units.');
             return;
         }
 
