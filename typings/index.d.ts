@@ -5,6 +5,7 @@
 /// <reference path="globals/chart.js/index.d.ts" />
 /// <reference path="globals/chrome/index.d.ts" />
 /// <reference path="globals/d3/index.d.ts" />
+/// <reference path="globals/es6-promise/index.d.ts" />
 /// <reference path="globals/google.analytics/ga/index.d.ts" />
 /// <reference path="globals/google.maps/index.d.ts" />
 /// <reference path="globals/jasmine/index.d.ts" />

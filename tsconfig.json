@@ -55,6 +55,7 @@
     "hook/extension/js/modifiers/HidePremiumModifier.ts",
     "hook/extension/js/modifiers/HideFeedModifier.ts",
     "hook/extension/js/modifiers/DisplayFlyByFeedModifier.ts",
+    "hook/extension/js/modifiers/GoalsModifier.ts",
     "hook/extension/js/processors/ActivityComputer.ts",
     "hook/extension/modules/StorageManager.ts",
     "hook/extension/modules/jquery.appear.ts",
