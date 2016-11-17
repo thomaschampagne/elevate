@@ -1,13 +1,21 @@
 version: '{build}'
 clone_depth: 1
+
+# Test against this version of Node.js
 environment:
-  nodejs_version: 6.9.0
-build_script:
-- cmd: >-
-    node -v
-    npm install --global gulp-cli typescript
-    npm install
-    npm test
-    gulp package
-artifacts:
-- path: package/*
+  nodejs_version: "6.9.0"
+
+# Install scripts. (runs after repo cloning)
+install:
+  - node --version
+  - npm install --global gulp-cli typescript
+  - npm install
+  - gulp package
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm test
