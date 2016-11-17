@@ -85,7 +85,7 @@ To apply files changes from **plugin/** to **dist/** you must run the build comm
 gulp build
 ```
 
-You can automatically execute this task on a file change from with:
+You can automatically execute this task on a file change with command:
 ```
 gulp watch
 ```
