@@ -1,6 +1,6 @@
 interface IFitnessTrendGraphScope extends IScope {
     colors: IColors;
-    fitnessDataOnToday: any;
+    fitnessDataOnToday: IFitnessTrimpObject;
     makeTooltip: (d: any) => string;
     drawHtmlSeparator: () => string;
     drawLegendSquare: (color: string, width: number, text: string) => string;
@@ -108,7 +108,6 @@ class FitnessTrendGraph {
         $scope.updateFitnessChartGraph = (lastMonthPeriodChange: boolean, fromOrToDateChange: boolean) => {
 
             onGraphDrawTimeStart = performance.now(); // Track graph draw time
-
 
             // Compute from timestamp
             let fromTimestamp: number, toTimestamp: number;
