@@ -263,7 +263,7 @@ gulp.task('cleanExtNodeModules', ['cleanDistAll'], function () {
 
     util.log('Cleaning extension node_modules/ folder');
 
-    return gulp.src('plugin/core/node_modules/')
+    return gulp.src('plugin/node_modules/')
         .pipe(plugins.clean({
             force: true
         }));

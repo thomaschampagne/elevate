@@ -26,6 +26,7 @@ interface IFitnessActivitiesWithHRDaysOff {
     type: Array<string>;
     activitiesName: Array<string>;
     trimp: number;
+    previewDay: boolean;
 }
 
 interface IFitnessTrimpObject /*extends IFitnessActivitiesWithHRDaysOff */ {
@@ -38,6 +39,7 @@ interface IFitnessTrimpObject /*extends IFitnessActivitiesWithHRDaysOff */ {
     ctl: number;
     atl: number;
     tsb: number;
+    previewDay: boolean;
 }
 
 interface IFitnessTrimpObjectTable extends IFitnessTrimpObject {
@@ -54,6 +56,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         fitnessData: null,
         const: {
             DAY_LONG_MILLIS: 24 * 3600 * 1000,
+            FUTURE_DAYS_PREVIEW: 14,
         },
         getDayAtMidnight: null,
         getComputedActivities: null,
@@ -180,7 +183,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                     timestamp: timestampOfCurrentDay,
                     type: [],
                     activitiesName: [],
-                    trimp: 0
+                    trimp: 0,
+                    previewDay: false
                 };
 
                 if (foundOnToday.length) {
@@ -195,6 +199,24 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 }
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
+            }
+
+            // Add 14 days as future "preview".
+            for (let i: number = 1; i <= fitnessDataService.const.FUTURE_DAYS_PREVIEW; i++) {
+
+                let futureDate: Date = new Date((new Date().getTime()) + fitnessDataService.const.DAY_LONG_MILLIS * i);
+
+                let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
+                    ids: [],
+                    date: futureDate,
+                    timestamp: futureDate.getTime(),
+                    type: [],
+                    activitiesName: [],
+                    trimp: 0,
+                    previewDay: true
+                };
+
+                everyDayFitnessObjects.push(fitnessObjectOnCurrentDay)
             }
 
             // fitnessDataService.fitnessObjectsWithDaysOff = everyDayFitnessObjects;
@@ -239,6 +261,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 ctl: parseFloat(ctl.toFixed(1)),
                 atl: parseFloat(atl.toFixed(1)),
                 tsb: parseFloat(tsb.toFixed(1)),
+                previewDay: trimpObject.previewDay
             };
 
             results.push(result);

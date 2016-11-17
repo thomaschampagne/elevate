@@ -28,7 +28,7 @@ interface IFitnessTrendGraphScope extends IScope {
 }
 
 interface IFitnessGraphData {
-    curves: {key: string, values: Array<any>, color: string, area?: boolean}[];
+    curves: {key: string, values: Array<any>, color: string, area?: boolean, classed?: string}[];
     yDomain: Array<number>;
 }
 
@@ -48,7 +48,9 @@ class FitnessTrendGraph {
 
             $scope.fitnessData = fitnessData;
 
-            $scope.fitnessDataOnToday = _.last($scope.fitnessData);
+            $scope.fitnessDataOnToday = _.last(_.where($scope.fitnessData, {
+                previewDay: false
+            }));
 
             // Notify parent of data loaded
             $scope.fitnessTrendGraphDataLoaded(!_.isEmpty($scope.fitnessData));
@@ -91,7 +93,7 @@ class FitnessTrendGraph {
             label: 'From the beginning'
         }];
 
-        $scope.periodSelected = $scope.periodsToWatch[4]; // 6 months default
+        $scope.periodSelected = $scope.periodsToWatch[5]; // 6 months default
 
         $scope.lastMonthsPeriodChanged = () => {
             $scope.updateFitnessChartGraph(true, false);
@@ -113,7 +115,7 @@ class FitnessTrendGraph {
             let fromTimestamp: number, toTimestamp: number;
 
             $scope.minDate = moment(_.first($scope.fitnessData).timestamp).startOf('day').toDate();
-            $scope.maxDate = new Date();
+            $scope.maxDate = new Date(); //moment(_.last($scope.fitnessData).timestamp).endOf('day').toDate();
 
             if (lastMonthPeriodChange) {
 
@@ -161,7 +163,7 @@ class FitnessTrendGraph {
 
             // Title
             html += '   <tr>';
-            html += '       <td colspan="3" class="dayType underlined" style="color: ' + (hasActivities ? $colors.strava : $colors.midGrey) + ';">' + (hasActivities ? 'ACTIVE' : 'REST') + '</td>';
+            html += '       <td colspan="3" class="dayType underlined" style="color: ' + (hasActivities ? $colors.strava : $colors.midGrey) + ';">' + ((fitnessObject.previewDay) ? 'PREVIEW' : (hasActivities ? 'ACTIVE' : 'REST')) + '</td>';
             html += '   </tr>';
 
             // Names
@@ -337,7 +339,7 @@ class FitnessTrendGraph {
 
             _.each(fitnessData, (fitData: IFitnessTrimpObject) => {
 
-                if (fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
+                if (!fitData.previewDay && fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
 
                     ctlValues.push({
                         x: fitData.timestamp,
@@ -361,9 +363,42 @@ class FitnessTrendGraph {
                         });
                     }
                 }
-
             });
 
+            // Adding days of preview (CTL + ATL + TSB dashed) after if toTimestamp is today
+            let ctlPreviewValues: Array<any> = [];
+            let atlPreviewValues: Array<any> = [];
+            let tsbPreviewValues: Array<any> = [];
+
+            let fitnessDataPreview: Array<IFitnessTrimpObject> = _.where(fitnessData, {
+                previewDay: true
+            });
+
+            // If "toTimestamp" is today
+            // We add preview curves...
+            if(moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
+
+                _.each(fitnessDataPreview, (fitData: IFitnessTrimpObject) => {
+
+                    ctlPreviewValues.push({
+                        x: fitData.timestamp,
+                        y: fitData.ctl
+                    });
+
+                    atlPreviewValues.push({
+                        x: fitData.timestamp,
+                        y: fitData.atl
+                    });
+
+                    tsbPreviewValues.push({
+                        x: fitData.timestamp,
+                        y: fitData.tsb
+                    });
+
+                });
+            }
+
+            // Find min/max of curves
             let yDomainMax = d3.max([
                 d3.max(ctlValues, (d: any) => {
                     return parseInt(d.y);
@@ -372,6 +407,15 @@ class FitnessTrendGraph {
                     return parseInt(d.y);
                 }),
                 d3.max(tsbValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.max(ctlPreviewValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.max(atlPreviewValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.max(tsbPreviewValues, (d: any) => {
                     return parseInt(d.y);
                 })
             ], (d: any) => {
@@ -386,6 +430,15 @@ class FitnessTrendGraph {
                     return parseInt(d.y);
                 }),
                 d3.min(tsbValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.min(ctlPreviewValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.min(atlPreviewValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.min(tsbPreviewValues, (d: any) => {
                     return parseInt(d.y);
                 })
             ], (d: any) => {
@@ -410,13 +463,24 @@ class FitnessTrendGraph {
                     key: "Active days",
                     values: activitiesPoints,
                     color: $colors.strongGrey
+                }, {
+                    key: "Preview_CTL",
+                    values: ctlPreviewValues,
+                    color: $colors.ctl
+                }, {
+                    key: "Preview_ATL",
+                    values: atlPreviewValues,
+                    color: $colors.atl
+                }, {
+                    key: "Preview_TSB",
+                    values: tsbPreviewValues,
+                    color: $colors.tsb
                 }],
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05]
             };
 
             return fitnessGraphData;
         };
-
 
         $scope.onGraphDrawn = () => {
 

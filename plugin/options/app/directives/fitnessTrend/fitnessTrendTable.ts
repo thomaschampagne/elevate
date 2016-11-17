@@ -4,7 +4,6 @@ class FitnessTrendTable {
 
     constructor(public $scope: any, public fitnessDataService: IFitnessDataService, public $window: IWindowService) {
 
-
         // Init directives constants
         $scope.const = {};
         $scope.const.fitnessDataForTable = null;
@@ -12,6 +11,11 @@ class FitnessTrendTable {
         fitnessDataService.getFitnessData().then((fitnessData) => {
 
             let fitnessDataForTable: Array<IFitnessTrimpObjectTable> = [];
+
+            // Filter fitnessData: remove preview days
+            fitnessData = _.where(fitnessData, {
+                previewDay: false
+            });
 
             _.each(fitnessData, (fitnessObj: IFitnessTrimpObject) => {
 

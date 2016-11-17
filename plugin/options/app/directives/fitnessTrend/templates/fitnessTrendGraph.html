@@ -9,7 +9,7 @@
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="md-title" style="color: {{colors.tsb}}">Form {{fitnessDataOnToday.tsb | number: 1}}</span>
             <span flex></span>
-            <md-button  layout-align="start start" class="md-icon-button" ng-click="showHelp()">
+            <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
                 <md-icon aria-label="Help">help</md-icon>
             </md-button>
         </div>
@@ -17,7 +17,7 @@
     </md-card-title>
     <md-card-content ng-cloak>
         <div layout="row" layout-align="start start">
-            <div flex="60" layout="row">
+            <div flex="65" layout="row">
                 <md-input-container>
                     <label>Period</label>
                     <md-select ng-model="periodSelected" ng-change="lastMonthsPeriodChanged()"
