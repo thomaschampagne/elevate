@@ -13,7 +13,7 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
-        version: '4.5.1',
+        version: '4.5.2',
         message: 'NEW: Added monthly and weekly targets for strava premium annual goals',
         hotFixes: [
             'Hot fix monthly and weekly targets number format'
