@@ -18,7 +18,7 @@
 
 1/ Install StravistiX from Chrome / Opera Store
 =====================================================
-Go to http://thomaschampagne.github.io/stravistix/
+Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.github.io/stravistix/)
 
 2/ Install from sources
 ==========
@@ -54,9 +54,9 @@ This will install required gulp plugins in order to run project tasks. Gulp plug
 ```
 gulp build
 ```
-First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **hook/extension/package.json** file if not already downloaded.
+First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **plugin/core/package.json** file if not already downloaded.
 
-Next, all the extensions files from **hook/extension/** will be copied to **dist/** folder.
+Next, all the extensions files from **plugin/** will be copied to **dist/** folder.
 
 ### 2.5/ Loading the extension
 
@@ -72,14 +72,14 @@ You can now load extension from **chrome://extensions** chrome tab:
 
 ### 3.1/ Making changes and view them
 
-Development must be done inside **hook/extension/** folder. You can code using TypeScript OR Javascript. But i strongly recommend you to use TypeScript.
+Development must be done inside **plugin/** folder. You can code using TypeScript OR Javascript. But i strongly recommend you to use TypeScript.
 
 >_Remember: [Here you can learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/)_
 >_Most IDE support TypeScript through plugins (Atom, Sublime, WebStorm, VisualStudio code, ...) @see https://www.typescriptlang.org/_
 
 In chrome, use **dist/** folder as Unpacked Extension for development
 
-To apply files changes from **hook/extension/** to **dist/** you must run the build command:
+To apply files changes from **plugin/** to **dist/** you must run the build command:
 
 ```
 gulp build
@@ -100,7 +100,7 @@ This will create zip archive of **dist/** folder in **package/StravistiX\_vX.X.X
 ```
 gulp clean
 ```
-This will clean **dist/**, **package/** & **hook/extension/node_modules/** folders
+This will clean **dist/**, **package/** & **plugin/node_modules/** folders
 
 4/ Git repository structure and GitFlow
 ==========

@@ -1,0 +1,13 @@
+version: '{build}'
+clone_depth: 1
+environment:
+  nodejs_version: 6.9.0
+build_script:
+- cmd: >-
+    node -v
+    npm install --global gulp-cli typescript
+    npm install
+    npm test
+    gulp package
+artifacts:
+- path: package/*
