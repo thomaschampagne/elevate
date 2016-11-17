@@ -219,7 +219,7 @@ class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                'MultiSports fitness trends upcoming. <a target="_blank" href="https://twitter.com/champagnethomas/status/788809148381134849">Here you can see a preview</a>',
+                'MultiSports fitness trends upcoming. <a target="_blank" href="https://goo.gl/forms/6c1BrGVR3jzNbRwS2">REGISTER FOR ALPHA TESTING HERE</a>',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]

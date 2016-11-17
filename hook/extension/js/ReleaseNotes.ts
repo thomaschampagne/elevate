@@ -13,6 +13,18 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '4.5.0',
+        message: 'NEW: Added monthly and weekly targets for strava premium annual goals',
+        hotFixes: [],
+        features: [
+            'Added monthly and weekly targets for strava premium annual goals'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed extended stats graph to get Y axis always starting from zero',
+        ],
+    },
+    {
         version: '4.4.0',
         message: 'NEW: Segment time comparison on all activity types ! Yeah !',
         hotFixes: [],
