@@ -219,9 +219,9 @@ class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                'MultiSports fitness trends upcoming. <a target="_blank" href="https://goo.gl/forms/6c1BrGVR3jzNbRwS2">REGISTER FOR ALPHA TESTING HERE</a>',
+                'MultiSports fitness trends upcoming. ALPHA Released through regular update in few days :)',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
+                'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a>!',
             ]
         };
 
