@@ -1,5 +1,20 @@
-[![Stories in Ready](https://badge.waffle.io/thomaschampagne/stravistix.png?label=ready&title=Ready)](http://waffle.io/thomaschampagne/stravistix)
-[![Join the chat at https://gitter.im/thomaschampagne/stravistix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thomaschampagne/stravistix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Table of Content
+<!-- toc -->
+- [1/ Install StravistiX from Chrome / Opera Store](#1-install-stravistix-from-chrome--opera-store)
+- [2/ Install from sources](#2-install-from-sources)
+    + [2.0/ Infos](#20-infos)
+    + [2.1/ Install NodeJS with node package manager](#21-install-nodejs-with-node-package-manager)
+    + [2.2/ Install Gulp task runner and TypeScript via node package manager](#22-install-gulp-task-runner-and-typescript-via-node-package-manager)
+    + [2.3/ Install gulp plugins dependencies](#23-install-gulp-plugins-dependencies)
+    + [2.4/ Build the project](#24-build-the-project)
+    + [2.5/ Loading the extension](#25-loading-the-extension)
+- [3/ How to develop in ?](#3-how-to-develop-in-)
+    + [3.1/ Making changes and view them](#31-making-changes-and-view-them)
+    + [3.2/ Create a package archive](#32-create-a-package-archive)
+    + [3.3/ Clean the project](#33-clean-the-project)
+- [4/ Git repository structure and GitFlow](#4-git-repository-structure-and-gitflow)
+- [5/ Code Editor and Indentation plugin used](#5-code-editor-and-indentation-plugin-used)
+<!-- tocstop -->
 
 1/ Install StravistiX from Chrome / Opera Store
 =====================================================

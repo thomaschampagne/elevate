@@ -83,6 +83,7 @@ class StravistiX {
         this.handleHidePremium();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
+        this.handleGoalsModifier();
 
         // Bike
         this.handleExtendedActivityData();
@@ -218,7 +219,7 @@ class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                'MultiSports fitness trends upcoming. <a target="_blank" href="https://twitter.com/champagnethomas/status/788809148381134849">Here you can see a preview</a>',
+                'MultiSports fitness trends upcoming. <a target="_blank" href="https://goo.gl/forms/6c1BrGVR3jzNbRwS2">REGISTER FOR ALPHA TESTING HERE</a>',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">my twitter</a>!',
             ]
@@ -1039,6 +1040,33 @@ class StravistiX {
 
         } else {
             if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+        }
+    }
+
+    /**
+     * Check for goals element and enable GoalsModifier.
+     *
+     * This checks the document for a #progress-goals-v2 element. If
+     * found then the GoalsModifier is enabled and bound to the element.
+     * However, note that the modifier only works for the current athelete,
+     * and hence is only enabled on the dashboard and current user's profile
+     * pages.
+     *
+     * If the `displayExtendedGoals` user setting is falsey then this
+     * handler does nothing.
+     */
+    protected handleGoalsModifier(): void {
+        if (!this._userSettings.displayExtendedGoals) {
+            return;
+        }
+        let goals = $('#progress-goals-v2');
+        if (goals.length > 0) {
+            let pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
+            let pageDashboard = new RegExp('^/dashboard');
+            if (window.location.pathname.match(pageProfile)
+                    || window.location.pathname.match(pageDashboard)) {
+                new GoalsModifier(goals).modify();
+            }
         }
     }
 

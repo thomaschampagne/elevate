@@ -262,6 +262,12 @@ app.factory('CommonSettingsService', () => {
                 optionLabels: ['All'],
                 optionHtml: 'This will hide all routes created in the dashboard feed.',
             }, {
+                optionKey: 'displayExtendedGoals',
+                optionType: 'checkbox',
+                optionTitle: 'Enable strava premium additional goal progress tracking',
+                optionLabels: ['All'],
+                optionHtml: 'This will add two extra progress bars for <u>strava premium annual</u> goals which tracks progress for the current month and week.',
+            },{
                 optionKey: 'feedHideRideActivitiesUnderDistance',
                 optionType: 'integer',
                 optionTitle: 'Hide rides activities under distance.',
@@ -313,19 +319,19 @@ app.factory('CommonSettingsService', () => {
                 optionHtml: 'This selects which units to use when displaying wind speed on weather pages.',
             }]
         }, {
-            sectionTitle: 'Year progression targets for ' + (new Date()).getFullYear(),
+            sectionTitle: 'StravistiX Year progression targets for ' + (new Date()).getFullYear(),
             sectionContent: [{
                 optionKey: 'targetsYearRide',
                 optionType: 'integer',
                 optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Cycling'],
-                optionHtml: '',
+                optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
             }, {
                 optionKey: 'targetsYearRun',
                 optionType: 'integer',
                 optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Running'],
-                optionHtml: '',
+                optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
             }]
         }, {
             sectionTitle: 'Miscellaneous',
