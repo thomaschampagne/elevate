@@ -17,9 +17,9 @@
                 <th md-column md-order-by="activitiesName"><span>Activity</span></th>
                 <th md-column md-order-by="type"><span>Type</span></th>
                 <th md-column md-numeric md-order-by="trimp"><span>Training Impulse</span></th>
-                <th md-column md-numeric md-order-by="ctl"><span>Chronic Training Load</span></th>
-                <th md-column md-numeric md-order-by="atl"><span>Acute Training Load</span></th>
-                <th md-column md-numeric md-order-by="tsb"><span>Training Stress Balance</span></th>
+                <th md-column md-numeric md-order-by="ctl"><span>Fitness/CTL</span></th>
+                <th md-column md-numeric md-order-by="atl"><span>Fatigue/ATL</span></th>
+                <th md-column md-numeric md-order-by="tsb"><span>Form/TSB</span></th>
                 <th md-column md-numeric><span>Link</span></th>
             </tr>
             </thead>
@@ -27,7 +27,7 @@
             <tr md-row md-auto-select="options.autoSelect" ng-repeat="fitnessObj in fitnessDataForTableFiltered | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
 
                 <td md-cell>{{fitnessObj.timestamp | date:'mediumDate'}}</td>
-                <td md-cell ng-bind-html="fitnessObj.activitiesName"></td>
+                <td md-cell ng-bind-html="fitnessObj.activitiesNameStr"></td>
                 <td md-cell ng-bind-html="fitnessObj.type"></td>
                 <td md-cell>{{(fitnessObj.trimp !== -1 ? fitnessObj.trimp : '-')}}</td>
                 <td md-cell>{{fitnessObj.ctl}}</td>
