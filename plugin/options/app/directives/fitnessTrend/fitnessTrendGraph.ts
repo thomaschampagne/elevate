@@ -291,13 +291,13 @@ class FitnessTrendGraph {
                     yAxis: {
                         ticks: 10,
                         tickFormat: (d: any) => {
-                            return d3.format('.02f')(d);
+                            return d3.format('.01f')(d);
                         },
                         axisLabelDistance: -10,
                     },
                     y2Axis: {
                         tickFormat: (d: any) => {
-                            return d3.format('.02f')(d);
+                            return d3.format('.01f')(d);
                         },
                     },
                     x2Axis: {

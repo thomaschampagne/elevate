@@ -236,9 +236,9 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 activitiesName: trimpObject.activitiesName,
                 type: trimpObject.type,
                 trimp: trimpObject.trimp,
-                ctl: parseFloat(ctl.toFixed(3)),
-                atl: parseFloat(atl.toFixed(3)),
-                tsb: parseFloat(tsb.toFixed(3)),
+                ctl: parseFloat(ctl.toFixed(1)),
+                atl: parseFloat(atl.toFixed(1)),
+                tsb: parseFloat(tsb.toFixed(1)),
             };
 
             results.push(result);
