@@ -73,7 +73,7 @@ class ActivitiesSyncModifier implements IModifier {
 
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
-            $('#storageUsage').html('Extension storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><i>"unlimited storage" permission may be asked in future.</i>');
+            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><i>"unlimited storage" permission may be asked in future.</i>');
         });
     }
 
