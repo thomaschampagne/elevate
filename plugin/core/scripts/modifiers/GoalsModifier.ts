@@ -46,8 +46,7 @@ class GoalsModifier implements IModifier {
                     activityType =
                         activityType[0].toUpperCase() + activityType.slice(1);
                     let $actual = $barYearly.find('.actual');
-                    let actual = parseInt(
-                        $actual.text().replace(",", ""), 10);
+                    let actual = this.parseActual($actual.text());
                     if (goal.value !== 0) {
                         if (goal.units === GoalUnit.METRES) {
                             actual = actual * 1000;
@@ -65,6 +64,29 @@ class GoalsModifier implements IModifier {
                 }
             );
         });
+    }
+
+    /**
+     * Parse the actual goal attainment from a string.
+     *
+     * This parses a number formatted as a string into an actual number.
+     * Thousand separators and the decimal component are stripped away
+     * before parsing the number into an integer.
+     *
+     * Both commas and periods are treated as potential thousand separators
+     * and decimal markers in the number.
+     *
+     * @param actualText: The formatted number to parse.
+     */
+    private parseActual = (actualText: string): number => {
+        let usesComma = actualText.search(/[,]/) !== -1;
+        let usesPeriod = actualText.search(/[.]/) !== -1;
+        let hasDecimal = usesComma && usesPeriod;
+        if (hasDecimal) {
+            actualText = actualText.replace(/[,.]\d*$/, "");
+        }
+        let numberString = actualText.replace(/[,.]/g, "");
+        return parseInt(numberString, 10);
     }
 
     /**
