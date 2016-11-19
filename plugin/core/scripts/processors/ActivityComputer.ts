@@ -428,7 +428,7 @@ class ActivityComputer {
 
         for (let i: number = 0; i < powerArray.length; i++) { // Loop on samples
 
-            if ((this.isTrainer || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+            if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
 
                 // Compute distribution for graph/table
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -527,7 +527,7 @@ class ActivityComputer {
 
         for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
-            if ((this.isTrainer || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+            if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
                 // Compute heartrate data while moving from now
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 // average over time
@@ -627,7 +627,7 @@ class ActivityComputer {
                 // recomputing crank revolutions using cadence data
                 crankRevolutions += this.valueForSum(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60);
 
-                if ((this.isTrainer || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+                if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
 
                     movingSampleCount++;
 
