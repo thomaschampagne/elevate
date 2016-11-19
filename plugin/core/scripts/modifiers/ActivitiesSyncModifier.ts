@@ -35,7 +35,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '       </div>';
 
         html += '       <div class="progressBarGroup">';
-        html += '           <div id="totalProgress">Global progression</div>';
+        html += '           <div id="totalProgress">Global synchronisation progress</div>';
         html += '           <progress id="syncProgressBar" value="0" max="100"></progress>';
         html += '           <span id="totalProgressText"></span>';
         html += '        </div>';
@@ -148,7 +148,7 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 
-            document.title = 'History synchronization. ' + stepMessage + ' @ ' + progress.progress.toFixed(0) + '%';
+            document.title = 'History synchronization @ ' + (progress.savedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
 
             // Infos
             $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
