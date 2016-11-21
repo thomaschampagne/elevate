@@ -10,12 +10,13 @@ import IAnchorScrollProvider = angular.IAnchorScrollProvider;
 import IConfirmDialog = angular.material.IConfirmDialog;
 import IPromptDialog = angular.material.IPromptDialog;
 import IIntervalService = angular.IIntervalService;
+import IMedia = angular.material.IMedia;
 
 class MainController {
 
-    static $inject = ['$rootScope', 'ChromeStorageService', '$scope', '$location', '$mdSidenav', '$colors', '$mdDialog', '$window', '$interval'];
+    static $inject = ['$rootScope', 'ChromeStorageService', '$scope', '$location', '$mdSidenav', '$colors', '$mdDialog', '$window', '$interval', '$mdMedia'];
 
-    constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: ISidenavService, $colors: any, $mdDialog: IDialogService, $window: IWindowService, $interval: IIntervalService) {
+    constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: ISidenavService, $colors: any, $mdDialog: IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: IMedia) {
 
         $scope.colors = $colors;
 
@@ -40,6 +41,15 @@ class MainController {
         $scope.updateLastSyncDateDisplay();
         $interval($scope.updateLastSyncDateDisplay, 1000 * 60); // Refresh LastSyncDate displayed every minutes
 
+        // Watch for window resize under 'gt-md' then dispatch event
+        $scope.$watch(() => {
+            return $mdMedia('gt-md');
+        }, (greaterThanMid: boolean) => {
+            $scope.sideNavLockedOpen = greaterThanMid;
+            setTimeout(() => {
+                $rootScope.$broadcast('window-resize-gt-md'); // Emit event after 750ms
+            }, 750);
+        });
 
         $scope.toggleSidenav = (menu: string) => {
             $mdSidenav(menu).toggle();

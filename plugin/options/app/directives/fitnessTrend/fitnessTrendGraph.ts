@@ -505,7 +505,12 @@ class FitnessTrendGraph {
             });
         };
 
-
+        // This fix as "workaround" graph cropped when sidebar show/hide. Listen events broadcasted by "$broadcast('window-resize-gt-md');"
+        // Better solution?!
+        $scope.$on('window-resize-gt-md', () => {
+            // Send fake js window resize to make sure graph is re-drawn (to avoid cropping by sidebar) over a window resize around gt-md.
+            $window.dispatchEvent(new Event('resize'));
+        });
     }
 }
 
