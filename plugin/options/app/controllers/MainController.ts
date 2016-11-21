@@ -19,26 +19,27 @@ class MainController {
 
         $scope.colors = $colors;
 
-        // Check if user has already synced his activities
-        chromeStorageService.getLastSyncDate().then((lastSyncDate: number) => {
-
-            $rootScope.lastSyncDate = lastSyncDate;
-            $scope.updateLastSyncDateDisplay($rootScope);
-            $interval($scope.updateLastSyncDateDisplay, 1000 * 60); // Refresh LastSyncDate displayed every minutes
-        });
-
         $scope.updateLastSyncDateDisplay = () => {
+            chromeStorageService.getLastSyncDate().then((lastSyncDate: number) => {
 
-            if ($rootScope.lastSyncDate === -1) {
-                // No sync done
-                // Must perform first sync
-                $scope.lastSyncDateDisplay = "Sync your history";
+                $rootScope.lastSyncDate = lastSyncDate;
 
-            } else {
-                // A previous sync exists...
-                $scope.lastSyncDateDisplay = "Synced " + moment($scope.lastSyncDate).fromNow();
-            }
+                if ($rootScope.lastSyncDate === -1) {
+                    // No sync done
+                    // Must perform first sync
+                    $scope.lastSyncDateDisplay = "Sync your history";
+
+                } else {
+                    // A previous sync exists...
+                    $scope.lastSyncDateDisplay = "Synced " + moment($scope.lastSyncDate).fromNow();
+                }
+            });
         };
+
+        // Check if user has already synced his activities
+        $scope.updateLastSyncDateDisplay();
+        $interval($scope.updateLastSyncDateDisplay, 1000 * 60); // Refresh LastSyncDate displayed every minutes
+
 
         $scope.toggleSidenav = (menu: string) => {
             $mdSidenav(menu).toggle();
