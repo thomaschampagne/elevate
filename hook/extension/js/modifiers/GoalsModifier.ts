@@ -73,19 +73,20 @@ class GoalsModifier implements IModifier {
      * Thousand separators and the decimal component are stripped away
      * before parsing the number into an integer.
      *
-     * Both commas and periods are treated as potential thousand separators
-     * and decimal markers in the number.
+     * All non-numeric characters are considered potential thousand
+     * separators and decimal markers in the number.
      *
      * @param actualText: The formatted number to parse.
      */
     private parseActual = (actualText: string): number => {
-        let usesComma = actualText.search(/[,]/) !== -1;
-        let usesPeriod = actualText.search(/[.]/) !== -1;
-        let hasDecimal = usesComma && usesPeriod;
-        if (hasDecimal) {
-            actualText = actualText.replace(/[,.]\d*$/, "");
+        let separatorPrimaryIndex = actualText.search(/[^0-9]/);
+        let separatorPrimary = actualText.charAt(separatorPrimaryIndex);
+        let separatorSecondaryIndex = actualText.search(
+            new RegExp(`[^0-9${separatorPrimary}]`));
+        if (separatorSecondaryIndex !== -1) {  // Decimal part
+            actualText = actualText.slice(separatorSecondaryIndex)
         }
-        let numberString = actualText.replace(/[,.]/g, "");
+        let numberString = actualText.replace(/[^0-9]/g, "");
         return parseInt(numberString, 10);
     }
 
