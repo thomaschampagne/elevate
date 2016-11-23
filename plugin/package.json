@@ -50,6 +50,7 @@
     "moment": "^2.16.0",
     "nvd3": "^1.8.4",
     "q": "^1.4.1",
+    "moment": "2.16.0",
     "qrcode-js-package": "^1.0.4",
     "underscore": "^1.8.3"
   }
