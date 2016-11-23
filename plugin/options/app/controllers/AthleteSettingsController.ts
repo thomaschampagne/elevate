@@ -10,10 +10,12 @@ interface IAthleteProfile {
     userWeight: number;
 }
 
-
 class AthleteSettingsController {
 
-    static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
+    public static remoteAthleteProfileEqualsLocalMessage: string = 'athlete-profile-remote-local-changed';
+    public static changedAthleteProfileMessage: string = 'athlete-profile-saved';
+
+    public static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
 
     constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService, $window: IWindowService) {
 
@@ -24,7 +26,7 @@ class AthleteSettingsController {
         }];
 
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
-
+            $scope.userSettingsSynced = userSettingsSynced;
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
@@ -153,34 +155,34 @@ class AthleteSettingsController {
         $scope.profileChanged = () => {
 
             // Save LocalAthleteProfile to chrome local storage
-            let athleteProfile: IAthleteProfile = {
+            let updatedAthleteProfile: IAthleteProfile = {
                 userGender: $scope.gender.type,
                 userMaxHr: $scope.userMaxHr,
                 userRestHr: $scope.userRestHr,
                 userWeight: $scope.userWeight,
-                userFTP: $scope.userFTP,
+                userFTP: $scope.userFTP
             };
 
-            chromeStorageService.setLocalAthleteProfile(athleteProfile).then((savedAthleteProfile: IAthleteProfile) => {
-                console.log('Profile configured with', savedAthleteProfile);
-            });
+            chromeStorageService.setLocalAthleteProfile(updatedAthleteProfile).then((savedAthleteProfile: IAthleteProfile) => {
 
-            // If a synchronisation exists...
-            chromeStorageService.getLastSyncDate().then((lastSyncDate: number) => {
-                if (lastSyncDate !== -1) {
-                    $scope.showHistoryNonConsistent = true;
+                console.log('Profile configured with', savedAthleteProfile);
+
+                /*let syncedAthleteProfile: IAthleteProfile = {
+                    userGender: $scope.userSettingsSynced.userGender,
+                    userMaxHr: $scope.userSettingsSynced.userMaxHr,
+                    userRestHr: $scope.userSettingsSynced.userRestHr,
+                    userWeight: $scope.userSettingsSynced.userWeight,
+                    userFTP: $scope.userSettingsSynced.userFTP
+                };*/
+                // $rootScope.$broadcast(AthleteSettingsController.remoteAthleteProfileEqualsLocalMessage, AthleteSettingsController.remoteAthleteProfileEqualsLocal(savedAthleteProfile, syncedAthleteProfile));
+
+                return chromeStorageService.getLastSyncDate();
+
+            }).then((lastSyncDate: number) => {
+                if (lastSyncDate !== -1) { // lastSyncDate exists
+                    $rootScope.$broadcast(AthleteSettingsController.changedAthleteProfileMessage);
                 }
             });
-        };
-
-        $scope.syncNow = (forceSync: boolean) => {
-            chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=800, height=600, location=0');
-            });
-        };
-
-        $scope.hideHistoryNonConsistent = () => {
-            $scope.showHistoryNonConsistent = false;
         };
     }
 }
