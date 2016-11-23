@@ -91,7 +91,7 @@ class WindyTyModifier implements IModifier {
             $('[data-wheater-windyty]').click((evt: Event) => {
                 evt.preventDefault();
                 evt.stopPropagation();
-                this.showWeather($('[data-wheater-windyty]').attr('data-wheater-windyty'));
+                this.showWeather($(evt.target).attr('data-wheater-windyty'));
             });
 
             $('#stravistix_weather_title').click((evt) => {
