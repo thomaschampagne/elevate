@@ -2,9 +2,19 @@ interface IGenderList {
     type: string;
 }
 
+interface IAthleteProfile {
+    userGender: string;
+    userMaxHr: number;
+    userRestHr: number;
+    userFTP: number;
+    userWeight: number;
+}
+
 class AthleteSettingsController {
 
-    static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
+    public static changedAthleteProfileMessage: string = 'athlete-profile-saved';
+
+    public static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
 
     constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService, $window: IWindowService) {
 
@@ -15,7 +25,7 @@ class AthleteSettingsController {
         }];
 
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
-
+            $scope.userSettingsSynced = userSettingsSynced;
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
@@ -142,30 +152,16 @@ class AthleteSettingsController {
         };
 
         $scope.profileChanged = () => {
-            chromeStorageService.getProfileConfigured().then((response: boolean) => {
-                if (!response) {
+
+            chromeStorageService.getProfileConfigured().then((configured: boolean) => {
+                if (!configured) {
                     chromeStorageService.setProfileConfigured(true).then(() => {
                         console.log('Profile configured');
                     });
                 }
             });
 
-            // If a synchronisation exists...
-            chromeStorageService.getLastSyncDate().then((lastSyncDate: number) => {
-                if (lastSyncDate !== -1) {
-                    $scope.showHistoryNonConsistent = true;
-                }
-            });
-        };
-
-        $scope.syncNow = (forceSync: boolean) => {
-            chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=800, height=600, location=0');
-            });
-        };
-
-        $scope.hideHistoryNonConsistent = () => {
-            $scope.showHistoryNonConsistent = false;
+            $rootScope.$broadcast(AthleteSettingsController.changedAthleteProfileMessage);
         };
     }
 }

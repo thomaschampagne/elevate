@@ -2,8 +2,9 @@ class ActivitiesSynchronizer {
 
     public static lastSyncDateTime: string = 'lastSyncDateTime';
     public static computedActivities: string = 'computedActivities';
-    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
+    public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
 
+    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
@@ -521,6 +522,18 @@ class ActivitiesSynchronizer {
 
             console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
 
+            let syncedAthleteProfile: IAthleteProfile = {
+                userGender: this.userSettings.userGender,
+                userMaxHr: this.userSettings.userMaxHr,
+                userRestHr: this.userSettings.userRestHr,
+                userWeight: this.userSettings.userWeight,
+                userFTP: this.userSettings.userFTP
+            };
+
+            return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
+
+        }).then((saved: any) => {
+            console.log('Sync With Athlete Profile', saved.data.syncWithAthleteProfile);
             deferred.resolve(saved.data);
         });
 
@@ -544,7 +557,7 @@ class ActivitiesSynchronizer {
 
                 let newLastSyncDate = new Date(_.last(computedActivitiesStoredCasted).start_time).getTime() + _.last(computedActivitiesStoredCasted).elapsed_time_raw * 1000;
 
-               // Save activities to local storage
+                // Save activities to local storage
                 Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivitiesStoredCasted).then((pagesGroupSaved: any) => {
 
                     Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, newLastSyncDate).then((saved: any) => {
