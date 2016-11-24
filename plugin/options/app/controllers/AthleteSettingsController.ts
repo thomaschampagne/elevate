@@ -2,6 +2,15 @@ interface IGenderList {
     type: string;
 }
 
+interface IAthleteProfile {
+    userGender: string;
+    userMaxHr: number;
+    userRestHr: number;
+    userFTP: number;
+    userWeight: number;
+}
+
+
 class AthleteSettingsController {
 
     static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
@@ -142,12 +151,18 @@ class AthleteSettingsController {
         };
 
         $scope.profileChanged = () => {
-            chromeStorageService.getProfileConfigured().then((response: boolean) => {
-                if (!response) {
-                    chromeStorageService.setProfileConfigured(true).then(() => {
-                        console.log('Profile configured');
-                    });
-                }
+
+            // Save LocalAthleteProfile to chrome local storage
+            let athleteProfile: IAthleteProfile = {
+                userGender: $scope.gender.type,
+                userMaxHr: $scope.userMaxHr,
+                userRestHr: $scope.userRestHr,
+                userWeight: $scope.userWeight,
+                userFTP: $scope.userFTP,
+            };
+
+            chromeStorageService.setLocalAthleteProfile(athleteProfile).then((savedAthleteProfile: IAthleteProfile) => {
+                console.log('Profile configured with', savedAthleteProfile);
             });
 
             // If a synchronisation exists...

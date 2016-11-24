@@ -14,8 +14,8 @@ class ProfileConfiguredRibbon {
         $scope.isProfileConfigured = true;
 
         // Retrieve profile configured...
-        chromeStorageService.getProfileConfigured().then((profileConfigured) => {
-            $scope.isProfileConfigured = profileConfigured || !_.isEmpty(profileConfigured);
+        chromeStorageService.getLocalAthleteProfile().then((profileConfigured) => {
+            $scope.isProfileConfigured = !_.isEmpty(profileConfigured);
         });
 
         $scope.goToAthleteSettings = () => {
@@ -23,10 +23,10 @@ class ProfileConfiguredRibbon {
         };
 
         $scope.hideAndConfigureProfile = () => {
-            chromeStorageService.setProfileConfigured(true).then(() => {
+            /*chromeStorageService.setLocalAthleteProfile(true).then(() => {
                 console.log('Profile configured');
                 $scope.isProfileConfigured = true;
-            });
+            });*/
         };
     }
 }

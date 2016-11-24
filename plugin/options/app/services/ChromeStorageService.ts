@@ -51,16 +51,20 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getProfileConfigured(): Q.IPromise<boolean> {
-        return this.getFromLocalStorage('profileConfigured');
+    public getLocalAthleteProfile(): Q.IPromise<IAthleteProfile> {
+        return this.getFromLocalStorage('athleteProfile');
     }
 
-    public setProfileConfigured(status: boolean): Q.IPromise<any> {
+    public setLocalAthleteProfile(profile: IAthleteProfile): Q.IPromise<IAthleteProfile> {
         let deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.set({
-            profileConfigured: status
+            athleteProfile: profile
         }, () => {
-            deferred.resolve();
+            if(chrome.runtime.lastError) {
+                deferred.reject(chrome.runtime.lastError);
+            } else {
+                deferred.resolve(profile);
+            }
         });
         return deferred.promise;
     }
