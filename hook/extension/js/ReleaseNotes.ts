@@ -13,6 +13,21 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '4.5.3',
+        message: 'Another release to fix latest small bug from 4.5.x. Sorry for inconvenience',
+        hotFixes: [
+        ],
+        features: [
+            'Added monthly and weekly targets for strava premium annual goals'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fix again monthly and weekly targets number format when language selected is french',
+            'Fix weather on cycling activities: only wind map could be displayed',
+            'Fixed extended stats graph to get Y axis always starting from zero',
+        ],
+    },
+    {
         version: '4.5.2',
         message: 'NEW: Added monthly and weekly targets for strava premium annual goals',
         hotFixes: [
