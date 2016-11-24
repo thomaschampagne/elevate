@@ -284,8 +284,8 @@ class StravistiX {
         }
 
         // Donate button
-        message += '<a style="font-size: 24px;" class="button btn-block btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#/?showDonation=true">';
-        message += '<strong>Push this project higher !!!</strong>';
+        message += '<a class="button btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#/?showDonation=true">';
+        message += '<button style="font-size: 18px; width: 100%;" class="btn btn-primary btn-sm">Push this project higher !!!</button>';
         message += '</a>';
 
         $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 25%;">' + updateMessageObj.logo + '</div><h2>' + updateMessageObj.title + '</h2>' + message);
@@ -1073,7 +1073,7 @@ class StravistiX {
             let pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
             let pageDashboard = new RegExp('^/dashboard');
             if (window.location.pathname.match(pageProfile)
-                    || window.location.pathname.match(pageDashboard)) {
+                || window.location.pathname.match(pageDashboard)) {
                 new GoalsModifier(goals).modify();
             }
         }
