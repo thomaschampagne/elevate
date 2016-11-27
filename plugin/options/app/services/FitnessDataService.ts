@@ -88,21 +88,13 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
         onGetComputedActivitiesTimeStart = performance.now(); // track time
 
-        // if (!fitnessDataService.computedActivities) {
-
         console.log('Fetch computedActivities from chromeStorageService');
 
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
-            // fitnessDataService.computedActivities = computedActivities;
             deferred.resolve(computedActivities);
         }, (err: any) => {
             deferred.reject(err);
         });
-
-        // } else {
-        //     console.log('Fetch computedActivities from FitnessDataService local var');
-        //     deferred.resolve(fitnessDataService.computedActivities);
-        // }
 
         return deferred.promise;
     };
@@ -163,6 +155,9 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             // let fromDate = new Date(_.first(cleanedActivitiesWithHRData).date.toDateString());
             let fromDate: Date = _.first(cleanedActivitiesWithHRData).date;
 
+            // Add one day before the first activity
+            fromDate = moment(fromDate).subtract(1, 'days').toDate();
+
             // Inject day off..
             let daysDiffWithToday: number = moment.duration(moment().diff(moment(fromDate))).asDays();
 
@@ -219,7 +214,6 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay)
             }
 
-            // fitnessDataService.fitnessObjectsWithDaysOff = everyDayFitnessObjects;
             deferred.resolve(everyDayFitnessObjects);
 
         }, (err: any) => {
