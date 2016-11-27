@@ -32,13 +32,6 @@ class ProfileConfiguredRibbon {
 
     constructor(public $scope: IProfileConfiguredRibbonScope, public chromeStorageService: ChromeStorageService, public $location: ILocationService, public $window: IWindowService) {
 
-        // chromeStorageService.removeFromLocalStorage('athleteProfile'); // TODO ...
-        // chromeStorageService.removeFromLocalStorage('profileConfigured'); // TODO ...
-        // chromeStorageService.removeFromLocalStorage('syncWithAthleteProfile'); // TODO ...
-        // chromeStorageService.getAllFromLocalStorage().then((saved: any) => {  // TODO ...
-        //     console.log(saved);
-        // });
-
         // Considering that profile is configured at first. It's a nominal state before saying that is isn't
         $scope.isProfileConfigured = true;
 
@@ -77,10 +70,13 @@ class ProfileConfiguredRibbon {
             });
         };
         // ...Then execute...
-        $scope.checkLocalSyncedAthleteProfileEqualsRemote();
+        if (!StorageManager.getCookie('hide_history_non_consistent')) {
+            $scope.checkLocalSyncedAthleteProfileEqualsRemote();
+        }
 
         $scope.hideHistoryNonConsistent = () => {
             $scope.showHistoryNonConsistent = false;
+            StorageManager.setCookieSeconds('hide_history_non_consistent', 'true', 24 * 3600); // Set for 1 day
         };
 
         $scope.goToAthleteSettings = () => {
