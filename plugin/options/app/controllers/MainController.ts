@@ -357,11 +357,15 @@ class MainController {
                 .cancel('Cancel');
 
             $mdDialog.show(confirm).then(function () {
+
                 chromeStorageService.removeFromLocalStorage('computedActivities').then(() => {
-                    return chromeStorageService.removeFromLocalStorage('lastSyncDateTime').then(() => {
-                        $window.location.reload();
-                    });
+                    return chromeStorageService.removeFromLocalStorage('lastSyncDateTime');
+                }).then(() => {
+                    return chromeStorageService.removeFromLocalStorage('syncWithAthleteProfile');
+                }).then(() => {
+                    $window.location.reload();
                 });
+
             }, function () {
                 // Cancel.. do nothing
             });

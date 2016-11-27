@@ -51,6 +51,10 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
+    public getLocalSyncedAthleteProfile(): Q.IPromise<IAthleteProfile> {
+        return this.getFromLocalStorage('syncWithAthleteProfile');
+    }
+
     public getProfileConfigured(): Q.IPromise<boolean> {
         return this.getFromLocalStorage('profileConfigured');
     }
