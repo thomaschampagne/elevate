@@ -25,6 +25,7 @@ interface IAppResources {
     twitterIcon: string;
     systemUpdatesIcon: string;
     fitnessCenterIcon: string;
+    timelineIcon: string;
     donateIcon: string;
     shareIcon: string;
     trackChangesIcon: string;

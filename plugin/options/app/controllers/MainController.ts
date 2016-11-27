@@ -69,7 +69,7 @@ class MainController {
                     name: 'Multisports Fitness Trend',
                     subname: 'Multisports fitness trend <Heart rate based>',
                     sup: 'ALPHA',
-                    icon: 'fitness_center',
+                    icon: 'timeline',
                     link: routeMap.fitnessTrendRoute,
                 }, {
                     id: 'ACTIVITIES_GRID',

@@ -28,7 +28,7 @@ class MenuModifier implements IModifier {
         html += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
         html += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
         html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
-        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.fitnessCenterIcon + "'/> <span>Multisports Fitness Trend</span></a></li>";
+        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.timelineIcon + "'/> <span>Multisports Fitness Trend</span></a></li>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/> <span>StravistiX Settings</span></a></li>";
         html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
         html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
