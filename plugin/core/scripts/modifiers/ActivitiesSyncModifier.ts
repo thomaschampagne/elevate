@@ -52,6 +52,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
         html += '           <div style="padding-bottom: 10px;" id="savedActivitiesCount"></div>';
         html += '           <div style="padding-bottom: 10px;" id="storageUsage"></div>';
+        html += '           <div style="padding-bottom: 10px;" id="autoClose"></div>';
         html += '       </div>';
         html += '    </div>';
         html += '</div>';
@@ -75,7 +76,7 @@ class ActivitiesSyncModifier implements IModifier {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
             $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><br/>' +
                 '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history inside storage allocated by extension. ' +
-                'In upcoming updates, your browser may tell you that "stravistix" permissions have changed. It\'s because "unlimited storage" permission is asked to handle users having more 5MB of history. Just accept new permissions. No big deal from most of you.</i>');
+                'In upcoming updates, your browser should ask you to accept new permissions for the "stravistix" extension. It\'s because "unlimited storage" permission is asked to handle users having more 5MB of history. Just accept new permissions. No big deal from most of you.</i>');
         });
     }
 
@@ -98,7 +99,14 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            // window.close();
+            let timer: number = 5000; // 5s + 1s (delay start) = 6s
+            let closeWindowIntervalId: number = setInterval(() => {
+                $('#autoClose').html('<strong>Sync is done. This windows will close itself in ' + (timer / 1000) + ' seconds.</strong> <a href="#" onclick="javascript:clearInterval(' + closeWindowIntervalId + '); $(\'#autoClose\').hide();">Cancel<a>');
+                if (timer <= 0) {
+                    window.close();
+                }
+                timer = timer - 1000; // 1s countdown
+            }, 1000);
 
         }, (err: any) => {
 
