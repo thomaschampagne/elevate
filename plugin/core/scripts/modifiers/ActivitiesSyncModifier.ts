@@ -31,11 +31,10 @@ class ActivitiesSyncModifier implements IModifier {
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced...</span><br/><br/>This can take several minutes on your first sync. <br/><br/>' +
-            'Note that once the first synchronization is completed, all become transparent since your history will be automatically synced when browsing strava.com. Of course you can trigger a manual synchronization from button you clicked to view this. <br/><br/>' +
-            'Closing this window will stop the synchronization. Window should close itself when sync is done.';
+        html += '           <span style="font-size: 28px;">Your history is being synced... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. <br/><br/>' +
+            'Once the first synchronization is completed, your history will be automatically synced while browsing strava.com. You can trigger a manual synchronization by clicking the same button.<br/><br/>' +
+            'Closing this window will stop the synchronization. This window should close itself when synchronisation is done.';
         html += '       </div>';
-
         html += '       <div class="progressBarGroup">';
         html += '           <div id="totalProgress">Global synchronisation progress</div>';
         html += '           <progress id="syncProgressBar" value="0" max="100"></progress>';
@@ -77,8 +76,9 @@ class ActivitiesSyncModifier implements IModifier {
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
             $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><br/>' +
-                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history inside storage allocated by extension. ' +
-                'In upcoming updates, your browser should ask you to accept new permissions for the "stravistix" extension. It\'s because "unlimited storage" permission is asked to handle users having more 5MB of history. Just accept new permissions. No big deal from most of you.</i>');
+                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history to storage allocated by extension. ' +
+                'In upcoming updates, your browser should ask you to accept new permissions avoid this 5MB limitation.' +
+                'Just accept... This will allow users having more 5MB of history to save it and get feature working. No big deal for most of you...</i>');
         });
     }
 

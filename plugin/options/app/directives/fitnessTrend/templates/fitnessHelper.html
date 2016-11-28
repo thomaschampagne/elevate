@@ -11,9 +11,10 @@
     <md-dialog-content>
         <div class="md-dialog-content">
 
-            Multi sports fitness trend is calculated from your various heart rate stress. An heart rate stress is
-            represented by an insight called <i>TRaining IMPulse</i> or <i>TRIMP</i>.
-            This concept has been developed by Dr. Eric W. Banister. Basically, it represents the amount of heart stress
+            Multi sports fitness trend is calculated from your various heart rate stress. A heart rate stress is
+            represented by an value called <i>TRaining IMPulse</i> or <i>TRIMP</i>.
+            Training Impulse concept has been developed by Dr. Eric W. Banister. Basically, it represents the amount of
+            heart stress
             during an activity: the longer you go at full
             throttle during an activity, the more <i>TRIMP</i> of activity goes up!
             <md-button class="md-accent" ng-hide="showMathsFormula" ng-click="showMathsFormula = true">Show me the
@@ -28,20 +29,18 @@
                 <i>TRIMP</i> has both a positive and a negative effect. The positive effect is called <i>fitness</i>,
                 and the negative
                 effect is called <i>fatigue</i>. <i>Fitness</i> and <i>fatigue</i> can combined to provide a value of
-                <i>form</i> or <i>performance</i>.
+                <i>form</i> or <i>Performance</i>.
             </div>
 
             <div style="padding-bottom: 10px;">
-                The fitness trend you can see as graph is computed over the <i>Training Stress Balance (TSB)</i> model.
-                This model uses the terms of:
-
+                The fitness trend drawn in the graph is computed over a model called <i>Training Stress Balance
+                (TSB)</i>.
+                This model uses following terms:
                 <ul>
-                    <li><i>Chronic Training Load (CTL)</i>, known as <i>Fitness</i></li>
-                    <li><i>Acute Training Load (ATL)</i> known as <i>Fatigue</i></li>
-                    <li>Training Stress Balance (TSB) for <i>Form</i> or <i>Performance</i></li>
+                    <li style="padding-bottom: 20px;"><i>Fitness</i> or <i>Chronic Training Load (CTL)</i></li>
+                    <li style="padding-bottom: 20px;"><i>Fatigue</i> or <i>Acute Training Load (ATL)</i></li>
+                    <li><i>Form</i> or <i>Training Stress Balance (TSB)</i></li>
                 </ul>
-
-
             </div>
             Explanations...
             <ul>
@@ -59,14 +58,12 @@
                     The <i>Acute Training Load (ATL)</i> or <i>Fatigue</i> is the short-term average daily training
                     load.
                     Same way than <i>CTL</i> but
-                    default period is fixed to 7 days (one week). Conceptually, fatigue is easy to understand; it's that
-                    tired feeling which limits your performance. This curve varies much faster than <i>CTL</i>. On that
-                    curve you
-                    can see on days with a workout with a high stress the fatigue climbs sharply in response. You do a
-                    hard
-                    workout today and you will feel it in the coming days. But also go down quickly as you take a few
-                    days
-                    off.
+                    default period is fixed to 7 days (one week). Conceptually, fatigue is easy to understand: It's the
+                    tired feelings which limits your performance. This curve varies much faster than <i>CTL</i>. On <i>ATL</i>
+                    curve, you can see the fatigue climbing sharply in response where you performed workouts with a high
+                    stress.
+                    You do a hard workout today and you will feel it in the coming days. But also go down quickly as you
+                    take few days off.
                 </li>
 
                 <li style="padding-bottom: 20px;">
@@ -79,17 +76,16 @@
                     <br/>
                     <ul>
                         <li>TSB > 0: Athlete in form, sharp or under-training phase.</li>
-                        <li>TSB < 0: Athlete on overload or over-training phase.</i></li>
+                        <li>TSB < 0: Athlete on overload or over-training phase.</li>
                     </ul>
                     <br/>
                     Note that being fit does not mean that you are ready to race at your best. A negative Form would
                     indicate that you are carrying a lot of fatigue and are not on form. However, by resting you can
                     evacuate fatigue at a greater rate than you lose fitness and come into form on the day that matters
-                    most... Race day! In short, Fitness minus Fatigue equals Form.
+                    most... Race day (or punish friend day... ;))! In short, <i>Fitness</i> minus <i>Fatigue</i> equals
+                    <i>Form</i>.
                 </li>
-
             </ul>
-
         </div>
     </md-dialog-content>
 </md-dialog>
