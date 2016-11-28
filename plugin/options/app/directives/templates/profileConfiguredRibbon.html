@@ -1,0 +1,15 @@
+<md-toolbar class="md-accent" ng-hide="isProfileConfigured">
+    <div class="md-toolbar-tools">
+        <span class="md-subhead">Your athlete settings seems to be not configured</span>
+        <span flex></span>
+        <md-button class="md-primary" ng-click="goToAthleteSettings()">Give a look</md-button> <md-button class="md-primary" ng-click="setProfileConfiguredAndHide()">It's OK, hide this !</md-button>
+    </div>
+</md-toolbar>
+<md-toolbar class="md-accent" ng-show="showHistoryNonConsistent">
+    <div class="md-toolbar-tools">
+        <span class="md-subhead">Your local history may not be consistent anymore since you changed your athlete settings from this browser or another one.</span>
+        <span flex></span>
+        <md-button flex="20" class="md-primary" ng-click="syncNow('true')">Erase/ReSync history</md-button>
+        <md-button flex="15" class="md-primary" ng-click="hideHistoryNonConsistent()">Hide for 1 day</md-button>
+    </div>
+</md-toolbar>

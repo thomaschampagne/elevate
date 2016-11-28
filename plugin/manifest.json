@@ -1,0 +1,57 @@
+{
+    "manifest_version": 2,
+    "name": "StravistiX for Strava",
+    "short_name": "StravistiX",
+    "description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
+    "version": "4.5.3",
+    "version_name": "4.5.3 Stable",
+    "background": {
+        "scripts": [
+            "core/scripts/Helper.js",
+            "core/scripts/UserSettings.js",
+            "core/modules/StorageManager.js",
+            "core/scripts/Background.js"
+        ]
+    },
+    "content_scripts": [{
+        "js": [
+            "node_modules/underscore/underscore-min.js",
+            "core/modules/Loader.js",
+            "core/scripts/Constants.js",
+            "core/scripts/Helper.js",
+            "core/scripts/UserSettings.js",
+            "core/scripts/Content.js"
+        ],
+        "run_at": "document_end",
+        "matches": [
+            "*://www.strava.com/*",
+            "*://app.strava.com/*"
+        ]
+    }],
+    "icons": {
+        "16": "core/icons/16.png",
+        "48": "core/icons/48.png",
+        "128": "core/icons/128.png"
+    },
+    "options_page": "options/app/index.html",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
+    "permissions": [
+        "*://www.strava.com/*",
+        "*://app.strava.com/*",
+        "storage"
+    ],
+    "web_accessible_resources": [
+        "node_modules/*",
+        "core/modules/*",
+        "core/config/*",
+        "core/scripts/processors/*",
+        "core/scripts/modifiers/*",
+        "core/scripts/*",
+        "core/css/*",
+        "options/*",
+        "core/icons/*"
+    ],
+    "externally_connectable": {
+        "matches": ["*://*.strava.com/*"]
+    }
+}

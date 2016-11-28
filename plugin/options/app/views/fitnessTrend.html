@@ -1,0 +1,41 @@
+<!--Display alpha/beta feature message, TO BE REMOVED IN FUTURE-->
+<md-card>
+    <md-switch ng-model="enableAlphaFitnessTrend" aria-label="" ng-click="onEnableAlphaFitnessTrend()">
+        Enable Alpha feature? <i>Note: feature can be unstable and related updates may reset the feature itself. Found a
+        bug? Thanks to report <a href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">here</a></i>
+    </md-switch>
+</md-card>
+<md-content ng-if="enableAlphaFitnessTrend">
+    <!--User must sync when no last sync date found-->
+    <md-card ng-hide="enableFitnessTabs">
+        <md-card-title>
+            <span class="md-headline">First history sync required.</span>
+        </md-card-title>
+        <md-card-content>
+            Please synchronize first your history to access "multisports fitness trend" feature.<br/><br/>Notice: Only
+            activities having heart rate data will be used to display the multisports fitness trend based on heart rate.
+        </md-card-content>
+    </md-card>
+
+    <!--No history with heart rate activities found-->
+    <md-card ng-hide="hasFitnessData">
+        <md-card-title>
+            <span class="md-headline">No history with heart rate activities found.</span>
+        </md-card-title>
+        <md-card-content>
+            No activities with heart rate data found in your history.<br/>They are required to display the multisports
+            fitness trend based on heart rate.
+        </md-card-content>
+    </md-card>
+
+    <!--Fitness tabs-->
+    <md-tabs md-dynamic-height md-border-bottom ng-if="(enableFitnessTabs && hasFitnessData)"
+             ng-show="(enableFitnessTabs && hasFitnessData)">
+        <md-tab label="graph">
+            <fitness-trend-graph></fitness-trend-graph>
+        </md-tab>
+        <md-tab label="table">
+            <fitness-trend-table ng-if="loadFitnessTrendTable" ng-cloak></fitness-trend-table>
+        </md-tab>
+    </md-tabs>
+</md-content>

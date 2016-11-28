@@ -1,0 +1,72 @@
+<md-card ng-show="fitnessData.length">
+    <!--FILTERS-->
+    <md-card-title aria-hidden="false">
+        <!--LEGEND-->
+        <div flex="100" layout="row" layout-align="start center">
+            <span class="md-title" style="color: {{colors.ctl}}">Fitness {{fitnessDataOnToday.ctl | number: 1}}</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="md-title" style="color: {{colors.atl}}">Fatigue {{fitnessDataOnToday.atl | number: 1}}</span>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="md-title" style="color: {{colors.tsb}}">Form {{fitnessDataOnToday.tsb | number: 1}}</span>
+            <span flex></span>
+            <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
+                <md-icon aria-label="Help">help</md-icon>
+            </md-button>
+        </div>
+
+    </md-card-title>
+    <md-card-content ng-cloak>
+        <div layout="row" layout-align="start start">
+            <div flex="65" layout="row">
+                <md-input-container>
+                    <label>Period</label>
+                    <md-select ng-model="periodSelected" ng-change="lastMonthsPeriodChanged()"
+                               aria-label="Period to watch">
+                        <md-option ng-repeat="period in periodsToWatch" ng-value="period">{{ period.label }}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>From</label>
+                    <md-datepicker ng-model="fromDate" md-placeholder="Enter date" md-min-date="minDate"
+                                   md-max-date="toDate" ng-change="fromDateChanged()"></md-datepicker>
+                </md-input-container>
+                <md-input-container class="md-block" layout-align="end start">
+                    <label>To</label>
+                    <md-datepicker ng-model="toDate" md-placeholder="Enter date" md-min-date="fromDate"
+                                   md-max-date="maxDate" ng-change="toDateChanged()"></md-datepicker>
+                </md-input-container>
+            </div>
+            <div flex></div>
+        </div>
+
+        <!--LOADING-->
+        <div ng-hide="displayOnFirstDrawn" layout="row" layout-align="center center" style="height: 150px;">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+
+        <!--GRAPH-->
+        <div layout="row" layout-align="start start">
+
+            <div flex="100">
+                <nvd3 options="fitnessChartOptions" config="{deepWatchDataDepth: 0}" data="fitnessChartData.curves"
+                      class="with-3d-shadow with-transitions"></nvd3>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>
+
+<!-- <label class="md-body-2">Period selection</label> -->
+<!--<md-select ng-model="selectedToppings" aria-label="Activity Types" placeholder="Filter by types" multiple>-->
+<!--<md-optgroup label="Activity Types">-->
+<!--<md-option ng-value="type" ng-repeat="type in activityTypes">{{type}}</md-option>-->
+<!--</md-optgroup>-->
+<!--</md-select>-->
+
+
+<!-- <div>
+    <div>You will loose {{restLooseGainData.lostCtl.percentageTrigger}}% of your CTL/Fitness in <strong>~{{restLooseGainData.lostCtl.dayCount}} days (on {{restLooseGainData.lostCtl.date.toLocaleDateString()}})</strong></div>
+    <div>You will loose {{restLooseGainData.lostAtl.percentageTrigger}}% of your ATL/Fatigue in <strong>~{{restLooseGainData.lostAtl.dayCount}} days (on {{restLooseGainData.lostAtl.date.toLocaleDateString()}})</strong></div>
+    <div>You will get in form (positive TSB) in <strong>~{{restLooseGainData.gainForm.dayCount}} days (on {{restLooseGainData.gainForm.date.toLocaleDateString()}})</strong></div>
+    <div>When in form, you will lost this form (negative TSB) after<strong>~{{restLooseGainData.lostForm.dayCount}} days (on {{restLooseGainData.lostForm.date.toLocaleDateString()}})</strong></div>
+</div> -->
