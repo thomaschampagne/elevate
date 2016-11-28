@@ -73,7 +73,9 @@ class ActivitiesSyncModifier implements IModifier {
 
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
-            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><i>"unlimited storage" permission may be asked in future.</i>');
+            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><br/>' +
+                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history inside storage allocated by extension. ' +
+                'In upcoming updates, your browser may tell you that "stravistix" permissions have changed. It\'s because "unlimited storage" permission is asked to handle users having more 5MB of history. Just accept new permissions. No big deal from most of you.</i>');
         });
     }
 
@@ -96,7 +98,7 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            window.close();
+            // window.close();
 
         }, (err: any) => {
 
