@@ -1,6 +1,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/6mantaa8yxbn4iqx/branch/develop?svg=true)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop)
 # Table of Content
+
 <!-- toc -->
+
 - [1/ Install StravistiX](#1-install-stravistix)
     + [1.1/ From Chrome / Opera Store](#11-from-chrome--opera-store)
     + [1.2/ From continuous integration](#12-from-continuous-integration)
@@ -17,14 +19,15 @@
     + [3.3/ Clean the project](#33-clean-the-project)
 - [4/ Git repository structure and GitFlow](#4-git-repository-structure-and-gitflow)
 - [5/ Code Editor and Indentation plugin used](#5-code-editor-and-indentation-plugin-used)
+
 <!-- tocstop -->
 
 1/ Install StravistiX
 =====================================================
-### 1.1/  From Chrome / Opera Store
+### 1.1/ From Chrome / Opera Store
 Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.github.io/stravistix/)
 
-### 1.2/  From continuous integration
+### 1.2/ From continuous integration
 Latest **develop** build: https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts
 
 2/ Install from sources
