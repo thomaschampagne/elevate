@@ -30,6 +30,8 @@ Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.gith
 ### 1.2/ From continuous integration
 Latest **develop** build: https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts
 
+Install steps to follow: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
+
 2/ Install from sources
 ==========
 
