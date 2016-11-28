@@ -1,6 +1,5 @@
 /// <reference path="../../../typings/index.d.ts" />
 /// <reference path="../../../typings/plugin.d.ts" />
-/// <reference path="../../../typings/stravistix.ts.migration.d.ts" />
 
 class StravistiX {
 
