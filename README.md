@@ -1,3 +1,4 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/6mantaa8yxbn4iqx/branch/develop?svg=true)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop)
 # Table of Content
 <!-- toc -->
 - [1/ Install StravistiX from Chrome / Opera Store](#1-install-stravistix-from-chrome--opera-store)
