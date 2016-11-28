@@ -4,7 +4,6 @@
     "typings/globals/chrome/index.d.ts",
     "typings/globals/jquery/index.d.ts",
     "typings/globals/underscore/index.d.ts",
-    "typings/stravistix.ts.migration.d.ts",
     "typings/plugin.d.ts",
     "plugin/core/config/env.ts",
     "plugin/core/scripts/Background.ts",
