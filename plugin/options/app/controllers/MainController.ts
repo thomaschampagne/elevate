@@ -344,7 +344,7 @@ class MainController {
 
         $scope.syncNow = (forceSync: boolean) => {
             chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=800, height=750, location=0');
+                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=765, location=0');
             });
         };
 

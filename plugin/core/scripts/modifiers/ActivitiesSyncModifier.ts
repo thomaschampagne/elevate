@@ -6,6 +6,8 @@ class ActivitiesSyncModifier implements IModifier {
     protected forceSync: boolean;
     protected userSettings: IUserSettings;
 
+    public static closeWindowIntervalId: number = -1;
+
     constructor(appResources: IAppResources, userSettings: IUserSettings, forceSync: boolean, sourceTabId?: number) {
         this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
         this.userSettings = userSettings;
@@ -80,6 +82,11 @@ class ActivitiesSyncModifier implements IModifier {
         });
     }
 
+    public static cancelAutoClose(): void {
+        clearInterval(this.closeWindowIntervalId);
+        $('#autoClose').hide();
+    }
+
     protected sync(): void {
 
         // Start sync..
@@ -100,8 +107,8 @@ class ActivitiesSyncModifier implements IModifier {
             $('#totalProgressText').html('100%');
 
             let timer: number = 5000; // 5s + 1s (delay start) = 6s
-            let closeWindowIntervalId: number = setInterval(() => {
-                $('#autoClose').html('<strong>Sync is done. This windows will close itself in ' + (timer / 1000) + ' seconds.</strong> <a href="#" onclick="javascript:clearInterval(' + closeWindowIntervalId + '); $(\'#autoClose\').hide();">Cancel<a>');
+            ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync is done. Window will close itself in ' + (timer / 1000) + ' seconds.</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }
