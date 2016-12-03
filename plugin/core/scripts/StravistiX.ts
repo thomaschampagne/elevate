@@ -221,13 +221,14 @@ class StravistiX {
 
         let updateMessageObj: any = {
             logo: '<img src="' + this.appResources.logoStravistix + '"/>',
-            title: 'Update <strong>v' + this.appResources.extVersion + '</strong>',
+            title: 'Update <strong>v' + this.appResources.extVersionName + '</strong>',
             hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                'MultiSports fitness trends upcoming. ALPHA Released through regular update in few days :)',
+                'Activities grid: All your activities in a table including stravistix extended stats as columns. ',
+                // 'MultiSports fitness trends upcoming. ALPHA Released through regular update in few days :)',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a>!',
             ]
@@ -263,14 +264,14 @@ class StravistiX {
         }
 
         if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
-            message += '<h5><strong>Upcomming Fixes:</strong></h5>';
+            message += '<h5><strong>Upcoming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, (upcommingFixes: string) => {
                 message += '<h6>- ' + upcommingFixes + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
-            message += '<h5><strong>Upcomming Features:</strong></h5>';
+            message += '<h5><strong>Upcoming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, (upcommingFeatures: string) => {
                 message += '<h6>- ' + upcommingFeatures + '</h6>';
             });
