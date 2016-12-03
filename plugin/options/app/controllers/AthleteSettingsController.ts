@@ -19,9 +19,11 @@ class AthleteSettingsController {
     constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService, $window: IWindowService) {
 
         $scope.genderList = [{
-            type: 'men'
+            type: 'men',
+            display: 'Male'
         }, {
-            type: 'women'
+            type: 'women',
+            display: 'Female'
         }];
 
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {

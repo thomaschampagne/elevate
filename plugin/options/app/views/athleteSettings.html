@@ -11,7 +11,7 @@
                 <div flex="25">
                     <md-input-container class="md-block">
                         <md-select ng-model="gender" aria-label="Gender" ng-change="userGenderChanged(gender)">
-                            <md-option ng-value="gender" ng-repeat="gender in genderList">{{gender.type}}</md-option>
+                            <md-option ng-value="gender" ng-repeat="gender in genderList">{{gender.display}}</md-option>
                         </md-select>
                     </md-input-container>
                 </div>
