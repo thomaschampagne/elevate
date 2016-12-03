@@ -13,6 +13,16 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.0.0',
+        message: '<i>MultiSports Fitness Trend released as Alpha !<br /><br />After long days of work, It\'s now live! Yeah! <br/><br/>Working with all activities where you held a heart rate monitor. Not only cycling...</i><br/><br/><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[Activate it here]</a>',
+        hotFixes: [],
+        features: [
+            'MultiSports fitness trend. <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">Activate the alpha feature</a>'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [],
+    },
+    {
         version: '4.5.3',
         message: 'Another release to fix latest small bug from 4.5.x. Sorry for inconvenience',
         hotFixes: [

@@ -76,8 +76,8 @@ class ActivitiesSyncModifier implements IModifier {
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
             $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><br/>' +
-                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history to storage allocated by extension. ' +
-                'In upcoming updates, your browser should ask you to accept new permissions avoid this 5MB limitation.' +
+                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history to allocated storage (given by extension).' +
+                'In upcoming updates, your browser may ask you to accept new permissions avoid this 5MB limitation.' +
                 'Just accept... This will allow users having more than 5MB of history to save it and get feature working. No big deal for most of you...</i>');
         });
     }
