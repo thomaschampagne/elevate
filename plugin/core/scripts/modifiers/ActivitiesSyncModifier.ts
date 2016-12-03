@@ -31,7 +31,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. <br/><br/>' +
+        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.  <br/><br/>' +
             'Once the first synchronization is completed, your history will be automatically synced while browsing strava.com. You can trigger a manual synchronization by clicking the same button.<br/><br/>' +
             'Closing this window will stop the synchronization. This window should close itself when synchronisation is done.';
         html += '       </div>';
