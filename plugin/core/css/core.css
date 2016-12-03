@@ -1,0 +1,237 @@
+.stravistiXExtendedData table {
+    margin: 0;
+    padding: 0;
+    border-spacing: 0px;
+}
+
+.stravistiXExtendedData td {
+    text-align: center;
+    padding: 3px;
+}
+
+.stravistiXExtendedData div {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 7.5px;
+}
+
+/* Remove padding on grid for featured data */
+.stravistiXExtendedData .featuredData .grid td {
+    padding-bottom: 0px;
+    max-width: 200px;
+    padding-right: 30px;
+}
+
+.stravistiXExtendedData .distributionGraphTitle {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+}
+
+.stravistiXExtendedData .distributionTable {
+    height: 450px;
+    width: 350px;
+}
+
+.stravistiXExtendedData .distributionTable tr:hover {
+    background-color: #ffff99;
+}
+
+.stravistiXExtendedData .grid {
+    font-size: 22px;
+    padding-left: 10px;
+}
+
+.stravistiXExtendedData .grid td {
+    text-align: left;
+    border: 0px;
+    padding-bottom: 30px;
+}
+
+.stravistiXExtendedData .gridDataContainer {
+    cursor: pointer;
+}
+
+.stravistiXExtendedData .gridUnits {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.stravistiXExtendedData .gridTitle {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.stravistiXExtendedData .grid td {
+    max-width: 100px;
+}
+
+.summaryGrid table {
+    margin: 0;
+    padding: 0;
+}
+
+.summaryGrid td {
+    padding: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.summaryGrid .summaryGridDataContainer {
+    color: rgb(78, 78, 78);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.summaryGrid .summaryGridTitle {
+    cursor: pointer;
+    color: rgb(137, 133, 133);
+    font-size: small;
+    font-weight: normal;
+}
+
+.summaryGrid .summarySubGridTitle {
+    color: rgb(78, 78, 78);
+    font-size: small;
+    font-weight: normal;
+}
+
+#athlete-history-chart .hra-time-mark {
+    stroke: rgb(150, 30, 30)
+}
+
+#athlete-history-chart .hra-line {
+    stroke: rgb(255, 130, 130);
+    stroke-dasharray: 5;
+    stroke-opacity: 0.75;
+}
+
+#athlete-history-chart .hra-axis {
+    fill: rgb(150, 30, 30);
+}
+
+#athlete-history-chart #hra-box-help { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-hover {
+    opacity: 0.0;
+}
+
+#athlete-history-chart #hra-hover-g {
+    pointer-events: none;
+}
+
+#athlete-history-chart #hra-hover-box {
+    opacity: 0.0;
+}
+
+#athlete-history-chart #hra-hover:hover {
+    opacity: 0.9;
+}
+
+#athlete-history-chart #hra-box { /* based on css of #effort-box */
+    fill: #fff;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+
+#athlete-history-chart #hra-value-help { /* based on css of #effort-box-activity-date */
+    fill: #999;
+    font-size: 11px;
+    display: block;
+    box-sizing: border-box;
+    text-anchor: middle;
+    alignment-baseline: central;
+}
+
+#athlete-history-chart #hra-value { /* based on css of #effort-box-activity-date */
+    fill: rgb(150, 30, 30);
+    font-size: 11px;
+    display: block;
+    box-sizing: border-box;
+    alignment-baseline: central;
+}
+
+/* ---- */
+
+#syncContainer {
+    width: 90%;
+    top: 5%;
+    text-align: center;
+    position: absolute;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+}
+
+#syncMessage {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 5%;
+    text-align: left;
+}
+
+#syncInfos {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 5%;
+    text-align: left;
+}
+
+#syncContainer progress {
+    height: 20px;
+}
+
+.progressBarGroup {
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-bottom: 2%;
+    text-align: left;
+    width: 100%;
+}
+
+#syncStatusError {
+    color: red;
+    margin: 15px
+}
+
+progress {
+    width: 75%;
+    height: 20px;
+    -webkit-appearance: none;
+    border: none;
+}
+
+/* All good till now. Now we'll style the background */
+progress::-webkit-progress-bar {
+    background: #ececec;
+    border-radius: 0px;
+    padding: 2px;
+}
+
+/* Now the value part */
+progress::-webkit-progress-value {
+    border-radius: 0px;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0)),
+    -webkit-linear-gradient(left, #e94e1b, #e94e1b);
+
+    /* Looks great, now animating it */
+    background-size: 25px 14px, 100% 100%, 100% 100%;
+    -webkit-animation: move 5s linear 0 infinite;
+}
+
+/* That's it! Now let's try creating a new stripe pattern and animate it using animation and keyframes properties  */
+
+@-webkit-keyframes move {
+    0% {
+        background-position: 0px 0px, 0 0, 0 0
+    }
+    100% {
+        background-position: -100px 0px, 0 0, 0 0
+    }
+}

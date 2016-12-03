@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/83adc941d134189c3a55afb73e940ce70308b35b/nvd3/nvd3.d.ts",
+    "raw": "registry:dt/nvd3#1.8.1+20160919061516",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/83adc941d134189c3a55afb73e940ce70308b35b/nvd3/nvd3.d.ts"
+  }
+}

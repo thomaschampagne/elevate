@@ -3,20 +3,22 @@ module.exports = function (config) {
         browsers: ['PhantomJS'],
         frameworks: ['jasmine'],
         files: [
-            'dist/config/env.js',
-            'dist/modules/**/*.js',
+            'dist/core/config/env.js',
+            'dist/core/modules/**/*.js',
             'dist/node_modules/underscore/underscore-min.js',
-            'dist/js/modifiers/extendedActivityData/views/AbstractDataView.js',
-            'dist/js/**/*.js',
+            'dist/node_modules/q/q.js',
+            'dist/node_modules/jquery/dist/jquery.js',
+            'dist/core/scripts/modifiers/extendedActivityData/views/AbstractDataView.js',
+            'dist/core/scripts/**/*.js',
             'specs/**/*.js',
             'specs/fixtures/**/*.json'
         ],
         exclude: [
-            'dist/js/Background.js',
-            'dist/js/Constants.js',
-            'dist/js/Content.js',
-            'dist/modules/jquery.appear.js',
-            'dist/js/ReleaseNotes.js'
+            'dist/core/scripts/Background.js',
+            'dist/core/scripts/Constants.js',
+            'dist/core/scripts/Content.js',
+            'dist/core/modules/jquery.appear.js',
+            'dist/core/scripts/ReleaseNotes.js'
         ],
         preprocessors: {
             'specs/fixtures/**/*.json': ['json_fixtures']

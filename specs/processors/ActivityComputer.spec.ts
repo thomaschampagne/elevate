@@ -11,7 +11,7 @@ describe('ActivityComputer', () => {
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, athleteWeight, powerMeter, statsMap, stream, null);
+        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, athleteWeight, powerMeter, statsMap, stream, null, true);
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();

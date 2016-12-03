@@ -1,6 +1,11 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/6mantaa8yxbn4iqx/branch/develop?svg=true)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop)
 # Table of Content
+
 <!-- toc -->
-- [1/ Install StravistiX from Chrome / Opera Store](#1-install-stravistix-from-chrome--opera-store)
+
+- [1/ Install StravistiX](#1-install-stravistix)
+    + [1.1/ From Chrome / Opera Store](#11-from-chrome--opera-store)
+    + [1.2/ From continuous integration](#12-from-continuous-integration)
 - [2/ Install from sources](#2-install-from-sources)
     + [2.0/ Infos](#20-infos)
     + [2.1/ Install NodeJS with node package manager](#21-install-nodejs-with-node-package-manager)
@@ -14,11 +19,18 @@
     + [3.3/ Clean the project](#33-clean-the-project)
 - [4/ Git repository structure and GitFlow](#4-git-repository-structure-and-gitflow)
 - [5/ Code Editor and Indentation plugin used](#5-code-editor-and-indentation-plugin-used)
+
 <!-- tocstop -->
 
-1/ Install StravistiX from Chrome / Opera Store
+1/ Install StravistiX
 =====================================================
-Go to http://thomaschampagne.github.io/stravistix/
+### 1.1/ From Chrome / Opera Store
+Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.github.io/stravistix/)
+
+### 1.2/ From continuous integration
+Latest **develop** build: https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts
+
+Install steps to follow: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
 
 2/ Install from sources
 ==========
@@ -54,9 +66,9 @@ This will install required gulp plugins in order to run project tasks. Gulp plug
 ```
 gulp build
 ```
-First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **hook/extension/package.json** file if not already downloaded.
+First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **plugin/core/package.json** file if not already downloaded.
 
-Next, all the extensions files from **hook/extension/** will be copied to **dist/** folder.
+Next, all the extensions files from **plugin/** will be copied to **dist/** folder.
 
 ### 2.5/ Loading the extension
 
@@ -72,20 +84,20 @@ You can now load extension from **chrome://extensions** chrome tab:
 
 ### 3.1/ Making changes and view them
 
-Development must be done inside **hook/extension/** folder. You can code using TypeScript OR Javascript. But i strongly recommend you to use TypeScript.
+Development must be done inside **plugin/** folder. You can code using TypeScript OR Javascript. But i strongly recommend you to use TypeScript.
 
 >_Remember: [Here you can learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/)_
 >_Most IDE support TypeScript through plugins (Atom, Sublime, WebStorm, VisualStudio code, ...) @see https://www.typescriptlang.org/_
 
 In chrome, use **dist/** folder as Unpacked Extension for development
 
-To apply files changes from **hook/extension/** to **dist/** you must run the build command:
+To apply files changes from **plugin/** to **dist/** you must run the build command:
 
 ```
 gulp build
 ```
 
-You can automatically execute this task on a file change from with:
+You can automatically execute this task on a file change with command:
 ```
 gulp watch
 ```
@@ -100,7 +112,7 @@ This will create zip archive of **dist/** folder in **package/StravistiX\_vX.X.X
 ```
 gulp clean
 ```
-This will clean **dist/**, **package/** & **hook/extension/node_modules/** folders
+This will clean **dist/**, **package/** & **plugin/node_modules/** folders
 
 4/ Git repository structure and GitFlow
 ==========
