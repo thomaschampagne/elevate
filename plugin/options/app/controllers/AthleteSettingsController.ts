@@ -2,14 +2,6 @@ interface IGenderList {
     type: string;
 }
 
-interface IAthleteProfile {
-    userGender: string;
-    userMaxHr: number;
-    userRestHr: number;
-    userFTP: number;
-    userWeight: number;
-}
-
 class AthleteSettingsController {
 
     public static changedAthleteProfileMessage: string = 'athlete-profile-saved';

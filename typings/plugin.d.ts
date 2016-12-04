@@ -2,6 +2,7 @@
 /// <reference path="../plugin/core/config/env.ts" />
 /// <reference path="../plugin/core/scripts/UserSettings.ts" />
 /// <reference path="../plugin/core/scripts/Helper.ts" />
+/// <reference path="../plugin/core/scripts/Follow.ts" />
 /// <reference path="../plugin/core/scripts/interfaces/ActivityData.ts" />
 /// <reference path="../plugin/core/scripts/interfaces/AppResources.ts" />
 /// <reference path="../plugin/core/scripts/interfaces/Sync.ts" />

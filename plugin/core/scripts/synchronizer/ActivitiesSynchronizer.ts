@@ -1,3 +1,11 @@
+interface IAthleteProfile {
+    userGender: string;
+    userMaxHr: number;
+    userRestHr: number;
+    userFTP: number;
+    userWeight: number;
+}
+
 class ActivitiesSynchronizer {
 
     public static lastSyncDateTime: string = 'lastSyncDateTime';
