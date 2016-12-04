@@ -106,7 +106,8 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            let timer: number = 5000; // 5s + 1s (delay start) = 6s
+            //let timer: number = 5000; // 5s + 1s (delay start) = 6s
+            let timer: number = 3600 * 1000; // 1h for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
                 $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync is done. Window will close itself in ' + (timer / 1000) + ' seconds.</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel<a></div>');
                 if (timer <= 0) {
