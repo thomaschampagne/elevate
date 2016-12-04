@@ -1085,7 +1085,7 @@ class StravistiX {
      * handler does nothing.
      */
     protected handleGoalsModifier(): void {
-        if (!this._userSettings.displayExtendedGoals) {
+        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
             return;
         }
         let goals = $('#progress-goals-v2');
@@ -1094,6 +1094,7 @@ class StravistiX {
             let pageDashboard = new RegExp('^/dashboard');
             if (window.location.pathname.match(pageProfile)
                 || window.location.pathname.match(pageDashboard)) {
+                console.warn('GoalsModifier called 2');
                 new GoalsModifier(goals).modify();
             }
         }
