@@ -65,7 +65,8 @@ interface Env {
     analyticsTrackingID: string; // GA ID
     displayUpdatePopup: boolean; // Must be false in release
     debugMode: boolean; // Must be false in release
-    useActivityStreamCache: boolean // Must be true in release
+    useActivityStreamCache: boolean; // Must be true in release
+    endPoint: string; // Stravistix endPoint for new features
 }
 
 interface Constants {

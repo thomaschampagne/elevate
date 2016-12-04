@@ -17,7 +17,7 @@ var currentDate: any = new Date();
 follow('create', env.analyticsTrackingID, 'auto');
 follow('send', 'pageview');
 
-interface IAthleteUpdate {
+interface IAthleteUpdate { // TODO Refactor outside + rerun specs
     stravaId: number,
     version: string,
     name: string,
@@ -29,15 +29,28 @@ interface IAthleteUpdate {
     __v?: number // Mongoose version doc
 }
 
-class AthleteUpdate {
-    public static generateAthleteUpdate(stravaId: number,
-                                        name: string,
-                                        version: string,
-                                        isPremium: boolean,
-                                        isPro: boolean,
-                                        country?: string,
-                                        hrMin?: number,
-                                        hrMax?: number): IAthleteUpdate {
+class AthleteUpdate { // TODO Refactor outside + rerun specs
+
+    /**
+     * Provide IAthleteUpdate object
+     * @param stravaId
+     * @param name
+     * @param version
+     * @param isPremium
+     * @param isPro
+     * @param country
+     * @param hrMin
+     * @param hrMax
+     * @returns {IAthleteUpdate}
+     */
+    public static create(stravaId: number,
+                         name: string,
+                         version: string,
+                         isPremium: boolean,
+                         isPro: boolean,
+                         country?: string,
+                         hrMin?: number,
+                         hrMax?: number): IAthleteUpdate {
 
         if (stravaId < 1 || _.isEmpty(name) || _.isEmpty(version) || !_.isBoolean(isPremium) || !_.isBoolean(isPro)) {
             return null;
