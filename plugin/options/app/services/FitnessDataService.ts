@@ -1,20 +1,19 @@
+import Moment = moment.Moment;
 interface IFitnessDataService {
     fitnessData: Array<IFitnessTrimpObject>;
-    const: any;
-    getDayAtMidnight: Function;
     getComputedActivities: Function;
     getCleanedComputedActivitiesWithHeartRateData: Function;
     getFitnessObjectsWithDaysOff: Function;
     computeChronicAcuteBalanceTrainingLoad: (fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => Array<IFitnessTrimpObject>;
-    // computeRestLooseGain: Function;
     getFitnessData: () => Q.Promise<Array<IFitnessTrimpObject>>;
 }
 
 interface IFitnessActivitiesWithHR {
     id: number;
     date: Date;
-    type: string;
     timestamp: number;
+    dayOfYear: number;
+    type: string;
     activityName: string;
     trimp: number;
 }
@@ -29,7 +28,7 @@ interface IFitnessActivitiesWithHRDaysOff {
     previewDay: boolean;
 }
 
-interface IFitnessTrimpObject /*extends IFitnessActivitiesWithHRDaysOff */ {
+interface IFitnessTrimpObject {
     ids: Array<number>;
     date: string;
     timestamp: number;
@@ -46,38 +45,21 @@ interface IFitnessTrimpObjectTable extends IFitnessTrimpObject {
     activitiesNameStr: string;
 }
 
-
 app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
 
     let onGetComputedActivitiesTimeStart: number;
     let onGetFitnessDataTimeDone: number;
 
+    const FUTURE_DAYS_PREVIEW = 14;
+
     let fitnessDataService: IFitnessDataService = {
         fitnessData: null,
-        const: {
-            DAY_LONG_MILLIS: 24 * 3600 * 1000,
-            FUTURE_DAYS_PREVIEW: 14,
-        },
-        getDayAtMidnight: null,
         getComputedActivities: null,
         getCleanedComputedActivitiesWithHeartRateData: null,
         getFitnessObjectsWithDaysOff: null,
         computeChronicAcuteBalanceTrainingLoad: null,
-        // computeRestLooseGain: null,
         getFitnessData: null,
     };
-
-    /**
-     * @return The date at midnight
-     */
-    fitnessDataService.getDayAtMidnight = (date: Date) => {
-        date.setHours(Math.abs(date.getTimezoneOffset() / 60));
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        return date;
-    };
-
 
     /**
      * @return Computed synced activities
@@ -114,13 +96,15 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             let cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR> = [];
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
                 if (activity.extendedStats && activity.extendedStats.heartRateData) {
-                    let date: Date = fitnessDataService.getDayAtMidnight(new Date(activity.start_time));
+
+                    let date: Date = new Date(activity.start_time);
 
                     let activityHR: IFitnessActivitiesWithHR = {
                         id: activity.id,
                         date: date,
-                        type: activity.display_type,
                         timestamp: date.getTime(),
+                        dayOfYear: moment(date).dayOfYear(),
+                        type: activity.display_type,
                         activityName: activity.name,
                         trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
                     };
@@ -129,7 +113,6 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 }
             });
 
-            // fitnessDataService.computedActivitiesWithHR = cleanedActivitiesWithHRData;
             deferred.resolve(cleanedActivitiesWithHRData);
 
         }, (err: any) => {
@@ -146,36 +129,34 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
         let deferred = $q.defer();
 
-        // if (!fitnessDataService.fitnessObjectsWithDaysOff) {
 
         console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
 
         fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
 
-            // let fromDate = new Date(_.first(cleanedActivitiesWithHRData).date.toDateString());
+            // From date is the first activity done in history
             let fromDate: Date = _.first(cleanedActivitiesWithHRData).date;
 
-            // Add one day before the first activity
+            // Subtract 1 day to from date (to show graph point with 1 day before)
             fromDate = moment(fromDate).subtract(1, 'days').toDate();
 
-            // Inject day off..
+            // Now inject days off/resting
             let daysDiffWithToday: number = moment.duration(moment().diff(moment(fromDate))).asDays();
 
             let everyDayFitnessObjects: Array<IFitnessActivitiesWithHRDaysOff> = [];
 
             for (let i: number = 0; i < daysDiffWithToday; i++) {
 
-                let timestampOfCurrentDay: number = fromDate.getTime() + fitnessDataService.const.DAY_LONG_MILLIS * i;
+                let currentDayMoment = moment(fromDate).add(i, 'days');
 
-                // Seek if current day with have 1 or several trimp. then add...
-                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.where(cleanedActivitiesWithHRData, {
-                    timestamp: timestampOfCurrentDay
+                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
+                    return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
                 });
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
                     ids: [],
-                    date: new Date(timestampOfCurrentDay),
-                    timestamp: timestampOfCurrentDay,
+                    date: currentDayMoment.toDate(),
+                    timestamp: currentDayMoment.toDate().getTime(),
                     type: [],
                     activitiesName: [],
                     trimp: 0,
@@ -197,9 +178,9 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             }
 
             // Add 14 days as future "preview".
-            for (let i: number = 1; i <= fitnessDataService.const.FUTURE_DAYS_PREVIEW; i++) {
+            for (let i: number = 1; i <= FUTURE_DAYS_PREVIEW; i++) {
 
-                let futureDate: Date = new Date((new Date().getTime()) + fitnessDataService.const.DAY_LONG_MILLIS * i);
+                let futureDate: Date = moment().add(i, 'days').toDate();
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
                     ids: [],
@@ -219,11 +200,6 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         }, (err: any) => {
             deferred.reject(err);
         });
-
-        // } else {
-        //     console.log('Fetch fitnessObjectsWithDaysOff from FitnessDataService local var');
-        //     deferred.resolve(fitnessDataService.fitnessObjectsWithDaysOff);
-        // }
 
         return deferred.promise;
 
@@ -260,75 +236,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
             results.push(result);
         });
-
         return results;
     };
-
-    /**
-     * @return
-     */
-    /*
-     DO NOT REMOVE FUNCTION
-     fitnessDataService.computeRestLooseGain = (fitnessData) => {
-
-     // Find the date and loos
-     var lastResult = _.clone(_.last(fitnessData));
-
-     var dayCountLostCtl = 1;
-     var dayCountLostAtl = 1;
-     var dayCountInForm = 0;
-     var dayCountLostForm = 0;
-
-     lastResult.ctl = parseInt(lastResult.ctl);
-     lastResult.atl = parseInt(lastResult.atl);
-
-     var ctlLooseTriggerPercentage = 5;
-     var ctlLooseTrigger = ctlLooseTriggerPercentage / 100 * lastResult.ctl;
-
-     var atlLooseTriggerPercentage = 5;
-     var atlLooseTrigger = atlLooseTriggerPercentage / 100 * lastResult.atl;
-
-     while (lastResult.ctl > ctlLooseTrigger) {
-
-     lastResult.ctl = lastResult.ctl + (0 - lastResult.ctl) * (1 - Math.exp(-1 / 42));
-     lastResult.atl = lastResult.atl + (0 - lastResult.atl) * (1 - Math.exp(-1 / 7));
-     lastResult.tsb = lastResult.ctl - lastResult.atl;
-
-     if (lastResult.ctl > ctlLooseTrigger) {
-     dayCountLostCtl++;
-     }
-     if (lastResult.atl > atlLooseTrigger) {
-     dayCountLostAtl++;
-     }
-
-     if (lastResult.tsb <= 0) {
-     dayCountInForm++;
-     } else { // Positive
-     dayCountLostForm++;
-     }
-     }
-
-     return {
-     lostCtl: {
-     percentageTrigger: 100 - ctlLooseTriggerPercentage,
-     dayCount: dayCountLostCtl,
-     date: new Date((new Date().getTime() + dayCountLostCtl * fitnessDataService.const.DAY_LONG_MILLIS))
-     },
-     lostAtl: {
-     percentageTrigger: 100 - atlLooseTriggerPercentage,
-     dayCount: dayCountLostAtl,
-     date: new Date((new Date().getTime() + dayCountLostAtl * fitnessDataService.const.DAY_LONG_MILLIS))
-     },
-     gainForm: {
-     dayCount: dayCountInForm,
-     date: new Date((new Date().getTime() + dayCountInForm * fitnessDataService.const.DAY_LONG_MILLIS))
-     },
-     lostForm: {
-     dayCount: dayCountLostForm,
-     date: new Date((new Date().getTime() + dayCountLostForm * fitnessDataService.const.DAY_LONG_MILLIS))
-     },
-     };
-     };*/
 
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
@@ -368,4 +277,69 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
 }]);
 
+/**
+ * @return
+ */
+/*
+ DO NOT REMOVE FUNCTION
+ fitnessDataService.computeRestLooseGain = (fitnessData) => {
+
+ // Find the date and loos
+ var lastResult = _.clone(_.last(fitnessData));
+
+ var dayCountLostCtl = 1;
+ var dayCountLostAtl = 1;
+ var dayCountInForm = 0;
+ var dayCountLostForm = 0;
+
+ lastResult.ctl = parseInt(lastResult.ctl);
+ lastResult.atl = parseInt(lastResult.atl);
+
+ var ctlLooseTriggerPercentage = 5;
+ var ctlLooseTrigger = ctlLooseTriggerPercentage / 100 * lastResult.ctl;
+
+ var atlLooseTriggerPercentage = 5;
+ var atlLooseTrigger = atlLooseTriggerPercentage / 100 * lastResult.atl;
+
+ while (lastResult.ctl > ctlLooseTrigger) {
+
+ lastResult.ctl = lastResult.ctl + (0 - lastResult.ctl) * (1 - Math.exp(-1 / 42));
+ lastResult.atl = lastResult.atl + (0 - lastResult.atl) * (1 - Math.exp(-1 / 7));
+ lastResult.tsb = lastResult.ctl - lastResult.atl;
+
+ if (lastResult.ctl > ctlLooseTrigger) {
+ dayCountLostCtl++;
+ }
+ if (lastResult.atl > atlLooseTrigger) {
+ dayCountLostAtl++;
+ }
+
+ if (lastResult.tsb <= 0) {
+ dayCountInForm++;
+ } else { // Positive
+ dayCountLostForm++;
+ }
+ }
+
+ return {
+ lostCtl: {
+ percentageTrigger: 100 - ctlLooseTriggerPercentage,
+ dayCount: dayCountLostCtl,
+ date: new Date((new Date().getTime() + dayCountLostCtl * fitnessDataService.const.DAY_LONG_MILLIS)) // TODO Use moment.add(x, 'days')
+ },
+ lostAtl: {
+ percentageTrigger: 100 - atlLooseTriggerPercentage,
+ dayCount: dayCountLostAtl,
+ date: new Date((new Date().getTime() + dayCountLostAtl * fitnessDataService.const.DAY_LONG_MILLIS))
+ },
+ gainForm: {
+ dayCount: dayCountInForm,
+ date: new Date((new Date().getTime() + dayCountInForm * fitnessDataService.const.DAY_LONG_MILLIS))
+ },
+ lostForm: {
+ dayCount: dayCountLostForm,
+ date: new Date((new Date().getTime() + dayCountLostForm * fitnessDataService.const.DAY_LONG_MILLIS))
+ },
+ };
+ };*/
 
