@@ -13,6 +13,19 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.0.1',
+        message: '<i>"MultiSports Fitness Trend"</i> Alpha V2 here! Mainly bugs fixed of Alpha V1... Thanks to testers! It works with all activities where you held a heart rate monitor. Not only cycling... </br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[You need to activate this alpha feature to use it]</a></br></br>Also disabled <i>"Premium additional goal progress tracking"</i>. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)',
+        hotFixes: [],
+        features: [
+            'Added plugin permission for users having more than 5MB of history. They can now save locally their history (required by <i>"MultiSports Fitness Trend"</i>)',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed majors bugs of <i>"MultiSports Fitness Trend"</i> Alpha V1',
+            'Disabled <i>"Premium additional goal progress tracking"</i>: few bugs remaining. Still available in common settings (hidden section).'
+        ],
+    },
+    {
         version: '5.0.0',
         message: '<i>MultiSports Fitness Trend released as Alpha !<br /><br />After long days of work, It\'s now live! Yeah! <br/><br/>Working with all activities where you held a heart rate monitor. Not only cycling...</i><br/><br/><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[Activate it here]</a>',
         hotFixes: [],
@@ -25,8 +38,7 @@ let releaseNotes: Array<IReleaseNote> = [
     {
         version: '4.5.3',
         message: 'Another release to fix latest small bug from 4.5.x. Sorry for inconvenience',
-        hotFixes: [
-        ],
+        hotFixes: [],
         features: [
             'Added monthly and weekly targets for strava premium annual goals'
         ],
