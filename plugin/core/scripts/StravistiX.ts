@@ -1049,7 +1049,7 @@ class StravistiX {
                 country = window.currentAthlete.get('geo').country;
             }
 
-            let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, this.appResources.extVersion, this.isPremium, this.isPro, country, this.userSettings.userRestHr, this.userSettings.userMaxHr);
+            let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== '0') ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, country, this.userSettings.userRestHr, this.userSettings.userMaxHr);
 
             $.post({
                 url: env.endPoint + '/api/athlete/update',
