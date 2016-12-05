@@ -271,6 +271,13 @@ class MainController {
         };
 
         /**
+         * Strava club page
+         */
+        $scope.openStravaClub = () => {
+            $window.open('https://www.strava.com/clubs/stravistix', '_blank');
+        };
+
+        /**
          * bug report
          */
         $scope.openBugReport = () => {
