@@ -38,7 +38,8 @@
     "permissions": [
         "*://www.strava.com/*",
         "*://app.strava.com/*",
-        "storage"
+        "storage",
+        "unlimitedStorage"
     ],
     "web_accessible_resources": [
         "node_modules/*",
