@@ -55,7 +55,17 @@ abstract class AbstractExtendedDataModifier {
 
                         // Add Show extended statistics to page
                         this.placeExtendedStatsButton(() => {
+
                             // Extended Button has been placed...
+                            // Check is owner of activity
+                            if(this.isAuthorOfViewedActivity) {
+                                // Check if profileConfigured locally. Ask user to double check is athlete settings
+                                Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, 'profileConfigured').then((profileConfigured: any) => {
+                                    if(!profileConfigured  || !profileConfigured.data) {
+                                        $('#extendedStatsButton').after("<a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'>Did you check your athlete settings before?</a>");
+                                    }
+                                });
+                            }
                         });
                     });
 
@@ -135,7 +145,7 @@ abstract class AbstractExtendedDataModifier {
 
     protected placeExtendedStatsButton(buttonAdded: () => void): void {
 
-        let htmlButton: string = '<section>';
+        let htmlButton: string = '<section style="text-align: center;">';
         htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
         htmlButton += 'Show extended statistics';
         htmlButton += '</a>';
@@ -187,7 +197,6 @@ abstract class AbstractExtendedDataModifier {
                         this.renderViews();
                         this.showResultsAndRefreshGraphs();
                     });
-
             });
 
         });

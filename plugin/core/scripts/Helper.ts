@@ -118,8 +118,14 @@ class Helper {
         return deferred.promise;
     }
 
+
     /**
      * Sending message to get key:value into storageType via background page
+     * @param extensionId
+     * @param storageType StorageManager.storageLocalType || StorageManager.storageSyncType
+     * @param key
+     * @param callback
+     * @return {Promise<any>}
      */
     public static getFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
 
