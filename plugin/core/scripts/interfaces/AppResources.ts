@@ -26,6 +26,7 @@ interface IAppResources {
     systemUpdatesIcon: string;
     fitnessCenterIcon: string;
     timelineIcon: string;
+    athleteIcon: string;
     donateIcon: string;
     shareIcon: string;
     trackChangesIcon: string;
