@@ -1,3 +1,6 @@
+/// <reference path="../typings/index.d.ts" />
+/// <reference path="../typings/plugin.d.ts" />
+
 describe('Helper', () => {
     it('should give seconds from HH:MM:SS pattern', () => {
         expect(Helper.HHMMSStoSeconds('00:05:00')).toEqual(300);
@@ -20,5 +23,12 @@ describe('Helper', () => {
         let maxHr: number = 200;
         let restHr: number = 50;
         expect(Helper.heartRateReserveFromHeartrate(125, maxHr, restHr)).toEqual(0.5);
+    });
+
+    it('should compare version', () => {
+        expect(Helper.versionCompare('5.0.0', '5.0.0')).toEqual(0);
+        expect(Helper.versionCompare('5.0.0', '4.9.9')).toEqual(1);
+        expect(Helper.versionCompare('4.9.8', '4.9.9')).toEqual(-1);
+        expect(Helper.versionCompare('', '4.9.9')).toEqual(NaN);
     });
 });
