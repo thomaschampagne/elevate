@@ -135,19 +135,20 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
 
             // From date is the first activity done in history
-            let fromDate: Date = _.first(cleanedActivitiesWithHRData).date;
+            // Subtract 1 day to from date (to show graph point with 1 day before) and on day start
+            let fromMoment = moment(_.first(cleanedActivitiesWithHRData).date).subtract(1, 'days').startOf('day');
 
-            // Subtract 1 day to from date (to show graph point with 1 day before)
-            fromDate = moment(fromDate).subtract(1, 'days').toDate();
+            let todayMoment: Moment = moment().endOf('day'); // Today end of day
 
             // Now inject days off/resting
-            let daysDiffWithToday: number = moment.duration(moment().diff(moment(fromDate))).asDays();
+            let daysDiffWithToday: number = moment.duration(todayMoment.diff(fromMoment)).asDays();
+            daysDiffWithToday = Math.floor(daysDiffWithToday); // Make it integer
 
             let everyDayFitnessObjects: Array<IFitnessActivitiesWithHRDaysOff> = [];
 
             for (let i: number = 0; i < daysDiffWithToday; i++) {
 
-                let currentDayMoment = moment(fromDate).add(i, 'days');
+                let currentDayMoment = moment(fromMoment).add(i, 'days');
 
                 let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
                     return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
