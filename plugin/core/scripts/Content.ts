@@ -115,6 +115,7 @@ let appResources: IAppResources = {
     systemUpdatesIcon: chrome.extension.getURL('/core/icons/ic_system_update_24px.svg'),
     fitnessCenterIcon: chrome.extension.getURL('/core/icons/ic_fitness_center_black_24px.svg'),
     timelineIcon: chrome.extension.getURL('/core/icons/ic_timeline_black_24px.svg'),
+    athleteIcon: chrome.extension.getURL('/core/icons/ic_accessibility_black_24px.svg'),
     donateIcon: chrome.extension.getURL('/core/icons/ic_attach_money_24px.svg'),
     shareIcon: chrome.extension.getURL('/core/icons/ic_share_24px.svg'),
     trackChangesIcon: chrome.extension.getURL('/core/icons/ic_track_changes_24px.svg'),
