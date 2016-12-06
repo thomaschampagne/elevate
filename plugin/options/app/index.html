@@ -79,6 +79,31 @@
                 </md-button>
                 <span class="md-title ng-binding">{{pageTitle}}</span>
                 <span flex></span>
+                <md-menu md-position-mode="target-right target">
+                    <md-button ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                        <md-icon>sync</md-icon>
+                    </md-button>
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button ng-click="syncNow('false')">
+                                <md-icon>sync</md-icon>
+                                Sync
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="syncNow('true')">
+                                <md-icon>redo</md-icon>
+                                Redo Full Sync
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="clearHistory()">
+                                <md-icon>delete</md-icon>
+                                Clear Local History
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
                 <md-button class="md-icon-button" ng-click="showReleaseNotes($event)">
                     <md-icon>assignment</md-icon>
@@ -89,16 +114,22 @@
                         <md-icon md-menu-origin>more_vert</md-icon>
                     </md-button>
                     <md-menu-content width="4">
-                        <md-menu-item>
-                            <md-button ng-click="clearHistory()">
-                                <md-icon>delete</md-icon>
-                                Clear your history
-                            </md-button>
-                        </md-menu-item>
+                        <!--<md-menu-item>-->
+                            <!--<md-button ng-click="clearHistory()">-->
+                                <!--<md-icon>delete</md-icon>-->
+                                <!--Clear your history-->
+                            <!--</md-button>-->
+                        <!--</md-menu-item>-->
                         <md-menu-item>
                             <md-button ng-click="showSharing($event)" aria-label="Share">
                                 <md-icon>share</md-icon>
                                 Share plugin
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="openStravaClub($event)" aria-label="Share">
+                                <md-icon>group</md-icon>
+                                Strava Club
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>

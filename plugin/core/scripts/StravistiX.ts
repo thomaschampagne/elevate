@@ -84,7 +84,7 @@ class StravistiX {
         this.handleHidePremium();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
-		this.handleGoalsModifier();
+        this.handleGoalsModifier();
         this.handleOnFlyActivitiesSync();
         this.handleActivitiesSyncFromOutside();
 
@@ -1044,6 +1044,26 @@ class StravistiX {
                 follow('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
+            let country: string = null;
+            if (window.currentAthlete && window.currentAthlete.get('geo') && window.currentAthlete.get('geo').country) {
+                country = window.currentAthlete.get('geo').country;
+            }
+
+            let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== '0') ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, country, this.userSettings.userRestHr, this.userSettings.userMaxHr);
+
+            $.post({
+                url: env.endPoint + '/api/athlete/update',
+                data: JSON.stringify(athleteUpdate),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (response: any) => {
+                    console.log('Athlete updated:', response);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                    console.warn('Unable to update athlete. Some StravistiX features will not be available or not working properly. Make sure to allow access to url <' + env.endPoint + '>', jqXHR);
+                }
+            });
+
             // Create cookie to avoid push during 1 day
             StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
 
@@ -1065,7 +1085,7 @@ class StravistiX {
      * handler does nothing.
      */
     protected handleGoalsModifier(): void {
-        if (!this._userSettings.displayExtendedGoals) {
+        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
             return;
         }
         let goals = $('#progress-goals-v2');
@@ -1074,6 +1094,7 @@ class StravistiX {
             let pageDashboard = new RegExp('^/dashboard');
             if (window.location.pathname.match(pageProfile)
                 || window.location.pathname.match(pageDashboard)) {
+                console.warn('GoalsModifier called 2');
                 new GoalsModifier(goals).modify();
             }
         }
@@ -1090,7 +1111,7 @@ class StravistiX {
             return;
         }
 
-        if(!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
+        if (!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
             console.log('Do not execute handleActivitiesSyncFromOutside(). because fitness trend feature is alpha not enabled');
             return;
         }

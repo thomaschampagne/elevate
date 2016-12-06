@@ -31,7 +31,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. <br/><br/>' +
+        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.  <br/><br/>' +
             'Once the first synchronization is completed, your history will be automatically synced while browsing strava.com. You can trigger a manual synchronization by clicking the same button.<br/><br/>' +
             'Closing this window will stop the synchronization. This window should close itself when synchronisation is done.';
         html += '       </div>';
@@ -106,9 +106,10 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            let timer: number = 5000; // 5s + 1s (delay start) = 6s
+            //let timer: number = 5000; // 5s + 1s (delay start) = 6s
+            let timer: number = 15 * 60 * 1000; // 1h for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync is done. Window will close itself in ' + (timer / 1000) + ' seconds.</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel<a></div>');
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's (During Alpha).</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }

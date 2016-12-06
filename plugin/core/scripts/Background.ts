@@ -104,6 +104,8 @@ class Background {
 
                 if (Helper.versionCompare('3.9.0', details.previousVersion) === 1) {
 
+                    // Previous version is inferior to 3.9.0
+
                     console.log('Reset zones...');
 
                     // Reset userHrrZones...
@@ -116,6 +118,13 @@ class Background {
                             console.log('zones revert to ', userSettings.zones);
                             console.log(data);
                         });
+                    });
+                }
+
+                if (Helper.versionCompare('5.0.1', details.previousVersion) === 1) {
+                    // Coming from version under 5.0.1..
+                    storageManager.setToStorage('displayExtendedGoals', false, (data: any) => {
+                        console.log('displayExtendedGoals set false ', data);
                     });
                 }
             }

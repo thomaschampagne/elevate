@@ -1,19 +1,28 @@
 <!--Display alpha/beta feature message, TO BE REMOVED IN FUTURE-->
 <md-card>
     <md-switch ng-model="enableAlphaFitnessTrend" aria-label="" ng-click="onEnableAlphaFitnessTrend()">
-        Enable Alpha feature? <i>Note: feature can be unstable and related updates may reset the feature itself. Found a
-        bug? Thanks to report <a href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">here</a></i>
+        Enable this <strong>Alpha</strong> feature? <span class="md-caption"><md-icon>warning</md-icon>
+        Unstable feature! Local history synced will be cleared on each update until Beta! Need you for test! <a
+                href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">Report bug here</a></span>
     </md-switch>
+
 </md-card>
 <md-content ng-if="enableAlphaFitnessTrend">
     <!--User must sync when no last sync date found-->
     <md-card ng-hide="enableFitnessTabs">
         <md-card-title>
-            <span class="md-headline">First history sync required.</span>
+            <span class="md-headline">Synchronise your history to this browser first</span>
         </md-card-title>
         <md-card-content>
-            Please synchronize first your history to access "Multisports Fitness Trend" feature.
-            <br/><br/>Since strava only provides fitness for cycling. Here you will be able to view your fitness trend using all activities where you held a heart rate monitor. It's an improved feature which where missing, not a duplicate!
+            Please synchronize your history to access "Multisports Fitness Trend" feature. The history will be locally
+            saved in the storage allocated by the extension.
+            <br/><br/>Since strava only provides fitness for cycling. Here you will be able to view your fitness trend
+            using all activities where you held a heart rate monitor. It's an improved feature which where missing, not
+            a duplicate!
+            <br/><br/>
+            <md-icon>warning</md-icon>
+            Only activities having heart rate data will be used. You will not see activities without heart rate monitor
+            in the fitness graph and table.
         </md-card-content>
     </md-card>
 

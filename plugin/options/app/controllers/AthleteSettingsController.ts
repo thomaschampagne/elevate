@@ -2,14 +2,6 @@ interface IGenderList {
     type: string;
 }
 
-interface IAthleteProfile {
-    userGender: string;
-    userMaxHr: number;
-    userRestHr: number;
-    userFTP: number;
-    userWeight: number;
-}
-
 class AthleteSettingsController {
 
     public static changedAthleteProfileMessage: string = 'athlete-profile-saved';
@@ -19,9 +11,11 @@ class AthleteSettingsController {
     constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService, $window: IWindowService) {
 
         $scope.genderList = [{
-            type: 'men'
+            type: 'men',
+            display: 'Male'
         }, {
-            type: 'women'
+            type: 'women',
+            display: 'Female'
         }];
 
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
