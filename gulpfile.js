@@ -239,7 +239,7 @@ gulp.task('specs', ['buildSpecs'], function () {
                 force: true
             }));
         } else {
-            process().exit(1);
+            process.exit(1);
         }
 
     }).start();
