@@ -78,4 +78,21 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
 
         return athleteUpdate;
     }
+
+    public static commit(athleteUpdate: IAthleteUpdate): void {
+
+        $.post({
+            url: env.endPoint + '/api/athlete/update',
+            data: JSON.stringify(athleteUpdate),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: (response: any) => {
+                console.log('Commited: ', response);
+            },
+            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+            }
+        });
+
+    }
 }
