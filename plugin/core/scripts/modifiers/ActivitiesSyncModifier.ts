@@ -75,10 +75,7 @@ class ActivitiesSyncModifier implements IModifier {
 
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
-            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB / 5MB (~' + storageUsage.percentUsage.toFixed(1) + '%).<br/><br/>' +
-                '<i style="color: #e94e1b">Note: Some athletes may need more than 5MB to store their computed history to allocated storage (given by extension).' +
-                'In upcoming updates, your browser may ask you to accept new permissions avoid this 5MB limitation.' +
-                'Just accept... This will allow users having more than 5MB of history to save it and get feature working. No big deal for most of you...</i>');
+            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB');
         });
     }
 
@@ -106,8 +103,7 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            //let timer: number = 5000; // 5s + 1s (delay start) = 6s
-            let timer: number = 15 * 60 * 1000; // 1h for debug...
+            let timer: number = 60 * 1000; // 60s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
                 $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's (During Alpha).</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
