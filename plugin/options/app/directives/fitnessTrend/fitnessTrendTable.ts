@@ -110,7 +110,7 @@ class FitnessTrendTable {
 
         $scope.refreshFitnessDataForTable = () => {
 
-            let filter = $scope.query.filter;
+            let filter: string = $scope.query.filter;
             filter = filter.replace(' ', '.*');
             filter = filter.trim();
 
@@ -123,7 +123,7 @@ class FitnessTrendTable {
             _.each(fitnessObject.ids, (activityId: number) => {
                 $window.open('https://www.strava.com/activities/' + activityId, '_blank');
             });
-        }
+        };
 
         $scope.logPagination = (page: number, pageCount:number) => {
             
