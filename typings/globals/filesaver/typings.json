@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d21f1bd1fd079bbc18bc88ed71d2be7f5707e33a/FileSaver/FileSaver.d.ts",
+    "raw": "registry:dt/filesaver#0.0.0+20160622185141",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d21f1bd1fd079bbc18bc88ed71d2be7f5707e33a/FileSaver/FileSaver.d.ts"
+  }
+}

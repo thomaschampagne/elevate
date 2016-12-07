@@ -296,6 +296,8 @@ class MainController {
          * Release Notes
          */
         $scope.showReleaseNotes = () => {
+
+
             $mdDialog.show({
                 controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
 
@@ -375,6 +377,14 @@ class MainController {
 
             }, function () {
                 // Cancel.. do nothing
+            });
+        };
+
+        $scope.saveHistory = () => {
+            chromeStorageService.getAllFromLocalStorage().then((data: any) => {
+                data = _.pick(data, 'lastSyncDateTime', 'syncWithAthleteProfile', 'computedActivities'); // Filter data to keep
+                let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
+                saveAs(blob, moment().format('Y.M.D_H.m') + ".history.json");
             });
         };
     }

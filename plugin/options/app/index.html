@@ -26,6 +26,7 @@
     <script src="../../node_modules/moment/moment.js"></script>
     <script src="../../node_modules/angular-moment/angular-moment.js"></script>
     <script src="../../node_modules/underscore/underscore-min.js"></script>
+    <script src="../../modules/FileSaver.js/FileSaver.min.js"></script>
 </head>
 
 <body class="md-body-1">
@@ -100,6 +101,12 @@
                             <md-button ng-click="clearHistory()">
                                 <md-icon>delete</md-icon>
                                 Clear Local History
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="saveHistory()">
+                                <md-icon>save</md-icon>
+                                Save Local History
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
