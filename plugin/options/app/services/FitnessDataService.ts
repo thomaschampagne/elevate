@@ -141,14 +141,11 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             let todayMoment: Moment = moment().endOf('day'); // Today end of day
 
             // Now inject days off/resting
-            let daysDiffWithToday: number = moment.duration(todayMoment.diff(fromMoment)).asDays();
-            daysDiffWithToday = Math.floor(daysDiffWithToday); // Make it integer
-
             let everyDayFitnessObjects: Array<IFitnessActivitiesWithHRDaysOff> = [];
 
-            for (let i: number = 0; i < daysDiffWithToday; i++) {
+            let currentDayMoment = moment(fromMoment);
 
-                let currentDayMoment = moment(fromMoment).add(i, 'days');
+            while (currentDayMoment <= todayMoment) {
 
                 let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
                     return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
@@ -176,6 +173,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 }
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
+
+                currentDayMoment.add(1, 'days'); // Add a day until todayMoment
             }
 
             // Add 14 days as future "preview".
@@ -254,11 +253,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             fitnessDataService.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
 
                 fitnessDataService.fitnessData = fitnessDataService.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
-
                 deferred.resolve(fitnessDataService.fitnessData);
-
                 onGetFitnessDataTimeDone = performance.now(); // track time
-
                 console.log("Generating FitnessData from storage took " + (onGetFitnessDataTimeDone - onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
 
             }, (err: any) => {
