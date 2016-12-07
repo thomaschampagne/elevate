@@ -13,6 +13,17 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.0.2',
+        message: '<i>"MultiSports Fitness Trend"</i> Alpha <strong>V3</strong> fast released! Include fixes of Alpha V2+V1... Feature works with all activities where you held a heart rate monitor. Not only cycling... </br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[You need to activate this alpha feature to use it]</a></br></br>Sticky note: <i>"Premium additional goal progress tracking"</i> disabled. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)',
+        hotFixes: [],
+        features: [
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Fixed majors bugs of <i>"MultiSports Fitness Trend"</i> Alpha V2+V1',
+        ],
+    },
+    {
         version: '5.0.1',
         message: '<i>"MultiSports Fitness Trend"</i> Alpha V2 here! Mainly bugs fixed of Alpha V1... Thanks to testers! It works with all activities where you held a heart rate monitor. Not only cycling... </br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[You need to activate this alpha feature to use it]</a></br></br>Also disabled <i>"Premium additional goal progress tracking"</i>. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)',
         hotFixes: [],

@@ -238,6 +238,8 @@ gulp.task('specs', ['buildSpecs'], function () {
             ]).pipe(plugins.clean({
                 force: true
             }));
+        } else {
+            process.exit(1);
         }
 
     }).start();

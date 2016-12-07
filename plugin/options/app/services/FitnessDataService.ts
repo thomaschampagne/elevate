@@ -135,19 +135,17 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
 
             // From date is the first activity done in history
-            let fromDate: Date = _.first(cleanedActivitiesWithHRData).date;
+            // Subtract 1 day to from date (to show graph point with 1 day before) and on day start
+            let fromMoment = moment(_.first(cleanedActivitiesWithHRData).date).subtract(1, 'days').startOf('day');
 
-            // Subtract 1 day to from date (to show graph point with 1 day before)
-            fromDate = moment(fromDate).subtract(1, 'days').toDate();
+            let todayMoment: Moment = moment().endOf('day'); // Today end of day
 
             // Now inject days off/resting
-            let daysDiffWithToday: number = moment.duration(moment().diff(moment(fromDate))).asDays();
-
             let everyDayFitnessObjects: Array<IFitnessActivitiesWithHRDaysOff> = [];
 
-            for (let i: number = 0; i < daysDiffWithToday; i++) {
+            let currentDayMoment = moment(fromMoment);
 
-                let currentDayMoment = moment(fromDate).add(i, 'days');
+            while (currentDayMoment <= todayMoment) {
 
                 let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
                     return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
@@ -175,6 +173,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 }
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
+
+                currentDayMoment.add(1, 'days'); // Add a day until todayMoment
             }
 
             // Add 14 days as future "preview".
@@ -253,11 +253,8 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             fitnessDataService.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
 
                 fitnessDataService.fitnessData = fitnessDataService.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
-
                 deferred.resolve(fitnessDataService.fitnessData);
-
                 onGetFitnessDataTimeDone = performance.now(); // track time
-
                 console.log("Generating FitnessData from storage took " + (onGetFitnessDataTimeDone - onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
 
             }, (err: any) => {

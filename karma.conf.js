@@ -37,6 +37,10 @@ module.exports = function (config) {
                 return path + '.js';
             }
         },
-        singleRun: true
+        singleRun: true,
+        captureTimeout: 2000,
+        browserDisconnectTimeout: 2000,
+        browserDisconnectTolerance: 3,
+        browserNoActivityTimeout: 20000,
     });
 };
