@@ -25,7 +25,7 @@ class HideFeedModifier implements IModifier {
                 });
             }
 
-            if (this.userSettings.feedHideRideActivitiesUnderDistance || this.userSettings.feedHideRunActivitiesUnderDistance) {
+            if (this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
 
                 let minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
                 let minRunDistanceToHide: number = this.userSettings.feedHideRunActivitiesUnderDistance;

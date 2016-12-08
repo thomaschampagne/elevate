@@ -27,10 +27,10 @@
                 <md-option ng-value="listItem" ng-repeat="listItem in option.optionList">{{ listItem.name }}</md-option>
             </md-select>
 
-            <md-input-container ng-if="option.optionType == 'integer'" class="md-primary" layout="row"
+            <md-input-container ng-if="option.optionType == 'number'" class="md-primary" layout="row"
                                 layout-align="end center">
-                <input type="number" step="any" name="rate" ng-model="option.value"
-                       ng-change="toggleIntegerOption(option)" aria-label="{{ option.optionTitle }}"/>
+                <input type="number" step="{{option.step}}" name="rate" ng-model="option.value"
+                       ng-change="toggleIntegerOption(option)" aria-label="{{ option.optionTitle }}" min="{{option.min}}" max="{{option.max}}"/>
                 <md-tooltip md-direction="top">
                     {{option.optionHtml}}
                 </md-tooltip>

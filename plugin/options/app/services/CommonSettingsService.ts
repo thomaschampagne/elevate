@@ -18,6 +18,20 @@ interface ISectionContent {
     active?: any;
     hidden?: boolean;
     value?: any;
+    /**
+     * For number type only
+     */
+    min?: number;
+
+    /**
+     * For number type only
+     */
+    max?: number;
+
+    /**
+     * For number type only
+     */
+    step?: number;
 }
 interface IListItem {
     key: string;
@@ -33,6 +47,17 @@ app.factory('CommonSettingsService', () => {
     commonSettingsService.provideSections = () => {
 
         let sections: Array<ISection> = [{
+            sectionTitle: 'Athlete History Synchronisation',
+            sectionContent: [ {
+                optionKey: 'autoSyncHours',
+                optionType: 'number',
+                optionTitle: 'Auto sync every X hours while browsing strava.com',
+                optionLabels: ['All'],
+                optionHtml: 'Enter the number of hours. Default is 6 hours. If 0, you will synchronise on every "www.strava.com/*" page load (not recommended)',
+                min: 0,
+                step: 0.5
+            }]
+        },{
             sectionTitle: 'Activities Extended Data',
             sectionContent: [{
                 optionKey: 'displayActivityRatio',
@@ -263,16 +288,18 @@ app.factory('CommonSettingsService', () => {
                 optionHtml: 'This will hide all routes created in the dashboard feed.',
             }, {
                 optionKey: 'feedHideRideActivitiesUnderDistance',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Hide rides activities under distance.',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This will hide all cycling rides (also virtual rides) in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+                min: 0
             }, {
                 optionKey: 'feedHideRunActivitiesUnderDistance',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Hide running activities under distance.',
                 optionLabels: ['Running'],
                 optionHtml: 'This will hide all running activities in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+                min: 0
             }]
         }, {
             sectionTitle: 'Weather units',
@@ -316,16 +343,18 @@ app.factory('CommonSettingsService', () => {
             sectionTitle: 'StravistiX Year progression targets for ' + (new Date()).getFullYear(),
             sectionContent: [{
                 optionKey: 'targetsYearRide',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Cycling'],
                 optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
+                min: 0
             }, {
                 optionKey: 'targetsYearRun',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Running'],
                 optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
+                min: 0
             }]
         }, {
             sectionTitle: 'Miscellaneous',
