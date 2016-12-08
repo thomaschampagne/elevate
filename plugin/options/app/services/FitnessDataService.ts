@@ -10,9 +10,10 @@ interface IFitnessDataService {
 
 interface IFitnessActivitiesWithHR {
     id: number;
-    date: Date;
+    date: Date; // TODO Store Moment instead?!
     timestamp: number;
     dayOfYear: number;
+    year: number;
     type: string;
     activityName: string;
     trimp: number;
@@ -97,13 +98,14 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
                 if (activity.extendedStats && activity.extendedStats.heartRateData) {
 
-                    let date: Date = new Date(activity.start_time);
+                    let momentStartTime: Moment = moment(activity.start_time);
 
                     let activityHR: IFitnessActivitiesWithHR = {
                         id: activity.id,
-                        date: date,
-                        timestamp: date.getTime(),
-                        dayOfYear: moment(date).dayOfYear(),
+                        date: momentStartTime.toDate(),
+                        timestamp: momentStartTime.toDate().getTime(),
+                        dayOfYear: momentStartTime.dayOfYear(),
+                        year: momentStartTime.year(),
                         type: activity.display_type,
                         activityName: activity.name,
                         trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
@@ -129,7 +131,6 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
         let deferred = $q.defer();
 
-
         console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
 
         fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
@@ -145,10 +146,11 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
             let currentDayMoment = moment(fromMoment);
 
-            while (currentDayMoment <= todayMoment) {
+            while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
-                    return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
+                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.where(cleanedActivitiesWithHRData, {
+                    year: currentDayMoment.year(),
+                    dayOfYear: currentDayMoment.dayOfYear()
                 });
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
