@@ -180,7 +180,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             // Add 14 days as future "preview".
             for (let i: number = 1; i <= FUTURE_DAYS_PREVIEW; i++) {
 
-                let futureDate: Date = moment().add(i, 'days').toDate();
+                let futureDate: Date = moment().add(i, 'days').startOf('day').toDate();
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
                     ids: [],
@@ -215,7 +215,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         let tsb: number = 0;
         let results: Array<IFitnessTrimpObject> = [];
 
-        _.each(fitnessObjectsWithDaysOff, (trimpObject: IFitnessActivitiesWithHRDaysOff) => {
+        _.each(fitnessObjectsWithDaysOff, (trimpObject: IFitnessActivitiesWithHRDaysOff, index: number, list: Array<IFitnessActivitiesWithHRDaysOff>) => {
 
             ctl = ctl + (trimpObject.trimp - ctl) * (1 - Math.exp(-1 / 42));
             atl = atl + (trimpObject.trimp - atl) * (1 - Math.exp(-1 / 7));
@@ -231,8 +231,34 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 ctl: parseFloat(ctl.toFixed(1)),
                 atl: parseFloat(atl.toFixed(1)),
                 tsb: parseFloat(tsb.toFixed(1)),
-                previewDay: trimpObject.previewDay
+                previewDay: trimpObject.previewDay,
             };
+
+            // Test if we are switching from today to the first preview day
+            // This test is positive just 1 time !
+            if (list[index - 1] && list[index - 1].previewDay !== list[index].previewDay) {
+
+                // First preview day here !
+                console.log('First preview day is', list[index].date);
+
+                let lastResult = _.last(results);
+
+                // Create a new result to fill the gap !
+                let fillTheCurvesGapWithFakeResult: IFitnessTrimpObject = {
+                    ids: null,
+                    date: lastResult.date,
+                    timestamp: lastResult.timestamp,
+                    activitiesName: null,
+                    type: null,
+                    trimp: null,
+                    ctl: lastResult.ctl,
+                    atl: lastResult.atl,
+                    tsb: lastResult.tsb,
+                    previewDay: true,
+                };
+
+                results.push(fillTheCurvesGapWithFakeResult);
+            }
 
             results.push(result);
         });
