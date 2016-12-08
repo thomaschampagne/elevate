@@ -62,7 +62,7 @@ interface IUserSettings {
 }
 
 let userSettings: IUserSettings = {
-    autoSyncHours: 6,
+    autoSyncHours: 1,
     localStorageMustBeCleared: false,
     userGender: 'men',
     userMaxHr: 190,

@@ -32,6 +32,11 @@ interface ISectionContent {
      * For number type only
      */
     step?: number;
+
+    /**
+     * For number type only
+     */
+    disableTooltip?: boolean;
 }
 interface IListItem {
     key: string;
@@ -48,16 +53,18 @@ app.factory('CommonSettingsService', () => {
 
         let sections: Array<ISection> = [{
             sectionTitle: 'Athlete History Synchronisation',
-            sectionContent: [ {
+            sectionContent: [{
                 optionKey: 'autoSyncHours',
                 optionType: 'number',
                 optionTitle: 'Auto sync every X hours while browsing strava.com',
                 optionLabels: ['All'],
-                optionHtml: 'Enter the number of hours. Default is 6 hours. If 0, you will synchronise on every "www.strava.com/*" page load (not recommended)',
+                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X hours have been flow out since your last synchronisation.<br /><br />- Default is 1 hour.<br /><br />- Value <strong>0</strong>: always auto sync on each <strong>strava.com/**</strong> page load (Not recommended).',
                 min: 0,
-                step: 0.5
+                max: 87600, // 10 years
+                step: 0.5,
+                disableTooltip: true
             }]
-        },{
+        }, {
             sectionTitle: 'Activities Extended Data',
             sectionContent: [{
                 optionKey: 'displayActivityRatio',
@@ -386,7 +393,7 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment (Experimental)',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'Experimental at the moment. This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
-            },{
+            }, {
                 optionKey: 'displayExtendedGoals',
                 optionType: 'checkbox',
                 optionTitle: 'Enable strava premium additional goal progress tracking (Experimental)',
