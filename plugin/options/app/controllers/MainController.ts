@@ -383,12 +383,10 @@ class MainController {
         $scope.saveHistory = () => {
             chromeStorageService.getAllFromLocalStorage().then((data: any) => {
                 data = _.pick(data, 'lastSyncDateTime', 'syncWithAthleteProfile', 'computedActivities'); // Filter data to keep
-
                 // Append currentversion
                 data.pluginVersion = chrome.runtime.getManifest().version;
-
                 let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
-                saveAs(blob, moment().format('Y.M.D_H.m') + ".history.json");
+                saveAs(blob, moment().format('Y.M.D_H.mm') + ".history.json");
             });
         };
 
