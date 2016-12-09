@@ -26,6 +26,7 @@
     <script src="../../node_modules/moment/moment.js"></script>
     <script src="../../node_modules/angular-moment/angular-moment.js"></script>
     <script src="../../node_modules/underscore/underscore-min.js"></script>
+    <script src="../../node_modules/file-saver/FileSaver.min.js"></script>
 </head>
 
 <body class="md-body-1">
@@ -98,8 +99,20 @@
                         </md-menu-item>
                         <md-menu-item>
                             <md-button ng-click="clearHistory()">
-                                <md-icon>delete</md-icon>
+                                <md-icon>clear</md-icon>
                                 Clear Local History
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="saveHistory()">
+                                <md-icon>save</md-icon>
+                                Backup History
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="restoreHistory()">
+                                <md-icon>restore</md-icon>
+                                Restore History
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
@@ -204,6 +217,7 @@
 <script src="directives/fitnessTrend/fitnessTrendGraph.js"></script>
 <script src="directives/fitnessTrend/fitnessTrendTable.js"></script>
 <script src="directives/profileConfiguredRibbon.js"></script>
+<script src="directives/restoreHistory.js"></script>
 
 <!-- Angular filters -->
 <script src="filters/HrrToBpmFilter.js"></script>

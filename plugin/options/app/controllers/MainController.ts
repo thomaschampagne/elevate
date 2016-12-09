@@ -296,6 +296,8 @@ class MainController {
          * Release Notes
          */
         $scope.showReleaseNotes = () => {
+
+
             $mdDialog.show({
                 controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
 
@@ -363,7 +365,7 @@ class MainController {
                 .ok('Delete my history')
                 .cancel('Cancel');
 
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show(confirm).then(() => {
 
                 chromeStorageService.removeFromLocalStorage('computedActivities').then(() => {
                     return chromeStorageService.removeFromLocalStorage('lastSyncDateTime');
@@ -373,13 +375,41 @@ class MainController {
                     $window.location.reload();
                 });
 
-            }, function () {
+            }, () => {
                 // Cancel.. do nothing
             });
         };
+
+        $scope.saveHistory = () => {
+            chromeStorageService.getAllFromLocalStorage().then((data: any) => {
+                data = _.pick(data, 'lastSyncDateTime', 'syncWithAthleteProfile', 'computedActivities'); // Filter data to keep
+
+                if (_.isEmpty(data.computedActivities)) {
+                    alert("No history to backup. Perform full sync at first");
+                    return;
+                }
+
+                // Append current version
+                data.pluginVersion = chrome.runtime.getManifest().version;
+                let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
+                saveAs(blob, moment().format('Y.M.D_H.mm') + ".history.json");
+            });
+        };
+
+        $scope.restoreHistory = () => {
+
+            $mdDialog.show({
+                controller: ($scope: any) => {
+                    $scope.hide = () => {
+                        $mdDialog.hide();
+                    };
+                },
+                templateUrl: 'views/modals/restoreHistory.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true
+            });
+        };
     }
-
-
 }
 
 app.controller('MainController', MainController);
