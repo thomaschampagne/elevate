@@ -5,12 +5,14 @@ class ActivitiesSyncModifier implements IModifier {
     protected sourceTabId: number;
     protected forceSync: boolean;
     protected userSettings: IUserSettings;
+    protected appResources: IAppResources;
 
     public static closeWindowIntervalId: number = -1;
 
     constructor(appResources: IAppResources, userSettings: IUserSettings, forceSync: boolean, sourceTabId?: number) {
         this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
         this.userSettings = userSettings;
+        this.appResources = appResources;
         this.extensionId = appResources.extensionId;
         this.sourceTabId = sourceTabId;
         this.forceSync = forceSync;
@@ -27,13 +29,12 @@ class ActivitiesSyncModifier implements IModifier {
         }
 
         let html = '';
-
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.  <br/><br/>' +
-            'Once the first synchronization is completed, your history will be automatically synced while browsing strava.com. You can trigger a manual synchronization by clicking the same button.<br/><br/>' +
-            'Closing this window will stop the synchronization. This window should close itself when synchronisation is done.';
+        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.' +
+            '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncHours + ' hour(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncHours + ' hour(s) have been flow out since your last synchronisation<br/><a href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId=autoSyncHours&searchText=auto%20sync" target="_blank" style="font-weight: bold; color: #e94e1b;">&#187; Configure auto sync here &#171;</a><br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
+            'Closing window stops synchronization. She will close itself when done.';
         html += '       </div>';
         html += '       <div class="progressBarGroup">';
         html += '           <div id="totalProgress">Global synchronisation progress</div>';
@@ -86,6 +87,8 @@ class ActivitiesSyncModifier implements IModifier {
 
     protected sync(): void {
 
+
+
         // Start sync..
         this.activitiesSynchronizer.sync().then((syncData: any) => {
 
@@ -103,9 +106,9 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            let timer: number = 60 * 1000; // 60s for debug...
+            let timer: number = 10 * 1000; // 10s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's (During Alpha).</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }

@@ -32,7 +32,7 @@ class CommonSettingsController {
                         option.active = _.findWhere(option.optionList, {
                             key: _.propertyOf(userSettingsSynced)(option.optionKey)
                         });
-                    } else if (option.optionType === 'integer') {
+                    } else if (option.optionType === 'number') {
                         option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
                         ;
                     } else {

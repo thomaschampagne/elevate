@@ -4,7 +4,6 @@
 class StravistiX {
 
     public static instance: StravistiX = null;
-    public static OnFlyActivitiesSyncTime = 1000 * 3600 * 6; // 6 hours;
 
     protected isPro: boolean;
     protected isPremium: boolean;
@@ -198,6 +197,8 @@ class StravistiX {
                     };
 
                     follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+
+                    StorageManager.setCookieSeconds('stravistix_daily_connection_done', false, 0); // Remove stravistix_daily_connection_done cookie to trigger athlete commit earlier
 
                 } else {
                     console.log("No install or update detected");
@@ -1044,8 +1045,7 @@ class StravistiX {
                 follow('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
-            let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== '0') ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
-            AthleteUpdate.commit(athleteUpdate);
+            this.commitAthleteUpdate();
 
             // Create cookie to avoid push during 1 day
             StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
@@ -1108,9 +1108,9 @@ class StravistiX {
 
                 console.log('A previous sync exists on ' + new Date(lastSyncDateTime).toString());
 
-                if (Date.now() > (lastSyncDateTime + StravistiX.OnFlyActivitiesSyncTime )) {
+                if (Date.now() > (lastSyncDateTime + 1000 * 3600 * this.userSettings.autoSyncHours)) {
 
-                    console.log('Last sync performed more than 6 hours. re-sync now');
+                    console.log('Last sync performed more than ' + this.userSettings.autoSyncHours + ' hours. re-sync now');
 
                     // Start sync
                     this.activitiesSynchronizer.sync().then((syncData: any) => {
@@ -1138,7 +1138,7 @@ class StravistiX {
                     });
 
                 } else {
-                    console.log('Do not re-sync (last sync done under 6 hours)');
+                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncHours + ' hour(s) ago');
                 }
 
             } else {
@@ -1165,5 +1165,10 @@ class StravistiX {
 
         let activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.appResources, this.userSettings, forceSync, sourceTabId);
         activitiesSyncModifier.modify();
+    }
+
+    protected commitAthleteUpdate() {
+        let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== '0') ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
+        AthleteUpdate.commit(athleteUpdate);
     }
 }

@@ -335,7 +335,7 @@ class MainController {
             $mdDialog.show({
                 controller: ($scope: any) => {
                     chromeStorageService.getLocalStorageUsage().then((storageUsage: IStorageUsage) => {
-                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB. Occupation: ~' + storageUsage.percentUsage.toFixed(1) + '%';
+                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB.';
                     });
                     $scope.hide = () => {
                         $mdDialog.hide();
@@ -353,7 +353,7 @@ class MainController {
 
         $scope.syncNow = (forceSync: boolean) => {
             chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=650, location=0');
+                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=675, location=0');
             });
         };
 
