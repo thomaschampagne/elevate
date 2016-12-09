@@ -333,7 +333,7 @@ class MainController {
             $mdDialog.show({
                 controller: ($scope: any) => {
                     chromeStorageService.getLocalStorageUsage().then((storageUsage: IStorageUsage) => {
-                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB. Occupation: ~' + storageUsage.percentUsage.toFixed(1) + '%';
+                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB.';
                     });
                     $scope.hide = () => {
                         $mdDialog.hide();
