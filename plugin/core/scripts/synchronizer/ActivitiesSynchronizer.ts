@@ -473,9 +473,10 @@ class ActivitiesSynchronizer {
      */
     public sync(): Q.Promise<any> {
 
+        let updateActivitiesInfoAtEnd: boolean = false;
         let deferred = Q.defer();
-
         let syncNotify: ISyncNotify;
+
 
         // Check for lastSyncDateTime
         Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime).then((savedLastSyncDateTime: any) => {
@@ -488,6 +489,7 @@ class ActivitiesSynchronizer {
 
                 lastSyncDateTime = new Date(savedLastSyncDateTime.data);
                 computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+                updateActivitiesInfoAtEnd = true;
                 console.log('Last sync date time found: ', lastSyncDateTime);
 
             } else { // lastSyncDateTime NOT found ! Full sync !
@@ -510,11 +512,7 @@ class ActivitiesSynchronizer {
         }).then((saved: any) => {
 
             // Last Sync Date Time saved... Now save syncedAthleteProfile
-
             syncNotify.step = 'updatingLastSyncDateTime';
-            syncNotify.progress = 100;
-
-            deferred.notify(syncNotify);
 
             console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
 
@@ -531,9 +529,28 @@ class ActivitiesSynchronizer {
         }).then((saved: any) => {
 
             // Synced Athlete Profile saved ...
+            console.log('Sync With Athlete Profile done');
+            console.log('Saved data:', saved.data);
 
-            console.log('Sync With Athlete Profile', saved.data.syncWithAthleteProfile);
-            deferred.resolve(saved.data);
+            // Need to update activities info?!
+            if (updateActivitiesInfoAtEnd) {
+                console.log('Now updating activities info...');
+                return this.updateActivitiesInfo();
+            } else {
+                return null;
+            }
+
+        }).then((data: any) => {
+
+            if (data && !_.isUndefined(data.updateActivitiesInfoChanges)) {
+                // Activities Info updated !
+                console.log('Activities info updated. Changes found: ' + data.updateActivitiesInfoChanges);
+            }
+
+            syncNotify.progress = 100;
+            deferred.notify(syncNotify);
+
+            deferred.resolve(); // Finish !!
 
         }, (err: any) => {
 
@@ -594,7 +611,7 @@ class ActivitiesSynchronizer {
      * Update activities names and types
      * @returns {Promise<T>}
      */
-    public updateActivitiesInfos(): Q.Promise<any> {
+    public updateActivitiesInfo(): Q.Promise<any> {
 
         let deferred = Q.defer();
         let computedActivities: Array<ISyncActivityComputed> = null;
@@ -613,7 +630,6 @@ class ActivitiesSynchronizer {
             }
 
         }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
-
 
             if (_.isEmpty(rawStravaActivities)) {
                 return null;
@@ -648,11 +664,11 @@ class ActivitiesSynchronizer {
             }
 
         }).then(() => {
-            console.log('updateActivitiesInfos done. Changes found: ' + changes);
+            deferred.resolve({updateActivitiesInfoChanges: changes});
         }, (err: any) => {
             deferred.reject(err);
         }, (progress: ISyncNotify) => {
-            progress.step = 'updateActivitiesInfos'; // Override step name
+            progress.step = 'updateActivitiesInfo'; // Override step name
             deferred.notify(progress);
         });
 
