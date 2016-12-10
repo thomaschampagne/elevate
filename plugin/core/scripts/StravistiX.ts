@@ -1094,6 +1094,11 @@ class StravistiX {
             return;
         }
 
+        if (window.location.search.match('stravistixSync')) {
+            console.log('Sync Popup. Skip handleOnFlyActivitiesSync()');
+            return;
+        }
+
         if (!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
             console.log('Do not execute handleActivitiesSyncFromOutside(). because fitness trend feature is alpha not enabled');
             return;
@@ -1149,7 +1154,7 @@ class StravistiX {
 
     protected handleActivitiesSyncFromOutside() {
 
-        if (!window.location.search.match('stravistixSync')) { // Skipping on activity cropping
+        if (!window.location.search.match('stravistixSync')) { // Skipping is we are not on sync popup
             return;
         }
 
