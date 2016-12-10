@@ -357,7 +357,7 @@ class ActivitiesSynchronizer {
     }
 
     /**
-     *
+     * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
      * @return {Promise<Array<ISyncActivityComputed>>}
      */
     protected computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<Array<ISyncActivityComputed>> {
@@ -484,13 +484,13 @@ class ActivitiesSynchronizer {
 
             let lastSyncDateTime: Date = null;
 
-            if (savedLastSyncDateTime.data) {
+            if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
 
                 lastSyncDateTime = new Date(savedLastSyncDateTime.data);
                 computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
                 console.log('Last sync date time found: ', lastSyncDateTime);
 
-            } else {
+            } else { // lastSyncDateTime NOT found ! Full sync !
 
                 console.log('No last sync date time found');
 
@@ -504,32 +504,13 @@ class ActivitiesSynchronizer {
 
         }).then(() => {
 
-            // Updating the last sync date
+            // Compute Activities By Groups Of Pages done... Now updating the last sync date
             return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (new Date()).getTime());
-
-        }, (err: any) => {
-            // Error...
-            deferred.reject(err);
-
-        }, (progress: ISyncNotify) => {
-
-            syncNotify = {
-                step: progress.step,
-                progress: progress.progress,
-                index: progress.index,
-                activityId: progress.activityId,
-                fromPage: progress.fromPage,
-                toPage: progress.toPage,
-                pageGroupId: (progress.pageGroupId) ? progress.pageGroupId : ((syncNotify && syncNotify.pageGroupId) ? syncNotify.pageGroupId : 1),
-                savedActivitiesCount: (progress.savedActivitiesCount) ? progress.savedActivitiesCount : ((syncNotify && syncNotify.savedActivitiesCount) ? syncNotify.savedActivitiesCount : 0),
-                totalActivities: (progress.totalActivities) ? progress.totalActivities : ((syncNotify && syncNotify.totalActivities) ? syncNotify.totalActivities : null)
-            };
-
-            deferred.notify(syncNotify);
 
         }).then((saved: any) => {
 
-            // saveLastSyncDateTimeSuccess...
+            // Last Sync Date Time saved... Now save syncedAthleteProfile
+
             syncNotify.step = 'updatingLastSyncDateTime';
             syncNotify.progress = 100;
 
@@ -548,8 +529,32 @@ class ActivitiesSynchronizer {
             return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
 
         }).then((saved: any) => {
+
+            // Synced Athlete Profile saved ...
+
             console.log('Sync With Athlete Profile', saved.data.syncWithAthleteProfile);
             deferred.resolve(saved.data);
+
+        }, (err: any) => {
+
+            deferred.reject(err);
+
+        }, (progress: ISyncNotify) => {
+
+            syncNotify = {
+                step: progress.step,
+                progress: progress.progress,
+                index: progress.index,
+                activityId: progress.activityId,
+                fromPage: progress.fromPage,
+                toPage: progress.toPage,
+                pageGroupId: (progress.pageGroupId) ? progress.pageGroupId : ((syncNotify && syncNotify.pageGroupId) ? syncNotify.pageGroupId : 1),
+                savedActivitiesCount: (progress.savedActivitiesCount) ? progress.savedActivitiesCount : ((syncNotify && syncNotify.savedActivitiesCount) ? syncNotify.savedActivitiesCount : 0),
+                totalActivities: (progress.totalActivities) ? progress.totalActivities : ((syncNotify && syncNotify.totalActivities) ? syncNotify.totalActivities : null)
+            };
+
+            deferred.notify(syncNotify);
+
         });
 
         return deferred.promise;
@@ -600,27 +605,19 @@ class ActivitiesSynchronizer {
             computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
             computedActivitiesStored.data = null; // Release memory
 
-            // computedActivities = null;
-
             if (!_.isEmpty(computedActivities)) {
-                // Read all pages !
-                return this.fetchRawActivitiesRecursive(null, null);
+                return this.fetchRawActivitiesRecursive(null, null);  // Read all pages !
             } else {
-
                 console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
                 return null;
-
-                // deferred.reject("No computedActivities stored !");
             }
 
         }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
 
-            console.warn(rawStravaActivities);
 
-            if(_.isEmpty(rawStravaActivities)) {
+            if (_.isEmpty(rawStravaActivities)) {
                 return null;
             }
-
 
             // Test if name or type of activity has changed on each computed activities stored
             _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
@@ -651,17 +648,11 @@ class ActivitiesSynchronizer {
             }
 
         }).then(() => {
-
             console.log('updateActivitiesInfos done. Changes found: ' + changes);
-
         }, (err: any) => {
-
             deferred.reject(err);
-
         }, (progress: ISyncNotify) => {
-            // Override step name
-            progress.step = 'updateActivitiesInfos';
-
+            progress.step = 'updateActivitiesInfos'; // Override step name
             deferred.notify(progress);
         });
 
