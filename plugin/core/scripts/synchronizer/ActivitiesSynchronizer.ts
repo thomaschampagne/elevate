@@ -208,22 +208,21 @@ class ActivitiesSynchronizer {
                             deferred.resolve(activitiesList);
                         } else {
                             // Continue to fetch
-                            notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
+                            notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities) * 100);
                             deferred.notify(notify);
                             setTimeout(() => {
                                 this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                            }, 150);
-
+                            }, 50);
                         }
 
                     } else {
                         // Append activities
                         activitiesList = _.flatten(_.union(activitiesList, data.models));
-                        notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
+                        notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities)) * 100;
                         deferred.notify(notify);
                         setTimeout(() => {
                             this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                        }, 150);
+                        }, 50);
                     }
                 }
             }
@@ -584,5 +583,88 @@ class ActivitiesSynchronizer {
                 });
             }
         });
+    }
+
+    /**
+     * Update activities names and types
+     * @returns {Promise<T>}
+     */
+    public updateActivitiesInfos(): Q.Promise<any> {
+
+        let deferred = Q.defer();
+        let computedActivities: Array<ISyncActivityComputed> = null;
+        let changes: number = 0;
+
+        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+
+            computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
+            computedActivitiesStored.data = null; // Release memory
+
+            // computedActivities = null;
+
+            if (!_.isEmpty(computedActivities)) {
+                // Read all pages !
+                return this.fetchRawActivitiesRecursive(null, null);
+            } else {
+
+                console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
+                return null;
+
+                // deferred.reject("No computedActivities stored !");
+            }
+
+        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+
+            console.warn(rawStravaActivities);
+
+            if(_.isEmpty(rawStravaActivities)) {
+                return null;
+            }
+
+
+            // Test if name or type of activity has changed on each computed activities stored
+            _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
+
+                // Seek for activity in just interrogated pages
+                let foundRawStravaActivity: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: computedActivity.id});
+
+                if (foundRawStravaActivity) {
+
+                    if (computedActivity.name !== foundRawStravaActivity.name) {
+                        computedActivity.name = foundRawStravaActivity.name; // Update name
+                        changes++
+                    }
+
+                    if (computedActivity.type !== foundRawStravaActivity.type) {
+                        computedActivity.type = foundRawStravaActivity.type; // Update name
+                        computedActivity.display_type = foundRawStravaActivity.display_type;// Update name
+                        changes++;
+                    }
+                }
+            });
+
+            if (changes) {
+                // Update activities to local storage
+                return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
+            } else {
+                return null;
+            }
+
+        }).then(() => {
+
+            console.log('updateActivitiesInfos done. Changes found: ' + changes);
+
+        }, (err: any) => {
+
+            deferred.reject(err);
+
+        }, (progress: ISyncNotify) => {
+            // Override step name
+            progress.step = 'updateActivitiesInfos';
+
+            deferred.notify(progress);
+        });
+
+        return deferred.promise;
     }
 }
