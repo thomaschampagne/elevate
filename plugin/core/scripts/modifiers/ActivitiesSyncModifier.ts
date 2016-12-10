@@ -87,12 +87,10 @@ class ActivitiesSyncModifier implements IModifier {
 
     protected sync(): void {
 
-
-
         // Start sync..
-        this.activitiesSynchronizer.sync().then((syncData: any) => {
+        this.activitiesSynchronizer.sync().then(() => {
 
-            console.log('Sync finished, saved data: ', syncData);
+            console.log('Sync finished');
 
             // Reloading source tab if exist
             if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
@@ -154,10 +152,14 @@ class ActivitiesSyncModifier implements IModifier {
 
                     stepMessage = 'Saving results to local extension storage...';
                     this.updateStorageUsage();
-
                     break;
+
                 case 'updatingLastSyncDateTime':
                     stepMessage = 'Updating your last synchronization date...';
+                    break;
+
+                case 'updateActivitiesInfo':
+                    stepMessage = 'Updating activities basic info...';
                     break;
             }
 

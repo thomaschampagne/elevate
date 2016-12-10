@@ -208,22 +208,21 @@ class ActivitiesSynchronizer {
                             deferred.resolve(activitiesList);
                         } else {
                             // Continue to fetch
-                            notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
+                            notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities) * 100);
                             deferred.notify(notify);
                             setTimeout(() => {
                                 this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                            }, 150);
-
+                            }, 50);
                         }
 
                     } else {
                         // Append activities
                         activitiesList = _.flatten(_.union(activitiesList, data.models));
-                        notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
+                        notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities)) * 100;
                         deferred.notify(notify);
                         setTimeout(() => {
                             this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                        }, 150);
+                        }, 50);
                     }
                 }
             }
@@ -358,7 +357,7 @@ class ActivitiesSynchronizer {
     }
 
     /**
-     *
+     * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
      * @return {Promise<Array<ISyncActivityComputed>>}
      */
     protected computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<Array<ISyncActivityComputed>> {
@@ -474,9 +473,10 @@ class ActivitiesSynchronizer {
      */
     public sync(): Q.Promise<any> {
 
+        let updateActivitiesInfoAtEnd: boolean = false;
         let deferred = Q.defer();
-
         let syncNotify: ISyncNotify;
+
 
         // Check for lastSyncDateTime
         Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime).then((savedLastSyncDateTime: any) => {
@@ -485,13 +485,14 @@ class ActivitiesSynchronizer {
 
             let lastSyncDateTime: Date = null;
 
-            if (savedLastSyncDateTime.data) {
+            if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
 
                 lastSyncDateTime = new Date(savedLastSyncDateTime.data);
                 computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+                updateActivitiesInfoAtEnd = true;
                 console.log('Last sync date time found: ', lastSyncDateTime);
 
-            } else {
+            } else { // lastSyncDateTime NOT found ! Full sync !
 
                 console.log('No last sync date time found');
 
@@ -505,11 +506,54 @@ class ActivitiesSynchronizer {
 
         }).then(() => {
 
-            // Updating the last sync date
+            // Compute Activities By Groups Of Pages done... Now updating the last sync date
             return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (new Date()).getTime());
 
+        }).then((saved: any) => {
+
+            // Last Sync Date Time saved... Now save syncedAthleteProfile
+            syncNotify.step = 'updatingLastSyncDateTime';
+
+            console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
+
+            let syncedAthleteProfile: IAthleteProfile = {
+                userGender: this.userSettings.userGender,
+                userMaxHr: this.userSettings.userMaxHr,
+                userRestHr: this.userSettings.userRestHr,
+                userWeight: this.userSettings.userWeight,
+                userFTP: this.userSettings.userFTP
+            };
+
+            return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
+
+        }).then((saved: any) => {
+
+            // Synced Athlete Profile saved ...
+            console.log('Sync With Athlete Profile done');
+            console.log('Saved data:', saved.data);
+
+            // Need to update activities info?!
+            if (updateActivitiesInfoAtEnd) {
+                console.log('Now updating activities info...');
+                return this.updateActivitiesInfo();
+            } else {
+                return null;
+            }
+
+        }).then((data: any) => {
+
+            if (data && !_.isUndefined(data.updateActivitiesInfoChanges)) {
+                // Activities Info updated !
+                console.log('Activities info updated. Changes found: ' + data.updateActivitiesInfoChanges);
+            }
+
+            syncNotify.progress = 100;
+            deferred.notify(syncNotify);
+
+            deferred.resolve(); // Finish !!
+
         }, (err: any) => {
-            // Error...
+
             deferred.reject(err);
 
         }, (progress: ISyncNotify) => {
@@ -528,29 +572,6 @@ class ActivitiesSynchronizer {
 
             deferred.notify(syncNotify);
 
-        }).then((saved: any) => {
-
-            // saveLastSyncDateTimeSuccess...
-            syncNotify.step = 'updatingLastSyncDateTime';
-            syncNotify.progress = 100;
-
-            deferred.notify(syncNotify);
-
-            console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
-
-            let syncedAthleteProfile: IAthleteProfile = {
-                userGender: this.userSettings.userGender,
-                userMaxHr: this.userSettings.userMaxHr,
-                userRestHr: this.userSettings.userRestHr,
-                userWeight: this.userSettings.userWeight,
-                userFTP: this.userSettings.userFTP
-            };
-
-            return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
-
-        }).then((saved: any) => {
-            console.log('Sync With Athlete Profile', saved.data.syncWithAthleteProfile);
-            deferred.resolve(saved.data);
         });
 
         return deferred.promise;
@@ -584,5 +605,73 @@ class ActivitiesSynchronizer {
                 });
             }
         });
+    }
+
+    /**
+     * Update activities names and types
+     * @returns {Promise<T>}
+     */
+    public updateActivitiesInfo(): Q.Promise<any> {
+
+        let deferred = Q.defer();
+        let computedActivities: Array<ISyncActivityComputed> = null;
+        let changes: number = 0;
+
+        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+
+            computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
+            computedActivitiesStored.data = null; // Release memory
+
+            if (!_.isEmpty(computedActivities)) {
+                return this.fetchRawActivitiesRecursive(null, null);  // Read all pages !
+            } else {
+                console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
+                return null;
+            }
+
+        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+
+            if (_.isEmpty(rawStravaActivities)) {
+                return null;
+            }
+
+            // Test if name or type of activity has changed on each computed activities stored
+            _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
+
+                // Seek for activity in just interrogated pages
+                let foundRawStravaActivity: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: computedActivity.id});
+
+                if (foundRawStravaActivity) {
+
+                    if (computedActivity.name !== foundRawStravaActivity.name) {
+                        computedActivity.name = foundRawStravaActivity.name; // Update name
+                        changes++
+                    }
+
+                    if (computedActivity.type !== foundRawStravaActivity.type) {
+                        computedActivity.type = foundRawStravaActivity.type; // Update name
+                        computedActivity.display_type = foundRawStravaActivity.display_type;// Update name
+                        changes++;
+                    }
+                }
+            });
+
+            if (changes) {
+                // Update activities to local storage
+                return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
+            } else {
+                return null;
+            }
+
+        }).then(() => {
+            deferred.resolve({updateActivitiesInfoChanges: changes});
+        }, (err: any) => {
+            deferred.reject(err);
+        }, (progress: ISyncNotify) => {
+            progress.step = 'updateActivitiesInfo'; // Override step name
+            deferred.notify(progress);
+        });
+
+        return deferred.promise;
     }
 }
