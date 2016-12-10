@@ -210,7 +210,10 @@ class ActivitiesSynchronizer {
                             // Continue to fetch
                             notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
                             deferred.notify(notify);
-                            this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                            setTimeout(() => {
+                                this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                            }, 150);
+
                         }
 
                     } else {
@@ -218,7 +221,9 @@ class ActivitiesSynchronizer {
                         activitiesList = _.flatten(_.union(activitiesList, data.models));
                         notify.progress = (activitiesList.length / (pagesToRead * perPage)) * 100;
                         deferred.notify(notify);
-                        this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                        setTimeout(() => {
+                            this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                        }, 150);
                     }
                 }
             }
