@@ -1108,9 +1108,9 @@ class StravistiX {
 
                 console.log('A previous sync exists on ' + new Date(lastSyncDateTime).toString());
 
-                if (Date.now() > (lastSyncDateTime + 1000 * 3600 * this.userSettings.autoSyncHours)) {
+                if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
 
-                    console.log('Last sync performed more than ' + this.userSettings.autoSyncHours + ' hours. re-sync now');
+                    console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
 
                     // Start sync
                     this.activitiesSynchronizer.sync().then((syncData: any) => {
@@ -1138,7 +1138,7 @@ class StravistiX {
                     });
 
                 } else {
-                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncHours + ' hour(s) ago');
+                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minutes(s) ago');
                 }
 
             } else {

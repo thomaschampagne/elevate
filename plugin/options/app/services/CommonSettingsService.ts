@@ -54,14 +54,14 @@ app.factory('CommonSettingsService', () => {
         let sections: Array<ISection> = [{
             sectionTitle: 'Athlete History Synchronisation',
             sectionContent: [{
-                optionKey: 'autoSyncHours',
+                optionKey: 'autoSyncMinutes',
                 optionType: 'number',
-                optionTitle: 'Auto sync every X hours while browsing strava.com',
+                optionTitle: 'Auto sync every X minutes while browsing strava.com',
                 optionLabels: ['All'],
-                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X hours have been flow out since your last synchronisation.<br /><br />- Default is 1 hour.<br /><br />- Value <strong>0</strong>: always auto sync on each <strong>strava.com/**</strong> page load (Not recommended).',
-                min: 0,
-                max: 87600, // 10 years
-                step: 0.5,
+                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X minutes have been flow out since your last synchronisation.<br /><br />- Default is 60 minutes.<br /><br />- Min: 5 minutes, Max: 43200 minutes (~30 days)',
+                min: 5,
+                max: 43200, // 30 days
+                step: 1,
                 disableTooltip: true
             }]
         }, {

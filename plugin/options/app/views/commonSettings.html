@@ -31,7 +31,7 @@
                                 layout-align="end center">
                 <input type="number" step="{{option.step}}" name="rate" ng-model="option.value"
                        ng-change="toggleIntegerOption(option)" aria-label="{{ option.optionTitle }}"
-                       min="{{option.min}}" max="{{option.max}}"/>
+                       min="{{option.min}}" max="{{option.max}}" />
                 <md-tooltip md-direction="top" ng-if="!option.disableTooltip">
                     {{option.optionHtml}}
                 </md-tooltip>
