@@ -1118,23 +1118,30 @@ class StravistiX {
                     console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
 
                     // Start sync
-                    this.activitiesSynchronizer.sync().then((syncData: any) => {
+                    this.activitiesSynchronizer.sync().then(() => {
 
-                        console.log('Sync finished, saved data: ', syncData);
+                        console.log('Sync finished');
 
                     }, (err: any) => {
 
                         console.error('Sync error', err);
 
-                        $.fancybox({
-                            fitToView: true,
-                            autoSize: true,
-                            closeClick: false,
-                            openEffect: 'none',
-                            closeEffect: 'none',
-                            scrolling: 'no',
-                            'type': 'iframe',
-                            'content': 'Error while syncing activities in background<br/><br/>Press F12 to see error in developer console.'
+                        let errorUpdate: any = {
+                            stravaId: this.athleteId,
+                            error: {path: window.location.href, date: new Date(), content: err}
+                        };
+
+                        $.post({
+                            url: env.endPoint + '/api/errorReport',
+                            data: JSON.stringify(errorUpdate),
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: (response: any) => {
+                                console.log('Commited: ', response);
+                            },
+                            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                                console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+                            }
                         });
 
 

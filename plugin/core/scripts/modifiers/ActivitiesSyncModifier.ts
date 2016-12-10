@@ -47,8 +47,8 @@ class ActivitiesSyncModifier implements IModifier {
         html += '           <span id="syncStepProgressText"></span>';
         html += '        </div>';
         html += '        <div id="syncStatusError" style="display: none;">';
-        html += '           <div style="padding-bottom: 20px;"><strong>Sync error occured :(. Could you send me bellow error(s)? </br ><a href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">post errors here</a>. Thanks !</strong></div>';
-        html += '           <div id="syncStatusErrorContent" style="border: 1px solid red;"></div>';
+        html += '           <div style="padding-bottom: 20px;">Sync error occured. Maybe a network timeout error...<a href="#" onclick="window.location.reload();">Try to sync again</a></div>';
+        html += '           <div id="syncStatusErrorContent" style="font-size: 11px;"></div>';
         html += '        </div>';
         html += '       <div id="syncInfos">';
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
@@ -117,6 +117,24 @@ class ActivitiesSyncModifier implements IModifier {
 
             console.error('Sync error', err);
 
+            let errorUpdate: any = {
+                stravaId: (window.currentAthlete && window.currentAthlete.get('id') ? window.currentAthlete.get('id') : null),
+                error: {path: window.location.href, date: new Date(), content: err}
+            };
+
+            $.post({
+                url: env.endPoint + '/api/errorReport',
+                data: JSON.stringify(errorUpdate),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (response: any) => {
+                    console.log('Commited: ', response);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                    console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+                }
+            });
+
             $('#syncStatusError').show();
 
             if (err && err.errObject) {
@@ -163,7 +181,9 @@ class ActivitiesSyncModifier implements IModifier {
                     break;
             }
 
-            $('#syncStep').html('Activity group <' + progress.pageGroupId + '> ' + stepMessage + '');
+            let syncStepMessage = (progress.step === 'updateActivitiesInfo') ? stepMessage : 'Activity group <' + progress.pageGroupId + '> ' + stepMessage;
+
+            $('#syncStep').html(syncStepMessage);
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 
