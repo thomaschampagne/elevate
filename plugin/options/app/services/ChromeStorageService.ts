@@ -27,6 +27,24 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
+    public setToLocalStorage(key: string, value: any): Q.IPromise<any> {
+        let deferred: IDeferred<any> = this.$q.defer();
+
+        let object: any = {};
+        object[key] = value;
+        chrome.storage.local.set(object, () => {
+
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError)
+                deferred.reject(chrome.runtime.lastError);
+            } else {
+                deferred.resolve();
+            }
+        });
+
+        return deferred.promise;
+    }
+
     public removeFromLocalStorage(key: string): Q.IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.remove(key, () => {

@@ -5,12 +5,14 @@ class ActivitiesSyncModifier implements IModifier {
     protected sourceTabId: number;
     protected forceSync: boolean;
     protected userSettings: IUserSettings;
+    protected appResources: IAppResources;
 
     public static closeWindowIntervalId: number = -1;
 
     constructor(appResources: IAppResources, userSettings: IUserSettings, forceSync: boolean, sourceTabId?: number) {
         this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
         this.userSettings = userSettings;
+        this.appResources = appResources;
         this.extensionId = appResources.extensionId;
         this.sourceTabId = sourceTabId;
         this.forceSync = forceSync;
@@ -27,13 +29,12 @@ class ActivitiesSyncModifier implements IModifier {
         }
 
         let html = '';
-
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.  <br/><br/>' +
-            'Once the first synchronization is completed, your history will be automatically synced while browsing strava.com. You can trigger a manual synchronization by clicking the same button.<br/><br/>' +
-            'Closing this window will stop the synchronization. This window should close itself when synchronisation is done.';
+        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.' +
+            '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation<br/><a href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" style="font-weight: bold; color: #e94e1b;">&#187; Configure auto sync here &#171;</a><br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
+            'Closing window stops synchronization. She will close itself when done.';
         html += '       </div>';
         html += '       <div class="progressBarGroup">';
         html += '           <div id="totalProgress">Global synchronisation progress</div>';
@@ -46,8 +47,8 @@ class ActivitiesSyncModifier implements IModifier {
         html += '           <span id="syncStepProgressText"></span>';
         html += '        </div>';
         html += '        <div id="syncStatusError" style="display: none;">';
-        html += '           <div style="padding-bottom: 20px;"><strong>Sync error occured :(. Could you send me bellow error(s)? </br ><a href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">post errors here</a>. Thanks !</strong></div>';
-        html += '           <div id="syncStatusErrorContent" style="border: 1px solid red;"></div>';
+        html += '           <div style="padding-bottom: 20px;">Sync error occured. Maybe a network timeout error...<a href="#" onclick="window.location.reload();">Try to sync again</a></div>';
+        html += '           <div id="syncStatusErrorContent" style="font-size: 11px;"></div>';
         html += '        </div>';
         html += '       <div id="syncInfos">';
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
@@ -87,9 +88,9 @@ class ActivitiesSyncModifier implements IModifier {
     protected sync(): void {
 
         // Start sync..
-        this.activitiesSynchronizer.sync().then((syncData: any) => {
+        this.activitiesSynchronizer.sync().then(() => {
 
-            console.log('Sync finished, saved data: ', syncData);
+            console.log('Sync finished');
 
             // Reloading source tab if exist
             if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
@@ -103,9 +104,9 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            let timer: number = 60 * 1000; // 60s for debug...
+            let timer: number = 10 * 1000; // 10s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's (During Alpha).</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }
@@ -115,6 +116,24 @@ class ActivitiesSyncModifier implements IModifier {
         }, (err: any) => {
 
             console.error('Sync error', err);
+
+            let errorUpdate: any = {
+                stravaId: (window.currentAthlete && window.currentAthlete.get('id') ? window.currentAthlete.get('id') : null),
+                error: {path: window.location.href, date: new Date(), content: err}
+            };
+
+            $.post({
+                url: env.endPoint + '/api/errorReport',
+                data: JSON.stringify(errorUpdate),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: (response: any) => {
+                    console.log('Commited: ', response);
+                },
+                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                    console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+                }
+            });
 
             $('#syncStatusError').show();
 
@@ -151,14 +170,20 @@ class ActivitiesSyncModifier implements IModifier {
 
                     stepMessage = 'Saving results to local extension storage...';
                     this.updateStorageUsage();
-
                     break;
+
                 case 'updatingLastSyncDateTime':
                     stepMessage = 'Updating your last synchronization date...';
                     break;
+
+                case 'updateActivitiesInfo':
+                    stepMessage = 'Updating activities basic info...';
+                    break;
             }
 
-            $('#syncStep').html('Activity group <' + progress.pageGroupId + '> ' + stepMessage + '');
+            let syncStepMessage = (progress.step === 'updateActivitiesInfo') ? stepMessage : 'Activity group <' + progress.pageGroupId + '> ' + stepMessage;
+
+            $('#syncStep').html(syncStepMessage);
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 

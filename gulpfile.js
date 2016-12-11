@@ -99,6 +99,7 @@ var OPTIONS_FILES = [
     'plugin/node_modules/angular-nvd3/dist/angular-nvd3.min.js',
     'plugin/node_modules/moment/moment.js',
     'plugin/node_modules/angular-moment/angular-moment.js',
+    'plugin/node_modules/file-saver/FileSaver.min.js',
     'plugin/options/**/*',
     '!plugin/options/**/*.ts' // Do not copy TypeScripts script using "!". They are compiled to JS files which are already copied to destination folder. (@see PLUGIN_TYPESCRIPT_SCRIPTS var)
 ];

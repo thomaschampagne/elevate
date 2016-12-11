@@ -10,9 +10,10 @@ interface IFitnessDataService {
 
 interface IFitnessActivitiesWithHR {
     id: number;
-    date: Date;
+    date: Date; // TODO Store Moment instead?!
     timestamp: number;
     dayOfYear: number;
+    year: number;
     type: string;
     activityName: string;
     trimp: number;
@@ -97,13 +98,14 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
                 if (activity.extendedStats && activity.extendedStats.heartRateData) {
 
-                    let date: Date = new Date(activity.start_time);
+                    let momentStartTime: Moment = moment(activity.start_time);
 
                     let activityHR: IFitnessActivitiesWithHR = {
                         id: activity.id,
-                        date: date,
-                        timestamp: date.getTime(),
-                        dayOfYear: moment(date).dayOfYear(),
+                        date: momentStartTime.toDate(),
+                        timestamp: momentStartTime.toDate().getTime(),
+                        dayOfYear: momentStartTime.dayOfYear(),
+                        year: momentStartTime.year(),
                         type: activity.display_type,
                         activityName: activity.name,
                         trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
@@ -129,7 +131,6 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
         let deferred = $q.defer();
 
-
         console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
 
         fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
@@ -145,10 +146,11 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
             let currentDayMoment = moment(fromMoment);
 
-            while (currentDayMoment <= todayMoment) {
+            while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.filter(cleanedActivitiesWithHRData, (activity: IFitnessActivitiesWithHR) => {
-                    return (activity.date.getFullYear() == currentDayMoment.year() && activity.dayOfYear == currentDayMoment.dayOfYear());
+                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.where(cleanedActivitiesWithHRData, {
+                    year: currentDayMoment.year(),
+                    dayOfYear: currentDayMoment.dayOfYear()
                 });
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
@@ -180,7 +182,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             // Add 14 days as future "preview".
             for (let i: number = 1; i <= FUTURE_DAYS_PREVIEW; i++) {
 
-                let futureDate: Date = moment().add(i, 'days').toDate();
+                let futureDate: Date = moment().add(i, 'days').startOf('day').toDate();
 
                 let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
                     ids: [],
@@ -215,7 +217,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         let tsb: number = 0;
         let results: Array<IFitnessTrimpObject> = [];
 
-        _.each(fitnessObjectsWithDaysOff, (trimpObject: IFitnessActivitiesWithHRDaysOff) => {
+        _.each(fitnessObjectsWithDaysOff, (trimpObject: IFitnessActivitiesWithHRDaysOff, index: number, list: Array<IFitnessActivitiesWithHRDaysOff>) => {
 
             ctl = ctl + (trimpObject.trimp - ctl) * (1 - Math.exp(-1 / 42));
             atl = atl + (trimpObject.trimp - atl) * (1 - Math.exp(-1 / 7));
@@ -231,8 +233,34 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 ctl: parseFloat(ctl.toFixed(1)),
                 atl: parseFloat(atl.toFixed(1)),
                 tsb: parseFloat(tsb.toFixed(1)),
-                previewDay: trimpObject.previewDay
+                previewDay: trimpObject.previewDay,
             };
+
+            // Test if we are switching from today to the first preview day
+            // This test is positive just 1 time !
+            if (list[index - 1] && list[index - 1].previewDay !== list[index].previewDay) {
+
+                // First preview day here !
+                console.log('First preview day is', list[index].date);
+
+                let lastResult = _.last(results);
+
+                // Create a new result to fill the gap !
+                let fillTheCurvesGapWithFakeResult: IFitnessTrimpObject = {
+                    ids: null,
+                    date: lastResult.date,
+                    timestamp: lastResult.timestamp,
+                    activitiesName: null,
+                    type: null,
+                    trimp: null,
+                    ctl: lastResult.ctl,
+                    atl: lastResult.atl,
+                    tsb: lastResult.tsb,
+                    previewDay: true,
+                };
+
+                results.push(fillTheCurvesGapWithFakeResult);
+            }
 
             results.push(result);
         });

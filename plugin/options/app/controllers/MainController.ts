@@ -278,6 +278,13 @@ class MainController {
         };
 
         /**
+         * FAQ
+         */
+        $scope.openFAQ = () => {
+            $window.open('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions', '_blank');
+        };
+
+        /**
          * bug report
          */
         $scope.openBugReport = () => {
@@ -296,6 +303,8 @@ class MainController {
          * Release Notes
          */
         $scope.showReleaseNotes = () => {
+
+
             $mdDialog.show({
                 controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
 
@@ -333,7 +342,7 @@ class MainController {
             $mdDialog.show({
                 controller: ($scope: any) => {
                     chromeStorageService.getLocalStorageUsage().then((storageUsage: IStorageUsage) => {
-                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB. Occupation: ~' + storageUsage.percentUsage.toFixed(1) + '%';
+                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB.';
                     });
                     $scope.hide = () => {
                         $mdDialog.hide();
@@ -351,19 +360,19 @@ class MainController {
 
         $scope.syncNow = (forceSync: boolean) => {
             chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=650, location=0');
+                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=675, location=0');
             });
         };
 
         $scope.clearHistory = () => {
-            var confirm = $mdDialog.confirm()
+            let confirm = $mdDialog.confirm()
                 .title('Are you sure to delete your history?')
                 .textContent('Performing this action will clear your history of activities synced. Features which depends of your history will not be displayed anymore until you perform a new synchronization.')
                 .ariaLabel('Are you sure to delete your history?')
                 .ok('Delete my history')
                 .cancel('Cancel');
 
-            $mdDialog.show(confirm).then(function () {
+            $mdDialog.show(confirm).then(() => {
 
                 chromeStorageService.removeFromLocalStorage('computedActivities').then(() => {
                     return chromeStorageService.removeFromLocalStorage('lastSyncDateTime');
@@ -373,13 +382,47 @@ class MainController {
                     $window.location.reload();
                 });
 
-            }, function () {
+            }, () => {
                 // Cancel.. do nothing
             });
         };
+
+        $scope.saveHistory = () => {
+            chromeStorageService.getAllFromLocalStorage().then((data: any) => {
+                data = _.pick(data, 'lastSyncDateTime', 'syncWithAthleteProfile', 'computedActivities'); // Filter data to keep
+
+                if (_.isEmpty(data.computedActivities)) {
+                    alert("No history to backup. Perform full sync at first");
+                    return;
+                }
+
+                // Append current version
+                data.pluginVersion = chrome.runtime.getManifest().version;
+                let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
+                let filename = moment().format('Y.M.D-H.mm') + '_v' + data.pluginVersion + '.history.json';
+                saveAs(blob, filename);
+
+                let dialog = $mdDialog.confirm()
+                    .htmlContent('<i>' + filename + '</i> file should be dropped in your download folder.')
+                    .ok('Got it !');
+                $mdDialog.show(dialog);
+            });
+        };
+
+        $scope.restoreHistory = () => {
+
+            $mdDialog.show({
+                controller: ($scope: any) => {
+                    $scope.hide = () => {
+                        $mdDialog.hide();
+                    };
+                },
+                templateUrl: 'views/modals/restoreHistory.html',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true
+            });
+        };
     }
-
-
 }
 
 app.controller('MainController', MainController);

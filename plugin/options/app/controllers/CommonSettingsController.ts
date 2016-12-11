@@ -32,9 +32,8 @@ class CommonSettingsController {
                         option.active = _.findWhere(option.optionList, {
                             key: _.propertyOf(userSettingsSynced)(option.optionKey)
                         });
-                    } else if (option.optionType === 'integer') {
+                    } else if (option.optionType === 'number') {
                         option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
-                        ;
                     } else {
                         console.error('Option type not supported');
                     }
@@ -80,23 +79,20 @@ class CommonSettingsController {
 
         $scope.toggleIntegerOption = (option: ISectionContent) => {
 
-            $scope.$watch('option.value', () => {
+            if (_.isNull(option.value) || _.isUndefined(option.value)) {
 
-                if (option.value < 0) {
-                    if (option.value == -1) {
-                        option.value = 0;
-                    } else {
-                        option.value = Math.abs(option.value);
-                    }
-                }
+                chromeStorageService.fetchUserSettings((userSettings: IUserSettings) => {
+                    let resetValue = _.propertyOf(userSettings)(option.optionKey);
+                    console.log(option.optionKey + ' value not compliant, Reset to  ' + resetValue);
+                    option.value = resetValue;
+                });
 
-            });
-
-            let saveValue: number = (_.isNull(option.value) || _.isUndefined(option.value)) ? 0 : option.value;
-
-            chromeStorageService.updateUserSetting(option.optionKey, saveValue, () => {
-                console.log(option.optionKey + ' has been updated to ' + saveValue);
-            });
+            } else {
+                // Save !
+                chromeStorageService.updateUserSetting(option.optionKey, option.value, () => {
+                    console.log(option.optionKey + ' has been updated to ' + option.value);
+                });
+            }
         };
 
         $scope.displayOptionHelper = (optionKeyParam: string) => {

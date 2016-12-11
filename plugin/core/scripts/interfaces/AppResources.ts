@@ -5,6 +5,7 @@ interface IAppResources {
     menuIconOrange: string;
     remoteViewIcon: string;
     pollIcon: string;
+    helpIcon: string;
     veloviewerIcon: string;
     raceshapeIcon: string;
     veloviewerDashboardIcon: string;

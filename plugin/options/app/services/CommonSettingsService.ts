@@ -18,6 +18,25 @@ interface ISectionContent {
     active?: any;
     hidden?: boolean;
     value?: any;
+    /**
+     * For number type only
+     */
+    min?: number;
+
+    /**
+     * For number type only
+     */
+    max?: number;
+
+    /**
+     * For number type only
+     */
+    step?: number;
+
+    /**
+     * For number type only
+     */
+    disableTooltip?: boolean;
 }
 interface IListItem {
     key: string;
@@ -33,6 +52,19 @@ app.factory('CommonSettingsService', () => {
     commonSettingsService.provideSections = () => {
 
         let sections: Array<ISection> = [{
+            sectionTitle: 'Athlete History Synchronisation',
+            sectionContent: [{
+                optionKey: 'autoSyncMinutes',
+                optionType: 'number',
+                optionTitle: 'Auto sync every X minutes while browsing strava.com',
+                optionLabels: ['All'],
+                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X minutes have been flow out since your last synchronisation.<br /><br />- Default is 60 minutes.<br /><br />- Min: 5 minutes, Max: 43200 minutes (~30 days)',
+                min: 5,
+                max: 43200, // 30 days
+                step: 1,
+                disableTooltip: true
+            }]
+        }, {
             sectionTitle: 'Activities Extended Data',
             sectionContent: [{
                 optionKey: 'displayActivityRatio',
@@ -263,16 +295,18 @@ app.factory('CommonSettingsService', () => {
                 optionHtml: 'This will hide all routes created in the dashboard feed.',
             }, {
                 optionKey: 'feedHideRideActivitiesUnderDistance',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Hide rides activities under distance.',
                 optionLabels: ['Cycling'],
                 optionHtml: 'This will hide all cycling rides (also virtual rides) in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+                min: 0
             }, {
                 optionKey: 'feedHideRunActivitiesUnderDistance',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Hide running activities under distance.',
                 optionLabels: ['Running'],
                 optionHtml: 'This will hide all running activities in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+                min: 0
             }]
         }, {
             sectionTitle: 'Weather units',
@@ -316,16 +350,18 @@ app.factory('CommonSettingsService', () => {
             sectionTitle: 'StravistiX Year progression targets for ' + (new Date()).getFullYear(),
             sectionContent: [{
                 optionKey: 'targetsYearRide',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Cycling distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Cycling'],
                 optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
+                min: 0
             }, {
                 optionKey: 'targetsYearRun',
-                optionType: 'integer',
+                optionType: 'number',
                 optionTitle: 'Running distance target for ' + (new Date()).getFullYear(),
                 optionLabels: ['Running'],
                 optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
+                min: 0
             }]
         }, {
             sectionTitle: 'Miscellaneous',
@@ -357,7 +393,7 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment (Experimental)',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'Experimental at the moment. This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
-            },{
+            }, {
                 optionKey: 'displayExtendedGoals',
                 optionType: 'checkbox',
                 optionTitle: 'Enable strava premium additional goal progress tracking (Experimental)',
