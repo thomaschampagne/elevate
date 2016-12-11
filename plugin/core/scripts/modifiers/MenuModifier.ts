@@ -39,7 +39,7 @@ class MenuModifier implements IModifier {
         html += "<li style='" + styleSideLeft + "' ><a  style='font-style: italic;' href='https://twitter.com/champagnethomas' style='font-style: italic;' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.twitterIcon + "'/> <span>What's next?</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showDonation=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/> <span>Donate</span></a></li>";
-        html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='http://thomaschampagne.github.io/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bikeIcon + "'/> <span> Author site</span></a></li>";
+        html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.helpIcon + "'/> <span> FAQ</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + newIssueURL + "' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/> <span>Report bug</span></a></li>";
         html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/?showSharing=true'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/> <span>Share</span></a></li>";

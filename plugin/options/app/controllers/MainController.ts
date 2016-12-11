@@ -278,6 +278,13 @@ class MainController {
         };
 
         /**
+         * FAQ
+         */
+        $scope.openFAQ = () => {
+            $window.open('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions', '_blank');
+        };
+
+        /**
          * bug report
          */
         $scope.openBugReport = () => {
