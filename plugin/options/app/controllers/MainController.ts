@@ -365,7 +365,7 @@ class MainController {
         };
 
         $scope.clearHistory = () => {
-            var confirm = $mdDialog.confirm()
+            let confirm = $mdDialog.confirm()
                 .title('Are you sure to delete your history?')
                 .textContent('Performing this action will clear your history of activities synced. Features which depends of your history will not be displayed anymore until you perform a new synchronization.')
                 .ariaLabel('Are you sure to delete your history?')
@@ -399,7 +399,13 @@ class MainController {
                 // Append current version
                 data.pluginVersion = chrome.runtime.getManifest().version;
                 let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
-                saveAs(blob, moment().format('Y.M.D_H.mm') + ".history.json");
+                let filename = moment().format('Y.M.D-H.mm') + '_v' + data.pluginVersion + '.history.json';
+                saveAs(blob, filename);
+
+                let dialog = $mdDialog.confirm()
+                    .htmlContent('<i>' + filename + '</i> file should be dropped in your download folder.')
+                    .ok('Got it !');
+                $mdDialog.show(dialog);
             });
         };
 
