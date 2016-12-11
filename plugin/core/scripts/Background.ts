@@ -78,7 +78,7 @@ class Background {
         let storageManager: StorageManager = new StorageManager(StorageManager.storageSyncType);
 
         // Handle on install
-        chrome.runtime.onInstalled.addListener(function (details) {
+        chrome.runtime.onInstalled.addListener((details) => {
 
             let thisVersion: string = chrome.runtime.getManifest().version;
 
@@ -127,7 +127,26 @@ class Background {
                         console.log('displayExtendedGoals set false ', data);
                     });
                 }
+
+                // Clear local history if coming from version under 5.1.0
+                if (Helper.versionCompare('5.1.0', details.previousVersion) === 1) {
+                    this.clearSyncCache();
+                }
+
             }
+        });
+    }
+
+    public clearSyncCache(): void {
+
+        let storageManagerOnLocal: StorageManager = new StorageManager(StorageManager.storageLocalType);
+
+        storageManagerOnLocal.removeFromStorage('computedActivities', () => {
+            storageManagerOnLocal.removeFromStorage('lastSyncDateTime', () => {
+                storageManagerOnLocal.removeFromStorage('syncWithAthleteProfile', () => {
+                    console.log('Local History cleared');
+                });
+            });
         });
     }
 }
