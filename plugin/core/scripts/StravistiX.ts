@@ -246,35 +246,35 @@ class StravistiX {
         if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += '<h5><strong>NEW in ' + baseVersion[0] + '.' + baseVersion[1] + '.x' + ':</strong></h5>';
             _.each(updateMessageObj.features, (feature: string) => {
-                message += '<h6>- ' + feature + '</h6>';
+                message += '<h6 style="margin-top: 12px;">- ' + feature + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
             message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
             _.each(updateMessageObj.hotFixes, (hotFix: string) => {
-                message += '<h6>- ' + hotFix + '</h6>';
+                message += '<h6 style="margin-top: 12px;">- ' + hotFix + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
             message += '<h5><strong>FIXED in ' + baseVersion[0] + '.' + baseVersion[1] + '.' + baseVersion[2] + ':</strong></h5>';
             _.each(updateMessageObj.fixes, (fix: string) => {
-                message += '<h6>- ' + fix + '</h6>';
+                message += '<h6 style="margin-top: 12px;">- ' + fix + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
             message += '<h5><strong>Upcoming Fixes:</strong></h5>';
             _.each(updateMessageObj.upcommingFixes, (upcommingFixes: string) => {
-                message += '<h6>- ' + upcommingFixes + '</h6>';
+                message += '<h6 style="margin-top: 12px;">- ' + upcommingFixes + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
             message += '<h5><strong>Upcoming Features:</strong></h5>';
             _.each(updateMessageObj.upcommingFeatures, (upcommingFeatures: string) => {
-                message += '<h6>- ' + upcommingFeatures + '</h6>';
+                message += '<h6 style="margin-top: 12px;">- ' + upcommingFeatures + '</h6>';
             });
         }
 
@@ -1150,7 +1150,7 @@ class StravistiX {
                     });
 
                 } else {
-                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minutes(s) ago');
+                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
                 }
 
             } else {

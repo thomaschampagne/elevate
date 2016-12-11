@@ -13,6 +13,24 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.1.0',
+        message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend Alpha V4</a> live! Improvements + fixes. Short nights :D. Feature still in "test".</br>' +
+        'Your history have been cleared if you had synced one... just sync again.',
+        hotFixes: [],
+        features: [
+            'Generating <i>MultiSports Fitness Trend</i> graph up to 4x faster',
+            'Auto sync frequency is now customisable in settings. Default is every 60 minute while browsing strava website',
+            'Added an update process of your activities names and types from strava to your local history: performed on a simple sync. ',
+            'Added backup/restore function of your local history synced',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Partially fixed cases where activities not displayed in <i>MultiSports Fitness Trend</i> on simple sync. Working hard!',
+            'Fixed gap between curves of <i>MultiSports Fitness Trend</i> from today to preview days',
+            'Fixed a lot of others small things...',
+        ],
+    },
+    {
         version: '5.0.2',
         message: '<i>"MultiSports Fitness Trend"</i> Alpha <strong>V3</strong> fast released! Include fixes of Alpha V2+V1... Feature works with all activities where you held a heart rate monitor. Not only cycling... </br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[You need to activate this alpha feature to use it]</a></br></br>Sticky note: <i>"Premium additional goal progress tracking"</i> disabled. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)',
         hotFixes: [],
