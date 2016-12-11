@@ -1150,7 +1150,7 @@ class StravistiX {
                     });
 
                 } else {
-                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minutes(s) ago');
+                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
                 }
 
             } else {
