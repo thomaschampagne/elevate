@@ -6,6 +6,12 @@ interface IAthleteProfile {
     userWeight: number;
 }
 
+interface IHistoryChanges {
+    added: Array<number>,
+    deleted: Array<number>,
+    edited: [{id: number, name: string, type: string, display_type: string}]
+}
+
 class ActivitiesSynchronizer {
 
     public static lastSyncDateTime: string = 'lastSyncDateTime';
@@ -23,6 +29,46 @@ class ActivitiesSynchronizer {
         this.userSettings = userSettings;
         this.extensionId = this.appResources.extensionId;
         this.activitiesProcessor = new ActivitiesProcessor(this.appResources, this.userSettings);
+    }
+
+    /**
+     * Provides:
+     * - activity IDs missing in the local history (added in strava.com and not computed/stored)
+     * - activity IDs to delete in the local history (removed from strava.com)
+     * - activity IDs to edit with their values (edited from strava.com)
+     * @param activities Array<ISyncRawStravaActivity>
+     * @param computedActivities Array<ISyncActivityComputed>
+     * @return IHistoryChanges
+     */
+    public static findAddedAndEditedActivities(rawActivities: Array<ISyncRawStravaActivity>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
+
+        if (_.isEmpty(rawActivities) || computedActivities) {
+            return null;
+        }
+
+        _.each(rawActivities, (rawActivities: ISyncRawStravaActivity) => {
+
+            // TODO
+            // Exist raw activity id in history?
+            // Yes  => Check for an edit..
+            // No   => Its an added activity.
+
+            // TODO Deletion must be done at the end finally.
+            // ... Or all other computed will be removed... if done here...
+        });
+
+        return null;
+    }
+
+    /**
+     * Provides:
+     * - activity IDs to delete in the local history (removed from strava.com)
+     * @param activities Array<ISyncRawStravaActivity>
+     * @return IHistoryChanges
+     */
+    public static findToDeleteActivities(rawActivities: Array<ISyncRawStravaActivity>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
+
+        return null;
     }
 
     /**
