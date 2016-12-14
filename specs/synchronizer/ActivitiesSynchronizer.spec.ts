@@ -1,3 +1,7 @@
+function clone(obj: any): any {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 describe('ActivitiesSynchronizer', () => {
 
     let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
@@ -16,6 +20,11 @@ describe('ActivitiesSynchronizer', () => {
         return fromArray;
     };
 
+
+    /**
+     * Skipped
+     * Testing promises spies
+     */
     xit('should test my promise ', (done) => {
 
         class Calc {
@@ -31,14 +40,17 @@ describe('ActivitiesSynchronizer', () => {
         spyOn(Calc, 'add').and.returnValue(deferred.promise); // Mock example
 
         Calc.add(10, 11).then((r: number) => {
-            expect(r).toEqual(3);
+            expect(r).toEqual(3); // Spy resolves as 3... no 21...
             done();
         });
     });
 
-    xit('should remove activity from array properly ', () => {
+    /**
+     * Skipped
+     */
+    it('should remove activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = window.__fixtures__['fixtures/sync/rawPage0120161213'].models;
+        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -49,9 +61,12 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
-    xit('should edit activity from array properly ', () => {
+    /**
+     * Skipped
+     */
+    it('should edit activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = window.__fixtures__['fixtures/sync/rawPage0120161213'].models;
+        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
@@ -66,13 +81,16 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
+    /**
+     * Skipped
+     */
     it('should detect activities added, modified and deleted ', () => {
 
         // let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
         // let appResourcesMock: IAppResources = window.__fixtures__['fixtures/appResources/appResources'];
 
-        let computedActivities: Array<ISyncActivityComputed> = window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities;
-        let rawPageOfActivities: Array<ISyncRawStravaActivity> = window.__fixtures__['fixtures/sync/rawPage0120161213'].models;
+        let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
+        let rawPageOfActivities: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
 
         // Simulate Remove data from strava, remove 2:
         /*
@@ -112,7 +130,7 @@ describe('ActivitiesSynchronizer', () => {
         expect(changes.edited.length).toEqual(2);
         expect(_.findWhere(changes.edited, {id: 799672885})).toBeDefined();
         expect(_.findWhere(changes.edited, {id: 708752345})).toBeDefined();
-        let findWhere:any = _.findWhere(changes.edited, {id: 799672885});
+        let findWhere: any = _.findWhere(changes.edited, {id: 799672885});
         expect(findWhere.name).toEqual("Run comeback");
         expect(findWhere.type).toEqual("Run");
         expect(findWhere.display_type).toEqual("Run");
@@ -125,5 +143,47 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
+    /**
+     * Skipped
+     */
+    it('should ActivitiesSynchronizer:fetchRawActivitiesRecursive', (done) => {
 
+        let userSettingsMock: IUserSettings = clone(window.__fixtures__['fixtures/userSettings/2470979']);
+        let appResourcesMock: IAppResources = clone(window.__fixtures__['fixtures/appResources/appResources']);
+
+        // We have 2 pages
+        let rawPageOfActivities_01: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213']); // Page 01 - 20 ACT
+        let rawPageOfActivities_02: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0220161213']); // Page 02 - 20 ACT
+
+        let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+
+        // Mocking http calls to strava training pages 1 and 2
+        spyOn(activitiesSynchronizer, 'httpPageGet').and.callFake(function (perPage: number, page: number) {
+
+            let deferred = $.Deferred();
+
+            if (page == 1) {
+                deferred.resolve(rawPageOfActivities_01, 'success');
+            } else if (page == 2) {
+                deferred.resolve(rawPageOfActivities_02, 'success');
+            } else {
+                console.log("Page " + page + " has no fixtures");
+                deferred.resolve({models: []}, 'success'); // No models to give
+            }
+            return deferred.promise();
+        });
+
+        activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+
+            expect(rawStravaActivities).not.toBeNull();
+            expect(rawStravaActivities.length).toEqual(40);
+
+            // TODO Make fun tests here !
+
+            console.log('length: ' + rawStravaActivities.length);
+            console.log(JSON.stringify(rawStravaActivities));
+
+            done();
+        });
+    });
 });

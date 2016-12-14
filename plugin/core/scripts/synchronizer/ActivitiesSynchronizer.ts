@@ -110,6 +110,17 @@ class ActivitiesSynchronizer {
             let fetchedActivitiesProgress: number = 0;
             let promisesOfActivitiesStreamById: Array<Q.IPromise<ISyncActivityWithStream>> = [];
 
+            /*// ActivitiesSynchronizer.findAddedAndEditedActivities(activities)
+
+             Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+             // Success getting previous stored activities.
+
+
+             ActivitiesSynchronizer.findAddedAndEditedActivities(activities, computedActivitiesStored)
+             });
+             */
+
+
             // For each activity, fetch his stream and compute extended stats
             _.each(activities, (activity: ISyncRawStravaActivity) => {
                 // Getting promise of stream for each activity...
@@ -193,6 +204,10 @@ class ActivitiesSynchronizer {
         return (<Q.Promise<Array<ISyncActivityWithStream>>> deferred.promise);
     }
 
+    public httpPageGet(perPage: number, page: number): JQueryXHR {
+        return $.ajax('/athlete/training_activities?new_activity_only=false&per_page=' + perPage + '&page=' + page);
+    }
+
     /**
      *
      * @param lastSyncDateTime Last sync date existing. can be null
@@ -203,7 +218,7 @@ class ActivitiesSynchronizer {
      * @param activitiesList
      * @return {Q.Promise<Array<ISyncRawStravaActivity>>}
      */
-    protected fetchRawActivitiesRecursive(lastSyncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: Array<ISyncRawStravaActivity>): Q.Promise<Array<ISyncRawStravaActivity>> {
+    public fetchRawActivitiesRecursive(lastSyncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: Array<ISyncRawStravaActivity>): Q.Promise<Array<ISyncRawStravaActivity>> {
 
         if (!page) {
             page = 1; // Usually start from first page when no page given
@@ -233,10 +248,7 @@ class ActivitiesSynchronizer {
         }
 
         let perPage: number = 20;
-
-        let activitiesUrl: string = '/athlete/training_activities?new_activity_only=false&per_page=' + perPage + '&page=' + page;
-
-        let promiseActivitiesRequest: JQueryXHR = $.ajax(activitiesUrl);
+        let promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
         let notify: ISyncNotify = {
             step: 'fetchActivitiesPercentage'
@@ -299,7 +311,7 @@ class ActivitiesSynchronizer {
             // error
             let err: any = {
                 method: 'ActivitiesSynchronizer.fetchRawActivitiesRecursive',
-                activitiesUrl: activitiesUrl,
+                page: page,
                 data: data,
                 textStatus: textStatus,
                 errorThrown: errorThrown,
