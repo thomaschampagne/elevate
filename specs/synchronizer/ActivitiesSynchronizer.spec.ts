@@ -16,7 +16,27 @@ describe('ActivitiesSynchronizer', () => {
         return fromArray;
     };
 
-    it('should remove activity from array properly ', () => {
+    xit('should test my promise ', (done) => {
+
+        class Calc {
+            public static add(a: number, b: number): Q.Promise<number> {
+                let deferred: Q.Deferred<number> = Q.defer<number>();
+                deferred.resolve(a + b);
+                return deferred.promise;
+            }
+        }
+
+        let deferred = Q.defer();
+        deferred.resolve(3);
+        spyOn(Calc, 'add').and.returnValue(deferred.promise); // Mock example
+
+        Calc.add(10, 11).then((r: number) => {
+            expect(r).toEqual(3);
+            done();
+        });
+    });
+
+    xit('should remove activity from array properly ', () => {
 
         let rawPageOfActivities: Array<ISyncActivityComputed> = window.__fixtures__['fixtures/sync/rawPage0120161213'].models;
         let sourceCount = rawPageOfActivities.length;
@@ -29,7 +49,7 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
-    it('should edit activity from array properly ', () => {
+    xit('should edit activity from array properly ', () => {
 
         let rawPageOfActivities: Array<ISyncActivityComputed> = window.__fixtures__['fixtures/sync/rawPage0120161213'].models;
         let sourceCount = rawPageOfActivities.length;
@@ -56,18 +76,18 @@ describe('ActivitiesSynchronizer', () => {
 
         // Simulate Remove data from strava, remove 2:
         /*
-        rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
-        rawPageOfActivities = removeActivityFromArray(700301520, rawPageOfActivities); // Remove Ride "Baladinette"
-        expect(rawPageOfActivities.length).toEqual(18);
-        */
+         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
+         rawPageOfActivities = removeActivityFromArray(700301520, rawPageOfActivities); // Remove Ride "Baladinette"
+         expect(rawPageOfActivities.length).toEqual(18);
+         */
 
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
         computedActivities = removeActivityFromArray(707356065, computedActivities); // Remove Ride "Je suis un gros lent !"
 
         // Simulate Modify: consist to edit data in strava
-        computedActivities = editActivityFromArray(799672885, computedActivities, "Run comeback", "Run"); // Edit "Running back... Hard !"
-        computedActivities = editActivityFromArray(708752345, computedActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
+        rawPageOfActivities = editActivityFromArray(799672885, rawPageOfActivities, "Run comeback", "Run"); // Edit "Running back... Hard !"
+        rawPageOfActivities = editActivityFromArray(708752345, rawPageOfActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
 
         // Now find+test changes
         // let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
@@ -77,22 +97,22 @@ describe('ActivitiesSynchronizer', () => {
         expect(changes.deleted).toBeNull();
 
         /*
-        NO ! Below expects useless. To be deleted
-        expect(changes.deleted.length).toEqual(2);
-        expect(_.findWhere(changes.deleted, {id: 722210052})).toBeDefined();
-        expect(_.findWhere(changes.deleted, {id: 700301520})).toBeDefined();
-        expect(_.findWhere(changes.deleted, {id: 999999999})).toBeUndefined(); // Fake
-        */
+         NO ! Below expects useless. To be deleted
+         expect(changes.deleted.length).toEqual(2);
+         expect(_.findWhere(changes.deleted, {id: 722210052})).toBeDefined();
+         expect(_.findWhere(changes.deleted, {id: 700301520})).toBeDefined();
+         expect(_.findWhere(changes.deleted, {id: 999999999})).toBeUndefined(); // Fake
+         */
 
         expect(changes.added.length).toEqual(2);
-        expect(_.findWhere(changes.added, {id: 723224273})).toBeDefined();
-        expect(_.findWhere(changes.added, {id: 707356065})).toBeDefined();
-        expect(_.findWhere(changes.added, {id: 999999999})).toBeUndefined(); // Fake
+        expect(_.indexOf(changes.added, 723224273)).not.toEqual(-1);
+        expect(_.indexOf(changes.added, 707356065)).not.toEqual(-1);
+        expect(_.indexOf(changes.added, 999999999)).toEqual(-1); // Fake
 
         expect(changes.edited.length).toEqual(2);
         expect(_.findWhere(changes.edited, {id: 799672885})).toBeDefined();
         expect(_.findWhere(changes.edited, {id: 708752345})).toBeDefined();
-        let findWhere = _.findWhere(changes.edited, {id: 799672885});
+        let findWhere:any = _.findWhere(changes.edited, {id: 799672885});
         expect(findWhere.name).toEqual("Run comeback");
         expect(findWhere.type).toEqual("Run");
         expect(findWhere.display_type).toEqual("Run");

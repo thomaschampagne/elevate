@@ -9,7 +9,7 @@ interface IAthleteProfile {
 interface IHistoryChanges {
     added: Array<number>,
     deleted: Array<number>,
-    edited: [{id: number, name: string, type: string, display_type: string}]
+    edited: Array<{id: number, name: string, type: string, display_type: string}>
 }
 
 class ActivitiesSynchronizer {
@@ -42,22 +42,44 @@ class ActivitiesSynchronizer {
      */
     public static findAddedAndEditedActivities(rawActivities: Array<ISyncRawStravaActivity>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
 
-        if (_.isEmpty(rawActivities) || computedActivities) {
+        if (_.isEmpty(rawActivities) || _.isEmpty(computedActivities)) {
             return null;
         }
 
-        _.each(rawActivities, (rawActivities: ISyncRawStravaActivity) => {
+        let added: Array<number> = [];
+        let edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
 
-            // TODO
+        _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
+
             // Exist raw activity id in history?
-            // Yes  => Check for an edit..
-            // No   => Its an added activity.
+            // Seek for activity in just interrogated pages
+            let foundComputedActivity: ISyncActivityComputed = _.findWhere(computedActivities, {id: rawActivity.id});
 
-            // TODO Deletion must be done at the end finally.
+            if (foundComputedActivity) { // Yes  => Check for an edit..
+
+                if (foundComputedActivity.name !== rawActivity.name || foundComputedActivity.type !== rawActivity.type) {
+                    // foundComputedActivity.name = rawActivity.name; // Update name
+                    edited.push({
+                        id: foundComputedActivity.id,
+                        name: rawActivity.name,
+                        type: rawActivity.type,
+                        display_type: rawActivity.display_type
+                    });
+                }
+            } else {
+                // No => rawActivity: Its an added activity from strava.com
+                added.push(rawActivity.id);
+            }
             // ... Or all other computed will be removed... if done here...
         });
 
-        return null;
+        let historyChanges: IHistoryChanges = {
+            added: added,
+            deleted: null,
+            edited: edited
+        };
+
+        return historyChanges;
     }
 
     /**
@@ -657,7 +679,7 @@ class ActivitiesSynchronizer {
      * Update activities names and types
      * @returns {Promise<T>}
      */
-    public updateActivitiesInfo(): Q.Promise<any> {
+    public updateActivitiesInfo(): Q.Promise<any> { // TODO Remove
 
         let deferred = Q.defer();
         let computedActivities: Array<ISyncActivityComputed> = null;
