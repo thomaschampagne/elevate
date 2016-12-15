@@ -65,26 +65,57 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         // Mocking activity stream promised, reduce @ 50 samples
         let stream: any = clone(window.__fixtures__['fixtures/activities/723224273/stream']);
+        stream.watts = stream.watts_calc; // because powerMeter is false
+
         _.each(_.keys(stream), (key: string) => {
             stream[key] = stream[key].slice(0, 50);
         });
         stream = <IActivityStream> stream;
+
         spyOn(activitiesSynchronizer, 'fetchStreamByActivityId').and.callFake((activityId: number) => {
             let defer = Q.defer();
-            let data: any = stream;
-            data.activityId = activityId
+            let data: any = {
+                state: "fulfilled",
+                value: stream
+            };
+            data.value.activityId = activityId
             defer.notify(activityId);
             defer.resolve(data);
             return defer.promise;
         });
 
-
+        // Mock ActivitiesProcessor:Compute: create fake results
+        spyOn(activitiesSynchronizer.activitiesProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+            let defer = Q.defer();
+            console.log("Spy activitiesSynchronizer.activitiesProcessor:compute called");
+            let activitiesComputed: Array<ISyncActivityComputed> = [];
+            let fakeAnalysisData: IAnalysisData = {
+                moveRatio: null,
+                toughnessScore: null,
+                speedData: null,
+                paceData: null,
+                powerData: null,
+                heartRateData: null,
+                cadenceData: null,
+                gradeData: null,
+                elevationData: null,
+            };
+            _.each(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
+                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, ActivitiesProcessor.outputFields);
+                activityComputed.extendedStats = fakeAnalysisData;
+                activitiesComputed.push(activityComputed);
+            });
+            defer.resolve(activitiesComputed);
+            return defer.promise;
+        });
     });
 
     it('should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()', (done) => {
 
         // Give NO last sync date or page + page to read.
         activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+
+            expect(activitiesSynchronizer.httpPageGet).toHaveBeenCalled(); // Ensure spy call
 
             expect(rawStravaActivities).not.toBeNull();
             expect(rawStravaActivities.length).toEqual(20 * 7); // 140 > 7 pages
@@ -120,6 +151,8 @@ describe('ActivitiesSynchronizer mocked', () => {
         // let fromPage = 1, pagesToRead = 3; // read 1 => 3
         activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<ISyncActivityWithStream>) => {
 
+            expect(activitiesSynchronizer.fetchStreamByActivityId).toHaveBeenCalled(); // Ensure spy call
+
             expect(activitiesWithStream).not.toBeNull();
             expect(activitiesWithStream.length).toEqual(140);
 
@@ -140,8 +173,9 @@ describe('ActivitiesSynchronizer mocked', () => {
             // Testing activitiesSynchronizer.fetchWithStream(null, 4, 3); => pages 4 to 6
             expect(activitiesWithStream).not.toBeNull();
             expect(activitiesWithStream.length).toEqual(60);
-            let jeannieRide2: ISyncActivityWithStream = _.findWhere(activitiesWithStream, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
-            expect(jeannieRide2).toBeUndefined(); // Must not exists in pages 4 to 6
+            let jeannieRide: ISyncActivityWithStream = _.findWhere(activitiesWithStream, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+            expect(jeannieRide).toBeUndefined(); // Must not exists in pages 4 to 6
+
             done(); // Finish it !
 
         }, (err: any) => {
@@ -154,37 +188,67 @@ describe('ActivitiesSynchronizer mocked', () => {
     });
 
 
-  /*
-
     it('should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()', (done) => {
-        // TODO ...
+
+        // Getting all pages (7)
+        activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
+
+            expect(activitiesSynchronizer.activitiesProcessor.compute).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesComputed).not.toBeNull();
+            expect(activitiesComputed.length).toEqual(140);
+
+            expect(_.first(activitiesComputed).extendedStats).toBeDefined();
+            expect(_.first(activitiesComputed).extendedStats.heartRateData).toBeNull();
+            expect(_.first(activitiesComputed).extendedStats.speedData).toBeNull();
+
+            // Now fetch in pages 7 to 10 (only 7 exists...)
+            return activitiesSynchronizer.fetchAndComputeGroupOfPages(null, 7, 3);
+
+        }).then((activitiesComputed: Array<ISyncActivityComputed>) => {
+
+            // result of pages 7 to 10 (only 7 exists...)
+            expect(activitiesComputed.length).toEqual(20); // Only 20 results... not 60 !
+
+            let ride: ISyncActivityComputed = _.findWhere(activitiesComputed, {id: 406217194}); // Find "Afternoon Ride"
+            expect(ride.extendedStats).toBeDefined();
+            expect(ride.extendedStats.heartRateData).toBeNull();
+            expect(ride.extendedStats.speedData).toBeNull();
+            expect(ride.moving_time_raw).toEqual(5901);
+
+            let jeannieRide: ISyncActivityComputed = _.findWhere(activitiesComputed, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+            expect(jeannieRide).toBeUndefined(); // Must not exists in page 7
+
+            done();
+        });
     });
 
-    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages()', (done) => {
-        // TODO ...
-    });
 
-    it('should sync() when no existing stored computed activities', (done) => {
-        // TODO ...
-    });
+    /*
+     it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages()', (done) => {
+     // TODO ...
+     });
 
-    it('should sync() when a new today training came up', (done) => {
-        // TODO ...
-    });
+     it('should sync() when no existing stored computed activities', (done) => {
+     // TODO ...
+     });
 
-    it('should sync() when a training has been upload today to but perform 2 weeks ago', (done) => {
-        // TODO ...
-    });
+     it('should sync() when a new today training came up', (done) => {
+     // TODO ...
+     });
 
-    it('should sync() when 3 activities have been removed from strava.com', (done) => {
-        // TODO ...
-    });
+     it('should sync() when a training has been upload today to but perform 2 weeks ago', (done) => {
+     // TODO ...
+     });
 
-    it('should sync() when 2 activities been edited from strava.com', (done) => {
-        // TODO ...
-    });
+     it('should sync() when 3 activities have been removed from strava.com', (done) => {
+     // TODO ...
+     });
 
-    */
+     it('should sync() when 2 activities been edited from strava.com', (done) => {
+     // TODO ...
+     });
+
+     */
 
 
     afterEach(() => {

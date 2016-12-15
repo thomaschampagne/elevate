@@ -8,7 +8,7 @@ class ActivitiesProcessor {
         this.userSettings = userSettings;
     }
 
-    protected outputFields: Array<string> = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
+    public static outputFields: Array<string> = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
 
     /**
      * @return Activities array with computed stats
@@ -60,7 +60,7 @@ class ActivitiesProcessor {
 
                 _.each(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
-                    let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(activitiesWithStream[index], this.outputFields);
+                    let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields);
                     activityComputed.extendedStats = computedResult;
                     activitiesComputed.push(activityComputed);
 

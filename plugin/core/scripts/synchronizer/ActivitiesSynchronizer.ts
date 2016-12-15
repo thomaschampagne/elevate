@@ -22,13 +22,13 @@ class ActivitiesSynchronizer {
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
-    protected activitiesProcessor: ActivitiesProcessor;
+    protected _activitiesProcessor: ActivitiesProcessor;
 
     constructor(appResources: IAppResources, userSettings: IUserSettings/*, fromPage?: number, maxPages?: number*/) {
         this.appResources = appResources;
         this.userSettings = userSettings;
         this.extensionId = this.appResources.extensionId;
-        this.activitiesProcessor = new ActivitiesProcessor(this.appResources, this.userSettings);
+        this._activitiesProcessor = new ActivitiesProcessor(this.appResources, this.userSettings);
     }
 
     /**
@@ -330,7 +330,7 @@ class ActivitiesSynchronizer {
      * @param activityId
      * @return {Promise<T>}
      */
-    protected fetchStreamByActivityId(activityId: number): Q.IPromise<any> {
+    public fetchStreamByActivityId(activityId: number): Q.IPromise<any> {
 
         let deferred = Q.defer();
 
@@ -390,7 +390,7 @@ class ActivitiesSynchronizer {
         this.fetchWithStream(lastSyncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: Array<ISyncActivityWithStream>) => {
 
             // fetchWithStreamSuccess...
-            return this.activitiesProcessor.compute(activitiesWithStreams);
+            return this._activitiesProcessor.compute(activitiesWithStreams);
 
         }, (err: any) => {
 
@@ -685,6 +685,10 @@ class ActivitiesSynchronizer {
                 });
             }
         });
+    }
+
+    get activitiesProcessor(): ActivitiesProcessor {
+        return this._activitiesProcessor;
     }
 
     /**
