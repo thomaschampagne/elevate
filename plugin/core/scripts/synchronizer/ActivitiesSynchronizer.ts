@@ -383,7 +383,7 @@ class ActivitiesSynchronizer {
      * Trigger the fetch of activities (Along last sync date), their stream and the compute of each activities.
      * @returns {Q.Promise<Array<ISyncActivityComputed>>} Promising an array of computed activities along the last sync date
      */
-    protected fetchAndComputeGroupOfPages(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<Array<ISyncActivityComputed>> {
+    public fetchAndComputeGroupOfPages(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<Array<ISyncActivityComputed>> {
 
         let deferred = Q.defer();
 
