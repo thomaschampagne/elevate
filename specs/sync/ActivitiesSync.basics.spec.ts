@@ -1,6 +1,4 @@
-function clone(obj: any): any {
-    return JSON.parse(JSON.stringify(obj));
-}
+/// <reference path="../typings/specs.d.ts" />
 
 describe('ActivitiesSynchronizer', () => {
 
@@ -25,7 +23,7 @@ describe('ActivitiesSynchronizer', () => {
      * Skipped
      * Testing promises spies
      */
-    xit('should test my promise ', (done) => {
+    it('should test my promise ', (done) => {
 
         class Calc {
             public static add(a: number, b: number): Q.Promise<number> {
@@ -86,18 +84,13 @@ describe('ActivitiesSynchronizer', () => {
      */
     it('should detect activities added, modified and deleted ', () => {
 
-        // let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        // let appResourcesMock: IAppResources = window.__fixtures__['fixtures/appResources/appResources'];
-
         let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
         let rawPageOfActivities: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
 
-        // Simulate Remove data from strava, remove 2:
-        /*
-         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
-         rawPageOfActivities = removeActivityFromArray(700301520, rawPageOfActivities); // Remove Ride "Baladinette"
-         expect(rawPageOfActivities.length).toEqual(18);
-         */
+        // TODO REMOVE Simulate Remove data from strava, remove 2:
+        // TODO REMOVE rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
+        // TODO REMOVE rawPageOfActivities = removeActivityFromArray(700301520, rawPageOfActivities); // Remove Ride "Baladinette"
+        // TODO REMOVE expect(rawPageOfActivities.length).toEqual(18);
 
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -115,7 +108,7 @@ describe('ActivitiesSynchronizer', () => {
         expect(changes.deleted).toBeNull();
 
         /*
-         NO ! Below expects useless. To be deleted
+        // TODO REMOVE .. Below expects useless. To be deleted
          expect(changes.deleted.length).toEqual(2);
          expect(_.findWhere(changes.deleted, {id: 722210052})).toBeDefined();
          expect(_.findWhere(changes.deleted, {id: 700301520})).toBeDefined();
@@ -141,71 +134,5 @@ describe('ActivitiesSynchronizer', () => {
 
         expect(ActivitiesSynchronizer.findAddedAndEditedActivities([], null)).toBeNull();
 
-    });
-
-    /**
-     * Skipped
-     */
-    it('should ActivitiesSynchronizer:fetchRawActivitiesRecursive', (done) => {
-
-        /**
-         * Start before each
-         */
-
-        let userSettingsMock: IUserSettings = clone(window.__fixtures__['fixtures/userSettings/2470979']);
-        let appResourcesMock: IAppResources = clone(window.__fixtures__['fixtures/appResources/appResources']);
-
-        // We have 2 pages
-        let rawPageOfActivities_01: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213']); // Page 01 - 20 ACT
-        let rawPageOfActivities_02: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0220161213']); // Page 02 - 20 ACT
-
-        let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-
-
-        // Mocking http calls to strava training pages 1 and 2
-        spyOn(activitiesSynchronizer, 'httpPageGet').and.callFake(function (perPage: number, page: number) {
-
-            let deferred = $.Deferred();
-
-            if (page == 1) {
-                deferred.resolve(rawPageOfActivities_01, 'success');
-            } else if (page == 2) {
-                deferred.resolve(rawPageOfActivities_02, 'success');
-            } else {
-                console.log("Page " + page + " has no fixtures");
-                deferred.resolve({models: []}, 'success'); // No models to give
-            }
-            return deferred.promise();
-        });
-
-        /**
-         * End before each
-         */
-
-        activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
-
-            expect(rawStravaActivities).not.toBeNull();
-            expect(rawStravaActivities.length).toEqual(40);
-
-            let jeannieRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 718908064}); // Find in page 1
-            expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
-            expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
-            expect(jeannieRide.moving_time_raw).toEqual(8557);
-
-            let relaxRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 642780978}); // Find in page 1
-            expect(relaxRide.name).toEqual("Relax");
-            expect(relaxRide.moving_time_raw).toEqual(4888);
-
-            let fakeRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 9999999999}); // Find in page 1
-            expect(fakeRide).toBeUndefined();
-
-
-
-            // TODO Make fun tests here !
-            // console.log('length: ' + rawStravaActivities.length);
-            // console.log(JSON.stringify(rawStravaActivities));
-
-            done();
-        });
     });
 });

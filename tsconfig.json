@@ -97,7 +97,8 @@
     "plugin/options/app/directives/restoreHistory.ts",
     "specs/processors/ActivityComputer.spec.ts",
     "specs/processors/VacuumProcessor.spec.ts",
-    "specs/synchronizer/ActivitiesSynchronizer.spec.ts"
+    "specs/sync/ActivitiesSync.basics.spec.ts",
+    "specs/sync/ActivitiesSync.mocked.spec.ts"
   ],
   "exclude": [
     "node_modules/",
