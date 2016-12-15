@@ -96,7 +96,7 @@ class ActivitiesSynchronizer {
     /**
      * @return All activities with their stream
      */
-    protected fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<Array<ISyncActivityWithStream>> {
+    public fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<Array<ISyncActivityWithStream>> {
 
         let deferred = Q.defer();
 

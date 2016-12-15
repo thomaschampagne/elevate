@@ -18,11 +18,6 @@ describe('ActivitiesSynchronizer', () => {
         return fromArray;
     };
 
-
-    /**
-     * Skipped
-     * Testing promises spies
-     */
     it('should test my promise ', (done) => {
 
         class Calc {
@@ -43,9 +38,6 @@ describe('ActivitiesSynchronizer', () => {
         });
     });
 
-    /**
-     * Skipped
-     */
     it('should remove activity from array properly ', () => {
 
         let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
@@ -59,9 +51,6 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
-    /**
-     * Skipped
-     */
     it('should edit activity from array properly ', () => {
 
         let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
@@ -79,9 +68,6 @@ describe('ActivitiesSynchronizer', () => {
 
     });
 
-    /**
-     * Skipped
-     */
     it('should detect activities added, modified and deleted ', () => {
 
         let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
