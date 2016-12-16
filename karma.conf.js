@@ -42,5 +42,9 @@ module.exports = function (config) {
         browserDisconnectTimeout: 2000,
         browserDisconnectTolerance: 3,
         browserNoActivityTimeout: 20000,
+        browserConsoleLogOptions: {
+            // path: './specs.log',
+            terminal: false
+        }
     });
 };
