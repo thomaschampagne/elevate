@@ -44,7 +44,7 @@ module.exports = function (config) {
         browserNoActivityTimeout: 20000,
         browserConsoleLogOptions: {
             // path: './specs.log',
-            terminal: false
+            terminal: true
         }
     });
 };
