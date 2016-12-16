@@ -14,6 +14,8 @@ describe('ActivitiesSynchronizer mocked', () => {
     let rawPageOfActivities_06: Array<ISyncRawStravaActivity>;
     let rawPageOfActivities_07: Array<ISyncRawStravaActivity>;
 
+    let CHROME_STORAGE_MOCK: any = {}; // Fake mocked storage to simulate chrome local storage
+
     beforeEach(() => {
 
         userSettingsMock = clone(window.__fixtures__['fixtures/userSettings/2470979']);
@@ -30,7 +32,9 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
-        // Mocking http calls to strava training pages 1 and 2
+        /**
+         * Mocking http calls to strava training pages 1 and 2
+         */
         spyOn(activitiesSynchronizer, 'httpPageGet').and.callFake((perPage: number, page: number) => {
             let defer = $.Deferred();
 
@@ -63,7 +67,9 @@ describe('ActivitiesSynchronizer mocked', () => {
             return defer.promise();
         });
 
-        // Mocking activity stream promised, reduce @ 50 samples
+        /**
+         * Mocking activity stream promised, reduce @ 50 samples
+         */
         let stream: any = clone(window.__fixtures__['fixtures/activities/723224273/stream']);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
@@ -84,7 +90,9 @@ describe('ActivitiesSynchronizer mocked', () => {
             return defer.promise;
         });
 
-        // Mock ActivitiesProcessor:Compute: create fake results
+        /**
+         * Mock ActivitiesProcessor:compute. Create fake analysis results
+         */
         spyOn(activitiesSynchronizer.activitiesProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
             let defer = Q.defer();
             console.log("Spy activitiesSynchronizer.activitiesProcessor:compute called");
@@ -106,6 +114,27 @@ describe('ActivitiesSynchronizer mocked', () => {
                 activitiesComputed.push(activityComputed);
             });
             defer.resolve(activitiesComputed);
+            return defer.promise;
+        });
+
+        /**
+         * Mock:
+         * - saveComputedActivitiesToLocal
+         * - getComputedActivitiesFromLocal
+         */
+        spyOn(activitiesSynchronizer, 'saveComputedActivitiesToLocal').and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
+            let defer = Q.defer();
+            CHROME_STORAGE_MOCK.computedActivities = computedActivities; // TODO Ensure right SAVE, like real (break point real !!)
+            defer.resolve({
+                data: CHROME_STORAGE_MOCK
+            });
+            return defer.promise;
+        });
+        spyOn(activitiesSynchronizer, 'getComputedActivitiesFromLocal').and.callFake(() => {
+            let defer = Q.defer();
+            defer.resolve({
+                data: CHROME_STORAGE_MOCK.computedActivities // TODO Ensure right GET, like real (break point real !!)
+            });
             return defer.promise;
         });
     });
@@ -223,13 +252,30 @@ describe('ActivitiesSynchronizer mocked', () => {
     });
 
 
+    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages()', (done) => {
+
+        // Getting all pages here:
+        activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedComputedActivities: Array<ISyncActivityComputed>) => {
+
+            expect(activitiesSynchronizer.getComputedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesSynchronizer.saveComputedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
+
+            expect(mergedComputedActivities).not.toBeNull();
+            expect(mergedComputedActivities.length).toEqual(140);
+
+            // TODO Append tests on case...
+            done();
+        });
+    });
+
     /*
-     it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages()', (done) => {
-     // TODO ...
-     });
 
      it('should sync() when no existing stored computed activities', (done) => {
+
      // TODO ...
+     // TODO SpyOn get/set lastSyncDate
+     // TODO SpyOn get/set athleteSyncWith...
+
      });
 
      it('should sync() when a new today training came up', (done) => {

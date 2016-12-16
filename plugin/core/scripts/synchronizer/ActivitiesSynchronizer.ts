@@ -19,6 +19,7 @@ class ActivitiesSynchronizer {
     public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
 
     public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
+    protected mergedComputedActivities: Array<ISyncActivityComputed> = null;
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
@@ -440,7 +441,7 @@ class ActivitiesSynchronizer {
      * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
      * @return {Promise<Array<ISyncActivityComputed>>}
      */
-    protected computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<Array<ISyncActivityComputed>> {
+    public computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<Array<ISyncActivityComputed>> {
 
         if (!handledGroupCount) {
             handledGroupCount = 0;
@@ -463,7 +464,7 @@ class ActivitiesSynchronizer {
         this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: Array<ISyncActivityComputed>) => {
 
             if (_.isEmpty(computedActivitiesPromised)) {
-                deferred.resolve();
+                deferred.resolve(this.mergedComputedActivities);
             }
 
             handledGroupCount++;
@@ -473,12 +474,12 @@ class ActivitiesSynchronizer {
             // }
 
             computedActivitiesInGroup = computedActivitiesPromised;
-
+            computedActivitiesPromised = null; // Free mem !
             console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
             console.log('Group handled count: ' + handledGroupCount);
 
             // Retrieve previous saved activities
-            return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities);
+            return this.getComputedActivitiesFromLocal();
 
         }, (err: any) => {
             // Error...
@@ -500,23 +501,22 @@ class ActivitiesSynchronizer {
                     computedActivitiesStored.data = <Array<ISyncActivityComputed>> [];
                 }
 
-                let mergedActivities: Array<ISyncActivityComputed> = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
+                this.mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
 
-                // Sort mergedActivities ascending before save
-                mergedActivities = _.sortBy(mergedActivities, (item) => {
+                // Sort this.mergedActivities ascending before save
+                this.mergedComputedActivities = _.sortBy(this.mergedComputedActivities, (item) => {
                     return (new Date(item.start_time)).getTime();
                 });
 
                 // Ensure activity unicity
-                mergedActivities = _.uniq(mergedActivities, (item) => {
+                this.mergedComputedActivities = _.uniq(this.mergedComputedActivities, (item) => {
                     return item.id;
                 });
-
 
                 console.log('Updating computed activities to extension local storage.');
 
                 // Save activities to local storage
-                Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, mergedActivities).then((pagesGroupSaved: any) => {
+                this.saveComputedActivitiesToLocal(this.mergedComputedActivities).then((pagesGroupSaved: any) => {
 
                     // Current group have been saved with previously stored activities...
                     console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
@@ -536,8 +536,6 @@ class ActivitiesSynchronizer {
                     // Free mem !
                     computedActivitiesInGroup = null;
                     computedActivitiesStored = null;
-                    mergedActivities = null;
-
                 });
             }
 
@@ -657,39 +655,48 @@ class ActivitiesSynchronizer {
         return deferred.promise;
     }
 
-    /**
-     * Use only for remove "lastActivitiesToBeRemoved" activities from synced and reposition the last sync date to the latest activities.
-     * @param lastActivitiesToBeRemoved
-     */
-    public removeComputedActivities(lastActivitiesToBeRemoved: number): void {
+    public saveComputedActivitiesToLocal(computedActivities: Array<ISyncActivityComputed>): Q.Promise<any> {
+        return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
+    }
 
-        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
-
-            // There's new activities to save
-            if (!_.isEmpty(computedActivitiesStored.data) && lastActivitiesToBeRemoved) {
-
-                let computedActivitiesStoredCasted = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
-
-                computedActivitiesStoredCasted = computedActivitiesStoredCasted.slice(0, (computedActivitiesStoredCasted.length - lastActivitiesToBeRemoved));
-
-                let newLastSyncDate = new Date(_.last(computedActivitiesStoredCasted).start_time).getTime() + _.last(computedActivitiesStoredCasted).elapsed_time_raw * 1000;
-
-                // Save activities to local storage
-                Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivitiesStoredCasted).then((pagesGroupSaved: any) => {
-
-                    Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, newLastSyncDate).then((saved: any) => {
-                        // saveLastSyncDateTimeSuccess...
-                        console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
-                    });
-
-                });
-            }
-        });
+    public getComputedActivitiesFromLocal(): Q.Promise<any> {
+        return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities);
     }
 
     get activitiesProcessor(): ActivitiesProcessor {
         return this._activitiesProcessor;
     }
+
+    /**
+     * Use only for remove "lastActivitiesToBeRemoved" activities from synced and reposition the last sync date to the latest activities.
+     * @param lastActivitiesToBeRemoved
+     */
+    /*
+     public removeComputedActivities(lastActivitiesToBeRemoved: number): void {
+
+     Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+
+     // There's new activities to save
+     if (!_.isEmpty(computedActivitiesStored.data) && lastActivitiesToBeRemoved) {
+
+     let computedActivitiesStoredCasted = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
+
+     computedActivitiesStoredCasted = computedActivitiesStoredCasted.slice(0, (computedActivitiesStoredCasted.length - lastActivitiesToBeRemoved));
+
+     let newLastSyncDate = new Date(_.last(computedActivitiesStoredCasted).start_time).getTime() + _.last(computedActivitiesStoredCasted).elapsed_time_raw * 1000;
+
+     // Save activities to local storage
+     this.saveComputedActivitiesToLocal(computedActivitiesStoredCasted).then((pagesGroupSaved: any) => {
+
+     Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, newLastSyncDate).then((saved: any) => {
+     // saveLastSyncDateTimeSuccess...
+     console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
+     });
+
+     });
+     }
+     });
+     }*/
 
     /**
      * Update activities names and types
