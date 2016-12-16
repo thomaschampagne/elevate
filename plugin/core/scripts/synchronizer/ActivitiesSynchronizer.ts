@@ -14,12 +14,16 @@ interface IHistoryChanges {
 
 class ActivitiesSynchronizer {
 
+    get mergedComputedActivities(): Array<ISyncActivityComputed> {
+        return this._mergedComputedActivities;
+    }
+
     public static lastSyncDateTime: string = 'lastSyncDateTime';
     public static computedActivities: string = 'computedActivities';
     public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
 
     public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
-    protected mergedComputedActivities: Array<ISyncActivityComputed> = null;
+    private _mergedComputedActivities: Array<ISyncActivityComputed> = null;
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
@@ -113,7 +117,7 @@ class ActivitiesSynchronizer {
 
             /*// ActivitiesSynchronizer.findAddedAndEditedActivities(activities)
 
-             Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+             getfromstor....then((computedActivitiesStored: any) => {
              // Success getting previous stored activities.
 
 
@@ -456,7 +460,7 @@ class ActivitiesSynchronizer {
         }
 
         if (!deferred) {
-            deferred = Q.defer();
+            deferred = Q.defer<Array<ISyncActivityComputed>>();
         }
 
         let computedActivitiesInGroup: Array<ISyncActivityComputed> = null;
@@ -464,7 +468,8 @@ class ActivitiesSynchronizer {
         this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: Array<ISyncActivityComputed>) => {
 
             if (_.isEmpty(computedActivitiesPromised)) {
-                deferred.resolve(this.mergedComputedActivities);
+                deferred.resolve(this._mergedComputedActivities);
+                // this._mergedComputedActivities = null; // Free mem !
             }
 
             handledGroupCount++;
@@ -501,22 +506,22 @@ class ActivitiesSynchronizer {
                     computedActivitiesStored.data = <Array<ISyncActivityComputed>> [];
                 }
 
-                this.mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
+                this._mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
 
                 // Sort this.mergedActivities ascending before save
-                this.mergedComputedActivities = _.sortBy(this.mergedComputedActivities, (item) => {
+                this._mergedComputedActivities = _.sortBy(this._mergedComputedActivities, (item) => {
                     return (new Date(item.start_time)).getTime();
                 });
 
                 // Ensure activity unicity
-                this.mergedComputedActivities = _.uniq(this.mergedComputedActivities, (item) => {
+                this._mergedComputedActivities = _.uniq(this._mergedComputedActivities, (item) => {
                     return item.id;
                 });
 
                 console.log('Updating computed activities to extension local storage.');
 
                 // Save activities to local storage
-                this.saveComputedActivitiesToLocal(this.mergedComputedActivities).then((pagesGroupSaved: any) => {
+                this.saveComputedActivitiesToLocal(this._mergedComputedActivities).then((pagesGroupSaved: any) => {
 
                     // Current group have been saved with previously stored activities...
                     console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
@@ -541,7 +546,7 @@ class ActivitiesSynchronizer {
 
         });
 
-        return (<Q.Promise<Array<ISyncActivityComputed>>> deferred.promise);
+        return deferred.promise;
     }
 
 
@@ -549,48 +554,47 @@ class ActivitiesSynchronizer {
      * Trigger the computing of new activities and save the result to local storage by merging with existing activities
      * @return Promise of synced activities
      */
-    public sync(): Q.Promise<any> {
+    public sync(): Q.Promise<Array<ISyncActivityComputed>> {
 
-        let updateActivitiesInfoAtEnd: boolean = false;
-        let deferred = Q.defer();
-        let syncNotify: ISyncNotify;
-
+        // let updateActivitiesInfoAtEnd: boolean = false;
+        let deferred = Q.defer<Array<ISyncActivityComputed>>();
+        let syncNotify: ISyncNotify = {};
+        this._mergedComputedActivities = null; // Reset for a new sync !
 
         // Check for lastSyncDateTime
-        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime).then((savedLastSyncDateTime: any) => {
+        this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 
             let computeGroupedActivitiesPromise: Q.IPromise<any> = null;
 
-            let lastSyncDateTime: Date = null;
+            let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
+            return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
 
-            if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
-
-                lastSyncDateTime = new Date(savedLastSyncDateTime.data);
-                computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-                updateActivitiesInfoAtEnd = true;
-                console.log('Last sync date time found: ', lastSyncDateTime);
-
-            } else { // lastSyncDateTime NOT found ! Full sync !
-
-                console.log('No last sync date time found');
-
-                // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
-                computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
-                    return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-                });
-            }
-
-            return computeGroupedActivitiesPromise;
+            /*if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
+             lastSyncDateTime = new Date(savedLastSyncDateTime.data);
+             computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+             // updateActivitiesInfoAtEnd = true;
+             console.log('Last sync date time found: ', lastSyncDateTime);
+             } else { // lastSyncDateTime NOT found ! Full sync !
+             console.log('No last sync date time found');
+             // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
+             computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
+             return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+             });
+             }*/
+            // return computeGroupedActivitiesPromise;
 
         }).then(() => {
 
             // Compute Activities By Groups Of Pages done... Now updating the last sync date
-            return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (new Date()).getTime());
+            return this.saveLastSyncDateToLocal((new Date()).getTime());
 
         }).then((saved: any) => {
 
+
             // Last Sync Date Time saved... Now save syncedAthleteProfile
             syncNotify.step = 'updatingLastSyncDateTime';
+            syncNotify.progress = 100;
+            deferred.notify(syncNotify);
 
             console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
 
@@ -602,33 +606,24 @@ class ActivitiesSynchronizer {
                 userFTP: this.userSettings.userFTP
             };
 
-            return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
+            return this.saveSyncedAthleteProfile(syncedAthleteProfile);
 
-        }).then((saved: any) => {
+        }).then(() => {
 
             // Synced Athlete Profile saved ...
             console.log('Sync With Athlete Profile done');
-            console.log('Saved data:', saved.data);
+            // console.log();
+            // console.log('Saved data:', saved.data);
 
-            // Need to update activities info?!
-            if (updateActivitiesInfoAtEnd) {
-                console.log('Now updating activities info...');
-                return this.updateActivitiesInfo();
-            } else {
-                return null;
-            }
-
-        }).then((data: any) => {
-
-            if (data && !_.isUndefined(data.updateActivitiesInfoChanges)) {
-                // Activities Info updated !
-                console.log('Activities info updated. Changes found: ' + data.updateActivitiesInfoChanges);
-            }
-
-            syncNotify.progress = 100;
-            deferred.notify(syncNotify);
-
-            deferred.resolve(); // Finish !!
+            deferred.resolve(this._mergedComputedActivities); // Sync finish !!
+            /*
+             // Need to update activities info?!
+             if (updateActivitiesInfoAtEnd) {
+             console.log('Now updating activities info...');
+             return this.updateActivitiesInfo();
+             } else {
+             return null;
+             }*/
 
         }, (err: any) => {
 
@@ -636,6 +631,7 @@ class ActivitiesSynchronizer {
 
         }, (progress: ISyncNotify) => {
 
+            // TODO Create TDD method which return that. Unit test it !!!
             syncNotify = {
                 step: progress.step,
                 progress: progress.progress,
@@ -647,12 +643,22 @@ class ActivitiesSynchronizer {
                 savedActivitiesCount: (progress.savedActivitiesCount) ? progress.savedActivitiesCount : ((syncNotify && syncNotify.savedActivitiesCount) ? syncNotify.savedActivitiesCount : 0),
                 totalActivities: (progress.totalActivities) ? progress.totalActivities : ((syncNotify && syncNotify.totalActivities) ? syncNotify.totalActivities : null)
             };
-
             deferred.notify(syncNotify);
-
         });
 
         return deferred.promise;
+    }
+
+    saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
+        return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
+    }
+
+    saveLastSyncDateToLocal(timestamp: number) {
+        return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
+    }
+
+    getLastSyncDateFromLocal() {
+        return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
     }
 
     public saveComputedActivitiesToLocal(computedActivities: Array<ISyncActivityComputed>): Q.Promise<any> {

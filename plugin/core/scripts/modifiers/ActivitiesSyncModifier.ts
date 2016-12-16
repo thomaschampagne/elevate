@@ -176,7 +176,7 @@ class ActivitiesSyncModifier implements IModifier {
                     stepMessage = 'Updating your last synchronization date...';
                     break;
 
-                case 'updateActivitiesInfo':
+                case 'updateActivitiesInfo': // TODO remove step
                     stepMessage = 'Updating activities basic info...';
                     break;
             }

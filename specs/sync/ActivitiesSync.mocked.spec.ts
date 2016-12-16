@@ -14,9 +14,11 @@ describe('ActivitiesSynchronizer mocked', () => {
     let rawPageOfActivities_06: Array<ISyncRawStravaActivity>;
     let rawPageOfActivities_07: Array<ISyncRawStravaActivity>;
 
-    let CHROME_STORAGE_MOCK: any = {}; // Fake mocked storage to simulate chrome local storage
+    let CHROME_STORAGE_MOCK: any; // Fake mocked storage to simulate chrome local storage
 
     beforeEach(() => {
+
+        CHROME_STORAGE_MOCK = {}; // Reset storage
 
         userSettingsMock = clone(window.__fixtures__['fixtures/userSettings/2470979']);
         appResourcesMock = clone(window.__fixtures__['fixtures/appResources/appResources']);
@@ -121,19 +123,57 @@ describe('ActivitiesSynchronizer mocked', () => {
          * Mock:
          * - saveComputedActivitiesToLocal
          * - getComputedActivitiesFromLocal
+         * - saveLastSyncDateToLocal
+         * - getLastSyncDateFromLocal
+         * - clearSyncCache
+         * - saveSyncedAthleteProfile
          */
         spyOn(activitiesSynchronizer, 'saveComputedActivitiesToLocal').and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
             let defer = Q.defer();
-            CHROME_STORAGE_MOCK.computedActivities = computedActivities; // TODO Ensure right SAVE, like real (break point real !!)
+            CHROME_STORAGE_MOCK.computedActivities = computedActivities;
             defer.resolve({
                 data: CHROME_STORAGE_MOCK
             });
             return defer.promise;
         });
+
         spyOn(activitiesSynchronizer, 'getComputedActivitiesFromLocal').and.callFake(() => {
             let defer = Q.defer();
             defer.resolve({
-                data: CHROME_STORAGE_MOCK.computedActivities // TODO Ensure right GET, like real (break point real !!)
+                data: CHROME_STORAGE_MOCK.computedActivities
+            });
+            return defer.promise;
+        });
+
+        spyOn(activitiesSynchronizer, 'saveLastSyncDateToLocal').and.callFake((timestamp: number) => {
+            let defer = Q.defer();
+            CHROME_STORAGE_MOCK.lastSyncDateTime = timestamp;
+            defer.resolve({
+                data: CHROME_STORAGE_MOCK
+            });
+            return defer.promise;
+        });
+
+        spyOn(activitiesSynchronizer, 'getLastSyncDateFromLocal').and.callFake(() => {
+            let defer = Q.defer();
+            defer.resolve({
+                data: (CHROME_STORAGE_MOCK.lastSyncDateTime) ? CHROME_STORAGE_MOCK.lastSyncDateTime : null
+            });
+            return defer.promise;
+        });
+
+        spyOn(activitiesSynchronizer, 'clearSyncCache').and.callFake(() => {
+            let defer = Q.defer();
+            CHROME_STORAGE_MOCK = {}; // Remove all
+            defer.resolve();
+            return defer.promise;
+        });
+
+        spyOn(activitiesSynchronizer, 'saveSyncedAthleteProfile').and.callFake((syncedAthleteProfile: IAthleteProfile) => {
+            let defer = Q.defer();
+            CHROME_STORAGE_MOCK.syncWithAthleteProfile = syncedAthleteProfile;
+            defer.resolve({
+                data: CHROME_STORAGE_MOCK
             });
             return defer.promise;
         });
@@ -252,7 +292,7 @@ describe('ActivitiesSynchronizer mocked', () => {
     });
 
 
-    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages()', (done) => {
+    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done) => {
 
         // Getting all pages here:
         activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedComputedActivities: Array<ISyncActivityComputed>) => {
@@ -263,21 +303,93 @@ describe('ActivitiesSynchronizer mocked', () => {
             expect(mergedComputedActivities).not.toBeNull();
             expect(mergedComputedActivities.length).toEqual(140);
 
-            // TODO Append tests on case...
+            let jeannieRide: ISyncActivityComputed = _.findWhere(mergedComputedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
+            expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
+            expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
+            expect(jeannieRide.moving_time_raw).toEqual(8557);
+            expect(jeannieRide.extendedStats).not.toBeNull();
+            expect(jeannieRide.extendedStats.heartRateData).toBeNull();
+            expect(jeannieRide.extendedStats.speedData).toBeNull();
+
+            let fakeRide: ISyncActivityComputed = _.findWhere(mergedComputedActivities, {id: 9999999999}); // Find fake
+            expect(fakeRide).toBeUndefined();
+
+            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+
             done();
         });
     });
 
+
+    it('should sync() when no existing stored computed activities', (done) => {
+
+        expect(activitiesSynchronizer.mergedComputedActivities).toBeNull(); // No mergedComputedActivities at the moment
+
+        activitiesSynchronizer.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
+            // Check no last sync date
+            expect(_.isNull(savedLastSyncDateTime.data) || _.isUndefined(savedLastSyncDateTime.data)).toBeTruthy();
+            return activitiesSynchronizer.getComputedActivitiesFromLocal();
+        }).then((computedActivitiesStored: any) => {
+            // Check no computedActivitiesStored
+            expect(_.isNull(computedActivitiesStored.data) || _.isUndefined(computedActivitiesStored.data)).toBeTruthy();
+            return activitiesSynchronizer.sync(); // Start sync
+        }).then((computedActivities: Array<ISyncActivityComputed>) => {
+
+            // Sync finished
+            expect(activitiesSynchronizer.getComputedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesSynchronizer.saveComputedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesSynchronizer.getLastSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
+            expect(activitiesSynchronizer.saveLastSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
+            expect(activitiesSynchronizer.saveSyncedAthleteProfile).toHaveBeenCalledTimes(1); // Ensure spy call
+
+            expect(computedActivities).not.toBeNull();
+            expect(computedActivities.length).toEqual(140);
+
+            let jeannieRide: ISyncActivityComputed = _.findWhere(computedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
+            expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
+            expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
+            expect(jeannieRide.moving_time_raw).toEqual(8557);
+            expect(jeannieRide.extendedStats).not.toBeNull();
+            expect(jeannieRide.extendedStats.heartRateData).toBeNull();
+            expect(jeannieRide.extendedStats.speedData).toBeNull();
+
+            let fakeRide: ISyncActivityComputed = _.findWhere(computedActivities, {id: 9999999999}); // Find fake
+            expect(fakeRide).toBeUndefined();
+
+            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+
+            // Check lastSyncDate & syncedAthleteProfile
+            return activitiesSynchronizer.getLastSyncDateFromLocal();
+
+        }).then((savedLastSyncDateTime: any) => {
+
+            expect(CHROME_STORAGE_MOCK.lastSyncDateTime).not.toBeNull();
+            expect(_.isNumber(CHROME_STORAGE_MOCK.lastSyncDateTime)).toBeTruthy();
+            expect(savedLastSyncDateTime.data).not.toBeNull();
+            expect(_.isNumber(savedLastSyncDateTime.data)).toBeTruthy();
+
+            // Check sync athlete profile
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userGender).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userMaxHr).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userRestHr).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userWeight).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userFTP).not.toBeNull();
+
+            done();
+
+        }, (err: any) => {
+
+            expect(err).toBeNull();
+            done();
+        }, (progress: ISyncNotify) => {
+
+        });
+    });
+
     /*
-
-     it('should sync() when no existing stored computed activities', (done) => {
-
-     // TODO ...
-     // TODO SpyOn get/set lastSyncDate
-     // TODO SpyOn get/set athleteSyncWith...
-
-     });
-
+     // TODO Test errors from pages, stream, compute ?
+     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
      it('should sync() when a new today training came up', (done) => {
      // TODO ...
      });
@@ -291,6 +403,10 @@ describe('ActivitiesSynchronizer mocked', () => {
      });
 
      it('should sync() when 2 activities been edited from strava.com', (done) => {
+     // TODO ...
+     });
+
+     it('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
      });
 
