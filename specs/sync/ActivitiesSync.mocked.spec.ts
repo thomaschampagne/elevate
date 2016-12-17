@@ -49,11 +49,6 @@ describe('ActivitiesSynchronizer mocked', () => {
         let stream: any = clone(window.__fixtures__['fixtures/activities/723224273/stream']);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        /*_.each(_.keys(stream), (key: string) => {
-            stream[key] = stream[key].slice(0, 50);
-        });
-        stream = <IActivityStream> stream;*/
-
         spyOn(activitiesSynchronizer, 'fetchStreamByActivityId').and.callFake((activityId: number) => {
             let defer = Q.defer();
             let data: any = {};
@@ -443,8 +438,6 @@ describe('ActivitiesSynchronizer mocked', () => {
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
-            console.log('**********************************************************');
-
             // Ready for a new sync
             return activitiesSynchronizer.sync();
 
@@ -467,15 +460,77 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
     });
 
+
+    it('should sync() when a training has been upload today to but perform 2 weeks ago, then test added first and last', (done) => {
+
+        // Get a full sync, with nothing stored...
+        // On sync done simulate 1 new added 2 weeks ago
+        // Re-sync and test...
+        activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+
+            // Sync is done...
+            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            expect(syncResult.computedActivities.length).toEqual(CHROME_STORAGE_MOCK.computedActivities.length);
+
+            // Add a new trainings on strava.com
+            expect(addStravaActivity(657225503)).toBeTruthy(); // Add "xxxx" - page 01 (removing it from last storage)
+
+            // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 657225503})).toBeUndefined();
+
+            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+
+            console.log('**********************************************************');
+
+            // Ready for a new sync
+            return activitiesSynchronizer.sync();
+
+        }).then((syncResult: ISyncResult) => {
+
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(1);
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 657225503})).toBeDefined();
+
+            // Now remove first activity and last...
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeDefined();
+
+            expect(addStravaActivity(799672885)).toBeTruthy();
+            expect(addStravaActivity(367463594)).toBeTruthy();
+
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(138); // 140 - 2
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeUndefined();
+
+            // Ready for a new sync
+            return activitiesSynchronizer.sync();
+
+        }).then((syncResult: ISyncResult) => {
+
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(2); // must be 2
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined(); // must be defined!
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeDefined(); // must be defined!
+            done();
+        });
+    });
+
+
+
     // TODO Test errors from pages, stream, compute ?
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
 
+
     /*
-
-     xit('should sync() when a training has been upload today to but perform 2 weeks ago', (done) => {
-     // TODO ...
-     });
-
      xit('should sync() when 3 activities have been removed from strava.com', (done) => {
      // TODO ...
      });
