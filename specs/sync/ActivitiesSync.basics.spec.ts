@@ -91,10 +91,10 @@ describe('ActivitiesSynchronizer', () => {
         let changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
 
         expect(changes).not.toBeNull();
-        expect(changes.deleted).toBeNull();
+        expect(changes.deleted).toEqual([]);
 
         /*
-        // TODO REMOVE .. Below expects useless. To be deleted
+         // TODO REMOVE .. Below expects useless. To be deleted
          expect(changes.deleted.length).toEqual(2);
          expect(_.findWhere(changes.deleted, {id: 722210052})).toBeDefined();
          expect(_.findWhere(changes.deleted, {id: 700301520})).toBeDefined();
@@ -118,7 +118,48 @@ describe('ActivitiesSynchronizer', () => {
         expect(findWhere.type).toEqual("Ride");
         expect(findWhere.display_type).toEqual("Ride");
 
-        expect(ActivitiesSynchronizer.findAddedAndEditedActivities([], null)).toBeNull();
+        expect(ActivitiesSynchronizer.findAddedAndEditedActivities(null, null)).not.toBeNull();
+
+    });
+
+    it('should append history of pages where activities added, modified and deleted ', () => {
+
+        let userSettingsMock: IUserSettings = clone(window.__fixtures__['fixtures/userSettings/2470979']);
+        let appResourcesMock: IAppResources = clone(window.__fixtures__['fixtures/appResources/appResources']);
+        let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+
+        // Append
+        activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
+            added: [1, 2],
+            deleted: [],
+            edited: []
+        });
+        expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
+        expect(activitiesSynchronizer.globalHistoryChanges.added).toEqual([1, 2]);
+        expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(0);
+        expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(0);
+
+        // Append
+        activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
+            added: [4, 5],
+            deleted: [],
+            edited: [{id: 6, name: 'rideName', type: 'Ride', display_type: 'Ride'}]
+        });
+        expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
+        expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(4);
+        expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(0);
+        expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(1);
+
+        // Append
+        activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
+            added: [5, 10, 11],
+            deleted: [15, 16],
+            edited: [{id: 6, name: 'rideName', type: 'Ride', display_type: 'Ride'}, {id: 22, name: 'Run...', type: 'Run', display_type: 'Run'}]
+        });
+        expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
+        expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(6); // id:5 already added
+        expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(2);
+        expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(3);
 
     });
 });

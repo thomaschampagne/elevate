@@ -88,9 +88,9 @@ class ActivitiesSyncModifier implements IModifier {
     protected sync(): void {
 
         // Start sync..
-        this.activitiesSynchronizer.sync().then(() => {
+        this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
-            console.log('Sync finished');
+            console.log('Sync finished', syncResult);
 
             // Reloading source tab if exist
             if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
@@ -167,23 +167,14 @@ class ActivitiesSyncModifier implements IModifier {
                     stepMessage = 'Computing extended statistics...';
                     break;
                 case 'savedComputedActivities':
-
                     stepMessage = 'Saving results to local extension storage...';
-                    this.updateStorageUsage();
                     break;
-
                 case 'updatingLastSyncDateTime':
                     stepMessage = 'Updating your last synchronization date...';
                     break;
-
-                case 'updateActivitiesInfo': // TODO remove step
-                    stepMessage = 'Updating activities basic info...';
-                    break;
             }
 
-            let syncStepMessage = (progress.step === 'updateActivitiesInfo') ? stepMessage : 'Activity group <' + progress.pageGroupId + '> ' + stepMessage;
-
-            $('#syncStep').html(syncStepMessage);
+            $('#syncStep').html('Activity group <' + progress.pageGroupId + '> ' + stepMessage);
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 

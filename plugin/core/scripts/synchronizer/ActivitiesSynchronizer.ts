@@ -12,22 +12,31 @@ interface IHistoryChanges {
     edited: Array<{id: number, name: string, type: string, display_type: string}>
 }
 
-class ActivitiesSynchronizer {
+interface ISyncResult {
+    globalHistoryChanges: IHistoryChanges,
+    computedActivities: Array<ISyncActivityComputed>,
+    lastSyncDateTime: number,
+    syncWithAthleteProfile: IAthleteProfile
+}
 
-    get mergedComputedActivities(): Array<ISyncActivityComputed> {
-        return this._mergedComputedActivities;
-    }
+class ActivitiesSynchronizer {
 
     public static lastSyncDateTime: string = 'lastSyncDateTime';
     public static computedActivities: string = 'computedActivities';
     public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
 
     public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
-    private _mergedComputedActivities: Array<ISyncActivityComputed> = null;
+    protected _mergedComputedActivities: Array<ISyncActivityComputed> = null;
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
     protected _activitiesProcessor: ActivitiesProcessor;
+
+    private _globalHistoryChanges: IHistoryChanges = {
+        added: [],
+        deleted: [],
+        edited: []
+    };
 
     constructor(appResources: IAppResources, userSettings: IUserSettings/*, fromPage?: number, maxPages?: number*/) {
         this.appResources = appResources;
@@ -36,10 +45,15 @@ class ActivitiesSynchronizer {
         this._activitiesProcessor = new ActivitiesProcessor(this.appResources, this.userSettings);
     }
 
+    public appendGlobalHistoryChanges(historyIn: IHistoryChanges): void {
+        this._globalHistoryChanges.added = _.union(this._globalHistoryChanges.added, historyIn.added);
+        this._globalHistoryChanges.deleted = _.union(this._globalHistoryChanges.deleted, historyIn.deleted);
+        this._globalHistoryChanges.edited = _.union(this._globalHistoryChanges.edited, historyIn.edited);
+    }
+
     /**
      * Provides:
      * - activity IDs missing in the local history (added in strava.com and not computed/stored)
-     * - activity IDs to delete in the local history (removed from strava.com)
      * - activity IDs to edit with their values (edited from strava.com)
      * @param activities Array<ISyncRawStravaActivity>
      * @param computedActivities Array<ISyncActivityComputed>
@@ -47,40 +61,43 @@ class ActivitiesSynchronizer {
      */
     public static findAddedAndEditedActivities(rawActivities: Array<ISyncRawStravaActivity>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
 
-        if (_.isEmpty(rawActivities) || _.isEmpty(computedActivities)) {
-            return null;
-        }
-
         let added: Array<number> = [];
+        let deleted: Array<number> = [];
         let edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
 
-        _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
+        if (_.isNull(computedActivities) || _.isUndefined(computedActivities) || !computedActivities) {
+            computedActivities = [];
+        }
 
-            // Exist raw activity id in history?
-            // Seek for activity in just interrogated pages
-            let foundComputedActivity: ISyncActivityComputed = _.findWhere(computedActivities, {id: rawActivity.id});
+        if (!_.isEmpty(rawActivities)) {
+            _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
 
-            if (foundComputedActivity) { // Yes  => Check for an edit..
+                // Exist raw activity id in history?
+                // Seek for activity in just interrogated pages
+                let foundComputedActivity: ISyncActivityComputed = _.findWhere(computedActivities, {id: rawActivity.id});
 
-                if (foundComputedActivity.name !== rawActivity.name || foundComputedActivity.type !== rawActivity.type) {
-                    // foundComputedActivity.name = rawActivity.name; // Update name
-                    edited.push({
-                        id: foundComputedActivity.id,
-                        name: rawActivity.name,
-                        type: rawActivity.type,
-                        display_type: rawActivity.display_type
-                    });
+                if (foundComputedActivity) { // Yes  => Check for an edit..
+
+                    if (foundComputedActivity.name !== rawActivity.name || foundComputedActivity.type !== rawActivity.type) {
+                        // foundComputedActivity.name = rawActivity.name; // Update name
+                        edited.push({
+                            id: foundComputedActivity.id,
+                            name: rawActivity.name,
+                            type: rawActivity.type,
+                            display_type: rawActivity.display_type
+                        });
+                    }
+                } else {
+                    // No => rawActivity: Its an added activity from strava.com
+                    added.push(rawActivity.id);
                 }
-            } else {
-                // No => rawActivity: Its an added activity from strava.com
-                added.push(rawActivity.id);
-            }
-            // ... Or all other computed will be removed... if done here...
-        });
+                // ... Or all other computed will be removed... if done here...
+            });
+        }
 
         let historyChanges: IHistoryChanges = {
             added: added,
-            deleted: null,
+            deleted: deleted,
             edited: edited
         };
 
@@ -106,64 +123,97 @@ class ActivitiesSynchronizer {
         let deferred = Q.defer();
 
         // Start fetching missing activities
-        this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((activities: Array<ISyncRawStravaActivity>) => {
+        this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: Array<ISyncRawStravaActivity>) => {
 
             // Success
-            console.log('Activities fetched in group ' + this.printGroupLimits(fromPage, pagesToRead) + ': ' + activities.length);
+            console.log('Activities fetched in group ' + this.printGroupLimits(fromPage, pagesToRead) + ': ' + rawActivities.length);
 
             let fetchedActivitiesStreamCount: number = 0;
             let fetchedActivitiesProgress: number = 0;
             let promisesOfActivitiesStreamById: Array<Q.IPromise<ISyncActivityWithStream>> = [];
 
-            /*// ActivitiesSynchronizer.findAddedAndEditedActivities(activities)
+            this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
 
-             getfromstor....then((computedActivitiesStored: any) => {
-             // Success getting previous stored activities.
+                // console.log('%%%%%%%%%', computedActivitiesStored);
 
+                // Should find added and edited activities
+                let historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
 
-             ActivitiesSynchronizer.findAddedAndEditedActivities(activities, computedActivitiesStored)
-             });
-             */
+                // For each activity, fetch his stream and compute extended stats
+                _.each(historyChangesOnPagesRode.added, (activityId: number) => {
+                    // Getting promise of stream for each activity...
+                    promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
+                });
 
+                // Update global history
+                this.appendGlobalHistoryChanges(historyChangesOnPagesRode);
 
-            // For each activity, fetch his stream and compute extended stats
-            _.each(activities, (activity: ISyncRawStravaActivity) => {
-                // Getting promise of stream for each activity...
-                promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activity.id));
-            });
+                console.log('$$$$$$$$$', historyChangesOnPagesRode.added.length);
 
-            Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
+                // TODO Handle edits...
 
-                // Success...
+                Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
 
-                if (streamResults.length !== activities.length) {
-                    let errMessage: string = 'Stream length mismatch with activities fetched length: ' + streamResults.length + ' != ' + activities.length + ')';
-                    deferred.reject(errMessage);
-                } else {
+                    // Success...
 
-                    console.log('Stream length match with activities fetched length: (' + streamResults.length + ' == ' + activities.length + ')');
+                    // console.log('###########', streamResults);
+                    // console.log('###########', streamResults.length);
+
+                    // if (streamResults.length !== activities.length) {
+                    //
+                    //     let errMessage: string = 'Stream length mismatch with activities fetched length: ' + streamResults.length + ' != ' + activities.length + ')';
+                    //
+                    //     console.log('RRRRRRR', streamResults.length);
+                    //
+                    //     deferred.reject(errMessage);
+                    // } else {
+
+                    console.log('Stream length: ' + streamResults.length + ', raw activities length: ' + rawActivities.length + ')');
 
                     let activitiesWithStream: Array<ISyncActivityWithStream> = [];
 
-                    _.each(streamResults, (data: Q.PromiseState<any>, index: number) => {
+                    _.each(streamResults, (data: Q.PromiseState<any>) => {
+
+                        // console.log('=======', JSON.stringify(data));
+
 
                         if (data.state === 'rejected') {
+
                             // No stream found for this activity
-                            console.warn('Stream not found for activity <' + data.reason.activityId + '>, index <' + index + '>', data);
+                            console.warn('Stream not found for activity <' + data.reason.activityId + '>', data);
+
+                            // Add to activities list without even if no stream...
+                            let newlyDetectedActivity: ISyncRawStravaActivity = _.findWhere(rawActivities, {id: data.reason.activityId});
+                            let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> newlyDetectedActivity;
+                            activityWithStream.hasPowerMeter = null;
+                            activityWithStream.stream = null;
+                            activitiesWithStream.push(activityWithStream);
 
                         } else if (data.state === 'fulfilled') {
 
-                            // Then append stream to activity
+                            // Find raw activities of fetched stream and push
+                            let newlyDetectedActivity: ISyncRawStravaActivity = _.findWhere(rawActivities, {id: data.value.activityId});
+
                             let hasPowerMeter: boolean = true;
                             if (_.isEmpty(data.value.watts)) {
                                 data.value.watts = data.value.watts_calc;
                                 hasPowerMeter = false;
                             }
 
-                            let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> activities[index];
+                            let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> newlyDetectedActivity;
                             activityWithStream.hasPowerMeter = hasPowerMeter;
                             activityWithStream.stream = data.value;
+
                             activitiesWithStream.push(activityWithStream);
+
+                            // console.log('PUSSSSHHH', JSON.stringify(activityWithStream));
+                            /*
+                             data.value.activityId // given by promise
+                             // Then append stream to activity
+                             let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> activities[??];
+                             activityWithStream.hasPowerMeter = hasPowerMeter;
+                             activityWithStream.stream = data.value;
+                             activitiesWithStream.push(activityWithStream);*/
                         }
                     });
 
@@ -176,28 +226,30 @@ class ActivitiesSynchronizer {
                     deferred.notify(notify);
 
                     deferred.resolve(activitiesWithStream);
-                }
+                    // }
 
-            }, (err: any) => {
+                }, (err: any) => {
 
-                // error
-                // We don't enter here with allSettled...
+                    // error
+                    // We don't enter here with allSettled...
 
-            }, (notification: any) => {
+                }, (notification: any) => {
 
-                // Progress...
-                fetchedActivitiesProgress = fetchedActivitiesStreamCount / activities.length * 100;
+                    // Progress...
+                    fetchedActivitiesProgress = fetchedActivitiesStreamCount / rawActivities.length * 100;
 
-                let notify: ISyncNotify = {
-                    step: 'fetchedStreamsPercentage',
-                    progress: fetchedActivitiesProgress,
-                    index: notification.index,
-                    activityId: notification.value,
-                };
+                    let notify: ISyncNotify = {
+                        step: 'fetchedStreamsPercentage',
+                        progress: fetchedActivitiesProgress,
+                        index: notification.index,
+                        activityId: notification.value,
+                    };
 
-                deferred.notify(notify);
+                    deferred.notify(notify);
 
-                fetchedActivitiesStreamCount++;
+                    fetchedActivitiesStreamCount++;
+                });
+
             });
 
         }, (err: any) => {
@@ -238,7 +290,7 @@ class ActivitiesSynchronizer {
         }
 
         if (!deferred) {
-            deferred = Q.defer();
+            deferred = Q.defer<Array<ISyncRawStravaActivity>>();
         }
 
         if (!activitiesList) {
@@ -276,39 +328,43 @@ class ActivitiesSynchronizer {
 
                     notify.totalActivities = data.total;
 
-                    if (lastSyncDateTime) {
+                    /*
+                     if (lastSyncDateTime) {
 
-                        // Filter activities with start date upper than lastSyncDateTime
-                        let activitiesCompliantWithLastSyncDateTime = _.filter(data.models, (model: ISyncRawStravaActivity) => {
-                            let activityEndTime: number = new Date(model.start_time).getTime() + model.elapsed_time_raw * 1000;
-                            return (activityEndTime >= lastSyncDateTime.getTime());
-                        });
+                     // Filter activities with start date upper than lastSyncDateTime
+                     let activitiesCompliantWithLastSyncDateTime = _.filter(data.models, (model: ISyncRawStravaActivity) => {
+                     let activityEndTime: number = new Date(model.start_time).getTime() + model.elapsed_time_raw * 1000;
+                     return (activityEndTime >= lastSyncDateTime.getTime());
+                     });
 
-                        // Append activities
-                        activitiesList = _.flatten(_.union(activitiesList, activitiesCompliantWithLastSyncDateTime));
+                     // Append activities
+                     activitiesList = _.flatten(_.union(activitiesList, activitiesCompliantWithLastSyncDateTime));
 
-                        if (data.models.length > activitiesCompliantWithLastSyncDateTime.length) { // lastSyncDateTime reached... resolve!
-                            notify.progress = 100;// 100% Complete
-                            deferred.notify(notify);
-                            deferred.resolve(activitiesList);
-                        } else {
-                            // Continue to fetch
-                            notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities) * 100);
-                            deferred.notify(notify);
-                            setTimeout(() => {
-                                this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                            }, 50);
-                        }
+                     if (data.models.length > activitiesCompliantWithLastSyncDateTime.length) { // lastSyncDateTime reached... resolve!
+                     notify.progress = 100;// 100% Complete
+                     deferred.notify(notify);
+                     deferred.resolve(activitiesList);
+                     } else {
+                     // Continue to fetch
+                     notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities) * 100);
+                     deferred.notify(notify);
+                     setTimeout(() => {
+                     this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                     }, 50);
+                     }
 
-                    } else {
-                        // Append activities
-                        activitiesList = _.flatten(_.union(activitiesList, data.models));
-                        notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities)) * 100;
-                        deferred.notify(notify);
-                        setTimeout(() => {
-                            this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                        }, 50);
-                    }
+                     } else {
+                     */
+                    // Append activities
+                    activitiesList = _.flatten(_.union(activitiesList, data.models));
+                    notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities)) * 100;
+                    deferred.notify(notify);
+                    setTimeout(() => {
+                        this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+                    }, 50);
+                    /*
+                     }
+                     */
                 }
             }
 
@@ -327,7 +383,7 @@ class ActivitiesSynchronizer {
 
         });
 
-        return (<Q.Promise<Array<ISyncRawStravaActivity>>> deferred.promise);
+        return deferred.promise;
     }
 
     /**
@@ -395,6 +451,7 @@ class ActivitiesSynchronizer {
         this.fetchWithStream(lastSyncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: Array<ISyncActivityWithStream>) => {
 
             // fetchWithStreamSuccess...
+            console.log('COUNT TO COMPUTE:', activitiesWithStreams.length);
             return this._activitiesProcessor.compute(activitiesWithStreams);
 
         }, (err: any) => {
@@ -469,7 +526,6 @@ class ActivitiesSynchronizer {
 
             if (_.isEmpty(computedActivitiesPromised)) {
                 deferred.resolve(this._mergedComputedActivities);
-                // this._mergedComputedActivities = null; // Free mem !
             }
 
             handledGroupCount++;
@@ -554,12 +610,19 @@ class ActivitiesSynchronizer {
      * Trigger the computing of new activities and save the result to local storage by merging with existing activities
      * @return Promise of synced activities
      */
-    public sync(): Q.Promise<Array<ISyncActivityComputed>> {
+    public sync(): Q.Promise<ISyncResult> {
 
         // let updateActivitiesInfoAtEnd: boolean = false;
-        let deferred = Q.defer<Array<ISyncActivityComputed>>();
+        let deferred = Q.defer<ISyncResult>();
         let syncNotify: ISyncNotify = {};
-        this._mergedComputedActivities = null; // Reset for a new sync !
+
+        // Reset value for new sync:
+        this._mergedComputedActivities = null;
+        this._globalHistoryChanges = {
+            added: [],
+            deleted: [],
+            edited: []
+        };
 
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
@@ -567,7 +630,17 @@ class ActivitiesSynchronizer {
             let computeGroupedActivitiesPromise: Q.IPromise<any> = null;
 
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
-            return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+
+            if(lastSyncDateTime) {
+                computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+            } else {
+                // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
+                computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
+                    return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+                });
+            }
+
+            return computeGroupedActivitiesPromise;
 
             /*if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
              lastSyncDateTime = new Date(savedLastSyncDateTime.data);
@@ -608,14 +681,21 @@ class ActivitiesSynchronizer {
 
             return this.saveSyncedAthleteProfile(syncedAthleteProfile);
 
-        }).then(() => {
+        }).then((saved: any) => {
 
             // Synced Athlete Profile saved ...
             console.log('Sync With Athlete Profile done');
             // console.log();
             // console.log('Saved data:', saved.data);
 
-            deferred.resolve(this._mergedComputedActivities); // Sync finish !!
+            let syncResult: ISyncResult = {
+                globalHistoryChanges: this._globalHistoryChanges,
+                computedActivities: this._mergedComputedActivities,
+                lastSyncDateTime: saved.data.lastSyncDateTime,
+                syncWithAthleteProfile: saved.data.syncWithAthleteProfile,
+            };
+
+            deferred.resolve(syncResult); // Sync finish !!
             /*
              // Need to update activities info?!
              if (updateActivitiesInfoAtEnd) {
@@ -673,6 +753,14 @@ class ActivitiesSynchronizer {
         return this._activitiesProcessor;
     }
 
+    get mergedComputedActivities(): Array<ISyncActivityComputed> {
+        return this._mergedComputedActivities;
+    }
+
+    get globalHistoryChanges(): IHistoryChanges {
+        return this._globalHistoryChanges;
+    }
+
     /**
      * Use only for remove "lastActivitiesToBeRemoved" activities from synced and reposition the last sync date to the latest activities.
      * @param lastActivitiesToBeRemoved
@@ -708,67 +796,68 @@ class ActivitiesSynchronizer {
      * Update activities names and types
      * @returns {Promise<T>}
      */
-    public updateActivitiesInfo(): Q.Promise<any> { // TODO Remove
+    /*
+     public updateActivitiesInfo(): Q.Promise<any> { // TODO Remove
 
-        let deferred = Q.defer();
-        let computedActivities: Array<ISyncActivityComputed> = null;
-        let changes: number = 0;
+     let deferred = Q.defer();
+     let computedActivities: Array<ISyncActivityComputed> = null;
+     let changes: number = 0;
 
-        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
+     Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
 
-            computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
-            computedActivitiesStored.data = null; // Release memory
+     computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
+     computedActivitiesStored.data = null; // Release memory
 
-            if (!_.isEmpty(computedActivities)) {
-                return this.fetchRawActivitiesRecursive(null, null);  // Read all pages !
-            } else {
-                console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
-                return null;
-            }
+     if (!_.isEmpty(computedActivities)) {
+     return this.fetchRawActivitiesRecursive(null, null);  // Read all pages !
+     } else {
+     console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
+     return null;
+     }
 
-        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+     }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
 
-            if (_.isEmpty(rawStravaActivities)) {
-                return null;
-            }
+     if (_.isEmpty(rawStravaActivities)) {
+     return null;
+     }
 
-            // Test if name or type of activity has changed on each computed activities stored
-            _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
+     // Test if name or type of activity has changed on each computed activities stored
+     _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
 
-                // Seek for activity in just interrogated pages
-                let foundRawStravaActivity: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: computedActivity.id});
+     // Seek for activity in just interrogated pages
+     let foundRawStravaActivity: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: computedActivity.id});
 
-                if (foundRawStravaActivity) {
+     if (foundRawStravaActivity) {
 
-                    if (computedActivity.name !== foundRawStravaActivity.name) {
-                        computedActivity.name = foundRawStravaActivity.name; // Update name
-                        changes++
-                    }
+     if (computedActivity.name !== foundRawStravaActivity.name) {
+     computedActivity.name = foundRawStravaActivity.name; // Update name
+     changes++
+     }
 
-                    if (computedActivity.type !== foundRawStravaActivity.type) {
-                        computedActivity.type = foundRawStravaActivity.type; // Update name
-                        computedActivity.display_type = foundRawStravaActivity.display_type;// Update name
-                        changes++;
-                    }
-                }
-            });
+     if (computedActivity.type !== foundRawStravaActivity.type) {
+     computedActivity.type = foundRawStravaActivity.type; // Update name
+     computedActivity.display_type = foundRawStravaActivity.display_type;// Update name
+     changes++;
+     }
+     }
+     });
 
-            if (changes) {
-                // Update activities to local storage
-                return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
-            } else {
-                return null;
-            }
+     if (changes) {
+     // Update activities to local storage
+     return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
+     } else {
+     return null;
+     }
 
-        }).then(() => {
-            deferred.resolve({updateActivitiesInfoChanges: changes});
-        }, (err: any) => {
-            deferred.reject(err);
-        }, (progress: ISyncNotify) => {
-            progress.step = 'updateActivitiesInfo'; // Override step name
-            deferred.notify(progress);
-        });
+     }).then(() => {
+     deferred.resolve({updateActivitiesInfoChanges: changes});
+     }, (err: any) => {
+     deferred.reject(err);
+     }, (progress: ISyncNotify) => {
+     progress.step = 'updateActivitiesInfo'; // Override step name
+     deferred.notify(progress);
+     });
 
-        return deferred.promise;
-    }
+     return deferred.promise;
+     }*/
 }
