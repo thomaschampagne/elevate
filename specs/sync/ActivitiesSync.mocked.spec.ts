@@ -394,6 +394,28 @@ describe('ActivitiesSynchronizer mocked', () => {
 
     /**
      *
+     * @param activityId
+     * @param rawPageOfActivities
+     * @param newName
+     * @param newType
+     * @returns {boolean}
+     */
+    let editStravaActivity = (activityId: number, rawPageOfActivities: any, newName: string, newType: string) => {
+
+        let found = _.findWhere(rawPageOfActivities.models, {id: activityId});
+
+        if (found) {
+            rawPageOfActivities.models = editActivityFromArray(activityId, rawPageOfActivities.models, newName, newType);
+            return true;
+        } else {
+            return false;
+        }
+
+    };
+
+
+    /**
+     *
      * @param id
      * @param atPage
      */
@@ -471,6 +493,7 @@ describe('ActivitiesSynchronizer mocked', () => {
             // Sync is done...
             expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
             expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
@@ -485,8 +508,6 @@ describe('ActivitiesSynchronizer mocked', () => {
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 657225503})).toBeUndefined();
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
-
-            console.log('**********************************************************');
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -514,6 +535,7 @@ describe('ActivitiesSynchronizer mocked', () => {
         }).then((syncResult: ISyncResult) => {
 
             expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(2); // must be 2
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
@@ -524,20 +546,66 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
     });
 
+    it('should sync() when 2 activities been edited from strava.com', (done) => {
+
+        // Get a full sync, with nothing stored...
+        // On sync done simulate ...
+        // Re-sync and test...
+        activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+
+            // Sync is done...
+            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            expect(editStravaActivity(9999999, rawPagesOfActivities[0], 'FakeName', 'FakeType')).toBeFalsy(); // Fake one, nothing should be edited
+            expect(editStravaActivity(707356065, rawPagesOfActivities[0], 'Prends donc un velo!', 'Ride')).toBeTruthy(); // Page 1, "Je suis un gros lent !"
+            expect(editStravaActivity(427606185, rawPagesOfActivities[5], 'First Zwift', 'VirtualRide')).toBeTruthy(); // Page 6, "1st zwift ride"
+
+            // Ready for a new sync
+            return activitiesSynchronizer.sync();
+
+        }).then((syncResult: ISyncResult) => {
+
+            // Sync is done...
+            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(2);
+
+            // TODO check name/type back of 707356065, 427606185
+            /*
+            let ride: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!" => "Je suis un gros lent !"
+            console.log(ride);
+            expect(ride.name).toEqual("Je suis un gros lent !");
+            expect(ride.type).toEqual("Run");
+            expect(ride.display_type).toEqual("Run");
+
+            let virtualRide: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 427606185}); // Page 1, "First Zwift" => "1st zwift ride"
+            expect(virtualRide.name).toEqual("1st zwift ride");
+            expect(virtualRide.type).toEqual("VirtualRide");
+            expect(virtualRide.display_type).toEqual("VirtualRide");
+            */
+
+            done();
+        });
+
+    });
 
 
     // TODO Test errors from pages, stream, compute ?
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
-
 
     /*
      xit('should sync() when 3 activities have been removed from strava.com', (done) => {
      // TODO ...
      });
 
-     xit('should sync() when 2 activities been edited from strava.com', (done) => {
-     // TODO ...
-     });
+
 
      xit('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
