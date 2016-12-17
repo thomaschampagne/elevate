@@ -155,30 +155,52 @@ describe('ActivitiesSynchronizer mocked', () => {
 
     it('should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()', (done) => {
 
+        // TODO Also test endReached ?! !!
+
         // Give NO last sync date or page + page to read.
-        activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+        activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((syncRawStravaResult: ISyncRawStravaResult) => {
 
             expect(activitiesSynchronizer.httpPageGet).toHaveBeenCalled(); // Ensure spy call
 
-            expect(rawStravaActivities).not.toBeNull();
-            expect(rawStravaActivities.length).toEqual(20 * 7); // 140 > 7 pages
+            expect(syncRawStravaResult.activitiesList).not.toBeNull();
+            expect(syncRawStravaResult.activitiesList.length).toEqual(20 * 7); // 140 > 7 pages
+            expect(syncRawStravaResult.noMoreResults).toBeTruthy();
 
-            let jeannieRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 718908064}); // Find in page 1
+            let jeannieRide: ISyncRawStravaActivity = _.findWhere(syncRawStravaResult.activitiesList, {id: 718908064}); // Find in page 1
             expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
             expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
             expect(jeannieRide.moving_time_raw).toEqual(8557);
 
-            let relaxRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 642780978}); // Find in page 1
+            let relaxRide: ISyncRawStravaActivity = _.findWhere(syncRawStravaResult.activitiesList, {id: 642780978}); // Find in page 1
             expect(relaxRide.name).toEqual("Relax");
             expect(relaxRide.moving_time_raw).toEqual(4888);
 
-            let burnedRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 377239233}); // Find in page 1
+            let burnedRide: ISyncRawStravaActivity = _.findWhere(syncRawStravaResult.activitiesList, {id: 377239233}); // Find in page 1
             expect(burnedRide.name).toEqual("Cramé !!");
             expect(burnedRide.type).toEqual("Ride");
             expect(burnedRide.moving_time_raw).toEqual(4315);
 
-            let fakeRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 9999999999}); // Find in page 1
+            let fakeRide: ISyncRawStravaActivity = _.findWhere(syncRawStravaResult.activitiesList, {id: 9999999999}); // Find in page 1
             expect(fakeRide).toBeUndefined();
+
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 1, 3);
+
+        }).then((syncRawStravaResult: ISyncRawStravaResult) => {
+
+            expect(syncRawStravaResult.noMoreResults).toBeFalsy();
+            expect(syncRawStravaResult.activitiesList.length).toEqual(20 * 3);
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 3); // Can only read page 6 + 7
+
+        }).then((syncRawStravaResult: ISyncRawStravaResult) => {
+
+            expect(syncRawStravaResult.noMoreResults).toBeTruthy();
+            expect(syncRawStravaResult.activitiesList.length).toEqual(40); // Page 6 + 7
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 1);
+
+        }).then((syncRawStravaResult: ISyncRawStravaResult) => {
+
+            expect(syncRawStravaResult.noMoreResults).toBeFalsy();
+            expect(syncRawStravaResult.activitiesList.length).toEqual(20);
             done();
 
         }, (err: any) => {
@@ -416,11 +438,13 @@ describe('ActivitiesSynchronizer mocked', () => {
             // Add a new trainings on strava.com
             expect(addStravaActivity(799672885)).toBeTruthy(); // Add "Running back... Hard" - page 01 (removing it from last storage)
             expect(addStravaActivity(644365059)).toBeTruthy(); // Add "Sortie avec vik" - page 02 (removing it from last storage)
+            expect(addStravaActivity(371317512)).toBeTruthy(); // Add "Fast Fast Fast Pschitt" - page 07 (removing it from last storage)
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 2);
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeUndefined();
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeUndefined();
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -431,7 +455,7 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         }).then((syncResult: ISyncResult) => {
 
-            expect(syncResult.globalHistoryChanges.added.length).toEqual(2);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
@@ -441,6 +465,8 @@ describe('ActivitiesSynchronizer mocked', () => {
 
             // We should not found "Running back... Hard" act anymore in storage
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeDefined();
 
             done();
         });
