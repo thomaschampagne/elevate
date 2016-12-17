@@ -179,6 +179,21 @@ describe('ActivitiesSynchronizer mocked', () => {
 
             let fakeRide: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: 9999999999}); // Find in page 1
             expect(fakeRide).toBeUndefined();
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 1, 3);
+
+        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+            // expect(activitiesSynchronizer.endReached).toBeFalsy();
+            expect(rawStravaActivities.length).toEqual(20 * 3);
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 3); // Can only read page 6 + 7
+
+        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+            // expect(activitiesSynchronizer.endReached).toBeTruthy();
+            expect(rawStravaActivities.length).toEqual(40); // Page 6 + 7
+            return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 1);
+
+        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+            // expect(activitiesSynchronizer.endReached).toBeFalsy();
+            expect(rawStravaActivities.length).toEqual(20);
             done();
 
         }, (err: any) => {
@@ -267,6 +282,12 @@ describe('ActivitiesSynchronizer mocked', () => {
 
 
     it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done) => {
+
+        console.log('----------', activitiesSynchronizer);
+
+        expect(activitiesSynchronizer).not.toBeNull();
+        expect(activitiesSynchronizer).not.toBeUndefined();
+        expect(activitiesSynchronizer.computeActivitiesByGroupsOfPages).not.toBeUndefined();
 
         // Getting all pages here:
         activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedComputedActivities: Array<ISyncActivityComputed>) => {
@@ -361,10 +382,6 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
     });
 
-
-    // TODO Test errors from pages, stream, compute ?
-    // TODO Test notify progress (create dedicated method ?! TDD making !) ?
-
     /**
      *
      * @param id
@@ -416,11 +433,13 @@ describe('ActivitiesSynchronizer mocked', () => {
             // Add a new trainings on strava.com
             expect(addStravaActivity(799672885)).toBeTruthy(); // Add "Running back... Hard" - page 01 (removing it from last storage)
             expect(addStravaActivity(644365059)).toBeTruthy(); // Add "Sortie avec vik" - page 02 (removing it from last storage)
+            expect(addStravaActivity(371317512)).toBeTruthy(); // Add "Fast Fast Fast Pschitt" - page 07 (removing it from last storage)
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 2);
+            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeUndefined();
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeUndefined();
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -431,7 +450,7 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         }).then((syncResult: ISyncResult) => {
 
-            expect(syncResult.globalHistoryChanges.added.length).toEqual(2);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
@@ -439,28 +458,33 @@ describe('ActivitiesSynchronizer mocked', () => {
             expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
             expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length);
 
-            // We should not found "Running back... Hard" act anymore in storage
+            // We should found "Running back... Hard" act anymore in storage
             expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeDefined();
 
             done();
         });
     });
 
+    // TODO Test errors from pages, stream, compute ?
+    // TODO Test notify progress (create dedicated method ?! TDD making !) ?
+
     /*
 
-     it('should sync() when a training has been upload today to but perform 2 weeks ago', (done) => {
+     xit('should sync() when a training has been upload today to but perform 2 weeks ago', (done) => {
      // TODO ...
      });
 
-     it('should sync() when 3 activities have been removed from strava.com', (done) => {
+     xit('should sync() when 3 activities have been removed from strava.com', (done) => {
      // TODO ...
      });
 
-     it('should sync() when 2 activities been edited from strava.com', (done) => {
+     xit('should sync() when 2 activities been edited from strava.com', (done) => {
      // TODO ...
      });
 
-     it('should NOT sync() with cases not declare...', (done) => {
+     xit('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
      });
 

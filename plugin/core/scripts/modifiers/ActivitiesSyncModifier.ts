@@ -182,7 +182,7 @@ class ActivitiesSyncModifier implements IModifier {
 
             // Infos
             $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
-            $('#savedActivitiesCount').html('Total activities (having streams) saved <' + progress.savedActivitiesCount + '>');
+            $('#savedActivitiesCount').html('Total activities saved <' + progress.savedActivitiesCount + '>');
         });
     }
 }

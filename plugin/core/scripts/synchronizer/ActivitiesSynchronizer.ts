@@ -21,6 +21,7 @@ interface ISyncResult {
 
 class ActivitiesSynchronizer {
 
+
     public static lastSyncDateTime: string = 'lastSyncDateTime';
     public static computedActivities: string = 'computedActivities';
     public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
@@ -30,7 +31,8 @@ class ActivitiesSynchronizer {
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
-    protected _activitiesProcessor: ActivitiesProcessor;
+    protected _activitiesProcessor: ActivitiesProcessor
+    private _endReached: boolean = false;
 
     private _globalHistoryChanges: IHistoryChanges = {
         added: [],
@@ -134,8 +136,6 @@ class ActivitiesSynchronizer {
 
             this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
 
-                // console.log('%%%%%%%%%', computedActivitiesStored);
-
                 // Should find added and edited activities
                 let historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
 
@@ -147,8 +147,6 @@ class ActivitiesSynchronizer {
 
                 // Update global history
                 this.appendGlobalHistoryChanges(historyChangesOnPagesRode);
-
-                console.log('$$$$$$$$$', historyChangesOnPagesRode.added.length);
 
                 // TODO Handle edits...
 
@@ -297,13 +295,6 @@ class ActivitiesSynchronizer {
             activitiesList = [];
         }
 
-        // If we have reached the max page to read then resolve...
-        if (pagesToRead && pagesToRead === pagesRidden) {
-            console.log('Resolving with ' + activitiesList.length + ' activities found');
-            deferred.resolve(activitiesList);
-            return;
-        }
-
         let perPage: number = 20;
         let promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
@@ -313,6 +304,7 @@ class ActivitiesSynchronizer {
 
         promiseActivitiesRequest.then((data: any, textStatus: string, jqXHR: JQueryXHR) => {
 
+
             // Success...
             if (textStatus !== 'success') {
 
@@ -320,9 +312,14 @@ class ActivitiesSynchronizer {
 
             } else { // No errors...
 
-                // If current page contains no activities
-                if (_.isEmpty(data.models)) {
+                // If we have reached the max page to read then resolve...
+                if (pagesToRead && pagesToRead === pagesRidden) {
+                    console.log('Resolving with ' + activitiesList.length + ' activities found');
+                    deferred.resolve(activitiesList);
+
+                } else if (_.isEmpty(data.models)) {
                     console.log('Resolving with ' + activitiesList.length + ' activities found.');
+                    this._endReached = true;
                     deferred.resolve(activitiesList);
                 } else {
 
@@ -522,71 +519,85 @@ class ActivitiesSynchronizer {
 
         let computedActivitiesInGroup: Array<ISyncActivityComputed> = null;
 
-        this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: Array<ISyncActivityComputed>) => {
+        if (this._endReached) {
 
-            if (_.isEmpty(computedActivitiesPromised)) {
-                deferred.resolve(this._mergedComputedActivities);
-            }
+            deferred.resolve(this._mergedComputedActivities);
 
-            handledGroupCount++;
+        } else {
 
-            // if(handledGroupCount >= 1) {
-            //     deferred.resolve();
-            // }
+            this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: Array<ISyncActivityComputed>) => {
 
-            computedActivitiesInGroup = computedActivitiesPromised;
-            computedActivitiesPromised = null; // Free mem !
-            console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
-            console.log('Group handled count: ' + handledGroupCount);
+                handledGroupCount++;
 
-            // Retrieve previous saved activities
-            return this.getComputedActivitiesFromLocal();
+                // if(handledGroupCount >= 1) {
+                //     deferred.resolve();
+                // }
 
-        }, (err: any) => {
-            // Error...
-            deferred.reject(err);
+                computedActivitiesInGroup = computedActivitiesPromised;
+                computedActivitiesPromised = null; // Free mem !
+                console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
+                console.log('Group handled count: ' + handledGroupCount);
 
-        }, (progress: ISyncNotify) => {
+                // Retrieve previous saved activities
+                return this.getComputedActivitiesFromLocal();
 
-            // computeProgress...
-            deferred.notify(progress);
+            }).then((computedActivitiesStored: any) => {
 
-        }).then((computedActivitiesStored: any) => {
+                // Success getting previous stored activities. Now merging with new...
+                if (computedActivitiesInGroup !== null && computedActivitiesInGroup.length > 0) {
 
-            // Success getting previous stored activities. Now merging with new...
-            if (computedActivitiesInGroup !== null && computedActivitiesInGroup.length > 0) {
+                    // There's new activities to save
+                    if (_.isEmpty(computedActivitiesStored) || _.isEmpty(computedActivitiesStored.data)) {
+                        computedActivitiesStored = {};
+                        computedActivitiesStored.data = <Array<ISyncActivityComputed>> [];
+                    }
 
-                // There's new activities to save
-                if (_.isEmpty(computedActivitiesStored) || _.isEmpty(computedActivitiesStored.data)) {
-                    computedActivitiesStored = {};
-                    computedActivitiesStored.data = <Array<ISyncActivityComputed>> [];
-                }
+                    this._mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
 
-                this._mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
+                    // Sort this.mergedActivities ascending before save
+                    this._mergedComputedActivities = _.sortBy(this._mergedComputedActivities, (item) => {
+                        return (new Date(item.start_time)).getTime();
+                    });
 
-                // Sort this.mergedActivities ascending before save
-                this._mergedComputedActivities = _.sortBy(this._mergedComputedActivities, (item) => {
-                    return (new Date(item.start_time)).getTime();
-                });
+                    // Ensure activity unicity
+                    this._mergedComputedActivities = _.uniq(this._mergedComputedActivities, (item) => {
+                        return item.id;
+                    });
 
-                // Ensure activity unicity
-                this._mergedComputedActivities = _.uniq(this._mergedComputedActivities, (item) => {
-                    return item.id;
-                });
+                    console.log('Updating computed activities to extension local storage.');
 
-                console.log('Updating computed activities to extension local storage.');
+                    // Save activities to local storage
+                    this.saveComputedActivitiesToLocal(this._mergedComputedActivities).then((pagesGroupSaved: any) => {
 
-                // Save activities to local storage
-                this.saveComputedActivitiesToLocal(this._mergedComputedActivities).then((pagesGroupSaved: any) => {
+                        // Current group have been saved with previously stored activities...
+                        console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
+
+                        let notify: ISyncNotify = {
+                            step: 'savedComputedActivities',
+                            progress: 100,
+                            pageGroupId: handledGroupCount + 1,
+                            savedActivitiesCount: pagesGroupSaved.data.computedActivities.length,
+                        };
+
+                        deferred.notify(notify);
+
+                        // Continue to next group, recursive call.
+                        this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, handledGroupCount, deferred);
+
+                        // Free mem !
+                        computedActivitiesInGroup = null;
+                        computedActivitiesStored = null;
+                    });
+                } else {
 
                     // Current group have been saved with previously stored activities...
-                    console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
+                    console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' handled');
 
                     let notify: ISyncNotify = {
                         step: 'savedComputedActivities',
                         progress: 100,
                         pageGroupId: handledGroupCount + 1,
-                        savedActivitiesCount: pagesGroupSaved.data.computedActivities.length,
+                        savedActivitiesCount: 0
                     };
 
                     deferred.notify(notify);
@@ -597,10 +608,19 @@ class ActivitiesSynchronizer {
                     // Free mem !
                     computedActivitiesInGroup = null;
                     computedActivitiesStored = null;
-                });
-            }
+                }
 
-        });
+            }, (err: any) => {
+                // Error...
+                deferred.reject(err);
+
+            }, (progress: ISyncNotify) => {
+
+                // computeProgress...
+                deferred.notify(progress);
+
+            });
+        }
 
         return deferred.promise;
     }
@@ -616,13 +636,14 @@ class ActivitiesSynchronizer {
         let deferred = Q.defer<ISyncResult>();
         let syncNotify: ISyncNotify = {};
 
-        // Reset value for new sync:
+        // Reset values for new sync:
         this._mergedComputedActivities = null;
         this._globalHistoryChanges = {
             added: [],
             deleted: [],
             edited: []
         };
+        this._endReached = false;
 
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
@@ -631,7 +652,7 @@ class ActivitiesSynchronizer {
 
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
 
-            if(lastSyncDateTime) {
+            if (lastSyncDateTime) {
                 computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
             } else {
                 // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
@@ -759,6 +780,10 @@ class ActivitiesSynchronizer {
 
     get globalHistoryChanges(): IHistoryChanges {
         return this._globalHistoryChanges;
+    }
+
+    get endReached(): boolean {
+        return this._endReached;
     }
 
     /**
