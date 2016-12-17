@@ -12,11 +12,6 @@ interface IHistoryChanges {
     edited: Array<{id: number, name: string, type: string, display_type: string}>
 }
 
-interface ISyncRawStravaResult {
-    activitiesList: Array<ISyncRawStravaActivity>,
-    noMoreResults: boolean;
-}
-
 interface ISyncResult {
     globalHistoryChanges: IHistoryChanges,
     computedActivities: Array<ISyncActivityComputed>,
@@ -128,8 +123,7 @@ class ActivitiesSynchronizer {
         let deferred = Q.defer();
 
         // Start fetching missing activities
-        this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((syncRawStravaResult: ISyncRawStravaResult) => {
-            let rawActivities: Array<ISyncRawStravaActivity> = syncRawStravaResult.activitiesList;
+        this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: Array<ISyncRawStravaActivity>) => {
 
             // Success
             console.log('Activities fetched in group ' + this.printGroupLimits(fromPage, pagesToRead) + ': ' + rawActivities.length);
@@ -281,7 +275,7 @@ class ActivitiesSynchronizer {
      * @param activitiesList
      * @return {Q.Promise<Array<ISyncRawStravaActivity>>}
      */
-    public fetchRawActivitiesRecursive(lastSyncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: Array<ISyncRawStravaActivity>): Q.Promise<ISyncRawStravaResult> {
+    public fetchRawActivitiesRecursive(lastSyncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: Array<ISyncRawStravaActivity>): Q.Promise<Array<ISyncRawStravaActivity>> {
 
         if (!page) {
             page = 1; // Usually start from first page when no page given
@@ -296,29 +290,19 @@ class ActivitiesSynchronizer {
         }
 
         if (!deferred) {
-            deferred = Q.defer<ISyncRawStravaResult>();
+            deferred = Q.defer<Array<ISyncRawStravaActivity>>();
         }
 
         if (!activitiesList) {
             activitiesList = [];
         }
 
-        /*
-         // If we have reached the max page to read then resolve...
-         if (pagesToRead && pagesToRead === pagesRidden) {
-         console.log('Resolving with ' + activitiesList.length + ' activities found');
-
-         let resolveWith: ISyncRawStravaResult ={
-         activitiesList: activitiesList,
-         endReached: false
-         };
-
-         console.log('NOT_REACHED__', 'page: '+page, activitiesList.length);
-         deferred.resolve(resolveWith);
-         return;
-         }
-
-         */
+        // If we have reached the max page to read then resolve...
+        if (pagesToRead && pagesToRead === pagesRidden) {
+            console.log('Resolving with ' + activitiesList.length + ' activities found');
+            deferred.resolve(activitiesList);
+            return;
+        }
 
         let perPage: number = 20;
         let promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
@@ -331,42 +315,15 @@ class ActivitiesSynchronizer {
 
             // Success...
             if (textStatus !== 'success') {
+
                 deferred.reject('Unable to get models' + textStatus);
+
             } else { // No errors...
 
                 // If current page contains no activities
-                /*if (_.isEmpty(data.models)) {
-
-                 console.log('Resolving with ' + activitiesList.length + ' activities found.');
-
-                 let resolveWith: ISyncRawStravaResult = {
-                 activitiesList: activitiesList,
-                 endReached: true
-                 };
-
-                 console.log('REACHED__', 'page: ' + page, activitiesList.length);
-                 deferred.resolve(resolveWith);
-
-                 }*/
-
-                // If we have reached the max page to read then resolve...
-                // Or no data anymore...
-
-                if ((pagesToRead && pagesToRead === pagesRidden /*pagesToRead < pagesRidden*/)
-                    || _.isEmpty(data.models)
-                ) {
-                    console.log('Resolving with ' + activitiesList.length + ' activities found');
-                    console.log(pagesToRead, pagesRidden);
-
-                    let resolveWith: ISyncRawStravaResult = {
-                        activitiesList: activitiesList,
-                        noMoreResults: _.isEmpty(data.models)
-                    };
-
-                    console.log('REACHED__', 'page: ' + page, 'endReached: ' + resolveWith.noMoreResults, activitiesList.length);
-                    deferred.resolve(resolveWith);
-                    // return;
-
+                if (_.isEmpty(data.models)) {
+                    console.log('Resolving with ' + activitiesList.length + ' activities found.');
+                    deferred.resolve(activitiesList);
                 } else {
 
                     notify.totalActivities = data.total;
@@ -567,8 +524,7 @@ class ActivitiesSynchronizer {
 
         this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: Array<ISyncActivityComputed>) => {
 
-
-            if (_.isEmpty(computedActivitiesPromised)) { // TODO ????
+            if (_.isEmpty(computedActivitiesPromised)) {
                 deferred.resolve(this._mergedComputedActivities);
             }
 
@@ -675,7 +631,7 @@ class ActivitiesSynchronizer {
 
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
 
-            if (lastSyncDateTime) {
+            if(lastSyncDateTime) {
                 computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
             } else {
                 // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
@@ -706,6 +662,7 @@ class ActivitiesSynchronizer {
             return this.saveLastSyncDateToLocal((new Date()).getTime());
 
         }).then((saved: any) => {
+
 
             // Last Sync Date Time saved... Now save syncedAthleteProfile
             syncNotify.step = 'updatingLastSyncDateTime';
