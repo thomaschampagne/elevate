@@ -1,6 +1,6 @@
 /// <reference path="../typings/specs.d.ts" />
 
-describe('ActivitiesSynchronizer mocked', () => {
+describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     let userSettingsMock: IUserSettings;
     let appResourcesMock: IAppResources;
@@ -9,11 +9,11 @@ describe('ActivitiesSynchronizer mocked', () => {
 
     let rawPagesOfActivities: Array<Array<ISyncRawStravaActivity>>;
 
-    let CHROME_STORAGE_MOCK: any; // Fake mocked storage to simulate chrome local storage
+    let CHROME_STORAGE_STUB: any; // Fake stubed storage to simulate chrome local storage
 
     beforeEach(() => {
 
-        CHROME_STORAGE_MOCK = {}; // Reset storage
+        CHROME_STORAGE_STUB = {}; // Reset storage
 
         userSettingsMock = clone(window.__fixtures__['fixtures/userSettings/2470979']);
         appResourcesMock = clone(window.__fixtures__['fixtures/appResources/appResources']);
@@ -31,7 +31,7 @@ describe('ActivitiesSynchronizer mocked', () => {
         activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         /**
-         * Mocking http calls to strava training pages 1 and 2
+         * Stubing http calls to strava training pages
          */
         spyOn(activitiesSynchronizer, 'httpPageGet').and.callFake((perPage: number, page: number) => {
             let defer = $.Deferred();
@@ -44,7 +44,7 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
 
         /**
-         * Mocking activity stream promised, reduce @ 50 samples
+         * Stubing activity stream promised, reduce @ 50 samples
          */
         let stream: any = clone(window.__fixtures__['fixtures/activities/723224273/stream']);
         stream.watts = stream.watts_calc; // because powerMeter is false
@@ -62,7 +62,7 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
 
         /**
-         * Mock ActivitiesProcessor:compute. Create fake analysis results
+         * Stub ActivitiesProcessor:compute. Create fake analysis results
          */
         spyOn(activitiesSynchronizer.activitiesProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
             let defer = Q.defer();
@@ -89,7 +89,7 @@ describe('ActivitiesSynchronizer mocked', () => {
         });
 
         /**
-         * Mock:
+         * Stub:
          * - saveComputedActivitiesToLocal
          * - getComputedActivitiesFromLocal
          * - saveLastSyncDateToLocal
@@ -99,9 +99,9 @@ describe('ActivitiesSynchronizer mocked', () => {
          */
         spyOn(activitiesSynchronizer, 'saveComputedActivitiesToLocal').and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
             let defer = Q.defer();
-            CHROME_STORAGE_MOCK.computedActivities = computedActivities;
+            CHROME_STORAGE_STUB.computedActivities = computedActivities;
             defer.resolve({
-                data: CHROME_STORAGE_MOCK
+                data: CHROME_STORAGE_STUB
             });
             return defer.promise;
         });
@@ -109,16 +109,16 @@ describe('ActivitiesSynchronizer mocked', () => {
         spyOn(activitiesSynchronizer, 'getComputedActivitiesFromLocal').and.callFake(() => {
             let defer = Q.defer();
             defer.resolve({
-                data: CHROME_STORAGE_MOCK.computedActivities
+                data: CHROME_STORAGE_STUB.computedActivities
             });
             return defer.promise;
         });
 
         spyOn(activitiesSynchronizer, 'saveLastSyncDateToLocal').and.callFake((timestamp: number) => {
             let defer = Q.defer();
-            CHROME_STORAGE_MOCK.lastSyncDateTime = timestamp;
+            CHROME_STORAGE_STUB.lastSyncDateTime = timestamp;
             defer.resolve({
-                data: CHROME_STORAGE_MOCK
+                data: CHROME_STORAGE_STUB
             });
             return defer.promise;
         });
@@ -126,23 +126,23 @@ describe('ActivitiesSynchronizer mocked', () => {
         spyOn(activitiesSynchronizer, 'getLastSyncDateFromLocal').and.callFake(() => {
             let defer = Q.defer();
             defer.resolve({
-                data: (CHROME_STORAGE_MOCK.lastSyncDateTime) ? CHROME_STORAGE_MOCK.lastSyncDateTime : null
+                data: (CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null
             });
             return defer.promise;
         });
 
         spyOn(activitiesSynchronizer, 'clearSyncCache').and.callFake(() => {
             let defer = Q.defer();
-            CHROME_STORAGE_MOCK = {}; // Remove all
+            CHROME_STORAGE_STUB = {}; // Remove all
             defer.resolve();
             return defer.promise;
         });
 
         spyOn(activitiesSynchronizer, 'saveSyncedAthleteProfile').and.callFake((syncedAthleteProfile: IAthleteProfile) => {
             let defer = Q.defer();
-            CHROME_STORAGE_MOCK.syncWithAthleteProfile = syncedAthleteProfile;
+            CHROME_STORAGE_STUB.syncWithAthleteProfile = syncedAthleteProfile;
             defer.resolve({
-                data: CHROME_STORAGE_MOCK
+                data: CHROME_STORAGE_STUB
             });
             return defer.promise;
         });
@@ -353,18 +353,18 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         }).then((savedLastSyncDateTime: any) => {
 
-            expect(CHROME_STORAGE_MOCK.lastSyncDateTime).not.toBeNull();
-            expect(_.isNumber(CHROME_STORAGE_MOCK.lastSyncDateTime)).toBeTruthy();
+            expect(CHROME_STORAGE_STUB.lastSyncDateTime).not.toBeNull();
+            expect(_.isNumber(CHROME_STORAGE_STUB.lastSyncDateTime)).toBeTruthy();
             expect(savedLastSyncDateTime.data).not.toBeNull();
             expect(_.isNumber(savedLastSyncDateTime.data)).toBeTruthy();
 
             // Check sync athlete profile
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userGender).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userMaxHr).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userRestHr).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userWeight).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.syncWithAthleteProfile.userFTP).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userGender).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userMaxHr).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userRestHr).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userWeight).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userFTP).not.toBeNull();
 
             done();
 
@@ -383,8 +383,8 @@ describe('ActivitiesSynchronizer mocked', () => {
      */
     let addStravaActivity = (activityId: number) => {
 
-        if (_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: activityId})) {
-            CHROME_STORAGE_MOCK.computedActivities = removeActivityFromArray(activityId, CHROME_STORAGE_MOCK.computedActivities);
+        if (_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: activityId})) {
+            CHROME_STORAGE_STUB.computedActivities = removeActivityFromArray(activityId, CHROME_STORAGE_STUB.computedActivities);
             return true;
         } else {
             return false;
@@ -430,8 +430,8 @@ describe('ActivitiesSynchronizer mocked', () => {
 
     it('should sync() when a new today training came up + an old one', (done) => {
 
-        expect(CHROME_STORAGE_MOCK.computedActivities).toBeUndefined();
-        expect(CHROME_STORAGE_MOCK.lastSyncDateTime).toBeUndefined();
+        expect(CHROME_STORAGE_STUB.computedActivities).toBeUndefined();
+        expect(CHROME_STORAGE_STUB.lastSyncDateTime).toBeUndefined();
 
         // Get a full sync, with nothing stored...
         // On sync done simulate 2 new added activities on strava.com
@@ -439,13 +439,13 @@ describe('ActivitiesSynchronizer mocked', () => {
         activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
             // Sync is done...
-            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(syncResult.computedActivities.length).toEqual(CHROME_STORAGE_MOCK.computedActivities.length);
+            expect(syncResult.computedActivities.length).toEqual(CHROME_STORAGE_STUB.computedActivities.length);
 
             // Add a new trainings on strava.com
             expect(addStravaActivity(799672885)).toBeTruthy(); // Add "Running back... Hard" - page 01 (removing it from last storage)
@@ -453,10 +453,10 @@ describe('ActivitiesSynchronizer mocked', () => {
             expect(addStravaActivity(371317512)).toBeTruthy(); // Add "Fast Fast Fast Pschitt" - page 07 (removing it from last storage)
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeUndefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeUndefined();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeUndefined();
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -469,14 +469,14 @@ describe('ActivitiesSynchronizer mocked', () => {
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length);
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length);
 
             // We should found "Running back... Hard" act anymore in storage
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 644365059})).toBeDefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 371317512})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeDefined();
 
             done();
         });
@@ -491,21 +491,21 @@ describe('ActivitiesSynchronizer mocked', () => {
         activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
             // Sync is done...
-            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(syncResult.computedActivities.length).toEqual(CHROME_STORAGE_MOCK.computedActivities.length);
+            expect(syncResult.computedActivities.length).toEqual(CHROME_STORAGE_STUB.computedActivities.length);
 
             // Add a new trainings on strava.com
             expect(addStravaActivity(657225503)).toBeTruthy(); // Add "xxxx" - page 01 (removing it from last storage)
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 657225503})).toBeUndefined();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeUndefined();
 
             expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -514,35 +514,42 @@ describe('ActivitiesSynchronizer mocked', () => {
 
         }).then((syncResult: ISyncResult) => {
 
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(1);
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 657225503})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeDefined();
 
             // Now remove first activity and last...
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined();
 
             expect(addStravaActivity(799672885)).toBeTruthy();
             expect(addStravaActivity(367463594)).toBeTruthy();
 
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(138); // 140 - 2
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeUndefined();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(138); // 140 - 2
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeUndefined();
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
 
         }).then((syncResult: ISyncResult) => {
 
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(2); // must be 2
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 799672885})).toBeDefined(); // must be defined!
-            expect(_.findWhere(CHROME_STORAGE_MOCK.computedActivities, {id: 367463594})).toBeDefined(); // must be defined!
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined(); // must be defined!
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // must be defined!
             done();
+        }, (err: any) => {
+            console.log("!! ERROR !!", err); // Error...
+            done();
+        }, (progress: ISyncNotify) => {
+            // computeProgress...
+            // deferred.notify(progress);
         });
     });
 
@@ -554,8 +561,8 @@ describe('ActivitiesSynchronizer mocked', () => {
         activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
             // Sync is done...
-            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
@@ -571,27 +578,46 @@ describe('ActivitiesSynchronizer mocked', () => {
         }).then((syncResult: ISyncResult) => {
 
             // Sync is done...
-            expect(CHROME_STORAGE_MOCK.computedActivities).not.toBeNull();
-            expect(CHROME_STORAGE_MOCK.computedActivities.length).toEqual(140);
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities).not.toBeNull();
+            expect(syncResult.computedActivities.length).toEqual(140);
+
             expect(syncResult.globalHistoryChanges.added.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(2);
 
-            // TODO check name/type back of 707356065, 427606185
-            /*
-            let ride: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!" => "Je suis un gros lent !"
+            // Check return
+            let ride: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
             console.log(ride);
-            expect(ride.name).toEqual("Je suis un gros lent !");
-            expect(ride.type).toEqual("Run");
-            expect(ride.display_type).toEqual("Run");
+            expect(ride.name).toEqual("Prends donc un velo!");
+            expect(ride.type).toEqual("Ride");
+            expect(ride.display_type).toEqual("Ride");
 
-            let virtualRide: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 427606185}); // Page 1, "First Zwift" => "1st zwift ride"
-            expect(virtualRide.name).toEqual("1st zwift ride");
+            let virtualRide: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+            expect(virtualRide.name).toEqual("First Zwift");
             expect(virtualRide.type).toEqual("VirtualRide");
             expect(virtualRide.display_type).toEqual("VirtualRide");
-            */
+
+            // Check in stub
+            ride = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
+            console.log(ride);
+            expect(ride.name).toEqual("Prends donc un velo!");
+            expect(ride.type).toEqual("Ride");
+            expect(ride.display_type).toEqual("Ride");
+
+            virtualRide = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+            expect(virtualRide.name).toEqual("First Zwift");
+            expect(virtualRide.type).toEqual("VirtualRide");
+            expect(virtualRide.display_type).toEqual("VirtualRide");
 
             done();
+        }, (err: any) => {
+            console.log("!! ERROR !!", err); // Error...
+            done();
+        }, (progress: ISyncNotify) => {
+            // computeProgress...
+            // deferred.notify(progress);
         });
 
     });

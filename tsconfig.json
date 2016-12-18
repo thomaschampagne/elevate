@@ -98,7 +98,7 @@
     "specs/processors/ActivityComputer.spec.ts",
     "specs/processors/VacuumProcessor.spec.ts",
     "specs/sync/ActivitiesSync.basics.spec.ts",
-    "specs/sync/ActivitiesSync.mocked.spec.ts"
+    "specs/sync/ActivitiesSync.stubed.spec.ts"
   ],
   "exclude": [
     "node_modules/",

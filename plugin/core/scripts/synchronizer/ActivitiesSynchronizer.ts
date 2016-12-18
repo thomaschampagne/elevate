@@ -679,6 +679,33 @@ class ActivitiesSynchronizer {
 
         }).then(() => {
 
+            // Apply names/types changes
+            if (this._globalHistoryChanges.edited.length > 0) {
+                this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
+                    if (computedActivitiesStored && computedActivitiesStored.data) {
+                        _.each(this._globalHistoryChanges.edited, (editData) => {
+                            let activityToEdit: ISyncActivityComputed = _.findWhere((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+                            activityToEdit.name = editData.name;
+                            activityToEdit.type = editData.type;
+                            activityToEdit.display_type = editData.display_type;
+                        });
+                        return this.saveComputedActivitiesToLocal(computedActivitiesStored.data);
+                    } else {
+                        deferred.reject("You tried to edit local history without having local data ?!");
+                        return;
+                    }
+                });
+            }
+
+            // TODO Apply deletions
+
+
+        }).then(() => {
+
+            // TODO Apply names/type changes
+
+            // TODO Apply deletions
+
             // Compute Activities By Groups Of Pages done... Now updating the last sync date
             return this.saveLastSyncDateToLocal((new Date()).getTime());
 
@@ -711,7 +738,8 @@ class ActivitiesSynchronizer {
 
             let syncResult: ISyncResult = {
                 globalHistoryChanges: this._globalHistoryChanges,
-                computedActivities: this._mergedComputedActivities,
+                // computedActivities: this._mergedComputedActivities,
+                computedActivities: saved.data.computedActivities,
                 lastSyncDateTime: saved.data.lastSyncDateTime,
                 syncWithAthleteProfile: saved.data.syncWithAthleteProfile,
             };
