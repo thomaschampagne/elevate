@@ -581,7 +581,6 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // Check return
             let ride: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
-            console.log(ride);
             expect(ride.name).toEqual("Prends donc un velo!");
             expect(ride.type).toEqual("Ride");
             expect(ride.display_type).toEqual("Ride");
@@ -671,18 +670,118 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
+    it('should sync() when added/edited/deleted from strava.com in the same sync', (done) => {
+
+        // Get a full sync, with nothing stored...
+        // On sync done simulate ...
+        // Re-sync and test...
+        activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+
+            // Sync is done...
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            /**
+             * Add 3 on various pages
+             */
+            expect(addStravaActivity(723224273)).toBeTruthy(); // "Bon rythme ! 33 KPH !!"
+            expect(addStravaActivity(556443499)).toBeTruthy(); // "75k @ 31.5 KPH // 181 BPM"
+            expect(addStravaActivity(368210547)).toBeTruthy(); // "Natation"
+
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(137); // 140 - 3
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 723224273})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 556443499})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 368210547})).toBeUndefined();
+            expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // Should exists. Not removed from CHROME_STORAGE_STUB.computedActivities
+
+            /**
+             * Edit 4 on various pages
+             */
+            expect(editStravaActivity(999999999, rawPagesOfActivities[0], 'FakeName', 'FakeType')).toBeFalsy(); // Fake one, nothing should be edited
+            expect(editStravaActivity(707356065, rawPagesOfActivities[0], 'Prends donc un velo!', 'Ride')).toBeTruthy(); // Page 1, "Je suis un gros lent !"
+            expect(editStravaActivity(569640952, rawPagesOfActivities[2], 'Petit nez!', 'Ride')).toBeTruthy(); // Page 3, "Pinet"
+            expect(editStravaActivity(427606185, rawPagesOfActivities[5], 'First Zwift', 'VirtualRide')).toBeTruthy(); // Page 6, "1st zwift ride"
+            expect(editStravaActivity(372761597, rawPagesOfActivities[6], 'Rodage plaquettes new name', 'EBike')).toBeTruthy(); // Page 7, "Rodage plaquettes"
+
+            expect(_.findWhere(rawPagesOfActivities[2].models, {id: 569640952}).name).toEqual('Petit nez!');
+            expect(_.findWhere(rawPagesOfActivities[6].models, {id: 372761597}).type).toEqual('EBike');
+            expect(_.findWhere(rawPagesOfActivities[0].models, {id: 707356065}).type).not.toEqual('EBike');
+
+            /**
+             * Delete 5 on various pages
+             */
+            expect(removeStravaActivity(999999999, rawPagesOfActivities[0])).toBeFalsy(); // Fake one, nothing should be deleted
+            expect(removeStravaActivity(661113141, rawPagesOfActivities[0])).toBeTruthy(); // Page 1, "Reprise apr\u00e8s vacances"
+            expect(removeStravaActivity(566288762, rawPagesOfActivities[2])).toBeTruthy(); // Page 3, "Tranquille "
+            expect(removeStravaActivity(552562511, rawPagesOfActivities[3])).toBeTruthy(); // Page 4, "Pererree 1.4"
+            expect(removeStravaActivity(473894759, rawPagesOfActivities[4])).toBeTruthy(); // Page 5, "Zwift Watopia Easy Spin Flat"
+            expect(removeStravaActivity(406217194, rawPagesOfActivities[6])).toBeTruthy(); // Page 7, "Afternoon Ride"
+
+            expect(_.findWhere(rawPagesOfActivities[0].models, {id: 661113141})).toBeUndefined(); // Page 1, "Reprise apr\u00e8s vacances"
+            expect(_.findWhere(rawPagesOfActivities[2].models, {id: 566288762})).toBeUndefined(); // Page 3, "Tranquille "
+            expect(_.findWhere(rawPagesOfActivities[3].models, {id: 552562511})).toBeUndefined(); // Page 4, "Pererree 1.4"
+            expect(_.findWhere(rawPagesOfActivities[4].models, {id: 473894759})).toBeUndefined(); // Page 5, "Zwift Watopia Easy Spin Flat"
+            expect(_.findWhere(rawPagesOfActivities[6].models, {id: 406217194})).toBeUndefined(); // Page 7, "Afternoon Ride"
+            expect(_.findWhere(rawPagesOfActivities[5].models, {id: 424565561})).toBeDefined(); // Should still exists "Chartreuse Rousse et Herbe fluo !!"
+
+            // Ready for a new sync
+            return activitiesSynchronizer.sync();
+
+        }).then((syncResult: ISyncResult) => {
+
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(syncResult.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(135); // -5 deleted
+            expect(syncResult.computedActivities.length).toEqual(135); // -5 deleted
+
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(5);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(4);
+
+            // Check some edited
+            let activity: ISyncActivityComputed = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 707356065});
+            expect(activity.name).toEqual("Prends donc un velo!");
+            expect(activity.type).toEqual("Ride");
+            expect(activity.display_type).toEqual("Ride");
+
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 372761597});
+            expect(activity.name).toEqual("Rodage plaquettes new name");
+            expect(activity.type).toEqual("EBike");
+            expect(activity.display_type).toEqual("EBike");
+
+            // Check some added
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 723224273});
+            expect(activity.name).toEqual("Bon rythme ! 33 KPH !!");
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 556443499});
+            expect(activity.name).toEqual("75k @ 31.5 KPH // 181 BPM");
+
+            // Check some deleted
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 566288762});
+            expect(activity).toBeUndefined();
+
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 473894759});
+            expect(activity).toBeUndefined();
+
+            activity = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 424565561});
+            expect(activity).toBeDefined(); // Should still exists
+
+            done();
+        });
+
+    });
 
     // TODO Test errors from pages, stream, compute ?
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
-
     /*
      xit('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
      });
 
      */
-
-
     afterEach(() => {
         activitiesSynchronizer = null;
     })
