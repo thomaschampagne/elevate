@@ -534,7 +534,7 @@ class ActivitiesSynchronizer {
                             step: 'savedComputedActivities',
                             progress: 100,
                             pageGroupId: handledGroupCount + 1,
-                            savedActivitiesCount: pagesGroupSaved.data.computedActivities.length,
+                            browsedActivitiesCount: this.totalRawActivityIds.length//pagesGroupSaved.data.computedActivities.length,
                         };
 
                         deferred.notify(notify);
@@ -555,6 +555,7 @@ class ActivitiesSynchronizer {
                         step: 'savedComputedActivities',
                         progress: 100,
                         pageGroupId: handledGroupCount + 1,
+                        browsedActivitiesCount: this.totalRawActivityIds.length
                     };
 
                     deferred.notify(notify);
@@ -706,7 +707,7 @@ class ActivitiesSynchronizer {
                 fromPage: progress.fromPage,
                 toPage: progress.toPage,
                 pageGroupId: (progress.pageGroupId) ? progress.pageGroupId : ((syncNotify && syncNotify.pageGroupId) ? syncNotify.pageGroupId : 1),
-                savedActivitiesCount: (progress.savedActivitiesCount) ? progress.savedActivitiesCount : ((syncNotify && syncNotify.savedActivitiesCount) ? syncNotify.savedActivitiesCount : 0),
+                browsedActivitiesCount: (progress.browsedActivitiesCount) ? progress.browsedActivitiesCount : ((syncNotify && syncNotify.browsedActivitiesCount) ? syncNotify.browsedActivitiesCount : 0),
                 totalActivities: (progress.totalActivities) ? progress.totalActivities : ((syncNotify && syncNotify.totalActivities) ? syncNotify.totalActivities : null)
             };
             deferred.notify(syncNotify);

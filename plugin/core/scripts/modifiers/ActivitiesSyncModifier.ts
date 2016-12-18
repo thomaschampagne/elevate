@@ -52,7 +52,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '        </div>';
         html += '       <div id="syncInfos">';
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
-        html += '           <div style="padding-bottom: 10px;" id="savedActivitiesCount"></div>';
+        html += '           <div style="padding-bottom: 10px;" id="browsedActivitiesCount"></div>';
         html += '           <div style="padding-bottom: 10px;" id="storageUsage"></div>';
         html += '           <div style="padding-bottom: 10px;" id="autoClose"></div>';
         html += '       </div>';
@@ -148,8 +148,8 @@ class ActivitiesSyncModifier implements IModifier {
             console.log(progress);
 
             // Global progress
-            $('#syncProgressBar').val(progress.savedActivitiesCount / progress.totalActivities * 100);
-            $('#totalProgressText').html((progress.savedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
+            $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);
+            $('#totalProgressText').html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
 
 
             // Step
@@ -168,6 +168,7 @@ class ActivitiesSyncModifier implements IModifier {
                     break;
                 case 'savedComputedActivities':
                     stepMessage = 'Saving results to local extension storage...';
+                    this.updateStorageUsage();
                     break;
                 case 'updatingLastSyncDateTime':
                     stepMessage = 'Updating your last synchronization date...';
@@ -178,11 +179,11 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 
-            document.title = 'History synchronization @ ' + (progress.savedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
+            document.title = 'History synchronization @ ' + (progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
 
             // Infos
             $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
-            $('#savedActivitiesCount').html('Total activities saved <' + progress.savedActivitiesCount + '>');
+            $('#browsedActivitiesCount').html('Total activities saved <' + progress.browsedActivitiesCount + '>');
         });
     }
 }
