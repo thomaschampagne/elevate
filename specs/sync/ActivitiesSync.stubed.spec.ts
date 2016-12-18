@@ -321,8 +321,6 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done) => {
 
-        console.log('----------', activitiesSynchronizer);
-
         expect(activitiesSynchronizer).not.toBeNull();
         expect(activitiesSynchronizer).not.toBeUndefined();
         expect(activitiesSynchronizer.computeActivitiesByGroupsOfPages).not.toBeUndefined();
@@ -347,7 +345,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             let fakeRide: ISyncActivityComputed = _.findWhere(mergedComputedActivities, {id: 9999999999}); // Find fake
             expect(fakeRide).toBeUndefined();
 
-            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+            expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
             done();
         });
@@ -356,7 +354,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     it('should sync() when no existing stored computed activities', (done) => {
 
-        expect(activitiesSynchronizer.mergedComputedActivities).toBeNull(); // No mergedComputedActivities at the moment
+        expect(activitiesSynchronizer.hasBeenComputedActivities).toBeNull(); // No mergedComputedActivities at the moment
 
         activitiesSynchronizer.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
             // Check no last sync date
@@ -389,7 +387,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             let fakeRide: ISyncActivityComputed = _.findWhere(syncResult.computedActivities, {id: 9999999999}); // Find fake
             expect(fakeRide).toBeUndefined();
 
-            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+            expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
             // Check lastSyncDate & syncedAthleteProfile
             return activitiesSynchronizer.getLastSyncDateFromLocal();
@@ -450,7 +448,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeUndefined();
             expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeUndefined();
 
-            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+            expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -499,7 +497,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
             expect(_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeUndefined();
 
-            expect(activitiesSynchronizer.mergedComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+            expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -776,6 +774,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     // TODO Test errors from pages, stream, compute ?
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
+
     /*
      xit('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
@@ -785,6 +784,5 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     afterEach(() => {
         activitiesSynchronizer = null;
     })
-
 
 });

@@ -1118,9 +1118,9 @@ class StravistiX {
                     console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
 
                     // Start sync
-                    this.activitiesSynchronizer.sync().then(() => {
+                    this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
-                        console.log('Sync finished');
+                        console.log('Sync finished', syncResult);
 
                     }, (err: any) => {
 

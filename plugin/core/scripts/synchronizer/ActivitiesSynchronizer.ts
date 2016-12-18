@@ -30,7 +30,7 @@ class ActivitiesSynchronizer {
     protected extensionId: string;
     protected totalRawActivityIds: Array<number> = [];
     public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
-    protected _mergedComputedActivities: Array<ISyncActivityComputed> = null; // TODO rename to computedOnThisSync ? can stay null if nothing to do..
+    protected _hasBeenComputedActivities: Array<ISyncActivityComputed> = null;
     protected _activitiesProcessor: ActivitiesProcessor;
     protected _endReached: boolean = false;
 
@@ -40,7 +40,7 @@ class ActivitiesSynchronizer {
         edited: []
     };
 
-    constructor(appResources: IAppResources, userSettings: IUserSettings/*, fromPage?: number, maxPages?: number*/) {
+    constructor(appResources: IAppResources, userSettings: IUserSettings) {
         this.appResources = appResources;
         this.userSettings = userSettings;
         this.extensionId = this.appResources.extensionId;
@@ -141,7 +141,7 @@ class ActivitiesSynchronizer {
      */
     public fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<Array<ISyncActivityWithStream>> {
 
-        let deferred = Q.defer();
+        let deferred = Q.defer<Array<ISyncActivityWithStream>>();
 
         // Start fetching missing activities
         this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: Array<ISyncRawStravaActivity>) => {
@@ -172,28 +172,11 @@ class ActivitiesSynchronizer {
 
                 Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
 
-                    // Success...
-
-                    // console.log('###########', streamResults);
-                    // console.log('###########', streamResults.length);
-
-                    // if (streamResults.length !== activities.length) {
-                    //
-                    //     let errMessage: string = 'Stream length mismatch with activities fetched length: ' + streamResults.length + ' != ' + activities.length + ')';
-                    //
-                    //     console.log('RRRRRRR', streamResults.length);
-                    //
-                    //     deferred.reject(errMessage);
-                    // } else {
-
                     console.log('Stream length: ' + streamResults.length + ', raw activities length: ' + rawActivities.length + ')');
 
                     let activitiesWithStream: Array<ISyncActivityWithStream> = [];
 
                     _.each(streamResults, (data: Q.PromiseState<any>) => {
-
-                        // console.log('=======', JSON.stringify(data));
-
 
                         if (data.state === 'rejected') {
 
@@ -223,15 +206,6 @@ class ActivitiesSynchronizer {
                             activityWithStream.stream = data.value;
 
                             activitiesWithStream.push(activityWithStream);
-
-                            // console.log('PUSSSSHHH', JSON.stringify(activityWithStream));
-                            /*
-                             data.value.activityId // given by promise
-                             // Then append stream to activity
-                             let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> activities[??];
-                             activityWithStream.hasPowerMeter = hasPowerMeter;
-                             activityWithStream.stream = data.value;
-                             activitiesWithStream.push(activityWithStream);*/
                         }
                     });
 
@@ -240,21 +214,16 @@ class ActivitiesSynchronizer {
                         step: 'fetchedStreamsPercentage',
                         progress: 100
                     };
-
                     deferred.notify(notify);
-
                     deferred.resolve(activitiesWithStream);
-                    // }
 
                 }, (err: any) => {
-
-                    // error
-                    // We don't enter here with allSettled...
+                    // error, we don't enter here with allSettled...
 
                 }, (notification: any) => {
 
                     // Progress...
-                    fetchedActivitiesProgress = fetchedActivitiesStreamCount / rawActivities.length * 100;
+                    fetchedActivitiesProgress = fetchedActivitiesStreamCount / historyChangesOnPagesRode.added.length * 100;
 
                     let notify: ISyncNotify = {
                         step: 'fetchedStreamsPercentage',
@@ -276,7 +245,7 @@ class ActivitiesSynchronizer {
             deferred.notify(progress);
         });
 
-        return (<Q.Promise<Array<ISyncActivityWithStream>>> deferred.promise);
+        return deferred.promise;
     }
 
     public httpPageGet(perPage: number, page: number): JQueryXHR {
@@ -324,7 +293,6 @@ class ActivitiesSynchronizer {
 
         promiseActivitiesRequest.then((data: any, textStatus: string, jqXHR: JQueryXHR) => {
 
-
             // Success...
             if (textStatus !== 'success') {
 
@@ -334,54 +302,27 @@ class ActivitiesSynchronizer {
 
                 // If we have reached the max page to read then resolve...
                 if (pagesToRead && pagesToRead === pagesRidden) {
-                    console.log('Resolving with ' + activitiesList.length + ' activities found');
+                    console.log('[PagesRidden] Resolving with ' + activitiesList.length + ' activities found');
                     deferred.resolve(activitiesList);
 
                 } else if (_.isEmpty(data.models)) {
-                    console.log('Resolving with ' + activitiesList.length + ' activities found.');
+                    console.log('[EndReached] Resolving with ' + activitiesList.length + ' activities found.');
                     this._endReached = true;
                     deferred.resolve(activitiesList);
+
                 } else {
 
                     notify.totalActivities = data.total;
 
-                    /*
-                     if (lastSyncDateTime) {
-
-                     // Filter activities with start date upper than lastSyncDateTime
-                     let activitiesCompliantWithLastSyncDateTime = _.filter(data.models, (model: ISyncRawStravaActivity) => {
-                     let activityEndTime: number = new Date(model.start_time).getTime() + model.elapsed_time_raw * 1000;
-                     return (activityEndTime >= lastSyncDateTime.getTime());
-                     });
-
-                     // Append activities
-                     activitiesList = _.flatten(_.union(activitiesList, activitiesCompliantWithLastSyncDateTime));
-
-                     if (data.models.length > activitiesCompliantWithLastSyncDateTime.length) { // lastSyncDateTime reached... resolve!
-                     notify.progress = 100;// 100% Complete
-                     deferred.notify(notify);
-                     deferred.resolve(activitiesList);
-                     } else {
-                     // Continue to fetch
-                     notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities) * 100);
-                     deferred.notify(notify);
-                     setTimeout(() => {
-                     this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
-                     }, 50);
-                     }
-
-                     } else {
-                     */
                     // Append activities
                     activitiesList = _.flatten(_.union(activitiesList, data.models));
                     notify.progress = (activitiesList.length / ((pagesToRead && perPage) ? (pagesToRead * perPage) : notify.totalActivities)) * 100;
+
                     deferred.notify(notify);
+
                     setTimeout(() => {
                         this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
                     }, 50);
-                    /*
-                     }
-                     */
                 }
             }
 
@@ -467,13 +408,10 @@ class ActivitiesSynchronizer {
 
         this.fetchWithStream(lastSyncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: Array<ISyncActivityWithStream>) => {
 
-            // fetchWithStreamSuccess...
-            console.log('COUNT TO COMPUTE:', activitiesWithStreams.length);
             return this._activitiesProcessor.compute(activitiesWithStreams);
 
         }, (err: any) => {
 
-            // fetchWithStreamError...
             deferred.reject(err);
             return null;
 
@@ -541,7 +479,7 @@ class ActivitiesSynchronizer {
 
         if (this._endReached) {
 
-            deferred.resolve(this._mergedComputedActivities);
+            deferred.resolve(this._hasBeenComputedActivities);
 
         } else {
 
@@ -572,22 +510,22 @@ class ActivitiesSynchronizer {
                         computedActivitiesStored.data = <Array<ISyncActivityComputed>> [];
                     }
 
-                    this._mergedComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
+                    this._hasBeenComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
 
                     // Sort this.mergedActivities ascending before save
-                    this._mergedComputedActivities = _.sortBy(this._mergedComputedActivities, (item) => {
+                    this._hasBeenComputedActivities = _.sortBy(this._hasBeenComputedActivities, (item) => {
                         return (new Date(item.start_time)).getTime();
                     });
 
                     // Ensure activity unicity
-                    this._mergedComputedActivities = _.uniq(this._mergedComputedActivities, (item) => {
+                    this._hasBeenComputedActivities = _.uniq(this._hasBeenComputedActivities, (item) => {
                         return item.id;
                     });
 
                     console.log('Updating computed activities to extension local storage.');
 
                     // Save activities to local storage
-                    this.saveComputedActivitiesToLocal(this._mergedComputedActivities).then((pagesGroupSaved: any) => {
+                    this.saveComputedActivitiesToLocal(this._hasBeenComputedActivities).then((pagesGroupSaved: any) => {
 
                         // Current group have been saved with previously stored activities...
                         console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
@@ -617,7 +555,6 @@ class ActivitiesSynchronizer {
                         step: 'savedComputedActivities',
                         progress: 100,
                         pageGroupId: handledGroupCount + 1,
-                        savedActivitiesCount: 0
                     };
 
                     deferred.notify(notify);
@@ -677,20 +614,6 @@ class ActivitiesSynchronizer {
 
             return computeGroupedActivitiesPromise;
 
-            /*if (savedLastSyncDateTime.data) { // lastSyncDateTime found !
-             lastSyncDateTime = new Date(savedLastSyncDateTime.data);
-             computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-             // updateActivitiesInfoAtEnd = true;
-             console.log('Last sync date time found: ', lastSyncDateTime);
-             } else { // lastSyncDateTime NOT found ! Full sync !
-             console.log('No last sync date time found');
-             // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
-             computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
-             return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-             });
-             }*/
-            // return computeGroupedActivitiesPromise;
-
         }).then(() => {
 
             // Let's check for deletion + apply edits
@@ -738,7 +661,6 @@ class ActivitiesSynchronizer {
 
         }).then((saved: any) => {
 
-
             // Last Sync Date Time saved... Now save syncedAthleteProfile
             syncNotify.step = 'updatingLastSyncDateTime';
             syncNotify.progress = 100;
@@ -763,21 +685,12 @@ class ActivitiesSynchronizer {
 
             let syncResult: ISyncResult = {
                 globalHistoryChanges: this._globalHistoryChanges,
-                // computedActivities: this._mergedComputedActivities,
                 computedActivities: saved.data.computedActivities,
                 lastSyncDateTime: saved.data.lastSyncDateTime,
                 syncWithAthleteProfile: saved.data.syncWithAthleteProfile,
             };
 
             deferred.resolve(syncResult); // Sync finish !!
-            /*
-             // Need to update activities info?!
-             if (updateActivitiesInfoAtEnd) {
-             console.log('Now updating activities info...');
-             return this.updateActivitiesInfo();
-             } else {
-             return null;
-             }*/
 
         }, (err: any) => {
 
@@ -785,7 +698,6 @@ class ActivitiesSynchronizer {
 
         }, (progress: ISyncNotify) => {
 
-            // TODO Create TDD method which return that. Unit test it !!!
             syncNotify = {
                 step: progress.step,
                 progress: progress.progress,
@@ -804,7 +716,7 @@ class ActivitiesSynchronizer {
     }
 
     protected initializeForSync() {
-        this._mergedComputedActivities = null;
+        this._hasBeenComputedActivities = null;
         this._globalHistoryChanges = {
             added: [],
             deleted: [],
@@ -838,8 +750,8 @@ class ActivitiesSynchronizer {
         return this._activitiesProcessor;
     }
 
-    get mergedComputedActivities(): Array<ISyncActivityComputed> {
-        return this._mergedComputedActivities;
+    get hasBeenComputedActivities(): Array<ISyncActivityComputed> {
+        return this._hasBeenComputedActivities;
     }
 
     get globalHistoryChanges(): IHistoryChanges {
