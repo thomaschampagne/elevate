@@ -106,7 +106,8 @@ class ActivitiesSyncModifier implements IModifier {
 
             let timer: number = 10 * 1000; // 10s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ', Edited:' + syncResult.globalHistoryChanges.edited.length + ', Deleted:' + syncResult.globalHistoryChanges.deleted.length +
+                    '. Closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }
@@ -183,7 +184,7 @@ class ActivitiesSyncModifier implements IModifier {
 
             // Infos
             $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
-            $('#browsedActivitiesCount').html('Total activities saved <' + progress.browsedActivitiesCount + '>');
+            $('#browsedActivitiesCount').html('Total activities processed <' + progress.browsedActivitiesCount + '>');
         });
     }
 }
