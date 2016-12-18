@@ -21,18 +21,18 @@ interface ISyncResult {
 
 class ActivitiesSynchronizer {
 
-
     public static lastSyncDateTime: string = 'lastSyncDateTime';
     public static computedActivities: string = 'computedActivities';
     public static syncWithAthleteProfile: string = 'syncWithAthleteProfile';
 
-    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
-    protected _mergedComputedActivities: Array<ISyncActivityComputed> = null;
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
     protected extensionId: string;
-    protected _activitiesProcessor: ActivitiesProcessor
-    private _endReached: boolean = false;
+    protected totalRawActivityIds: Array<number> = [];
+    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
+    protected _mergedComputedActivities: Array<ISyncActivityComputed> = null; // TODO rename to computedOnThisSync ? can stay null if nothing to do..
+    protected _activitiesProcessor: ActivitiesProcessor;
+    protected _endReached: boolean = false;
 
     private _globalHistoryChanges: IHistoryChanges = {
         added: [],
@@ -72,6 +72,7 @@ class ActivitiesSynchronizer {
         }
 
         if (!_.isEmpty(rawActivities)) {
+
             _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
 
                 // Exist raw activity id in history?
@@ -109,12 +110,30 @@ class ActivitiesSynchronizer {
     /**
      * Provides:
      * - activity IDs to delete in the local history (removed from strava.com)
-     * @param activities Array<ISyncRawStravaActivity>
-     * @return IHistoryChanges
+     * @param rawActivityIds
+     * @param computedActivities
+     * @returns {null}
      */
-    public static findToDeleteActivities(rawActivities: Array<ISyncRawStravaActivity>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
+    public static findDeletedActivities(rawActivityIds: Array<number>, computedActivities: Array<ISyncActivityComputed>): IHistoryChanges {
 
-        return null;
+        let added: Array<number> = [];
+        let deleted: Array<number> = [];
+        let edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
+
+        _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
+            // Seek for activity in just interrogated pages
+            let notFound: boolean = (_.indexOf(rawActivityIds, computedActivity.id) == -1);
+            if (notFound) {
+                deleted.push(computedActivity.id);
+            }
+        });
+
+        let historyChanges: IHistoryChanges = {
+            added: added,
+            deleted: deleted,
+            edited: edited
+        };
+        return historyChanges;
     }
 
     /**
@@ -138,6 +157,7 @@ class ActivitiesSynchronizer {
 
                 // Should find added and edited activities
                 let historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
+                this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
 
                 // For each activity, fetch his stream and compute extended stats
                 _.each(historyChangesOnPagesRode.added, (activityId: number) => {
@@ -145,10 +165,10 @@ class ActivitiesSynchronizer {
                     promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
                 });
 
-                // Update global history
-                this.appendGlobalHistoryChanges(historyChangesOnPagesRode);
-
-                // TODO Handle edits...
+                // Track all parsed activities from strava: used for deletions detect at the end..
+                _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
+                    this.totalRawActivityIds.push(rawActivity.id);
+                });
 
                 Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
 
@@ -636,14 +656,8 @@ class ActivitiesSynchronizer {
         let deferred = Q.defer<ISyncResult>();
         let syncNotify: ISyncNotify = {};
 
-        // Reset values for new sync:
-        this._mergedComputedActivities = null;
-        this._globalHistoryChanges = {
-            added: [],
-            deleted: [],
-            edited: []
-        };
-        this._endReached = false;
+        // Reset values for a sync
+        this.initializeForSync();
 
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
@@ -679,32 +693,45 @@ class ActivitiesSynchronizer {
 
         }).then(() => {
 
-            // Apply names/types changes
-            if (this._globalHistoryChanges.edited.length > 0) {
-                this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
-                    if (computedActivitiesStored && computedActivitiesStored.data) {
-                        _.each(this._globalHistoryChanges.edited, (editData) => {
-                            let activityToEdit: ISyncActivityComputed = _.findWhere((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
-                            activityToEdit.name = editData.name;
-                            activityToEdit.type = editData.type;
-                            activityToEdit.display_type = editData.display_type;
-                        });
-                        return this.saveComputedActivitiesToLocal(computedActivitiesStored.data);
-                    } else {
-                        deferred.reject("You tried to edit local history without having local data ?!");
-                        return;
-                    }
-                });
-            }
+            // Let's check for deletion + apply edits
+            return this.getComputedActivitiesFromLocal();
 
-            // TODO Apply deletions
+        }).then((computedActivitiesStored: any) => {
+
+            if (computedActivitiesStored && computedActivitiesStored.data) {
+
+                // Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
+                let historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (<Array<ISyncActivityComputed>> computedActivitiesStored.data));
+                this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
+
+                // Apply names/types changes
+                if (this._globalHistoryChanges.edited.length > 0) {
+                    _.each(this._globalHistoryChanges.edited, (editData) => {
+                        let activityToEdit: ISyncActivityComputed = _.findWhere((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+                        activityToEdit.name = editData.name;
+                        activityToEdit.type = editData.type;
+                        activityToEdit.display_type = editData.display_type;
+                    });
+                }
+
+                // Apply deletions
+                if (this._globalHistoryChanges.deleted.length > 0) {
+                    _.each(this._globalHistoryChanges.deleted, (deleteId: number) => {
+                        computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.findWhere(computedActivitiesStored.data, {
+                            id: deleteId
+                        }));
+                    });
+                }
+
+                return this.saveComputedActivitiesToLocal(computedActivitiesStored.data);
+
+            } else {
+                deferred.reject("You tried to edit/delete from local history without having local data ?!");
+                return null;
+            }
 
 
         }).then(() => {
-
-            // TODO Apply names/type changes
-
-            // TODO Apply deletions
 
             // Compute Activities By Groups Of Pages done... Now updating the last sync date
             return this.saveLastSyncDateToLocal((new Date()).getTime());
@@ -733,8 +760,6 @@ class ActivitiesSynchronizer {
 
             // Synced Athlete Profile saved ...
             console.log('Sync With Athlete Profile done');
-            // console.log();
-            // console.log('Saved data:', saved.data);
 
             let syncResult: ISyncResult = {
                 globalHistoryChanges: this._globalHistoryChanges,
@@ -778,6 +803,17 @@ class ActivitiesSynchronizer {
         return deferred.promise;
     }
 
+    protected initializeForSync() {
+        this._mergedComputedActivities = null;
+        this._globalHistoryChanges = {
+            added: [],
+            deleted: [],
+            edited: []
+        };
+        this._endReached = false;
+        this.totalRawActivityIds = [];
+    }
+
     saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
     }
@@ -813,104 +849,4 @@ class ActivitiesSynchronizer {
     get endReached(): boolean {
         return this._endReached;
     }
-
-    /**
-     * Use only for remove "lastActivitiesToBeRemoved" activities from synced and reposition the last sync date to the latest activities.
-     * @param lastActivitiesToBeRemoved
-     */
-    /*
-     public removeComputedActivities(lastActivitiesToBeRemoved: number): void {
-
-     Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
-
-     // There's new activities to save
-     if (!_.isEmpty(computedActivitiesStored.data) && lastActivitiesToBeRemoved) {
-
-     let computedActivitiesStoredCasted = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
-
-     computedActivitiesStoredCasted = computedActivitiesStoredCasted.slice(0, (computedActivitiesStoredCasted.length - lastActivitiesToBeRemoved));
-
-     let newLastSyncDate = new Date(_.last(computedActivitiesStoredCasted).start_time).getTime() + _.last(computedActivitiesStoredCasted).elapsed_time_raw * 1000;
-
-     // Save activities to local storage
-     this.saveComputedActivitiesToLocal(computedActivitiesStoredCasted).then((pagesGroupSaved: any) => {
-
-     Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, newLastSyncDate).then((saved: any) => {
-     // saveLastSyncDateTimeSuccess...
-     console.log('Last sync date time saved: ', new Date(saved.data.lastSyncDateTime));
-     });
-
-     });
-     }
-     });
-     }*/
-
-    /**
-     * Update activities names and types
-     * @returns {Promise<T>}
-     */
-    /*
-     public updateActivitiesInfo(): Q.Promise<any> { // TODO Remove
-
-     let deferred = Q.defer();
-     let computedActivities: Array<ISyncActivityComputed> = null;
-     let changes: number = 0;
-
-     Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then((computedActivitiesStored: any) => {
-
-     computedActivities = <Array<ISyncActivityComputed>> computedActivitiesStored.data;
-     computedActivitiesStored.data = null; // Release memory
-
-     if (!_.isEmpty(computedActivities)) {
-     return this.fetchRawActivitiesRecursive(null, null);  // Read all pages !
-     } else {
-     console.warn("No computedActivities stored ! Skip updateActivitiesInfos...");
-     return null;
-     }
-
-     }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
-
-     if (_.isEmpty(rawStravaActivities)) {
-     return null;
-     }
-
-     // Test if name or type of activity has changed on each computed activities stored
-     _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
-
-     // Seek for activity in just interrogated pages
-     let foundRawStravaActivity: ISyncRawStravaActivity = _.findWhere(rawStravaActivities, {id: computedActivity.id});
-
-     if (foundRawStravaActivity) {
-
-     if (computedActivity.name !== foundRawStravaActivity.name) {
-     computedActivity.name = foundRawStravaActivity.name; // Update name
-     changes++
-     }
-
-     if (computedActivity.type !== foundRawStravaActivity.type) {
-     computedActivity.type = foundRawStravaActivity.type; // Update name
-     computedActivity.display_type = foundRawStravaActivity.display_type;// Update name
-     changes++;
-     }
-     }
-     });
-
-     if (changes) {
-     // Update activities to local storage
-     return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
-     } else {
-     return null;
-     }
-
-     }).then(() => {
-     deferred.resolve({updateActivitiesInfoChanges: changes});
-     }, (err: any) => {
-     deferred.reject(err);
-     }, (progress: ISyncNotify) => {
-     progress.step = 'updateActivitiesInfo'; // Override step name
-     deferred.notify(progress);
-     });
-
-     return deferred.promise;
-     }*/
 }

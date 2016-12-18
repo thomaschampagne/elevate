@@ -4,12 +4,55 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     let userSettingsMock: IUserSettings;
     let appResourcesMock: IAppResources;
-
     let activitiesSynchronizer: ActivitiesSynchronizer;
-
-    let rawPagesOfActivities: Array<Array<ISyncRawStravaActivity>>;
-
+    let rawPagesOfActivities: Array<{models: Array<ISyncRawStravaActivity>}>;
     let CHROME_STORAGE_STUB: any; // Fake stubed storage to simulate chrome local storage
+
+    /**
+     *
+     * @param id
+     */
+    let addStravaActivity = (activityId: number) => {
+        if (_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: activityId})) {
+            CHROME_STORAGE_STUB.computedActivities = removeActivityFromArray(activityId, CHROME_STORAGE_STUB.computedActivities);
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    /**
+     *
+     * @param activityId
+     * @param rawPageOfActivities
+     * @param newName
+     * @param newType
+     * @returns {boolean}
+     */
+    let editStravaActivity = (activityId: number, rawPageOfActivities: any, newName: string, newType: string) => {
+        let found = _.findWhere(rawPageOfActivities.models, {id: activityId});
+        if (found) {
+            rawPageOfActivities.models = editActivityFromArray(activityId, rawPageOfActivities.models, newName, newType);
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    /**
+     *
+     * @param id
+     * @param atPage
+     */
+    let removeStravaActivity = (activityId: number, rawPageOfActivities: any) => {
+        let found = _.findWhere(rawPageOfActivities.models, {id: activityId});
+        if (found) {
+            rawPageOfActivities.models = removeActivityFromArray(activityId, rawPageOfActivities.models);
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     beforeEach(() => {
 
@@ -377,57 +420,6 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    /**
-     *
-     * @param id
-     */
-    let addStravaActivity = (activityId: number) => {
-
-        if (_.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: activityId})) {
-            CHROME_STORAGE_STUB.computedActivities = removeActivityFromArray(activityId, CHROME_STORAGE_STUB.computedActivities);
-            return true;
-        } else {
-            return false;
-        }
-
-    };
-
-    /**
-     *
-     * @param activityId
-     * @param rawPageOfActivities
-     * @param newName
-     * @param newType
-     * @returns {boolean}
-     */
-    let editStravaActivity = (activityId: number, rawPageOfActivities: any, newName: string, newType: string) => {
-
-        let found = _.findWhere(rawPageOfActivities.models, {id: activityId});
-
-        if (found) {
-            rawPageOfActivities.models = editActivityFromArray(activityId, rawPageOfActivities.models, newName, newType);
-            return true;
-        } else {
-            return false;
-        }
-
-    };
-
-
-    /**
-     *
-     * @param id
-     * @param atPage
-     */
-    let removeStravaActivity = (activityId: number, atPage: number) => {
-        if (_.findWhere(rawPagesOfActivities[atPage - 1], {id: activityId})) {
-            rawPagesOfActivities[atPage - 1] = removeActivityFromArray(activityId, rawPagesOfActivities[atPage - 1]);
-            return true;
-        } else {
-            return false;
-        }
-    };
-
     it('should sync() when a new today training came up + an old one', (done) => {
 
         expect(CHROME_STORAGE_STUB.computedActivities).toBeUndefined();
@@ -601,7 +593,6 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // Check in stub
             ride = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
-            console.log(ride);
             expect(ride.name).toEqual("Prends donc un velo!");
             expect(ride.type).toEqual("Ride");
             expect(ride.display_type).toEqual("Ride");
@@ -622,17 +613,69 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
+    it('should sync() when 3 activities have been removed from strava.com', (done) => {
+
+        // Get a full sync, with nothing stored...
+        // On sync done simulate ...
+        // Re-sync and test...
+        activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+
+            // Sync is done...
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
+            expect(syncResult.computedActivities.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            expect(removeStravaActivity(9999999, rawPagesOfActivities[0])).toBeFalsy(); // Fake one, nothing should be deleted
+            expect(removeStravaActivity(707356065, rawPagesOfActivities[0])).toBeTruthy(); // Page 1, "Je suis un gros lent !"
+            expect(removeStravaActivity(427606185, rawPagesOfActivities[5])).toBeTruthy(); // Page 6, "1st zwift ride"
+
+            expect(_.findWhere(rawPagesOfActivities[0].models, {id: 707356065})).toBeUndefined();
+            expect(_.findWhere(rawPagesOfActivities[5].models, {id: 427606185})).toBeUndefined();
+            expect(_.findWhere(rawPagesOfActivities[5].models, {id: 424565561})).toBeDefined(); // Should still exists
+
+            // Ready for a new sync
+            return activitiesSynchronizer.sync();
+
+        }).then((syncResult: ISyncResult) => {
+
+            expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
+            expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(138); // -2 deleted
+            expect(syncResult.computedActivities.length).toEqual(138); // -2 deleted
+
+            expect(syncResult.globalHistoryChanges.added.length).toEqual(0);
+            expect(syncResult.globalHistoryChanges.deleted.length).toEqual(2);
+            expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+
+            // Check returns
+            let ride: ISyncActivityComputed = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
+            expect(ride).toBeUndefined();
+
+            let virtualRide: ISyncActivityComputed = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+            expect(virtualRide).toBeUndefined();
+
+            let anotherRide: ISyncActivityComputed = <ISyncActivityComputed> _.findWhere(CHROME_STORAGE_STUB.computedActivities, {id: 424565561}); // Should still exists
+            expect(anotherRide).toBeDefined();
+
+            done();
+
+        }, (err: any) => {
+            console.log("!! ERROR !!", err); // Error...
+            done();
+        }, (progress: ISyncNotify) => {
+            // computeProgress...
+            // deferred.notify(progress);
+        });
+
+    });
+
 
     // TODO Test errors from pages, stream, compute ?
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
 
     /*
-     xit('should sync() when 3 activities have been removed from strava.com', (done) => {
-     // TODO ...
-     });
-
-
-
      xit('should NOT sync() with cases not declare...', (done) => {
      // TODO ...
      });

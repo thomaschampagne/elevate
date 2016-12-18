@@ -57,11 +57,6 @@ describe('ActivitiesSynchronizer', () => {
         let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
         let rawPageOfActivities: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
 
-        // TODO REMOVE Simulate Remove data from strava, remove 2:
-        // TODO REMOVE rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
-        // TODO REMOVE rawPageOfActivities = removeActivityFromArray(700301520, rawPageOfActivities); // Remove Ride "Baladinette"
-        // TODO REMOVE expect(rawPageOfActivities.length).toEqual(18);
-
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
         computedActivities = removeActivityFromArray(707356065, computedActivities); // Remove Ride "Je suis un gros lent !"
@@ -76,14 +71,6 @@ describe('ActivitiesSynchronizer', () => {
 
         expect(changes).not.toBeNull();
         expect(changes.deleted).toEqual([]);
-
-        /*
-         // TODO REMOVE .. Below expects useless. To be deleted
-         expect(changes.deleted.length).toEqual(2);
-         expect(_.findWhere(changes.deleted, {id: 722210052})).toBeDefined();
-         expect(_.findWhere(changes.deleted, {id: 700301520})).toBeDefined();
-         expect(_.findWhere(changes.deleted, {id: 999999999})).toBeUndefined(); // Fake
-         */
 
         expect(changes.added.length).toEqual(2);
         expect(_.indexOf(changes.added, 723224273)).not.toEqual(-1);
@@ -118,6 +105,7 @@ describe('ActivitiesSynchronizer', () => {
             deleted: [],
             edited: []
         });
+
         expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
         expect(activitiesSynchronizer.globalHistoryChanges.added).toEqual([1, 2]);
         expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(0);
@@ -138,7 +126,12 @@ describe('ActivitiesSynchronizer', () => {
         activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
             added: [5, 10, 11],
             deleted: [15, 16],
-            edited: [{id: 6, name: 'rideName', type: 'Ride', display_type: 'Ride'}, {id: 22, name: 'Run...', type: 'Run', display_type: 'Run'}]
+            edited: [{id: 6, name: 'rideName', type: 'Ride', display_type: 'Ride'}, {
+                id: 22,
+                name: 'Run...',
+                type: 'Run',
+                display_type: 'Run'
+            }]
         });
         expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
         expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(6); // id:5 already added
