@@ -1104,6 +1104,16 @@ class StravistiX {
             return;
         }
 
+        // Avoid concurrent auto-sync when several tabs opened
+        if(StorageManager.getCookie('stravistix_auto_sync_locker')) {
+            let warnMessage = 'Auto-sync locked for 10 minutes. Skipping auto-sync. Why? another tab/window may have started the sync. ';
+            warnMessage += 'If auto-sync has been interrupted (eg. tab closed), auto-sync will be available back in 10 minutes.';
+            console.warn(warnMessage);
+            return;
+        } else {
+            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 60 * 10); // 10 minutes
+        }
+
         // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
         Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
 
