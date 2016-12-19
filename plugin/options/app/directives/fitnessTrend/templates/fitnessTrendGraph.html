@@ -5,24 +5,24 @@
         <div flex="100" layout="row" layout-align="start center">
             <span class="md-title" style="color: {{colors.ctl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Fitness {{fitnessDataOnToday.ctl | number: 1}}
                 <md-tooltip md-direction="bottom">
-                    Chronic Training Load or CTL (Click to show help)
+                    Chronic load (Click to show info)
                 </md-tooltip>
             </span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="md-title" style="color: {{colors.atl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Fatigue {{fitnessDataOnToday.atl | number: 1}}
               <md-tooltip md-direction="bottom">
-                  Acute Training Load or ATL (Click to show help)
+                  Acute load (Click to show info)
               </md-tooltip>
             </span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="md-title" style="color: {{colors.tsb}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Form {{fitnessDataOnToday.tsb | number: 1}}
                 <md-tooltip md-direction="bottom">
-                    Training Stress Balance or TSB (Click to show help)
+                    Stress balance (Click to show info)
                 </md-tooltip>
             </span>
             <span flex></span>
             <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
-                <md-icon aria-label="Help">help</md-icon>
+                <md-icon aria-label="Help">info</md-icon>
             </md-button>
         </div>
 
