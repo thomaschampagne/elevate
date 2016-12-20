@@ -1135,9 +1135,15 @@ class StravistiX {
 
                             console.log('Sync finished', syncResult);
 
+                            // Remove auto-sync lock
+                            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 0);
+
                         }, (err: any) => {
 
                             console.error('Sync error', err);
+
+                            // Remove auto-sync lock
+                            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 0);
 
                             let errorUpdate: any = {
                                 stravaId: this.athleteId,
