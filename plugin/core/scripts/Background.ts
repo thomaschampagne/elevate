@@ -128,8 +128,8 @@ class Background {
                     });
                 }
 
-                // Clear local history if coming from version under 5.1.0
-                if (Helper.versionCompare('5.1.0', details.previousVersion) === 1) {
+                // Clear local history if coming from version under 5.1.1
+                if (Helper.versionCompare('5.1.1', details.previousVersion) === 1) {
                     this.clearSyncCache();
                 }
 

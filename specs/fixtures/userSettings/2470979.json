@@ -109,6 +109,7 @@
   "temperatureUnit": "C",
   "userFTP": 240,
   "userGender": "men",
+  "userWeight": 71.9,
   "userHrrZones": [
     {
       "fromHrr": 10,

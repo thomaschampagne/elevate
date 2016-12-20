@@ -39,8 +39,12 @@ module.exports = function (config) {
         },
         singleRun: true,
         captureTimeout: 2000,
-        browserDisconnectTimeout: 2000,
+        browserDisconnectTimeout: 10000,
         browserDisconnectTolerance: 3,
-        browserNoActivityTimeout: 20000,
+        browserNoActivityTimeout: 900000,
+        browserConsoleLogOptions: {
+            // path: './specs.log',
+            terminal: false
+        }
     });
 };

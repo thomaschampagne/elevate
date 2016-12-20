@@ -2,7 +2,6 @@ describe('ActivityComputer', () => {
 
     it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
 
-        const athleteWeight: number = 71.9;
         const powerMeter: boolean = false;
 
         let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
@@ -11,7 +10,7 @@ describe('ActivityComputer', () => {
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, athleteWeight, powerMeter, statsMap, stream, null, true);
+        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();

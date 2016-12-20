@@ -32,9 +32,9 @@ class ActivitiesSyncModifier implements IModifier {
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
-        html += '           <span style="font-size: 28px;">Your history is being synced to this browser... (Alpha)</span><br/><br/>It can take several minutes on your first synchronisation. The history is locally saved in the storage allocated by the extension.' +
+        html += '           <span style="font-size: 28px;">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension.' +
             '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation<br/><a href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" style="font-weight: bold; color: #e94e1b;">&#187; Configure auto sync here &#171;</a><br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
-            'Closing window stops synchronization. She will close itself when done.';
+            'Closing window stops synchronization. It will close itself when done.';
         html += '       </div>';
         html += '       <div class="progressBarGroup">';
         html += '           <div id="totalProgress">Global synchronisation progress</div>';
@@ -52,7 +52,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '        </div>';
         html += '       <div id="syncInfos">';
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
-        html += '           <div style="padding-bottom: 10px;" id="savedActivitiesCount"></div>';
+        html += '           <div style="padding-bottom: 10px;" id="browsedActivitiesCount"></div>';
         html += '           <div style="padding-bottom: 10px;" id="storageUsage"></div>';
         html += '           <div style="padding-bottom: 10px;" id="autoClose"></div>';
         html += '       </div>';
@@ -88,9 +88,9 @@ class ActivitiesSyncModifier implements IModifier {
     protected sync(): void {
 
         // Start sync..
-        this.activitiesSynchronizer.sync().then(() => {
+        this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
-            console.log('Sync finished');
+            console.log('Sync finished', syncResult);
 
             // Reloading source tab if exist
             if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
@@ -106,7 +106,8 @@ class ActivitiesSyncModifier implements IModifier {
 
             let timer: number = 10 * 1000; // 10s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Window closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
+                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ', Edited:' + syncResult.globalHistoryChanges.edited.length + ', Deleted:' + syncResult.globalHistoryChanges.deleted.length +
+                    '. Closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }
@@ -148,8 +149,8 @@ class ActivitiesSyncModifier implements IModifier {
             console.log(progress);
 
             // Global progress
-            $('#syncProgressBar').val(progress.savedActivitiesCount / progress.totalActivities * 100);
-            $('#totalProgressText').html((progress.savedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
+            $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);
+            $('#totalProgressText').html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
 
 
             // Step
@@ -167,31 +168,23 @@ class ActivitiesSyncModifier implements IModifier {
                     stepMessage = 'Computing extended statistics...';
                     break;
                 case 'savedComputedActivities':
-
                     stepMessage = 'Saving results to local extension storage...';
                     this.updateStorageUsage();
                     break;
-
                 case 'updatingLastSyncDateTime':
                     stepMessage = 'Updating your last synchronization date...';
                     break;
-
-                case 'updateActivitiesInfo':
-                    stepMessage = 'Updating activities basic info...';
-                    break;
             }
 
-            let syncStepMessage = (progress.step === 'updateActivitiesInfo') ? stepMessage : 'Activity group <' + progress.pageGroupId + '> ' + stepMessage;
-
-            $('#syncStep').html(syncStepMessage);
+            $('#syncStep').html('Activity group <' + progress.pageGroupId + '> ' + stepMessage);
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 
-            document.title = 'History synchronization @ ' + (progress.savedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
+            document.title = 'History synchronization @ ' + (progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
 
             // Infos
             $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
-            $('#savedActivitiesCount').html('Total activities (having streams) saved <' + progress.savedActivitiesCount + '>');
+            $('#browsedActivitiesCount').html('Total activities processed <' + progress.browsedActivitiesCount + '>');
         });
     }
 }

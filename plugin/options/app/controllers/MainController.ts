@@ -402,7 +402,7 @@ class MainController {
                 let filename = moment().format('Y.M.D-H.mm') + '_v' + data.pluginVersion + '.history.json';
                 saveAs(blob, filename);
 
-                let dialog = $mdDialog.confirm()
+                let dialog = $mdDialog.alert()
                     .htmlContent('<i>' + filename + '</i> file should be dropped in your download folder.')
                     .ok('Got it !');
                 $mdDialog.show(dialog);

@@ -1,5 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
-/// <reference path="../typings/plugin.d.ts" />
+/// <reference path="./typings/specs.d.ts" />
 
 describe('Helper', () => {
     it('should give seconds from HH:MM:SS pattern', () => {

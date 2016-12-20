@@ -73,6 +73,6 @@ interface ISyncNotify {
     fromPage?: number;
     toPage?: number;
     pageGroupId?: number;
-    savedActivitiesCount?: number;
+    browsedActivitiesCount?: number;
     totalActivities?: number;
 }

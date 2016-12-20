@@ -13,6 +13,20 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.1.1',
+        message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend Alpha <strong>V5</strong></a> here. Sync process fully reworked!. Last alpha testing version optimistically.</br></br>' +
+        '/!\\ Your <u>history</u> have been <u>cleared</u> on this update if you had synced one... Just sync again... Sry :/',
+        hotFixes: [],
+        features: [
+            '<i>MultiSports Fitness Trend:</i> Sync process fully reworked. Added, deleted & edited activities should be well handled. Sync typescript code is covered by unit tests.'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            // 'Fixed cases where activities were not correctly handled on history synchronisation (<i>MultiSports Fitness Trend</i>)',
+            'Fixed a lot of others small things...',
+        ],
+    },
+    {
         version: '5.1.0',
         message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend Alpha V4</a> live! Improvements + fixes. Short nights :D. Feature still in "test".</br>' +
         'Your history have been cleared if you had synced one... just sync again.',
