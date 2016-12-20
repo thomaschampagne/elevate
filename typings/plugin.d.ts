@@ -16,9 +16,9 @@
 declare let Strava: any;
 
 // Class declaration for chrome typing
-declare class MediaStream {}
-declare class MediaStreamConstraints {}
-declare class DirectoryEntry {}
+declare interface MediaStream {}
+declare interface MediaStreamConstraints {}
+declare interface DirectoryEntry {}
 
 declare class QRCode {
     constructor(elementId: string, options: any);

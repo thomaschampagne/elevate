@@ -1104,59 +1104,75 @@ class StravistiX {
             return;
         }
 
-        // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
+        setTimeout(() => { // Wait for 15s before starting the auto-sync
 
-            let lastSyncDateTime: number = response.data;
+            // Avoid concurrent auto-sync when several tabs opened
+            if (StorageManager.getCookie('stravistix_auto_sync_locker')) {
+                let warnMessage = 'Auto-sync locked for 10 minutes. Skipping auto-sync. Why? another tab/window may have started the sync. ';
+                warnMessage += 'If auto-sync has been interrupted (eg. tab closed), auto-sync will be available back in 10 minutes.';
+                console.warn(warnMessage);
+                return;
+            } else {
+                console.log('Auto-sync started')
+                StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 60 * 10); // 10 minutes
+            }
 
-            if (lastSyncDateTime) {
+            // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
+            Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
 
-                console.log('A previous sync exists on ' + new Date(lastSyncDateTime).toString());
+                let lastSyncDateTime: number = response.data;
 
-                if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
+                if (lastSyncDateTime) {
 
-                    console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
+                    console.log('A previous sync exists on ' + new Date(lastSyncDateTime).toString());
 
-                    // Start sync
-                    this.activitiesSynchronizer.sync().then(() => {
+                    if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
 
-                        console.log('Sync finished');
+                        console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
 
-                    }, (err: any) => {
+                        // Start sync
+                        this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
-                        console.error('Sync error', err);
+                            console.log('Sync finished', syncResult);
 
-                        let errorUpdate: any = {
-                            stravaId: this.athleteId,
-                            error: {path: window.location.href, date: new Date(), content: err}
-                        };
+                        }, (err: any) => {
 
-                        $.post({
-                            url: env.endPoint + '/api/errorReport',
-                            data: JSON.stringify(errorUpdate),
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            success: (response: any) => {
-                                console.log('Commited: ', response);
-                            },
-                            error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                                console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
-                            }
+                            console.error('Sync error', err);
+
+                            let errorUpdate: any = {
+                                stravaId: this.athleteId,
+                                error: {path: window.location.href, date: new Date(), content: err}
+                            };
+
+                            $.post({
+                                url: env.endPoint + '/api/errorReport',
+                                data: JSON.stringify(errorUpdate),
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: (response: any) => {
+                                    console.log('Commited: ', response);
+                                },
+                                error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
+                                    console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+                                }
+                            });
+
+
+                        }, (progress: ISyncNotify) => {
+                            console.log(progress);
                         });
 
-
-                    }, (progress: ISyncNotify) => {
-                        console.log(progress);
-                    });
+                    } else {
+                        console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
+                    }
 
                 } else {
-                    console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
+                    console.log('No previous sync found. A first sync must be performed');
                 }
+            });
 
-            } else {
-                console.log('No previous sync found. A first sync must be performed');
-            }
-        });
+        }, 1000 * 15); // Wait for 15s before starting the auto-sync
+
     }
 
     protected handleActivitiesSyncFromOutside() {

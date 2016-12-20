@@ -169,8 +169,8 @@ class FitnessTrendGraph {
             // Names
             if (hasActivities) {
                 html += '   <tr>';
-                html += '       <td class="title">Name</td>';
-                html += '       <td colspan="2">' + fitnessObject.activitiesName + '</td>';
+                html += '       <td class="title" style="vertical-align: top;">Name</td>';
+                html += '       <td colspan="2" style="white-space:pre-wrap ; word-wrap:break-word;">' + fitnessObject.activitiesName + '</td>';
                 html += '   </tr>';
             }
 
@@ -185,8 +185,8 @@ class FitnessTrendGraph {
 
             if (hasActivities) {
                 html += '   <tr>';
-                html += '       <td class="title" colspan="2">TRIMP</td>';
-                html += '       <td >' + fitnessObject.trimp + '</td>';
+                html += '       <td class="title">TRIMP</td>';
+                html += '       <td>' + fitnessObject.trimp + '</td>';
                 html += '   </tr>';
             }
 
