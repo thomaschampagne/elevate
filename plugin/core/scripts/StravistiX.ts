@@ -1106,17 +1106,6 @@ class StravistiX {
 
         setTimeout(() => { // Wait for 15s before starting the auto-sync
 
-            // Avoid concurrent auto-sync when several tabs opened
-            if (StorageManager.getCookie('stravistix_auto_sync_locker')) {
-                let warnMessage = 'Auto-sync locked for 10 minutes. Skipping auto-sync. Why? another tab/window may have started the sync. ';
-                warnMessage += 'If auto-sync has been interrupted (eg. tab closed), auto-sync will be available back in 10 minutes.';
-                console.warn(warnMessage);
-                return;
-            } else {
-                console.log('Auto-sync started')
-                StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 60 * 10); // 10 minutes
-            }
-
             // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
             Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
 
@@ -1128,7 +1117,18 @@ class StravistiX {
 
                     if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
 
-                        console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. re-sync now');
+                        console.log('Last sync performed more than ' + this.userSettings.autoSyncMinutes + ' minutes. auto-sync now');
+
+                        // Avoid concurrent auto-sync when several tabs opened
+                        if (StorageManager.getCookie('stravistix_auto_sync_locker')) {
+                            let warnMessage = 'Auto-sync locked for 10 minutes. Skipping auto-sync. Why? another tab/window may have started the sync. ';
+                            warnMessage += 'If auto-sync has been interrupted (eg. tab closed), auto-sync will be available back in 10 minutes.';
+                            console.warn(warnMessage);
+                            return;
+                        } else {
+                            console.log('Auto-sync started, set stravistix_auto_sync_locker to true.')
+                            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 60 * 10); // 10 minutes
+                        }
 
                         // Start sync
                         this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
@@ -1163,7 +1163,7 @@ class StravistiX {
                         });
 
                     } else {
-                        console.log('Do not re-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
+                        console.log('Do not auto-sync. Last sync done under than ' + this.userSettings.autoSyncMinutes + ' minute(s) ago');
                     }
 
                 } else {
