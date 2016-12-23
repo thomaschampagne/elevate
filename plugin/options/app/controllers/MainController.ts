@@ -68,7 +68,7 @@ class MainController {
                     id: 'FITNESS_TREND',
                     name: 'Multisports Fitness Trend',
                     subname: 'Multisports fitness trend based on activities having HR sensor',
-                    sup: 'ALPHA',
+                    sup: 'BETA',
                     icon: 'timeline',
                     link: routeMap.fitnessTrendRoute,
                 }, {

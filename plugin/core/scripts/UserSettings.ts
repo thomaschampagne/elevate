@@ -58,7 +58,6 @@ interface IUserSettings {
     windUnit: string;
     showHiddenBetaFeatures: boolean;
     displayReliveCCLink: boolean;
-    enableAlphaFitnessTrend: boolean; // TODO Must be removed in future ?! Enabled by default...
 }
 
 let userSettings: IUserSettings = {
@@ -288,6 +287,5 @@ let userSettings: IUserSettings = {
     temperatureUnit: 'F',
     windUnit: 'mph',
     showHiddenBetaFeatures: false,
-    displayReliveCCLink: true,
-    enableAlphaFitnessTrend: false
+    displayReliveCCLink: true
 };

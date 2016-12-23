@@ -229,7 +229,6 @@ class StravistiX {
             upcommingFixes: [],
             upcommingFeatures: [
                 'Activities grid: All your activities in a table including stravistix extended stats as columns. ',
-                // 'MultiSports fitness trends upcoming. ALPHA Released through regular update in few days :)',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a>!',
             ]
@@ -1096,11 +1095,6 @@ class StravistiX {
 
         if (window.location.search.match('stravistixSync')) {
             console.log('Sync Popup. Skip handleOnFlyActivitiesSync()');
-            return;
-        }
-
-        if (!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
-            console.log('Do not execute handleActivitiesSyncFromOutside(). because fitness trend feature is alpha not enabled');
             return;
         }
 

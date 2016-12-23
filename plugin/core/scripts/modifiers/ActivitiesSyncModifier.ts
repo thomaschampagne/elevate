@@ -23,11 +23,6 @@ class ActivitiesSyncModifier implements IModifier {
         // Make a white page !
         $('body').children().remove();
 
-        if (!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
-            $('body').append('<div style="font-size: 16px; padding: 5%;">History sync is in alpha currently.<br/><br/>To test it, please activate "Multisports fitness trend" alpha feature in "Multisports fitness trend" section.</div>');
-            return;
-        }
-
         let html = '';
         html += '<div>';
         html += '    <div id="syncContainer">';
