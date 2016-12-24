@@ -42,7 +42,7 @@
                 </div>
             </div>
             <md-divider></md-divider>
-            <md-list ng-repeat="section in uiStructure.sidenav.sections" ng-hide="section.hide">
+            <md-list style="padding: 0; margin: 0;" ng-repeat="section in uiStructure.sidenav.sections" ng-hide="section.hide">
                 <md-list-item ng-click="(section.actions.length) ? section.expand=!section.expand : forward(section)">
                     <md-icon style="color: {{colors.strava}};">{{section.icon}}</md-icon>
                     <p>
