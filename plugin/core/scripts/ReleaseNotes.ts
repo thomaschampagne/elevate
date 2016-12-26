@@ -13,6 +13,17 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.2.0',
+        message: '</br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> in Beta for ALL!</br></br>',
+        hotFixes: [],
+        features: [
+            'MultiSports Fitness Trend released as beta'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+        ],
+    },
+    {
         version: '5.1.1',
         message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend Alpha <strong>V5</strong></a> here. Sync process fully reworked!. Last alpha testing version optimistically.</br></br>' +
         '/!\\ Your <u>history</u> have been <u>cleared</u> on this update if you had synced one... Just sync again... Sry :/',
@@ -48,8 +59,7 @@ let releaseNotes: Array<IReleaseNote> = [
         version: '5.0.2',
         message: '<i>"MultiSports Fitness Trend"</i> Alpha <strong>V3</strong> fast released! Include fixes of Alpha V2+V1... Feature works with all activities where you held a heart rate monitor. Not only cycling... </br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">[You need to activate this alpha feature to use it]</a></br></br>Sticky note: <i>"Premium additional goal progress tracking"</i> disabled. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)',
         hotFixes: [],
-        features: [
-        ],
+        features: [],
         hideFeatureReleaseNote: true,
         fixes: [
             'Fixed majors bugs of <i>"MultiSports Fitness Trend"</i> Alpha V2+V1',
