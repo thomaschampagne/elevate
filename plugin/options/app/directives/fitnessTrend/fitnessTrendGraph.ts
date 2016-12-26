@@ -231,8 +231,7 @@ class FitnessTrendGraph {
 
                 chart: {
                     type: 'lineWithFocusChart',
-                    height: window.innerHeight * 0.58,
-                    // height: window.innerHeight * 0.65, // When alpha feature is not enabled
+                    height: window.innerHeight * 0.65,
                     showLegend: false,
                     margin: {
                         top: 20,

@@ -58,8 +58,8 @@ app.factory('CommonSettingsService', () => {
                 optionType: 'number',
                 optionTitle: 'Auto sync every X minutes while browsing strava.com',
                 optionLabels: ['All'],
-                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X minutes have been flow out since your last synchronisation.<br /><br />- Default is 60 minutes.<br /><br />- Min: 5 minutes, Max: 43200 minutes (~30 days)',
-                min: 5,
+                optionHtml: 'Allow you to synchronise automatically your history while browsing strava.com.<br/><br />Auto sync is triggered if X minutes have been flow out since your last synchronisation.<br /><br />- Default is 60 minutes.<br /><br />- Min: 10 minutes, Max: 43200 minutes (~30 days)',
+                min: 10,
                 max: 43200, // 30 days
                 step: 1,
                 disableTooltip: true

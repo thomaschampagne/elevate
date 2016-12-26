@@ -1,16 +1,4 @@
-<!--Display alpha/beta feature message, TO BE REMOVED IN FUTURE-->
-<md-card>
-    <md-switch ng-model="enableAlphaFitnessTrend" aria-label="" ng-click="onEnableAlphaFitnessTrend()">
-        Enable this <strong>Alpha</strong> feature?
-        <md-icon>warning</md-icon>
-        Unstable feature! <u>Local history will be cleared on alpha updates</u> until Beta! <a
-            href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">Report Bug </a> <strong>|</strong> <a
-            href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions" target="_blank">Frequently
-        Asked Questions</a>
-    </md-switch>
-
-</md-card>
-<md-content ng-if="enableAlphaFitnessTrend">
+<md-content>
     <!--User must sync when no last sync date found-->
     <md-card ng-hide="enableFitnessTabs">
         <md-card-title>
@@ -37,7 +25,9 @@
                 Performance, fellrnr.com</a>.<br/><br/>
 
                 Please read <a href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions" target="_blank">Frequently
-                Asked Questions</a>
+                Asked Questions</a><br/><br/>
+
+                Beta feature: <a href="https://goo.gl/forms/Q8W4JTUlG9JuquY13" target="_blank">Report Bug</a>
             </div>
         </md-card-content>
     </md-card>

@@ -47,7 +47,7 @@ class ProfileConfiguredRibbon {
 
             chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
 
-                if (!userSettings || !userSettings.enableAlphaFitnessTrend) {
+                if (!userSettings) {
                     return null;
                 }
 

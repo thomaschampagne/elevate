@@ -87,7 +87,7 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
             dataType: 'json',
             contentType: 'application/json',
             success: (response: any) => {
-                console.log('Commited: ', response);
+                console.log('Updated: ', response);
             },
             error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
                 console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);

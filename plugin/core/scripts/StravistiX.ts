@@ -111,6 +111,7 @@ class StravistiX {
 
         // Must be done at the end
         this.handleTrackTodayIncomingConnection();
+        this.handleAthleteUpdate();
         this.handleGoogleMapsComeBackModifier();
     }
 
@@ -198,7 +199,7 @@ class StravistiX {
 
                     follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
-                    StorageManager.setCookieSeconds('stravistix_daily_connection_done', false, 0); // Remove stravistix_daily_connection_done cookie to trigger athlete commit earlier
+                    StorageManager.setCookieSeconds('stravistix_athlete_update_done', false, 0); // Remove stravistix_athlete_update_done cookie to trigger athlete commit earlier
 
                 } else {
                     console.log("No install or update detected");
@@ -228,8 +229,8 @@ class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
-                'Activities grid: All your activities in a table including stravistix extended stats as columns. ',
-                // 'MultiSports fitness trends upcoming. ALPHA Released through regular update in few days :)',
+                'Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.',
+                'Grid: All your activities in a table including stravistix extended stats as columns.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
                 'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a>!',
             ]
@@ -1045,13 +1046,18 @@ class StravistiX {
                 follow('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
-            this.commitAthleteUpdate();
-
             // Create cookie to avoid push during 1 day
             StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
 
         } else {
             if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+        }
+    }
+
+    protected handleAthleteUpdate(): void {
+        if (!StorageManager.getCookie('stravistix_athlete_update_done')) {
+            this.commitAthleteUpdate();
+            StorageManager.setCookieSeconds('stravistix_athlete_update_done', true, 6 * 60 * 60); // Don't update for 6 hours
         }
     }
 
@@ -1099,11 +1105,6 @@ class StravistiX {
             return;
         }
 
-        if (!this.userSettings.enableAlphaFitnessTrend) { // TODO To be removed once beta/ready
-            console.log('Do not execute handleActivitiesSyncFromOutside(). because fitness trend feature is alpha not enabled');
-            return;
-        }
-
         setTimeout(() => { // Wait for 15s before starting the auto-sync
 
             // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
@@ -1135,9 +1136,15 @@ class StravistiX {
 
                             console.log('Sync finished', syncResult);
 
+                            // Remove auto-sync lock
+                            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 0);
+
                         }, (err: any) => {
 
                             console.error('Sync error', err);
+
+                            // Remove auto-sync lock
+                            StorageManager.setCookieSeconds('stravistix_auto_sync_locker', true, 0);
 
                             let errorUpdate: any = {
                                 stravaId: this.athleteId,
