@@ -111,6 +111,7 @@ class StravistiX {
 
         // Must be done at the end
         this.handleTrackTodayIncomingConnection();
+        this.handleAthleteUpdate();
         this.handleGoogleMapsComeBackModifier();
     }
 
@@ -198,7 +199,7 @@ class StravistiX {
 
                     follow('send', 'event', updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
-                    StorageManager.setCookieSeconds('stravistix_daily_connection_done', false, 0); // Remove stravistix_daily_connection_done cookie to trigger athlete commit earlier
+                    StorageManager.setCookieSeconds('stravistix_athlete_update_done', false, 0); // Remove stravistix_athlete_update_done cookie to trigger athlete commit earlier
 
                 } else {
                     console.log("No install or update detected");
@@ -1044,13 +1045,18 @@ class StravistiX {
                 follow('send', 'event', 'DailyConnection', eventAction, eventName);
             }
 
-            this.commitAthleteUpdate();
-
             // Create cookie to avoid push during 1 day
             StorageManager.setCookie('stravistix_daily_connection_done', true, 1);
 
         } else {
             if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+        }
+    }
+
+    protected handleAthleteUpdate(): void {
+        if (!StorageManager.getCookie('stravistix_athlete_update_done')) {
+            this.commitAthleteUpdate();
+            StorageManager.setCookieSeconds('stravistix_athlete_update_done', true, 6 * 60 * 60); // Don't update for 6 hours
         }
     }
 
