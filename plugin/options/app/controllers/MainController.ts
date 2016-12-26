@@ -56,9 +56,22 @@ class MainController {
         };
 
         $scope.forward = (target: any) => {
-            // Update title page
-            $scope.pageTitle = (target.subname) ? target.subname : target.name;
-            $location.path(target.link);
+
+            if (target.message) {
+                let dialog = $mdDialog.confirm()
+                    .htmlContent(target.message)
+                    .cancel('ok').ok('Help this free project.');
+                $mdDialog.show(dialog).then(() => {
+                    $scope.showDonation();
+                }, () => {
+                    // Ok click
+                });
+
+            } else {
+                // Update title page
+                $scope.pageTitle = (target.subname) ? target.subname : target.name;
+                $location.path(target.link);
+            }
         };
 
         $scope.uiStructure = {
@@ -71,18 +84,6 @@ class MainController {
                     sup: 'BETA',
                     icon: 'timeline',
                     link: routeMap.fitnessTrendRoute,
-                }, {
-                    id: 'ACTIVITIES_GRID',
-                    name: 'Activities Grid',
-                    icon: 'grid_on',
-                    link: 'link',
-                    hide: true
-                }, {
-                    id: 'TARGETS',
-                    name: 'Targets',
-                    icon: 'adjust',
-                    link: 'link',
-                    hide: true
                 }, {
                     id: 'YEAR_PROGRESSION',
                     name: 'Year progression',
@@ -151,6 +152,20 @@ class MainController {
                         icon: 'call_made',
                         link: routeMap.zonesSettingsRoute + '/ascent'
                     }]
+                }, {
+                    id: 'DASHBOARD',
+                    name: 'Dashboard',
+                    icon: 'dashboard',
+                    link: 'link',
+                    sup: 'SOON',
+                    message: '<strong>Work in progress feature</strong></br></br>- Interrogate any stats of your history on a period. STX extended stats included.</br>- Interrogate by sports, by bike, ...</br>- Result goes in a tile in dashboard.</br>- Assign target in option: min, max, average or total to reach.</br>- Fully customisable.',
+                }, {
+                    id: 'ACTIVITIES_GRID',
+                    name: 'Grid',
+                    icon: 'grid_on',
+                    link: 'link',
+                    sup: 'SOON',
+                    message: '<strong>Work in progress feature</strong></br></br>- All your activities in a table: <i>A column = A stat</i></br>- STX extended stats included.</br>- Fast searching along stats: Best TRIMP activity? Best W/KG ride ever? ...',
                 }]
             }
         };
