@@ -186,7 +186,7 @@ class FitnessTrendGraph {
             if (hasActivities) {
                 html += '   <tr>';
                 html += '       <td class="title">TRIMP</td>';
-                html += '       <td>' + fitnessObject.trimp + '</td>';
+                html += '       <td>' + fitnessObject.trimp.toFixed(0) + '</td>';
                 html += '   </tr>';
             }
 
@@ -199,15 +199,15 @@ class FitnessTrendGraph {
             // Type
             html += '   <tr>';
             html += '       <td class="title" colspan="2">' + $scope.drawLegendSquare($colors.ctl, 10, 'FITNESS') + '</td>';
-            html += '       <td>' + fitnessObject.ctl + '</td>';
+            html += '       <td>' + fitnessObject.ctl.toFixed(1) + '</td>';
             html += '   </tr>';
             html += '   <tr>';
             html += '       <td class="title" colspan="2">' + $scope.drawLegendSquare($colors.atl, 10, 'FATIGUE') + '</td>';
-            html += '       <td>' + fitnessObject.atl + '</td>';
+            html += '       <td>' + fitnessObject.atl.toFixed(1) + '</td>';
             html += '   </tr>';
             html += '   <tr>';
             html += '       <td class="title" colspan="2">' + $scope.drawLegendSquare($colors.tsb, 10, 'FORM') + '</td>';
-            html += '       <td>' + fitnessObject.tsb + '</td>';
+            html += '       <td>' + fitnessObject.tsb.toFixed(1) + '</td>';
             html += '   </tr>';
 
             // Hint

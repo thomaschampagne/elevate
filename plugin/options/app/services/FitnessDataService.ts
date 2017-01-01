@@ -108,7 +108,7 @@ class FitnessDataService {
                         year: momentStartTime.year(),
                         type: activity.type,
                         activityName: activity.name,
-                        trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
+                        trimp: activity.extendedStats.heartRateData.TRIMP
                     };
 
                     cleanedActivitiesWithHRData.push(activityHR);
@@ -229,9 +229,9 @@ class FitnessDataService {
                 activitiesName: trimpObject.activitiesName,
                 type: trimpObject.type,
                 trimp: trimpObject.trimp,
-                ctl: parseFloat(ctl.toFixed(1)),
-                atl: parseFloat(atl.toFixed(1)),
-                tsb: parseFloat(tsb.toFixed(1)),
+                ctl: ctl,
+                atl: atl,
+                tsb: tsb,
                 previewDay: trimpObject.previewDay,
             };
 
@@ -282,7 +282,7 @@ class FitnessDataService {
                 this.fitnessData = this.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
                 deferred.resolve(this.fitnessData);
                 this.onGetFitnessDataTimeDone = performance.now(); // track time
-                console.log("NEW Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
+                console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
 
             }, (err: any) => {
                 deferred.reject(err);

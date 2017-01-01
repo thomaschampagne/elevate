@@ -41,6 +41,7 @@ class FitnessTrendTable {
 
                     newFitnessObj.activitiesNameStr = finalActivityName;
                     newFitnessObj.type = [finalTypeName];
+                    newFitnessObj.trimp = parseInt(newFitnessObj.trimp.toFixed(0));
                 } else {
                     newFitnessObj.activitiesNameStr = '-';
                     newFitnessObj.type = ['-'];
