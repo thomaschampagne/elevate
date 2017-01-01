@@ -106,7 +106,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                         timestamp: momentStartTime.toDate().getTime(),
                         dayOfYear: momentStartTime.dayOfYear(),
                         year: momentStartTime.year(),
-                        type: activity.display_type,
+                        type: activity.type,
                         activityName: activity.name,
                         trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
                     };
