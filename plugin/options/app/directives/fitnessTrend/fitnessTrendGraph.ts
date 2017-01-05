@@ -375,7 +375,7 @@ class FitnessTrendGraph {
 
             // If "toTimestamp" is today
             // We add preview curves...
-            if(moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
+            if (moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
 
                 _.each(fitnessDataPreview, (fitData: IFitnessTrimpObject) => {
 
@@ -446,10 +446,6 @@ class FitnessTrendGraph {
 
             let fitnessGraphData: IFitnessGraphData = {
                 curves: [{
-                    key: "Fitness/CTL",
-                    values: ctlValues,
-                    color: $colors.ctl,
-                }, {
                     key: "Fatigue/ATL",
                     values: atlValues,
                     color: $colors.atl
@@ -459,13 +455,13 @@ class FitnessTrendGraph {
                     color: $colors.tsb,
                     area: true
                 }, {
+                    key: "Fitness/CTL",
+                    values: ctlValues,
+                    color: $colors.ctl,
+                }, {
                     key: "Active days",
                     values: activitiesPoints,
                     color: $colors.strongGrey
-                }, {
-                    key: "Preview_CTL",
-                    values: ctlPreviewValues,
-                    color: $colors.ctl
                 }, {
                     key: "Preview_ATL",
                     values: atlPreviewValues,
@@ -474,6 +470,10 @@ class FitnessTrendGraph {
                     key: "Preview_TSB",
                     values: tsbPreviewValues,
                     color: $colors.tsb
+                }, {
+                    key: "Preview_CTL",
+                    values: ctlPreviewValues,
+                    color: $colors.ctl
                 }],
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05]
             };
