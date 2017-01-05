@@ -15,7 +15,7 @@ interface IColors {
 let $colors: IColors = {
     strava: '#e94e1b',
     ctl: '#e94e1b',
-    atl: '#4a4a4a',
+    atl: '#515151',
     tsb: '#adadad',
     lightGrey: '#eeeeee',
     midGrey: '#4e4e4e',
