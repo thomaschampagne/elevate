@@ -95,7 +95,6 @@ a:hover {
     z-index: 8;
 }
 
-
 g.nv-series-3 path.nv-line {
     stroke-opacity: 0;
 }
@@ -114,4 +113,25 @@ g.nv-series-5 path.nv-line {
 g.nv-series-6 path.nv-line {
     stroke-dasharray: 4, 3;
     stroke-opacity: 1;
+}
+
+/* SERIE 7 8 9 10 : training  constants */
+g.nv-series-7 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+g.nv-series-8 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+g.nv-series-9 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+g.nv-series-10 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
 }

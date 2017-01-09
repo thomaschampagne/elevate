@@ -15,12 +15,29 @@
               </md-tooltip>
             </span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="md-title" style="color: {{colors.tsb}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Form {{fitnessDataOnToday.tsb | number: 1}}
+            <span class="md-title" style="color: {{colors.tsb}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Form {{fitnessDataOnToday.tsb | number: 1}} <span style="font-size: 12px;"> / Zone: <span style="color: {{trainingZoneOnToday.color}};">{{trainingZoneOnToday.name.toLocaleUpperCase()}}</span></span>
                 <md-tooltip md-direction="bottom">
                     Stress balance (Click to show info)
                 </md-tooltip>
             </span>
             <span flex></span>
+            <md-switch ng-model="showTrainingZone"  ng-change="showTrainingZoneChanged()" aria-label="Display Training Zones">
+                <md-icon>power_input</md-icon>
+                <md-tooltip>
+                    Display Form Zones on graph
+                </md-tooltip>
+            </md-switch>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <md-switch ng-disabled="true" aria-label="Use cycling power meter when available" ng-click="tmpUsePowerMeterPopup()" style="cursor: pointer;">
+                <md-icon>flash_on</md-icon>
+                <md-tooltip>
+                    Use cycling power meter when available
+                </md-tooltip>
+            </md-switch>
+            <span flex="5"></span>
+            <!--<md-button layout-align="start start" class="md-icon-button" ng-click="_todo()">-->
+                <!--<md-icon aria-label="Help">settings</md-icon>-->
+            <!--</md-button>-->
             <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
                 <md-icon aria-label="Help">info</md-icon>
             </md-button>
@@ -32,7 +49,7 @@
             <div flex="65" layout="row">
                 <md-input-container>
                     <label>Period</label>
-                    <md-select ng-model="periodSelected" ng-change="lastMonthsPeriodChanged()"
+                    <md-select ng-model="periodSelected" ng-change="lastMonthsPeriodChanged(periodSelected)"
                                aria-label="Period to watch">
                         <md-option ng-repeat="period in periodsToWatch" ng-value="period">{{ period.label }}
                         </md-option>

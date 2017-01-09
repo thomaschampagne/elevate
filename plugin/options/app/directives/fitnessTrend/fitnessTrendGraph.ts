@@ -1,4 +1,9 @@
 interface IFitnessTrendGraphScope extends IScope {
+    showTrainingZoneChanged: Function;
+    trainingZoneOnToday: ITrainingZone;
+    getTrainingZone: (tsb: number) => ITrainingZone;
+    showTrainingZone: boolean;
+    tmpUsePowerMeterPopup: () => void; // TODO Remove in future
     colors: IColors;
     fitnessDataOnToday: IFitnessTrimpObject;
     makeTooltip: (d: any) => string;
@@ -17,7 +22,7 @@ interface IFitnessTrendGraphScope extends IScope {
     updateFitnessChartGraph: (lastMonthPeriodChange: boolean, fromOrToDateChange: boolean) => void;
     toDateChanged: () => void;
     fromDateChanged: () => void;
-    lastMonthsPeriodChanged: () => void;
+    lastMonthsPeriodChanged: (periodSelected: {days: number, label: string}) => void;
     periodSelected: {days: Number, label: String};
     periodsToWatch: {days: Number, label: String}[];
     activityTypes: Array<string>;
@@ -30,6 +35,12 @@ interface IFitnessTrendGraphScope extends IScope {
 interface IFitnessGraphData {
     curves: {key: string, values: Array<any>, color: string, area?: boolean, classed?: string}[];
     yDomain: Array<number>;
+}
+
+interface ITrainingZone {
+    name: string;
+    level: number;
+    color: string;
 }
 
 class FitnessTrendGraph {
@@ -52,11 +63,10 @@ class FitnessTrendGraph {
                 previewDay: false
             }));
 
+            $scope.trainingZoneOnToday = $scope.getTrainingZone($scope.fitnessDataOnToday.tsb);
+
             // Notify parent of data loaded
             $scope.fitnessTrendGraphDataLoaded(!_.isEmpty($scope.fitnessData));
-
-            // Handle uniques activity types for selection in UI
-            // $scope.activityTypes = _.uniq(_.flatten(_.pluck($scope.fitnessData, 'type')));
 
             setTimeout(() => { // Postpone execution at the end
                 $scope.updateFitnessChartGraph(true, false);
@@ -93,9 +103,21 @@ class FitnessTrendGraph {
             label: 'From the beginning'
         }];
 
-        $scope.periodSelected = $scope.periodsToWatch[5]; // 6 months default
+        // Re-select last month period chosen
 
-        $scope.lastMonthsPeriodChanged = () => {
+        let index = parseInt(localStorage.getItem('lastMonthPeriodSelected'));
+
+        if(_.isNumber(index) && !_.isNaN(index) && !_.isEmpty($scope.periodsToWatch[index])) {
+            $scope.periodSelected = $scope.periodsToWatch[index];
+        } else {
+            $scope.periodSelected = $scope.periodsToWatch[5];
+        }
+
+        $scope.lastMonthsPeriodChanged = (periodSelected: {days: number, label: string}) => {
+            let index: number = _.indexOf($scope.periodsToWatch, periodSelected);
+            if (index !== -1) {
+                localStorage.setItem('lastMonthPeriodSelected', index.toString()); // Store value
+            }
             $scope.updateFitnessChartGraph(true, false);
         };
 
@@ -104,6 +126,12 @@ class FitnessTrendGraph {
         };
 
         $scope.toDateChanged = () => {
+            $scope.updateFitnessChartGraph(false, true);
+        };
+
+        $scope.showTrainingZone = (_.isEmpty(localStorage.getItem('showTrainingZone')) || localStorage.getItem('showTrainingZone') === '1');
+        $scope.showTrainingZoneChanged = () => {
+            localStorage.setItem('showTrainingZone', $scope.showTrainingZone ? '1' : '0'); // Store value
             $scope.updateFitnessChartGraph(false, true);
         };
 
@@ -149,6 +177,39 @@ class FitnessTrendGraph {
             return '<div style="width: 100%; border-bottom: 1px solid ' + $colors.lightGrey + '; padding-bottom: 3px; padding-top: 3px;"></div>';
         };
 
+        $scope.getTrainingZone = (tsb: number) => {
+
+            let trainingZone: ITrainingZone = {
+                level: null,
+                name: null,
+                color: null
+            };
+
+            if (tsb > 25) {
+                trainingZone.level = 2;
+                trainingZone.name = 'Transition';
+                trainingZone.color = '#00b40c';
+            } else if (25 >= tsb && tsb > 5) {
+                trainingZone.level = 1;
+                trainingZone.name = 'Freshness';
+                trainingZone.color = '#00b40c';
+            } else if (5 >= tsb && tsb > -10) {
+                trainingZone.level = 0;
+                trainingZone.name = 'Neutral';
+                trainingZone.color = '#00acf8';
+            } else if (-10 >= tsb && tsb > -30) {
+                trainingZone.level = -1;
+                trainingZone.name = 'Optimal';
+                trainingZone.color = '#ffa300';
+            } else if (-30 >= tsb) {
+                trainingZone.level = -2;
+                trainingZone.name = 'Over Load';
+                trainingZone.color = '#ff001f';
+            }
+
+            return trainingZone;
+        };
+
         $scope.makeTooltip = (d: any) => {
 
             let fitnessObject: IFitnessTrimpObject = <IFitnessTrimpObject> (_.findWhere($scope.fitnessData, {
@@ -156,6 +217,8 @@ class FitnessTrendGraph {
             }));
 
             let hasActivities: boolean = (fitnessObject.activitiesName.length) ? true : false;
+
+            let trainingZone: ITrainingZone = $scope.getTrainingZone(fitnessObject.tsb);
 
             let html: string = '';
 
@@ -207,8 +270,13 @@ class FitnessTrendGraph {
             html += '   </tr>';
             html += '   <tr>';
             html += '       <td class="title" colspan="2">' + $scope.drawLegendSquare($colors.tsb, 10, 'FORM') + '</td>';
-            html += '       <td>' + fitnessObject.tsb.toFixed(1) + '</td>';
+            html += '       <td class="">' + fitnessObject.tsb.toFixed(1) + ' @ <span style="color: ' + trainingZone.color + ';">' + trainingZone.name.toUpperCase() + '</span>' + '</td>';
             html += '   </tr>';
+
+            // html += '   <tr>';
+            // html += '       <td class="title" colspan="2">Training Zone</td>';
+            // html += '       <td style="color: ' + trainingZone.color + ';">' + trainingZone.name.toUpperCase() + '</td>';
+            // html += '   </tr>';
 
             // Hint
             if (hasActivities) {
@@ -336,6 +404,12 @@ class FitnessTrendGraph {
             let tsbValues: Array<any> = [];
             let activitiesPoints: Array<any> = [];
 
+            // Constants training zones
+            let freshness_zone_points: Array<any> = [];
+            let neutral_zone_points: Array<any> = [];
+            let optimal_zone_points: Array<any> = [];
+            let overtrain_zone_points: Array<any> = [];
+
             _.each(fitnessData, (fitData: IFitnessTrimpObject) => {
 
                 if (!fitData.previewDay && fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
@@ -361,6 +435,24 @@ class FitnessTrendGraph {
                             y: 0
                         });
                     }
+
+                    // Constants training zones
+                    freshness_zone_points.push({
+                        x: fitData.timestamp,
+                        y: 25
+                    });
+                    neutral_zone_points.push({
+                        x: fitData.timestamp,
+                        y: 5
+                    });
+                    optimal_zone_points.push({
+                        x: fitData.timestamp,
+                        y: -10
+                    });
+                    overtrain_zone_points.push({
+                        x: fitData.timestamp,
+                        y: -30
+                    });
                 }
             });
 
@@ -393,6 +485,26 @@ class FitnessTrendGraph {
                         x: fitData.timestamp,
                         y: fitData.tsb
                     });
+
+                    // Constants training zones
+                    if ($scope.showTrainingZone) {
+                        freshness_zone_points.push({
+                            x: fitData.timestamp,
+                            y: 25
+                        });
+                        neutral_zone_points.push({
+                            x: fitData.timestamp,
+                            y: 5
+                        });
+                        optimal_zone_points.push({
+                            x: fitData.timestamp,
+                            y: -10
+                        });
+                        overtrain_zone_points.push({
+                            x: fitData.timestamp,
+                            y: -30
+                        });
+                    }
 
                 });
             }
@@ -478,6 +590,26 @@ class FitnessTrendGraph {
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05]
             };
 
+            if ($scope.showTrainingZone) {
+                fitnessGraphData.curves = _.union(fitnessGraphData.curves, [{
+                    key: "freshness_zone_points",
+                    values: freshness_zone_points,
+                    color: '#00b40c'
+                }, {
+                    key: "neutral_zone_points",
+                    values: neutral_zone_points,
+                    color: '#00acf8'
+                }, {
+                    key: "optimal_zone_points",
+                    values: optimal_zone_points,
+                    color: '#ffa300'
+                }, {
+                    key: "overtrain_zone_points",
+                    values: overtrain_zone_points,
+                    color: '#ff001f'
+                }]);
+            }
+
             return fitnessGraphData;
         };
 
@@ -502,6 +634,14 @@ class FitnessTrendGraph {
                 parent: angular.element(document.body),
                 clickOutsideToClose: true
             });
+        };
+
+        $scope.tmpUsePowerMeterPopup = () => {
+            let dialog = $mdDialog.alert()
+                .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of cycling power meter stress score when available to compute your fitness.</br></br>' +
+                    'To support this feature, your local history will be cleared in a next update: because calculation algorithm of your stats will change. A new full sync will be required.').ok('Got it !');
+
+            $mdDialog.show(dialog);
         };
 
         // This fix as "workaround" graph cropped when sidebar show/hide. Listen events broadcasted by "$broadcast('window-resize-gt-md');"
