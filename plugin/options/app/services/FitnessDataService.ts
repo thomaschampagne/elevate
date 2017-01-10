@@ -1,4 +1,5 @@
 import Moment = moment.Moment;
+import IPromise = angular.IPromise;
 interface IFitnessDataService {
     fitnessData: Array<IFitnessTrimpObject>;
     getComputedActivities: Function;
@@ -46,53 +47,52 @@ interface IFitnessTrimpObjectTable extends IFitnessTrimpObject {
     activitiesNameStr: string;
 }
 
-app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
+class FitnessDataService {
 
-    let onGetComputedActivitiesTimeStart: number;
-    let onGetFitnessDataTimeDone: number;
+    public static FUTURE_DAYS_PREVIEW: number = 14;
 
-    const FUTURE_DAYS_PREVIEW = 14;
+    protected onGetComputedActivitiesTimeStart: number;
+    protected onGetFitnessDataTimeDone: number;
 
-    let fitnessDataService: IFitnessDataService = {
-        fitnessData: null,
-        getComputedActivities: null,
-        getCleanedComputedActivitiesWithHeartRateData: null,
-        getFitnessObjectsWithDaysOff: null,
-        computeChronicAcuteBalanceTrainingLoad: null,
-        getFitnessData: null,
-    };
+    protected $q: IQService;
+    protected chromeStorageService: ChromeStorageService;
+    protected fitnessData: any;
+
+    constructor(q: IQService, chromeStorageService: ChromeStorageService) {
+        this.$q = q;
+        this.chromeStorageService = chromeStorageService;
+    }
 
     /**
      * @return Computed synced activities
      */
-    fitnessDataService.getComputedActivities = () => {
+    protected getComputedActivities(): IPromise<Array<ISyncActivityComputed>> {
 
-        let deferred = $q.defer();
+        let deferred = this.$q.defer<Array<ISyncActivityComputed>>();
 
-        onGetComputedActivitiesTimeStart = performance.now(); // track time
+        this.onGetComputedActivitiesTimeStart = performance.now(); // track time
 
         console.log('Fetch computedActivities from chromeStorageService');
 
-        chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
+        this.chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
             deferred.resolve(computedActivities);
         }, (err: any) => {
             deferred.reject(err);
         });
 
         return deferred.promise;
-    };
-
+    }
 
     /**
      * @return computed activities with HR data only
      */
-    fitnessDataService.getCleanedComputedActivitiesWithHeartRateData = () => {
+    protected getCleanedComputedActivitiesWithHeartRateData(): IPromise<Array<IFitnessActivitiesWithHR>> {
 
-        let deferred = $q.defer();
+        let deferred = this.$q.defer<Array<IFitnessActivitiesWithHR>>();
 
         console.log('Fetch computedActivitiesWithHR from fitnessDataService.getCleanedComputedActivitiesWithHeartRateData');
 
-        fitnessDataService.getComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
+        this.getComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
             let cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR> = [];
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
@@ -106,9 +106,9 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                         timestamp: momentStartTime.toDate().getTime(),
                         dayOfYear: momentStartTime.dayOfYear(),
                         year: momentStartTime.year(),
-                        type: activity.display_type,
+                        type: activity.type,
                         activityName: activity.name,
-                        trimp: parseInt(activity.extendedStats.heartRateData.TRIMP.toFixed(0))
+                        trimp: activity.extendedStats.heartRateData.TRIMP
                     };
 
                     cleanedActivitiesWithHRData.push(activityHR);
@@ -122,18 +122,18 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         });
 
         return deferred.promise;
-    };
+    }
 
     /**
      * @return Fitness object of computed activities including days off (= rest day)
      */
-    fitnessDataService.getFitnessObjectsWithDaysOff = () => {
+    protected  getFitnessObjectsWithDaysOff(): IPromise<Array<IFitnessActivitiesWithHRDaysOff>> {
 
-        let deferred = $q.defer();
+        let deferred = this.$q.defer<Array<IFitnessActivitiesWithHRDaysOff>>();
 
         console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
 
-        fitnessDataService.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
+        this.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
 
             // From date is the first activity done in history
             // Subtract 1 day to from date (to show graph point with 1 day before) and on day start
@@ -180,7 +180,7 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             }
 
             // Add 14 days as future "preview".
-            for (let i: number = 1; i <= FUTURE_DAYS_PREVIEW; i++) {
+            for (let i: number = 1; i <= FitnessDataService.FUTURE_DAYS_PREVIEW; i++) {
 
                 let futureDate: Date = moment().add(i, 'days').startOf('day').toDate();
 
@@ -204,13 +204,12 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
         });
 
         return deferred.promise;
-
-    };
+    }
 
     /**
      * @return Compute CTl, ATL, TSB results with days off (= rest day)
      */
-    fitnessDataService.computeChronicAcuteBalanceTrainingLoad = (fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
+    protected computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>): Array<IFitnessTrimpObject> {
 
         let ctl: number = 0;
         let atl: number = 0;
@@ -230,9 +229,9 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
                 activitiesName: trimpObject.activitiesName,
                 type: trimpObject.type,
                 trimp: trimpObject.trimp,
-                ctl: parseFloat(ctl.toFixed(1)),
-                atl: parseFloat(atl.toFixed(1)),
-                tsb: parseFloat(tsb.toFixed(1)),
+                ctl: ctl,
+                atl: atl,
+                tsb: tsb,
                 previewDay: trimpObject.previewDay,
             };
 
@@ -265,25 +264,25 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
             results.push(result);
         });
         return results;
-    };
+    }
 
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
      */
-    fitnessDataService.getFitnessData = () => {
+    protected getFitnessData(): IPromise<Array<IFitnessTrimpObject>> {
 
-        let deferred = $q.defer();
+        let deferred = this.$q.defer<Array<IFitnessTrimpObject>>();
 
-        if (!fitnessDataService.fitnessData) {
+        if (!this.fitnessData) {
 
             console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
 
-            fitnessDataService.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
+            this.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
 
-                fitnessDataService.fitnessData = fitnessDataService.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
-                deferred.resolve(fitnessDataService.fitnessData);
-                onGetFitnessDataTimeDone = performance.now(); // track time
-                console.log("Generating FitnessData from storage took " + (onGetFitnessDataTimeDone - onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
+                this.fitnessData = this.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
+                deferred.resolve(this.fitnessData);
+                this.onGetFitnessDataTimeDone = performance.now(); // track time
+                console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
 
             }, (err: any) => {
                 deferred.reject(err);
@@ -291,15 +290,14 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
 
         } else {
             console.log('Fetch fitnessData from FitnessDataService local var');
-            deferred.resolve(fitnessDataService.fitnessData);
+            deferred.resolve(this.fitnessData);
         }
+        return deferred.promise;
+    }
+}
 
-        return <Q.Promise<Array<IFitnessTrimpObject>>> deferred.promise;
-
-    };
-
-    return fitnessDataService;
-
+app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
+    return new FitnessDataService($q, chromeStorageService);
 }]);
 
 /**

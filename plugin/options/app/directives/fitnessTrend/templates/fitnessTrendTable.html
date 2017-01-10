@@ -24,17 +24,16 @@
             </tr>
             </thead>
             <tbody md-body>
-            <tr md-row md-auto-select="options.autoSelect" ng-repeat="fitnessObj in fitnessDataForTableFiltered | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
+            <tr md-row md-auto-select="options.autoSelect"
+                ng-repeat="fitnessObj in fitnessDataForTableFiltered | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
 
                 <td md-cell>{{fitnessObj.timestamp | date:'mediumDate'}}</td>
                 <td md-cell ng-bind-html="fitnessObj.activitiesNameStr"></td>
                 <td md-cell ng-bind-html="fitnessObj.type"></td>
                 <td md-cell>{{(fitnessObj.trimp !== -1 ? fitnessObj.trimp : '-')}}</td>
-                <td md-cell>{{fitnessObj.ctl}}</td>
-                <td md-cell>{{fitnessObj.atl}}</td>
-                <td md-cell>
-                    <md-subheader>{{fitnessObj.tsb}}</md-subheader>
-                </td>
+                <td md-cell>{{fitnessObj.ctl | number: 1}}</td>
+                <td md-cell>{{fitnessObj.atl | number: 1}}</td>
+                <td md-cell>{{fitnessObj.tsb | number: 1}}</td>
                 <td md-cell>
                     <span ng-if="fitnessObj.ids.length" ng-click="openActivities(fitnessObj)" style="cursor: pointer;">
                         <md-icon>insert_link</md-icon>

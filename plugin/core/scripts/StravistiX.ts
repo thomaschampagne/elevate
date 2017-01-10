@@ -1095,8 +1095,8 @@ class StravistiX {
 
     protected handleOnFlyActivitiesSync(): void {
 
-        if (window.location.pathname.match('login')) {
-            console.log('Login page. Skip handleOnFlyActivitiesSync()');
+        if (window.location.pathname.match('login') || window.location.pathname.match('upload')) {
+            console.log('Login or upload page. Skip handleOnFlyActivitiesSync()');
             return;
         }
 
