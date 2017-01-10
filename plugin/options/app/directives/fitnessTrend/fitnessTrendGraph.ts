@@ -639,7 +639,7 @@ class FitnessTrendGraph {
         $scope.tmpUsePowerMeterPopup = () => {
             let dialog = $mdDialog.alert()
                 .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of cycling power meter stress score when available to compute your fitness.</br></br>' +
-                    'To support this feature, your local history will be cleared in a next update: because calculation algorithm of your stats will change. A new full sync will be required.').ok('Got it !');
+                    'To support this feature, your local history may be cleared in a next update: because calculation algorithm of your stats will change. A new full sync will be required.').ok('Got it !');
 
             $mdDialog.show(dialog);
         };
