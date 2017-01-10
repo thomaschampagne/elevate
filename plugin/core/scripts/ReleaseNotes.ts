@@ -13,6 +13,19 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.3.0',
+        message: '</br>New beta version of <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a></br></br>Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load.</br>Prepare for the race day. Manage your rest with accuracy. Etc...</br></br>On next update: cycling power meter will be also used to compute fitness trend.',
+        hotFixes: [],
+        features: [
+            'Added form zones to fitness trend: train properly...',
+            'Improved required time to generate graph.',
+            'Others minors improvements around MultiSports Fitness Trend & synchronisation.'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+        ],
+    },
+    {
         version: '5.2.0',
         message: '</br><a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> in Beta for ALL!</br></br>',
         hotFixes: [],
