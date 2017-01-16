@@ -13,6 +13,20 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.3.1',
+        message: '<strong>5.3.1:</strong> <i>Strava premium additional goal has been delayed at the moment.</i></br></br><strong>5.3.0 features reminder:</strong> <i>New beta version of <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a></br></br>- Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load. Prepare for the race day. Manage your rest with accuracy. Etc...</br>- On next update (5.4.0): cycling power meter will be also used to compute your fitness trend (if you have this sensor).</i>',
+        hotFixes: [],
+        features: [
+            'Added form zones to fitness trend.',
+            'Improved required time to generate fitness trend graph.',
+            'Others minors improvements around MultiSports Fitness Trend & synchronisation.'
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Due to feature problems: strava premium additional goal progress tracking has be removed temporally. It\'s coming back later.'
+        ],
+    },
+    {
         version: '5.3.0',
         message: '</br>New beta version of <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a></br></br>- Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load.</br>Prepare for the race day. Manage your rest with accuracy. Etc...</br></br>- On next update: cycling power meter will be also used to compute your fitness trend (if you have this sensor).',
         hotFixes: [],
