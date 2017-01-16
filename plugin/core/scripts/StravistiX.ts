@@ -1070,10 +1070,11 @@ class StravistiX {
      * and hence is only enabled on the dashboard and current user's profile
      * pages.
      *
-     * If the `displayExtendedGoals` user setting is falsey then this
+     * If the `displayExtendedGoals` user setting is false then this
      * handler does nothing.
      */
     protected handleGoalsModifier(): void {
+        /*
         if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
             return;
         }
@@ -1087,6 +1088,7 @@ class StravistiX {
                 new GoalsModifier(goals).modify();
             }
         }
+        */
     }
 
     public get userSettings(): IUserSettings {

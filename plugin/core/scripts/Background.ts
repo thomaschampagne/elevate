@@ -121,13 +121,6 @@ class Background {
                     });
                 }
 
-                if (Helper.versionCompare('5.0.1', details.previousVersion) === 1) {
-                    // Coming from version under 5.0.1..
-                    storageManager.setToStorage('displayExtendedGoals', false, (data: any) => {
-                        console.log('displayExtendedGoals set false ', data);
-                    });
-                }
-
                 // Clear local history if coming from version under 5.1.1
                 if (Helper.versionCompare('5.1.1', details.previousVersion) === 1) {
                     this.clearSyncCache();

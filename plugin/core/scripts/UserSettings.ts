@@ -48,7 +48,6 @@ interface IUserSettings {
     displaySegmentTimeComparisonToPR: boolean;
     displaySegmentTimeComparisonToCurrentYearPR: boolean;
     displaySegmentTimeComparisonPosition: boolean;
-    displayExtendedGoals: boolean;
     reviveGoogleMaps: boolean;
     displayRecentEffortsHRAdjustedPacePower: boolean;
     reviveGoogleMapsLayerType: string;
@@ -279,7 +278,6 @@ let userSettings: IUserSettings = {
     displaySegmentTimeComparisonToCurrentYearPR: true,
     displaySegmentTimeComparisonPosition: true,
     displayRecentEffortsHRAdjustedPacePower: false,
-    displayExtendedGoals: false,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: 'terrain',
     displayActivityBestSplits: true,

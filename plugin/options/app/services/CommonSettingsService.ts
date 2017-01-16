@@ -379,7 +379,7 @@ app.factory('CommonSettingsService', () => {
                 optionType: 'checkbox',
                 optionTitle: 'Enable Hidden/Beta features',
                 optionLabels: ['All'],
-                optionEnableSub: ['displayReliveCCLink', 'displayRecentEffortsHRAdjustedPacePower', 'displayExtendedGoals'],
+                optionEnableSub: ['displayReliveCCLink', 'displayRecentEffortsHRAdjustedPacePower'],
                 optionHtml: 'Show features which are hidden. Example: BETA features.',
             }, {
                 optionKey: 'displayReliveCCLink',
@@ -393,13 +393,7 @@ app.factory('CommonSettingsService', () => {
                 optionTitle: 'Display running estimated paces & cycling estimated powers from most painful effort on a segment (Experimental)',
                 optionLabels: ['Cycling', 'Running'],
                 optionHtml: 'Experimental at the moment. This feature gives you a fitness trend in your segments. You can see estimations in "Your recent efforts" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.',
-            }, {
-                optionKey: 'displayExtendedGoals',
-                optionType: 'checkbox',
-                optionTitle: 'Enable strava premium additional goal progress tracking (Experimental)',
-                optionLabels: ['All'],
-                optionHtml: 'Experimental at the moment. This will add two extra progress bars for <u>strava premium annual</u> goals which tracks progress for the current month and week.',
-            },]
+            }]
         }];
 
         return sections;
