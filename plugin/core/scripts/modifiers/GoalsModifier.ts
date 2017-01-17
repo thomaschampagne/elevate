@@ -444,8 +444,11 @@ class GoalsModifier implements IModifier {
         let $fill = $svg.find('rect.progress-bar-fill');
         let $marker = $svg.find('line.progress-marker');
         let $markerText = $svg.find('text');
-        let markerNudge = 0;
         let width = parseInt($container.attr('width'), 10);
+        if ( actual > goal.value ) {
+            $container.attr('width', width * goal.value / actual);
+            width = $container.attr('width');
+        }
         if (goal.value === 0) {
             $fill.attr('width', width);
         } else {
@@ -453,11 +456,10 @@ class GoalsModifier implements IModifier {
         }
         if (progress >= 1) {
             progress = 1;
-            markerNudge = -1;
         } else if (progress <= 0) {
             progress = 0;
         }
-        let markerX = (width * progress) + markerNudge;
+        let markerX = width * progress;
         $marker
             .attr('x1', markerX)
             .attr('x2', markerX)
