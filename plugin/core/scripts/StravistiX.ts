@@ -1074,7 +1074,6 @@ class StravistiX {
      * handler does nothing.
      */
     protected handleGoalsModifier(): void {
-        /*
         if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
             return;
         }
@@ -1088,7 +1087,6 @@ class StravistiX {
                 new GoalsModifier(goals).modify();
             }
         }
-        */
     }
 
     public get userSettings(): IUserSettings {
