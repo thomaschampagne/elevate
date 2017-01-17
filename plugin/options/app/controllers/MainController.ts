@@ -60,7 +60,7 @@ class MainController {
             if (target.message) {
                 let dialog = $mdDialog.confirm()
                     .htmlContent(target.message)
-                    .cancel('ok').ok('Help this free project.');
+                    .cancel('Hide').ok('Push project higher !');
                 $mdDialog.show(dialog).then(() => {
                     $scope.showDonation();
                 }, () => {
