@@ -628,7 +628,7 @@ let releaseNotes: Array<IReleaseNote> = [
         features: [
             "Add Surface Area of your activities (raceshape EREA)",
             "Normalized Power (TrainingPeaks trademarked term) removed. Profit to Weighted Power data now",
-            "Intensity Factor (TrainingPeaks trademarked term) removed. Profit to Punch Factor data now",
+            "Intensity Factor (TrainingPeaks trademarked term) removed. Profit to Intensity data now",
             "Prepare better veloviewer.com integration (waiting for veloviewer.com side now...)",
             "Bugs fixes",
         ]
@@ -765,7 +765,7 @@ let releaseNotes: Array<IReleaseNote> = [
         features: [
             "Add Estimated Weighted Power for cycling activities",
             "Add Estimated Variability Index for cycling activities",
-            "Add Estimated Punch Factor for cycling activities",
+            "Add Estimated Intensity for cycling activities",
             "Bug fixing",
         ]
     }, {

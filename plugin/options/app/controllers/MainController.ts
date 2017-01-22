@@ -80,7 +80,7 @@ class MainController {
                 sections: [{
                     id: 'FITNESS_TREND',
                     name: 'Multisports Fitness Trend',
-                    subname: 'Multisports fitness trend based on activities having HR sensor',
+                    // subname: 'Multisports fitness trend based on activities having HR sensor',
                     sup: 'BETA',
                     icon: 'timeline',
                     link: routeMap.fitnessTrendRoute,

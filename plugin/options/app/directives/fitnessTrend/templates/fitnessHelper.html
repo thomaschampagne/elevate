@@ -34,10 +34,10 @@
                 heart stress
                 during an activity: the longer you go at full
                 throttle during an activity, the more <i>TRIMP</i> of activity goes up!
-                <md-button class="md-accent" ng-hide="showMathsFormula" ng-click="showMathsFormula = true">Show me the
+                <md-button class="md-accent" ng-hide="showMathsTrimpFormula" ng-click="showMathsTrimpFormula = true">Show me TRIMP
                     maths...
                 </md-button>
-                <div ng-show="showMathsFormula" style="background: #f3f3f3; margin: 10px; padding: 10px;">
+                <div ng-show="showMathsTrimpFormula" style="background: #f3f3f3; margin: 10px; padding: 10px;">
                     <img src="img/trimp_equation.png"/><br/><br/> Where <img src="img/kMen_equation.png"/> (For Mens) or
                     <img src="img/kWomen_equation.png"/> (For Womens) <br/><br/>And <i>HRR = Heart Rate Reserve = Heart
                     effort level according to heart capacity</i> defined by<br/><br/> <img src="img/hrr_equation.png"/>
@@ -48,6 +48,23 @@
                     effect is called <i>fatigue</i>. <i>Fitness</i> and <i>fatigue</i> can combined to provide a value
                     of
                     <i>form</i> or <i>Performance</i>.
+                </div>
+
+                <div style="padding-bottom: 10px;">
+                    <u>Are you a cyclist?</u><br/>If you own a power meter and you activated the cycling power meter option in
+                    the feature, then the "Power Stress
+                    Score (PSS)" will be used instead of TRIMP on cycling activities. "Power Stress Score" is used in
+                    computation only if available.
+                    <md-button class="md-accent" ng-hide="showMathsPSSFormula" ng-click="showMathsPSSFormula = true">Show me "Power Stress
+                        Score" maths...
+                    </md-button>
+                    <div ng-show="showMathsPSSFormula" style="background: #f3f3f3; margin: 10px; padding: 10px;">
+                        <img src="https://latex.codecogs.com/png.latex?%5Cinline%20PowerStressScore(PSS)%3D%20%5Cfrac%7BEffortInSeconds%5C%20.%20%5C%20WeightedPower%5C%20.%20%5C%20Intensity%7D%7BCyclingFTP%5C%20.%20%5C%203600%7D%5C%20.%20%5C%20100"/>
+                        <br/><br/>
+                        <img src="https://latex.codecogs.com/png.latex?%5Cinline%20Intensity%20%3D%20%5Cfrac%7BWeigthedPower%7D%7BCycling%20FTP%7D" />
+                        <br/><br/>
+                        <img src="img/np_equation.png" />
+                    </div>
                 </div>
 
                 <div style="padding-bottom: 10px;">
@@ -100,14 +117,21 @@
                         <br/>
                         <ul>
                             <!--<li>Form < 0: Athlete is on overload or over-training phase.</li>-->
-                            <li><i>+25 < Form :</i> Transition zone. Athlete is on form. Case where athlete has an extended break. (e.g. illness, injury or end of the season).</li>
+                            <li><i>+25 < Form :</i> Transition zone. Athlete is on form. Case where athlete has an
+                                extended break. (e.g. illness, injury or end of the season).
+                            </li>
                             <li><i>+5 < Form < +25 :</i> Freshness Zone. Athlete is on form. Ready for a race.</li>
-                            <li><i>-10 < Form < +5 :</i> Neutral Zone. Zone reached typically when athlete is in a rest or recovery week. After a race or hard training period.</li>
+                            <li><i>-10 < Form < +5 :</i> Neutral Zone. Zone reached typically when athlete is in a rest
+                                or recovery week. After a race or hard training period.
+                            </li>
                             <li><i>-30 < Form < -10 :</i> Optimal Training Zone.</li>
-                            <li><i>Form < -30 :</i> Over Load Zone. Athlete is on overload or over-training phase. He should take rest!</li>
+                            <li><i>Form < -30 :</i> Over Load Zone. Athlete is on overload or over-training phase. He
+                                should take rest!
+                            </li>
                         </ul>
 
-                        <br/><a href="http://www.joefrielsblog.com/2015/12/managing-training-using-tsb.html" target="_blank">Read more from joefrielsblog.com</a>.<br/><br/>
+                        <br/><a href="http://www.joefrielsblog.com/2015/12/managing-training-using-tsb.html"
+                                target="_blank">Read more from joefrielsblog.com</a>.<br/><br/>
 
                         Be fit doesn't mean you are ready to race at your higher level. A negative <i>Form</i> would
                         reveal that you are carrying fatigue and are not on form. By resting you can
