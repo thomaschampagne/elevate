@@ -61,7 +61,7 @@ class GoalsModifier implements IModifier {
                             $view, activities, activityType, goal);
                     }
                     // Add year label last so it doesn't get cloned
-                    this.labelProgressBar($barYearly, (new Date()).getFullYear());
+                    this.labelProgressBar($barYearly, (new Date()).getFullYear().toString());
                 }
             );
         });
@@ -447,7 +447,7 @@ class GoalsModifier implements IModifier {
         let width = parseInt($container.attr('width'), 10);
         if ( actual > goal.value ) {
             $container.attr('width', width * goal.value / actual);
-            width = $container.attr('width');
+            width = parseInt($container.attr('width'));
         }
         if (goal.value === 0) {
             $fill.attr('width', width);

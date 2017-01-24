@@ -1083,7 +1083,6 @@ class StravistiX {
             let pageDashboard = new RegExp('^/dashboard');
             if (window.location.pathname.match(pageProfile)
                 || window.location.pathname.match(pageDashboard)) {
-                console.warn('GoalsModifier called 2');
                 new GoalsModifier(goals).modify();
             }
         }
