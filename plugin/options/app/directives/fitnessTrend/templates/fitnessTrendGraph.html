@@ -43,6 +43,14 @@
                     Use cycling power meter when available
                 </md-tooltip>
             </md-switch>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <md-switch ng-disabled="true" ng-model="useSwimStressScore" ng-click="tmpUseSwimStressScorePopup()"
+                       aria-label="Use swimming stress score (no HRM required)">
+                <md-icon>pool</md-icon>
+                <md-tooltip>
+                    Use swimming stress score (no HRM required)
+                </md-tooltip>
+            </md-switch>
             <span flex="5"></span>
             <!--<md-button layout-align="start start" class="md-icon-button" ng-click="_todo()">-->
             <!--<md-icon aria-label="Help">settings</md-icon>-->

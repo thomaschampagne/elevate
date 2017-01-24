@@ -1,4 +1,5 @@
 interface IFitnessTrendGraphScope extends IScope {
+    tmpUseSwimStressScorePopup: Function;
     nvd3api: any;
     userFTP: number;
     makeGraph: Function;
@@ -688,6 +689,14 @@ class FitnessTrendGraph {
             // Send fake js window resize to make sure graph is re-drawn (to avoid cropping by sidebar) over a window resize around gt-md.
             $scope.nvd3api.update();
         });
+
+        
+        $scope.tmpUseSwimStressScorePopup = () => {
+            let dialog = $mdDialog.alert()
+                .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of a swimming stress score to compute your fitness on swimming activities.</br></br> No heart rate monitor will be required. Only a "Swimming Functional Threshold Pace"  will be asked to you in athlete settings.').ok('Got it !');
+
+            $mdDialog.show(dialog);
+        };
     }
 }
 
