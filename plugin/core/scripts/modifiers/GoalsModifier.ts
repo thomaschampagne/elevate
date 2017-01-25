@@ -61,7 +61,7 @@ class GoalsModifier implements IModifier {
                             $view, activities, activityType, goal);
                     }
                     // Add year label last so it doesn't get cloned
-                    this.labelProgressBar($barYearly, '2016');
+                    this.labelProgressBar($barYearly, (new Date()).getFullYear());
                 }
             );
         });
