@@ -9,7 +9,7 @@ class ChromeStorageService {
         this.$q = q;
     }
 
-    public getAllFromLocalStorage(): Q.IPromise<any> {
+    public getAllFromLocalStorage(): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.get(null, (data: any) => {
             deferred.resolve(data);
@@ -17,7 +17,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getFromLocalStorage(key: string): Q.IPromise<any> {
+    public getFromLocalStorage(key: string): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         let object: any = {};
         object[key] = null;
@@ -27,7 +27,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public setToLocalStorage(key: string, value: any): Q.IPromise<any> {
+    public setToLocalStorage(key: string, value: any): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
 
         let object: any = {};
@@ -45,7 +45,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public removeFromLocalStorage(key: string): Q.IPromise<any> {
+    public removeFromLocalStorage(key: string): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.remove(key, () => {
             deferred.resolve();
@@ -53,7 +53,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getLastSyncDate(): Q.IPromise<number> {
+    public getLastSyncDate(): IPromise<number> {
 
         let deferred: IDeferred<number> = this.$q.defer();
 
@@ -69,15 +69,15 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getLocalSyncedAthleteProfile(): Q.IPromise<IAthleteProfile> {
+    public getLocalSyncedAthleteProfile(): IPromise<IAthleteProfile> {
         return this.getFromLocalStorage('syncWithAthleteProfile');
     }
 
-    public getProfileConfigured(): Q.IPromise<boolean> {
+    public getProfileConfigured(): IPromise<boolean> {
         return this.getFromLocalStorage('profileConfigured');
     }
 
-    public setProfileConfigured(status: boolean): Q.IPromise<any> {
+    public setProfileConfigured(status: boolean): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.set({
             profileConfigured: status
@@ -87,7 +87,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public fetchUserSettings(callback?: (userSettingsSynced: IUserSettings) => void): Q.IPromise<any> {
+    public fetchUserSettings(callback?: (userSettingsSynced: IUserSettings) => void): IPromise<IUserSettings> {
         let deferred: IDeferred<IUserSettings> = this.$q.defer();
         chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
             if (callback) callback(userSettingsSynced);
@@ -96,7 +96,7 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public updateUserSetting(key: string, value: any, callback?: () => void): Q.IPromise<any> {
+    public updateUserSetting(key: string, value: any, callback?: () => void): IPromise<any> {
         let deferred: IDeferred<any> = this.$q.defer();
         let settingToBeUpdated: any = {};
         settingToBeUpdated[key] = value;
@@ -107,11 +107,11 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public fetchComputedActivities(): Q.IPromise<Array<ISyncActivityComputed>> {
-        return <Q.IPromise<Array<ISyncActivityComputed>>> this.getFromLocalStorage('computedActivities');
+    public fetchComputedActivities(): IPromise<Array<ISyncActivityComputed>> {
+        return <IPromise<Array<ISyncActivityComputed>>> this.getFromLocalStorage('computedActivities');
     }
 
-    public getLocalStorageUsage(): Q.IPromise<IStorageUsage> {
+    public getLocalStorageUsage(): IPromise<IStorageUsage> {
 
         let deferred: IDeferred<IStorageUsage> = this.$q.defer();
         chrome.storage.local.getBytesInUse((bytesInUse: number) => {
