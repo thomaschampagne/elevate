@@ -9,12 +9,11 @@
                 Please synchronize your history to access "Multisports Fitness Trend" feature. The history will be
                 locally saved in the storage allocated by the extension.
                 <br/><br/>Since strava only provides fitness for cycling. Here you will be able to view your fitness
-                trend using all activities where you held a heart rate monitor. It's an improved feature which where missing,
+                trend using all activities where you held a heart rate monitor and/or cycling power meter. It's an improved feature which where missing,
                 not a duplicate! <u>Hoping that strava will make it for all sports!</u>
                 <br/><br/>
                 <md-icon>warning</md-icon>
-                Only activities having heart rate data will be used. You will not see activities without heart rate
-                monitor in the fitness graph and table.
+                Only activities having heart rate and/or cycling power meter data will be used. You will not see others activities without HRM or power meter at the moment. It's planned by the way.
             </div>
 
             <md-divider style="margin-top: 20px; margin-bottom: 20px;"></md-divider>
@@ -50,7 +49,7 @@
             <fitness-trend-graph></fitness-trend-graph>
         </md-tab>
         <md-tab label="table">
-            <fitness-trend-table ng-if="loadFitnessTrendTable" ng-cloak></fitness-trend-table>
+            <fitness-trend-table ng-cloak></fitness-trend-table>
         </md-tab>
     </md-tabs>
 </md-content>

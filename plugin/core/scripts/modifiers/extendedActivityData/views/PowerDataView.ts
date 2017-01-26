@@ -32,7 +32,7 @@ class PowerDataView extends AbstractDataView {
         this.insertContentAtGridPosition(1, 0, this.powerData.variabilityIndex.toFixed(2), 'Variability Index', '', 'displayAdvancedPowerData');
 
         if (this.powerData.punchFactor) {
-            this.insertContentAtGridPosition(2, 0, this.powerData.punchFactor.toFixed(2), 'Punch Factor', '', 'displayAdvancedPowerData');
+            this.insertContentAtGridPosition(2, 0, this.powerData.punchFactor.toFixed(2), 'Intensity', '', 'displayAdvancedPowerData');
         }
 
         this.insertContentAtGridPosition(0, 1, this.powerData.lowerQuartileWatts, '25% Quartile Watts', 'W', 'displayAdvancedPowerData');

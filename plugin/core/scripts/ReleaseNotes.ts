@@ -13,6 +13,19 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.4.0',
+        message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.</br></br>Swimming is not supported properly in fitness trend... Now taking care of swimmers ;) Still in Beta isn\'t it ?^^;)',
+        hotFixes: [],
+        features: [
+            'Fitness trend can now use your cycling power meter to compute your fitness.',
+            'Strava premium additional goal progress is back! Still "experimental". Activate it from Hidden feature section',
+            'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+        ],
+    },
+    {
         version: '5.3.1',
         message: '<strong>5.3.1:</strong> <i>Strava premium additional goal has been delayed at the moment.</i></br></br><strong>5.3.0 features reminder:</strong> <i>New beta version of <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a></br></br>- Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load. Prepare for the race day. Manage your rest with accuracy. Etc...</br>- On next update (5.4.0): cycling power meter will be also used to compute your fitness trend (if you have this sensor).</i>',
         hotFixes: [],
@@ -628,7 +641,7 @@ let releaseNotes: Array<IReleaseNote> = [
         features: [
             "Add Surface Area of your activities (raceshape EREA)",
             "Normalized Power (TrainingPeaks trademarked term) removed. Profit to Weighted Power data now",
-            "Intensity Factor (TrainingPeaks trademarked term) removed. Profit to Punch Factor data now",
+            "Intensity Factor (TrainingPeaks trademarked term) removed. Profit to Intensity data now",
             "Prepare better veloviewer.com integration (waiting for veloviewer.com side now...)",
             "Bugs fixes",
         ]
@@ -765,7 +778,7 @@ let releaseNotes: Array<IReleaseNote> = [
         features: [
             "Add Estimated Weighted Power for cycling activities",
             "Add Estimated Variability Index for cycling activities",
-            "Add Estimated Punch Factor for cycling activities",
+            "Add Estimated Intensity for cycling activities",
             "Bug fixing",
         ]
     }, {

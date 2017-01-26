@@ -3,40 +3,57 @@
     <md-card-title aria-hidden="false">
         <!--LEGEND-->
         <div flex="100" layout="row" layout-align="start center">
-            <span class="md-title" style="color: {{colors.ctl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Fitness {{fitnessDataOnToday.ctl | number: 1}}
+            <span class="md-title"
+                  style="color: {{colors.ctl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;"
+                  ng-click="showHelp()">Fitness {{fitnessDataOnToday.ctl | number: 1}}
                 <md-tooltip md-direction="bottom">
                     Chronic load (Click to show info)
                 </md-tooltip>
             </span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="md-title" style="color: {{colors.atl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Fatigue {{fitnessDataOnToday.atl | number: 1}}
+            <span class="md-title"
+                  style="color: {{colors.atl}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;"
+                  ng-click="showHelp()">Fatigue {{fitnessDataOnToday.atl | number: 1}}
               <md-tooltip md-direction="bottom">
                   Acute load (Click to show info)
               </md-tooltip>
             </span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="md-title" style="color: {{colors.tsb}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;" ng-click="showHelp()">Form {{fitnessDataOnToday.tsb | number: 1}} <span style="font-size: 12px;"> / Zone: <span style="color: {{trainingZoneOnToday.color}};">{{trainingZoneOnToday.name.toLocaleUpperCase()}}</span></span>
+            <span class="md-title"
+                  style="color: {{colors.tsb}}; cursor: pointer; padding-bottom: 2px; border-bottom: 1px dashed;"
+                  ng-click="showHelp()">Form {{fitnessDataOnToday.tsb | number: 1}} <span style="font-size: 12px;"> / Zone: <span
+                    style="color: {{trainingZoneOnToday.color}};">{{trainingZoneOnToday.name.toLocaleUpperCase()}}</span></span>
                 <md-tooltip md-direction="bottom">
                     Stress balance (Click to show info)
                 </md-tooltip>
             </span>
             <span flex></span>
-            <md-switch ng-model="showTrainingZone"  ng-change="showTrainingZoneChanged()" aria-label="Display Training Zones">
+            <md-switch ng-model="showTrainingZone" ng-change="showTrainingZoneChanged()"
+                       aria-label="Display Training Zones">
                 <md-icon>power_input</md-icon>
                 <md-tooltip>
                     Display Form Zones on graph
                 </md-tooltip>
             </md-switch>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <md-switch ng-disabled="true" aria-label="Use cycling power meter when available" ng-click="tmpUsePowerMeterPopup()" style="cursor: pointer;">
+            <md-switch ng-model="usePowerMeter" ng-change="usePowerMeterChanged()"
+                       aria-label="Use cycling power meter when available">
                 <md-icon>flash_on</md-icon>
                 <md-tooltip>
                     Use cycling power meter when available
                 </md-tooltip>
             </md-switch>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <md-switch ng-disabled="true" ng-model="useSwimStressScore" ng-click="tmpUseSwimStressScorePopup()"
+                       aria-label="Use swimming stress score (no HRM required)">
+                <md-icon>pool</md-icon>
+                <md-tooltip>
+                    Use swimming stress score (no HRM required)
+                </md-tooltip>
+            </md-switch>
             <span flex="5"></span>
             <!--<md-button layout-align="start start" class="md-icon-button" ng-click="_todo()">-->
-                <!--<md-icon aria-label="Help">settings</md-icon>-->
+            <!--<md-icon aria-label="Help">settings</md-icon>-->
             <!--</md-button>-->
             <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
                 <md-icon aria-label="Help">info</md-icon>
@@ -69,16 +86,11 @@
             <div flex></div>
         </div>
 
-        <!--LOADING-->
-        <div ng-hide="displayOnFirstDrawn" layout="row" layout-align="center center" style="height: 150px;">
-            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-
         <!--GRAPH-->
         <div layout="row" layout-align="start start">
 
             <div flex="100">
-                <nvd3 options="fitnessChartOptions" config="{deepWatchDataDepth: 0}" data="fitnessChartData.curves"
+                <nvd3 options="fitnessChartOptions" config="{deepWatchDataDepth: 0}" data="fitnessChartData.curves" api="nvd3api"
                       class="with-3d-shadow with-transitions"></nvd3>
             </div>
         </div>

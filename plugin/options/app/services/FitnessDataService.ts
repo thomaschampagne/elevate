@@ -1,15 +1,7 @@
 import Moment = moment.Moment;
 import IPromise = angular.IPromise;
-interface IFitnessDataService {
-    fitnessData: Array<IFitnessTrimpObject>;
-    getComputedActivities: Function;
-    getCleanedComputedActivitiesWithHeartRateData: Function;
-    getFitnessObjectsWithDaysOff: Function;
-    computeChronicAcuteBalanceTrainingLoad: (fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => Array<IFitnessTrimpObject>;
-    getFitnessData: () => Q.Promise<Array<IFitnessTrimpObject>>;
-}
 
-interface IFitnessActivitiesWithHR {
+interface IActivitiesWithFitness {
     id: number;
     date: Date; // TODO Store Moment instead?!
     timestamp: number;
@@ -18,32 +10,35 @@ interface IFitnessActivitiesWithHR {
     type: string;
     activityName: string;
     trimp: number;
+    powerStressScore?: number;
 }
 
-interface IFitnessActivitiesWithHRDaysOff {
+interface IActivitiesWithFitnessDaysOff {
     ids: Array<number>;
     date: Date;
     timestamp: number;
     type: Array<string>;
     activitiesName: Array<string>;
     trimp: number;
+    powerStressScore?: number;
     previewDay: boolean;
 }
 
-interface IFitnessTrimpObject {
+interface IFitnessActivity {
     ids: Array<number>;
     date: string;
     timestamp: number;
     type: Array<string>;
     activitiesName: Array<string>;
     trimp: number;
+    powerStressScore?: number;
     ctl: number;
     atl: number;
     tsb: number;
     previewDay: boolean;
 }
 
-interface IFitnessTrimpObjectTable extends IFitnessTrimpObject {
+interface IFitnessActivityTable extends IFitnessActivity {
     activitiesNameStr: string;
 }
 
@@ -56,7 +51,9 @@ class FitnessDataService {
 
     protected $q: IQService;
     protected chromeStorageService: ChromeStorageService;
-    protected fitnessData: any;
+    protected fitnessData: Array<IFitnessActivity>;
+    protected usePowerMeter: boolean = false;
+    protected userFTP: number = -1;
 
     constructor(q: IQService, chromeStorageService: ChromeStorageService) {
         this.$q = q;
@@ -64,43 +61,36 @@ class FitnessDataService {
     }
 
     /**
-     * @return Computed synced activities
+     * @return computed activities cleaned
      */
-    protected getComputedActivities(): IPromise<Array<ISyncActivityComputed>> {
+    protected getCleanedComputedActivities(): IPromise<Array<IActivitiesWithFitness>> {
 
-        let deferred = this.$q.defer<Array<ISyncActivityComputed>>();
+        if (this.userFTP === -1) {
+            console.error("userFTP must be set before");
+            return;
+        }
 
-        this.onGetComputedActivitiesTimeStart = performance.now(); // track time
+        this.onGetComputedActivitiesTimeStart = performance.now();
 
-        console.log('Fetch computedActivities from chromeStorageService');
+        let deferred = this.$q.defer<Array<IActivitiesWithFitness>>();
 
         this.chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
-            deferred.resolve(computedActivities);
-        }, (err: any) => {
-            deferred.reject(err);
-        });
 
-        return deferred.promise;
-    }
+            let cleanedActivities: Array<IActivitiesWithFitness> = [];
 
-    /**
-     * @return computed activities with HR data only
-     */
-    protected getCleanedComputedActivitiesWithHeartRateData(): IPromise<Array<IFitnessActivitiesWithHR>> {
-
-        let deferred = this.$q.defer<Array<IFitnessActivitiesWithHR>>();
-
-        console.log('Fetch computedActivitiesWithHR from fitnessDataService.getCleanedComputedActivitiesWithHeartRateData');
-
-        this.getComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
-
-            let cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR> = [];
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
-                if (activity.extendedStats && activity.extendedStats.heartRateData) {
+
+                let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
+
+                let isPowerMeterUsePossible: boolean = this.usePowerMeter && _.isNumber(this.userFTP)
+                    && activity.extendedStats && activity.extendedStats.powerData
+                    && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
+
+                if (hasHeartRateData || isPowerMeterUsePossible) {
 
                     let momentStartTime: Moment = moment(activity.start_time);
 
-                    let activityHR: IFitnessActivitiesWithHR = {
+                    let activityWithFitness: IActivitiesWithFitness = {
                         id: activity.id,
                         date: momentStartTime.toDate(),
                         timestamp: momentStartTime.toDate().getTime(),
@@ -108,14 +98,18 @@ class FitnessDataService {
                         year: momentStartTime.year(),
                         type: activity.type,
                         activityName: activity.name,
-                        trimp: activity.extendedStats.heartRateData.TRIMP
+                        trimp: (hasHeartRateData) ? activity.extendedStats.heartRateData.TRIMP : null
                     };
 
-                    cleanedActivitiesWithHRData.push(activityHR);
+                    if (isPowerMeterUsePossible) {
+                        activityWithFitness.powerStressScore = (activity.moving_time_raw * activity.extendedStats.powerData.weightedPower * (activity.extendedStats.powerData.weightedPower / this.userFTP) / (this.userFTP * 3600) * 100);
+                    }
+
+                    cleanedActivities.push(activityWithFitness);
                 }
             });
 
-            deferred.resolve(cleanedActivitiesWithHRData);
+            deferred.resolve(cleanedActivities);
 
         }, (err: any) => {
             deferred.reject(err);
@@ -127,33 +121,38 @@ class FitnessDataService {
     /**
      * @return Fitness object of computed activities including days off (= rest day)
      */
-    protected  getFitnessObjectsWithDaysOff(): IPromise<Array<IFitnessActivitiesWithHRDaysOff>> {
+    protected  getFitnessObjectsWithDaysOff(): IPromise<Array<IActivitiesWithFitnessDaysOff>> {
 
-        let deferred = this.$q.defer<Array<IFitnessActivitiesWithHRDaysOff>>();
+        let deferred = this.$q.defer<Array<IActivitiesWithFitnessDaysOff>>();
 
         console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
 
-        this.getCleanedComputedActivitiesWithHeartRateData().then((cleanedActivitiesWithHRData: Array<IFitnessActivitiesWithHR>) => {
+        this.getCleanedComputedActivities().then((cleanedActivities: Array<IActivitiesWithFitness>) => {
+
+            if(_.isEmpty(cleanedActivities)) {
+                deferred.reject('No ready activities');
+                return;
+            }
 
             // From date is the first activity done in history
             // Subtract 1 day to from date (to show graph point with 1 day before) and on day start
-            let fromMoment = moment(_.first(cleanedActivitiesWithHRData).date).subtract(1, 'days').startOf('day');
+            let fromMoment = moment(_.first(cleanedActivities).date).subtract(1, 'days').startOf('day');
 
             let todayMoment: Moment = moment().endOf('day'); // Today end of day
 
             // Now inject days off/resting
-            let everyDayFitnessObjects: Array<IFitnessActivitiesWithHRDaysOff> = [];
+            let everyDayFitnessObjects: Array<IActivitiesWithFitnessDaysOff> = [];
 
             let currentDayMoment = moment(fromMoment);
 
             while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-                let foundOnToday: Array<IFitnessActivitiesWithHR> = _.where(cleanedActivitiesWithHRData, {
+                let foundOnToday: Array<IActivitiesWithFitness> = _.where(cleanedActivities, {
                     year: currentDayMoment.year(),
                     dayOfYear: currentDayMoment.dayOfYear()
                 });
 
-                let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
+                let fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
                     ids: [],
                     date: currentDayMoment.toDate(),
                     timestamp: currentDayMoment.toDate().getTime(),
@@ -169,6 +168,15 @@ class FitnessDataService {
                     for (let j: number = 0; j < foundOnToday.length; j++) {
                         fitnessObjectOnCurrentDay.ids.push(foundOnToday[j].id);
                         fitnessObjectOnCurrentDay.trimp += foundOnToday[j].trimp;
+
+                        if (foundOnToday[j].powerStressScore) {
+
+                            if (!fitnessObjectOnCurrentDay.powerStressScore) { // Initialize value if not exists
+                                fitnessObjectOnCurrentDay.powerStressScore = 0;
+                            }
+                            fitnessObjectOnCurrentDay.powerStressScore += foundOnToday[j].powerStressScore;
+                        }
+
                         fitnessObjectOnCurrentDay.activitiesName.push(foundOnToday[j].activityName);
                         fitnessObjectOnCurrentDay.type.push(foundOnToday[j].type);
                     }
@@ -184,7 +192,7 @@ class FitnessDataService {
 
                 let futureDate: Date = moment().add(i, 'days').startOf('day').toDate();
 
-                let fitnessObjectOnCurrentDay: IFitnessActivitiesWithHRDaysOff = {
+                let fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
                     ids: [],
                     date: futureDate,
                     timestamp: futureDate.getTime(),
@@ -209,26 +217,35 @@ class FitnessDataService {
     /**
      * @return Compute CTl, ATL, TSB results with days off (= rest day)
      */
-    protected computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>): Array<IFitnessTrimpObject> {
+    protected computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff: Array<IActivitiesWithFitnessDaysOff>): Array<IFitnessActivity> {
 
         let ctl: number = 0;
         let atl: number = 0;
         let tsb: number = 0;
-        let results: Array<IFitnessTrimpObject> = [];
+        let results: Array<IFitnessActivity> = [];
 
-        _.each(fitnessObjectsWithDaysOff, (trimpObject: IFitnessActivitiesWithHRDaysOff, index: number, list: Array<IFitnessActivitiesWithHRDaysOff>) => {
+        _.each(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
 
-            ctl = ctl + (trimpObject.trimp - ctl) * (1 - Math.exp(-1 / 42));
-            atl = atl + (trimpObject.trimp - atl) * (1 - Math.exp(-1 / 7));
+            let score: number;
+            if (this.usePowerMeter && trimpObject.powerStressScore) {  // Use power stress score
+                score = trimpObject.powerStressScore;
+            } else { // Use trimp
+                score = trimpObject.trimp;
+                // score = 0; // Simulate power meter only
+            }
+
+            ctl = ctl + (score - ctl) * (1 - Math.exp(-1 / 42));
+            atl = atl + (score - atl) * (1 - Math.exp(-1 / 7));
             tsb = ctl - atl;
 
-            let result: IFitnessTrimpObject = {
+            let result: IFitnessActivity = {
                 ids: trimpObject.ids,
                 date: trimpObject.date.toLocaleDateString(),
                 timestamp: trimpObject.timestamp,
                 activitiesName: trimpObject.activitiesName,
                 type: trimpObject.type,
                 trimp: trimpObject.trimp,
+                powerStressScore: trimpObject.powerStressScore,
                 ctl: ctl,
                 atl: atl,
                 tsb: tsb,
@@ -245,7 +262,7 @@ class FitnessDataService {
                 let lastResult = _.last(results);
 
                 // Create a new result to fill the gap !
-                let fillTheCurvesGapWithFakeResult: IFitnessTrimpObject = {
+                let fillTheCurvesGapWithFakeResult: IFitnessActivity = {
                     ids: null,
                     date: lastResult.date,
                     timestamp: lastResult.timestamp,
@@ -263,35 +280,41 @@ class FitnessDataService {
 
             results.push(result);
         });
+
         return results;
     }
 
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
      */
-    protected getFitnessData(): IPromise<Array<IFitnessTrimpObject>> {
+    public getFitnessData(usePowerMeter: boolean, userFTP: number): IPromise<Array<IFitnessActivity>> {
 
-        let deferred = this.$q.defer<Array<IFitnessTrimpObject>>();
+        this.usePowerMeter = usePowerMeter;
+        this.userFTP = userFTP;
 
-        if (!this.fitnessData) {
+        let deferred = this.$q.defer<Array<IFitnessActivity>>();
 
-            console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
+        // if (!this.fitnessData) {
 
-            this.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IFitnessActivitiesWithHRDaysOff>) => {
+        console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
 
-                this.fitnessData = this.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
-                deferred.resolve(this.fitnessData);
-                this.onGetFitnessDataTimeDone = performance.now(); // track time
-                console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
+        this.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IActivitiesWithFitnessDaysOff>) => {
 
-            }, (err: any) => {
-                deferred.reject(err);
-            });
+            this.fitnessData = this.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
 
-        } else {
-            console.log('Fetch fitnessData from FitnessDataService local var');
             deferred.resolve(this.fitnessData);
-        }
+
+            this.onGetFitnessDataTimeDone = performance.now(); // track time
+            console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
+
+        }, (err: any) => {
+            deferred.reject(err);
+        });
+
+        // } else {
+        //     console.log('Fetch fitnessData from FitnessDataService local var');
+        //     deferred.resolve(this.fitnessData);
+        // }
         return deferred.promise;
     }
 }

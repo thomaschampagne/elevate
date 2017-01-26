@@ -1,24 +1,28 @@
 interface IFitnessTrendGraphScope extends IScope {
+    tmpUseSwimStressScorePopup: Function;
+    nvd3api: any;
+    userFTP: number;
+    makeGraph: Function;
+    showTrainingZone: boolean;
     showTrainingZoneChanged: Function;
     trainingZoneOnToday: ITrainingZone;
     getTrainingZone: (tsb: number) => ITrainingZone;
-    showTrainingZone: boolean;
-    tmpUsePowerMeterPopup: () => void; // TODO Remove in future
+    usePowerMeter: boolean;
+    usePowerMeterChanged: () => void;
     colors: IColors;
-    fitnessDataOnToday: IFitnessTrimpObject;
+    fitnessDataOnToday: IFitnessActivity;
     makeTooltip: (d: any) => string;
     drawHtmlSeparator: () => string;
     drawLegendSquare: (color: string, width: number, text: string) => string;
-    displayOnFirstDrawn: boolean;
     onGraphDrawn: () => void;
     lastSyncDate: number;
     toDate: Date;
     fromDate: Date;
-    fitnessData: Array<IFitnessTrimpObject>;
+    fitnessData: Array<IFitnessActivity>;
     maxDate: Date;
     minDate: Date;
-    generateFitnessGraphData: (fitnessData: Array<IFitnessTrimpObject>, fromTimestamp: number, toTimestamp: number) => IFitnessGraphData;
-    generateGraph: () => void;
+    generateFitnessGraphData: (fitnessData: Array<IFitnessActivity>, fromTimestamp: number, toTimestamp: number) => IFitnessGraphData;
+    configureGraph: () => void;
     updateFitnessChartGraph: (lastMonthPeriodChange: boolean, fromOrToDateChange: boolean) => void;
     toDateChanged: () => void;
     fromDateChanged: () => void;
@@ -28,8 +32,8 @@ interface IFitnessTrendGraphScope extends IScope {
     activityTypes: Array<string>;
     fitnessChartOptions: any;
     fitnessChartData: IFitnessGraphData;
-    fitnessTrendGraphDataLoaded: (hasFitnessData: boolean) => void; // coming from $parent
     showHelp: () => void;
+    loadFitnessData(): void;
 }
 
 interface IFitnessGraphData {
@@ -45,34 +49,63 @@ interface ITrainingZone {
 
 class FitnessTrendGraph {
 
-    static $inject: string[] = ['$scope', 'FitnessDataService', '$colors', '$window', '$mdDialog'];
+    static $inject: string[] = ['$scope', '$colors', '$window', '$mdDialog', '$location'];
 
-    constructor(public $scope: IFitnessTrendGraphScope, public fitnessDataService: IFitnessDataService, public $colors: IColors, public $window: IWindowService, public $mdDialog: IDialogService) {
+    constructor(public $scope: IFitnessTrendGraphScope, public $colors: IColors, public $window: IWindowService, public $mdDialog: IDialogService, public $location: ILocationService) {
 
         let onGraphDrawTimeStart: number;
         let onGraphDrawnTimeDone: number;
 
-        $scope.displayOnFirstDrawn = false;
         $scope.colors = $colors;
 
-        fitnessDataService.getFitnessData().then((fitnessData: Array<IFitnessTrimpObject>) => {
+        // Check showTrainingZone stored cfg
+        $scope.showTrainingZone = (_.isEmpty(localStorage.getItem('showTrainingZone')) || localStorage.getItem('showTrainingZone') === '1');
+        $scope.showTrainingZoneChanged = () => {
+            localStorage.setItem('showTrainingZone', $scope.showTrainingZone ? '1' : '0'); // Store value
+            $scope.updateFitnessChartGraph(false, true);
+        };
 
-            $scope.fitnessData = fitnessData;
+        $scope.$on(FitnessTrendController.fitnessDataLoaded, (event: any, message: any) => {
 
+            console.log('FitnessTrendGraph: message ' + FitnessTrendController.fitnessDataLoaded + ' received');
+
+            $scope.usePowerMeter = message.usePowerMeter;
+            $scope.userFTP = message.userFTP;
+            $scope.fitnessData = message.fitnessData;
             $scope.fitnessDataOnToday = _.last(_.where($scope.fitnessData, {
                 previewDay: false
             }));
-
             $scope.trainingZoneOnToday = $scope.getTrainingZone($scope.fitnessDataOnToday.tsb);
-
-            // Notify parent of data loaded
-            $scope.fitnessTrendGraphDataLoaded(!_.isEmpty($scope.fitnessData));
-
-            setTimeout(() => { // Postpone execution at the end
-                $scope.updateFitnessChartGraph(true, false);
-            });
-
+            $scope.updateFitnessChartGraph(true, false);
         });
+
+
+        // User just trigger power meter use toggle
+        $scope.usePowerMeterChanged = () => { // TODO rework
+
+            if (!_.isNumber($scope.userFTP)) {
+
+                $scope.usePowerMeter = false; // Reset
+
+                let confirm = $mdDialog.confirm()
+                    .htmlContent('Your Cycling Functional Threshold Power (FTP) is not defined. Please set it in athlete settings and reload this page.')
+                    .cancel('cancel').ok('Go to athlete settings');
+
+                $mdDialog.show(confirm).then(() => {
+                    $location.path(routeMap.athleteSettingsRoute);
+                }, () => {
+                });
+
+            } else {
+
+                // Apply graph changes
+                localStorage.setItem('usePowerMeter', $scope.usePowerMeter ? '1' : '0'); // Store value
+
+                // Call parent FitnessTrendController:loadFitnessData to re-compute fitness data
+                // A FitnessTrendController.fitnessDataLoaded message will be re-send
+                $scope.loadFitnessData();
+            }
+        };
 
         $scope.periodsToWatch = [{
             days: moment.duration(moment().diff(moment().subtract(7, 'days'))).asDays(),
@@ -104,10 +137,9 @@ class FitnessTrendGraph {
         }];
 
         // Re-select last month period chosen
-
         let index = parseInt(localStorage.getItem('lastMonthPeriodSelected'));
 
-        if(_.isNumber(index) && !_.isNaN(index) && !_.isEmpty($scope.periodsToWatch[index])) {
+        if (_.isNumber(index) && !_.isNaN(index) && !_.isEmpty($scope.periodsToWatch[index])) {
             $scope.periodSelected = $scope.periodsToWatch[index];
         } else {
             $scope.periodSelected = $scope.periodsToWatch[5];
@@ -126,12 +158,6 @@ class FitnessTrendGraph {
         };
 
         $scope.toDateChanged = () => {
-            $scope.updateFitnessChartGraph(false, true);
-        };
-
-        $scope.showTrainingZone = (_.isEmpty(localStorage.getItem('showTrainingZone')) || localStorage.getItem('showTrainingZone') === '1');
-        $scope.showTrainingZoneChanged = () => {
-            localStorage.setItem('showTrainingZone', $scope.showTrainingZone ? '1' : '0'); // Store value
             $scope.updateFitnessChartGraph(false, true);
         };
 
@@ -167,7 +193,7 @@ class FitnessTrendGraph {
 
             $scope.fitnessChartData = $scope.generateFitnessGraphData($scope.fitnessData, fromTimestamp, toTimestamp);
 
-            $scope.generateGraph();
+            $scope.configureGraph();
         };
 
         $scope.drawLegendSquare = (color: string, width: number, text: string) => {
@@ -212,7 +238,7 @@ class FitnessTrendGraph {
 
         $scope.makeTooltip = (d: any) => {
 
-            let fitnessObject: IFitnessTrimpObject = <IFitnessTrimpObject> (_.findWhere($scope.fitnessData, {
+            let fitnessObject: IFitnessActivity = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
                 timestamp: d.value
             }));
 
@@ -245,19 +271,38 @@ class FitnessTrendGraph {
                 html += '   </tr>';
             }
 
-
-            if (hasActivities) {
-                html += '   <tr>';
-                html += '       <td class="title">TRIMP</td>';
-                html += '       <td>' + fitnessObject.trimp.toFixed(0) + '</td>';
-                html += '   </tr>';
-            }
-
             // Date
             html += '   <tr>';
             html += '       <td class="title underlined">Date</td>';
             html += '       <td class="underlined" colspan="2">' + moment(d.point.x).format('MMMM Do YYYY') + '</td>';
             html += '   </tr>';
+
+            if (hasActivities) {
+
+                html += '   <tr>';
+                html += '       <td class="title"></td>';
+                html += '       <td class="" colspan="2"></td>';
+                html += '   </tr>';
+
+                if(fitnessObject.trimp) {
+                    html += '   <tr>';
+                    html += '       <td class="title">TRIMP</td>';
+                    html += '       <td>' + fitnessObject.trimp.toFixed(0) + '</td>';
+                    html += '   </tr>';
+                }
+
+                if(fitnessObject.powerStressScore) {
+                    html += '   <tr>';
+                    html += '       <td class="title">PSS</td>';
+                    html += '       <td>' + fitnessObject.powerStressScore.toFixed(0) + '</td>';
+                    html += '   </tr>';
+                }
+
+                html += '   <tr>';
+                html += '       <td class="title underlined"></td>';
+                html += '       <td class="underlined" colspan="2"></td>';
+                html += '   </tr>';
+            }
 
             // Type
             html += '   <tr>';
@@ -293,7 +338,9 @@ class FitnessTrendGraph {
             return html;
         };
 
-        $scope.generateGraph = () => {
+        $scope.configureGraph = () => {
+
+            console.log('Configure graph options');
 
             $scope.fitnessChartOptions = {
 
@@ -331,7 +378,7 @@ class FitnessTrendGraph {
                         dispatch: {
                             elementClick: function (d: any) {
                                 // Open activities on point click
-                                let fitnessObject: IFitnessTrimpObject = <IFitnessTrimpObject> (_.findWhere($scope.fitnessData, {
+                                let fitnessObject: IFitnessActivity = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
                                     timestamp: d.point.x
                                 }));
 
@@ -397,7 +444,7 @@ class FitnessTrendGraph {
 
         };
 
-        $scope.generateFitnessGraphData = (fitnessData: Array<IFitnessTrimpObject>, fromTimestamp: number, toTimestamp: number) => {
+        $scope.generateFitnessGraphData = (fitnessData: Array<IFitnessActivity>, fromTimestamp: number, toTimestamp: number) => {
 
             let ctlValues: Array<any> = [];
             let atlValues: Array<any> = [];
@@ -410,7 +457,7 @@ class FitnessTrendGraph {
             let optimal_zone_points: Array<any> = [];
             let overtrain_zone_points: Array<any> = [];
 
-            _.each(fitnessData, (fitData: IFitnessTrimpObject) => {
+            _.each(fitnessData, (fitData: IFitnessActivity) => {
 
                 if (!fitData.previewDay && fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
 
@@ -461,7 +508,7 @@ class FitnessTrendGraph {
             let atlPreviewValues: Array<any> = [];
             let tsbPreviewValues: Array<any> = [];
 
-            let fitnessDataPreview: Array<IFitnessTrimpObject> = _.where(fitnessData, {
+            let fitnessDataPreview: Array<IFitnessActivity> = _.where(fitnessData, {
                 previewDay: true
             });
 
@@ -469,7 +516,7 @@ class FitnessTrendGraph {
             // We add preview curves...
             if (moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
 
-                _.each(fitnessDataPreview, (fitData: IFitnessTrimpObject) => {
+                _.each(fitnessDataPreview, (fitData: IFitnessActivity) => {
 
                     ctlPreviewValues.push({
                         x: fitData.timestamp,
@@ -615,12 +662,12 @@ class FitnessTrendGraph {
 
         $scope.onGraphDrawn = () => {
 
-            $scope.displayOnFirstDrawn = true;
-            $scope.$apply();
-
             onGraphDrawnTimeDone = performance.now(); // Track graph draw time on done
             console.log("Generating Fitness Graph took " + (onGraphDrawnTimeDone - onGraphDrawTimeStart).toFixed(0) + " ms.");
 
+            setTimeout(() => {
+                $scope.nvd3api.update();
+            });
         };
 
         $scope.showHelp = () => {
@@ -636,20 +683,20 @@ class FitnessTrendGraph {
             });
         };
 
-        $scope.tmpUsePowerMeterPopup = () => {
-            let dialog = $mdDialog.alert()
-                .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of cycling power meter stress score when available to compute your fitness.</br></br>' +
-                    'To support this feature, your local history may be cleared in a next update: because calculation algorithm of your stats will change. A new full sync will be required.').ok('Got it !');
-
-            $mdDialog.show(dialog);
-        };
-
         // This fix as "workaround" graph cropped when sidebar show/hide. Listen events broadcasted by "$broadcast('window-resize-gt-md');"
         // Better solution?!
         $scope.$on('window-resize-gt-md', () => {
             // Send fake js window resize to make sure graph is re-drawn (to avoid cropping by sidebar) over a window resize around gt-md.
-            $window.dispatchEvent(new Event('resize'));
+            $scope.nvd3api.update();
         });
+
+        
+        $scope.tmpUseSwimStressScorePopup = () => {
+            let dialog = $mdDialog.alert()
+                .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of a swimming stress score to compute your fitness on swimming activities.</br></br> No heart rate monitor will be required. Only a "Swimming Functional Threshold Pace"  will be asked to you in athlete settings.').ok('Got it !');
+
+            $mdDialog.show(dialog);
+        };
     }
 }
 
