@@ -232,7 +232,7 @@ class StravistiX {
                 'Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.',
                 'Grid: All your activities in a table including stravistix extended stats as columns.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                'And more suprises... stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a>!',
+                'Stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a> // Just created <a target="_blank" href="https://www.strava.com/clubs/stravistix">Strava Club</a>',
             ]
         };
 
