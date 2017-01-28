@@ -6,6 +6,7 @@ interface IYearProgress {
 }
 
 interface IProgression {
+    onTimestamp: number;
     onYear: number;
     onDayOfYear: number;
     totalDistance: number; // meters
@@ -72,6 +73,7 @@ class YearProgressComputer {
                 };
                 // Start totals from 0
                 progression = {
+                    onTimestamp: currentDayMoment.toDate().getTime(),
                     onYear: currentDayMoment.year(),
                     onDayOfYear: currentDayMoment.dayOfYear(),
                     totalDistance: 0,
@@ -83,6 +85,7 @@ class YearProgressComputer {
             } else {
                 // Year exists
                 progression = {
+                    onTimestamp: currentDayMoment.toDate().getTime(),
                     onYear: currentDayMoment.year(),
                     onDayOfYear: currentDayMoment.dayOfYear(),
                     totalDistance: lastProgression.totalDistance,
@@ -126,11 +129,29 @@ class YearProgressController {
 
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
-            // let result = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Ride', 'VirtualRide']);
-            // let result = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Run']);
-            let result = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['VirtualRide']);
+            let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Ride', 'VirtualRide']);
+            // let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Run']);
+            // let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['VirtualRide']);
+            console.log(yearProgressions);
 
-            console.log(result);
+            // Compute curves
+            let curves: Array<any> = [];
+            _.each(yearProgressions, (yearProgress: IYearProgress) => {
+                let yearValues: Array<{x: number, y: number}> = [];
+                _.each(yearProgress.progressions, (progression: IProgression) => {
+                    let date = new Date(progression.onTimestamp);
+                    let flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
+                    yearValues.push({
+                        x: flatDate.getTime(),
+                        y: progression.totalDistance / 1000
+                    });
+                });
+                curves.push({
+                    key: yearProgress.year,
+                    values: yearValues,
+                });
+            });
+            $scope.data = curves;
         });
 
         $scope.options = {
@@ -166,14 +187,19 @@ class YearProgressController {
                     }
                 },
                 xAxis: {
-                    axisLabel: 'Time (ms)'
+                    ticks: 12,
+                    tickFormat: (d: any) => {
+                        // let date = new Date(d);
+                        return moment(d).format('MMM Do');
+                    },
+                    staggerLabels: true
                 },
                 yAxis: {
-                    axisLabel: 'Voltage (v)',
+                    ticks: 10,
                     tickFormat: (d: any) => {
-                        return d3.format('.02f')(d);
+                        return d3.format('.01f')(d);
                     },
-                    axisLabelDistance: -10
+                    axisLabelDistance: -10,
                 },
                 callback: (chart: any) => {
                     console.log("!!! lineChart callback !!!");
