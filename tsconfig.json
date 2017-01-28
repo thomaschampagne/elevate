@@ -78,6 +78,7 @@
     "plugin/options/app/controllers/CommonSettingsController.ts",
     "plugin/options/app/controllers/AthleteSettingsController.ts",
     "plugin/options/app/controllers/FitnessTrendController.ts",
+    "plugin/options/app/controllers/YearProgressController.ts",
     "plugin/options/app/controllers/HrrZonesSettingsController.ts",
     "plugin/options/app/controllers/XtdZonesSettingsController.ts",
     "plugin/options/app/services/AvoidInputKeysService.ts",
