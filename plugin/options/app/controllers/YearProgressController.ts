@@ -117,33 +117,97 @@ class YearProgressComputer {
         return result;
     }
 }
-
+enum DataType {
+    DISTANCE,
+    TIME,
+    ELEVATION,
+    COUNT
+}
 class YearProgressController {
 
     public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog', '$window'];
 
-    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: IDialogService, $window: IWindowService) {
+    protected computedActivities: Array<ISyncActivityComputed> = [];
 
+    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: IDialogService, $window: IWindowService) {
 
         let yearProgressComputer: YearProgressComputer = new YearProgressComputer();
 
+        // Data type
+        $scope.dataType = [
+            {value: DataType.DISTANCE, text: 'Distance'},
+            {value: DataType.TIME, text: 'Time'},
+            {value: DataType.ELEVATION, text: 'Elevation'},
+            {value: DataType.COUNT, text: 'Count'},
+        ];
+        $scope.dataTypeSelected = $scope.dataType[0];
+        $scope.dataTypeChanged = () => {
+            $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
+        };
+
+        // Activities type
+        $scope.searchTypesSelected = ['Ride', 'VirtualRide']; // Defaults
+        $scope.getSearchTypesSelectedText = function () {
+            if ($scope.searchTypesSelected.length) {
+                return $scope.searchTypesSelected.length + ' selected';
+            } else {
+                return "Activities types";
+            }
+        };
+        $scope.typesChanged = () => {
+            $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
+        };
+
+        // Start...
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
-            let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Ride', 'VirtualRide']);
-            // let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['Run']);
-            // let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, ['VirtualRide']);
-            console.log(yearProgressions);
+            this.computedActivities = computedActivities;
+            $scope.searchStatsTypes = _.uniq(_.flatten(_.pluck(computedActivities, 'type'))); // Handle uniques activity types for selection in UI
+
+            setTimeout(() => {
+                $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
+            });
+        });
+
+        $scope.applyData = function (computedActivities: Array<ISyncActivityComputed>, types: Array<string>, dataType: DataType) {
+
+            if (_.isEmpty(computedActivities) || _.isEmpty(types)) {
+                alert('hide graph');
+                return;
+            }
+
+            let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, types);
 
             // Compute curves
             let curves: Array<any> = [];
             _.each(yearProgressions, (yearProgress: IYearProgress) => {
+
                 let yearValues: Array<{x: number, y: number}> = [];
+
                 _.each(yearProgress.progressions, (progression: IProgression) => {
+
                     let date = new Date(progression.onTimestamp);
                     let flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
+
+                    let value: number;
+
+                    switch (dataType) {
+                        case DataType.DISTANCE:
+                            value = progression.totalDistance / 1000; // km
+                            break;
+                        case DataType.TIME:
+                            value = progression.totalTime / 3600; // hours
+                            break;
+                        case DataType.ELEVATION:
+                            value = progression.totalElevation; // meters
+                            break;
+                        case DataType.COUNT:
+                            value = progression.count; // meters
+                            break;
+                    }
                     yearValues.push({
                         x: flatDate.getTime(),
-                        y: progression.totalDistance / 1000
+                        y: value
                     });
                 });
                 curves.push({
@@ -152,13 +216,12 @@ class YearProgressController {
                 });
             });
             $scope.data = curves;
-        });
+        };
 
         $scope.options = {
             chart: {
                 type: 'lineChart',
                 height: window.innerHeight * 0.65,
-                // showLegend: false,
                 margin: {
                     top: 20,
                     right: 50,
@@ -189,7 +252,6 @@ class YearProgressController {
                 xAxis: {
                     ticks: 12,
                     tickFormat: (d: any) => {
-                        // let date = new Date(d);
                         return moment(d).format('MMM Do');
                     },
                     staggerLabels: true
@@ -207,47 +269,7 @@ class YearProgressController {
             },
 
         };
-
-        // $scope.data = sinAndCos();
-
-        /*Random Data Generator */
-
-        // function sinAndCos() {
-        //     var sin = [],sin2 = [],
-        //         cos = [];
-        //
-        //     //Data is represented as an array of {x,y} pairs.
-        //     for (var i = 0; i < 100; i++) {
-        //         sin.push({x: i, y: Math.sin(i/10)});
-        //         sin2.push({x: i, y: i % 10 == 5 ? null : Math.sin(i/10) *0.25 + 0.5});
-        //         cos.push({x: i, y: .5 * Math.cos(i/10+ 2) + Math.random() / 10});
-        //     }
-        //
-        //     //Line chart data should be sent as an array of series objects.
-        //     return [
-        //         {
-        //             values: sin,      //values - represents the array of {x,y} data points
-        //             key: 'Sine Wave', //key  - the name of the series.
-        //             color: '#ff7f0e',  //color - optional: choose your own line color.
-        //             strokeWidth: 2,
-        //             classed: 'dashed'
-        //         },
-        //         {
-        //             values: cos,
-        //             key: 'Cosine Wave',
-        //             color: '#2ca02c'
-        //         },
-        //         {
-        //             values: sin2,
-        //             key: 'Another sine wave',
-        //             color: '#7777ff',
-        //             area: true      //area - set to true if you want this line to turn into a filled area chart.
-        //         }
-        //     ];
-        // };
-
     }
-
 }
 
 app.controller("YearProgressController", YearProgressController);

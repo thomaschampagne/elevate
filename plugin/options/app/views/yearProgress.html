@@ -1,3 +1,32 @@
-<md-content>
-    <nvd3 options="options" data="data"></nvd3>
+<md-content layout-padding>
+    <md-card>
+        <md-card-content>
+            <div flex="100" layout="row" layout-align="end center">
+                <md-input-container flex="20">
+                    <label>Activities types</label>
+                    <md-select ng-model="searchTypesSelected" md-selected-text="getSearchTypesSelectedText()" multiple
+                               class="md-block" ng-change="typesChanged()">
+                        <md-optgroup label="Types">
+                            <md-option ng-value="type"
+                                       ng-repeat="type in searchStatsTypes">
+                                {{type}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+                <span flex="5"></span>
+                <md-input-container flex="20">
+                    <label>Select data</label>
+                    <md-select ng-model="dataTypeSelected" class="md-block" ng-change="dataTypeChanged()">
+                        <md-option ng-value="type"
+                                   ng-repeat="type in dataType">
+                            {{type.text}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <nvd3 options="options" data="data"></nvd3>
+        </md-card-content>
+    </md-card>
 </md-content>
