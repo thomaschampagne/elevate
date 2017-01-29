@@ -129,7 +129,7 @@ class FitnessDataService {
 
         this.getCleanedComputedActivities().then((cleanedActivities: Array<IActivitiesWithFitness>) => {
 
-            if(_.isEmpty(cleanedActivities)) {
+            if (_.isEmpty(cleanedActivities)) {
                 deferred.reject('No ready activities');
                 return;
             }
@@ -226,12 +226,13 @@ class FitnessDataService {
 
         _.each(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
 
-            let score: number;
-            if (this.usePowerMeter && trimpObject.powerStressScore) {  // Use power stress score
-                score = trimpObject.powerStressScore;
-            } else { // Use trimp
-                score = trimpObject.trimp;
-                // score = 0; // Simulate power meter only
+            let score: number = 0;
+            if (this.usePowerMeter && trimpObject.powerStressScore) {
+                score += trimpObject.powerStressScore;
+            }
+
+            if (trimpObject.trimp > 0) {
+                score += trimpObject.trimp;
             }
 
             ctl = ctl + (score - ctl) * (1 - Math.exp(-1 / 42));
