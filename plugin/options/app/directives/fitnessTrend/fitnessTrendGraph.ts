@@ -284,17 +284,24 @@ class FitnessTrendGraph {
                 html += '       <td class="" colspan="2"></td>';
                 html += '   </tr>';
 
-                if(fitnessObject.trimp) {
+                if (fitnessObject.trimpScore > 0) {
                     html += '   <tr>';
                     html += '       <td class="title">TRIMP</td>';
-                    html += '       <td>' + fitnessObject.trimp.toFixed(0) + '</td>';
+                    html += '       <td>' + fitnessObject.trimpScore.toFixed(0) + '</td>';
                     html += '   </tr>';
                 }
 
-                if(fitnessObject.powerStressScore) {
+                if (fitnessObject.powerStressScore > 0) {
                     html += '   <tr>';
                     html += '       <td class="title">PSS</td>';
                     html += '       <td>' + fitnessObject.powerStressScore.toFixed(0) + '</td>';
+                    html += '   </tr>';
+                }
+
+                if (fitnessObject.totalStressScore > 0) {
+                    html += '   <tr>';
+                    html += '       <td class="title">Total Stress</td>';
+                    html += '       <td>' + fitnessObject.totalStressScore.toFixed(0) + '</td>';
                     html += '   </tr>';
                 }
 
@@ -690,7 +697,7 @@ class FitnessTrendGraph {
             $scope.nvd3api.update();
         });
 
-        
+
         $scope.tmpUseSwimStressScorePopup = () => {
             let dialog = $mdDialog.alert()
                 .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of a swimming stress score to compute your fitness on swimming activities.</br></br> No heart rate monitor will be required. Only a "Swimming Functional Threshold Pace"  will be asked to you in athlete settings.').ok('Got it !');
