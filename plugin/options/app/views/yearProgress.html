@@ -25,8 +25,31 @@
                     </md-select>
                 </md-input-container>
             </div>
+            <nvd3 options="graphOptions" data="graphData"></nvd3>
 
-            <nvd3 options="options" data="data"></nvd3>
+            <md-table-container>
+                <table md-table ng-model="selected">
+                    <thead md-head md-order="tableQuery.order">
+                    <tr md-row>
+                        <th md-column md-numeric md-order-by=""><span>Year</span></th>
+                        <th md-column md-numeric md-order-by=""><span>Count</span></th>
+                        <th md-column md-numeric md-order-by=""><span>Distance (km)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>Time (h)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>Elevation (m)</span></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row md-select="dessert" md-select-id="name" md-auto-select
+                        ng-repeat="row in tableData">
+                        <td md-cell>{{row.year}}</td>
+                        <td md-cell>{{row.count}}</td>
+                        <td md-cell>{{row.totalDistance | number: 1}}</td>
+                        <td md-cell>{{row.totalTime | number: 1}}</td>
+                        <td md-cell>{{row.totalElevation | number: 0}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
         </md-card-content>
     </md-card>
 </md-content>

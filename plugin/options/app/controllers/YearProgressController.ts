@@ -40,15 +40,9 @@ class YearProgressComputer {
             return activity.start_time;
         });
 
-        // console.warn(yearProgressActivities);
-
         // Find along types date from & to / From: 1st january of first year / To: Today
         let fromMoment: Moment = moment(_.first(yearProgressActivities).start_time).startOf('year'); // 1st january of first year
         let todayMoment: Moment = moment().endOf('day'); // Today end of day
-
-        // console.warn(fromMoment.toDate());
-        // console.warn(todayMoment.toDate());
-        //
 
         // Init required IYearProgress result
         let result: Array<IYearProgress> = [];
@@ -178,8 +172,10 @@ class YearProgressController {
 
             let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, types);
 
-            // Compute curves
+            // Compute curves & rows
             let curves: Array<any> = [];
+            let rows: Array<any> = [];
+
             _.each(yearProgressions, (yearProgress: IYearProgress) => {
 
                 let yearValues: Array<{x: number, y: number}> = [];
@@ -210,18 +206,41 @@ class YearProgressController {
                         y: value
                     });
                 });
+
+                // Add row
+                let progressAtThisDayOfYear: IProgression = _.findWhere(yearProgress.progressions, {
+                    onDayOfYear: moment().dayOfYear()
+                });
+
+                let row: any = {};
+                row.year = yearProgress.year;
+                row.totalDistance = progressAtThisDayOfYear.totalDistance / 1000;
+                row.totalTime = moment.duration(progressAtThisDayOfYear.totalTime * 1000).asHours();
+                row.totalElevation = progressAtThisDayOfYear.totalElevation;
+                row.count = progressAtThisDayOfYear.count;
+                rows.push(row);
+
+                // Add curve
                 curves.push({
                     key: yearProgress.year,
                     values: yearValues,
                 });
             });
-            $scope.data = curves;
+
+            $scope.tableData = _.sortBy(rows, (row) => {
+                return -1 * row.year;
+            });
+
+            $scope.graphData = _.sortBy(curves, (curve) => {
+                return -1 * curve.key;
+            });
         };
 
-        $scope.options = {
+        $scope.graphOptions = {
             chart: {
                 type: 'lineChart',
-                height: window.innerHeight * 0.65,
+                // height: window.innerHeight * 0.65,
+                height: 650,
                 margin: {
                     top: 20,
                     right: 50,
@@ -264,11 +283,18 @@ class YearProgressController {
                     axisLabelDistance: -10,
                 },
                 callback: (chart: any) => {
-                    console.log("!!! lineChart callback !!!");
                 }
-            },
-
+            }
         };
+
+        $scope.selected = [];
+
+        $scope.tableQuery = {
+            order: 'name',
+            limit: 5,
+            page: 1
+        };
+
     }
 }
 
