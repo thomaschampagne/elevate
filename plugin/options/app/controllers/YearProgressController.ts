@@ -174,9 +174,9 @@ class YearProgressController {
 
             // Compute curves & rows
             let curves: Array<any> = [];
-            let rows: Array<any> = [];
+            let tableRows: Array<any> = [];
 
-            _.each(yearProgressions, (yearProgress: IYearProgress) => {
+            _.each(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
 
                 let yearValues: Array<{x: number, y: number}> = [];
 
@@ -212,13 +212,27 @@ class YearProgressController {
                     onDayOfYear: moment().dayOfYear()
                 });
 
-                let row: any = {};
-                row.year = yearProgress.year;
-                row.totalDistance = progressAtThisDayOfYear.totalDistance / 1000;
-                row.totalTime = moment.duration(progressAtThisDayOfYear.totalTime * 1000).asHours();
-                row.totalElevation = progressAtThisDayOfYear.totalElevation;
-                row.count = progressAtThisDayOfYear.count;
-                rows.push(row);
+                let tableRow: any = {};
+                tableRow.year = yearProgress.year;
+
+                tableRow.totalDistance = progressAtThisDayOfYear.totalDistance / 1000;
+                tableRow.totalTime = moment.duration(progressAtThisDayOfYear.totalTime * 1000).asHours();
+                tableRow.totalElevation = progressAtThisDayOfYear.totalElevation;
+                tableRow.count = progressAtThisDayOfYear.count;
+
+                if(yearProgressionsIterator[index - 1]) {
+
+                    let progressAtThisDayOfLastYear: IProgression = _.findWhere(yearProgressionsIterator[index - 1].progressions, {
+                        onDayOfYear: moment().dayOfYear()
+                    });
+
+                    tableRow.deltaPreviousDistance = (progressAtThisDayOfYear.totalDistance - progressAtThisDayOfLastYear.totalDistance) / 1000;
+                    tableRow.deltaPreviousTime = moment.duration((progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime) * 1000).asHours();
+                    tableRow.deltaPreviousElevation = progressAtThisDayOfYear.totalElevation - progressAtThisDayOfLastYear.totalElevation;
+                    tableRow.deltaPreviousCount = progressAtThisDayOfYear.count - progressAtThisDayOfLastYear.count;
+                }
+
+                tableRows.push(tableRow);
 
                 // Add curve
                 curves.push({
@@ -227,7 +241,7 @@ class YearProgressController {
                 });
             });
 
-            $scope.tableData = _.sortBy(rows, (row) => {
+            $scope.tableData = _.sortBy(tableRows, (row) => {
                 return -1 * row.year;
             });
 

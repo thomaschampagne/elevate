@@ -33,9 +33,13 @@
                     <tr md-row>
                         <th md-column md-numeric md-order-by=""><span>Year</span></th>
                         <th md-column md-numeric md-order-by=""><span>Count</span></th>
+                        <th md-column md-numeric md-order-by=""><span>&Delta; prev. count</span></th>
                         <th md-column md-numeric md-order-by=""><span>Distance (km)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>&Delta; prev. dist. (km)</span></th>
                         <th md-column md-numeric md-order-by=""><span>Time (h)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>&Delta; prev. time (h)</span></th>
                         <th md-column md-numeric md-order-by=""><span>Elevation (m)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>&Delta; prev. elev. (m)</span></th>
                     </tr>
                     </thead>
                     <tbody md-body>
@@ -43,9 +47,13 @@
                         ng-repeat="row in tableData">
                         <td md-cell>{{row.year}}</td>
                         <td md-cell>{{row.count}}</td>
+                        <td md-cell>{{row.deltaPreviousCount}}</td>
                         <td md-cell>{{row.totalDistance | number: 1}}</td>
+                        <td md-cell>{{row.deltaPreviousDistance | number: 1}}</td>
                         <td md-cell>{{row.totalTime | number: 1}}</td>
+                        <td md-cell>{{row.deltaPreviousTime | number: 1}}</td>
                         <td md-cell>{{row.totalElevation | number: 0}}</td>
+                        <td md-cell>{{row.deltaPreviousElevation | number: 1}}</td>
                     </tr>
                     </tbody>
                 </table>
