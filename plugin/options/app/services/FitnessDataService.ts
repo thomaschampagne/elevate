@@ -21,7 +21,7 @@ interface IActivitiesWithFitnessDaysOff {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
-    totalStressScore: number;
+    finalStressScore: number;
     previewDay: boolean;
 }
 
@@ -33,7 +33,7 @@ interface IFitnessActivity {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
-    totalStressScore?: number;
+    finalStressScore?: number;
     ctl: number;
     atl: number;
     tsb: number;
@@ -165,7 +165,7 @@ class FitnessDataService {
                     type: [],
                     activitiesName: [],
                     previewDay: false,
-                    totalStressScore: 0
+                    finalStressScore: 0
                 };
 
                 if (activitiesWithFitnessThatDay.length) {
@@ -180,32 +180,29 @@ class FitnessDataService {
                         fitnessObjectOnCurrentDay.type.push(fitnessActivity.type);
 
                         // Apply scores for that day
-                        if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
+                        // PSS
+                        if (fitnessActivity.powerStressScore) {
 
                             if (!fitnessObjectOnCurrentDay.powerStressScore) { // Initialize value if not exists
                                 fitnessObjectOnCurrentDay.powerStressScore = 0;
                             }
-
                             fitnessObjectOnCurrentDay.powerStressScore += fitnessActivity.powerStressScore;
+                        }
 
-                            // Append to total
-                            fitnessObjectOnCurrentDay.totalStressScore += fitnessActivity.powerStressScore;
-
-                        } else if (fitnessActivity.trimpScore) { // Check for TRIMP score if available
-
+                        // TRIMP
+                        if (fitnessActivity.trimpScore) { // Check for TRIMP score if available
                             if (!fitnessObjectOnCurrentDay.trimpScore) { // Initialize value if not exists
                                 fitnessObjectOnCurrentDay.trimpScore = 0;
                             }
-
                             fitnessObjectOnCurrentDay.trimpScore += fitnessActivity.trimpScore;
-
-                            // Append to total
-                            fitnessObjectOnCurrentDay.totalStressScore += fitnessActivity.trimpScore;
-
-                        } else {
-                            // Do nothing at the moment. Simulated fitness in future?
                         }
 
+                        // Apply final stress score for that day
+                        if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
+                            fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.powerStressScore;
+                        } else if (fitnessActivity.trimpScore) {
+                            fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.trimpScore;
+                        }
                     }
                 }
 
@@ -227,7 +224,7 @@ class FitnessDataService {
                     activitiesName: [],
                     trimpScore: 0,
                     previewDay: true,
-                    totalStressScore: 0
+                    finalStressScore: 0
                 };
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay)
@@ -254,8 +251,8 @@ class FitnessDataService {
 
         _.each(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
 
-            ctl = ctl + (trimpObject.totalStressScore - ctl) * (1 - Math.exp(-1 / 42));
-            atl = atl + (trimpObject.totalStressScore - atl) * (1 - Math.exp(-1 / 7));
+            ctl = ctl + (trimpObject.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
+            atl = atl + (trimpObject.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
             tsb = ctl - atl;
 
             let result: IFitnessActivity = {
@@ -278,8 +275,8 @@ class FitnessDataService {
                 result.powerStressScore = trimpObject.powerStressScore;
             }
 
-            if (_.isNumber(trimpObject.totalStressScore) && trimpObject.totalStressScore > 0) {
-                result.totalStressScore = trimpObject.totalStressScore;
+            if (_.isNumber(trimpObject.finalStressScore) && trimpObject.finalStressScore > 0) {
+                result.finalStressScore = trimpObject.finalStressScore;
             }
 
             // Test if we are switching from today to the first preview day
@@ -299,7 +296,7 @@ class FitnessDataService {
                     activitiesName: null,
                     type: null,
                     // trimpScore: null,
-                    // totalStressScore: trimpObject.totalStressScore,
+                    // finalStressScore: trimpObject.finalStressScore,
                     ctl: lastResult.ctl,
                     atl: lastResult.atl,
                     tsb: lastResult.tsb,

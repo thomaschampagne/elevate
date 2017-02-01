@@ -298,10 +298,10 @@ class FitnessTrendGraph {
                     html += '   </tr>';
                 }
 
-                if (fitnessObject.totalStressScore > 0) {
+                if (fitnessObject.finalStressScore > 0) {
                     html += '   <tr>';
-                    html += '       <td class="title">Total Stress</td>';
-                    html += '       <td>' + fitnessObject.totalStressScore.toFixed(0) + '</td>';
+                    html += '       <td class="title">Final Stress</td>';
+                    html += '       <td>' + fitnessObject.finalStressScore.toFixed(0) + '</td>';
                     html += '   </tr>';
                 }
 

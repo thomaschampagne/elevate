@@ -47,13 +47,13 @@ class FitnessTrendTable {
                     newFitnessObj.type = [finalTypeName];
                     newFitnessObj.trimpScore = (_.isNumber(newFitnessObj.trimpScore)) ? parseInt(newFitnessObj.trimpScore.toFixed(0)) : -1;
                     newFitnessObj.powerStressScore = (_.isNumber(newFitnessObj.powerStressScore)) ? parseInt(newFitnessObj.powerStressScore.toFixed(0)) : -1;
-                    newFitnessObj.totalStressScore = (_.isNumber(newFitnessObj.totalStressScore)) ? parseInt(newFitnessObj.totalStressScore.toFixed(0)) : -1;
+                    newFitnessObj.finalStressScore = (_.isNumber(newFitnessObj.finalStressScore)) ? parseInt(newFitnessObj.finalStressScore.toFixed(0)) : -1;
                 } else {
                     newFitnessObj.activitiesNameStr = '-';
                     newFitnessObj.type = ['-'];
                     newFitnessObj.trimpScore = -1;
                     newFitnessObj.powerStressScore = -1;
-                    newFitnessObj.totalStressScore = -1;
+                    newFitnessObj.finalStressScore = -1;
                 }
 
                 fitnessDataForTable.push(newFitnessObj);

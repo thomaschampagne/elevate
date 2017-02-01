@@ -32,7 +32,7 @@
                         </md-tooltip>
                     </span>
                 </th>
-                <th md-column md-numeric md-order-by="totalStressScore"><span>Total Stress</span></th>
+                <th md-column md-numeric md-order-by="totalStressScore"><span>Final Stress</span></th>
                 <th md-column md-numeric md-order-by="ctl"><span>Fitness</span></th>
                 <th md-column md-numeric md-order-by="atl"><span>Fatigue</span></th>
                 <th md-column md-numeric md-order-by="tsb"><span>Form</span></th>
@@ -48,7 +48,7 @@
                 <td md-cell ng-bind-html="fitnessObj.type"></td>
                 <td md-cell>{{(fitnessObj.trimpScore !== -1 ? fitnessObj.trimpScore : '-')}}</td>
                 <td md-cell ng-if="usePowerMeter">{{(fitnessObj.powerStressScore !== -1 ? fitnessObj.powerStressScore : '-')}}</td>
-                <td md-cell>{{(fitnessObj.totalStressScore !== -1 ? fitnessObj.totalStressScore : '-')}}</td>
+                <td md-cell>{{(fitnessObj.finalStressScore !== -1 ? fitnessObj.finalStressScore : '-')}}</td>
                 <td md-cell>{{fitnessObj.ctl | number: 1}}</td>
                 <td md-cell>{{fitnessObj.atl | number: 1}}</td>
                 <td md-cell>{{fitnessObj.tsb | number: 1}}</td>
