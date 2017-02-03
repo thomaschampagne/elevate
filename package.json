@@ -35,9 +35,11 @@
     "jasmine": "^2.5.2",
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
     "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-phantomjs-launcher": "^1.0.2",
+    "karma-typescript": "^2.1.7",
     "run-sequence": "^1.2.2",
     "underscore": "^1.8.3",
     "vinyl-ftp": "^0.4.5"

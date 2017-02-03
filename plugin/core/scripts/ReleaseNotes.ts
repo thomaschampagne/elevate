@@ -13,6 +13,20 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.4.1',
+        message: '<strong>5.4.1:</strong> <i>Bug fix release</i></br></br><strong>5.4.0 features reminder:</strong> <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.',
+        hotFixes: [],
+        features: [
+            'Fitness trend can now use your cycling power meter to compute your fitness.',
+            'Strava premium additional goal progress is back! Still "experimental". Activate it from Hidden feature section',
+            'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Fix wrong daily fitness final score in case of multiple activities done on same day having TRIMP score for some and PSS score for others.'
+        ],
+    },
+    {
         version: '5.4.0',
         message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.</br></br>Swimming is not supported properly in fitness trend... Now taking care of swimmers ;) Still in Beta isn\'t it ?^^;)',
         hotFixes: [],

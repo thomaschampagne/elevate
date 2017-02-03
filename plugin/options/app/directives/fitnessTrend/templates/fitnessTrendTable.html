@@ -16,7 +16,7 @@
                 <th md-column md-order-by="timestamp"><span>Date</span></th>
                 <th md-column md-order-by="activitiesName"><span>Activity</span></th>
                 <th md-column md-order-by="type"><span>Type</span></th>
-                <th md-column md-numeric md-order-by="trimp">
+                <th md-column md-numeric md-order-by="trimpScore">
                     <span>
                         TRIMP
                          <md-tooltip md-direction="bottom">
@@ -32,6 +32,7 @@
                         </md-tooltip>
                     </span>
                 </th>
+                <th md-column md-numeric md-order-by="totalStressScore"><span>Final Stress</span></th>
                 <th md-column md-numeric md-order-by="ctl"><span>Fitness</span></th>
                 <th md-column md-numeric md-order-by="atl"><span>Fatigue</span></th>
                 <th md-column md-numeric md-order-by="tsb"><span>Form</span></th>
@@ -45,8 +46,9 @@
                 <td md-cell>{{fitnessObj.timestamp | date:'mediumDate'}}</td>
                 <td md-cell ng-bind-html="fitnessObj.activitiesNameStr"></td>
                 <td md-cell ng-bind-html="fitnessObj.type"></td>
-                <td md-cell>{{(fitnessObj.trimp !== -1 ? fitnessObj.trimp : '-')}}</td>
-                <td md-cell ng-if="usePowerMeter">{{fitnessObj.powerStressScore | number: 0}}</td>
+                <td md-cell>{{(fitnessObj.trimpScore !== -1 ? fitnessObj.trimpScore : '-')}}</td>
+                <td md-cell ng-if="usePowerMeter">{{(fitnessObj.powerStressScore !== -1 ? fitnessObj.powerStressScore : '-')}}</td>
+                <td md-cell>{{(fitnessObj.finalStressScore !== -1 ? fitnessObj.finalStressScore : '-')}}</td>
                 <td md-cell>{{fitnessObj.ctl | number: 1}}</td>
                 <td md-cell>{{fitnessObj.atl | number: 1}}</td>
                 <td md-cell>{{fitnessObj.tsb | number: 1}}</td>
