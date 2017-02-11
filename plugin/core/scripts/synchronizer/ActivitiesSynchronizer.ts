@@ -493,7 +493,7 @@ class ActivitiesSynchronizer {
 
                 computedActivitiesInGroup = computedActivitiesPromised;
                 computedActivitiesPromised = null; // Free mem !
-                console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
+                // console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
                 console.log('Group handled count: ' + handledGroupCount);
 
                 // Retrieve previous saved activities
@@ -528,7 +528,7 @@ class ActivitiesSynchronizer {
                     this.saveComputedActivitiesToLocal(this._hasBeenComputedActivities).then((pagesGroupSaved: any) => {
 
                         // Current group have been saved with previously stored activities...
-                        console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
+                        // console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
 
                         let notify: ISyncNotify = {
                             step: 'savedComputedActivities',

@@ -141,7 +141,7 @@ class ActivitiesSyncModifier implements IModifier {
 
         }, (progress: ISyncNotify) => {
 
-            console.log(progress);
+            // console.log(progress);
 
             // Global progress
             $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);
