@@ -29,7 +29,7 @@ class ActivitiesSynchronizer {
     protected userSettings: IUserSettings;
     protected extensionId: string;
     protected totalRawActivityIds: Array<number> = [];
-    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
+    public static pagesPerGroupToRead: number = 2; // = 40 activities with 20 activities per page.
     protected _hasBeenComputedActivities: Array<ISyncActivityComputed> = null;
     protected _activitiesProcessor: ActivitiesProcessor;
     protected _endReached: boolean = false;
