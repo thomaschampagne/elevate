@@ -143,7 +143,7 @@ class ActivityComputer {
         // Q1 HR
         // Median HR
         // Q3 HR
-        let heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth, activityStatsMap);
+        let heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time);
 
         // Cadence percentage
         // Time Cadence
@@ -505,7 +505,7 @@ class ActivityComputer {
         return powerData;
     }
 
-    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>, velocityArray: Array<number>, activityStatsMap: IActivityStatsMap): IHeartRateData {
+    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>): IHeartRateData {
 
         if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
             return null;
@@ -530,7 +530,7 @@ class ActivityComputer {
 
         for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
-            if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+            if (i > 0) {
                 // Compute heartrate data while moving from now
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 // average over time
