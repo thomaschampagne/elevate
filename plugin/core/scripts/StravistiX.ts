@@ -1165,7 +1165,7 @@ class StravistiX {
 
 
                         }, (progress: ISyncNotify) => {
-                            console.log(progress);
+                            // console.log(progress);
                         });
 
                     } else {
