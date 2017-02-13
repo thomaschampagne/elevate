@@ -13,6 +13,21 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.4.2',
+        message: '<i>Patch release: Now calculating TRIMP over elapsed time instead of moving time. TRIMP were not properly computed with activities without movements.<br/>You may need to perform a full sync of your synced history for the fitness trend feature. Memory management during synchronization of your history has been also improved.</i>',
+        hotFixes: [],
+        features: [
+            '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> can now use your cycling power meter to compute your fitness.',
+            'Strava premium additional goal progress is back! Still "experimental". Activate it from Hidden feature section',
+            'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Now calculating TRIMP over elapsed time instead of moving time',
+            'Improved memory management during synchronization of your history',
+        ],
+    },
+    {
         version: '5.4.1',
         message: '<strong>5.4.1:</strong> <i>Bug fix release</i></br></br><strong>5.4.0 features reminder:</strong> <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.',
         hotFixes: [],
