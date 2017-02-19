@@ -11,6 +11,7 @@ interface IActivitiesWithFitness {
     activityName: string;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
 }
 
 interface IActivitiesWithFitnessDaysOff {
@@ -21,6 +22,7 @@ interface IActivitiesWithFitnessDaysOff {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore: number;
     previewDay: boolean;
 }
@@ -33,6 +35,7 @@ interface IFitnessActivity {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore?: number;
     ctl: number;
     atl: number;
@@ -80,6 +83,8 @@ class FitnessDataService {
 
             let cleanedActivities: Array<IActivitiesWithFitness> = [];
 
+            console.warn(computedActivities);
+
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
 
                 let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
@@ -88,7 +93,9 @@ class FitnessDataService {
                     && activity.extendedStats && activity.extendedStats.powerData
                     && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-                if (hasHeartRateData || isPowerMeterUsePossible) {
+                let hasSwimmingData: boolean = (activity.type == "Swim" && _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw));
+
+                if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
 
                     let momentStartTime: Moment = moment(activity.start_time);
 
@@ -109,6 +116,14 @@ class FitnessDataService {
 
                     if (isPowerMeterUsePossible) {
                         activityWithFitness.powerStressScore = (activity.moving_time_raw * activity.extendedStats.powerData.weightedPower * (activity.extendedStats.powerData.weightedPower / this.userFTP) / (this.userFTP * 3600) * 100);
+                    }
+
+                    if (hasSwimmingData) {
+
+                        let swimFTP = 49; // TODO from param + test null. Example: 2200m / 45min
+                        let normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
+                        let swimIntensity = normalizedSwimSpeed / swimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
+                        activityWithFitness.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
                     }
 
                     cleanedActivities.push(activityWithFitness);
@@ -197,11 +212,27 @@ class FitnessDataService {
                             fitnessObjectOnCurrentDay.trimpScore += fitnessActivity.trimpScore;
                         }
 
+                        // SwimSS
+                        if (fitnessActivity.swimStressScore) { // Check for TRIMP score if available
+                            if (!fitnessObjectOnCurrentDay.swimStressScore) { // Initialize value if not exists
+                                fitnessObjectOnCurrentDay.swimStressScore = 0;
+                            }
+                            fitnessObjectOnCurrentDay.swimStressScore += fitnessActivity.swimStressScore;
+                        }
+
                         // Apply final stress score for that day
                         if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.powerStressScore;
+
                         } else if (fitnessActivity.trimpScore) {
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.trimpScore;
+
+                        } else if (fitnessActivity.swimStressScore) {
+
+                            fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.swimStressScore;
+
                         }
                     }
                 }
@@ -273,6 +304,10 @@ class FitnessDataService {
 
             if (_.isNumber(trimpObject.powerStressScore) && trimpObject.powerStressScore > 0) {
                 result.powerStressScore = trimpObject.powerStressScore;
+            }
+
+            if (_.isNumber(trimpObject.swimStressScore) && trimpObject.swimStressScore > 0) {
+                result.swimStressScore = trimpObject.swimStressScore;
             }
 
             if (_.isNumber(trimpObject.finalStressScore) && trimpObject.finalStressScore > 0) {

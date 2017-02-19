@@ -298,6 +298,14 @@ class FitnessTrendGraph {
                     html += '   </tr>';
                 }
 
+
+                if (fitnessObject.swimStressScore > 0) {
+                    html += '   <tr>';
+                    html += '       <td class="title">Swim Score</td>';
+                    html += '       <td>' + fitnessObject.swimStressScore.toFixed(0) + '</td>';
+                    html += '   </tr>';
+                }
+
                 if (fitnessObject.finalStressScore > 0) {
                     html += '   <tr>';
                     html += '       <td class="title">Final Stress</td>';
