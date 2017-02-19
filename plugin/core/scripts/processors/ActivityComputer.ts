@@ -1,6 +1,6 @@
 class ActivityComputer {
 
-    public static MOVING_THRESHOLD_KPH: number = 3.5; // Kph
+    public static MOVING_THRESHOLD_KPH: number = 0.1; // Kph
     public static CADENCE_THRESHOLD_RPM: number = 35; // RPMs
     public static GRADE_CLIMBING_LIMIT: number = 1.6;
     public static GRADE_DOWNHILL_LIMIT: number = -1.6;
@@ -143,7 +143,7 @@ class ActivityComputer {
         // Q1 HR
         // Median HR
         // Q3 HR
-        let heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time);
+        let heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
         // Cadence percentage
         // Time Cadence
@@ -505,7 +505,7 @@ class ActivityComputer {
         return powerData;
     }
 
-    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>): IHeartRateData {
+    protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: Array<number>, timeArray: Array<number>, velocityArray: Array<number>): IHeartRateData {
 
         if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
             return null;
@@ -530,7 +530,12 @@ class ActivityComputer {
 
         for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
-            if (i > 0) {
+            if (i > 0 && (
+                this.isTrainer || // can be cycling home trainer
+                !velocityArray || // OR Non movements activities
+                velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
+                )) {
+
                 // Compute heartrate data while moving from now
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 // average over time
