@@ -69,6 +69,7 @@ interface IPowerData {
     variabilityIndex: number;
     punchFactor: number;
     powerStressScore: number;
+    powerStressScorePerHour: number;
     weightedWattsPerKg: number;
     lowerQuartileWatts: number;
     medianWatts: number;
