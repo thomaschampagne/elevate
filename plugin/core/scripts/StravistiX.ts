@@ -316,6 +316,10 @@ class StravistiX {
      *
      */
     protected handleActivitiesSummary(): void {
+
+
+        /* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
+
         // If we are not on the athletes page then return...
         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
             return;
@@ -325,6 +329,7 @@ class StravistiX {
 
         let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
         activitiesSummaryModifier.modify();
+        */
     }
 
     /**
