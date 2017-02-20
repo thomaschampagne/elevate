@@ -84,7 +84,8 @@ class FitnessDataService {
 
                 let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
-                let isPowerMeterUsePossible: boolean = this.usePowerMeter && _.isNumber(this.userFTP)
+                let isPowerMeterUsePossible: boolean = (activity.type == "Ride" || activity.type == "VirtualRide")
+                    && this.usePowerMeter && _.isNumber(this.userFTP)
                     && activity.extendedStats && activity.extendedStats.powerData
                     && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
 
