@@ -22,6 +22,7 @@ class ProfileConfiguredRibbon {
             remoteAthleteProfile.userMaxHr !== localAthleteProfile.userMaxHr ||
             remoteAthleteProfile.userRestHr !== localAthleteProfile.userRestHr ||
             remoteAthleteProfile.userFTP !== localAthleteProfile.userFTP ||
+            // remoteAthleteProfile.userSwimFTP !== localAthleteProfile.userSwimFTP ||
             remoteAthleteProfile.userWeight !== localAthleteProfile.userWeight) {
             remoteEqualsLocal = false; // Remote do not matches with local
         }
@@ -56,6 +57,7 @@ class ProfileConfiguredRibbon {
                     userMaxHr: userSettings.userMaxHr,
                     userRestHr: userSettings.userRestHr,
                     userFTP: userSettings.userFTP,
+                    // userSwimFTP: userSettings.userSwimFTP,
                     userWeight: userSettings.userWeight,
                 };
 

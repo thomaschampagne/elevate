@@ -23,6 +23,7 @@ class AthleteSettingsController {
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
+            $scope.userSwimFTP = userSettingsSynced.userSwimFTP;
             $scope.userWeight = userSettingsSynced.userWeight;
             $scope.gender = _.findWhere($scope.genderList, {
                 type: userSettingsSynced.userGender
