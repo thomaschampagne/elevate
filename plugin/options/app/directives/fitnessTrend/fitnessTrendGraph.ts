@@ -117,6 +117,9 @@ class FitnessTrendGraph {
             days: moment.duration(moment().diff(moment().subtract(1, 'months'))).asDays(),
             label: 'Last month'
         }, {
+            days: moment.duration(moment().diff(moment().subtract(6, 'weeks'))).asDays(),
+            label: 'Last 6 weeks'
+        }, {
             days: moment.duration(moment().diff(moment().subtract(2, 'months'))).asDays(),
             label: 'Last 2 months'
         }, {
@@ -142,7 +145,7 @@ class FitnessTrendGraph {
         if (_.isNumber(index) && !_.isNaN(index) && !_.isEmpty($scope.periodsToWatch[index])) {
             $scope.periodSelected = $scope.periodsToWatch[index];
         } else {
-            $scope.periodSelected = $scope.periodsToWatch[5];
+            $scope.periodSelected = $scope.periodsToWatch[6];
         }
 
         $scope.lastMonthsPeriodChanged = (periodSelected: {days: number, label: string}) => {
