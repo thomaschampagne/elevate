@@ -1,4 +1,4 @@
-class PowerDataView extends AbstractDataView {
+class CyclingPowerDataView extends AbstractDataView {
 
     protected powerData: IPowerData;
 
@@ -39,7 +39,12 @@ class PowerDataView extends AbstractDataView {
         this.insertContentAtGridPosition(1, 1, this.powerData.medianWatts, '50% Quartile Watts', 'W', 'displayAdvancedPowerData');
         this.insertContentAtGridPosition(2, 1, this.powerData.upperQuartileWatts, '75% Quartile Watts', 'W', 'displayAdvancedPowerData');
 
-        this.insertContentAtGridPosition(0, 2, this.powerData.avgWattsPerKg.toFixed(2), 'Avg Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(1, 2, this.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
+        if (this.powerData.avgWattsPerKg) {
+            this.insertContentAtGridPosition(0, 2, this.powerData.avgWattsPerKg.toFixed(2), 'Avg Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
+        }
+
+        if (this.powerData.weightedWattsPerKg) {
+            this.insertContentAtGridPosition(1, 2, this.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
+        }
     }
 }
