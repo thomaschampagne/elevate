@@ -60,7 +60,7 @@ class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
     }
 
 
-    protected placeExtendedStatsButtonSegment(buttonAdded: ()=>void): void {
+    protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
         setTimeout(() => { // Execute at the end to make sure DOM is ready
             let htmlButton: string = '<section>';
@@ -94,7 +94,7 @@ class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.dataViews.push(paceDataView);
         }
 
-        if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
+        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData) {
             let powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, 'w');
             powerDataView.setAppResources(this.appResources);
             powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
