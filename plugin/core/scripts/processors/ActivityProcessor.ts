@@ -60,7 +60,7 @@ class ActivityProcessor {
         this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
 
             // Compute data in a background thread to avoid UI locking
-            this.computeAnalysisThroughDedicatedThread(hasPowerMeter, activityStatsMap, activityStream, bounds, (resultFromThread: IAnalysisData) => {
+            this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: IAnalysisData) => {
 
                 callback(resultFromThread);
 
@@ -80,7 +80,7 @@ class ActivityProcessor {
         });
     }
 
-    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
+    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
@@ -101,7 +101,7 @@ class ActivityProcessor {
             isTrainer: this.isTrainer,
             appResources: this.appResources,
             userSettings: this.userSettings,
-            athleteWeight: this.userSettings.userWeight,
+            athleteWeight: athleteWeight,
             hasPowerMeter: hasPowerMeter,
             activityStatsMap: activityStatsMap,
             activityStream: activityStream,

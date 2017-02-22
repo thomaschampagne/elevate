@@ -59,6 +59,26 @@ class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
             this.insertContentAtGridPosition(1, 4, avgWattsPerKg, labelWKg, ' w/kg', 'displayAdvancedPowerData');
         }
 
+        let powerStressScore: string = '-';
+        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
+
+            let labelPSS: string;
+            if (this.analysisData.powerData.powerStressScore) {
+                powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + ' / hour)</span>';
+                labelPSS = 'Power Stress Score';
+                /* Uncomment this for power stress score estimation
+                if (!this.analysisData.powerData.hasPowerMeter) {
+                    labelPSS = 'Est. ' + labelPSS;
+                }
+                */
+            } else {
+                powerStressScore = '-';
+                labelPSS = '<i>Configure FTP in athlete settings</i>';
+            }
+
+            this.insertContentAtGridPosition(0, 5, powerStressScore, labelPSS, '', 'displayAdvancedPowerData');
+        }
+
     }
 
     protected placeSummaryPanel(panelAdded: () => void): void {
@@ -101,7 +121,7 @@ class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
         }
 
         if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-            let powerDataView: PowerDataView = new PowerDataView(this.analysisData.powerData, 'w');
+            let powerDataView: CyclingPowerDataView = new CyclingPowerDataView(this.analysisData.powerData, 'w');
             powerDataView.setAppResources(this.appResources);
             powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
             powerDataView.setActivityType(this.activityType);

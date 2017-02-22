@@ -758,8 +758,4 @@ class ActivitiesSynchronizer {
     get globalHistoryChanges(): IHistoryChanges {
         return this._globalHistoryChanges;
     }
-
-    get endReached(): boolean {
-        return this._endReached;
-    }
 }
