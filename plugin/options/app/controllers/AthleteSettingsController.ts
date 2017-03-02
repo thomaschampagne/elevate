@@ -117,6 +117,20 @@ class AthleteSettingsController {
 
         };
 
+        // Watch value changes from field directly OR from swim FTP calculator
+        $scope.$watch('userSwimFTP', () => {
+            setTimeout(() => {
+                if (!_.isUndefined($scope.userSwimFTP)) {
+                    chromeStorageService.updateUserSetting('userSwimFTP', $scope.userSwimFTP, () => {
+                        console.log('userSwimFTP has been updated to ' + $scope.userSwimFTP);
+                        $scope.localStorageMustBeCleared();
+                        $scope.profileChanged();
+                    });
+                }
+            }, 500);
+        }, true);
+
+
         $scope.hintModal = ($event: any, title: string, content: string) => {
             $mdDialog.show(
                 $mdDialog.alert()
@@ -130,35 +144,11 @@ class AthleteSettingsController {
             );
         };
 
-        /*$scope.swimFTPCalculator = ($event: any) => {
+        $scope.swimFTPHelperEnabled = false;
+        $scope.showSwimFTPHelper = () => {
+            $scope.swimFTPHelperEnabled = !$scope.swimFTPHelperEnabled;
+        };
 
-            $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService) => {
-
-                    // $scope.hide = ) =>{
-                    //     $mdDialog.hide();
-                    // };
-                    //
-                    // $scope.cancel = ) =>{
-                    //     $mdDialog.cancel();
-                    // };
-                    //
-                    // $scope.answer = answer) =>{
-                    //     $mdDialog.hide(answer);
-                    // };
-                },
-                templateUrl: 'views/modals/swimFTPCalculator.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                clickOutsideToClose: true,
-                // fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-            }).then((answer) => {
-                $scope.status = 'You said the information was "' + answer + '".';
-            }, () => {
-                $scope.status = 'You cancelled the dialog.';
-            });
-
-        };*/
 
         $scope.displayUserMaxHrHelper = ($event: any) => {
             $scope.hintModal($event, 'How to find your max Heart rate value', 'If you don\'t know your own max Heart rate then enter the value <strong> 220 - "your age" </strong>. <br /><br /> For example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>');

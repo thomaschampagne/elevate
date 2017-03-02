@@ -80,7 +80,7 @@
                         <md-tooltip>Use arrows &#8645; or numpad to set your Functional Threshold Power in Watts
                         </md-tooltip>
                     </md-input-container>
-                    <div ng-if="healthCommonForm.userSwimFTP.$invalid">
+                    <div ng-if="healthCommonForm.userFTP.$invalid">
                         <div>Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
                     </div>
                 </div>
@@ -98,18 +98,26 @@
                 <div flex="25">
                     <md-input-container class="md-block">
                         <label>Enter your Swimming FTP (m/min)</label>
-                        <input name="userSwimFTP" type="number" min="10" max="2500" class="form-control input-lg"
-                               ng-model="userSwimFTP" ng-pattern="/^[0-9]+$/" ng-change="swimFtpHasChanged()"/>
-                        <md-tooltip>Use arrows &#8645; or numpad to set your Swimming Functional Threshold Pace in m/min
+                        <input name="userSwimFTP" type="number" min="0" max="2500" class="form-control input-lg"
+                               ng-model="userSwimFTP"/>
+                        <md-tooltip>Use arrows &#8645; or numpad to set your Swimming Functional Threshold Pace in
+                            m/min
                         </md-tooltip>
                     </md-input-container>
-                    <div ng-if="healthCommonForm.userSwimFTP.$invalid">
-                        <div>Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
-                    </div>
-                    <swim-ftp-calculator></swim-ftp-calculator>
-                    <md-button class="md-raised md-primary" ng-click="swimFTPCalculator($event)">
-                        Swim FTP Help Calculator
+                    <a href="" ng-click="showSwimFTPHelper()">I don't know my <i>Swimming
+                        Functional Threshold Pace</i>. Help me with a calculator :) !</a>
+                </div>
+                <div flex>
+                    <md-button class="md-icon-button" ng-click="showSwimFTPHelper()">
+                        <md-icon aria-label="Help">help</md-icon>
                     </md-button>
+                </div>
+            </div>
+            <div layout="row" ng-show="swimFTPHelperEnabled" layout-padding>
+                <div flex="100">
+                    <md-whiteframe class="md-whiteframe-5dp">
+                        <swim-ftp-calculator user-swim-ftp="userSwimFTP"></swim-ftp-calculator>
+                    </md-whiteframe>
                 </div>
             </div>
         </form>

@@ -1,11 +1,17 @@
 <div>
-    <md-switch ng-model="method_01" aria-label="">
-        Method One
-    </md-switch>
-    <md-switch ng-model="method_02" aria-label="">
-        Method Two
-    </md-switch>
-    <md-switch ng-model="method_03" aria-label="">
-        Method Three
-    </md-switch>
+    <h3 class="md-headline">Swimming Functional Threshold Pace Calculator</h3>
+    <i>Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically calculated in the upper field.</i>
+
+    <h4 class="md-title">Calculation methods:</h4>
+    <div ng-repeat="method in calculationMethods" class="md-whiteframe-1dp" layout-padding>
+        <md-switch ng-model="method.active" aria-label="method.name" ng-change="methodChanged(method)">
+            {{method.name}}
+        </md-switch>
+        <div ng-repeat="param in method.params">
+            <md-input-container class="md-block">
+                <label>{{param.hint}}</label>
+                <input type="number" ng-model="param.value" ng-disabled="!method.active" ng-change="methodChanged(method)"/>
+            </md-input-container>
+        </div>
+    </div>
 </div>

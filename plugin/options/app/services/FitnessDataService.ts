@@ -59,6 +59,8 @@ class FitnessDataService {
     protected fitnessData: Array<IFitnessActivity>;
     protected usePowerMeter: boolean = false;
     protected userFTP: number = -1;
+    protected useSwimStressScore: boolean = false;
+    protected userSwimFTP: number = -1;
 
     constructor(q: IQService, chromeStorageService: ChromeStorageService) {
         this.$q = q;
@@ -71,7 +73,12 @@ class FitnessDataService {
     protected getCleanedComputedActivities(): IPromise<Array<IActivitiesWithFitness>> {
 
         if (this.userFTP === -1) {
-            console.error("userFTP must be set before");
+            console.error("userFTP must be set before calling this method");
+            return;
+        }
+
+        if (this.userSwimFTP === -1) {
+            console.error("userFTP must be set before calling this method");
             return;
         }
 
@@ -83,18 +90,16 @@ class FitnessDataService {
 
             let cleanedActivities: Array<IActivitiesWithFitness> = [];
 
-            console.warn(computedActivities);
-
             _.each(computedActivities, (activity: ISyncActivityComputed) => {
 
                 let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
-                let isPowerMeterUsePossible: boolean = (activity.type == "Ride" || activity.type == "VirtualRide")
+                let isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
                     && this.usePowerMeter && _.isNumber(this.userFTP)
                     && activity.extendedStats && activity.extendedStats.powerData
                     && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-                let hasSwimmingData: boolean = (activity.type == "Swim" && _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw));
+                let hasSwimmingData: boolean = this.useSwimStressScore && _.isNumber(this.userSwimFTP) && this.userSwimFTP > 0 && activity.type === "Swim" && _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw);
 
                 if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
 
@@ -120,10 +125,8 @@ class FitnessDataService {
                     }
 
                     if (hasSwimmingData) {
-
-                        let swimFTP = 49; // TODO from param + test null. Example: 2200m / 45min
                         let normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
-                        let swimIntensity = normalizedSwimSpeed / swimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
+                        let swimIntensity = normalizedSwimSpeed / this.userSwimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
                         activityWithFitness.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
                     }
 
@@ -351,14 +354,15 @@ class FitnessDataService {
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
      */
-    public getFitnessData(usePowerMeter: boolean, userFTP: number): IPromise<Array<IFitnessActivity>> {
+    public getFitnessData(usePowerMeter: boolean, userFTP: number, useSwimStressScore: boolean, userSwimFTP: number): IPromise<Array<IFitnessActivity>> {
 
         this.usePowerMeter = usePowerMeter;
         this.userFTP = userFTP;
 
-        let deferred = this.$q.defer<Array<IFitnessActivity>>();
+        this.useSwimStressScore = useSwimStressScore;
+        this.userSwimFTP = userSwimFTP;
 
-        // if (!this.fitnessData) {
+        let deferred = this.$q.defer<Array<IFitnessActivity>>();
 
         console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
 
@@ -375,10 +379,6 @@ class FitnessDataService {
             deferred.reject(err);
         });
 
-        // } else {
-        //     console.log('Fetch fitnessData from FitnessDataService local var');
-        //     deferred.resolve(this.fitnessData);
-        // }
         return deferred.promise;
     }
 }
