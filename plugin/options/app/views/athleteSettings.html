@@ -79,10 +79,10 @@
                                ng-model="userFTP" ng-pattern="/^[0-9]+$/" ng-change="ftpHasChanged()"/>
                         <md-tooltip>Use arrows &#8645; or numpad to set your Functional Threshold Power in Watts
                         </md-tooltip>
+                        <div ng-if="healthCommonForm.userFTP.$invalid">
+                            <div style="color: darkred;">Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
+                        </div>
                     </md-input-container>
-                    <div ng-if="healthCommonForm.userFTP.$invalid">
-                        <div>Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
-                    </div>
                 </div>
                 <div flex>
                     <md-button class="md-icon-button" ng-click="displayUserFTPHelper($event)">
@@ -107,9 +107,14 @@
                     <md-input-container class="md-block">
                         <label>OR enter as <strong>mm:ss / 100 meters</strong></label>
                         <input name="userSwimFTP100m" maxlength="6" type="text" class="form-control input-lg"
-                               ng-model="userSwimFTP100m" ng-change="userSwimFTP100mChanged()"/>
-                        <md-tooltip>Format expected min:s/100m</md-tooltip>
+                               ng-model="userSwimFTP100m" ng-pattern="/^[0-9]+:[0-5]{1}[0-9]{1}$/"
+                               ng-change="userSwimFTP100mChanged()"/>
+                        <md-tooltip>Format expected min:ss/100m</md-tooltip>
+                        <div ng-if="healthCommonForm.userSwimFTP100m.$invalid">
+                            <div style="color: darkred;">Enter a valid Swin FTP, format: min:ss/100m</div>
+                        </div>
                     </md-input-container>
+
                     <a href="" ng-click="showSwimFTPHelper()">I don't know my <i>Swimming
                         Functional Threshold Pace</i>. Help me with a calculator :) !</a>
                 </div>
