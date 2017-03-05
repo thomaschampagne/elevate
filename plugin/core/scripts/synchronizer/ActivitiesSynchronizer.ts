@@ -606,20 +606,8 @@ class ActivitiesSynchronizer {
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 
-            let computeGroupedActivitiesPromise: Q.IPromise<any> = null;
-
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
-
-            if (lastSyncDateTime) {
-                computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-            } else {
-                // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
-                computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
-                    return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-                });
-            }
-
-            return computeGroupedActivitiesPromise;
+            return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
 
         }).then(() => {
 
@@ -764,9 +752,5 @@ class ActivitiesSynchronizer {
 
     get globalHistoryChanges(): IHistoryChanges {
         return this._globalHistoryChanges;
-    }
-
-    get endReached(): boolean {
-        return this._endReached;
     }
 }

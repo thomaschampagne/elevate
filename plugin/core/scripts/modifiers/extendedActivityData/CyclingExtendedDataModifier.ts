@@ -121,7 +121,7 @@ class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
         }
 
         if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-            let powerDataView: PowerDataView = new PowerDataView(this.analysisData.powerData, 'w');
+            let powerDataView: CyclingPowerDataView = new CyclingPowerDataView(this.analysisData.powerData, 'w');
             powerDataView.setAppResources(this.appResources);
             powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
             powerDataView.setActivityType(this.activityType);

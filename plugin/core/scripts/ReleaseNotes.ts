@@ -13,6 +13,24 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.5.0',
+        message: 'At a glance...</br>Cycling Power Stress Score on your activities :)</br>' +
+        'Support of Running Power Meters :)</br>' +
+        'Please redo a full sync of your history if you "pause" your activities during lunch (See below fixed bugs)',
+        hotFixes: [],
+        features: [
+            'Added "Cycling Power Stress Score" to strava activity pages. You must have a power meter on your bike to view the stat.',
+            'Added support of Running Power Meters (e.g. Stryd, RPM2, ... sensors) inside strava running activities pages.',
+            'Added a period of "6 weeks" inside MultiSports Fitness Trend',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed a wrong calculation of TRIMP on elapsed time when your activities were "paused" for a long time. <i></i>',
+            'Fixed the use of running power meters matching with cycling power meter option of Multisports Fitness Trend.',
+            'Fixed a wrong calculation of based w/kg stats on others cycling activities than you: your weight were used instead of the weights of activities owners.',
+        ],
+    },
+    {
         version: '5.4.2',
         message: '<i>Patch release: Now calculating TRIMP over elapsed time instead of moving time. TRIMP were not properly computed with activities without movements.<br/>You may need to perform a full sync of your synced history for the fitness trend feature. Memory management during synchronization of your history has been also improved.</i>',
         hotFixes: [],
@@ -51,8 +69,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.3.1',
@@ -78,8 +95,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'Others minors improvements around MultiSports Fitness Trend & synchronisation.'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.2.0',
@@ -89,8 +105,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'MultiSports Fitness Trend released as beta'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.1.1',

@@ -32,16 +32,35 @@ class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
             this.insertContentAtGridPosition(1, 2, climbPaceDisplayed, 'Avg climbing pace', '/' + this.speedUnitsData.units, 'displayAdvancedGradeData');
         }
+
+
+        let averageWatts: string = '-';
+        if (this.userSettings.displayAdvancedPowerData) {
+            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts && this.analysisData.powerData.hasPowerMeter) {
+                averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
+            }
+            this.insertContentAtGridPosition(0, 3, averageWatts, 'Running Average Power', 'w', 'displayAdvancedPowerData');
+        }
+
+        let weightedPower: string = '-';
+        if (this.userSettings.displayAdvancedPowerData) {
+            if (this.analysisData.powerData && this.analysisData.powerData.weightedPower && this.analysisData.powerData.hasPowerMeter) {
+                weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+            }
+            this.insertContentAtGridPosition(1, 3, weightedPower, 'Running Weighted Power', 'w', 'displayAdvancedPowerData');
+        }
+
+
     }
 
 
     protected placeSummaryPanel(panelAdded: () => void): void {
-        this.makeSummaryGrid(2, 3);
+        this.makeSummaryGrid(2, 4);
         super.placeSummaryPanel(panelAdded);
     }
 
 
-    protected placeExtendedStatsButtonSegment(buttonAdded: ()=>void): void {
+    protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
         setTimeout(() => { // Execute at the end to make sure DOM is ready
             let htmlButton: string = '<section>';
@@ -73,6 +92,15 @@ class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
             paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
             this.dataViews.push(paceDataView);
+        }
+
+        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData) {
+            let powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, 'w');
+            powerDataView.setAppResources(this.appResources);
+            powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+            powerDataView.setActivityType(this.activityType);
+            powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+            this.dataViews.push(powerDataView);
         }
 
         if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
