@@ -114,8 +114,6 @@ class AthleteSettingsController {
                     });
                 }
             }, 500);
-
-
         };
 
         // Watch value changes from field directly OR from swim FTP calculator

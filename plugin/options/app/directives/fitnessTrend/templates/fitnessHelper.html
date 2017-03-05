@@ -51,7 +51,7 @@
                 </div>
 
                 <div style="padding-bottom: 10px;">
-                    <u>Are you a cyclist?</u><br/>If you own a power meter and you activated the cycling power meter option in
+                    <span class="md-subhead">(Are you a cyclist?)</span><br/>If you own a power meter and you activated the cycling power meter option in
                     the feature, then the "Power Stress
                     Score (PSS)" will be used instead of TRIMP on cycling activities. "Power Stress Score" is used in
                     computation only if available.
@@ -64,6 +64,25 @@
                         <img src="https://latex.codecogs.com/png.latex?%5Cinline%20Intensity%20%3D%20%5Cfrac%7BWeigthedPower%7D%7BCycling%20FTP%7D" />
                         <br/><br/>
                         <img src="img/np_equation.png" />
+                    </div>
+                </div>
+
+                <div style="padding-bottom: 10px;">
+                    <span class="md-subhead">(Are you a swimmer?)</span><br/>
+                    A "Swimming Stress Score" (Swim SS) can be computed for each of your swim activities if your "Swimming Functional Threshold Pace" (Swim FTP) has been entered inside athlete settings and you enabled swimming stress score option.
+                    No heart rate monitor is required. Even a swimming manual activity will be handled by the system.
+
+                    <i>Note:</i> Strava do not support HR data for swimming activities at the moment (on march 2017). In the case where you have HRM while swimming and strava finally support HR data then TRIMP value will be used instead of Swim SS</br>
+
+                    <md-button class="md-accent" ng-hide="showMathsSwimSSFormula" ng-click="showMathsSwimSSFormula = true">Show me "Swimming Stress
+                        Score" maths...
+                    </md-button>
+                    <div ng-show="showMathsSwimSSFormula" style="background: #f3f3f3; margin: 10px; padding: 10px;">
+                        <img src="https://latex.codecogs.com/png.latex?NormalizedSwimSpeed%20%3D%20DistanceMeter%20/%20TimeNoRestInMinutes"/>
+                        <br/><br/>
+                        <img src="https://latex.codecogs.com/png.latex?Intensity%20%3D%20NormalizedSwimSpeed%20/%20SwimFTP" />
+                        <br/><br/>
+                        <img src="https://latex.codecogs.com/png.latex?SwimStressScore%20%3D%20Intensity%5E3%20*%20TotalTimeInHours%20*%20100" />
                     </div>
                 </div>
 

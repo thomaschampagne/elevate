@@ -1,5 +1,3 @@
-// https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/
-
 class SwimFTPCalculator {
 
     public static $inject: string[] = ['$scope'];
