@@ -24,6 +24,7 @@ class AthleteSettingsController {
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
             $scope.userSwimFTP = userSettingsSynced.userSwimFTP;
+            $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
             $scope.userWeight = userSettingsSynced.userWeight;
             $scope.gender = _.findWhere($scope.genderList, {
                 type: userSettingsSynced.userGender
@@ -118,7 +119,10 @@ class AthleteSettingsController {
         };
 
         // Watch value changes from field directly OR from swim FTP calculator
-        $scope.$watch('userSwimFTP', () => {
+        $scope.userSwimFTPChanged = () => {
+
+            $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP); // convert min/m to seconds/100m
+
             setTimeout(() => {
                 if (!_.isUndefined($scope.userSwimFTP)) {
                     chromeStorageService.updateUserSetting('userSwimFTP', $scope.userSwimFTP, () => {
@@ -128,8 +132,19 @@ class AthleteSettingsController {
                     });
                 }
             }, 500);
-        }, true);
+        };
 
+        $scope.userSwimFTP100mChanged = () => {
+
+            if ($scope.userSwimFTP100m && $scope.userSwimFTP100m.match('[0-9]+:[0-5]{1}[0-9]{1}')) {
+
+                let split = $scope.userSwimFTP100m.split(':');
+                let minutes = parseInt(split[0]);
+                let seconds = parseInt(split[1]);
+                let totalSeconds = minutes * 60 + seconds;
+                $scope.userSwimFTP = parseFloat((60 * 100 / totalSeconds).toFixed(2));
+            }
+        };
 
         $scope.hintModal = ($event: any, title: string, content: string) => {
             $mdDialog.show(
@@ -144,9 +159,36 @@ class AthleteSettingsController {
             );
         };
 
-        $scope.swimFTPHelperEnabled = false;
-        $scope.showSwimFTPHelper = () => {
-            $scope.swimFTPHelperEnabled = !$scope.swimFTPHelperEnabled;
+        $scope.showSwimFTPHelper = ($event: MouseEvent) => {
+
+            $mdDialog.show({
+                controller: ($scope: any, $mdDialog: IDialogService, userSwimFTP: number) => {
+
+                    $scope.userSwimFTP = userSwimFTP;
+
+                    $scope.$watch('userSwimFTP', () => {
+                        $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
+                    });
+
+                    $scope.hide = () => {
+                        $mdDialog.hide();
+                    };
+
+                    $scope.answer = (userSwimFTP: number) => {
+                        $mdDialog.hide(userSwimFTP);
+                    };
+                },
+                templateUrl: 'directives/templates/dialogs/swimFTPCalculatorDialog.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: true,
+                locals: {
+                    userSwimFTP: $scope.userSwimFTP
+                },
+            }).then((userSwimFTP: number) => {
+                $scope.userSwimFTP = userSwimFTP;
+                $scope.userSwimFTPChanged(); // Trigger save & userSwimFTP100m new value
+            });
         };
 
 
@@ -179,6 +221,7 @@ class AthleteSettingsController {
             $rootScope.$broadcast(AthleteSettingsController.changedAthleteProfileMessage);
         };
     }
+
 }
 
 app.controller("AthleteSettingsController", AthleteSettingsController);

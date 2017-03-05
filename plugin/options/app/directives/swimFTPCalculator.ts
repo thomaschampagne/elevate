@@ -4,11 +4,15 @@ class SwimFTPCalculator {
 
     public static $inject: string[] = ['$scope'];
 
+    public static convertMPerMinToTimePer100m(userSwimFTP: number): string {
+        return (!userSwimFTP || userSwimFTP <= 0) ? '' : moment(((1 / userSwimFTP) * 60 * 100) * 1000).format('mm:ss');
+    }
+
     constructor(public $scope: any) {
 
         $scope.calculationMethods = [{
             active: false,
-            name: '60 minutes swimming FTP test',
+            name: '60 minutes swimming FTP test (recommended)',
             params: [{
                 hint: 'Swim as far as possible during 60 minutes and enter distance performed in meters (ex: 1800 meters)',
                 value: null

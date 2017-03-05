@@ -118,7 +118,7 @@ class FitnessTrendGraph {
                 $scope.useSwimStressScore = false; // Reset
 
                 let confirm = $mdDialog.confirm()
-                    .htmlContent('Your Swimming Functional Threshold Pace Please is not defined. Please set it in athlete settings and reload this page.')
+                    .htmlContent('Your Swimming Functional Threshold Pace is not defined. Please set it in athlete settings and reload this page.')
                     .cancel('cancel').ok('Go to athlete settings');
 
                 $mdDialog.show(confirm).then(() => {

@@ -1,9 +1,6 @@
-<div>
-    <h3 class="md-headline">Swimming Functional Threshold Pace Calculator</h3>
-    <i>Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically calculated in the upper field.</i>
-
-    <h4 class="md-title">Calculation methods:</h4>
-    <div ng-repeat="method in calculationMethods" class="md-whiteframe-1dp" layout-padding>
+<div layout-padding>
+    <i>Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically calculated.</i>
+    <div ng-repeat="method in calculationMethods">
         <md-switch ng-model="method.active" aria-label="method.name" ng-change="methodChanged(method)">
             {{method.name}}
         </md-switch>
