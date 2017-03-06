@@ -1,3 +1,17 @@
+interface ISwimCalculationMethod {
+    active: boolean;
+    name: string;
+    params: Array<{hint: string, value: number}>;
+    formula: Function;
+}
+
+interface IScopeSwimFTPCalculator extends IScope {
+    calculationMethods: Array<ISwimCalculationMethod>;
+    methodChanged: (selectedMethod: ISwimCalculationMethod) => void;
+    userSwimFtp: number;
+    onMethodSelected: Function;
+}
+
 class SwimFTPCalculator {
 
     public static $inject: string[] = ['$scope'];
@@ -6,7 +20,7 @@ class SwimFTPCalculator {
         return (!userSwimFTP || userSwimFTP <= 0) ? '' : moment(((1 / userSwimFTP) * 60 * 100) * 1000).format('mm:ss');
     }
 
-    constructor(public $scope: any) {
+    constructor(public $scope: IScopeSwimFTPCalculator) {
 
         $scope.calculationMethods = [{
             active: false,
@@ -35,7 +49,7 @@ class SwimFTPCalculator {
                 hint: 'Swim as fast as possible on 200 meters. Enter time performed in seconds (ex: 210 seconds)',
                 value: null
             }, {
-                hint: 'After a rest, swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)',
+                hint: 'After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)',
                 value: null
             }],
             formula: (params: Array<{hint: string, value: number}>) => {
@@ -43,7 +57,7 @@ class SwimFTPCalculator {
             }
         }];
 
-        $scope.methodChanged = (selectedMethod: any) => { // TODO type it...
+        $scope.methodChanged = (selectedMethod: ISwimCalculationMethod) => {
 
             // Make all other method inactive
             let othersMethods = _.reject($scope.calculationMethods, (method: any) => {
@@ -57,6 +71,10 @@ class SwimFTPCalculator {
             let userSwimFtp = selectedMethod.formula(selectedMethod.params);
 
             $scope.userSwimFtp = (_.isNumber(userSwimFtp) && userSwimFtp >= 0) ? parseFloat(userSwimFtp.toFixed(2)) : 0;
+
+            if(selectedMethod.active) {
+                $scope.onMethodSelected(selectedMethod);
+            }
         };
     }
 }
@@ -66,7 +84,8 @@ app.directive('swimFtpCalculator', [() => {
     return {
         controller: SwimFTPCalculator,
         scope: {
-            userSwimFtp: '='
+            userSwimFtp: '=',
+            onMethodSelected: '='
         },
         templateUrl: 'directives/templates/swimFTPCalculator.html'
     };

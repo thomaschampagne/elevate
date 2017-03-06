@@ -97,7 +97,7 @@
                 </div>
                 <div flex="35">
                     <md-input-container class="md-block">
-                        <label>Enter <strong>meters / min</strong></label>
+                        <label>Enter <strong>meters / min (e.g. 31)</strong></label>
                         <input name="userSwimFTP" type="number" min="0" max="2500" class="form-control input-lg"
                                ng-model="userSwimFTP" ng-change="userSwimFTPChanged()"/>
                         <md-tooltip>Use arrows &#8645; or numpad to set your Swimming Functional Threshold Pace in
@@ -105,7 +105,7 @@
                         </md-tooltip>
                     </md-input-container>
                     <md-input-container class="md-block">
-                        <label>OR enter as <strong>mm:ss / 100 meters</strong></label>
+                        <label>OR enter as <strong>mm:ss / 100 meters (e.g. 03:15)</strong></label>
                         <input name="userSwimFTP100m" maxlength="6" type="text" class="form-control input-lg"
                                ng-model="userSwimFTP100m" ng-pattern="/^[0-9]+:[0-5]{1}[0-9]{1}$/"
                                ng-change="userSwimFTP100mChanged()"/>
