@@ -96,6 +96,7 @@
     "plugin/options/app/directives/fitnessTrend/fitnessTrendTable.ts",
     "plugin/options/app/directives/profileConfiguredRibbon.ts",
     "plugin/options/app/directives/restoreHistory.ts",
+    "plugin/options/app/directives/swimFTPCalculator.ts",
     "specs/processors/ActivityComputer.spec.ts",
     "specs/processors/VacuumProcessor.spec.ts",
     "specs/sync/ActivitiesSync.basics.spec.ts",

@@ -1,0 +1,23 @@
+<md-dialog>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Swimming Functional Threshold Pace Calculator</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="hide()">
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <swim-ftp-calculator user-swim-ftp="userSwimFTP" on-method-selected="onMethodSelected"></swim-ftp-calculator>
+        </md-dialog-content>
+        <md-dialog-actions ng-show="selectedMethod && compliantSwimFTP" layout="row">
+            <span flex></span>
+            <span>Swimming FTP Result&nbsp;=&nbsp;<i>{{userSwimFTP}} min/m</i>&nbsp;or&nbsp;<i>{{userSwimFTP100m}}/100m</i></span>
+            <md-button class="md-raised md-primary" ng-click="answer(userSwimFTP)">
+                Use FTP
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
