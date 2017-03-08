@@ -13,6 +13,67 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.6.0',
+        message: 'Swimming is now supported in multi-sport fitness trend!!</br></br><strong>Fitness trend</strong> is now completely <strong>ready</strong> for <strong>triathletes</strong> :)</br></br> It\'s also working with swimming activities entered manually :) No heart rate monitor is required for swimming! Your 10$ stopwatch should be good enough ;) !',
+        hotFixes: [],
+        features: [
+            'Added Swimming support inside multi-sport fitness trend by using your swim FTP.</br><i>Note: this type of activity where not supported by default (via HR data and thus "trimps") because strava swimming activities don\'t keep HR data.</i>',
+            'Improved history synchronization. Synchronization continues where she stopped earlier (in case of any type of interruption).',
+            'Added possibility to filter or not "commutes" activities on year progressions.'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed date comparison bug on additional goal progress tracking.'
+        ],
+    },
+    {
+        version: '5.5.0',
+        message: 'At a glance...</br>Cycling Power Stress Score on your activities :)</br>' +
+        'Support of Running Power Meters :)</br>' +
+        'Please redo a full sync of your history if you "pause" your activities during lunch (See below fixed bugs)',
+        hotFixes: [],
+        features: [
+            'Added "Cycling Power Stress Score" to strava activity pages. You must have a power meter on your bike to view the stat.',
+            'Added support of Running Power Meters (e.g. Stryd, RPM2, ... sensors) inside strava running activities pages.',
+            'Added a period of "6 weeks" inside MultiSports Fitness Trend',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed a wrong calculation of TRIMP on elapsed time when your activities were "paused" for a long time. <i></i>',
+            'Fixed the use of running power meters matching with cycling power meter option of Multisports Fitness Trend.',
+            'Fixed a wrong calculation of based w/kg stats on others cycling activities than you: your weight were used instead of the weights of activities owners.',
+        ],
+    },
+    {
+        version: '5.4.2',
+        message: '<i>Patch release: Now calculating TRIMP over elapsed time instead of moving time. TRIMP were not properly computed with activities without movements.<br/>You may need to perform a full sync of your synced history for the fitness trend feature. Memory management during synchronization of your history has been also improved.</i>',
+        hotFixes: [],
+        features: [
+            '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> can now use your cycling power meter to compute your fitness.',
+            'Strava premium additional goal progress is back! Still "experimental". Activate it from Hidden feature section',
+            'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Now calculating TRIMP over elapsed time instead of moving time',
+            'Improved memory management during synchronization of your history',
+        ],
+    },
+    {
+        version: '5.4.1',
+        message: '<strong>5.4.1:</strong> <i>Bug fix release</i></br></br><strong>5.4.0 features reminder:</strong> <a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.',
+        hotFixes: [],
+        features: [
+            'Fitness trend can now use your cycling power meter to compute your fitness.',
+            'Strava premium additional goal progress is back! Still "experimental". Activate it from Hidden feature section',
+            'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Fix wrong daily fitness final score in case of multiple activities done on same day having TRIMP score for some and PSS score for others.'
+        ],
+    },
+    {
         version: '5.4.0',
         message: '<a href="' + Constants.OPTIONS_URL + '#/fitnessTrend" target="_blank">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.</br></br>Swimming is not supported properly in fitness trend... Now taking care of swimmers ;) Still in Beta isn\'t it ?^^;)',
         hotFixes: [],
@@ -22,8 +83,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'Renamed cycling stat "Punch Factor" to "Intensity" (= Weighted Power / FTP)'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.3.1',
@@ -49,8 +109,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'Others minors improvements around MultiSports Fitness Trend & synchronisation.'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.2.0',
@@ -60,8 +119,7 @@ let releaseNotes: Array<IReleaseNote> = [
             'MultiSports Fitness Trend released as beta'
         ],
         hideFeatureReleaseNote: false,
-        fixes: [
-        ],
+        fixes: [],
     },
     {
         version: '5.1.1',

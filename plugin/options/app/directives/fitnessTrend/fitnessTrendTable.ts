@@ -15,6 +15,7 @@ class FitnessTrendTable {
             let fitnessDataForTable: Array<IFitnessActivityTable> = [];
 
             $scope.usePowerMeter = message.usePowerMeter;
+            $scope.useSwimStressScore = message.useSwimStressScore;
 
             // Filter fitnessData: remove preview days
             let fitnessData = _.where(message.fitnessData, {
@@ -45,11 +46,17 @@ class FitnessTrendTable {
 
                     newFitnessObj.activitiesNameStr = finalActivityName;
                     newFitnessObj.type = [finalTypeName];
-                    newFitnessObj.trimp = parseInt(newFitnessObj.trimp.toFixed(0));
+                    newFitnessObj.trimpScore = (_.isNumber(newFitnessObj.trimpScore)) ? parseInt(newFitnessObj.trimpScore.toFixed(0)) : -1;
+                    newFitnessObj.powerStressScore = (_.isNumber(newFitnessObj.powerStressScore)) ? parseInt(newFitnessObj.powerStressScore.toFixed(0)) : -1;
+                    newFitnessObj.swimStressScore = (_.isNumber(newFitnessObj.swimStressScore)) ? parseInt(newFitnessObj.swimStressScore.toFixed(0)) : -1;
+                    newFitnessObj.finalStressScore = (_.isNumber(newFitnessObj.finalStressScore)) ? parseInt(newFitnessObj.finalStressScore.toFixed(0)) : -1;
                 } else {
                     newFitnessObj.activitiesNameStr = '-';
                     newFitnessObj.type = ['-'];
-                    newFitnessObj.trimp = -1;
+                    newFitnessObj.trimpScore = -1;
+                    newFitnessObj.powerStressScore = -1;
+                    newFitnessObj.swimStressScore = -1;
+                    newFitnessObj.finalStressScore = -1;
                 }
 
                 fitnessDataForTable.push(newFitnessObj);

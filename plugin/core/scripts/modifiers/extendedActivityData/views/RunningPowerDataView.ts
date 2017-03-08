@@ -1,4 +1,4 @@
-class PowerDataView extends AbstractDataView {
+class RunningPowerDataView extends AbstractDataView {
 
     protected powerData: IPowerData;
 
@@ -28,18 +28,13 @@ class PowerDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        this.insertContentAtGridPosition(0, 0, this.powerData.weightedPower.toFixed(0), 'Weighted Power', 'W', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(1, 0, this.powerData.variabilityIndex.toFixed(2), 'Variability Index', '', 'displayAdvancedPowerData');
-
-        if (this.powerData.punchFactor) {
-            this.insertContentAtGridPosition(2, 0, this.powerData.punchFactor.toFixed(2), 'Intensity', '', 'displayAdvancedPowerData');
-        }
+        this.insertContentAtGridPosition(0, 0, this.powerData.avgWatts.toFixed(0), 'Average Power', 'W', 'displayAdvancedPowerData');
+        this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), 'Weighted Power', 'W', 'displayAdvancedPowerData');
+        this.insertContentAtGridPosition(2, 0, this.powerData.variabilityIndex.toFixed(2), 'Variability Index', '', 'displayAdvancedPowerData');
 
         this.insertContentAtGridPosition(0, 1, this.powerData.lowerQuartileWatts, '25% Quartile Watts', 'W', 'displayAdvancedPowerData');
         this.insertContentAtGridPosition(1, 1, this.powerData.medianWatts, '50% Quartile Watts', 'W', 'displayAdvancedPowerData');
         this.insertContentAtGridPosition(2, 1, this.powerData.upperQuartileWatts, '75% Quartile Watts', 'W', 'displayAdvancedPowerData');
 
-        this.insertContentAtGridPosition(0, 2, this.powerData.avgWattsPerKg.toFixed(2), 'Avg Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(1, 2, this.powerData.weightedWattsPerKg.toFixed(2), 'Weighted Watts/Kg', 'W/Kg', 'displayAdvancedPowerData');
     }
 }

@@ -27,6 +27,7 @@ class ActivitiesSyncModifier implements IModifier {
         html += '<div>';
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
+        html += '       <div style="background: #fff969; padding: 5px; font-size: 14px;"><u>Note to Chrome v56 users:</u> If a crash occurs during the synchronization of a large history. Simply reinstall your chrome browser to fix the problem. Bug appears only on previous versions of chrome upgraded to v56, not a stravistix bug.</div>'; // TODO Remove later chrome 57
         html += '           <span style="font-size: 28px;">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension.' +
             '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation<br/><a href="' + this.appResources.settingsLink + '#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" style="font-weight: bold; color: #e94e1b;">&#187; Configure auto sync here &#171;</a><br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
             'Closing window stops synchronization. It will close itself when done.';
@@ -99,7 +100,7 @@ class ActivitiesSyncModifier implements IModifier {
             $('#syncProgressBar').val(100);
             $('#totalProgressText').html('100%');
 
-            let timer: number = 10 * 1000; // 10s for debug...
+            let timer: number = 5 * 1000; // 10s for debug...
             ActivitiesSyncModifier.closeWindowIntervalId = setInterval(() => {
                 $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ', Edited:' + syncResult.globalHistoryChanges.edited.length + ', Deleted:' + syncResult.globalHistoryChanges.deleted.length +
                     '. Closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:ActivitiesSyncModifier.cancelAutoClose()">Cancel auto close<a></div>');
@@ -141,7 +142,7 @@ class ActivitiesSyncModifier implements IModifier {
 
         }, (progress: ISyncNotify) => {
 
-            console.log(progress);
+            // console.log(progress);
 
             // Global progress
             $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);

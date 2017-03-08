@@ -5,10 +5,10 @@
     <md-card-content>
         <form name="healthCommonForm">
             <div layout="row">
-                <div flex="70">
+                <div flex="60">
                     Gender
                 </div>
-                <div flex="25">
+                <div flex="35">
                     <md-input-container class="md-block">
                         <md-select ng-model="gender" aria-label="Gender" ng-change="userGenderChanged(gender)">
                             <md-option ng-value="gender" ng-repeat="gender in genderList">{{gender.display}}</md-option>
@@ -18,10 +18,10 @@
                 <div flex></div>
             </div>
             <div layout="row">
-                <div flex="70">
+                <div flex="60">
                     Max heartrate
                 </div>
-                <div flex="25">
+                <div flex="35">
                     <md-input-container class="md-block">
                         <label>Enter your max bpm</label>
                         <input name="userMaxHr" type="number" min="{{userRestHr + 10}}" max="300" ng-model="userMaxHr"
@@ -36,10 +36,10 @@
                 </div>
             </div>
             <div layout="row">
-                <div flex="70">
+                <div flex="60">
                     Resting heartrate
                 </div>
-                <div flex="25">
+                <div flex="35">
                     <md-input-container class="md-block">
                         <label>Enter your min bpm</label>
                         <input name="userRestHr" type="number" min="10" max="{{userMaxHr - 10}}" ng-model="userRestHr"
@@ -55,10 +55,10 @@
                 </div>
             </div>
             <div layout="row">
-                <div flex="70">
+                <div flex="60">
                     Weight
                 </div>
-                <div flex="25">
+                <div flex="35">
                     <md-input-container class="md-block">
                         <label>Enter your weight (kg)</label>
                         <input name="userWeight" type="number" min="0" max="1000" class="form-control input-lg"
@@ -69,23 +69,57 @@
                 <div flex></div>
             </div>
             <div layout="row">
-                <div flex="70">
-                    Cycling Functional Threshold Power
+                <div flex="60">
+                    Cycling Functional Threshold Power (Watts)
                 </div>
-                <div flex="25">
+                <div flex="35">
                     <md-input-container class="md-block">
-                        <label>Enter your FTP</label>
+                        <label>Enter your cycling FTP (watts)</label>
                         <input name="userFTP" type="number" min="10" max="2500" class="form-control input-lg"
                                ng-model="userFTP" ng-pattern="/^[0-9]+$/" ng-change="ftpHasChanged()"/>
                         <md-tooltip>Use arrows &#8645; or numpad to set your Functional Threshold Power in Watts
                         </md-tooltip>
+                        <div ng-if="healthCommonForm.userFTP.$invalid">
+                            <div style="color: darkred;">Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
+                        </div>
                     </md-input-container>
-                    <div ng-if="healthCommonForm.userFTP.$invalid">
-                        <div>Enter a valid FTP value in watts (between 10 to 2500 watts)</div>
-                    </div>
                 </div>
                 <div flex>
                     <md-button class="md-icon-button" ng-click="displayUserFTPHelper($event)">
+                        <md-icon aria-label="Help">help</md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+            <div layout="row">
+                <div flex="60">
+                    Swimming Functional Threshold Pace (m/min)
+                </div>
+                <div flex="35">
+                    <md-input-container class="md-block">
+                        <label>Enter <strong>meters / min (e.g. 31)</strong></label>
+                        <input name="userSwimFTP" type="number" min="0" max="2500" class="form-control input-lg"
+                               ng-model="userSwimFTP" ng-change="userSwimFTPChanged()"/>
+                        <md-tooltip>Use arrows &#8645; or numpad to set your Swimming Functional Threshold Pace in
+                            m/min
+                        </md-tooltip>
+                    </md-input-container>
+                    <md-input-container class="md-block">
+                        <label>OR enter as <strong>mm:ss / 100 meters (e.g. 03:15)</strong></label>
+                        <input name="userSwimFTP100m" maxlength="6" type="text" class="form-control input-lg"
+                               ng-model="userSwimFTP100m" ng-pattern="/^[0-9]+:[0-5]{1}[0-9]{1}$/"
+                               ng-change="userSwimFTP100mChanged()"/>
+                        <md-tooltip>Format expected min:ss/100m</md-tooltip>
+                        <div ng-if="healthCommonForm.userSwimFTP100m.$invalid">
+                            <div style="color: darkred;">Enter a valid Swin FTP, format: min:ss/100m</div>
+                        </div>
+                    </md-input-container>
+
+                    <a href="" ng-click="showSwimFTPHelper()">I don't know my <i>Swimming
+                        Functional Threshold Pace</i>. Help me with a calculator :) !</a>
+                </div>
+                <div flex>
+                    <md-button class="md-icon-button" ng-click="showSwimFTPHelper()">
                         <md-icon aria-label="Help">help</md-icon>
                     </md-button>
                 </div>

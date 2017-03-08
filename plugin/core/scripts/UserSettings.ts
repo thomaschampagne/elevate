@@ -5,6 +5,7 @@ interface IUserSettings {
     userMaxHr: number;
     userRestHr: number;
     userFTP: number;
+    userSwimFTP: number;
     userWeight: number;
     userHrrZones: Array<IHrrZone>;
     zones: {
@@ -67,6 +68,7 @@ let userSettings: IUserSettings = {
     userMaxHr: 190,
     userRestHr: 65,
     userFTP: null,
+    userSwimFTP: null,
     userWeight: 70,
     userHrrZones: [{fromHrr: 10, toHrr: 30}, {fromHrr: 30, toHrr: 40}, {
         fromHrr: 40,

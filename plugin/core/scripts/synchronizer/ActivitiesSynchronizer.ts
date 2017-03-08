@@ -3,6 +3,12 @@ interface IAthleteProfile {
     userMaxHr: number;
     userRestHr: number;
     userFTP: number;
+
+    // Detect swim ftp changes cloud/local is not required to perform new full sync.
+    // Related computation with this param is currently not stored locally.
+    // Swim stress score computed on the fly inside fitness data computer
+    // userSwimFTP: number;
+
     userWeight: number;
 }
 
@@ -29,7 +35,7 @@ class ActivitiesSynchronizer {
     protected userSettings: IUserSettings;
     protected extensionId: string;
     protected totalRawActivityIds: Array<number> = [];
-    public static pagesPerGroupToRead: number = 3; // = 60 activities with 20 activities per page.
+    public static pagesPerGroupToRead: number = 2; // = 40 activities with 20 activities per page.
     protected _hasBeenComputedActivities: Array<ISyncActivityComputed> = null;
     protected _activitiesProcessor: ActivitiesProcessor;
     protected _endReached: boolean = false;
@@ -493,7 +499,7 @@ class ActivitiesSynchronizer {
 
                 computedActivitiesInGroup = computedActivitiesPromised;
                 computedActivitiesPromised = null; // Free mem !
-                console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
+                // console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
                 console.log('Group handled count: ' + handledGroupCount);
 
                 // Retrieve previous saved activities
@@ -528,7 +534,7 @@ class ActivitiesSynchronizer {
                     this.saveComputedActivitiesToLocal(this._hasBeenComputedActivities).then((pagesGroupSaved: any) => {
 
                         // Current group have been saved with previously stored activities...
-                        console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
+                        // console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
 
                         let notify: ISyncNotify = {
                             step: 'savedComputedActivities',
@@ -600,20 +606,8 @@ class ActivitiesSynchronizer {
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 
-            let computeGroupedActivitiesPromise: Q.IPromise<any> = null;
-
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
-
-            if (lastSyncDateTime) {
-                computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-            } else {
-                // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
-                computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
-                    return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-                });
-            }
-
-            return computeGroupedActivitiesPromise;
+            return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
 
         }).then(() => {
 
@@ -674,7 +668,8 @@ class ActivitiesSynchronizer {
                 userMaxHr: this.userSettings.userMaxHr,
                 userRestHr: this.userSettings.userRestHr,
                 userWeight: this.userSettings.userWeight,
-                userFTP: this.userSettings.userFTP
+                userFTP: this.userSettings.userFTP,
+                // userSwimFTP: this.userSettings.userSwimFTP
             };
 
             return this.saveSyncedAthleteProfile(syncedAthleteProfile);
@@ -757,9 +752,5 @@ class ActivitiesSynchronizer {
 
     get globalHistoryChanges(): IHistoryChanges {
         return this._globalHistoryChanges;
-    }
-
-    get endReached(): boolean {
-        return this._endReached;
     }
 }

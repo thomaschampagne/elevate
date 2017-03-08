@@ -223,12 +223,13 @@ class StravistiX {
 
         let updateMessageObj: any = {
             logo: '<img src="' + this.appResources.logoStravistix + '"/>',
-            title: 'Update <strong>v' + this.appResources.extVersionName + '</strong>',
+            title: 'This browser just get updated to <strong>v' + this.appResources.extVersionName + '</strong> :)',
             hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcommingFixes: [],
             upcommingFeatures: [
+                'Years progressions reworked',
                 'Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.',
                 'Grid: All your activities in a table including stravistix extended stats as columns.',
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
@@ -316,6 +317,10 @@ class StravistiX {
      *
      */
     protected handleActivitiesSummary(): void {
+
+
+        /* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
+
         // If we are not on the athletes page then return...
         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
             return;
@@ -325,6 +330,7 @@ class StravistiX {
 
         let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
         activitiesSummaryModifier.modify();
+        */
     }
 
     /**
@@ -1165,7 +1171,7 @@ class StravistiX {
 
 
                         }, (progress: ISyncNotify) => {
-                            console.log(progress);
+                            // console.log(progress);
                         });
 
                     } else {
