@@ -1,10 +1,7 @@
-// types: Array<string>;
-
 interface IYearProgress {
     year: number;
     progressions: Array<IProgression>;
 }
-
 interface IProgression {
     onTimestamp: number;
     onYear: number;
@@ -220,16 +217,20 @@ class YearProgressController {
                 tableRow.totalElevation = progressAtThisDayOfYear.totalElevation;
                 tableRow.count = progressAtThisDayOfYear.count;
 
-                if(yearProgressionsIterator[index - 1]) {
+                if (yearProgressionsIterator[index - 1]) {
 
                     let progressAtThisDayOfLastYear: IProgression = _.findWhere(yearProgressionsIterator[index - 1].progressions, {
                         onDayOfYear: moment().dayOfYear()
                     });
 
                     tableRow.deltaPreviousDistance = (progressAtThisDayOfYear.totalDistance - progressAtThisDayOfLastYear.totalDistance) / 1000;
+                    tableRow.deltaPreviousDistanceColor = (tableRow.deltaPreviousDistance >= 0) ? "green" : "red";
                     tableRow.deltaPreviousTime = moment.duration((progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime) * 1000).asHours();
+                    tableRow.deltaPreviousTimeColor = (tableRow.deltaPreviousTime >= 0) ? "green" : "red";
                     tableRow.deltaPreviousElevation = progressAtThisDayOfYear.totalElevation - progressAtThisDayOfLastYear.totalElevation;
+                    tableRow.deltaPreviousElevationColor = (tableRow.deltaPreviousElevation >= 0) ? "green" : "red";
                     tableRow.deltaPreviousCount = progressAtThisDayOfYear.count - progressAtThisDayOfLastYear.count;
+                    tableRow.deltaPreviousCountColor = (tableRow.deltaPreviousCount >= 0) ? "green" : "red";
                 }
 
                 tableRows.push(tableRow);
