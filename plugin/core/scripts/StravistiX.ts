@@ -223,7 +223,7 @@ class StravistiX {
 
         let updateMessageObj: any = {
             logo: '<img src="' + this.appResources.logoStravistix + '"/>',
-            title: 'Update <strong>v' + this.appResources.extVersionName + '</strong>',
+            title: 'This browser just get updated to <strong>v' + this.appResources.extVersionName + '</strong> :)',
             hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
