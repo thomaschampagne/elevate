@@ -1,5 +1,6 @@
 class ActivityComputer {
 
+    public static GRAVITY_CONST: number = 9.81;
     public static MOVING_THRESHOLD_KPH: number = 0.1; // Kph
     public static CADENCE_THRESHOLD_RPM: number = 35; // RPMs
     public static GRADE_CLIMBING_LIMIT: number = 1.6;
@@ -98,11 +99,39 @@ class ActivityComputer {
             if (!_.isEmpty(activityStream.altitude_smooth)) {
                 activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
             }
+
+            // TODO gradeAdjustedSpeedArray slice...
         }
     }
 
     protected smoothAltitudeStream(activityStream: IActivityStream, activityStatsMap: IActivityStatsMap): any {
         return this.smoothAltitude(activityStream, activityStatsMap.elevation);
+    }
+
+    /**
+     * Create Running Power stream estimation
+     * References: http://sprott.physics.wisc.edu/technote/walkrun.htm
+     * @param athleteWeight Mass of athlete
+     * @param gradeAdjustedSpeedArray Adjusted speed along elevation in meters per seconds
+     * @returns {Array<number>} Array of power
+     */
+    // TODO Move from here
+    protected createRunningPowerStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>, timeArray: Array<number>): Array<number> {
+
+        let powerStream: Array<number> = [];
+
+        for (let i = 0; i < timeArray.length; i++) {
+
+            let power = 0;
+            if (i > 0) {
+                let time = timeArray[i] - timeArray[i - 1];
+                let distance = gradeAdjustedDistanceArray[i] - gradeAdjustedDistanceArray[i - 1];
+                power = (athleteWeight * ActivityComputer.GRAVITY_CONST * (time / distance)) / time; // J/s = W
+            }
+            console.log(power);
+            powerStream.push(power);
+        }
+        return powerStream;
     }
 
     protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
@@ -135,7 +164,18 @@ class ActivityComputer {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
+
+        // TODO if Running activity and no power meter... try to simulate power stream...
+        // athleteWeight = 54.32;
+        // hasPowerMeter = false;
+        // console.warn('athleteWeight: ' + athleteWeight);
+        if (this.activityType === 'Run' && !this.hasPowerMeter) {
+            activityStream.watts = this.createRunningPowerStream(athleteWeight, activityStream.grade_adjusted_distance, activityStream.time);
+        }
+
         let powerData: IPowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
+
+        // console.warn(powerData); // TODO remove
 
         // TRaining IMPulse
         // %HRR Avg

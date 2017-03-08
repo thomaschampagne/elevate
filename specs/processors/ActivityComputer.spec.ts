@@ -1,5 +1,6 @@
 describe('ActivityComputer', () => {
 
+    // Cycling
     it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
 
         const powerMeter: boolean = false;
@@ -91,6 +92,45 @@ describe('ActivityComputer', () => {
         expect(result.elevationData.lowerQuartileElevation.toString()).toMatch(/^215/);
         expect(result.elevationData.medianElevation.toString()).toMatch(/^231/);
         expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
+    });
+
+    // Running power test
+    it('should compute correctly "Begin Running Ep 1 // Stade 40min" @ https://www.strava.com/activities/887284960', () => {
+
+        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
+        let stream: IActivityStream = window.__fixtures__['fixtures/activities/887284960/stream'];
+        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/887284960/statsMap'];
+
+        let activityComputer: ActivityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
+        let result: IAnalysisData = activityComputer.compute();
+
+        console.log(result.powerData);
+    });
+
+    // Running estimation test
+    fit('should compute correctly "1/2 NCNR Run Club" @ https://www.strava.com/activities/874762067', () => {
+
+        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
+        let stream: IActivityStream = window.__fixtures__['fixtures/activities/874762067/stream'];
+        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/874762067/statsMap'];
+
+        userSettingsMock.userGender = 'women';
+        userSettingsMock.userWeight = 54.32;
+
+        let activityComputer: ActivityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, true, statsMap, stream, null, true);
+        let resultWithPowerMeter: IAnalysisData = activityComputer.compute();
+        expect(resultWithPowerMeter.powerData.avgWatts.toString()).toMatch(/^151/);
+
+        console.log(resultWithPowerMeter.powerData);
+
+        // Test without power data and power meter...
+        delete stream.watts;
+        delete stream.watts_calc;
+        activityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
+        let resultWithoutPowerMeter: IAnalysisData = activityComputer.compute();
+
+        console.log(resultWithoutPowerMeter.powerData);
+
     });
 });
 

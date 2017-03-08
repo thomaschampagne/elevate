@@ -18,6 +18,7 @@ interface IActivityStream {
     distance: Array<number>;
     altitude: Array<number>;
     altitude_smooth?: Array<number>;
+    grade_adjusted_distance: Array<number>;
 }
 
 interface IAnalysisData {
