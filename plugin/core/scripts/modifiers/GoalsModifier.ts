@@ -241,7 +241,8 @@ class GoalsModifier implements IModifier {
                         let monthStartReached = false;
                         activities.push(... response.models);
                         for (let activity of response.models) {
-                            if (activity.start_date_local_raw < +monthStart) {
+                            // activity.start_date_local_raw is in seconds, monthStart is in ms
+                            if (activity.start_date_local_raw*1000 < +monthStart) {
                                 monthStartReached = true;
                             }
                         }

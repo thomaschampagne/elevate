@@ -23,6 +23,8 @@ class AthleteSettingsController {
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
+            $scope.userSwimFTP = userSettingsSynced.userSwimFTP;
+            $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
             $scope.userWeight = userSettingsSynced.userWeight;
             $scope.gender = _.findWhere($scope.genderList, {
                 type: userSettingsSynced.userGender
@@ -48,72 +50,89 @@ class AthleteSettingsController {
 
         $scope.userMaxHrChanged = () => {
 
-            setTimeout(() => {
-                if (!_.isUndefined($scope.userMaxHr) && !_.isNull($scope.userMaxHr)) {
+            if (!_.isUndefined($scope.userMaxHr) && !_.isNull($scope.userMaxHr)) {
 
-                    if ($scope.userMaxHr <= $scope.userRestHr) {
-                        $scope.healthCommonForm.userMaxHr.$invalid = true;
-                        $scope.$apply();
+                if ($scope.userMaxHr <= $scope.userRestHr) {
+                    $scope.healthCommonForm.userMaxHr.$invalid = true;
+                    $scope.$apply();
 
-                    } else {
-                        chromeStorageService.updateUserSetting('userMaxHr', $scope.userMaxHr, () => {
-                            console.log('userMaxHr has been updated to ' + $scope.userMaxHr);
-                            $scope.localStorageMustBeCleared();
-                            $scope.profileChanged();
-                        });
-                    }
+                } else {
+                    chromeStorageService.updateUserSetting('userMaxHr', $scope.userMaxHr, () => {
+                        console.log('userMaxHr has been updated to ' + $scope.userMaxHr);
+                        $scope.localStorageMustBeCleared();
+                        $scope.profileChanged();
+                    });
                 }
-            }, 500);
+            }
 
         };
 
         $scope.userRestHrChanged = () => {
 
-            setTimeout(() => {
-                if (!_.isUndefined($scope.userRestHr) && !_.isNull($scope.userRestHr)) {
+            if (!_.isUndefined($scope.userRestHr) && !_.isNull($scope.userRestHr)) {
 
 
-                    if ($scope.userMaxHr <= $scope.userRestHr) {
-                        $scope.healthCommonForm.userRestHr.$invalid = true;
-                        $scope.$apply();
-                    } else {
-                        chromeStorageService.updateUserSetting('userRestHr', $scope.userRestHr, () => {
-                            console.log('userRestHr has been updated to ' + $scope.userRestHr);
-                            $scope.localStorageMustBeCleared();
-                            $scope.profileChanged();
-                        });
-                    }
-
+                if ($scope.userMaxHr <= $scope.userRestHr) {
+                    $scope.healthCommonForm.userRestHr.$invalid = true;
+                    $scope.$apply();
+                } else {
+                    chromeStorageService.updateUserSetting('userRestHr', $scope.userRestHr, () => {
+                        console.log('userRestHr has been updated to ' + $scope.userRestHr);
+                        $scope.localStorageMustBeCleared();
+                        $scope.profileChanged();
+                    });
                 }
-            }, 500);
+
+            }
         };
 
         $scope.ftpHasChanged = () => {
 
-            setTimeout(() => {
-                if (!_.isUndefined($scope.userFTP)) {
-                    chromeStorageService.updateUserSetting('userFTP', $scope.userFTP, () => {
-                        console.log('userFTP has been updated to ' + $scope.userFTP);
-                        $scope.localStorageMustBeCleared();
-                        $scope.profileChanged();
-                    });
-                }
-            }, 500);
+            if (!_.isUndefined($scope.userFTP)) {
+                chromeStorageService.updateUserSetting('userFTP', $scope.userFTP, () => {
+                    console.log('userFTP has been updated to ' + $scope.userFTP);
+                    $scope.localStorageMustBeCleared();
+                    $scope.profileChanged();
+                });
+            }
         };
 
         $scope.userWeightChanged = () => {
 
-            setTimeout(() => {
-                if (!_.isUndefined($scope.userWeight)) {
-                    chromeStorageService.updateUserSetting('userWeight', $scope.userWeight, function () {
-                        console.log('userWeight has been updated to ' + $scope.userWeight);
-                        $scope.localStorageMustBeCleared();
-                        $scope.profileChanged();
-                    });
-                }
-            }, 500);
+            if (!_.isUndefined($scope.userWeight)) {
+                chromeStorageService.updateUserSetting('userWeight', $scope.userWeight, function () {
+                    console.log('userWeight has been updated to ' + $scope.userWeight);
+                    $scope.localStorageMustBeCleared();
+                    $scope.profileChanged();
+                });
+            }
+        };
 
+        // Watch value changes from field directly OR from swim FTP calculator
+        $scope.userSwimFTPChanged = () => {
 
+            $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP); // convert min/m to seconds/100m
+
+            if (!_.isUndefined($scope.userSwimFTP)) {
+                chromeStorageService.updateUserSetting('userSwimFTP', $scope.userSwimFTP, () => {
+                    console.log('userSwimFTP has been updated to ' + $scope.userSwimFTP);
+                    $scope.localStorageMustBeCleared();
+                    $scope.profileChanged();
+                });
+            }
+        };
+
+        $scope.userSwimFTP100mChanged = () => {
+
+            if ($scope.userSwimFTP100m && $scope.userSwimFTP100m.match('[0-9]+:[0-5]{1}[0-9]{1}')) {
+
+                let split = $scope.userSwimFTP100m.split(':');
+                let minutes = parseInt(split[0]);
+                let seconds = parseInt(split[1]);
+                let totalSeconds = minutes * 60 + seconds;
+                $scope.userSwimFTP = parseFloat((60 * 100 / totalSeconds).toFixed(2));
+                $scope.userSwimFTPChanged(); // Trigger save & userSwimFTP100m new value
+            }
         };
 
         $scope.hintModal = ($event: any, title: string, content: string) => {
@@ -128,6 +147,45 @@ class AthleteSettingsController {
                     .targetEvent($event)
             );
         };
+
+        $scope.showSwimFTPHelper = ($event: MouseEvent) => {
+
+            $mdDialog.show({
+                controller: ($scope: any, $mdDialog: IDialogService, userSwimFTP: number) => {
+
+                    $scope.userSwimFTP = userSwimFTP;
+
+                    $scope.onMethodSelected = (selectedMethod: ISwimCalculationMethod) => {
+                        $scope.selectedMethod = selectedMethod;
+                    };
+
+                    $scope.compliantSwimFTP = false;
+                    $scope.$watch('userSwimFTP', () => {
+                        $scope.compliantSwimFTP = (_.isFinite($scope.userSwimFTP) && $scope.userSwimFTP > 0);
+                        $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
+                    });
+
+                    $scope.hide = () => {
+                        $mdDialog.hide();
+                    };
+
+                    $scope.answer = (userSwimFTP: number) => {
+                        $mdDialog.hide(userSwimFTP);
+                    };
+                },
+                templateUrl: 'directives/templates/dialogs/swimFTPCalculatorDialog.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: true,
+                locals: {
+                    userSwimFTP: $scope.userSwimFTP
+                },
+            }).then((userSwimFTP: number) => {
+                $scope.userSwimFTP = userSwimFTP;
+                $scope.userSwimFTPChanged(); // Trigger save & userSwimFTP100m new value
+            });
+        };
+
 
         $scope.displayUserMaxHrHelper = ($event: any) => {
             $scope.hintModal($event, 'How to find your max Heart rate value', 'If you don\'t know your own max Heart rate then enter the value <strong> 220 - "your age" </strong>. <br /><br /> For example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>');
@@ -158,6 +216,7 @@ class AthleteSettingsController {
             $rootScope.$broadcast(AthleteSettingsController.changedAthleteProfileMessage);
         };
     }
+
 }
 
 app.controller("AthleteSettingsController", AthleteSettingsController);

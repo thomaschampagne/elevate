@@ -11,6 +11,7 @@ interface IActivitiesWithFitness {
     activityName: string;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
 }
 
 interface IActivitiesWithFitnessDaysOff {
@@ -21,6 +22,7 @@ interface IActivitiesWithFitnessDaysOff {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore: number;
     previewDay: boolean;
 }
@@ -33,6 +35,7 @@ interface IFitnessActivity {
     activitiesName: Array<string>;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore?: number;
     ctl: number;
     atl: number;
@@ -56,6 +59,8 @@ class FitnessDataService {
     protected fitnessData: Array<IFitnessActivity>;
     protected usePowerMeter: boolean = false;
     protected userFTP: number = -1;
+    protected useSwimStressScore: boolean = false;
+    protected userSwimFTP: number = -1;
 
     constructor(q: IQService, chromeStorageService: ChromeStorageService) {
         this.$q = q;
@@ -68,7 +73,12 @@ class FitnessDataService {
     protected getCleanedComputedActivities(): IPromise<Array<IActivitiesWithFitness>> {
 
         if (this.userFTP === -1) {
-            console.error("userFTP must be set before");
+            console.error("userFTP must be set before calling this method");
+            return;
+        }
+
+        if (this.userSwimFTP === -1) {
+            console.error("userFTP must be set before calling this method");
             return;
         }
 
@@ -84,12 +94,14 @@ class FitnessDataService {
 
                 let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
-                let isPowerMeterUsePossible: boolean = (activity.type == "Ride" || activity.type == "VirtualRide")
+                let isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
                     && this.usePowerMeter && _.isNumber(this.userFTP)
                     && activity.extendedStats && activity.extendedStats.powerData
                     && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-                if (hasHeartRateData || isPowerMeterUsePossible) {
+                let hasSwimmingData: boolean = this.useSwimStressScore && _.isNumber(this.userSwimFTP) && this.userSwimFTP > 0 && activity.type === "Swim" && _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw);
+
+                if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
 
                     let momentStartTime: Moment = moment(activity.start_time);
 
@@ -110,6 +122,12 @@ class FitnessDataService {
 
                     if (isPowerMeterUsePossible) {
                         activityWithFitness.powerStressScore = (activity.moving_time_raw * activity.extendedStats.powerData.weightedPower * (activity.extendedStats.powerData.weightedPower / this.userFTP) / (this.userFTP * 3600) * 100);
+                    }
+
+                    if (hasSwimmingData) {
+                        let normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
+                        let swimIntensity = normalizedSwimSpeed / this.userSwimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
+                        activityWithFitness.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
                     }
 
                     cleanedActivities.push(activityWithFitness);
@@ -198,11 +216,27 @@ class FitnessDataService {
                             fitnessObjectOnCurrentDay.trimpScore += fitnessActivity.trimpScore;
                         }
 
+                        // SwimSS
+                        if (fitnessActivity.swimStressScore) { // Check for TRIMP score if available
+                            if (!fitnessObjectOnCurrentDay.swimStressScore) { // Initialize value if not exists
+                                fitnessObjectOnCurrentDay.swimStressScore = 0;
+                            }
+                            fitnessObjectOnCurrentDay.swimStressScore += fitnessActivity.swimStressScore;
+                        }
+
                         // Apply final stress score for that day
                         if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.powerStressScore;
+
                         } else if (fitnessActivity.trimpScore) {
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.trimpScore;
+
+                        } else if (fitnessActivity.swimStressScore) {
+
+                            fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.swimStressScore;
+
                         }
                     }
                 }
@@ -276,6 +310,10 @@ class FitnessDataService {
                 result.powerStressScore = trimpObject.powerStressScore;
             }
 
+            if (_.isNumber(trimpObject.swimStressScore) && trimpObject.swimStressScore > 0) {
+                result.swimStressScore = trimpObject.swimStressScore;
+            }
+
             if (_.isNumber(trimpObject.finalStressScore) && trimpObject.finalStressScore > 0) {
                 result.finalStressScore = trimpObject.finalStressScore;
             }
@@ -316,14 +354,15 @@ class FitnessDataService {
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
      */
-    public getFitnessData(usePowerMeter: boolean, userFTP: number): IPromise<Array<IFitnessActivity>> {
+    public getFitnessData(usePowerMeter: boolean, userFTP: number, useSwimStressScore: boolean, userSwimFTP: number): IPromise<Array<IFitnessActivity>> {
 
         this.usePowerMeter = usePowerMeter;
         this.userFTP = userFTP;
 
-        let deferred = this.$q.defer<Array<IFitnessActivity>>();
+        this.useSwimStressScore = useSwimStressScore;
+        this.userSwimFTP = userSwimFTP;
 
-        // if (!this.fitnessData) {
+        let deferred = this.$q.defer<Array<IFitnessActivity>>();
 
         console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
 
@@ -340,10 +379,6 @@ class FitnessDataService {
             deferred.reject(err);
         });
 
-        // } else {
-        //     console.log('Fetch fitnessData from FitnessDataService local var');
-        //     deferred.resolve(this.fitnessData);
-        // }
         return deferred.promise;
     }
 }

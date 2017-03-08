@@ -3,6 +3,12 @@ interface IAthleteProfile {
     userMaxHr: number;
     userRestHr: number;
     userFTP: number;
+
+    // Detect swim ftp changes cloud/local is not required to perform new full sync.
+    // Related computation with this param is currently not stored locally.
+    // Swim stress score computed on the fly inside fitness data computer
+    // userSwimFTP: number;
+
     userWeight: number;
 }
 
@@ -600,20 +606,8 @@ class ActivitiesSynchronizer {
         // Check for lastSyncDateTime
         this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 
-            let computeGroupedActivitiesPromise: Q.IPromise<any> = null;
-
             let lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
-
-            if (lastSyncDateTime) {
-                computeGroupedActivitiesPromise = this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-            } else {
-                // No last sync date time found, then clear local cache (some previous groups of page could be saved if a previous sync was interrupted)
-                computeGroupedActivitiesPromise = this.clearSyncCache().then(() => {
-                    return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
-                });
-            }
-
-            return computeGroupedActivitiesPromise;
+            return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
 
         }).then(() => {
 
@@ -674,7 +668,8 @@ class ActivitiesSynchronizer {
                 userMaxHr: this.userSettings.userMaxHr,
                 userRestHr: this.userSettings.userRestHr,
                 userWeight: this.userSettings.userWeight,
-                userFTP: this.userSettings.userFTP
+                userFTP: this.userSettings.userFTP,
+                // userSwimFTP: this.userSettings.userSwimFTP
             };
 
             return this.saveSyncedAthleteProfile(syncedAthleteProfile);

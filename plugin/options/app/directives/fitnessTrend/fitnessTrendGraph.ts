@@ -1,7 +1,7 @@
 interface IFitnessTrendGraphScope extends IScope {
-    tmpUseSwimStressScorePopup: Function;
     nvd3api: any;
     userFTP: number;
+    userSwimFTP: number;
     makeGraph: Function;
     showTrainingZone: boolean;
     showTrainingZoneChanged: Function;
@@ -9,6 +9,8 @@ interface IFitnessTrendGraphScope extends IScope {
     getTrainingZone: (tsb: number) => ITrainingZone;
     usePowerMeter: boolean;
     usePowerMeterChanged: () => void;
+    useSwimStressScore: boolean;
+    useSwimStressScoreChanged: () => void;
     colors: IColors;
     fitnessDataOnToday: IFitnessActivity;
     makeTooltip: (d: any) => string;
@@ -71,6 +73,8 @@ class FitnessTrendGraph {
 
             $scope.usePowerMeter = message.usePowerMeter;
             $scope.userFTP = message.userFTP;
+            $scope.useSwimStressScore = message.useSwimStressScore;
+            $scope.userSwimFTP = message.userSwimFTP;
             $scope.fitnessData = message.fitnessData;
             $scope.fitnessDataOnToday = _.last(_.where($scope.fitnessData, {
                 previewDay: false
@@ -81,7 +85,7 @@ class FitnessTrendGraph {
 
 
         // User just trigger power meter use toggle
-        $scope.usePowerMeterChanged = () => { // TODO rework
+        $scope.usePowerMeterChanged = () => {
 
             if (!_.isNumber($scope.userFTP)) {
 
@@ -106,6 +110,32 @@ class FitnessTrendGraph {
                 $scope.loadFitnessData();
             }
         };
+
+        $scope.useSwimStressScoreChanged = () => {
+
+            if (!_.isNumber($scope.userSwimFTP)) {
+
+                $scope.useSwimStressScore = false; // Reset
+
+                let confirm = $mdDialog.confirm()
+                    .htmlContent('Your Swimming Functional Threshold Pace is not defined. Please set it in athlete settings and reload this page.')
+                    .cancel('cancel').ok('Go to athlete settings');
+
+                $mdDialog.show(confirm).then(() => {
+                    $location.path(routeMap.athleteSettingsRoute);
+                }, () => {
+                });
+
+            } else {
+
+                // Apply graph changes
+                localStorage.setItem('useSwimStressScore', $scope.useSwimStressScore ? '1' : '0'); // Store value
+
+                // Call parent FitnessTrendController:loadFitnessData to re-compute fitness data
+                // A FitnessTrendController.fitnessDataLoaded message will be re-send
+                $scope.loadFitnessData();
+            }
+        }
 
         $scope.periodsToWatch = [{
             days: moment.duration(moment().diff(moment().subtract(7, 'days'))).asDays(),
@@ -298,6 +328,14 @@ class FitnessTrendGraph {
                     html += '   <tr>';
                     html += '       <td class="title">PSS</td>';
                     html += '       <td>' + fitnessObject.powerStressScore.toFixed(0) + '</td>';
+                    html += '   </tr>';
+                }
+
+
+                if (fitnessObject.swimStressScore > 0) {
+                    html += '   <tr>';
+                    html += '       <td class="title">Swim Score</td>';
+                    html += '       <td>' + fitnessObject.swimStressScore.toFixed(0) + '</td>';
                     html += '   </tr>';
                 }
 
@@ -699,14 +737,6 @@ class FitnessTrendGraph {
             // Send fake js window resize to make sure graph is re-drawn (to avoid cropping by sidebar) over a window resize around gt-md.
             $scope.nvd3api.update();
         });
-
-
-        $scope.tmpUseSwimStressScorePopup = () => {
-            let dialog = $mdDialog.alert()
-                .htmlContent('<i>Coming in a next update...</i></br></br>Enabling this will allow the use of a swimming stress score to compute your fitness on swimming activities.</br></br> No heart rate monitor will be required. Only a "Swimming Functional Threshold Pace"  will be asked to you in athlete settings.').ok('Got it !');
-
-            $mdDialog.show(dialog);
-        };
     }
 }
 
