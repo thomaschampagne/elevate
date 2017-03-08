@@ -13,6 +13,20 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.6.0',
+        message: 'Swimming is now supported in multi-sport fitness trend!!</br></br><strong>Fitness trend</strong> is now completely <strong>ready</strong> for <strong>triathletes</strong> :)</br></br> It\'s also working with swimming activities entered manually :) No heart rate monitor is required for swimming! Your 10$ stopwatch should be good enough ;) !',
+        hotFixes: [],
+        features: [
+            'Added Swimming support inside multi-sport fitness trend by using your swim FTP.</br><i>Note: this type of activity where not supported by default (via HR data and thus "trimps") because strava swimming activities don\'t keep HR data.</i>',
+            'Improved history synchronization. Synchronization continues where she stopped earlier (in case of any type of interruption).',
+            'Added possibility to filter or not "commutes" activities on year progressions.'
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed date comparison bug on additional goal progress tracking.'
+        ],
+    },
+    {
         version: '5.5.0',
         message: 'At a glance...</br>Cycling Power Stress Score on your activities :)</br>' +
         'Support of Running Power Meters :)</br>' +
