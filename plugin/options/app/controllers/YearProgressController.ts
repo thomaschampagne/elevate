@@ -21,6 +21,10 @@ class YearProgressComputer {
 
     public compute(yearProgressActivities: Array<YearProgressActivity>, types: Array<string>): Array<IYearProgress> {
 
+        if (_.isEmpty(yearProgressActivities)) {
+            return;
+        }
+
         // Keep from types
         yearProgressActivities = _.filter(yearProgressActivities, (activity: YearProgressActivity) => {
             if (_.indexOf(types, activity.type) !== -1) {
@@ -31,6 +35,11 @@ class YearProgressComputer {
             }
             return false
         });
+
+
+        if (yearProgressActivities.length === 0) {
+            return;
+        }
 
         // Sort yearProgressActivities along start_time
         yearProgressActivities = _.sortBy(yearProgressActivities, (activity: YearProgressActivity) => {
@@ -114,6 +123,7 @@ enum DataType {
     ELEVATION,
     COUNT
 }
+
 class YearProgressController {
 
     public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog', '$window'];
@@ -124,6 +134,8 @@ class YearProgressController {
 
         let yearProgressComputer: YearProgressComputer = new YearProgressComputer();
 
+        $scope.enableFeature = true;
+
         // Data type
         $scope.dataType = [
             {value: DataType.DISTANCE, text: 'Distance'},
@@ -131,13 +143,13 @@ class YearProgressController {
             {value: DataType.ELEVATION, text: 'Elevation'},
             {value: DataType.COUNT, text: 'Count'},
         ];
-        $scope.dataTypeSelected = $scope.dataType[0];
+        $scope.dataTypeSelected = $scope.dataType[0]; // TODO load previous saved
         $scope.dataTypeChanged = () => {
             $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
         // Activities type
-        $scope.searchTypesSelected = ['Ride', 'VirtualRide']; // Defaults
+        $scope.searchTypesSelected = ['Ride', 'VirtualRide']; // Defaults // TODO load previous saved
         $scope.getSearchTypesSelectedText = function () {
             if ($scope.searchTypesSelected.length) {
                 return $scope.searchTypesSelected.length + ' selected';
@@ -149,11 +161,25 @@ class YearProgressController {
             $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
+        $scope.showHelp = () => {
+            let dialog = $mdDialog.alert()
+                .htmlContent("This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"")
+                .ok('Got it !');
+            $mdDialog.show(dialog);
+        };
+
         // Start...
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
             this.computedActivities = computedActivities;
             $scope.searchStatsTypes = _.uniq(_.flatten(_.pluck(computedActivities, 'type'))); // Handle uniques activity types for selection in UI
+
+            if (_.isEmpty(this.computedActivities)) {
+                $scope.enableFeature = false;
+                return;
+            } else {
+                $scope.enableFeature = true;
+            }
 
             setTimeout(() => {
                 $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
@@ -161,11 +187,6 @@ class YearProgressController {
         });
 
         $scope.applyData = function (computedActivities: Array<ISyncActivityComputed>, types: Array<string>, dataType: DataType) {
-
-            if (_.isEmpty(computedActivities) || _.isEmpty(types)) {
-                alert('hide graph');
-                return;
-            }
 
             let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, types);
 
@@ -298,6 +319,7 @@ class YearProgressController {
                     axisLabelDistance: -10,
                 },
                 callback: (chart: any) => {
+                    console.log('Graph loaded');
                 }
             }
         };

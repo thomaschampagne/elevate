@@ -1,5 +1,23 @@
 <md-content layout-padding>
-    <md-card>
+    <md-card ng-hide="enableFeature">
+        <md-card-title>
+            <span flex class="md-headline">No history found on this browser.</span>
+
+        </md-card-title>
+        <md-card-content>
+            Please synchronize your history to access this feature. The history will be locally saved in the storage
+            allocated by the extension.
+        </md-card-content>
+    </md-card>
+
+    <md-card ng-show="enableFeature" ng-cloak="true">
+        <md-card-title layout="row" layout-align="start center">
+            <span flex class="md-headline">My year progressions to current month/day</span>
+            <span flex="5"></span>
+            <md-button class="md-icon-button" ng-click="showHelp()">
+                <md-icon aria-label="Help">help</md-icon>
+            </md-button>
+        </md-card-title>
         <md-card-content>
             <div flex="100" layout="row" layout-align="end center">
                 <md-input-container flex="20">
@@ -47,14 +65,18 @@
                         ng-repeat="row in tableData">
                         <td md-cell>{{row.year}}</td>
                         <td md-cell>{{row.count}}</td>
-                        <td md-cell><span style="color: {{row.deltaPreviousCountColor}};">{{(row.deltaPreviousCount >= 0) ? '+': ''}} {{row.deltaPreviousCount}}</span></td>
+                        <td md-cell><span style="color: {{row.deltaPreviousCountColor}};">{{(row.deltaPreviousCount >= 0) ? '+': ''}} {{row.deltaPreviousCount}}</span>
+                        </td>
                         <td md-cell>{{row.totalDistance | number: 1}}</td>
-                        <td md-cell><span style="color: {{row.deltaPreviousDistanceColor}};">{{(row.deltaPreviousDistance >= 0) ? '+': ''}} {{row.deltaPreviousDistance | number: 1}}</span></td>
+                        <td md-cell><span style="color: {{row.deltaPreviousDistanceColor}};">{{(row.deltaPreviousDistance >= 0) ? '+': ''}} {{row.deltaPreviousDistance | number: 1}}</span>
+                        </td>
 
                         <td md-cell>{{row.totalTime | number: 1}}</td>
-                        <td md-cell><span style="color: {{row.deltaPreviousTimeColor}};">{{(row.deltaPreviousTime >= 0) ? '+': ''}} {{row.deltaPreviousTime | number: 1}}</span></td>
+                        <td md-cell><span style="color: {{row.deltaPreviousTimeColor}};">{{(row.deltaPreviousTime >= 0) ? '+': ''}} {{row.deltaPreviousTime | number: 1}}</span>
+                        </td>
                         <td md-cell>{{row.totalElevation | number: 0}}</td>
-                        <td md-cell><span style="color: {{row.deltaPreviousElevationColor}};">{{(row.deltaPreviousElevation >= 0) ? '+': ''}} {{row.deltaPreviousElevation | number: 1}}</span></td>
+                        <td md-cell><span style="color: {{row.deltaPreviousElevationColor}};">{{(row.deltaPreviousElevation >= 0) ? '+': ''}} {{row.deltaPreviousElevation | number: 1}}</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
