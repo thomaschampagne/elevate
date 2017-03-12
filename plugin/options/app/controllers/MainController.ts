@@ -87,7 +87,7 @@ class MainController {
                 }, {
                     id: 'YEAR_PROGRESSION',
                     name: 'Year Progressions',
-                    icon: 'trending_up',
+                    icon: 'timelapse',
                     link: routeMap.yearProgressRoute,
                 }, {
                     id: 'COMMON_SETTINGS',

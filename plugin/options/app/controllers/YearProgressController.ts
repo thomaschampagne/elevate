@@ -124,6 +124,9 @@ enum DataType {
     COUNT
 }
 
+// TODO Targets?
+// TODO Remove old feature?
+
 class YearProgressController {
 
     public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog', '$window'];
@@ -136,20 +139,25 @@ class YearProgressController {
 
         $scope.enableFeature = true;
 
+        $scope.today = moment().format('MMMM Do');
+
         // Data type
         $scope.dataType = [
-            {value: DataType.DISTANCE, text: 'Distance'},
-            {value: DataType.TIME, text: 'Time'},
-            {value: DataType.ELEVATION, text: 'Elevation'},
+            {value: DataType.DISTANCE, text: 'Distance (km)'},
+            {value: DataType.TIME, text: 'Time (h)'},
+            {value: DataType.ELEVATION, text: 'Elevation (m)'},
             {value: DataType.COUNT, text: 'Count'},
         ];
-        $scope.dataTypeSelected = $scope.dataType[0]; // TODO load previous saved
+
+
+        $scope.dataTypeSelected = (_.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.findWhere($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
         $scope.dataTypeChanged = () => {
+            localStorage.setItem('yearProgressDataType', $scope.dataTypeSelected.value); // Store value
             $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
         // Activities type
-        $scope.searchTypesSelected = ['Ride', 'VirtualRide']; // Defaults // TODO load previous saved
+        $scope.searchTypesSelected = (localStorage.getItem('yearProgressActivitiesType')) ? angular.fromJson(localStorage.getItem('yearProgressActivitiesType')) : ['Ride', 'VirtualRide'];
         $scope.getSearchTypesSelectedText = function () {
             if ($scope.searchTypesSelected.length) {
                 return $scope.searchTypesSelected.length + ' selected';
@@ -158,6 +166,7 @@ class YearProgressController {
             }
         };
         $scope.typesChanged = () => {
+            localStorage.setItem('yearProgressActivitiesType', angular.toJson($scope.searchTypesSelected)); // Store value
             $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
@@ -276,7 +285,7 @@ class YearProgressController {
             chart: {
                 type: 'lineChart',
                 // height: window.innerHeight * 0.65,
-                height: 650,
+                height: 575,
                 margin: {
                     top: 20,
                     right: 50,
