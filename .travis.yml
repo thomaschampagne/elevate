@@ -2,10 +2,7 @@ language: node_js
 node_js:
   - "6"
 install:
-  - node -v
   - npm install --global gulp-cli typescript
   - npm install
-  - node make.js build
-  
 script:
   - npm test
