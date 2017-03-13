@@ -126,15 +126,14 @@ enum DataType {
 
 class YearProgressController {
 
-    public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog', '$window'];
+    public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog'];
 
-    protected computedActivities: Array<ISyncActivityComputed> = [];
-
-    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: IDialogService, $window: IWindowService) {
+    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: IDialogService) {
 
         let yearProgressComputer: YearProgressComputer = new YearProgressComputer();
 
-        $scope.enableFeature = true;
+        $scope.enabledFeature = true;
+        $scope.computedActivities = [];
 
         $scope.today = moment().format('MMMM Do');
 
@@ -147,10 +146,10 @@ class YearProgressController {
         ];
 
 
-        $scope.dataTypeSelected = (_.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.findWhere($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
+        $scope.dataTypeSelected = (localStorage.getItem('yearProgressDataType') && _.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.findWhere($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
         $scope.dataTypeChanged = () => {
             localStorage.setItem('yearProgressDataType', $scope.dataTypeSelected.value); // Store value
-            $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
+            $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
         // Activities type
@@ -164,7 +163,7 @@ class YearProgressController {
         };
         $scope.typesChanged = () => {
             localStorage.setItem('yearProgressActivitiesType', angular.toJson($scope.searchTypesSelected)); // Store value
-            $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
+            $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
         $scope.showHelp = () => {
@@ -177,19 +176,14 @@ class YearProgressController {
         // Start...
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
-            this.computedActivities = computedActivities;
+            $scope.computedActivities = computedActivities;
             $scope.searchStatsTypes = _.uniq(_.flatten(_.pluck(computedActivities, 'type'))); // Handle uniques activity types for selection in UI
 
-            if (_.isEmpty(this.computedActivities)) {
-                $scope.enableFeature = false;
-                return;
-            } else {
-                $scope.enableFeature = true;
+            if (_.isEmpty($scope.computedActivities)) {
+                $scope.enabledFeature = false;
+                // return;
             }
-
-            setTimeout(() => {
-                $scope.applyData(this.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
-            });
+            $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         });
 
         $scope.applyData = function (computedActivities: Array<ISyncActivityComputed>, types: Array<string>, dataType: DataType) {
@@ -326,6 +320,8 @@ class YearProgressController {
                 },
                 callback: (chart: any) => {
                     console.log('Graph loaded');
+                    $scope.nvd3api.update();
+
                 }
             }
         };

@@ -1,8 +1,7 @@
 <md-content layout-padding>
-    <md-card ng-hide="enableFeature">
+    <md-card ng-hide="enabledFeature">
         <md-card-title>
             <span flex class="md-headline">No history found on this browser.</span>
-
         </md-card-title>
         <md-card-content>
             Please synchronize your history to access this feature. The history will be locally saved in the storage
@@ -10,7 +9,13 @@
         </md-card-content>
     </md-card>
 
-    <md-card ng-show="enableFeature" ng-cloak="true">
+    <md-card ng-show="enabledFeature && !computedActivities.length">
+        <md-card-title>
+            <span flex class="md-subtitle">Loading...</span>
+        </md-card-title>
+    </md-card>
+
+    <md-card ng-show="computedActivities.length">
         <md-card-title>
             <span flex class="md-headline">Year progressions graph</span>
         </md-card-title>
@@ -39,10 +44,10 @@
                     </md-select>
                 </md-input-container>
             </div>
-            <nvd3 options="graphOptions" data="graphData"></nvd3>
+            <nvd3 options="graphOptions" data="graphData" config="{deepWatchDataDepth: 0}" api="nvd3api"></nvd3>
         </md-card-content>
     </md-card>
-    <md-card ng-show="enableFeature" ng-cloak="true">
+    <md-card ng-show="computedActivities.length" ng-cloak="true">
         <md-card-title>
             <div flex layout="row" layout-align="start center">
                 <div flex layout="column">
