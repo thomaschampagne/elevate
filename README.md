@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6mantaa8yxbn4iqx/branch/develop?svg=true)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop) [![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=master)](https://travis-ci.org/thomaschampagne/stravistix)
+[![Build status](https://ci.appveyor.com/api/projects/status/6mantaa8yxbn4iqx/branch/develop?svg=true)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop) [![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
 # Table of Content
 
 <!-- toc -->
