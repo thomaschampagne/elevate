@@ -32,6 +32,8 @@ class Content {
             window.location.pathname.match(/^\/about/) ||
             window.location.pathname.match(/^\/running-app/) ||
             window.location.pathname.match(/^\/features/) ||
+            window.location.pathname.match(/^\/api/) ||
+            window.location.pathname.match(/^\/premium/) ||
             window.location.pathname.match(/^\/store/) ||
             window.location.pathname.match(/^\/how-it-works/)) {
 
