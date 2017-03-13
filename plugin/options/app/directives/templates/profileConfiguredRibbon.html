@@ -1,0 +1,18 @@
+<md-toolbar class="md-accent" style="border-bottom: 1px solid black;" ng-hide="isProfileConfigured">
+    <div class="md-toolbar-tools">
+        <span class="md-subhead">Please validate your athlete settings on this browser.</br>
+            Usually, settings should be synced between browsers having google/opera account linked.</span>
+        <span flex></span>
+        <md-button class="md-primary" ng-click="goToAthleteSettings()">Give a look</md-button>
+        <md-button class="md-primary" ng-click="setProfileConfiguredAndHide()">It's OK</md-button>
+    </div>
+</md-toolbar>
+<md-toolbar class="md-accent" style="border-bottom: 1px solid black;" ng-show="showHistoryNonConsistent">
+    <div class="md-toolbar-tools">
+        <span class="md-subhead">Your local history may not be consistent.
+            <br/>It seems you changed your athlete settings from this browser or another one.</span>
+        <span flex></span>
+        <md-button class="md-primary" ng-click="syncNow('true')">Redo Full Sync</md-button>
+        <md-button class="md-primary" ng-click="hideHistoryNonConsistent()">Hide for 1 day</md-button>
+    </div>
+</md-toolbar>

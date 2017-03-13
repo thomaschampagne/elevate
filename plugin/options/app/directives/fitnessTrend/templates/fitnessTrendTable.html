@@ -1,0 +1,78 @@
+<md-card>
+    <!-- Search for activities form  -->
+    <md-card-title aria-hidden="false">
+        <md-input-container flex="grow" class="md-block">
+            <md-icon>search</md-icon>
+            <input type="text" name="filter.form" ng-model="query.filter" ng-model-options="filter.options"
+                   placeholder="Search for activities" class="ng-valid ng-valid-parse ng-touched ng-pristine"
+                   aria-invalid="false">
+        </md-input-container>
+    </md-card-title>
+
+    <md-table-container>
+        <table md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}">
+            <thead ng-if="!options.decapitate" md-head md-order="query.order" md-on-reorder="logOrder">
+            <tr md-row>
+                <th md-column md-order-by="timestamp"><span>Date</span></th>
+                <th md-column md-order-by="activitiesName"><span>Activity</span></th>
+                <th md-column md-order-by="type"><span>Type</span></th>
+                <th md-column md-numeric md-order-by="trimpScore">
+                    <span>
+                        TRIMP
+                         <md-tooltip md-direction="bottom">
+                            Training Impulse
+                        </md-tooltip>
+                    </span>
+                </th>
+                <th ng-if="usePowerMeter" md-column md-numeric md-order-by="powerStressScore">
+                    <span>
+                        Power SS
+                        <md-tooltip md-direction="bottom">
+                            Power Stress Score
+                        </md-tooltip>
+                    </span>
+                </th>
+                <th ng-if="useSwimStressScore" md-column md-numeric md-order-by="swimStressScore">
+                    <span>
+                        Swim SS
+                        <md-tooltip md-direction="bottom">
+                            Swim Stress Score
+                        </md-tooltip>
+                    </span>
+                </th>
+                <th md-column md-numeric md-order-by="totalStressScore"><span>Final Stress</span></th>
+                <th md-column md-numeric md-order-by="ctl"><span>Fitness</span></th>
+                <th md-column md-numeric md-order-by="atl"><span>Fatigue</span></th>
+                <th md-column md-numeric md-order-by="tsb"><span>Form</span></th>
+                <th md-column md-numeric><span>Link</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row md-auto-select="options.autoSelect"
+                ng-repeat="fitnessObj in fitnessDataForTableFiltered | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
+
+                <td md-cell>{{fitnessObj.timestamp | date:'mediumDate'}}</td>
+                <td md-cell ng-bind-html="fitnessObj.activitiesNameStr"></td>
+                <td md-cell ng-bind-html="fitnessObj.type"></td>
+                <td md-cell>{{(fitnessObj.trimpScore !== -1 ? fitnessObj.trimpScore : '-')}}</td>
+                <td md-cell ng-if="usePowerMeter">{{(fitnessObj.powerStressScore !== -1 ? fitnessObj.powerStressScore : '-')}}</td>
+                <td md-cell ng-if="useSwimStressScore">{{(fitnessObj.swimStressScore !== -1 ? fitnessObj.swimStressScore : '-')}}</td>
+                <td md-cell>{{(fitnessObj.finalStressScore !== -1 ? fitnessObj.finalStressScore : '-')}}</td>
+                <td md-cell>{{fitnessObj.ctl | number: 1}}</td>
+                <td md-cell>{{fitnessObj.atl | number: 1}}</td>
+                <td md-cell>{{fitnessObj.tsb | number: 1}}</td>
+                <td md-cell>
+                    <span ng-if="fitnessObj.ids.length" ng-click="openActivities(fitnessObj)" style="cursor: pointer;">
+                        <md-icon>insert_link</md-icon>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <md-table-pagination md-limit="query.limit" md-limit-options="limitOptions" md-page="query.page"
+                         md-total="{{fitnessDataForTableFiltered.length}}" md-page-select="options.pageSelect"
+                         md-boundary-links="options.boundaryLinks"
+                         md-on-paginate="logPagination"></md-table-pagination>
+</md-card>

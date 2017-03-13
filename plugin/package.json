@@ -1,0 +1,57 @@
+{
+  "name": "stravistix",
+  "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
+  "keywords": [
+    "strava",
+    "cycling",
+    "running",
+    "tracking"
+  ],
+  "maintainers": [
+    {
+      "name": "Thomas Champagne",
+      "email": "th.champagne@gmail.com",
+      "web": "http://thomaschampagne.github.io"
+    }
+  ],
+  "repository": [
+    {
+      "type": "git",
+      "url": "https://github.com/thomaschampagne/stravistix"
+    }
+  ],
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas Champagne",
+  "license": "MIT",
+  "readme": "None",
+  "devDependencies": {
+    "angular": "1.5.9",
+    "angular-animate": "1.5.9",
+    "angular-aria": "1.5.9",
+    "angular-material": "^1.1.1",
+    "angular-material-data-table": "^0.10.10",
+    "angular-material-icons": "^0.7.1",
+    "angular-messages": "1.5.9",
+    "angular-mocks": "1.5.9",
+    "angular-moment": "^1.0.1",
+    "angular-nvd3": "^1.0.9",
+    "angular-route": "1.5.9",
+    "angular-sanitize": "1.5.9",
+    "chart.js": "^2.4.0",
+    "d3": "^3.5.17",
+    "fancybox": "^3.0.0",
+    "file-saver": "^1.3.3",
+    "geodesy": "^1.1.1",
+    "jquery": "^3.1.1",
+    "moment": "^2.16.0",
+    "nvd3": "^1.8.5",
+    "q": "^1.4.1",
+    "qrcode-js-package": "^1.0.4",
+    "underscore": "^1.8.3"
+  }
+}

@@ -1,6 +1,9 @@
+.idea/
 *.git/
 */.gitignore
 **/node_modules/
 dist/
-builds/
+package/
+specs/**/*.js
 chrome-win32/
+ftpConfig.json
