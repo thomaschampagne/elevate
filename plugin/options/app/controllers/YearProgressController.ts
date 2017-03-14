@@ -135,7 +135,7 @@ class YearProgressController {
         $scope.enabledFeature = true;
         $scope.computedActivities = [];
 
-        $scope.today = moment().format('MMMM Do');
+        $scope.today = Date.now();//moment().format('MMMM Do');
 
         // Data type
         $scope.dataType = [
@@ -167,8 +167,9 @@ class YearProgressController {
         };
 
         $scope.showHelp = () => {
+            let todayMoment = moment().format('MMMM Do');
             let dialog = $mdDialog.alert()
-                .htmlContent("This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"")
+                .htmlContent("This panel displays your progress for each beginning of year to current month and day. Today is " + todayMoment + ", this panel shows \"What I've accomplished by " + todayMoment + " of this year compared to previous years during the same period.\"")
                 .ok('Got it !');
             $mdDialog.show(dialog);
         };

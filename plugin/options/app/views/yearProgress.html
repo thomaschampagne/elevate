@@ -51,10 +51,10 @@
         <md-card-title>
             <div flex layout="row" layout-align="start center">
                 <div flex layout="column">
-                    <span flex class="md-headline">Year progressions on {{today}}</span>
-                    <i flex class="md-subtitle">
-                        Including <span ng-repeat="type in searchTypesSelected">{{type}}. </span>
-                    </i>
+                    <span flex class="md-headline">Year progressions on {{today | date:'MMMM d' }}</span>
+                    <span flex class="md-subtitle">
+                        Including types: <span ng-repeat="type in searchTypesSelected track by $index">{{type}}{{(($index+1) < searchTypesSelected.length)  ? ' + ': ''}}</span>
+                    </span>
                 </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="showHelp()">
@@ -81,7 +81,7 @@
                     <tbody md-body>
                     <tr md-row md-select="dessert" md-select-id="name" md-auto-select
                         ng-repeat="row in tableData">
-                        <td md-cell>{{row.year}}</td>
+                        <td md-cell>{{today | date:'MMMM d,'}} {{row.year}}</td>
                         <td md-cell>{{row.count}}</td>
                         <td md-cell><span style="color: {{row.deltaPreviousCountColor}};">{{(row.deltaPreviousCount >= 0) ? '+': ''}} {{row.deltaPreviousCount}}</span>
                         </td>
