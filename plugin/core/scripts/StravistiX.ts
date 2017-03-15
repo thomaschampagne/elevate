@@ -131,10 +131,13 @@ class StravistiX {
 
         let latestRelease: IReleaseNote = _.first(releaseNotes);
 
-        latestRelease.message = 'New Year progressions added. Now keep run/ride with the good curved'; // TODO remove override
+        if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
+            console.log('Silent update... skip update ribbon');
+            return;
+        }
 
-        if (latestRelease.message.length > 80) {
-            alert('too long message');
+        if (latestRelease.message.length > 90) {
+            alert('Too long update message');
         }
 
         let ribbonMessage: string = 'StravistiX ' + this.appResources.extVersion + ' update: ' + latestRelease.message + '. <a href="#" id ="pluginInstallOrUpgrade_details">[show details]</a>';
@@ -202,7 +205,6 @@ class StravistiX {
                 console.log("No previous version found. Should be an fresh install of " + this.appResources.extVersion);
 
                 // Display ribbon update message
-                // this.handleUpdatePopup();
                 this.showPluginInstallOrUpgradeRibbon();
 
                 // Save current version to chrome local storage
@@ -223,7 +225,6 @@ class StravistiX {
                     localStorage.clear();
 
                     // Display ribbon update message
-                    // this.handleUpdatePopup();
                     this.showPluginInstallOrUpgradeRibbon();
 
                     // Save current version to chrome local storage

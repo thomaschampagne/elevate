@@ -9,6 +9,11 @@ interface IReleaseNote {
      * Say if we display again features. Eg. Fix or hotfix release. Default: false
      */
     hideFeatureReleaseNote?: boolean;
+
+    /**
+     * Make silent updates... no update ribbon displayed
+     */
+    silent?: boolean;
 }
 
 let releaseNotes: Array<IReleaseNote> = [
