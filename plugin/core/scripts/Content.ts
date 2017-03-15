@@ -184,6 +184,7 @@ let jsDependencies: Array<string> = [
 
     // ... with ... extended data views
     'core/scripts/modifiers/extendedActivityData/views/AbstractDataView.js',
+    'core/scripts/modifiers/extendedActivityData/views/HeaderView.js',
     'core/scripts/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'core/scripts/modifiers/extendedActivityData/views/SpeedDataView.js',
     'core/scripts/modifiers/extendedActivityData/views/PaceDataView.js',

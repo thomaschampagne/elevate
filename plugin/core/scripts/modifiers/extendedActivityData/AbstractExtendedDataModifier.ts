@@ -279,6 +279,9 @@ abstract class AbstractExtendedDataModifier {
         // Clean Data View Before
         this.cleanDataViews();
 
+        let headerView: HeaderView = new HeaderView();
+        this.dataViews.push(headerView);
+
         // By default we have... If data exist of course...
         // Featured view
         if (this.analysisData) {

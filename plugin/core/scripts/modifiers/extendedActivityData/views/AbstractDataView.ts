@@ -18,7 +18,7 @@ abstract class AbstractDataView {
     protected activityType: string;
     protected speedUnitsData: ISpeedUnitData;
 
-    constructor(units: string) {
+    constructor(units?: string) {
         this.content = '';
         this.viewTitle = '';
         this.units = units;
