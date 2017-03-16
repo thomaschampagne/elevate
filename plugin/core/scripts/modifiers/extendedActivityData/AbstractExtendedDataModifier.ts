@@ -1,3 +1,4 @@
+///<reference path="views/HeaderView.ts"/>
 abstract class AbstractExtendedDataModifier {
 
     public static TYPE_ACTIVITY: number = 0;
@@ -280,6 +281,7 @@ abstract class AbstractExtendedDataModifier {
         this.cleanDataViews();
 
         let headerView: HeaderView = new HeaderView();
+        headerView.setAppResources(this.appResources);
         this.dataViews.push(headerView);
 
         // By default we have... If data exist of course...

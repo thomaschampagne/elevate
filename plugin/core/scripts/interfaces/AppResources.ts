@@ -43,6 +43,8 @@ interface IAppResources {
     lineChartIcon: string;
     logArrowUpIcon: string;
     cogIcon: string;
+    logoNoText: string;
+    logoTextOnly: string;
     extVersion: string;
     extVersionName: string;
     extensionId: string;

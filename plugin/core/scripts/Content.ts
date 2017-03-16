@@ -134,6 +134,8 @@ let appResources: IAppResources = {
     lineChartIcon: chrome.extension.getURL('/core/icons/fa-line-chart.png'),
     logArrowUpIcon: chrome.extension.getURL('/core/icons/fa-long-arrow-up.png'),
     cogIcon: chrome.extension.getURL('/core/icons/fa-cog.png'),
+    logoNoText: chrome.extension.getURL('/core/icons/logo_no_text.svg'),
+    logoTextOnly: chrome.extension.getURL('/core/icons/logo_text_only.svg'),
     extVersion: chrome.runtime.getManifest().version,
     extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
