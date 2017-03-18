@@ -30,16 +30,6 @@ class FeaturedDataView extends AbstractDataView {
             this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||
             this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
-            let title: string = '<img src="' + this.appResources.lightbulbIcon + '" style="vertical-align: baseline; height:20px;"/>';
-
-            if (this.isSegmentEffortView && !_.isEmpty(this.basicInfo.segmentEffort)) { // Segment effort only
-                title += ' EFFORT STATS on <i>&lt;' + this.basicInfo.segmentEffort.name + '&gt;</i> SEGMENT // TIME ' + Helper.secondsToHHMMSS(this.basicInfo.segmentEffort.elapsedTimeSec);
-                this.content += this.generateSectionTitle(title);
-            } else { // Complete activity
-                title += ' STATS on <i>&lt;' + this.basicInfo.activityName + '&gt;</i> ACTIVITY';
-                this.content += this.generateSectionTitle(title);
-            }
-
             // Add a title
             this.makeGrid(7, 1); // (col, row)
 

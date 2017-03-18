@@ -33,12 +33,13 @@ class MenuModifier implements IModifier {
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/> <span>Athlete Settings</span></a></li>";
         html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
         html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
+        html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showDonation=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/> <span>Donate</span></a></li>";
         html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showReleaseNotes=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/> <span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/stravistix/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.rateIcon + "'/> <span>Rate</span></a></li>";
         html += "<li style='" + styleSideLeft + "' ><a  style='font-style: italic;' href='https://twitter.com/champagnethomas' style='font-style: italic;' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.twitterIcon + "'/> <span>What's next?</span></a></li>";
 
-        html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showDonation=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/> <span>Donate</span></a></li>";
+        html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://www.strava.com/clubs/stravistix' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.peopleIcon + "'/> <span>Join Club</span></a></li>";
         html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.helpIcon + "'/> <span> FAQ</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + newIssueURL + "' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/> <span>Report bug</span></a></li>";

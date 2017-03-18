@@ -30,6 +30,7 @@
     "plugin/core/scripts/modifiers/extendedActivityData/RunningExtendedDataModifier.ts",
     "plugin/core/scripts/modifiers/extendedActivityData/GenericExtendedDataModifier.ts",
     "plugin/core/scripts/modifiers/extendedActivityData/views/AbstractDataView.ts",
+    "plugin/core/scripts/modifiers/extendedActivityData/views/HeaderView.ts",
     "plugin/core/scripts/modifiers/extendedActivityData/views/FeaturedDataView.ts",
     "plugin/core/scripts/modifiers/extendedActivityData/views/HeartRateDataView.ts",
     "plugin/core/scripts/modifiers/extendedActivityData/views/SpeedDataView.ts",

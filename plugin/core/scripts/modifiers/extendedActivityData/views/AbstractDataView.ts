@@ -18,7 +18,7 @@ abstract class AbstractDataView {
     protected activityType: string;
     protected speedUnitsData: ISpeedUnitData;
 
-    constructor(units: string) {
+    constructor(units?: string) {
         this.content = '';
         this.viewTitle = '';
         this.units = units;
@@ -56,7 +56,7 @@ abstract class AbstractDataView {
     }
 
     protected generateSectionTitle(title: string): string {
-        return "<h2 style='background-color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: white; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 10px;'>" + title + "</span></h2>";
+        return "<h2 style='background-color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: white; margin-top: 10px; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 10px;'>" + title + "</span></h2>";
     }
 
     protected generateCanvasForGraph(): void {

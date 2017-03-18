@@ -19,6 +19,7 @@ interface IAppResources {
     bugIcon: string;
     rateIcon: string;
     aboutIcon: string;
+    peopleIcon: string;
     eyeIcon: string;
     bikeIcon: string;
     mapIcon: string;
@@ -43,6 +44,8 @@ interface IAppResources {
     lineChartIcon: string;
     logArrowUpIcon: string;
     cogIcon: string;
+    logoNoText: string;
+    logoTextOnly: string;
     extVersion: string;
     extVersionName: string;
     extensionId: string;
