@@ -74,7 +74,9 @@ class Content {
                         chromeSettings = this.userSettings;
                     }
 
-                    if(_.difference(_.keys(chromeSettings),_.keys(userSettings)).length !== 0){ // If settings shape has changed
+                    let defaultSettings = _.keys(userSettings)
+                    let syncedSettings = _.keys(chromeSettings)
+                    if(_.difference(defaultSettings, syncedSettings).length !== 0){ // If settings shape has changed
                        _.defaults(chromeSettings, userSettings)
                     }
 
