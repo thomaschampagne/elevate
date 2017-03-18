@@ -57,10 +57,6 @@ class StravistiX {
             this.handlePreviewRibbon();
         }
 
-        if (env.displayUpdatePopup) {
-            this.handleUpdatePopup();
-        }
-
         if (this._userSettings.localStorageMustBeCleared) {
             localStorage.clear();
             Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, 'localStorageMustBeCleared', false, (response: any) => {
@@ -131,6 +127,60 @@ class StravistiX {
     /**
      *
      */
+    protected showPluginInstallOrUpgradeRibbon(): void {
+
+        let latestRelease: IReleaseNote = _.first(releaseNotes);
+
+        if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
+            console.log('Silent update... skip update ribbon');
+            return;
+        }
+
+        if (latestRelease.message.length > 90) {
+            alert('Too long update message');
+        }
+
+        let ribbonMessage: string = 'StravistiX ' + this.appResources.extVersion + ' update: ' + latestRelease.message + '. <a href="#" id ="pluginInstallOrUpgrade_details">Show details</a>';
+        let ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">[close (<span id="pluginInstallOrUpgrade_counter"></span>)]</a></div></div>';
+
+        $('body').before(ribbonHtml).each(() => {
+
+            let closeRibbon = function () {
+                $('#pluginInstallOrUpgrade').slideUp(450, () => {
+                    $('#pluginInstallOrUpgrade').remove();
+                });
+                clearInterval(counterInterval);
+            };
+
+            // Display ribbon
+            $('#pluginInstallOrUpgrade').hide();
+            $('#pluginInstallOrUpgrade').slideDown(450);
+
+            let counter = 10000;
+            let refresh = 1000;
+            $('#pluginInstallOrUpgrade_counter').html((counter / 1000).toString())
+            let counterInterval = setInterval(() => {
+                counter -= refresh;
+                $('#pluginInstallOrUpgrade_counter').html((counter / 1000).toString());
+            }, refresh);
+
+            setTimeout(() => {
+                closeRibbon();
+            }, counter); // 10 sec auto hide
+
+            $('#pluginInstallOrUpgrade_close').on('click', () => {
+                closeRibbon();
+            });
+
+            $('#pluginInstallOrUpgrade_details').on('click', () => {
+                this.handleUpdatePopup();
+            });
+        });
+    }
+
+    /**
+     *
+     */
     protected handlePluginInstallOrUpgrade(): void {
 
         if (!window.location.pathname.match(/^\/dashboard/)) {
@@ -158,13 +208,23 @@ class StravistiX {
         // Check for previous version is installed
         Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, 'versionInstalled', (response: any) => {
 
+            // Override version with fake one to simulate update
+            if (env.simulateUpdate) {
+                response = {
+                    data: {
+                        version: 'fakeVersion',
+                        on: 0
+                    }
+                }
+            }
+
             if (!response.data || !response.data.version) {
 
                 // No previous version installed. It's an install of the plugin
                 console.log("No previous version found. Should be an fresh install of " + this.appResources.extVersion);
 
                 // Display ribbon update message
-                this.handleUpdatePopup();
+                this.showPluginInstallOrUpgradeRibbon();
 
                 // Save current version to chrome local storage
                 saveCurrentVersionInstalled(() => {
@@ -184,7 +244,7 @@ class StravistiX {
                     localStorage.clear();
 
                     // Display ribbon update message
-                    this.handleUpdatePopup();
+                    this.showPluginInstallOrUpgradeRibbon();
 
                     // Save current version to chrome local storage
                     saveCurrentVersionInstalled(() => {
@@ -227,8 +287,8 @@ class StravistiX {
             hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
-            upcommingFixes: [],
-            upcommingFeatures: [
+            upcomingFixes: [],
+            upcomingFeatures: [
                 'Years progressions reworked',
                 'Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.',
                 'Grid: All your activities in a table including stravistix extended stats as columns.',
@@ -266,17 +326,17 @@ class StravistiX {
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFixes) && !previewBuild) {
+        if (!_.isEmpty(updateMessageObj.upcomingFixes) && !previewBuild) {
             message += '<h5><strong>Upcoming Fixes:</strong></h5>';
-            _.each(updateMessageObj.upcommingFixes, (upcommingFixes: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + upcommingFixes + '</h6>';
+            _.each(updateMessageObj.upcomingFixes, (upcomingFixes: string) => {
+                message += '<h6 style="margin-top: 12px;">- ' + upcomingFixes + '</h6>';
             });
         }
 
-        if (!_.isEmpty(updateMessageObj.upcommingFeatures) && !previewBuild) {
+        if (!_.isEmpty(updateMessageObj.upcomingFeatures) && !previewBuild) {
             message += '<h5><strong>Upcoming Features:</strong></h5>';
-            _.each(updateMessageObj.upcommingFeatures, (upcommingFeatures: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + upcommingFeatures + '</h6>';
+            _.each(updateMessageObj.upcomingFeatures, (upcomingFeatures: string) => {
+                message += '<h6 style="margin-top: 12px;">- ' + upcomingFeatures + '</h6>';
             });
         }
 
@@ -321,16 +381,16 @@ class StravistiX {
 
         /* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
 
-        // If we are not on the athletes page then return...
-        if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
-            return;
-        }
+         // If we are not on the athletes page then return...
+         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
+         return;
+         }
 
-        if (env.debugMode) console.log("Execute handleActivitiesSummary()");
+         if (env.debugMode) console.log("Execute handleActivitiesSummary()");
 
-        let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
-        activitiesSummaryModifier.modify();
-        */
+         let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
+         activitiesSummaryModifier.modify();
+         */
     }
 
     /**

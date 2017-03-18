@@ -110,6 +110,7 @@ let appResources: IAppResources = {
     bugIcon: chrome.extension.getURL('/core/icons/ic_bug_report_24px.svg'),
     rateIcon: chrome.extension.getURL('/core/icons/ic_star_24px.svg'),
     aboutIcon: chrome.extension.getURL('/core/icons/ic_info_outline_24px.svg'),
+    peopleIcon: chrome.extension.getURL('/core/icons/ic_supervisor_account_black_24px.svg'),
     eyeIcon: chrome.extension.getURL('/core/icons/ic_remove_red_eye_24px.svg'),
     bikeIcon: chrome.extension.getURL('/core/icons/ic_directions_bike_24px.svg'),
     mapIcon: chrome.extension.getURL('/core/icons/ic_map_24px.svg'),
@@ -134,6 +135,8 @@ let appResources: IAppResources = {
     lineChartIcon: chrome.extension.getURL('/core/icons/fa-line-chart.png'),
     logArrowUpIcon: chrome.extension.getURL('/core/icons/fa-long-arrow-up.png'),
     cogIcon: chrome.extension.getURL('/core/icons/fa-cog.png'),
+    logoNoText: chrome.extension.getURL('/core/icons/logo_no_text.svg'),
+    logoTextOnly: chrome.extension.getURL('/core/icons/logo_text_only.svg'),
     extVersion: chrome.runtime.getManifest().version,
     extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
@@ -184,6 +187,7 @@ let jsDependencies: Array<string> = [
 
     // ... with ... extended data views
     'core/scripts/modifiers/extendedActivityData/views/AbstractDataView.js',
+    'core/scripts/modifiers/extendedActivityData/views/HeaderView.js',
     'core/scripts/modifiers/extendedActivityData/views/FeaturedDataView.js',
     'core/scripts/modifiers/extendedActivityData/views/SpeedDataView.js',
     'core/scripts/modifiers/extendedActivityData/views/PaceDataView.js',
