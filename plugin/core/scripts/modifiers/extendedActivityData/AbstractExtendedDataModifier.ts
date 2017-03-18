@@ -280,8 +280,12 @@ abstract class AbstractExtendedDataModifier {
         // Clean Data View Before
         this.cleanDataViews();
 
-        let headerView: HeaderView = new HeaderView();
+        let headerView: HeaderView = new HeaderView(this.basicInfo);
         headerView.setAppResources(this.appResources);
+        headerView.setAppResources(this.appResources);
+        headerView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+        headerView.setActivityType(this.activityType);
+        headerView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
         this.dataViews.push(headerView);
 
         // By default we have... If data exist of course...
