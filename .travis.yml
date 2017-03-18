@@ -6,3 +6,6 @@ install:
   - npm install
 script:
   - npm test
+branches:
+  only:
+  - develop
