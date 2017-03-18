@@ -86,10 +86,9 @@ class MainController {
                     link: routeMap.fitnessTrendRoute,
                 }, {
                     id: 'YEAR_PROGRESSION',
-                    name: 'Year progression',
-                    icon: 'show_chart',
-                    link: 'link',
-                    hide: true
+                    name: 'Year Progressions',
+                    icon: 'timelapse',
+                    link: routeMap.yearProgressRoute,
                 }, {
                     id: 'COMMON_SETTINGS',
                     name: 'Common Settings',

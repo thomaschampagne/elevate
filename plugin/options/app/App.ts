@@ -61,6 +61,11 @@ app.config(['$routeProvider', ($routeProvider: any) => {
         controller: 'FitnessTrendController'
     });
 
+    $routeProvider.when(routeMap.yearProgressRoute, {
+        templateUrl: 'views/yearProgress.html',
+        controller: 'YearProgressController'
+    });
+
     $routeProvider.otherwise({
         redirectTo: routeMap.commonSettingsRoute
     });
