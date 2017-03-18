@@ -86,6 +86,7 @@ class MainController {
                     link: routeMap.fitnessTrendRoute,
                 }, {
                     id: 'YEAR_PROGRESSION',
+                    sup: 'NEW',
                     name: 'Year Progressions',
                     icon: 'timelapse',
                     link: routeMap.yearProgressRoute,
