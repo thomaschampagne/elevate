@@ -43,6 +43,7 @@ interface IUserSettings {
     enableBothLegsCadence: boolean;
     feedHideChallenges: boolean;
     feedHideCreatedRoutes: boolean;
+    feedHideVirtualRides: boolean;
     feedHideRideActivitiesUnderDistance: number;
     feedHideRunActivitiesUnderDistance: number;
     displaySegmentTimeComparisonToKOM: boolean;
@@ -274,6 +275,7 @@ let userSettings: IUserSettings = {
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+    feedHideVirtualRides: false,
     feedHideRideActivitiesUnderDistance: 0,
     feedHideRunActivitiesUnderDistance: 0,
     displaySegmentTimeComparisonToKOM: true,

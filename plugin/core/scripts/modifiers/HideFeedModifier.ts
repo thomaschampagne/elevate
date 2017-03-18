@@ -1,3 +1,7 @@
+const VIRTUAL_RIDE: string = "virtualride";
+const RIDE: string = "ride";
+const RUN: string = "run";
+
 class HideFeedModifier implements IModifier {
 
     protected userSettings: IUserSettings;
@@ -25,15 +29,14 @@ class HideFeedModifier implements IModifier {
                 });
             }
 
-            if (this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
+            if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
 
                 let minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
                 let minRunDistanceToHide: number = this.userSettings.feedHideRunActivitiesUnderDistance;
 
                 $('div.feed>.activity').each((index: number, element: Element) => {
 
-                    let type: string = $(element).find('div').first().attr('class').replace('icon-sm', '').replace('  ', ' ').split(' ')[1].replace('icon-sm', '').replace('icon-', '');
-
+                    let type: string = $(element).find('.entry-type-icon .app-icon').attr('class').replace('icon-lg', '').replace('app-icon','').replace('icon-dark','').replace(/\s+/g, '').replace('icon-','')
 
                     let distanceEl = _.filter($(element).find('ul.inline-stats').find('[class=unit]'), function (item) {
                         return ($(item).html() == 'km' || $(item).html() == 'mi');
@@ -41,13 +44,18 @@ class HideFeedModifier implements IModifier {
 
                     let distance: number = parseFloat($(distanceEl).parent().text().replace(',', '.'));
 
+                    // Remove virtual rides
+                    if(this.userSettings.feedHideVirtualRides && type === VIRTUAL_RIDE) {
+                        $(element).remove();
+                    }
+
                     // Remove Ride activities if distance lower than "minRideDistanceToHide", if minRideDistanceToHide equal 0, then keep all.
-                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (type === "ride" || type === "virtualride")) {
+                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (type === RIDE || type === VIRTUAL_RIDE)) {
                         $(element).remove();
                     }
 
                     // Remove Run activities if distance lower than "minRunDistanceToHide", if minRunDistanceToHide equal 0, then keep all.
-                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type === "run") {
+                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type === RUN) {
                         $(element).remove();
                     }
                 });
