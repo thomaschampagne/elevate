@@ -303,11 +303,11 @@ app.factory('CommonSettingsService', () => {
                 optionHtml: 'This will hide all virtual rides in the dashboard feed.',
                 min: 0
             }, {
-                optionKey: 'feedHideRunActivitiesUnderDistance',
+                optionKey: 'feedHideRideActivitiesUnderDistance',
                 optionType: 'number',
-                optionTitle: 'Hide running activities under distance.',
-                optionLabels: ['Running'],
-                optionHtml: 'This will hide all running activities in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
+                optionTitle: 'Hide rides activities under distance.',
+                optionLabels: ['Cycling'],
+                optionHtml: 'This will hide all cycling rides (also virtual rides) in the dashboard feed if they are under distance you set (KM or MI). Set empty value or "0" to display all cycling rides in your feed',
                 min: 0
             }, {
                 optionKey: 'feedHideRunActivitiesUnderDistance',
