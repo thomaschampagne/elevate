@@ -19,6 +19,7 @@ interface IAppResources {
     bugIcon: string;
     rateIcon: string;
     aboutIcon: string;
+    peopleIcon: string;
     eyeIcon: string;
     bikeIcon: string;
     mapIcon: string;

@@ -110,6 +110,7 @@ let appResources: IAppResources = {
     bugIcon: chrome.extension.getURL('/core/icons/ic_bug_report_24px.svg'),
     rateIcon: chrome.extension.getURL('/core/icons/ic_star_24px.svg'),
     aboutIcon: chrome.extension.getURL('/core/icons/ic_info_outline_24px.svg'),
+    peopleIcon: chrome.extension.getURL('/core/icons/ic_supervisor_account_black_24px.svg'),
     eyeIcon: chrome.extension.getURL('/core/icons/ic_remove_red_eye_24px.svg'),
     bikeIcon: chrome.extension.getURL('/core/icons/ic_directions_bike_24px.svg'),
     mapIcon: chrome.extension.getURL('/core/icons/ic_map_24px.svg'),
