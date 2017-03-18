@@ -140,17 +140,36 @@ class StravistiX {
             alert('Too long update message');
         }
 
-        let ribbonMessage: string = 'StravistiX ' + this.appResources.extVersion + ' update: ' + latestRelease.message + '. <a href="#" id ="pluginInstallOrUpgrade_details">[show details]</a>';
-        let ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">[close]</a></div></div>';
+        let ribbonMessage: string = 'StravistiX ' + this.appResources.extVersion + ' update: ' + latestRelease.message + '. <a href="#" id ="pluginInstallOrUpgrade_details">Show details</a>';
+        let ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">[close (<span id="pluginInstallOrUpgrade_counter"></span>)]</a></div></div>';
 
         $('body').before(ribbonHtml).each(() => {
 
+            let closeRibbon = function () {
+                $('#pluginInstallOrUpgrade').slideUp(450, () => {
+                    $('#pluginInstallOrUpgrade').remove();
+                });
+                clearInterval(counterInterval);
+            };
+
+            // Display ribbon
+            $('#pluginInstallOrUpgrade').hide();
+            $('#pluginInstallOrUpgrade').slideDown(450);
+
+            let counter = 10000;
+            let refresh = 1000;
+            $('#pluginInstallOrUpgrade_counter').html((counter / 1000).toString())
+            let counterInterval = setInterval(() => {
+                counter -= refresh;
+                $('#pluginInstallOrUpgrade_counter').html((counter / 1000).toString());
+            }, refresh);
+
             setTimeout(() => {
-                $('#pluginInstallOrUpgrade').hide();
-            }, 10000); // 10 sec auto hide
+                closeRibbon();
+            }, counter); // 10 sec auto hide
 
             $('#pluginInstallOrUpgrade_close').on('click', () => {
-                $('#pluginInstallOrUpgrade').hide();
+                closeRibbon();
             });
 
             $('#pluginInstallOrUpgrade_details').on('click', () => {
