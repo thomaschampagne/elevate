@@ -7,6 +7,7 @@ let routeMap: any = {
     hrrZonesSettingsRoute: '/hrrZonesSettings',
     zonesSettingsRoute: '/zonesSettings',
     fitnessTrendRoute: '/fitnessTrend',
+    yearProgressRoute: '/yearsProgress',
     releaseNotesRoute: '/releaseNotes',
     aboutRoute: '/about',
     donateRoute: '/donate',

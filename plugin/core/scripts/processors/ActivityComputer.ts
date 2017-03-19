@@ -406,19 +406,27 @@ class ActivityComputer {
      * 4) take the 4th root of the value obtained in step #3.
      * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program like WKO+ to do the work for you <g>.)
      */
-
     protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: Array<number>, velocityArray: Array<number>, timeArray: Array<number>): IPowerData {
 
         if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
+        let powerZonesAlongActivityType: Array<IZone>;
+        if (this.activityType === 'Ride') {
+            powerZonesAlongActivityType = this.userSettings.zones.power;
+        } else if (this.activityType === 'Run') {
+            powerZonesAlongActivityType = this.userSettings.zones.runningPower;
+        } else {
+            powerZonesAlongActivityType = null;
+        }
+
+        powerZonesAlongActivityType = this.prepareZonesForDistributionComputation(powerZonesAlongActivityType);
+
         let accumulatedWattsOnMove: number = 0;
         let wattSampleOnMoveCount: number = 0;
         let wattsSamplesOnMove: Array<number> = [];
         let wattsSamplesOnMoveDuration: Array<number> = [];
-
-        let powerZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.power);
 
         let durationInSeconds: number;
         let totalMovingInSeconds: number = 0;
@@ -456,10 +464,10 @@ class ActivityComputer {
                 accumulatedWattsOnMove += this.valueForSum(powerArray[i], powerArray[i - 1], durationInSeconds);
                 wattSampleOnMoveCount += durationInSeconds;
 
-                let powerZoneId: number = this.getZoneId(this.userSettings.zones.power, powerArray[i]);
+                let powerZoneId: number = this.getZoneId(powerZonesAlongActivityType, powerArray[i]);
 
-                if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZones[powerZoneId])) {
-                    powerZones[powerZoneId].s += durationInSeconds;
+                if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZonesAlongActivityType[powerZoneId])) {
+                    powerZonesAlongActivityType[powerZoneId].s += durationInSeconds;
                 }
             }
         }
@@ -486,7 +494,7 @@ class ActivityComputer {
         let percentiles: Array<number> = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
         // Update zone distribution percentage
-        powerZones = this.finalizeDistributionComputationZones(powerZones);
+        powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
         let powerData: IPowerData = {
             hasPowerMeter: hasPowerMeter,
@@ -501,7 +509,7 @@ class ActivityComputer {
             lowerQuartileWatts: percentiles[0],
             medianWatts: percentiles[1],
             upperQuartileWatts: percentiles[2],
-            powerZones: (this.returnZones) ? powerZones : null// Only while moving
+            powerZones: (this.returnZones) ? powerZonesAlongActivityType : null// Only while moving
         };
 
         return powerData;

@@ -9,9 +9,31 @@ interface IReleaseNote {
      * Say if we display again features. Eg. Fix or hotfix release. Default: false
      */
     hideFeatureReleaseNote?: boolean;
+
+    /**
+     * Make silent updates... no update ribbon displayed
+     */
+    silent?: boolean;
 }
 
 let releaseNotes: Array<IReleaseNote> = [
+    {
+        version: '5.7.0',
+        message: 'Added New Year progressions <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
+        hotFixes: [
+        ],
+        features: [
+            'Added New Year progression UI. <a href="' + Constants.OPTIONS_URL + '#/yearsProgress" target="_blank">Here</a> ',
+            'Added custom running power zones (was linked to cycling power zones before)',
+            'Added option to hide Virtual Rides from activity feed',
+            'Added ribbon on top of page when plugin update occurs. Less annoying than the big update popup ;)',
+            'Minor improvements',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed plugin running on strava.com/api/*'
+        ],
+    },
     {
         version: '5.6.1',
         message: '<i>(5.6.1: Fast fix on the new swimming fitness trend support)</i></br></br><strong>NEW:</strong> Swimming is now supported in multi-sport fitness trend!!</br></br><strong>Fitness trend</strong> is now completely <strong>ready</strong> for <strong>triathletes</strong> :)</br></br> It\'s also working with swimming activities entered manually :) No heart rate monitor is required for swimming! Your 10$ stopwatch should be good enough ;) !',

@@ -86,10 +86,10 @@ class MainController {
                     link: routeMap.fitnessTrendRoute,
                 }, {
                     id: 'YEAR_PROGRESSION',
-                    name: 'Year progression',
-                    icon: 'show_chart',
-                    link: 'link',
-                    hide: true
+                    sup: 'NEW',
+                    name: 'Year Progressions',
+                    icon: 'timelapse',
+                    link: routeMap.yearProgressRoute,
                 }, {
                     id: 'COMMON_SETTINGS',
                     name: 'Common Settings',
@@ -126,7 +126,12 @@ class MainController {
                         subname: 'Customize Cycling Power zones',
                         icon: 'flash_on',
                         link: routeMap.zonesSettingsRoute + '/power'
-                    }, {
+                    },{
+                        name: 'Running Power',
+                        subname: 'Customize Running Power zones',
+                        icon: 'flash_on',
+                        link: routeMap.zonesSettingsRoute + '/runningPower'
+                    },  {
                         name: 'Cycling Cadence',
                         subname: 'Customize Cycling Cadence zones',
                         icon: 'autorenew',
