@@ -126,7 +126,12 @@ class MainController {
                         subname: 'Customize Cycling Power zones',
                         icon: 'flash_on',
                         link: routeMap.zonesSettingsRoute + '/power'
-                    }, {
+                    },{
+                        name: 'Running Power',
+                        subname: 'Customize Running Power zones',
+                        icon: 'flash_on',
+                        link: routeMap.zonesSettingsRoute + '/runningPower'
+                    },  {
                         name: 'Cycling Cadence',
                         subname: 'Customize Cycling Cadence zones',
                         icon: 'autorenew',

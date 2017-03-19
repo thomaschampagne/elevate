@@ -47,6 +47,13 @@ class XtdZonesSettingsController {
             min: 0,
             max: 9999
         }, {
+            name: 'Running Power',
+            value: 'runningPower',
+            units: 'Watts',
+            step: 1,
+            min: 0,
+            max: 9999
+        }, {
             name: 'Cycling Cadence',
             value: 'cyclingCadence',
             units: 'RPM',

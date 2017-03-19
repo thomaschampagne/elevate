@@ -12,6 +12,7 @@ interface IUserSettings {
         speed: Array<IZone>;
         pace: Array<IZone>;
         power: Array<IZone>;
+        runningPower: Array<IZone>;
         cyclingCadence: Array<IZone>;
         runningCadence: Array<IZone>;
         grade: Array<IZone>;
@@ -145,6 +146,28 @@ let userSettings: IUserSettings = {
             from: 1175,
             to: 1200
         }, {from: 1200, to: 1225}, {from: 1225, to: 1250}],
+        runningPower: [{from: 0, to: 25}, {from: 25, to: 50}, {from: 50, to: 75}, {
+            from: 75,
+            to: 100
+        }, {from: 100, to: 125}, {from: 125, to: 150}, {from: 150, to: 175}, {
+            from: 175,
+            to: 200
+        }, {from: 200, to: 225}, {from: 225, to: 250}, {from: 250, to: 275}, {
+            from: 275,
+            to: 300
+        }, {from: 300, to: 325}, {from: 325, to: 350}, {from: 350, to: 375}, {
+            from: 375,
+            to: 400
+        }, {from: 400, to: 425}, {from: 425, to: 450}, {from: 450, to: 475}, {
+            from: 475,
+            to: 500
+        }, {from: 500, to: 525}, {from: 525, to: 550}, {from: 550, to: 575}, {
+            from: 575,
+            to: 600
+        }, {from: 600, to: 625}, {from: 625, to: 650}, {from: 650, to: 675}, {
+            from: 675,
+            to: 700
+        }],
         cyclingCadence: [{from: 0, to: 5}, {from: 5, to: 10}, {from: 10, to: 15}, {
             from: 15,
             to: 20
