@@ -29,6 +29,7 @@ class MenuModifier implements IModifier {
         html += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
         html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.timelineIcon + "'/> <span>Multisports Fitness Trend - Beta</span></a></li>";
+        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/yearsProgress'><img style='vertical-align:middle' src='" + this.appResources.timelapseIcon + "'/> <span>Year Progressions</span></a></li>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/> <span>StravistiX Settings</span></a></li>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/> <span>Athlete Settings</span></a></li>";
         html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
