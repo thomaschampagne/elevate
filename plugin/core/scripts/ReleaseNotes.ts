@@ -18,7 +18,7 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
-        version: '5.7.0',
+        version: '5.7.1',
         message: 'Added New Year progressions <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
         hotFixes: [
         ],
