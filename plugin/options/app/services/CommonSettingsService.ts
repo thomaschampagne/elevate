@@ -296,6 +296,13 @@ app.factory('CommonSettingsService', () => {
                 optionLabels: ['All'],
                 optionHtml: 'This will hide all routes created in the dashboard feed.',
             }, {
+                optionKey: 'feedHideVirtualRides',
+                optionType: 'checkbox',
+                optionTitle: 'Hide virtual rides.',
+                optionLabels: ['Cycling'],
+                optionHtml: 'This will hide all virtual rides in the dashboard feed.',
+                min: 0
+            }, {
                 optionKey: 'feedHideRideActivitiesUnderDistance',
                 optionType: 'number',
                 optionTitle: 'Hide rides activities under distance.',

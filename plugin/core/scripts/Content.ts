@@ -74,6 +74,12 @@ class Content {
                         chromeSettings = this.userSettings;
                     }
 
+                    let defaultSettings = _.keys(userSettings)
+                    let syncedSettings = _.keys(chromeSettings)
+                    if(_.difference(defaultSettings, syncedSettings).length !== 0){ // If settings shape has changed
+                       _.defaults(chromeSettings, userSettings)
+                    }
+
                     inner.textContent = 'var $ = jQuery;';
                     inner.textContent += 'var stravistiX = new StravistiX(' + JSON.stringify(chromeSettings) + ', ' + JSON.stringify(this.appResources) + ');';
                     inner.onload = () => {
