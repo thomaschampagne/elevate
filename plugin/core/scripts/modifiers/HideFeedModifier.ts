@@ -1,8 +1,8 @@
-const VIRTUAL_RIDE: string = "virtualride";
-const RIDE: string = "ride";
-const RUN: string = "run";
-
 class HideFeedModifier implements IModifier {
+
+    private static VIRTUAL_RIDE: string = "virtualride";
+    private static RIDE: string = "ride";
+    private static RUN: string = "run";
 
     protected userSettings: IUserSettings;
 
@@ -36,7 +36,7 @@ class HideFeedModifier implements IModifier {
 
                 $('div.feed>.activity').each((index: number, element: Element) => {
 
-                    let type: string = $(element).find('.entry-type-icon .app-icon').attr('class').replace('icon-lg', '').replace('app-icon','').replace('icon-dark','').replace(/\s+/g, '').replace('icon-','')
+                    let type: string = $(element).find('.entry-type-icon .app-icon').attr('class').replace('icon-lg', '').replace('app-icon', '').replace('icon-dark', '').replace(/\s+/g, '').replace('icon-', '')
 
                     let distanceEl = _.filter($(element).find('ul.inline-stats').find('[class=unit]'), function (item) {
                         return ($(item).html() == 'km' || $(item).html() == 'mi');
@@ -45,17 +45,17 @@ class HideFeedModifier implements IModifier {
                     let distance: number = parseFloat($(distanceEl).parent().text().replace(',', '.'));
 
                     // Remove virtual rides
-                    if(this.userSettings.feedHideVirtualRides && type === VIRTUAL_RIDE) {
+                    if (this.userSettings.feedHideVirtualRides && type === HideFeedModifier.VIRTUAL_RIDE) {
                         $(element).remove();
                     }
 
                     // Remove Ride activities if distance lower than "minRideDistanceToHide", if minRideDistanceToHide equal 0, then keep all.
-                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (type === RIDE || type === VIRTUAL_RIDE)) {
+                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (type === HideFeedModifier.RIDE || type === HideFeedModifier.VIRTUAL_RIDE)) {
                         $(element).remove();
                     }
 
                     // Remove Run activities if distance lower than "minRunDistanceToHide", if minRunDistanceToHide equal 0, then keep all.
-                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type === RUN) {
+                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && type === HideFeedModifier.RUN) {
                         $(element).remove();
                     }
                 });
