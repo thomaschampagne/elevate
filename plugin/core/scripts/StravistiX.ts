@@ -136,12 +136,8 @@ class StravistiX {
             return;
         }
 
-        if (latestRelease.message.length > 90) {
-            alert('Too long update message');
-        }
-
-        let ribbonMessage: string = 'StravistiX ' + this.appResources.extVersion + ' update: ' + latestRelease.message + '. <a href="#" id ="pluginInstallOrUpgrade_details">Show details</a>';
-        let ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">[close (<span id="pluginInstallOrUpgrade_counter"></span>)]</a></div></div>';
+        let ribbonMessage: string = '<a href="#" class="pluginInstallOrUpgrade_details"><img style="width: 24px;" src="' + this.appResources.systemUpdatesIcon + '" /> StravistiX ' + this.appResources.extVersion + ' update</a> ' + latestRelease.message + '. <a href="#" class="pluginInstallOrUpgrade_details">[show update details]</a>';
+        let ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">close (<span id="pluginInstallOrUpgrade_counter"></span>)</a></div></div>';
 
         $('body').before(ribbonHtml).each(() => {
 
@@ -156,7 +152,7 @@ class StravistiX {
             $('#pluginInstallOrUpgrade').hide();
             $('#pluginInstallOrUpgrade').slideDown(450);
 
-            let counter = 10000;
+            let counter = 15000;
             let refresh = 1000;
             $('#pluginInstallOrUpgrade_counter').html((counter / 1000).toString())
             let counterInterval = setInterval(() => {
@@ -172,7 +168,7 @@ class StravistiX {
                 closeRibbon();
             });
 
-            $('#pluginInstallOrUpgrade_details').on('click', () => {
+            $('.pluginInstallOrUpgrade_details').on('click', () => {
                 this.handleUpdatePopup();
             });
         });
