@@ -152,15 +152,8 @@ class YearProgressController {
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
-        // Activities type
-        $scope.searchTypesSelected = (localStorage.getItem('yearProgressActivitiesType')) ? angular.fromJson(localStorage.getItem('yearProgressActivitiesType')) : ['Ride', 'VirtualRide'];
-        $scope.getSearchTypesSelectedText = function () {
-            if ($scope.searchTypesSelected.length) {
-                return $scope.searchTypesSelected.length + ' selected';
-            } else {
-                return "Activities types";
-            }
-        };
+
+
         $scope.typesChanged = () => {
             localStorage.setItem('yearProgressActivitiesType', angular.toJson($scope.searchTypesSelected)); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
@@ -178,7 +171,26 @@ class YearProgressController {
         chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
 
             $scope.computedActivities = computedActivities;
-            $scope.searchStatsTypes = _.uniq(_.flatten(_.pluck(computedActivities, 'type'))); // Handle uniques activity types for selection in UI
+
+            let typesCount = _.countBy(_.pluck($scope.computedActivities, 'type'));
+
+            let mostPerformedType: string = <string> _.first(_.last(_.sortBy(_.pairs(typesCount), (value: any) => {
+                return value[1];
+            })));
+
+            // Try use types from localStorage or use the most performed sport by the user
+            $scope.searchTypesSelected = (localStorage.getItem('yearProgressActivitiesType')) ? angular.fromJson(localStorage.getItem('yearProgressActivitiesType')) : (mostPerformedType) ? [mostPerformedType] : null;
+
+            // Which text displayed in activities types?
+            $scope.getSearchTypesSelectedText = function () {
+                if ($scope.searchTypesSelected.length) {
+                    return $scope.searchTypesSelected.length + ' selected';
+                } else {
+                    return "Activities types";
+                }
+            };
+
+            $scope.searchStatsTypes = _.keys(typesCount); // Handle uniques activity types for selection in UI
 
             if (_.isEmpty($scope.computedActivities)) {
                 $scope.enabledFeature = false;
