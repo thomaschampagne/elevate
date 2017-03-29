@@ -105,7 +105,7 @@ class YearProgressComputer {
                 for (let i: number = 0; i < foundOnToday.length; i++) {
                     // Then apply totals...
                     progression.totalDistance += foundOnToday[i].distance_raw;
-                    progression.totalTime += foundOnToday[i].elapsed_time_raw;
+                    progression.totalTime += foundOnToday[i].moving_time_raw;
                     progression.totalElevation += foundOnToday[i].elevation_gain_raw;
                     progression.count++;
                 }
