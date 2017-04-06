@@ -124,6 +124,9 @@ enum DataType {
     COUNT
 }
 
+// TODO Targets?
+// TODO Remove old feature?
+
 class YearProgressController {
 
     public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog'];

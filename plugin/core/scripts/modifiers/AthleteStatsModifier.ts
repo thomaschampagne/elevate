@@ -206,19 +206,13 @@ class AthleteStatsModifier implements IModifier {
 
 
     public modify(): void {
-        let progress: JQuery = $("#progress-goals-v2");
-        this.progressThisYear = $("<div class='section'><h3>My year progressions to current month/day</h3><div>Year progressions have moved to <a target='_blank' id='extendedStatsButton' href='" + this.appResources.settingsLink + "#/yearsProgress'>internal plugin page</a></div>");
-        this.progressThisYear.insertBefore(progress);
-    }
-
-    public modifyOld(): void {
 
         let self = this;
 
         // wait for My Stats load
         if ($("#ytd_year_bike, #ytd_year_run").length === 0) {
             setTimeout(() => {
-                this.modifyOld();
+                this.modify();
             }, 500);
             return;
         }
@@ -505,11 +499,11 @@ class AthleteStatsModifier implements IModifier {
                 height = $(container).height();
 
             let margin: any = {
-                    top: 20,
-                    right: 80,
-                    bottom: 30,
-                    left: 90
-                },
+                top: 20,
+                right: 80,
+                bottom: 30,
+                left: 90
+            },
                 w = width - margin.left - margin.right,
                 h = height - margin.top - margin.bottom;
 
