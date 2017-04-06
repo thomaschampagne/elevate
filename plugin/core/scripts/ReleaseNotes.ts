@@ -18,6 +18,24 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.7.2',
+        message: 'New Year progressions improvements (Old version reactivated in Strava profile page) <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
+        hotFixes: [
+        ],
+        features: [
+            'Added New Year progression UI. <a href="' + Constants.OPTIONS_URL + '#/yearsProgress" target="_blank">Here</a> ',
+            'Added custom running power zones (was linked to cycling power zones before)',
+            'Added option to hide Virtual Rides from activity feed',
+            'Added ribbon on top of page when plugin update occurs. Less annoying than the big update popup ;)',
+            'Minor improvements',
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            'Fixed new year progressions "Time (h)" jumps',
+            'Fixed new year progressions counts on selected activity types'
+        ],
+    },
+    {
         version: '5.7.1',
         message: 'Added New Year progressions <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
         hotFixes: [
