@@ -2,7 +2,7 @@
 
 describe('ActivitiesSynchronizer', () => {
 
-    it('should test my promise ', (done) => {
+    it('should test my promise ', (done: Function) => {
 
         class Calc {
             public static add(a: number, b: number): Q.Promise<number> {
