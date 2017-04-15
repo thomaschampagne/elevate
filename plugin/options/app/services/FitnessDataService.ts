@@ -17,6 +17,8 @@ export interface IActivitiesWithFitness {
     trimpScore?: number;
     powerStressScore?: number;
     swimStressScore?: number;
+    runningPerformance?: number,
+    runningTime?: number
 }
 
 export interface IActivitiesWithFitnessDaysOff {
@@ -26,9 +28,13 @@ export interface IActivitiesWithFitnessDaysOff {
     type: string[];
     activitiesName: string[];
     trimpScore?: number;
+    runningPerformance?: number,
+    runningTime?: number,
     powerStressScore?: number;
     swimStressScore?: number;
     finalStressScore: number;
+    finalRunningPerformance: number,
+    finalRunningTime: number,
     previewDay: boolean;
 }
 
@@ -45,7 +51,7 @@ export interface IFitnessActivity {
     ctl: number;
     atl: number;
     tsb: number;
-    runPerformance: number,
+    runPerformance?: number,
     previewDay: boolean;
 }
 
@@ -99,6 +105,7 @@ export class FitnessDataService {
             _.forEach(computedActivities, (activity: ISyncActivityComputed) => {
 
                 const hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
+                let hasRunningData: boolean = (activity.type === "Run" && activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && !_.isEmpty(activity.extendedStats.paceData));
 
                 const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
                     && this.usePowerMeter && _.isNumber(this.userFTP)
@@ -134,6 +141,12 @@ export class FitnessDataService {
                         const normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
                         const swimIntensity = normalizedSwimSpeed / this.userSwimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
                         activityWithFitness.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+                    }
+
+                    if (hasRunningData) {
+                        let timeInMinutes = activity.moving_time_raw / 60;
+                        activityWithFitness.runningPerformance = activity.distance_raw / timeInMinutes;
+                        activityWithFitness.runningTime = timeInMinutes;
                     }
 
                     cleanedActivities.push(activityWithFitness);
@@ -191,6 +204,8 @@ export class FitnessDataService {
                     activitiesName: [],
                     previewDay: false,
                     finalStressScore: 0,
+                    finalRunningPerformance: 0,
+                    finalRunningTime: 0,
                 };
 
                 if (activitiesWithFitnessThatDay.length) {
@@ -230,6 +245,18 @@ export class FitnessDataService {
                             fitnessObjectOnCurrentDay.swimStressScore += fitnessActivity.swimStressScore;
                         }
 
+                        // Apply running performance for that day
+                        if (fitnessActivity.runningPerformance) {
+                            let sumTime = fitnessObjectOnCurrentDay.finalRunningTime + fitnessActivity.runningTime;
+                            let sumPerformance = (
+                                fitnessObjectOnCurrentDay.finalRunningPerformance * fitnessObjectOnCurrentDay.finalRunningTime +
+                                fitnessActivity.runningPerformance * fitnessActivity.runningTime
+                            );
+
+                            fitnessObjectOnCurrentDay.finalRunningTime = sumTime;
+                            fitnessObjectOnCurrentDay.finalRunningPerformance = sumPerformance / sumTime;
+                        }
+
                         // Apply final stress score for that day
                         if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
 
@@ -266,6 +293,8 @@ export class FitnessDataService {
                     trimpScore: 0,
                     previewDay: true,
                     finalStressScore: 0,
+                    finalRunningTime: 0,
+                    finalRunningPerformance: 0,
                 };
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
@@ -288,7 +317,7 @@ export class FitnessDataService {
         let ctl: number = 0;
         let atl: number = 0;
         let tsb: number = 0;
-        let runPerf: number = 45;
+        let runPerformance : number = undefined;
         const results: IFitnessActivity[] = [];
 
         _.forEach(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: IActivitiesWithFitnessDaysOff[]) => {
@@ -296,6 +325,12 @@ export class FitnessDataService {
             ctl = ctl + (trimpObject.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
             atl = atl + (trimpObject.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
             tsb = ctl - atl;
+            if (trimpObject.finalRunningTime > 0 && trimpObject.finalRunningPerformance > 0) {
+                runPerformance = trimpObject.finalRunningPerformance / 2;
+            } else {
+                runPerformance = undefined;
+            }
+
 
             const result: IFitnessActivity = {
                 ids: trimpObject.ids,
@@ -307,7 +342,7 @@ export class FitnessDataService {
                 atl,
                 tsb,
                 previewDay: trimpObject.previewDay,
-                runPerformance: runPerf,
+                runPerformance: runPerformance,
             };
 
             if (_.isNumber(trimpObject.trimpScore) && trimpObject.trimpScore > 0) {
@@ -347,7 +382,6 @@ export class FitnessDataService {
                     ctl: lastResult.ctl,
                     atl: lastResult.atl,
                     tsb: lastResult.tsb,
-                    runPerformance: lastResult.runPerformance,
                     previewDay: true,
                 };
 
