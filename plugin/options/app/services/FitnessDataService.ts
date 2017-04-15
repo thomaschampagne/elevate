@@ -45,6 +45,7 @@ export interface IFitnessActivity {
     ctl: number;
     atl: number;
     tsb: number;
+    runPerformance: number,
     previewDay: boolean;
 }
 
@@ -287,6 +288,7 @@ export class FitnessDataService {
         let ctl: number = 0;
         let atl: number = 0;
         let tsb: number = 0;
+        let runPerf: number = 45;
         const results: IFitnessActivity[] = [];
 
         _.forEach(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: IActivitiesWithFitnessDaysOff[]) => {
@@ -305,6 +307,7 @@ export class FitnessDataService {
                 atl,
                 tsb,
                 previewDay: trimpObject.previewDay,
+                runPerformance: runPerf,
             };
 
             if (_.isNumber(trimpObject.trimpScore) && trimpObject.trimpScore > 0) {
@@ -344,6 +347,7 @@ export class FitnessDataService {
                     ctl: lastResult.ctl,
                     atl: lastResult.atl,
                     tsb: lastResult.tsb,
+                    runPerformance: lastResult.runPerformance,
                     previewDay: true,
                 };
 

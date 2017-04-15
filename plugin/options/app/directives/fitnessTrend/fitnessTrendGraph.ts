@@ -467,6 +467,7 @@ export class FitnessTrendGraph {
                         axisLabelDistance: -10,
                     },
                     y2Axis: {
+                        ticks: 13,
                         tickFormat: (d: any) => {
                             return d3.format(".01f")(d);
                         },
@@ -507,6 +508,9 @@ export class FitnessTrendGraph {
             const tsbValues: any[] = [];
             const activitiesPoints: any[] = [];
 
+            // Measured performance
+            let runPerfValues: Array<any> = [];
+
             // Constants training zones
             const freshness_zone_points: any[] = [];
             const neutral_zone_points: any[] = [];
@@ -538,6 +542,11 @@ export class FitnessTrendGraph {
                             y: 0,
                         });
                     }
+
+                    runPerfValues.push ({
+                        x: fitData.timestamp,
+                        y: fitData.runPerformance
+                    });
 
                     // Constants training zones
                     freshness_zone_points.push({
@@ -623,6 +632,9 @@ export class FitnessTrendGraph {
                 d3.max(tsbValues, (d: any) => {
                     return parseInt(d.y);
                 }),
+                d3.max(runPerfValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
                 d3.max(ctlPreviewValues, (d: any) => {
                     return parseInt(d.y);
                 }),
@@ -644,6 +656,9 @@ export class FitnessTrendGraph {
                     return parseInt(d.y);
                 }),
                 d3.min(tsbValues, (d: any) => {
+                    return parseInt(d.y);
+                }),
+                d3.min(runPerfValues, (d: any) => {
                     return parseInt(d.y);
                 }),
                 d3.min(ctlPreviewValues, (d: any) => {
@@ -689,6 +704,11 @@ export class FitnessTrendGraph {
                     key: "Preview_CTL",
                     values: ctlPreviewValues,
                     color: $colors.ctl,
+                }, {
+                    key: "Running performance",
+                    values: runPerfValues,
+                    color: $colors.runPerf,
+                    area: true
                 }],
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05],
             };
@@ -754,4 +774,4 @@ export let fitnessTrendGraph = [() => {
         controller: FitnessTrendGraph,
     } as any;
 }];
-
+
