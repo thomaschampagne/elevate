@@ -144,9 +144,15 @@ export class FitnessDataService {
                     }
 
                     if (hasRunningData) {
-                        let timeInMinutes = activity.moving_time_raw / 60;
-                        activityWithFitness.runningPerformance = activity.distance_raw / timeInMinutes;
-                        activityWithFitness.runningTime = timeInMinutes;
+                        let hrr = activity.extendedStats.heartRateData.activityHeartRateReserve;
+                        const minHrr = 30;  // activity with too low HRR is not representative enough
+                        const minTimeSeconds = 3*60; // too short activity is not representative enough
+                        if (hrr >= minHrr && activity.moving_time_raw >= minTimeSeconds ) {
+                            let timeInMinutes = activity.moving_time_raw / 60 * hrr / 100;
+                            let hrrAdjustedDistance = activity.distance_raw;
+                            activityWithFitness.runningPerformance = hrrAdjustedDistance / timeInMinutes;
+                            activityWithFitness.runningTime = timeInMinutes;
+                        }
                     }
 
                     cleanedActivities.push(activityWithFitness);
@@ -326,7 +332,7 @@ export class FitnessDataService {
             atl = atl + (trimpObject.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
             tsb = ctl - atl;
             if (trimpObject.finalRunningTime > 0 && trimpObject.finalRunningPerformance > 0) {
-                runPerformance = trimpObject.finalRunningPerformance / 2;
+                runPerformance = trimpObject.finalRunningPerformance;
             } else {
                 runPerformance = undefined;
             }

@@ -362,7 +362,7 @@ export class FitnessTrendGraph {
                     html += '   <tr>';
                     html += '       <td class="title">Running performance</td>';
 
-                    let pace = 1000 / 2 / fitnessObject.runPerformance;
+                    let pace = 1000 / fitnessObject.runPerformance;
 
                     //let speedUnitFactor = $scope.speedUnitData.speedUnitFactor;
                     let speedUnitFactor = 1;
@@ -564,7 +564,7 @@ export class FitnessTrendGraph {
                     if (fitData.runPerformance) {
                         runPerfValues.push({
                             x: fitData.timestamp,
-                            y: fitData.runPerformance
+                            y: fitData.runPerformance / 4 // TODO: dynamic scaling
                         });
                     }
 
