@@ -145,12 +145,13 @@ export class FitnessDataService {
 
                     if (hasRunningData) {
                         let hrr = activity.extendedStats.heartRateData.activityHeartRateReserve;
+                        let ga = activity.extendedStats.paceData.avgGAP / activity.extendedStats.paceData.avgPace;
                         const minHrr = 30;  // activity with too low HRR is not representative enough
                         const minTimeSeconds = 3*60; // too short activity is not representative enough
                         if (hrr >= minHrr && activity.moving_time_raw >= minTimeSeconds ) {
-                            let timeInMinutes = activity.moving_time_raw / 60 * hrr / 100;
-                            let hrrAdjustedDistance = activity.distance_raw;
-                            activityWithFitness.runningPerformance = hrrAdjustedDistance / timeInMinutes;
+                            let timeInMinutes = activity.moving_time_raw / 60 * hrr / 100 * ga;
+
+                            activityWithFitness.runningPerformance = activity.distance_raw / timeInMinutes;
                             activityWithFitness.runningTime = timeInMinutes;
                         }
                     }

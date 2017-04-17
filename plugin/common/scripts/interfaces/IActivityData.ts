@@ -54,6 +54,7 @@ export interface ISpeedData {
 
 export interface IPaceData {
     avgPace: number;
+    avgGAP: number;
     lowerQuartilePace: number;
     medianPace: number;
     upperQuartilePace: number;
