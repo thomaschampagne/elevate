@@ -727,8 +727,7 @@ export class FitnessTrendGraph {
                 }, {
                     key: "Running performance",
                     values: runPerfValues,
-                    color: $colors.runPerf,
-                    area: true
+                    color: $colors.runPerf
                 }],
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05],
             };

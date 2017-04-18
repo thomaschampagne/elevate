@@ -115,12 +115,14 @@ a:hover {
     stroke-opacity: 1;
 }
 
-/* SERIE 7 8 9 10 : training  constants */
+/* SERIE 7: running performance */
+
 #fitnessGraph g.nv-series-7 path.nv-line {
-    stroke-dasharray: 12, 17;
-    stroke-opacity: 0.5;
+    stroke-dasharray: 5, 1;
+    stroke-opacity: 0.8;
 }
 
+/* SERIE 8 9 10 11: training  constants */
 #fitnessGraph g.nv-series-8 path.nv-line {
     stroke-dasharray: 12, 17;
     stroke-opacity: 0.5;
@@ -135,3 +137,9 @@ a:hover {
     stroke-dasharray: 12, 17;
     stroke-opacity: 0.5;
 }
+
+#fitnessGraph g.nv-series-11 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
