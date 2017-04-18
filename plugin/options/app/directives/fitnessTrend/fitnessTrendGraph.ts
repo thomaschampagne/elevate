@@ -709,30 +709,44 @@ export class FitnessTrendGraph {
 
             let yDomainMinClamped = Math.max(yDomainMin, 0);
 
-            function zip(arrays: Array<Array<number>>) {
-                return arrays[0].map(function(_: any,i: number){
-                    return arrays.map(function(array){return array[i]})
-                });
+            function findActivity(ts: any): string {
+                let fitnessObject = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
+                    timestamp: ts
+                }));
+                return "" + fitnessObject.activitiesName;
             }
 
-            let first = runPerfValues[0];
-            let last = runPerfValues[runPerfValues.length-1];
+            function getSafe(index: number) {
+                if (index < 0) return runPerfValues[0];
+                if (index > runPerfValues.length-1) return runPerfValues[runPerfValues.length-1];
+                return runPerfValues[index]
+            }
 
-            let z1 = runPerfValues.slice(2).concat([last, last]);
-            let z2 = [first].concat(runPerfValues.slice(1, runPerfValues.length - 1)).concat([last]);
-            let z3 = [first, first].concat(runPerfValues.slice(0, runPerfValues.length - 2));
+            let groupsFiltered = runPerfValues.map(function (p: any, index: number){
 
-            let groups = zip([z1, z2, z3]);
+                // relaxed filter: let the value pass if it is not out of range too much
+                // TODO: consider time distance as well
 
-            let groupsFiltered = groups.map(function(g: Array<any>){
-                let y0 = g[0].y;
-                let y1 = g[1].y;
-                let y2 = g[2].y;
+                let y0 = getSafe(index - 1).y;
+                let y1 = p.y;
+                let y2 = getSafe(index + 1).y;
 
-                if (y1 > y0 && y1 > y2) return undefined;
-                if (y1 < y0 && y1 < y2) return undefined;
+                const upTolerance = 1.2;
+                const downTolerance = 0.90;
 
-                return g[1];
+                //console.log(findActivity(p.x));
+
+                if (y1 > Math.max(y0, y2) * upTolerance) {
+                    //console.log("Reject up " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.max(y0, y2));
+                    return undefined;
+                }
+                if (y1 < Math.min(y0, y2) * downTolerance) {
+                    //console.log("Reject down " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.min(y0, y2));
+                    return undefined;
+                }
+
+                //console.log("Pass " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.min(y0, y2));
+                return p;
             });
 
             let runPerfValuesSmooth = groupsFiltered.filter(function(n: any){ return n != undefined });
