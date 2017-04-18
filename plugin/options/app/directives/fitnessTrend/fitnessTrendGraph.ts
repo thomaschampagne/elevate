@@ -705,8 +705,13 @@ export class FitnessTrendGraph {
                 return d;
             });
 
+            // prevent y2axis from using negative range of the first axis
+
+            let yDomainMinClamped = Math.max(yDomainMin, 0);
+
+
             function mapYAxis2(y: number) {
-                return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMin) + yDomainMin;
+                return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMinClamped) + yDomainMinClamped;
             }
 
             const runPerfValuesMapped = runPerfValues.map(function(v){
