@@ -709,12 +709,39 @@ export class FitnessTrendGraph {
 
             let yDomainMinClamped = Math.max(yDomainMin, 0);
 
+            function zip(arrays: Array<Array<number>>) {
+                return arrays[0].map(function(_: any,i: number){
+                    return arrays.map(function(array){return array[i]})
+                });
+            }
+
+            let first = runPerfValues[0];
+            let last = runPerfValues[runPerfValues.length-1];
+
+            let z1 = runPerfValues.slice(2).concat([last, last]);
+            let z2 = [first].concat(runPerfValues.slice(1, runPerfValues.length - 1)).concat([last]);
+            let z3 = [first, first].concat(runPerfValues.slice(0, runPerfValues.length - 2));
+
+            let groups = zip([z1, z2, z3]);
+
+            let groupsFiltered = groups.map(function(g: Array<any>){
+                let y0 = g[0].y;
+                let y1 = g[1].y;
+                let y2 = g[2].y;
+
+                if (y1 > y0 && y1 > y2) return undefined;
+                if (y1 < y0 && y1 < y2) return undefined;
+
+                return g[1];
+            });
+
+            let runPerfValuesSmooth = groupsFiltered.filter(function(n: any){ return n != undefined });
 
             function mapYAxis2(y: number) {
                 return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMinClamped) + yDomainMinClamped;
             }
 
-            const runPerfValuesMapped = runPerfValues.map(function(v){
+            const runPerfValuesMapped = runPerfValuesSmooth.map(function(v: any){
                 return {
                     x: v.x,
                     y: mapYAxis2(v.y)
