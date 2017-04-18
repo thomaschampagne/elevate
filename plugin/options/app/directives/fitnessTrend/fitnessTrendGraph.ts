@@ -564,7 +564,7 @@ export class FitnessTrendGraph {
                     if (fitData.runPerformance) {
                         runPerfValues.push({
                             x: fitData.timestamp,
-                            y: fitData.runPerformance / 4 // TODO: dynamic scaling
+                            y: fitData.runPerformance
                         });
                     }
 
@@ -652,9 +652,6 @@ export class FitnessTrendGraph {
                 d3.max(tsbValues, (d: any) => {
                     return parseInt(d.y);
                 }),
-                d3.max(runPerfValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
                 d3.max(ctlPreviewValues, (d: any) => {
                     return parseInt(d.y);
                 }),
@@ -678,9 +675,6 @@ export class FitnessTrendGraph {
                 d3.min(tsbValues, (d: any) => {
                     return parseInt(d.y);
                 }),
-                d3.min(runPerfValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
                 d3.min(ctlPreviewValues, (d: any) => {
                     return parseInt(d.y);
                 }),
@@ -693,6 +687,36 @@ export class FitnessTrendGraph {
             ], (d: any) => {
                 return d;
             });
+
+
+            const yDomain2Max = d3.max([
+                d3.max(runPerfValues, (d: any) => {
+                    return parseInt(d.y);
+                })
+            ], (d: any) => {
+                return d;
+            });
+
+            const yDomain2Min = d3.min([
+                d3.min(runPerfValues, (d: any) => {
+                    return parseInt(d.y);
+                })
+            ], (d: any) => {
+                return d;
+            });
+
+            function mapYAxis2(y: number) {
+                return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMin) + yDomainMin;
+            }
+
+            const runPerfValuesMapped = runPerfValues.map(function(v){
+                return {
+                    x: v.x,
+                    y: mapYAxis2(v.y)
+                };
+            });
+
+
 
             const fitnessGraphData: IFitnessGraphData = {
                 curves: [{
@@ -726,7 +750,7 @@ export class FitnessTrendGraph {
                     color: $colors.ctl,
                 }, {
                     key: "Running performance",
-                    values: runPerfValues,
+                    values: runPerfValuesMapped,
                     color: $colors.runPerf
                 }],
                 yDomain: [yDomainMin * 1.05, yDomainMax * 1.05],
