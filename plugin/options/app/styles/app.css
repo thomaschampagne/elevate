@@ -115,19 +115,19 @@ a:hover {
     stroke-opacity: 1;
 }
 
-/* SERIE 7: running performance */
+/* SERIE 7, 8: running/riding performance */
 
 #fitnessGraph g.nv-series-7 path.nv-line {
     stroke-dasharray: 5, 1;
     stroke-opacity: 0.8;
 }
 
-/* SERIE 8 9 10 11: training  constants */
 #fitnessGraph g.nv-series-8 path.nv-line {
-    stroke-dasharray: 12, 17;
-    stroke-opacity: 0.5;
+    stroke-dasharray: 5, 1;
+    stroke-opacity: 0.8;
 }
 
+/* SERIE 9 10 11 12: training  constants */
 #fitnessGraph g.nv-series-9 path.nv-line {
     stroke-dasharray: 12, 17;
     stroke-opacity: 0.5;
@@ -139,6 +139,11 @@ a:hover {
 }
 
 #fitnessGraph g.nv-series-11 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+#fitnessGraph g.nv-series-12 path.nv-line {
     stroke-dasharray: 12, 17;
     stroke-opacity: 0.5;
 }
