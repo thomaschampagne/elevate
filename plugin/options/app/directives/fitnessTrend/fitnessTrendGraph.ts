@@ -727,25 +727,35 @@ export class FitnessTrendGraph {
                 // relaxed filter: let the value pass if it is not out of range too much
                 // TODO: consider time distance as well
 
-                let y0 = getSafe(index - 1).y;
+                let ym2 = getSafe(index - 2).y;
+                let ym1 = getSafe(index - 1).y;
                 let y1 = p.y;
-                let y2 = getSafe(index + 1).y;
+                let yp1 = getSafe(index + 1).y;
+                let yp2 = getSafe(index + 2).y;
 
-                const upTolerance = 1.2;
+                let a = [ym2, ym1, p.y, yp1, yp2];
+
+                a.sort(function sortNumber(a,b) {
+                    return a - b;
+                });
+
+                const upTolerance = 1.15;
                 const downTolerance = 0.90;
 
                 //console.log(findActivity(p.x));
 
-                if (y1 > Math.max(y0, y2) * upTolerance) {
-                    //console.log("Reject up " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.max(y0, y2));
+                let med = a[2];
+
+                if (y1 > med * upTolerance) {
+                    //console.log("Reject up " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
                     return undefined;
                 }
-                if (y1 < Math.min(y0, y2) * downTolerance) {
-                    //console.log("Reject down " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.min(y0, y2));
+                if (y1 < med * downTolerance) {
+                    //console.log("Reject down " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
                     return undefined;
                 }
 
-                //console.log("Pass " + y1.toFixed() + " " + y0.toFixed() + " " + y2.toFixed() + " " + y1 / Math.min(y0, y2));
+                //console.log("Pass " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
                 return p;
             });
 
