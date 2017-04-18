@@ -748,13 +748,13 @@ export class FitnessTrendGraph {
                 return "" + fitnessObject.activitiesName;
             }
 
-            function getSafe(index: number) {
-                if (index < 0) return runPerfValues[0];
-                if (index > runPerfValues.length-1) return runPerfValues[runPerfValues.length-1];
-                return runPerfValues[index]
-            }
+            function filterSmooth(p: any, index: number, array: Array<any>){
 
-            let groupsFiltered = runPerfValues.map(function (p: any, index: number){
+                function getSafe(index: number) {
+                    if (index < 0) return array[0];
+                    if (index > array.length-1) return array[array.length-1];
+                    return array[index]
+                }
 
                 // relaxed filter: let the value pass if it is not out of range too much
                 // TODO: consider time distance as well
@@ -789,9 +789,11 @@ export class FitnessTrendGraph {
 
                 //console.log("Pass " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
                 return p;
-            });
+            }
+            function filterSmoothResults(n: any){ return n != undefined }
 
-            let runPerfValuesSmooth = groupsFiltered.filter(function(n: any){ return n != undefined });
+            let runPerfValuesSmooth = runPerfValues.map(filterSmooth).filter(filterSmoothResults);
+            let ridePerfValuesSmooth = ridePerfValues.map(filterSmooth).filter(filterSmoothResults);
 
             function mapYAxis2(y: number) {
                 return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMinClamped) + yDomainMinClamped;
@@ -807,7 +809,7 @@ export class FitnessTrendGraph {
                 };
             });
 
-            let ridePerfValuesMapped = ridePerfValues.map(function(v: any){
+            let ridePerfValuesMapped = ridePerfValuesSmooth.map(function(v: any){
                 return {
                     x: v.x,
                     y: mapYAxis3(v.y)
