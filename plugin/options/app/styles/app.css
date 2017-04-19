@@ -100,16 +100,8 @@ a:hover {
 }
 
 /* SERIE 4, 5, 6: PREVIEW (.nv-series-3, 3 = ) */
-#fitnessGraph g.nv-series-4 path.nv-line {
-    stroke-dasharray: 4, 3;
-    stroke-opacity: 1;
-}
-
-#fitnessGraph g.nv-series-5 path.nv-line {
-    stroke-dasharray: 4, 3;
-    stroke-opacity: 1;
-}
-
+#fitnessGraph g.nv-series-4 path.nv-line,
+#fitnessGraph g.nv-series-5 path.nv-line,
 #fitnessGraph g.nv-series-6 path.nv-line {
     stroke-dasharray: 4, 3;
     stroke-opacity: 1;
@@ -117,11 +109,7 @@ a:hover {
 
 /* SERIE 7, 8: running/riding performance - smooth */
 
-#fitnessGraph g.nv-series-7 path.nv-line {
-    stroke-dasharray: 5, 1;
-    stroke-opacity: 0.8;
-}
-
+#fitnessGraph g.nv-series-7 path.nv-line,
 #fitnessGraph g.nv-series-8 path.nv-line {
     stroke-dasharray: 5, 1;
     stroke-opacity: 0.8;
@@ -129,32 +117,16 @@ a:hover {
 
 /* SERIE 9, 10: running/riding performance - raw */
 
-#fitnessGraph g.nv-series-9 path.nv-line {
-    stroke-dasharray: 5, 1;
-    stroke-opacity: 0.33;
-}
-
+#fitnessGraph g.nv-series-9 path.nv-line,
 #fitnessGraph g.nv-series-10 path.nv-line {
     stroke-dasharray: 5, 1;
     stroke-opacity: 0.33;
 }
 
 /* SERIE 11 12 13 14: training  constants */
-#fitnessGraph g.nv-series-11 path.nv-line {
-    stroke-dasharray: 12, 17;
-    stroke-opacity: 0.5;
-}
-
-#fitnessGraph g.nv-series-12 path.nv-line {
-    stroke-dasharray: 12, 17;
-    stroke-opacity: 0.5;
-}
-
-#fitnessGraph g.nv-series-13 path.nv-line {
-    stroke-dasharray: 12, 17;
-    stroke-opacity: 0.5;
-}
-
+#fitnessGraph g.nv-series-11 path.nv-line,
+#fitnessGraph g.nv-series-12 path.nv-line,
+#fitnessGraph g.nv-series-13 path.nv-line,
 #fitnessGraph g.nv-series-14 path.nv-line {
     stroke-dasharray: 12, 17;
     stroke-opacity: 0.5;
