@@ -659,94 +659,47 @@ export class FitnessTrendGraph {
             }
 
             // Find min/max of curves
-            const yDomainMax = d3.max([
-                d3.max(ctlValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.max(atlValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.max(tsbValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.max(ctlPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.max(atlPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.max(tsbPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-            ], (d: any) => {
-                return d;
-            });
+            class Domain {
+                max: number;
+                min: number;
 
-            const yDomainMin = d3.min([
-                d3.min(ctlValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.min(atlValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.min(tsbValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.min(ctlPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.min(atlPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-                d3.min(tsbPreviewValues, (d: any) => {
-                    return parseInt(d.y);
-                }),
-            ], (d: any) => {
-                return d;
-            });
+                constructor(arrayOfValues: Array<Array<any>>) {
+                    this.max = d3.max(arrayOfValues, (values: Array<any>) => {
+                        let i = 0;
+                        return d3.max(values, (d: any) => {
+                            return parseInt(d.y);
+                        })
+                    });
+                    this.min = d3.min(arrayOfValues, (values: Array<any>) => {
+                        let i = 0;
+                        return d3.min(values, (d: any) => {
+                            return parseInt(d.y);
+                        })
+                    })
+                }
 
+                mapYTo(y: number, target: Domain) {
+                    let targetMinClamped = Math.max(target.min, 0);
+                    return (y - this.min) / (this.max - this.min) * (target.max - targetMinClamped) + targetMinClamped;
+                }
 
-            const yDomain2Max = d3.max([
-                d3.max(runPerfValues, (d: any) => {
-                    return parseInt(d.y);
-                })
-            ], (d: any) => {
-                return d;
-            });
+                mapValues(values: Array<any>, target: Domain) {
+                    let self = this;
+                    return values.map(function(v: any){
+                        return {
+                            x: v.x,
+                            y: self.mapYTo(v.y, target)
+                        };
+                    });
+                }
+            }
 
-            const yDomain2Min = d3.min([
-                d3.min(runPerfValues, (d: any) => {
-                    return parseInt(d.y);
-                })
-            ], (d: any) => {
-                return d;
-            });
+            let yDomain = new Domain([ctlValues, atlValues, tsbValues, ctlPreviewValues, atlPreviewValues, tsbPreviewValues]);
 
-            let yDomain3Max = d3.max([
-                d3.max(ridePerfValues, (d: any) => {
-                    return parseInt(d.y);
-                })
-            ], (d: any) => {
-                return d;
-            });
-            let yDomain3Min = d3.min([
-                d3.min(ridePerfValues, (d: any) => {
-                    return parseInt(d.y);
-                })
-            ], (d: any) => {
-                return d;
-            });
+            let yDomain2 = new Domain([runPerfValues]);
+            let yDomain3 = new Domain([ridePerfValues]);
 
             // prevent y2axis from using negative range of the first axis
-
-            let yDomainMinClamped = Math.max(yDomainMin, 0);
-
-            function findActivity(ts: any): string {
-                let fitnessObject = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
-                    timestamp: ts
-                }));
-                return "" + fitnessObject.activitiesName;
-            }
 
             function filterSmooth(p: any, index: number, array: Array<any>){
 
@@ -771,23 +724,31 @@ export class FitnessTrendGraph {
                     return a - b;
                 });
 
+
+                /*
+                function findActivity(ts: any): string {
+                    let fitnessObject = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
+                        timestamp: ts
+                    }));
+                    return "" + fitnessObject.activitiesName;
+                }
+
+                console.log(findActivity(p.x));
+                */
+
+                let median = a[2];
                 const upTolerance = 1.15;
                 const downTolerance = 0.90;
-
-                //console.log(findActivity(p.x));
-
-                let med = a[2];
-
-                if (y1 > med * upTolerance) {
-                    //console.log("Reject up " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
+                if (y1 > median * upTolerance) {
+                    //console.log("Reject up " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
                     return undefined;
                 }
-                if (y1 < med * downTolerance) {
-                    //console.log("Reject down " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
+                if (y1 < median * downTolerance) {
+                    //console.log("Reject down " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
                     return undefined;
                 }
 
-                //console.log("Pass " + y1.toFixed() + " " + med.toFixed() + " " + y1 / med);
+                //console.log("Pass " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
                 return p;
             }
             function filterSmoothResults(n: any){ return n != undefined }
@@ -795,26 +756,8 @@ export class FitnessTrendGraph {
             let runPerfValuesSmooth = runPerfValues.map(filterSmooth).filter(filterSmoothResults);
             let ridePerfValuesSmooth = ridePerfValues.map(filterSmooth).filter(filterSmoothResults);
 
-            function mapYAxis2(y: number) {
-                return (y - yDomain2Min) / (yDomain2Max - yDomain2Min) * (yDomainMax - yDomainMinClamped) + yDomainMinClamped;
-            }
-            function mapYAxis3(y: number) {
-                return (y - yDomain3Min) / (yDomain3Max - yDomain3Min) * (yDomainMax - yDomainMinClamped) + yDomainMinClamped;
-            }
-
-            const runPerfValuesMapped = runPerfValuesSmooth.map(function(v: any){
-                return {
-                    x: v.x,
-                    y: mapYAxis2(v.y)
-                };
-            });
-
-            let ridePerfValuesMapped = ridePerfValuesSmooth.map(function(v: any){
-                return {
-                    x: v.x,
-                    y: mapYAxis3(v.y)
-                };
-            });
+            let runPerfValuesMapped = yDomain2.mapValues(runPerfValuesSmooth, yDomain);
+            let ridePerfValuesMapped = yDomain3.mapValues(ridePerfValuesSmooth, yDomain);
 
 
             const fitnessGraphData: IFitnessGraphData = {
@@ -856,7 +799,7 @@ export class FitnessTrendGraph {
                     values: ridePerfValuesMapped,
                     color: $colors.ridePerf
                 }],
-                yDomain: [yDomainMin * 1.05, yDomainMax * 1.05],
+                yDomain: [yDomain.min * 1.05, yDomain.max * 1.05],
             };
 
             if ($scope.showTrainingZone) {
