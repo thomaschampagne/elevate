@@ -709,21 +709,14 @@ export class FitnessTrendGraph {
                     return array[index]
                 }
 
-                // relaxed filter: let the value pass if it is not out of range too much
-                // TODO: consider time distance as well
 
-                let ym2 = getSafe(index - 2).y;
-                let ym1 = getSafe(index - 1).y;
-                let y1 = p.y;
-                let yp1 = getSafe(index + 1).y;
-                let yp2 = getSafe(index + 2).y;
+                // take span*2 + 1 values
+                const span = 2;
+                // consider inner innerSpan*2 + 1 always valid (always includes median)
+                const innerSpan = 0;
+                let aroundP: Array<number> = _.range(-span, +span).map((i: number) => getSafe(index + i).y);
 
-                let a = [ym2, ym1, p.y, yp1, yp2];
-
-                a.sort(function sortNumber(a,b) {
-                    return a - b;
-                });
-
+                aroundP.sort((a: number,b: number) => a - b);
 
                 /*
                 function findActivity(ts: any): string {
@@ -736,19 +729,22 @@ export class FitnessTrendGraph {
                 console.log(findActivity(p.x));
                 */
 
-                let median = a[2];
+                //let median = aroundP[span];
+                let validMin = aroundP[span - innerSpan];
+                let validMax = aroundP[span + innerSpan];
+                // TODO: consider time distance as well
                 const upTolerance = 1.15;
                 const downTolerance = 0.90;
-                if (y1 > median * upTolerance) {
-                    //console.log("Reject up " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
+                if (p.y > validMax * upTolerance) {
+                    //console.log("Reject up " + p.y.toFixed() + " " + median.toFixed() + " " + y1 / median);
                     return undefined;
                 }
-                if (y1 < median * downTolerance) {
-                    //console.log("Reject down " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
+                if (p.y < validMin * downTolerance) {
+                    //console.log("Reject down " + p.y.toFixed() + " " + median.toFixed() + " " + y1 / median);
                     return undefined;
                 }
 
-                //console.log("Pass " + y1.toFixed() + " " + median.toFixed() + " " + y1 / median);
+                //console.log("Pass " + p.y.toFixed() + " " + median.toFixed() + " " + y1 / median);
                 return p;
             }
             function filterSmoothResults(n: any){ return n != undefined }
