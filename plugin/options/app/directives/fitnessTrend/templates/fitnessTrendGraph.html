@@ -36,6 +36,14 @@
                 </md-tooltip>
             </md-switch>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <md-switch ng-model="showPerformance" ng-change="showPerformanceChanged()"
+                       aria-label="Display Performance Data">
+                <md-icon>show_chart</md-icon>
+                <md-tooltip>
+                    Display Performance Data
+                </md-tooltip>
+            </md-switch>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <md-switch ng-model="usePowerMeter" ng-change="usePowerMeterChanged()"
                        aria-label="Use cycling power meter when available">
                 <md-icon>flash_on</md-icon>

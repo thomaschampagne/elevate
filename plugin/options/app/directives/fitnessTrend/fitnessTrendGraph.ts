@@ -15,6 +15,8 @@ export interface IFitnessTrendGraphScope extends IScope {
     makeGraph: Function;
     showTrainingZone: boolean;
     showTrainingZoneChanged: Function;
+    showPerformance: boolean;
+    showPerformanceChanged: Function;
     trainingZoneOnToday: ITrainingZone;
     speedUnitData: ISpeedUnitData;
     getTrainingZone: (tsb: number) => ITrainingZone;
@@ -75,6 +77,11 @@ export class FitnessTrendGraph {
         $scope.showTrainingZone = (_.isEmpty(localStorage.getItem("showTrainingZone")) || localStorage.getItem("showTrainingZone") === "1");
         $scope.showTrainingZoneChanged = () => {
             localStorage.setItem("showTrainingZone", $scope.showTrainingZone ? "1" : "0"); // Store value
+            $scope.updateFitnessChartGraph(false, true);
+        };
+        $scope.showPerformance = (_.isEmpty(localStorage.getItem('showPerformance')) || localStorage.getItem('showPerformance') === '1');
+        $scope.showPerformanceChanged = () => {
+            localStorage.setItem('showPerformance', $scope.showPerformance ? '1' : '0'); // Store value
             $scope.updateFitnessChartGraph(false, true);
         };
 
@@ -696,16 +703,17 @@ export class FitnessTrendGraph {
 
             let yDomain = new Domain([ctlValues, atlValues, tsbValues, ctlPreviewValues, atlPreviewValues, tsbPreviewValues]);
 
-            let yDomain2 = new Domain([runPerfValues]);
-            let yDomain3 = new Domain([ridePerfValues]);
+            let runPerfValuesMapped: Array<any> = [];
+            let ridePerfValuesMapped: Array<any> = [];
 
-            // prevent y2axis from using negative range of the first axis
+            let runPerfValuesSmoothMapped: Array<any> = [];
+            let ridePerfValuesSmoothMapped: Array<any> = [];
 
-            function filterSmooth(p: any, index: number, array: Array<any>){
+            function filterSmooth(p: any, index: number, array: Array<any>) {
 
                 function getSafe(index: number) {
                     if (index < 0) return array[0];
-                    if (index > array.length-1) return array[array.length-1];
+                    if (index > array.length - 1) return array[array.length - 1];
                     return array[index]
                 }
 
@@ -716,18 +724,18 @@ export class FitnessTrendGraph {
                 const innerSpan = 0;
                 let aroundP: Array<number> = _.range(-span, +span).map((i: number) => getSafe(index + i).y);
 
-                aroundP.sort((a: number,b: number) => a - b);
+                aroundP.sort((a: number, b: number) => a - b);
 
                 /*
-                function findActivity(ts: any): string {
-                    let fitnessObject = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
-                        timestamp: ts
-                    }));
-                    return "" + fitnessObject.activitiesName;
-                }
+                 function findActivity(ts: any): string {
+                 let fitnessObject = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
+                 timestamp: ts
+                 }));
+                 return "" + fitnessObject.activitiesName;
+                 }
 
-                console.log(findActivity(p.x));
-                */
+                 console.log(findActivity(p.x));
+                 */
 
                 //let median = aroundP[span];
                 let validMin = aroundP[span - innerSpan];
@@ -747,16 +755,27 @@ export class FitnessTrendGraph {
                 //console.log("Pass " + p.y.toFixed() + " " + median.toFixed() + " " + y1 / median);
                 return p;
             }
-            function filterSmoothResults(n: any){ return n != undefined }
 
-            let runPerfValuesSmooth = runPerfValues.map(filterSmooth).filter(filterSmoothResults);
-            let ridePerfValuesSmooth = ridePerfValues.map(filterSmooth).filter(filterSmoothResults);
+            function filterSmoothResults(n: any) {
+                return n != undefined
+            }
 
-            let runPerfValuesMapped = yDomain2.mapValues(runPerfValues, yDomain);
-            let ridePerfValuesMapped = yDomain3.mapValues(ridePerfValues, yDomain);
+            if ($scope.showPerformance) {
 
-            let runPerfValuesSmoothMapped = yDomain2.mapValues(runPerfValuesSmooth, yDomain);
-            let ridePerfValuesSmoothMapped = yDomain3.mapValues(ridePerfValuesSmooth, yDomain);
+                let yDomain2 = new Domain([runPerfValues]);
+                let yDomain3 = new Domain([ridePerfValues]);
+
+                // prevent y2axis from using negative range of the first axis
+
+                let runPerfValuesSmooth = runPerfValues.map(filterSmooth).filter(filterSmoothResults);
+                let ridePerfValuesSmooth = ridePerfValues.map(filterSmooth).filter(filterSmoothResults);
+
+                runPerfValuesMapped = yDomain2.mapValues(runPerfValues, yDomain);
+                ridePerfValuesMapped = yDomain3.mapValues(ridePerfValues, yDomain);
+
+                runPerfValuesSmoothMapped = yDomain2.mapValues(runPerfValuesSmooth, yDomain);
+                ridePerfValuesSmoothMapped = yDomain3.mapValues(ridePerfValuesSmooth, yDomain);
+            }
 
             const showUnfiltered = true;
 
