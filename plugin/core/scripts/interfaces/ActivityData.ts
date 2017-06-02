@@ -102,6 +102,8 @@ interface ICadenceData {
 }
 interface IGradeData {
     avgGrade: number;
+    maxGrade: number;
+    minGrade: number;
     lowerQuartileGrade: number;
     medianGrade: number;
     upperQuartileGrade: number;
