@@ -29,6 +29,11 @@ class HideFeedModifier implements IModifier {
                 });
             }
 
+            // If hide suggested athletes
+            if (this.userSettings.feedHideSuggestedAthletes) {
+                $('#suggested-follow-module').remove(); // Will work as long as id remains "suggested-follow-module"
+            }
+
             if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
 
                 let minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
