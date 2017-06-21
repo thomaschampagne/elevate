@@ -4,7 +4,7 @@
  * * * * * * * * *
  * clean        => cleanPackage => cleanDistAll => cleanExtNodeModules
  * cleanAll     => cleanRootNodeModules => clean
- * build        => writeManifest => tsCompile => npmInstall
+ * build        => writeManifest => tsCompile
  * specs        => buildSpecs
  * buildSpecs   => build
  * makeArchive  => build
@@ -28,7 +28,6 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var runSequence = require('run-sequence');
-var exec = require('child_process').exec;
 var options = require('gulp-options');
 var ftp = require('vinyl-ftp');
 var git = require('gulp-git');
@@ -41,7 +40,6 @@ var karmaServer = require('karma').Server;
  * Global folder variable
  */
 var ROOT_FOLDER = __dirname;
-var EXT_FOLDER = ROOT_FOLDER + '/plugin/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
 var SPECS_FOLDER = ROOT_FOLDER + '/specs/';
@@ -107,7 +105,7 @@ var OPTIONS_FILES = [
 /**
  * Gulp Tasks
  */
-gulp.task('tsCompile', ['npmInstall'], function () { // Compile Typescript and copy them to DIST_FOLDER
+gulp.task('tsCompile', function () { // Compile Typescript and copy them to DIST_FOLDER
 
     util.log('Start TypeScript compilation... then copy files to destination folder.');
 
@@ -165,35 +163,6 @@ gulp.task('build', ['writeManifest'], function () {
         base: 'plugin/'
     }).pipe(gulp.dest(DIST_FOLDER));
 
-});
-
-gulp.task('npmInstall', function (initDone) {
-
-    util.log('Installing extension NPM dependencies');
-
-    // Switch to ./plugin folder
-    process.chdir(EXT_FOLDER);
-
-    exec('npm install', function (error, stdout, stderr) {
-
-        if (error) {
-            util.log(error);
-            util.log(stderr);
-        } else {
-            if (stdout) {
-                util.log(stdout);
-                util.log('Install done.');
-            } else {
-                util.log('Nothing to install');
-            }
-
-            util.log('Use generated "dist/" folder as chrome unpacked extension folder. You will have to execute "gulp build" command before. Helper: "gulp watch" command will automatically trigger "gulp build" command on a file change event.');
-
-            // Switch back to ./plugin/core/../.. aka "root" folder
-            process.chdir(ROOT_FOLDER);
-            initDone();
-        }
-    });
 });
 
 gulp.task('makeArchive', ['build'], function () {
