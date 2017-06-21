@@ -9,7 +9,7 @@ class ReliveCCModifier implements IModifier {
     public modify(): void {
 
         let html: string = "<li class='group'>";
-        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive Ride <sup style='color:#FC4C02; font-size:10px;'>NEW</sup></div>";
+        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive <sup style='color:#FC4C02; font-size:10px;'>NEW</sup></div>";
 
         $("#pagenav").append($(html)).each(() => {
 
@@ -20,9 +20,8 @@ class ReliveCCModifier implements IModifier {
 
                 let url: string = 'https://www.relive.cc/view/' + this.activityId;
 
-                let embedUrl: string = url + '/embed';
-
-                let windowWidth: number = window.innerWidth * 0.50;
+                let windowWidth: number = 800;
+                let windowHeight: number = 515;
 
                 $.fancybox({
                     fitToView: true,
@@ -32,7 +31,7 @@ class ReliveCCModifier implements IModifier {
                     closeEffect: 'none',
                     scrolling: 'no',
                     'type': 'iframe',
-                    'content': '<div style="text-align:center;"><a href="' + url + '" target="_blank">View in relive.cc website</a></div><iframe src="' + embedUrl + '" width="' + windowWidth + '" height="' + windowWidth * 9 / 16 + '" frameborder="0"></iframe>'
+                    'content': '<iframe src="' + url + '" width="' + windowWidth + '" height="' + windowHeight + '" frameborder="0"></iframe>'
                 });
             });
         });

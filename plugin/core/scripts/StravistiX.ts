@@ -458,7 +458,7 @@ class StravistiX {
 
     protected handleReliveCCModifier(): void {
 
-        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayReliveCCLink) {
+        if (!this._userSettings.displayReliveCCLink) {
             return;
         }
 
@@ -471,12 +471,14 @@ class StravistiX {
             return;
         }
 
+        let activityType: string = window.pageView.activity().get('type');
+
         // Avoid running Extended data at the moment
-        if (window.pageView.activity().get('type') != "Ride") {
+        if (activityType !== "Ride" && activityType !== "Run") {
             return;
         }
 
-        // If home trainer skip (it will use gps data to locate weather data)
+        // If home trainer skip
         if (window.pageView.activity().get('trainer')) {
             return;
         }
