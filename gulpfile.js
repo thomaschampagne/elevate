@@ -28,7 +28,6 @@ var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var util = require('gulp-util');
 var runSequence = require('run-sequence');
-var exec = require('child_process').exec;
 var options = require('gulp-options');
 var ftp = require('vinyl-ftp');
 var git = require('gulp-git');
@@ -41,7 +40,6 @@ var karmaServer = require('karma').Server;
  * Global folder variable
  */
 var ROOT_FOLDER = __dirname;
-var EXT_FOLDER = ROOT_FOLDER + '/plugin/';
 var DIST_FOLDER = ROOT_FOLDER + '/dist/';
 var PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
 var SPECS_FOLDER = ROOT_FOLDER + '/specs/';
@@ -107,7 +105,7 @@ var OPTIONS_FILES = [
 /**
  * Gulp Tasks
  */
-gulp.task('tsCompile', [], function () { // Compile Typescript and copy them to DIST_FOLDER
+gulp.task('tsCompile', function () { // Compile Typescript and copy them to DIST_FOLDER
 
     util.log('Start TypeScript compilation... then copy files to destination folder.');
 
