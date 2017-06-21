@@ -1,22 +1,24 @@
 /**
- * * * * * * * * *
- * TASKS GRAPH
- * * * * * * * * *
- * clean        => cleanPackage => cleanDistAll => cleanExtNodeModules
- * cleanAll     => cleanRootNodeModules => clean
- * build        => writeManifest => tsCompile
- * specs        => buildSpecs
- * buildSpecs   => build
- * makeArchive  => build
- * package      => clean => makeArchive
- *
- * * * * * * * * *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * COMMANDS
- * * * * * * * * *
- * gulp clean
- * gulp build
- * gulp specs
- * gulp package
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * gulp clean       // Clean dist/ folder
+ * gulp build       // Generate dist/ folder. Use it for development
+ * gulp specs       // Run unit tests & integration tests
+ * gulp package     // Create .zip packaged archive to be published
+ * gulp wipe        // Remove All generated files
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * TASKS GRAPH
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * clean       : cleanPackage => cleanDistAll => cleanExtNodeModules
+ * build       : writeManifest => tsCompile
+ * specs       : buildSpecs
+ * buildSpecs  : build
+ * makeArchive : build
+ * package     : clean => makeArchive
+ * wipe        : cleanRootNodeModules => cleanExtNodeModules => cleanPackage
+ * 
  */
 
 /**
@@ -273,7 +275,7 @@ gulp.task('watch', function () {
 
 // Clean dist/, package/, plugin/core/node_modules/
 gulp.task('clean', ['cleanPackage']);
-gulp.task('cleanAll', ['cleanRootNodeModules']);
+gulp.task('wipe', ['cleanRootNodeModules', 'cleanExtNodeModules', 'cleanPackage']);
 
 // FTP publish
 gulp.task('ftpPublish', ['package'], function () {
