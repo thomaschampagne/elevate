@@ -2,7 +2,7 @@
   "name": "Make",
   "description": "Makes StravistiX distribution structure,  and builds archive",
   "scripts": {
-    "postinstall": "cd plugin && npm install",
+    "postinstall": "npm --prefix ./plugin install ./plugin",
     "test": "gulp specs"
   },
   "repository": {
