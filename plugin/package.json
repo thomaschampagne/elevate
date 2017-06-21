@@ -1,5 +1,5 @@
 {
-  "name": "stravistix",
+  "name": "StravistixWebPlugin",
   "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
   "keywords": [
     "strava",
