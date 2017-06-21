@@ -125,7 +125,7 @@ class Helper {
      * @param storageType StorageManager.storageLocalType || StorageManager.storageSyncType
      * @param key
      * @param callback
-     * @return {Promise<any>}
+     * @return {Q.Promise<any>}
      */
     public static getFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
 
