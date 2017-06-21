@@ -353,7 +353,7 @@ class ActivitiesSynchronizer {
     /**
      * Fetch the stream of an activity
      * @param activityId
-     * @return {Promise<T>}
+     * @return {Q.Promise<T>}
      */
     public fetchStreamByActivityId(activityId: number): Q.IPromise<any> {
 
@@ -387,7 +387,7 @@ class ActivitiesSynchronizer {
 
     /**
      * Erase stored last sync date and computed activities
-     * @return {Promise<U>}
+     * @return {Q.Promise<U>}
      */
     public clearSyncCache(): Q.IPromise<any> {
 
@@ -461,7 +461,7 @@ class ActivitiesSynchronizer {
 
     /**
      * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
-     * @return {Promise<Array<ISyncActivityComputed>>}
+     * @return {Q.Promise<Array<ISyncActivityComputed>>}
      */
     public computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<Array<ISyncActivityComputed>> {
 
@@ -592,7 +592,7 @@ class ActivitiesSynchronizer {
 
     /**
      * Trigger the computing of new activities and save the result to local storage by merging with existing activities
-     * @return Promise of synced activities
+     * @return Q.Promise of synced activities
      */
     public sync(): Q.Promise<ISyncResult> {
 

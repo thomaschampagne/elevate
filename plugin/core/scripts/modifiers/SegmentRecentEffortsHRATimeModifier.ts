@@ -334,8 +334,8 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         let pbLabel = chart.find(".personal-best-label");
                         let pbValue = chart.find(".personal-best-value");
 
-                        let pbLabelBox = (<SVGLocatable><any>pbLabel[0]).getBBox();
-                        let pbLabelValue = (<SVGLocatable><any>pbValue[0]).getBBox();
+                        let pbLabelBox = (<any>pbLabel[0]).getBBox();
+                        let pbLabelValue = (<any>pbValue[0]).getBBox();
 
                         let pbTop = Math.min(pbLabelBox.y, pbLabelValue.y);
                         let pbBot = Math.max(pbLabelBox.y + pbLabelBox.height, pbLabelValue.y + pbLabelValue.height);

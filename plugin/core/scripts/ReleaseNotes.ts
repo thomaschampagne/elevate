@@ -18,6 +18,16 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.8.0',
+        message: 'NEW: "Relive" your Rides & Runs inside your activity pages with relive.cc',
+        hotFixes: [],
+        features: [
+            'Added "Relive" of your Rides & Runs inside your activity pages with relive.cc. Make sure you have <a href="http://relive.cc" target="_blank">relive.cc</a> account to get the feature onto your next Rides & Runs.',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [],
+    },
+    {
         version: '5.7.2',
         message: 'New Year progressions improvements (Old version reactivated in Strava profile page) <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
         hotFixes: [

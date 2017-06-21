@@ -191,7 +191,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()', (done) => {
+    it('should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()', (done: Function) => {
 
         // Give NO last sync date or page + page to read.
         activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
@@ -242,7 +242,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should ensure ActivitiesSynchronizer:fetchWithStream()', (done) => {
+    it('should ensure ActivitiesSynchronizer:fetchWithStream()', (done: Function) => {
 
         // let fromPage = 1, pagesToRead = 3; // read 1 => 3
         activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<ISyncActivityWithStream>) => {
@@ -284,7 +284,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()', (done) => {
+    it('should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()', (done: Function) => {
 
         // Getting all pages (7)
         activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
@@ -319,7 +319,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done) => {
+    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done: Function) => {
 
         expect(activitiesSynchronizer).not.toBeNull();
         expect(activitiesSynchronizer).not.toBeUndefined();
@@ -352,7 +352,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should sync() when no existing stored computed activities', (done) => {
+    it('should sync() when no existing stored computed activities', (done: Function) => {
 
         expect(activitiesSynchronizer.hasBeenComputedActivities).toBeNull(); // No mergedComputedActivities at the moment
 
@@ -418,7 +418,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should sync() when a new today training came up + an old one', (done) => {
+    it('should sync() when a new today training came up + an old one', (done: Function) => {
 
         expect(CHROME_STORAGE_STUB.computedActivities).toBeUndefined();
         expect(CHROME_STORAGE_STUB.lastSyncDateTime).toBeUndefined();
@@ -473,7 +473,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should sync() when a training has been upload today to but perform 2 weeks ago, then test added first and last', (done) => {
+    it('should sync() when a training has been upload today to but perform 2 weeks ago, then test added first and last', (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate 1 new added 2 weeks ago
@@ -543,7 +543,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should sync() when 2 activities been edited from strava.com', (done) => {
+    it('should sync() when 2 activities been edited from strava.com', (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -610,7 +610,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
-    it('should sync() when 3 activities have been removed from strava.com', (done) => {
+    it('should sync() when 3 activities have been removed from strava.com', (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -668,7 +668,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
-    it('should sync() when added/edited/deleted from strava.com in the same sync', (done) => {
+    it('should sync() when added/edited/deleted from strava.com in the same sync', (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -776,7 +776,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     // TODO Test notify progress (create dedicated method ?! TDD making !) ?
 
     /*
-     xit('should NOT sync() with cases not declare...', (done) => {
+     xit('should NOT sync() with cases not declare...', (done: Function) => {
      // TODO ...
      });
 
