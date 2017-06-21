@@ -1,6 +1,6 @@
 {
   "name": "Make",
-  "description": "Make StravistiX distribution structure and builds archive",
+  "description": "Makes StravistiX distribution structure,  and builds archive",
   "scripts": {
     "postinstall": "cd plugin && npm install",
     "test": "gulp specs"
@@ -14,11 +14,13 @@
     "email": "th.champagne@gmail.com",
     "web": "http://thomaschampagne.github.io"
   },
-  "contributors": {
-    "name": "Thomas Champagne",
-    "email": "th.champagne@gmail.com",
-    "web": "http://thomaschampagne.github.io"
-  },
+  "contributors": [
+    {
+      "name": "Thomas Champagne",
+      "email": "th.champagne@gmail.com",
+      "web": "http://thomaschampagne.github.io"
+    }
+  ],
   "readme": "None",
   "devDependencies": {
     "gulp": "^3.9.1",

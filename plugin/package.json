@@ -14,12 +14,10 @@
       "web": "http://thomaschampagne.github.io"
     }
   ],
-  "repository": [
-    {
-      "type": "git",
-      "url": "https://github.com/thomaschampagne/stravistix"
-    }
-  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaschampagne/stravistix"
+  },
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {},
