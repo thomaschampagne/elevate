@@ -73,7 +73,7 @@
                         <th md-column md-numeric md-order-by=""><span>&Delta; year-1</span></th>
                         <th md-column md-numeric md-order-by=""><span>Distance (km)</span></th>
                         <th md-column md-numeric md-order-by=""><span>&Delta; year-1</span></th>
-                        <th md-column md-numeric md-order-by=""><span>Time (h)</span></th>
+                        <th md-column md-numeric md-order-by=""><span>Time (hh:mm)</span></th>
                         <th md-column md-numeric md-order-by=""><span>&Delta; year-1</span></th>
                         <th md-column md-numeric md-order-by=""><span>Elevation (m)</span></th>
                         <th md-column md-numeric md-order-by=""><span>&Delta; year-1</span></th>
@@ -90,8 +90,8 @@
                         <td md-cell><span style="color: {{row.deltaPreviousDistanceColor}};">{{(row.deltaPreviousDistance >= 0) ? '+': ''}} {{row.deltaPreviousDistance | number: 1}}</span>
                         </td>
 
-                        <td md-cell>{{row.totalTime | number: 1}}</td>
-                        <td md-cell><span style="color: {{row.deltaPreviousTimeColor}};">{{(row.deltaPreviousTime >= 0) ? '+': ''}} {{row.deltaPreviousTime | number: 1}}</span>
+                        <td md-cell>{{row.totalTime}}</td>
+                        <td md-cell><span style="color: {{row.deltaPreviousTimeColor}};">{{row.deltaPreviousTime}}</span>
                         </td>
                         <td md-cell>{{row.totalElevation | number: 0}}</td>
                         <td md-cell><span style="color: {{row.deltaPreviousElevationColor}};">{{(row.deltaPreviousElevation >= 0) ? '+': ''}} {{row.deltaPreviousElevation | number: 1}}</span>
