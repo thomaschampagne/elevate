@@ -250,20 +250,27 @@ class YearProgressController {
                 tableRow.year = yearProgress.year;
 
                 tableRow.totalDistance = progressAtThisDayOfYear.totalDistance / 1000;
-                tableRow.totalTime = moment.duration(progressAtThisDayOfYear.totalTime * 1000).asHours();
+
+                // Formatting time manually as HH:MM
+                var totalTimeH = Math.floor(progressAtThisDayOfYear.totalTime/3600);
+                var totalTimeM = Math.floor((progressAtThisDayOfYear.totalTime%3600)/60);
+                tableRow.totalTime = totalTimeH + ":"+ ((totalTimeM < 10) ? '0' + totalTimeM.toString() : totalTimeM.toString()); 
+                
                 tableRow.totalElevation = progressAtThisDayOfYear.totalElevation;
                 tableRow.count = progressAtThisDayOfYear.count;
-
                 if (yearProgressionsIterator[index - 1]) {
-
-                    let progressAtThisDayOfLastYear: IProgression = _.findWhere(yearProgressionsIterator[index - 1].progressions, {
+                    var progressAtThisDayOfLastYear = _.findWhere(yearProgressionsIterator[index - 1].progressions, {
                         onDayOfYear: moment().dayOfYear()
                     });
-
                     tableRow.deltaPreviousDistance = (progressAtThisDayOfYear.totalDistance - progressAtThisDayOfLastYear.totalDistance) / 1000;
                     tableRow.deltaPreviousDistanceColor = (tableRow.deltaPreviousDistance >= 0) ? "green" : "red";
-                    tableRow.deltaPreviousTime = moment.duration((progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime) * 1000).asHours();
-                    tableRow.deltaPreviousTimeColor = (tableRow.deltaPreviousTime >= 0) ? "green" : "red";
+
+                    var deltaPreviousTime = progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime
+                    var deltaPreviousTimeH = (deltaPreviousTime >= 0) ? Math.floor(deltaPreviousTime/3600): Math.ceil(deltaPreviousTime/3600);
+                    var deltaPreviousTimeM = (deltaPreviousTime >= 0) ? Math.floor((deltaPreviousTime%3600)/60) : Math.ceil((deltaPreviousTime%3600)/60);
+                    tableRow.deltaPreviousTime = deltaPreviousTimeH + ":"+ ((deltaPreviousTimeM > -10) ? '0' + Math.abs(deltaPreviousTimeM).toString() : Math.abs(deltaPreviousTimeM).toString());
+                    
+                    tableRow.deltaPreviousTimeColor = (deltaPreviousTime >= 0) ? "green" : "red";
                     tableRow.deltaPreviousElevation = progressAtThisDayOfYear.totalElevation - progressAtThisDayOfLastYear.totalElevation;
                     tableRow.deltaPreviousElevationColor = (tableRow.deltaPreviousElevation >= 0) ? "green" : "red";
                     tableRow.deltaPreviousCount = progressAtThisDayOfYear.count - progressAtThisDayOfLastYear.count;
