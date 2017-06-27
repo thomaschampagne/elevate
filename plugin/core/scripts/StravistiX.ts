@@ -1120,8 +1120,12 @@ class StravistiX {
 
     protected handleAthleteUpdate(): void {
         if (!StorageManager.getCookie('stravistix_athlete_update_done')) {
-            this.commitAthleteUpdate();
-            StorageManager.setCookieSeconds('stravistix_athlete_update_done', true, 6 * 60 * 60); // Don't update for 6 hours
+            this.commitAthleteUpdate().then((response: any) => {
+                console.log("Updated", response);
+                StorageManager.setCookieSeconds('stravistix_athlete_update_done', true, 6 * 60 * 60); // Don't update for 6 hours
+            }, (err: any) => {
+                console.error(err);
+            });
         }
     }
 
@@ -1265,8 +1269,8 @@ class StravistiX {
         activitiesSyncModifier.modify();
     }
 
-    protected commitAthleteUpdate() {
+    protected commitAthleteUpdate(): Q.IPromise<any> {
         let athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== '0') ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
-        AthleteUpdate.commit(athleteUpdate);
+        return AthleteUpdate.commit(athleteUpdate);
     }
 }

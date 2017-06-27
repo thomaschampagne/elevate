@@ -79,7 +79,9 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
         return athleteUpdate;
     }
 
-    public static commit(athleteUpdate: IAthleteUpdate): void {
+    public static commit(athleteUpdate: IAthleteUpdate): Q.IPromise<any> {
+
+        let deferred = Q.defer<ISyncResult>();
 
         $.post({
             url: env.endPoint + '/api/athlete/update',
@@ -87,12 +89,14 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
             dataType: 'json',
             contentType: 'application/json',
             success: (response: any) => {
-                console.log('Updated: ', response);
+                deferred.resolve(response);
             },
             error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
                 console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
+                deferred.reject({textStatus: textStatus, errorThrown: errorThrown});
             }
         });
 
+        return deferred.promise;
     }
 }
