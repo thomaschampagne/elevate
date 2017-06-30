@@ -69,7 +69,7 @@ This will install required gulp plugins in order to run project tasks. Gulp plug
 ```
 gulp build
 ```
-First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **plugin/core/package.json** file if not already downloaded.
+First, this will download others JS dependencies (underscore, angularjs, chart.js, ...) specified in **plugin/package.json** file if not already downloaded.
 
 Next, all the extensions files from **plugin/** will be copied to **dist/** folder.
 

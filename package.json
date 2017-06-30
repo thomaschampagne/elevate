@@ -1,7 +1,8 @@
 {
-  "name": "Make",
-  "description": "Make StravistiX distribution structure and builds archive",
+  "name": "StravistixDevWrapper",
+  "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
+    "postinstall": "npm --prefix ./plugin install ./plugin",
     "test": "gulp specs"
   },
   "repository": {
@@ -13,11 +14,13 @@
     "email": "th.champagne@gmail.com",
     "web": "http://thomaschampagne.github.io"
   },
-  "contributors": {
-    "name": "Thomas Champagne",
-    "email": "th.champagne@gmail.com",
-    "web": "http://thomaschampagne.github.io"
-  },
+  "contributors": [
+    {
+      "name": "Thomas Champagne",
+      "email": "th.champagne@gmail.com",
+      "web": "http://thomaschampagne.github.io"
+    }
+  ],
   "readme": "None",
   "devDependencies": {
     "gulp": "^3.9.1",
@@ -31,8 +34,8 @@
     "gulp-typescript": "^2.14.1",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^3.2.0",
-    "jasmine": "^2.5.3",
-    "karma": "^1.5.0",
+    "jasmine": "^2.6.0",
+    "karma": "^1.7.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",

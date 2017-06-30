@@ -18,6 +18,16 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.8.1',
+        message: 'Improvements on years progressions and "Relive" feature (Replay your Rides & Runs inside your activity pages with relive.cc)',
+        hotFixes: [],
+        features: [
+            'Added "Relive" of your Rides & Runs inside your activity pages with relive.cc. Make sure you have <a href="http://relive.cc" target="_blank">relive.cc</a> account to get the feature onto your next Rides & Runs.',
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: ['Fixed time format in years progressions'],
+    },
+    {
         version: '5.8.0',
         message: 'NEW: "Relive" your Rides & Runs inside your activity pages with relive.cc',
         hotFixes: [],
@@ -30,8 +40,7 @@ let releaseNotes: Array<IReleaseNote> = [
     {
         version: '5.7.2',
         message: 'New Year progressions improvements (Old version reactivated in Strava profile page) <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
-        hotFixes: [
-        ],
+        hotFixes: [],
         features: [
             'Added New Year progression UI. <a href="' + Constants.OPTIONS_URL + '#/yearsProgress" target="_blank">Here</a> ',
             'Added custom running power zones (was linked to cycling power zones before)',
@@ -48,8 +57,7 @@ let releaseNotes: Array<IReleaseNote> = [
     {
         version: '5.7.1',
         message: 'Added New Year progressions <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides',
-        hotFixes: [
-        ],
+        hotFixes: [],
         features: [
             'Added New Year progression UI. <a href="' + Constants.OPTIONS_URL + '#/yearsProgress" target="_blank">Here</a> ',
             'Added custom running power zones (was linked to cycling power zones before)',

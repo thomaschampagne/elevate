@@ -18,10 +18,10 @@ class ReliveCCModifier implements IModifier {
                 evt.preventDefault();
                 evt.stopPropagation();
 
-                let url: string = 'https://www.relive.cc/view/' + this.activityId;
+                let url: string = 'https://www.relive.cc/view/' + this.activityId + '?r=stravistix';
 
                 let windowWidth: number = 800;
-                let windowHeight: number = 515;
+                let windowHeight: number = 600;
 
                 $.fancybox({
                     fitToView: true,
