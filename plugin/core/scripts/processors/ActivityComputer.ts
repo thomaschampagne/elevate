@@ -63,8 +63,13 @@ class ActivityComputer {
             if (!_.isEmpty(activityStream.velocity_smooth)) {
                 activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
             }
+
             if (!_.isEmpty(activityStream.time)) {
                 activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+            }
+
+            if (!_.isEmpty(activityStream.latlng)) {
+                activityStream.latlng = activityStream.latlng.slice(bounds[0], bounds[1]);
             }
 
             if (!_.isEmpty(activityStream.heartrate)) {
