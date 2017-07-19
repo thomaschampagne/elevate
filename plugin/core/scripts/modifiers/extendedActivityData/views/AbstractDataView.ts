@@ -239,7 +239,7 @@ abstract class AbstractDataView {
 
     protected insertContentAtGridPosition(columnId: number, rowId: number, data: any, title: string, units: string, userSettingKey: string): void {
 
-        let onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+        let onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.grid) {
             let content: string = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span></span>';
