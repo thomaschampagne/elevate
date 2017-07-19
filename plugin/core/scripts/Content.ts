@@ -161,6 +161,7 @@ let jsDependencies: Array<string> = [
     'node_modules/qrcode-js-package/qrcode.min.js',
     'node_modules/geodesy/dms.js',
     'node_modules/geodesy/latlon-spherical.js',
+    'node_modules/file-saver/FileSaver.min.js',
     'core/modules/StorageManager.js',
     'core/modules/jquery.appear.js',
 

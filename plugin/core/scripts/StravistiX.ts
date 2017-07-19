@@ -1047,7 +1047,7 @@ class StravistiX {
             return;
         }
 
-        let virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId);
+        let virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId, this.vacuumProcessor);
         virtualPartnerModifier.modify();
     }
 
