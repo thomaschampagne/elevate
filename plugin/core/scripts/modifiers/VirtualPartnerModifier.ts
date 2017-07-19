@@ -88,14 +88,14 @@ class VirtualPartnerModifier implements IModifier {
         let effortId: number = parseInt(window.location.pathname.split('/')[4] || window.location.hash.replace('#', ''));
 
         let dlButton: string = '<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File (GPX)</a>';
-        let title: string = 'Export effort as Virtual Partner';
         let message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
 
-        $.fancybox('<h3>' + title + '</h3><h4>' + message + '</h4>', {
+        $.fancybox('<div id="stravistix_popup_download_course_' + effortId + '">' + message + '</div>', {
             afterShow: () => {
                 $('#stravistix_download_course_' + effortId).html(dlButton).each(() => {
                     $('#stravistix_download_course_' + effortId).on('click', () => {
                         this.downloadGpx(effortId);
+                        $('#stravistix_popup_download_course_' + effortId).html('Your GPX file is (being) dropped in your download folder...');
                     });
                 });
             }
@@ -117,7 +117,8 @@ class VirtualPartnerModifier implements IModifier {
 
     protected createGpxAndSave(courseName: string, effortId: number, activityStream: IActivityStream) {
         let blob = new Blob([this.genGpxData(courseName, activityStream)], {type: "application/xml; charset=utf-8"});
-        saveAs(blob, "course_" + effortId + ".gpx");
+        let filename: string = "course_" + effortId + ".gpx";
+        saveAs(blob, filename);
     }
 
     protected genGpxData(courseName: string, activityStream: IActivityStream): string {
@@ -147,16 +148,16 @@ class VirtualPartnerModifier implements IModifier {
             // Time
             gpxString += '<time>' + (new Date(activityStream.time[i] * 1000)).toISOString() + '</time>\n';
 
-            if (_.isNumber(activityStream.heartrate[i]) || _.isNumber(activityStream.cadence[i])) {
+            if (activityStream.heartrate || activityStream.cadence) {
 
                 gpxString += '<extensions>\n';
                 gpxString += '<gpxtpx:TrackPointExtension>\n';
 
-                if (_.isNumber(activityStream.heartrate[i])) {
-                    gpxString += '<gpxtpx:hr>' + activityStream.heartrate[i] + '</gpxtpx:hr>';
+                if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
+                    gpxString += '<gpxtpx:hr>' + activityStream.heartrate[i] + '</gpxtpx:hr>\n';
                 }
-                if (_.isNumber(activityStream.cadence[i])) {
-                    gpxString += '<gpxtpx:cad>' + activityStream.cadence[i] + '</gpxtpx:cad>';
+                if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
+                    gpxString += '<gpxtpx:cad>' + activityStream.cadence[i] + '</gpxtpx:cad>\n';
                 }
 
                 gpxString += '</gpxtpx:TrackPointExtension>\n';
