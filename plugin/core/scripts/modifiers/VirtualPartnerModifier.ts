@@ -30,7 +30,7 @@ class VirtualPartnerModifier implements IModifier {
 
             if ($('.stravistix_exportVpu').length < 1) {
 
-                let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
+                let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
 
                 $('.raceshape-btn').first().after(exportButtonHtml).each(() => {
 
