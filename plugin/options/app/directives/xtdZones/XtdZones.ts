@@ -326,7 +326,7 @@ class XtdZones {
 
 app.directive('xtdZones', [() => {
 
-    return {
+    return <any>{
         templateUrl: 'directives/xtdZones/templates/xtdZones.html',
         scope: {
             xtdZones: "=",

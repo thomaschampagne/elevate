@@ -349,7 +349,7 @@ class HrrZones {
 
 app.directive('hrrZones', [() => {
 
-    return {
+    return <any> {
         templateUrl: 'directives/hrrZones/templates/hrrZones.html',
         scope: {
             hrrZones: "=",

@@ -9,6 +9,7 @@ interface IActivityStatsMap {
 
 interface IActivityStream {
     time: Array<number>;
+    latlng: Array<Array<number>>;
     heartrate: Array<number>;
     velocity_smooth: Array<number>;
     cadence: Array<number>;

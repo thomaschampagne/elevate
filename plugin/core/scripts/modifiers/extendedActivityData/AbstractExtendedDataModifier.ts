@@ -63,7 +63,7 @@ abstract class AbstractExtendedDataModifier {
                                 // Check if profileConfigured locally. Ask user to double check is athlete settings
                                 Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, 'profileConfigured').then((profileConfigured: any) => {
                                     if(!profileConfigured  || !profileConfigured.data) {
-                                        $('#extendedStatsButton').after("<a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'>Did you check your athlete settings before?</a>");
+                                        $('#extendedStatsButton').after("<a target='_blank' href='" + this.appResources.settingsLink + "#!/athleteSettings'>Did you check your athlete settings before?</a>");
                                     }
                                 });
                             }
@@ -322,7 +322,7 @@ abstract class AbstractExtendedDataModifier {
     }
 
     protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
-        let onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+        let onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.summaryGrid) {
             let content: string = '<span class="summaryGridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="summaryGridUnits">' + units + '</span><br /><span class="summaryGridTitle">' + title + '</span></span>';

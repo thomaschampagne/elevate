@@ -92,7 +92,7 @@ class Background {
                 }, (tab: Tab) => {
                     console.log("First install. Display website new tab:", tab);
                     chrome.tabs.create({
-                        url: chrome.extension.getURL('/options/app/index.html#/')
+                        url: chrome.extension.getURL('/options/app/index.html#!/')
                     }, (tab: Tab) => {
                         console.log("First install. Display settings:", tab);
                     });

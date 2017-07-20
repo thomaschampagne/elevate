@@ -741,7 +741,7 @@ class FitnessTrendGraph {
 }
 
 app.directive('fitnessTrendGraph', [() => {
-    return {
+    return <any> {
         templateUrl: 'directives/fitnessTrend/templates/fitnessTrendGraph.html',
         controller: FitnessTrendGraph
     };

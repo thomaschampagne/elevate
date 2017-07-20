@@ -44,6 +44,7 @@
     "karma-typescript": "^2.1.7",
     "run-sequence": "^1.2.2",
     "underscore": "^1.8.3",
-    "vinyl-ftp": "^0.4.5"
+    "vinyl-ftp": "^0.4.5",
+    "typescript": "^2.4.2"
   }
 }

@@ -24,7 +24,7 @@ class XtdZone {
 
 app.directive('xtdZone', [() => {
 
-    return {
+    return <any>{
         scope: {
             zoneId: '@zoneId',
             xtdZone: '=',

@@ -283,7 +283,7 @@ let userSettings: IUserSettings = {
     activateRunningCadence: true,
     activateRunningTemperature: true,
     activityStravaMapType: 'terrain',
-    hidePremiumFeatures: true,
+    hidePremiumFeatures: false,
     displaySegmentRankPercentage: true,
     displayNearbySegments: true,
     displayMotivationScore: true,

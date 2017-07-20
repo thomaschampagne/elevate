@@ -36,7 +36,7 @@ class Helper {
 
     public static secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
 
-        let secNum: number = secondsParam; // don't forget the second param
+        let secNum: number = Math.round(secondsParam); // don't forget the second param
         let hours: number = Math.floor(secNum / 3600);
         let minutes: number = Math.floor((secNum - (hours * 3600)) / 60);
         let seconds: number = secNum - (hours * 3600) - (minutes * 60);

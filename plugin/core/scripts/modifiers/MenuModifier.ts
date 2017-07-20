@@ -28,14 +28,14 @@ class MenuModifier implements IModifier {
         html += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
         html += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
         html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
-        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.timelineIcon + "'/> <span>Multisports Fitness Trend - Beta</span></a></li>";
-        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/yearsProgress'><img style='vertical-align:middle' src='" + this.appResources.timelapseIcon + "'/> <span>Year Progressions</span></a></li>";
+        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#!/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.timelineIcon + "'/> <span>Multisports Fitness Trend - Beta</span></a></li>";
+        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#!/yearsProgress'><img style='vertical-align:middle' src='" + this.appResources.timelapseIcon + "'/> <span>Year Progressions</span></a></li>";
         html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/> <span>StravistiX Settings</span></a></li>";
-        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/> <span>Athlete Settings</span></a></li>";
+        html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#!/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/> <span>Athlete Settings</span></a></li>";
         html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
         html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/> <span>Heat Map</span></a></li>";
-        html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showDonation=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/> <span>Donate</span></a></li>";
-        html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/?showReleaseNotes=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/> <span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
+        html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#!/?showDonation=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/> <span>Donate</span></a></li>";
+        html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#!/?showReleaseNotes=true' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/> <span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/stravistix/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.rateIcon + "'/> <span>Rate</span></a></li>";
         html += "<li style='" + styleSideLeft + "' ><a  style='font-style: italic;' href='https://twitter.com/champagnethomas' style='font-style: italic;' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.twitterIcon + "'/> <span>What's next?</span></a></li>";
@@ -44,7 +44,7 @@ class MenuModifier implements IModifier {
         html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.helpIcon + "'/> <span> FAQ</span></a></li>";
 
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + newIssueURL + "' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/> <span>Report bug</span></a></li>";
-        html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/?showSharing=true'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/> <span>Share</span></a></li>";
+        html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#!/?showSharing=true'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/> <span>Share</span></a></li>";
         html += "</ul>";
         html += "</li>";
 

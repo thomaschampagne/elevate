@@ -144,7 +144,7 @@ class FitnessTrendTable {
 }
 
 app.directive('fitnessTrendTable', [() => {
-    return {
+    return <any> {
         templateUrl: 'directives/fitnessTrend/templates/fitnessTrendTable.html',
         controller: FitnessTrendTable
     };

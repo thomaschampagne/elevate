@@ -343,7 +343,7 @@ class StravistiX {
         }
 
         // Donate button
-        message += '<a class="button btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#/?showDonation=true">';
+        message += '<a class="button btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#!/?showDonation=true">';
         message += '<button style="font-size: 18px; width: 100%;" class="btn btn-primary btn-sm">Push this project higher !!!</button>';
         message += '</a>';
 
@@ -1047,7 +1047,7 @@ class StravistiX {
             return;
         }
 
-        let virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId);
+        let virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId, this.vacuumProcessor);
         virtualPartnerModifier.modify();
     }
 

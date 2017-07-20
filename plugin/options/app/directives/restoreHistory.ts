@@ -20,7 +20,7 @@ class RestoreHistoryController {
 
 app.directive('restoreHistory', [() => {
 
-    return {
+    return <any>{
 
         template: '<div><input type="file"/><md-button class="md-raised md-primary" ng-click="restore()">Restore</md-button></div>',
 

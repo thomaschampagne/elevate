@@ -15,7 +15,7 @@ class ActivitiesProcessor {
      */
     public compute(activitiesWithStream: Array<ISyncActivityWithStream>): Q.IPromise<Array<ISyncActivityComputed>> {
 
-        let deferred = Q.defer();
+        let deferred = Q.defer<Array<ISyncActivityComputed>>();
 
         let computedActivitiesPercentageCount: number = 0;
 
@@ -109,7 +109,7 @@ class ActivitiesProcessor {
 
     protected computeActivity(activityWithStream: ISyncActivityWithStream): Q.IPromise<IAnalysisData> {
 
-        let deferred = Q.defer();
+        let deferred = Q.defer<IAnalysisData>();
 
         // Lets create that worker/thread!
         let computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], {
