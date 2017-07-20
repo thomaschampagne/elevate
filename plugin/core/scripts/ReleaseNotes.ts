@@ -18,6 +18,20 @@ interface IReleaseNote {
 
 let releaseNotes: Array<IReleaseNote> = [
     {
+        version: '5.9.0',
+        message: 'NEW: Export segments efforts to your GPS device and challenge yourself outside against a virtual friend, a pro or your ghost!',
+        hotFixes: [],
+        features: [
+            'Added export segments efforts to your GPS device. Go to an activity, choose a segment effort (from you or another athlete) and click "Export segment effort for GPS device".',
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            'Fixed links errors to access some options pages',
+            'Fixed global wrong conversion from seconds to hh:mm:ss format',
+            'Fixed hidden premium labels and buttons on plugin install (requested by strava.com)'
+        ],
+    },
+    {
         version: '5.8.1',
         message: 'Improvements on years progressions and "Relive" feature (Replay your Rides & Runs inside your activity pages with relive.cc)',
         hotFixes: [],
