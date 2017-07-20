@@ -81,7 +81,7 @@ class SwimFTPCalculator {
 
 app.directive('swimFtpCalculator', [() => {
 
-    return {
+    return <any>{
         controller: SwimFTPCalculator,
         scope: {
             userSwimFtp: '=',

@@ -1,6 +1,6 @@
 class HrrZone {
 
-    static $inject: string[] = ['$scope','AvoidInputKeysService'];
+    static $inject: string[] = ['$scope', 'AvoidInputKeysService'];
 
     constructor(public $scope: any, public AvoidInputKeysService: IAvoidInputKeysService) {
 
@@ -21,7 +21,7 @@ class HrrZone {
 
 app.directive('hrrZone', [() => {
 
-    return {
+    return <any> {
 
         scope: {
             hrrZoneId: '@hrrZoneId',

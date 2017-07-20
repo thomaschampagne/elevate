@@ -114,7 +114,7 @@ class ProfileConfiguredRibbon {
 
 app.directive('profileConfiguredRibbon', [() => {
 
-    return {
+    return <any> {
         controller: ProfileConfiguredRibbon,
         templateUrl: 'directives/templates/profileConfiguredRibbon.html'
 

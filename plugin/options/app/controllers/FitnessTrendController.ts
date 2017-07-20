@@ -1,3 +1,5 @@
+import IControllerConstructor = angular.IControllerConstructor;
+import Injectable = angular.Injectable;
 class FitnessTrendController {
 
     static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'FitnessDataService'];
@@ -56,4 +58,4 @@ class FitnessTrendController {
         }
     }
 }
-app.controller("FitnessTrendController", FitnessTrendController);
+app.controller("FitnessTrendController",  <Injectable<IControllerConstructor>> FitnessTrendController);
