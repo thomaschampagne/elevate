@@ -111,7 +111,9 @@ gulp.task('tsCompile', function () { // Compile Typescript and copy them to DIST
 
     util.log('Start TypeScript compilation... then copy files to destination folder.');
 
-    return tsProject.src().pipe(tsProject()).pipe(gulp.dest(DIST_FOLDER));
+    return gulp.src(PLUGIN_TYPESCRIPT_SCRIPTS, {
+        base: 'plugin/'
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest(DIST_FOLDER));
 
 });
 
@@ -191,7 +193,7 @@ gulp.task('buildSpecs', ['build'], function () {
 
     return gulp.src([SPECS_FOLDER + '/**/*.ts'], {
         base: './'
-    }).pipe(tsProject()).pipe(gulp.dest('./'));
+    }).pipe(typeScript(tsProject)).pipe(gulp.dest('./'));
 
 });
 
