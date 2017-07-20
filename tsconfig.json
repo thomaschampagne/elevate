@@ -115,7 +115,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "inlineSources": true
+    "inlineSources": true,
+    "skipLibCheck": true
   },
   "compileOnSave": false
 }
