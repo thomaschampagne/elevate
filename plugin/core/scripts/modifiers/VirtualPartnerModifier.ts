@@ -28,11 +28,10 @@ class VirtualPartnerModifier implements IModifier {
 
             let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
+            let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
             if ($('.stravistix_exportVpu').length < 1) {
 
-                let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
-
-                $('.raceshape-btn').first().after(exportButtonHtml).each(() => {
+                $('.effort-actions').first().after(exportButtonHtml).each(() => {
 
                     $('#stravistix_exportVpu').click((evt) => {
                         evt.preventDefault();
@@ -42,13 +41,6 @@ class VirtualPartnerModifier implements IModifier {
                     return;
                 });
             }
-            /*
-             // TODO Support Running VPU
-             else {
-             // Running export
-             let exportButtonHtml = '<div class="spans8"><a href="/segments/6330649?filter=my_results">View My Efforts</a></div>';
-             $('.bottomless.inset').after(exportButtonHtml);
-             }*/
             return r;
         };
     }
