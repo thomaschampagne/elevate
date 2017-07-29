@@ -189,7 +189,7 @@ class AthleteStatsModifier implements IModifier {
                     }) + "</small></div></td>" +
                     "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + this.elevationUnit + this.renderTrendArrow(elevationDifference, function (value: any) {
                         return Helper.formatNumber(Math.abs(value), 0) + " " + this.elevationUnit;
-                    }).bind(this) + "</div></td>" +
+                    }.bind(this)) + "</div></td>" +
                     "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + this.renderTrendArrow(timeDifference, function (value: any) {
                         return Helper.secondsToDHM(Math.abs(value));
                     }) + "</div></td>" +
