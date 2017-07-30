@@ -48,7 +48,6 @@ let CURRENT_COMMIT = null;
 /**
  * Global folder variable
  */
-
 let CORE_JAVASCRIPT_SCRIPTS = [
     'plugin/core/config/env.js',
     'plugin/core/modules/*.js',
@@ -115,6 +114,28 @@ let INLINE_SOURCES = [
 
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Gulp helper functions
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+
+function execTypeScriptCommand(cmdDone, esTarget) {
+
+    let command = 'tsc' + ((esTarget) ? ' --target ' + esTarget : '');
+
+    util.log('Running TypeScript command "' + command + '"');
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            util.log(error);
+            util.log(stderr);
+        } else {
+            cmdDone();
+        }
+    });
+}
+
+/**
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Gulp Tasks
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
@@ -127,14 +148,7 @@ gulp.task('tsCompileToDist', () => { // Compile Typescript and copy them to DIST
 
 gulp.task('tscCommand', (cmdDone) => { // Compile Typescript then copy js/map files next to .ts files
     util.log('Start Local TypeScript compilation (with command "tsc")... Compiled files will be copied next to .ts files');
-    exec('tsc', (error, stdout, stderr) => {
-        if (error) {
-            util.log(error);
-            util.log(stderr);
-        } else {
-            cmdDone();
-        }
-    });
+    execTypeScriptCommand(cmdDone);
 });
 
 gulp.task('writeManifest', ['tsCompileToDist'], (done) => {
@@ -206,16 +220,23 @@ gulp.task('makeArchive', ['build'], () => {
 
 });
 
-gulp.task('specs', ['tscCommand'], () => {
-    util.log('Running jasmine tests through Karma server');
-    new karmaServer({
-        configFile: __dirname + '/karma.conf.js'
-    }, (hasError) => {
-        if (!hasError) {
-        } else {
-            process.exit(1);
-        }
-    }).start();
+gulp.task('specs', ['cleanInlineSources'], () => {
+
+    let esTarget = 'es5'; // For EmacsScript target for specs on PhantomJS 2.1
+
+    execTypeScriptCommand(() => {
+
+        util.log('Running jasmine tests through Karma server');
+        new karmaServer({
+            configFile: __dirname + '/karma.conf.js'
+        }, (hasError) => {
+            if (!hasError) {
+            } else {
+                process.exit(1);
+            }
+        }).start();
+
+    }, esTarget);
 });
 
 gulp.task('cleanInlineSources', () => {

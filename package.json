@@ -40,7 +40,6 @@
     "@types/nvd3": "^1.8.37",
     "@types/q": "^1.0.2",
     "@types/systemjs": "^0.20.2",
-    "es6-module-loader": "^0.17.11",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
@@ -62,13 +61,11 @@
     "karma-promise": "^0.1.0",
     "karma-systemjs": "^0.16.0",
     "karma-typescript": "^2.1.7",
+    "lodash": "^4.17.4",
     "run-sequence": "^1.2.2",
     "systemjs": "^0.19.0",
     "systemjs-plugin-babel": "0.0.25",
     "traceur": "0.0.111",
     "typescript": "^2.4.2"
-  },
-  "dependencies": {
-    "lodash": "^4.17.4"
   }
 }
