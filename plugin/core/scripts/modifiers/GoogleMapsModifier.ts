@@ -1,5 +1,5 @@
 import {IUserSettings} from "../interfaces/IUserSettings";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IAppResources} from "../interfaces/IAppResources";
 
 export class GoogleMapsModifier implements IModifier {
@@ -300,7 +300,7 @@ export class GoogleMapsModifier implements IModifier {
         let points: Array<google.maps.LatLng> = [];
         let bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
 
-        _.each(mainPathArray, (position) => {
+        _.forEach(mainPathArray, (position) => {
             let point: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
             points.push(point);
             bounds.extend(point);
@@ -331,7 +331,7 @@ export class GoogleMapsModifier implements IModifier {
 
             // Erase bounds and computed new ones with highlighted path
             bounds = new google.maps.LatLngBounds();
-            _.each(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), (position: Array<number>) => {
+            _.forEach(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), (position: Array<number>) => {
                 let p: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
                 bounds.extend(p);
             });

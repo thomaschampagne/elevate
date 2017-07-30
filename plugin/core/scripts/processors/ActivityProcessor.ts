@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {env} from "../../config/env";
 import {VacuumProcessor} from "./VacuumProcessor";
 import {IUserSettings} from "../interfaces/IUserSettings";

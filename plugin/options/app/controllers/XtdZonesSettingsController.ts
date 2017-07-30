@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IScope} from "angular";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
@@ -111,7 +111,7 @@ export class XtdZonesSettingsController {
 
             let zoneValue: string = $routeParams.zoneValue;
 
-            let item: IXtdData = _.findWhere($scope.xtdListOptions as Array<IXtdData>, {
+            let item: IXtdData = _.find($scope.xtdListOptions as Array<IXtdData>, {
                 value: zoneValue
             });
 

@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IScope, ILocationService, IWindowService} from "angular";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {AthleteSettingsController} from "../controllers/AthleteSettingsController";

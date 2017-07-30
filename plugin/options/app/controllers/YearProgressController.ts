@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";
 import * as d3 from "d3";
 import * as moment from "moment";
@@ -74,7 +74,7 @@ export class YearProgressComputer {
             let progression: IProgression = null;
 
             // Create new year progress if current year do not exists
-            if (!_.findWhere(result, {year: currentYear})) {
+            if (!_.find(result, {year: currentYear})) {
                 lastProgression = null; // New year then remove
                 currentYearProgress = {
                     year: currentYear,
@@ -105,7 +105,7 @@ export class YearProgressComputer {
             }
 
             // Find matching activities
-            let foundOnToday: Array<ISyncActivityComputed> = _.where(yearProgressActivities, {
+            let foundOnToday: Array<ISyncActivityComputed> = _.filter(yearProgressActivities, {
                 year: currentDayMoment.year(),
                 dayOfYear: currentDayMoment.dayOfYear()
             });
@@ -158,7 +158,7 @@ export class YearProgressController {
         ];
 
 
-        $scope.dataTypeSelected = (localStorage.getItem('yearProgressDataType') && _.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.findWhere($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
+        $scope.dataTypeSelected = (localStorage.getItem('yearProgressDataType') && _.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.find($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
         $scope.dataTypeChanged = () => {
             localStorage.setItem('yearProgressDataType', $scope.dataTypeSelected.value); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
@@ -184,9 +184,9 @@ export class YearProgressController {
 
             $scope.computedActivities = computedActivities;
 
-            let typesCount = _.countBy(_.pluck($scope.computedActivities, 'type'));
+            let typesCount = _.countBy(_.map($scope.computedActivities, 'type'));
 
-            let mostPerformedType: string = <string> _.first(_.last(_.sortBy(_.pairs(typesCount), (value: any) => {
+            let mostPerformedType: string = <string> _.first(_.last(_.sortBy(_.toPairs(typesCount), (value: any) => {
                 return value[1];
             })));
 
@@ -219,11 +219,11 @@ export class YearProgressController {
             let curves: Array<any> = [];
             let tableRows: Array<any> = [];
 
-            _.each(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
+            _.forEach(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
 
                 let yearValues: Array<{x: number, y: number}> = [];
 
-                _.each(yearProgress.progressions, (progression: IProgression) => {
+                _.forEach(yearProgress.progressions, (progression: IProgression) => {
 
                     let date = new Date(progression.onTimestamp);
                     let flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
@@ -251,7 +251,7 @@ export class YearProgressController {
                 });
 
                 // Add row
-                let progressAtThisDayOfYear: IProgression = _.findWhere(yearProgress.progressions, {
+                let progressAtThisDayOfYear: IProgression = _.find(yearProgress.progressions, {
                     onDayOfYear: moment().dayOfYear()
                 });
 
@@ -268,7 +268,7 @@ export class YearProgressController {
                 tableRow.totalElevation = progressAtThisDayOfYear.totalElevation;
                 tableRow.count = progressAtThisDayOfYear.count;
                 if (yearProgressionsIterator[index - 1]) {
-                    var progressAtThisDayOfLastYear = _.findWhere(yearProgressionsIterator[index - 1].progressions, {
+                    var progressAtThisDayOfLastYear = _.find(yearProgressionsIterator[index - 1].progressions, {
                         onDayOfYear: moment().dayOfYear()
                     });
                     tableRow.deltaPreviousDistance = (progressAtThisDayOfYear.totalDistance - progressAtThisDayOfLastYear.totalDistance) / 1000;

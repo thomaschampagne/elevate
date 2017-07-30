@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IWindowService} from "angular";
 import {FitnessTrendController} from "../../controllers/FitnessTrendController";
 import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDataService";
@@ -24,18 +24,18 @@ export class FitnessTrendTable {
             $scope.useSwimStressScore = message.useSwimStressScore;
 
             // Filter fitnessData: remove preview days
-            let fitnessData = _.where(message.fitnessData, {
+            let fitnessData = _.filter(message.fitnessData, {
                 previewDay: false
             });
 
-            _.each(fitnessData, (fitnessObj: IFitnessActivity) => {
+            _.forEach(fitnessData, (fitnessObj: IFitnessActivity) => {
 
                 let newFitnessObj: IFitnessActivityTable = <IFitnessActivityTable> _.clone(fitnessObj);
 
                 if (newFitnessObj.activitiesName.length) {
 
                     let finalActivityName = '';
-                    _.each(newFitnessObj.activitiesName, (name, index) => {
+                    _.forEach(newFitnessObj.activitiesName, (name, index) => {
                         if (index !== 0) {
                             finalActivityName += ' <strong>+</strong> ';
                         }
@@ -43,7 +43,7 @@ export class FitnessTrendTable {
                     });
 
                     let finalTypeName = '';
-                    _.each(newFitnessObj.type, (type, index) => {
+                    _.forEach(newFitnessObj.type, (type, index) => {
                         if (index > 0) {
                             finalTypeName += ' <strong>+</strong> ';
                         }
@@ -137,7 +137,7 @@ export class FitnessTrendTable {
         };
 
         $scope.openActivities = (fitnessObject: IFitnessActivityTable) => {
-            _.each(fitnessObject.ids, (activityId: number) => {
+            _.forEach(fitnessObject.ids, (activityId: number) => {
                 $window.open('https://www.strava.com/activities/' + activityId, '_blank');
             });
         };

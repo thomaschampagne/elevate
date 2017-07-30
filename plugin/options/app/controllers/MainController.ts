@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";
 import * as moment from "moment";
 import {saveAs} from 'file-saver';
@@ -180,7 +180,7 @@ export class MainController {
             }
 
             // Find subname or name to auto put title on load
-            let sectionFound: any = _.findWhere($scope.uiStructure.sidenav.sections, {
+            let sectionFound: any = _.find($scope.uiStructure.sidenav.sections, {
                 link: $location.path()
             });
 
@@ -197,7 +197,7 @@ export class MainController {
                 for (let i = 0; i < sectionsWithActions.length; i++) {
 
                     let section: any = sectionsWithActions[i];
-                    actionFound = _.findWhere(section.actions, {
+                    actionFound = _.find(section.actions, {
                         link: path
                     });
 

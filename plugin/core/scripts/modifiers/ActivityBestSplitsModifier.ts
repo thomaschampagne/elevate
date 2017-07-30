@@ -4,7 +4,7 @@
  */
 declare let d3: any; // Injected by strava.com
 
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {Helper} from "../Helper";
 import {IUserSettings} from "../interfaces/IUserSettings";
 
@@ -817,7 +817,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             }
             let splitType = parseInt($("#best-split-new-unit").val());
 
-            let splitAlreadyExist = _.findWhere(splitsArray, {
+            let splitAlreadyExist = _.find(splitsArray, {
                 length: splitLength,
                 unit: splitType
             });

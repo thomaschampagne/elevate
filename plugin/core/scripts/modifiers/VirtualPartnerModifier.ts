@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {saveAs} from 'file-saver';
 import {VacuumProcessor} from "../processors/VacuumProcessor";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";

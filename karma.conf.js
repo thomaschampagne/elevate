@@ -20,7 +20,7 @@ module.exports = function (config) {
         files: [
             'plugin/node_modules/q/q.js',
             'plugin/node_modules/jquery/dist/jquery.js',
-            'plugin/node_modules/underscore/underscore-min.js',
+            'plugin/node_modules/lodash/lodash.min.js',
             'plugin/node_modules/chart.js/dist/Chart.bundle.js',
             'plugin/node_modules/d3/d3.js',
             'plugin/node_modules/file-saver/FileSaver.min.js',
@@ -55,7 +55,7 @@ module.exports = function (config) {
                 map: {
                     'q': 'npm@plugin:q/q.js',
                     'jquery': 'npm@plugin:jquery/dist/jquery.js',
-                    'underscore': 'npm@plugin:underscore/underscore-min.js',
+                    'lodash': 'npm@plugin:lodash/lodash.min.js',
                     'chart.js': 'npm@plugin:chart.js/dist/Chart.bundle.js',
                     'd3': 'npm@plugin:d3/d3.js',
                     'file-saver': 'npm@plugin:file-saver/FileSaver.min.js'

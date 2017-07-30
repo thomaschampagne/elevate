@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {Helper} from "../Helper";
 import {StorageManager} from "../../modules/StorageManager";
 import {IAppResources} from "../interfaces/IAppResources";
@@ -756,7 +756,7 @@ export class AthleteStatsModifier implements IModifier {
                     }
                     $.when.apply(self, requests).done(() => {
 
-                        _.each(requests, function (request: any) {
+                        _.forEach(requests, function (request: any) {
                             if (request.responseJSON.models) {
                                 currentActivities = currentActivities.concat(request.responseJSON.models);
                             }

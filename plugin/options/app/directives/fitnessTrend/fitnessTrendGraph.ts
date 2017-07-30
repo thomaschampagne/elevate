@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as d3 from "d3";
 import * as moment from "moment";
 import * as angular from "angular";
@@ -86,7 +86,7 @@ export class FitnessTrendGraph {
             $scope.useSwimStressScore = message.useSwimStressScore;
             $scope.userSwimFTP = message.userSwimFTP;
             $scope.fitnessData = message.fitnessData;
-            $scope.fitnessDataOnToday = _.last(_.where($scope.fitnessData, {
+            $scope.fitnessDataOnToday = _.last(_.filter($scope.fitnessData, {
                 previewDay: false
             }));
             $scope.trainingZoneOnToday = $scope.getTrainingZone($scope.fitnessDataOnToday.tsb);
@@ -281,7 +281,7 @@ export class FitnessTrendGraph {
 
         $scope.makeTooltip = (d: any) => {
 
-            let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.findWhere($scope.fitnessData, {
+            let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.find($scope.fitnessData, {
                 timestamp: d.value
             }));
 
@@ -436,11 +436,11 @@ export class FitnessTrendGraph {
                         dispatch: {
                             elementClick: function (d: any) {
                                 // Open activities on point click
-                                let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.findWhere($scope.fitnessData, {
+                                let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.find($scope.fitnessData, {
                                     timestamp: d.point.x
                                 }));
 
-                                _.each(fitnessObject.ids, (activityId: number) => {
+                                _.forEach(fitnessObject.ids, (activityId: number) => {
                                     $window.open('https://www.strava.com/activities/' + activityId, '_blank');
                                 });
                             }
@@ -515,7 +515,7 @@ export class FitnessTrendGraph {
             let optimal_zone_points: Array<any> = [];
             let overtrain_zone_points: Array<any> = [];
 
-            _.each(fitnessData, (fitData: IFitnessActivity) => {
+            _.forEach(fitnessData, (fitData: IFitnessActivity) => {
 
                 if (!fitData.previewDay && fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
 
@@ -566,7 +566,7 @@ export class FitnessTrendGraph {
             let atlPreviewValues: Array<any> = [];
             let tsbPreviewValues: Array<any> = [];
 
-            let fitnessDataPreview: Array<IFitnessActivity> = _.where(fitnessData, {
+            let fitnessDataPreview: Array<IFitnessActivity> = _.filter(fitnessData, {
                 previewDay: true
             });
 
@@ -574,7 +574,7 @@ export class FitnessTrendGraph {
             // We add preview curves...
             if (moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
 
-                _.each(fitnessDataPreview, (fitData: IFitnessActivity) => {
+                _.forEach(fitnessDataPreview, (fitData: IFitnessActivity) => {
 
                     ctlPreviewValues.push({
                         x: fitData.timestamp,

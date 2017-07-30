@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {Helper} from "../Helper";
 import {env} from "../../config/env";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
@@ -404,7 +404,7 @@ export class VacuumProcessor {
 
             let bikeOdoArray: any = {};
 
-            _.each($(data.responseText).find('div.gear>table>tbody>tr'), (element: Element) => {
+            _.forEach($(data.responseText).find('div.gear>table>tbody>tr'), (element: Element) => {
 
                 let bikeName: string = $(element).find('td').first().text().trim();
                 let bikeOdo: string = $(element).find('td').last().text().trim();

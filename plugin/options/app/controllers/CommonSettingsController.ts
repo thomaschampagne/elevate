@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";
 import {ILocationService, ISCEService} from "angular";
 import {ChromeStorageService} from "../services/ChromeStorageService";
@@ -20,9 +20,9 @@ export class CommonSettingsController {
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
-                _.each(section.sectionContent, (option: ISectionContent) => {
+                _.forEach(section.sectionContent, (option: ISectionContent) => {
 
                     if (option.optionType === 'checkbox') {
 
@@ -30,13 +30,13 @@ export class CommonSettingsController {
                         option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
 
                         if (option.optionEnableSub) {
-                            _.each(option.optionEnableSub, (subKey: string) => {
+                            _.forEach(option.optionEnableSub, (subKey: string) => {
                                 $scope.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.optionKey));
                             });
                         }
 
                     } else if (option.optionType === 'list') {
-                        option.active = _.findWhere(option.optionList, {
+                        option.active = _.find(option.optionList, {
                             key: _.propertyOf(userSettingsSynced)(option.optionKey)
                         });
                     } else if (option.optionType === 'number') {
@@ -59,15 +59,15 @@ export class CommonSettingsController {
             // Enable/disable sub option if needed
             if (option.optionEnableSub) {
                 // Replace this to find option object from option.optionEnableSub
-                _.each(option.optionEnableSub, (subKey: string) => {
+                _.forEach(option.optionEnableSub, (subKey: string) => {
                     $scope.displaySubOption(subKey, option.active);
                 });
             }
         };
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-            _.each($scope.sections, (section: ISection) => {
-                let optionFound: ISectionContent = _.findWhere(section.sectionContent, {
+            _.forEach($scope.sections, (section: ISection) => {
+                let optionFound: ISectionContent = _.find(section.sectionContent, {
                     optionKey: subOptionKey
                 });
                 if (optionFound) {
@@ -106,9 +106,9 @@ export class CommonSettingsController {
 
             let option: ISectionContent = null;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
-                let optionSearch: ISectionContent = _.findWhere(section.sectionContent, {
+                let optionSearch: ISectionContent = _.find(section.sectionContent, {
                     optionKey: optionKeyParam
                 });
 

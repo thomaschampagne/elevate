@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";;
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {ISwimCalculationMethod, SwimFTPCalculator} from "../directives/swimFTPCalculator";
@@ -34,7 +34,7 @@ export class AthleteSettingsController {
             $scope.userSwimFTP = userSettingsSynced.userSwimFTP;
             $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
             $scope.userWeight = userSettingsSynced.userWeight;
-            $scope.gender = _.findWhere($scope.genderList, {
+            $scope.gender = _.find($scope.genderList, {
                 type: userSettingsSynced.userGender
             });
             $scope.zones = userSettingsSynced.userHrrZones;

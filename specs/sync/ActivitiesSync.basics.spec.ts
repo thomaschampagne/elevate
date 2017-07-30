@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as Q from "q";
 import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
@@ -36,7 +36,7 @@ describe('ActivitiesSynchronizer', () => {
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        expect(_.findWhere(rawPageOfActivities, {id: 722210052})).toBeUndefined();
+        expect(_.find(rawPageOfActivities, {id: 722210052})).toBeUndefined();
         expect(rawPageOfActivities.length).toEqual(sourceCount - 1);
 
     });
@@ -49,7 +49,7 @@ describe('ActivitiesSynchronizer', () => {
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        let foundBack: ISyncActivityComputed = _.findWhere(rawPageOfActivities, {id: 722210052});
+        let foundBack: ISyncActivityComputed = _.find(rawPageOfActivities, {id: 722210052});
         expect(foundBack).toBeDefined();
         expect(foundBack.name).toEqual("New_Name");
         expect(foundBack.type).toEqual("Ride");
@@ -84,13 +84,13 @@ describe('ActivitiesSynchronizer', () => {
         expect(_.indexOf(changes.added, 999999999)).toEqual(-1); // Fake
 
         expect(changes.edited.length).toEqual(2);
-        expect(_.findWhere(changes.edited, {id: 799672885})).toBeDefined();
-        expect(_.findWhere(changes.edited, {id: 708752345})).toBeDefined();
-        let findWhere: any = _.findWhere(changes.edited, {id: 799672885});
+        expect(_.find(changes.edited, {id: 799672885})).toBeDefined();
+        expect(_.find(changes.edited, {id: 708752345})).toBeDefined();
+        let findWhere: any = _.find(changes.edited, {id: 799672885});
         expect(findWhere.name).toEqual("Run comeback");
         expect(findWhere.type).toEqual("Run");
         expect(findWhere.display_type).toEqual("Run");
-        findWhere = _.findWhere(changes.edited, {id: 708752345});
+        findWhere = _.find(changes.edited, {id: 708752345});
         expect(findWhere.name).toEqual("MTB @ Bastille");
         expect(findWhere.type).toEqual("Ride");
         expect(findWhere.display_type).toEqual("Ride");

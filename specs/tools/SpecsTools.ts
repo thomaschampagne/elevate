@@ -1,17 +1,17 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 export let clone = (obj: any): any => {
     return JSON.parse(JSON.stringify(obj));
 };
 
 export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
-    return _.without(fromArray, _.findWhere(fromArray, {
+    return _.without(fromArray, _.find(fromArray, {
         id: activityId
     }));
 };
 
 export let editActivityFromArray = (activityId: number, fromArray: Array<any>, newName: string, newType: string): Array<any> => {
-    let a: any = _.findWhere(fromArray, {
+    let a: any = _.find(fromArray, {
         id: activityId
     });
     a.name = newName;

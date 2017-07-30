@@ -1,5 +1,5 @@
 // This code is from Google, so let's not modify it too much, just add gaNewElem and gaElems:
-import * as _ from "underscore"
+import * as _ from "lodash"
 import * as Q from "q";
 import {ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
 import {env} from "../config/env";

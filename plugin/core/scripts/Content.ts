@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {userSettings} from "./UserSettings";
 import {Loader} from "../modules/Loader";
 import {constants} from "./Constants";

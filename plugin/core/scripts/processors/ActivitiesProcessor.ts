@@ -1,5 +1,5 @@
 import * as Q from "q";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {IAppResources} from "../interfaces/IAppResources";
@@ -67,7 +67,7 @@ export class ActivitiesProcessor {
 
                 let activitiesComputed: Array<ISyncActivityComputed> = [];
 
-                _.each(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
+                _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
                     let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields);
                     activityComputed.extendedStats = computedResult;

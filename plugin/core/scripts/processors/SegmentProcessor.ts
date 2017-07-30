@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {VacuumProcessor} from "./VacuumProcessor";
 import {env} from "../../config/env";
 
@@ -78,11 +78,11 @@ export class SegmentProcessor {
             (segmentsData: any) => {
 
                 // Flag cycling/running
-                _.each(segmentsData.cycling.segments, (segment: any) => {
+                _.forEach(segmentsData.cycling.segments, (segment: any) => {
                     segment.type = 'cycling';
                 });
 
-                _.each(segmentsData.running.segments, (segment: any) => {
+                _.forEach(segmentsData.running.segments, (segment: any) => {
                     segment.type = 'running';
                 });
 

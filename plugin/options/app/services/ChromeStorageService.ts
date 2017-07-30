@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
 import {IPromise} from "angular";

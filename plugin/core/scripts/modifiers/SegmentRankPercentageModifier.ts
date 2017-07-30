@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 export class SegmentRankPercentageModifier implements IModifier {
 

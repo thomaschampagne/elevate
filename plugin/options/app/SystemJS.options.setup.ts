@@ -29,7 +29,7 @@ SystemJS.config({
         'nvd3': 'npm:angular-nvd3/dist/angular-nvd3.min.js', //angular-nvd3
         'nvd3-core': 'npm:nvd3/build/nv.d3.min.js',
         'moment': 'npm:moment/moment.js',
-        'underscore': 'npm:underscore/underscore-min.js',
+        'lodash': 'npm:lodash/lodash.min.js',
         'file-saver': 'npm:file-saver/FileSaver.min.js',
         'q': 'npm:q/q.js',
 

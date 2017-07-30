@@ -1,5 +1,5 @@
 import {IUserSettings} from "../interfaces/IUserSettings";
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 export class HideFeedModifier implements IModifier {
 

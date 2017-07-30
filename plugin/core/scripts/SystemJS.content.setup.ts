@@ -9,7 +9,7 @@ SystemJS.config({
         }
     },
     map: {
-        'underscore': 'npm:underscore/underscore-min.js',
+        'lodash': 'npm:lodash/lodash.min.js',
     }
 });
 

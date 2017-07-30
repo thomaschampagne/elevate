@@ -1,6 +1,6 @@
 import {IScope} from "angular";
 import * as moment from "moment";
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 
 export interface ISwimCalculationMethod {
@@ -69,7 +69,7 @@ export class SwimFTPCalculator {
                 return method.name === selectedMethod.name;
             });
 
-            _.each(othersMethods, (method: any) => {
+            _.forEach(othersMethods, (method: any) => {
                 method.active = false;
             });
 
