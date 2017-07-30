@@ -23,18 +23,18 @@
 /**
  * Required node module for running gulp tasks
  */
-let fs = require('fs');
-let exec = require('child_process').exec;
-let _ = require('lodash');
-let gulp = require('gulp');
-let plugins = require('gulp-load-plugins')();
-let util = require('gulp-util');
-let runSequence = require('run-sequence');
-let options = require('gulp-options');
-let git = require('gulp-git');
+let fs = require("fs");
+let exec = require("child_process").exec;
+let _ = require("lodash");
+let gulp = require("gulp");
+let plugins = require("gulp-load-plugins")();
+let util = require("gulp-util");
+let runSequence = require("run-sequence");
+let options = require("gulp-options");
+let git = require("gulp-git");
 let jeditor = require("gulp-json-editor");
 let typeScript = require("gulp-typescript");
-let karmaServer = require('karma').Server;
+let karmaServer = require("karma").Server;
 
 /**
  * Global folder variable
@@ -42,7 +42,6 @@ let karmaServer = require('karma').Server;
 let ROOT_FOLDER = __dirname;
 let DIST_FOLDER = ROOT_FOLDER + '/dist/';
 let PACKAGE_FOLDER = ROOT_FOLDER + '/package/';
-let SPECS_FOLDER = ROOT_FOLDER + '/specs/';
 let PACKAGE_NAME = null; // No value at the moment, dynamically set by "package" task
 let CURRENT_COMMIT = null;
 
@@ -126,9 +125,9 @@ gulp.task('tsCompileToDist', () => { // Compile Typescript and copy them to DIST
 
 });
 
-gulp.task('tscCommand', function (cmdDone) { // Compile Typescript then copy js/map files next to .ts files
+gulp.task('tscCommand', (cmdDone) => { // Compile Typescript then copy js/map files next to .ts files
     util.log('Start Local TypeScript compilation (with command "tsc")... Compiled files will be copied next to .ts files');
-    exec('tsc', function (error, stdout, stderr) {
+    exec('tsc', (error, stdout, stderr) => {
         if (error) {
             util.log(error);
             util.log(stderr);
@@ -138,7 +137,7 @@ gulp.task('tscCommand', function (cmdDone) { // Compile Typescript then copy js/
     });
 });
 
-gulp.task('writeManifest', ['tsCompileToDist'], function (done) {
+gulp.task('writeManifest', ['tsCompileToDist'], (done) => {
 
     // Handle manifest file, if preview mode or not... if preview then: version name change to short sha1 HEAD commit and version = 0
     if (options.has('preview')) {
@@ -148,7 +147,7 @@ gulp.task('writeManifest', ['tsCompileToDist'], function (done) {
         git.revParse({
             args: '--short HEAD',
             quiet: true
-        }, function (err, sha1Short) {
+        }, (err, sha1Short) => {
 
             if (err) {
                 throw new Error(err);
@@ -211,7 +210,7 @@ gulp.task('specs', ['tscCommand'], () => {
     util.log('Running jasmine tests through Karma server');
     new karmaServer({
         configFile: __dirname + '/karma.conf.js'
-    }, function (hasError) {
+    }, (hasError) => {
         if (!hasError) {
         } else {
             process.exit(1);
@@ -259,7 +258,7 @@ gulp.task('cleanRootNodeModules', ['clean'], () => {
 gulp.task('default', ['build']);
 
 // Result in a zip file into builds/
-gulp.task('package', function (done) {
+gulp.task('package', (done) => {
     runSequence('clean', 'makeArchive', () => {
         done();
     });
