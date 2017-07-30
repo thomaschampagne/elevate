@@ -36,6 +36,7 @@
     "@types/googlemaps": "^3.26.16",
     "@types/jasmine": "^2.5.53",
     "@types/jquery": "^3.2.9",
+    "@types/lodash": "^4.14.71",
     "@types/nvd3": "^1.8.37",
     "@types/q": "^1.0.2",
     "@types/systemjs": "^0.20.2",
@@ -68,5 +69,8 @@
     "traceur": "0.0.111",
     "typescript": "^2.4.2",
     "underscore": "^1.8.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
   }
 }
