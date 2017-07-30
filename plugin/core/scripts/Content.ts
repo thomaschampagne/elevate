@@ -38,6 +38,7 @@ export class Content {
             window.location.pathname.match(/^\/features/) ||
             window.location.pathname.match(/^\/api/) ||
             window.location.pathname.match(/^\/premium/) ||
+            window.location.pathname.match(/^\/gopremium/) ||
             window.location.pathname.match(/^\/store/) ||
             window.location.pathname.match(/^\/how-it-works/)) {
 
@@ -45,7 +46,9 @@ export class Content {
         }
 
         // Do not run extension if user not logged
-        if (document.getElementsByClassName('btn-login').length > 0) {
+        if (document.body.classList.contains('is-home-page') ||
+            document.body.classList.contains('logged-out')
+        ) {
             isRunnable = false;
         }
 
