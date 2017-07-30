@@ -95,7 +95,7 @@ export class FitnessDataService {
 
             let cleanedActivities: Array<IActivitiesWithFitness> = [];
 
-            _.each(computedActivities, (activity: ISyncActivityComputed) => {
+            _.forEach(computedActivities, (activity: ISyncActivityComputed) => {
 
                 let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
@@ -289,7 +289,7 @@ export class FitnessDataService {
         let tsb: number = 0;
         let results: Array<IFitnessActivity> = [];
 
-        _.each(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
+        _.forEach(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
 
             ctl = ctl + (trimpObject.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
             atl = atl + (trimpObject.finalStressScore - atl) * (1 - Math.exp(-1 / 7));

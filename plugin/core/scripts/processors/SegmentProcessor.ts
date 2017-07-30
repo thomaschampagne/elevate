@@ -78,11 +78,11 @@ export class SegmentProcessor {
             (segmentsData: any) => {
 
                 // Flag cycling/running
-                _.each(segmentsData.cycling.segments, (segment: any) => {
+                _.forEach(segmentsData.cycling.segments, (segment: any) => {
                     segment.type = 'cycling';
                 });
 
-                _.each(segmentsData.running.segments, (segment: any) => {
+                _.forEach(segmentsData.running.segments, (segment: any) => {
                     segment.type = 'running';
                 });
 

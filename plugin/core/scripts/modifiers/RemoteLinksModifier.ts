@@ -39,7 +39,7 @@ export class RemoteLinksModifier implements IModifier {
         let html: string = "<li class='group'>";
         html += "<div class='title' id='stravistix_remote_title' style='font-size: 14px; cursor: pointer;'>Remote Views</div>";
         html += "<ul style='display: none;' id='stravistix_remoteViews'>";
-        _.each(remoteViewActivityLinksArray, (linkArray: Array<string>) => {
+        _.forEach(remoteViewActivityLinksArray, (linkArray: Array<string>) => {
             html += "<li>";
             html += "<a data-menu='' " + linkArray[3] + " target='_blank' style='color: #333;' href='" + linkArray[1] + this.activityId + linkArray[2] + "'>" + linkArray[0] + "</a>";
         });
@@ -96,7 +96,7 @@ export class RemoteLinksModifier implements IModifier {
         html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
         html += "<ul class='options' style='z-index: 999;'>";
 
-        _.each(remoteViewSegmentLinksArray, (linkArray: Array<string>) => {
+        _.forEach(remoteViewSegmentLinksArray, (linkArray: Array<string>) => {
             html += "<li><a target='_blank' href='" + linkArray[1] + segmentId + linkArray[2] + "'>" + linkArray[0] + "</a></li>";
         });
         html += "</ul>";

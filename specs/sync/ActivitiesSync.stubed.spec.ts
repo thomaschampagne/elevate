@@ -109,7 +109,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         spyOn(activitiesSynchronizer, 'fetchStreamByActivityId').and.callFake((activityId: number) => {
             let defer = Q.defer();
             let data: any = {};
-            _.each(_.keys(stream), (key: string) => {
+            _.forEach(_.keys(stream), (key: string) => {
                 data[key] = stream[key].slice(0, 50);
             });
             data.activityId = activityId;
@@ -136,7 +136,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
                 gradeData: null,
                 elevationData: null,
             };
-            _.each(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
+            _.forEach(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
                 let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, ActivitiesProcessor.outputFields);
                 activityComputed.extendedStats = fakeAnalysisData;
                 activitiesComputed.push(activityComputed);

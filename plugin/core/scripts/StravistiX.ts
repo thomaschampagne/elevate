@@ -349,35 +349,35 @@ export class StravistiX {
         let baseVersion: Array<string> = this.appResources.extVersion.split('.');
         if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += '<h5><strong>NEW in ' + baseVersion[0] + '.' + baseVersion[1] + '.x' + ':</strong></h5>';
-            _.each(updateMessageObj.features, (feature: string) => {
+            _.forEach(updateMessageObj.features, (feature: string) => {
                 message += '<h6 style="margin-top: 12px;">- ' + feature + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
             message += '<h5><strong>HOTFIXES ' + this.appResources.extVersion + ':</strong></h5>';
-            _.each(updateMessageObj.hotFixes, (hotFix: string) => {
+            _.forEach(updateMessageObj.hotFixes, (hotFix: string) => {
                 message += '<h6 style="margin-top: 12px;">- ' + hotFix + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
             message += '<h5><strong>FIXED in ' + baseVersion[0] + '.' + baseVersion[1] + '.' + baseVersion[2] + ':</strong></h5>';
-            _.each(updateMessageObj.fixes, (fix: string) => {
+            _.forEach(updateMessageObj.fixes, (fix: string) => {
                 message += '<h6 style="margin-top: 12px;">- ' + fix + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcomingFixes) && !previewBuild) {
             message += '<h5><strong>Upcoming Fixes:</strong></h5>';
-            _.each(updateMessageObj.upcomingFixes, (upcomingFixes: string) => {
+            _.forEach(updateMessageObj.upcomingFixes, (upcomingFixes: string) => {
                 message += '<h6 style="margin-top: 12px;">- ' + upcomingFixes + '</h6>';
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcomingFeatures) && !previewBuild) {
             message += '<h5><strong>Upcoming Features:</strong></h5>';
-            _.each(updateMessageObj.upcomingFeatures, (upcomingFeatures: string) => {
+            _.forEach(updateMessageObj.upcomingFeatures, (upcomingFeatures: string) => {
                 message += '<h6 style="margin-top: 12px;">- ' + upcomingFeatures + '</h6>';
             });
         }

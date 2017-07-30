@@ -88,7 +88,7 @@ export class ActivitiesSynchronizer {
 
         if (!_.isEmpty(rawActivities)) {
 
-            _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
+            _.forEach(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
 
                 // Exist raw activity id in history?
                 // Seek for activity in just interrogated pages
@@ -135,7 +135,7 @@ export class ActivitiesSynchronizer {
         let deleted: Array<number> = [];
         let edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
 
-        _.each(computedActivities, (computedActivity: ISyncActivityComputed) => {
+        _.forEach(computedActivities, (computedActivity: ISyncActivityComputed) => {
             // Seek for activity in just interrogated pages
             let notFound: boolean = (_.indexOf(rawActivityIds, computedActivity.id) == -1);
             if (notFound) {
@@ -175,13 +175,13 @@ export class ActivitiesSynchronizer {
                 this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
 
                 // For each activity, fetch his stream and compute extended stats
-                _.each(historyChangesOnPagesRode.added, (activityId: number) => {
+                _.forEach(historyChangesOnPagesRode.added, (activityId: number) => {
                     // Getting promise of stream for each activity...
                     promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
                 });
 
                 // Track all parsed activities from strava: used for deletions detect at the end..
-                _.each(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
+                _.forEach(rawActivities, (rawActivity: ISyncRawStravaActivity) => {
                     this.totalRawActivityIds.push(rawActivity.id);
                 });
 
@@ -191,7 +191,7 @@ export class ActivitiesSynchronizer {
 
                     let activitiesWithStream: Array<ISyncActivityWithStream> = [];
 
-                    _.each(streamResults, (data: Q.PromiseState<any>) => {
+                    _.forEach(streamResults, (data: Q.PromiseState<any>) => {
 
                         if (data.state === 'rejected') {
 
@@ -633,7 +633,7 @@ export class ActivitiesSynchronizer {
 
                 // Apply names/types changes
                 if (this._globalHistoryChanges.edited.length > 0) {
-                    _.each(this._globalHistoryChanges.edited, (editData) => {
+                    _.forEach(this._globalHistoryChanges.edited, (editData) => {
                         let activityToEdit: ISyncActivityComputed = _.find((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
                         activityToEdit.name = editData.name;
                         activityToEdit.type = editData.type;
@@ -643,7 +643,7 @@ export class ActivitiesSynchronizer {
 
                 // Apply deletions
                 if (this._globalHistoryChanges.deleted.length > 0) {
-                    _.each(this._globalHistoryChanges.deleted, (deleteId: number) => {
+                    _.forEach(this._globalHistoryChanges.deleted, (deleteId: number) => {
                         computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.find(computedActivitiesStored.data, {
                             id: deleteId
                         }));

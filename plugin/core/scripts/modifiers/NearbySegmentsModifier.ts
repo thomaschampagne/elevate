@@ -22,7 +22,7 @@ export class NearbySegmentsModifier implements IModifier {
         let segmentName: string;
         let segmentIconType: string;
 
-        _.each(this.segments, (segment: ISegmentInfo) => {
+        _.forEach(this.segments, (segment: ISegmentInfo) => {
 
             segmentName = segment.name + " <i>@ " + (segment.distance / 1000).toFixed(1) + "k, " + segment.avg_grade.toFixed(1) + "%";
 

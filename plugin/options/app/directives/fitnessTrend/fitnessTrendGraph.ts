@@ -440,7 +440,7 @@ export class FitnessTrendGraph {
                                     timestamp: d.point.x
                                 }));
 
-                                _.each(fitnessObject.ids, (activityId: number) => {
+                                _.forEach(fitnessObject.ids, (activityId: number) => {
                                     $window.open('https://www.strava.com/activities/' + activityId, '_blank');
                                 });
                             }
@@ -515,7 +515,7 @@ export class FitnessTrendGraph {
             let optimal_zone_points: Array<any> = [];
             let overtrain_zone_points: Array<any> = [];
 
-            _.each(fitnessData, (fitData: IFitnessActivity) => {
+            _.forEach(fitnessData, (fitData: IFitnessActivity) => {
 
                 if (!fitData.previewDay && fitData.timestamp >= fromTimestamp && fitData.timestamp <= toTimestamp) {
 
@@ -574,7 +574,7 @@ export class FitnessTrendGraph {
             // We add preview curves...
             if (moment(toTimestamp).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
 
-                _.each(fitnessDataPreview, (fitData: IFitnessActivity) => {
+                _.forEach(fitnessDataPreview, (fitData: IFitnessActivity) => {
 
                     ctlPreviewValues.push({
                         x: fitData.timestamp,

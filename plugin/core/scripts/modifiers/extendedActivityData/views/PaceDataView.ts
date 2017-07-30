@@ -70,7 +70,7 @@ export class PaceDataView extends AbstractDataView {
         htmlTable += '<td>% ZONE</td>'; // % in zone
         htmlTable += '</tr>';
 
-        _.each(zones, (zone: IZone, index: number) => {
+        _.forEach(zones, (zone: IZone, index: number) => {
             let from: string = (zone.from === 0) ? '&infin;' : Helper.secondsToHHMMSS(zone.from * ratio);
             htmlTable += '<tr>'; // Zone
             htmlTable += '<td>Z' + (index + 1) + '</td>'; // Zone
@@ -96,7 +96,7 @@ export class PaceDataView extends AbstractDataView {
         let labelsData: Array<string> = [];
         let distributionArray: Array<string> = [];
 
-        _.each(zones, (zone: IZone, index: number) => {
+        _.forEach(zones, (zone: IZone, index: number) => {
             let from: string = (zone.from === 0) ? 'Infinite' : Helper.secondsToHHMMSS(zone.from * ratio);
             let label: string = "Z" + (index + 1) + ": " + from + " - " + Helper.secondsToHHMMSS(zone.to * ratio) + " " + this.units;
             labelsData.push(label);

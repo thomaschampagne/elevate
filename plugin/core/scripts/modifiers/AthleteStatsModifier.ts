@@ -756,7 +756,7 @@ export class AthleteStatsModifier implements IModifier {
                     }
                     $.when.apply(self, requests).done(() => {
 
-                        _.each(requests, function (request: any) {
+                        _.forEach(requests, function (request: any) {
                             if (request.responseJSON.models) {
                                 currentActivities = currentActivities.concat(request.responseJSON.models);
                             }

@@ -253,7 +253,7 @@ export abstract class AbstractExtendedDataModifier {
 
         this.setDataViewsNeeded();
 
-        _.each(this.dataViews, (view) => {
+        _.forEach(this.dataViews, (view) => {
 
             if (!view) {
                 console.warn(view);
@@ -281,7 +281,7 @@ export abstract class AbstractExtendedDataModifier {
         });
 
         // For each view start making the assossiated graphs
-        _.each(this.dataViews, (view: AbstractDataView) => {
+        _.forEach(this.dataViews, (view: AbstractDataView) => {
             view.displayGraph();
         });
     }

@@ -20,9 +20,9 @@ export class CommonSettingsController {
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
-                _.each(section.sectionContent, (option: ISectionContent) => {
+                _.forEach(section.sectionContent, (option: ISectionContent) => {
 
                     if (option.optionType === 'checkbox') {
 
@@ -30,7 +30,7 @@ export class CommonSettingsController {
                         option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
 
                         if (option.optionEnableSub) {
-                            _.each(option.optionEnableSub, (subKey: string) => {
+                            _.forEach(option.optionEnableSub, (subKey: string) => {
                                 $scope.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.optionKey));
                             });
                         }
@@ -59,14 +59,14 @@ export class CommonSettingsController {
             // Enable/disable sub option if needed
             if (option.optionEnableSub) {
                 // Replace this to find option object from option.optionEnableSub
-                _.each(option.optionEnableSub, (subKey: string) => {
+                _.forEach(option.optionEnableSub, (subKey: string) => {
                     $scope.displaySubOption(subKey, option.active);
                 });
             }
         };
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
                 let optionFound: ISectionContent = _.find(section.sectionContent, {
                     optionKey: subOptionKey
                 });
@@ -106,7 +106,7 @@ export class CommonSettingsController {
 
             let option: ISectionContent = null;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
                 let optionSearch: ISectionContent = _.find(section.sectionContent, {
                     optionKey: optionKeyParam

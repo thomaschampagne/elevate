@@ -239,7 +239,7 @@ export class ActivityComputer {
 
     protected prepareZonesForDistributionComputation(sourceZones: Array<IZone>): Array<IZone> {
         let preparedZones: Array<IZone> = [];
-        _.each(sourceZones, (zone: IZone) => {
+        _.forEach(sourceZones, (zone: IZone) => {
             zone.s = 0;
             zone.percentDistrib = null;
             preparedZones.push(zone);
@@ -547,7 +547,7 @@ export class ActivityComputer {
         let heartRateArrayMovingDuration: Array<any> = [];
 
         // Find HR for each Hrr of each zones
-        _.each(this.userSettings.userHrrZones, (zone: IHrrZone) => {
+        _.forEach(this.userSettings.userHrrZones, (zone: IHrrZone) => {
             zone.fromHr = Helper.heartrateFromHeartRateReserve(zone.fromHrr, userMaxHr, userRestHr);
             zone.toHr = Helper.heartrateFromHeartRateReserve(zone.toHrr, userMaxHr, userRestHr);
             zone.s = 0;

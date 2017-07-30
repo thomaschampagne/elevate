@@ -69,7 +69,7 @@ export class SwimFTPCalculator {
                 return method.name === selectedMethod.name;
             });
 
-            _.each(othersMethods, (method: any) => {
+            _.forEach(othersMethods, (method: any) => {
                 method.active = false;
             });
 

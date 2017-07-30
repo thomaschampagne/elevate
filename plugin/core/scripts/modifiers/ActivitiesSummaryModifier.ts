@@ -54,7 +54,7 @@ export class ActivitiesSummaryModifier implements IModifier {
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
 
-        _.each($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), (element) => {
+        _.forEach($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), (element) => {
 
             let $this: JQuery = $(element),
                 $activityUrl: JQuery = $this.prev(".entry-title").find("a[href^='/activities/']"),
@@ -94,7 +94,7 @@ export class ActivitiesSummaryModifier implements IModifier {
                     noAverage: true
                 };
 
-            _.each(requests, (request: any) => {
+            _.forEach(requests, (request: any) => {
 
                 let data: any = request.responseJSON,
                     distance: number = data.distance_raw / 1000 * speedUnitRatio,

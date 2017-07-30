@@ -67,7 +67,7 @@ export class ActivitiesProcessor {
 
                 let activitiesComputed: Array<ISyncActivityComputed> = [];
 
-                _.each(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
+                _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
                     let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields);
                     activityComputed.extendedStats = computedResult;

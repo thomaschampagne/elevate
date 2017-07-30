@@ -404,7 +404,7 @@ export class VacuumProcessor {
 
             let bikeOdoArray: any = {};
 
-            _.each($(data.responseText).find('div.gear>table>tbody>tr'), (element: Element) => {
+            _.forEach($(data.responseText).find('div.gear>table>tbody>tr'), (element: Element) => {
 
                 let bikeName: string = $(element).find('td').first().text().trim();
                 let bikeOdo: string = $(element).find('td').last().text().trim();

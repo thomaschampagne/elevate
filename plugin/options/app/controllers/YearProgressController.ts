@@ -219,11 +219,11 @@ export class YearProgressController {
             let curves: Array<any> = [];
             let tableRows: Array<any> = [];
 
-            _.each(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
+            _.forEach(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
 
                 let yearValues: Array<{x: number, y: number}> = [];
 
-                _.each(yearProgress.progressions, (progression: IProgression) => {
+                _.forEach(yearProgress.progressions, (progression: IProgression) => {
 
                     let date = new Date(progression.onTimestamp);
                     let flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
