@@ -1,4 +1,4 @@
-class ReliveCCModifier implements IModifier {
+export class ReliveCCModifier implements IModifier {
 
     private activityId: number;
 
@@ -13,7 +13,7 @@ class ReliveCCModifier implements IModifier {
 
         $("#pagenav").append($(html)).each(() => {
 
-            $('#stravistix_relivecc').click((evt: Event) => {
+            $('#stravistix_relivecc').click((evt: JQuery.Event) => {
 
                 evt.preventDefault();
                 evt.stopPropagation();

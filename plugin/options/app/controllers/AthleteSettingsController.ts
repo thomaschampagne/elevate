@@ -1,14 +1,22 @@
-interface IGenderList {
+import * as _ from "underscore";
+import * as angular from "angular";;
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {ISwimCalculationMethod, SwimFTPCalculator} from "../directives/swimFTPCalculator";
+
+import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+
+export interface IGenderList {
     type: string;
 }
 
-class AthleteSettingsController {
+export class AthleteSettingsController {
 
     public static changedAthleteProfileMessage: string = 'athlete-profile-saved';
 
     public static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'AvoidInputKeysService', '$mdDialog', '$window'];
 
-    constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: IDialogService, $window: IWindowService) {
+    constructor($rootScope: any, $scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService, $mdDialog: angular.material.IDialogService) {
 
         $scope.genderList = [{
             type: 'men',
@@ -151,7 +159,7 @@ class AthleteSettingsController {
         $scope.showSwimFTPHelper = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, userSwimFTP: number) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, userSwimFTP: number) => {
 
                     $scope.userSwimFTP = userSwimFTP;
 
@@ -219,4 +227,3 @@ class AthleteSettingsController {
 
 }
 
-app.controller("AthleteSettingsController", AthleteSettingsController);

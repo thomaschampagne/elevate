@@ -1,4 +1,8 @@
-class CyclingPowerDataView extends AbstractDataView {
+import * as _ from "underscore";
+import {AbstractDataView} from "./AbstractDataView";
+import {IPowerData} from "../../../interfaces/IActivityData";
+
+export class CyclingPowerDataView extends AbstractDataView {
 
     protected powerData: IPowerData;
 

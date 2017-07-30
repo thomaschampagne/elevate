@@ -1,9 +1,54 @@
-/// <reference path="../../../typings/index.d.ts" />
-/// <reference path="../../../typings/plugin.d.ts" />
+import * as _ from "underscore";
+import {env} from "../config/env";
+import {Helper} from "./Helper";
+import {AbstractExtendedDataModifier} from "./modifiers/extendedActivityData/AbstractExtendedDataModifier";
+import {CyclingExtendedDataModifier} from "./modifiers/extendedActivityData/CyclingExtendedDataModifier";
+import {RunningExtendedDataModifier} from "./modifiers/extendedActivityData/RunningExtendedDataModifier";
+import {ActivitiesSynchronizer, ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
+import {AthleteUpdate} from "./Follow";
+import {ActivitySegmentTimeComparisonModifier} from "./modifiers/ActivitySegmentTimeComparisonModifier";
+import {ActivitiesSyncModifier} from "./modifiers/ActivitiesSyncModifier";
+import {AthleteStatsModifier} from "./modifiers/AthleteStatsModifier";
+import {SegmentRecentEffortsHRATimeModifier} from "./modifiers/SegmentRecentEffortsHRATimeModifier";
+import {ActivityProcessor} from "./processors/ActivityProcessor";
+import {VacuumProcessor} from "./processors/VacuumProcessor";
+import {SegmentProcessor, ISegmentInfo} from "./processors/SegmentProcessor";
+import {BikeOdoProcessor} from "./processors/BikeOdoProcessor";
+import {VirtualPartnerModifier} from "./modifiers/VirtualPartnerModifier";
+import {NearbySegmentsModifier} from "./modifiers/NearbySegmentsModifier";
+import {StorageManager} from "../modules/StorageManager";
+import {IUserSettings} from "./interfaces/IUserSettings";
+import {HideFeedModifier} from "./modifiers/HideFeedModifier";
+import {GoogleMapsModifier} from "./modifiers/GoogleMapsModifier";
+import {WindyTyModifier} from "./modifiers/WindyTyModifier";
+import {IAppResources} from "./interfaces/IAppResources";
+import {MenuModifier} from "./modifiers/MenuModifier";
+import {RemoteLinksModifier} from "./modifiers/RemoteLinksModifier";
+import {ActivityQRCodeDisplayModifier} from "./modifiers/ActivityQRCodeDisplayModifier";
+import {IReleaseNote, releaseNotes} from "./ReleaseNotes";
+import {ActivityScrollingModifier} from "./modifiers/ActivityScrollingModifier";
+import {DisplayFlyByFeedModifier} from "./modifiers/DisplayFlyByFeedModifier";
+import {ReliveCCModifier} from "./modifiers/ReliveCCModifier";
+import {DefaultLeaderBoardFilterModifier} from "./modifiers/DefaultLeaderBoardFilterModifier";
+import {SegmentRankPercentageModifier} from "./modifiers/SegmentRankPercentageModifier";
+import {
+    RunningCadenceModifier,
+    RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
+    RunningTemperatureModifier
+} from "./modifiers/RunningDataModifier";
+import {ActivityStravaMapTypeModifier} from "./modifiers/ActivityStravaMapTypeModifier";
+import {HidePremiumModifier} from "./modifiers/HidePremiumModifier";
+import {ActivityBikeOdoModifier} from "./modifiers/ActivityBikeOdoModifier";
+import {GoalsModifier} from "./modifiers/GoalsModifier";
+import {IActivityBasicInfo} from "./interfaces/IActivityData";
+import {ISyncNotify} from "./interfaces/ISync";
+import {ActivityBestSplitsModifier} from "./modifiers/ActivityBestSplitsModifier";
+import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
 
-class StravistiX {
+export class StravistiX {
 
     public static instance: StravistiX = null;
+    public static versionInstalledKey: string = 'versionInstalled';
 
     protected isPro: boolean;
     protected isPremium: boolean;
@@ -33,17 +78,17 @@ class StravistiX {
         this.activityId = this.vacuumProcessor.getActivityId();
         this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this._userSettings);
 
-        this.init();
-
         if (StravistiX.instance == null) {
             StravistiX.instance = this;
         }
+
+        this.init();
     }
 
     /**
      * Make the work...
      */
-    protected init(): void {
+    public init(): void {
 
         // Redirect app.strava.com/* to www.strava.com/*
         if (this.handleForwardToWWW()) {
@@ -63,6 +108,9 @@ class StravistiX {
                 console.log('localStorageMustBeCleared is now ' + response.data.localStorageMustBeCleared);
             });
         }
+
+        // Init "stravistix bridge"
+        window.__stravistix_bridge__ = {};
 
         if (env.debugMode) console.log("Handling " + window.location.pathname);
 
@@ -99,9 +147,7 @@ class StravistiX {
 
         // All activities
         this.handleActivityQRCodeDisplay();
-
         this.handleVirtualPartner();
-
         this.handleAthletesStats();
         this.handleActivitiesSummary();
 
@@ -195,14 +241,14 @@ class StravistiX {
                 on: Date.now()
             };
 
-            Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, 'versionInstalled', toBeStored, () => { // TODO make versionInstalled static
+            Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, toBeStored, () => {
                 console.log("Version has been saved to local storage");
                 callback();
             });
         };
 
         // Check for previous version is installed
-        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, 'versionInstalled', (response: any) => {
+        Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, (response: any) => {
 
             // Override version with fake one to simulate update
             if (env.simulateUpdate) {
@@ -866,8 +912,8 @@ class StravistiX {
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
 
         let activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources, activityType, isMyOwn);
-
         activitySegmentTimeComparisonModifier.modify();
+
     }
 
     /**

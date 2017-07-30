@@ -1,4 +1,9 @@
-class HrrZonesSettingsController {
+import {ChromeStorageService} from "../services/ChromeStorageService";
+
+import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+
+export class HrrZonesSettingsController {
 
     static $inject = ['$scope', 'ChromeStorageService', 'AvoidInputKeysService'];
 
@@ -21,5 +26,3 @@ class HrrZonesSettingsController {
         };
     }
 }
-
-app.controller("HrrZonesSettingsController", HrrZonesSettingsController);

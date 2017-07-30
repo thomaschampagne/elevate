@@ -1,8 +1,17 @@
-interface IYearProgress {
+import * as _ from "underscore";
+import * as angular from "angular";
+import * as d3 from "d3";
+import * as moment from "moment";
+import {Moment} from "moment";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+
+import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
+
+export interface IYearProgress {
     year: number;
     progressions: Array<IProgression>;
 }
-interface IProgression {
+export interface IProgression {
     onTimestamp: number;
     onYear: number;
     onDayOfYear: number;
@@ -12,12 +21,12 @@ interface IProgression {
     count: number;
 }
 
-interface YearProgressActivity extends ISyncActivityComputed {
+export interface YearProgressActivity extends ISyncActivityComputed {
     year: number;
     dayOfYear: number;
 }
 
-class YearProgressComputer {
+export class YearProgressComputer {
 
     public compute(yearProgressActivities: Array<YearProgressActivity>, types: Array<string>): Array<IYearProgress> {
 
@@ -127,11 +136,11 @@ enum DataType {
 // TODO Targets?
 // TODO Remove old feature?
 
-class YearProgressController {
+export class YearProgressController {
 
     public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog'];
 
-    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: IDialogService) {
+    constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: angular.material.IDialogService) {
 
         let yearProgressComputer: YearProgressComputer = new YearProgressComputer();
 
@@ -360,4 +369,4 @@ class YearProgressController {
     }
 }
 
-app.controller("YearProgressController", YearProgressController);
+

@@ -1,11 +1,19 @@
-class XtdZones {
+import * as _ from "underscore";
+import * as angular from "angular";;
+import {ChromeStorageService} from "../../services/ChromeStorageService";
+import {IAnchorScrollService, ILocationService} from "angular";
+import {userSettings} from "../../../../core/scripts/UserSettings";
+import {IZone} from "../../../../core/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../../core/scripts/interfaces/IUserSettings";
+
+export class XtdZones {
 
     public static maxZonesCount: number = 50;
     public static minZonesCount: number = 3;
 
     public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
 
-    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         $scope.addZone = ($event: MouseEvent) => {
 
@@ -91,7 +99,7 @@ class XtdZones {
 
         $scope.resetZone = ($event: MouseEvent) => {
 
-            let confirm: IConfirmDialog = $mdDialog.confirm()
+            let confirm: angular.material.IConfirmDialog = $mdDialog.confirm()
                 .title('Reset zones')
                 .textContent('You are going to reset ' + $scope.xtdDataSelected.name + ' zones to default factory values. Are you sure?')
                 .targetEvent($event)
@@ -140,7 +148,7 @@ class XtdZones {
         $scope.setupStep = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, localStep: number, localZoneType: string) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, localStep: number, localZoneType: string) => {
 
                     $scope.step = localStep;
                     $scope.zoneType = localZoneType;
@@ -173,7 +181,7 @@ class XtdZones {
 
             let exportData = angular.toJson($scope.xtdZones);
 
-            let exportPrompt: IPromptDialog = $mdDialog.prompt()
+            let exportPrompt: angular.material.IPromptDialog = $mdDialog.prompt()
                 .title('Exporting ' + $scope.xtdDataSelected.name + ' zones')
                 .textContent('Copy data inside field.')
                 .ariaLabel('Copy data inside field.')
@@ -324,7 +332,7 @@ class XtdZones {
     }
 }
 
-app.directive('xtdZones', [() => {
+export let xtdZones = [() => {
 
     return <any>{
         templateUrl: 'directives/xtdZones/templates/xtdZones.html',
@@ -335,4 +343,4 @@ app.directive('xtdZones', [() => {
         controller: XtdZones
     };
 
-}]);
+}];

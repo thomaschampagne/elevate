@@ -1,4 +1,8 @@
-class SpeedDataView extends AbstractDataView {
+import {AbstractDataView} from "./AbstractDataView";
+import {Helper} from "../../../Helper";
+import {ISpeedData} from "../../../interfaces/IActivityData";
+
+export class SpeedDataView extends AbstractDataView {
 
     protected speedData: ISpeedData;
 

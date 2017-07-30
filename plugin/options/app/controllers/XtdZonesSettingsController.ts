@@ -1,4 +1,10 @@
-interface IXtdData {
+import * as _ from "underscore";
+import {IScope} from "angular";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IZone} from "../../../core/scripts/interfaces/IActivityData";
+
+export interface IXtdData {
     name: string;
     value: string;
     units: string;
@@ -8,19 +14,19 @@ interface IXtdData {
     hasConvertion?: boolean;
 }
 
-interface IXtdZonesSettingsScope extends IScope {
-    zones: {speed: Array<IZone>, pace: Array<IZone>, power: Array<IZone>, cyclingCadence: Array<IZone>, runningCadence: Array<IZone>, grade: Array<IZone>, elevation: Array<IZone>, ascent: Array<IZone>};
+export interface IXtdZonesSettingsScope extends IScope {
+    zones: { speed: Array<IZone>, pace: Array<IZone>, power: Array<IZone>, cyclingCadence: Array<IZone>, runningCadence: Array<IZone>, grade: Array<IZone>, elevation: Array<IZone>, ascent: Array<IZone> };
     xtdZones: Array<IZone>;
     xtdData: IXtdData;
     switchZonesFromXtdItem: (xtdData: IXtdData) => void;
     xtdListOptions: Array<IXtdData>;
 }
 
-class XtdZonesSettingsController {
+export class XtdZonesSettingsController {
 
-    static $inject = ['$scope', '$location', '$routeParams', 'ChromeStorageService'];
+    static $inject = ['$scope', '$routeParams', 'ChromeStorageService'];
 
-    constructor($scope: IXtdZonesSettingsScope, $location: ILocationService, $routeParams: any, chromeStorageService: ChromeStorageService) {
+    constructor($scope: IXtdZonesSettingsScope, $routeParams: any, chromeStorageService: ChromeStorageService) {
 
         // List of Xtended data to be customize
         $scope.xtdListOptions = [{
@@ -114,5 +120,3 @@ class XtdZonesSettingsController {
 
     }
 }
-
-app.controller("XtdZonesSettingsController", XtdZonesSettingsController);

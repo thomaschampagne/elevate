@@ -1,22 +1,18 @@
-import ILocationService = angular.ILocationService;
-import IDialogService = angular.material.IDialogService;
-import ISidenavService = angular.material.ISidenavService;
-import IWindowService = angular.IWindowService;
-import IScope = angular.IScope;
-import ITimeoutService = angular.ITimeoutService;
-import ISCEService = angular.ISCEService;
-import IAnchorScrollService = angular.IAnchorScrollService;
-import IAnchorScrollProvider = angular.IAnchorScrollProvider;
-import IConfirmDialog = angular.material.IConfirmDialog;
-import IPromptDialog = angular.material.IPromptDialog;
-import IIntervalService = angular.IIntervalService;
-import IMedia = angular.material.IMedia;
+import * as _ from "underscore";
+import * as angular from "angular";
+import * as moment from "moment";
+import {saveAs} from 'file-saver';
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {IIntervalService, ILocationService, IWindowService} from "angular";
+import {IReleaseNotesService} from "../services/ReleaseNotesService";
+import {IStorageUsage} from "../../../core/modules/StorageManager";
+import {routeMap, properties} from "../Config";
 
-class MainController {
+export class MainController {
 
     static $inject = ['$rootScope', 'ChromeStorageService', '$scope', '$location', '$mdSidenav', '$colors', '$mdDialog', '$window', '$interval', '$mdMedia'];
 
-    constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: ISidenavService, $colors: any, $mdDialog: IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: IMedia) {
+    constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: angular.material.ISidenavService, $colors: any, $mdDialog: angular.material.IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: angular.material.IMedia) {
 
         $scope.colors = $colors;
 
@@ -126,12 +122,12 @@ class MainController {
                         subname: 'Customize Cycling Power zones',
                         icon: 'flash_on',
                         link: routeMap.zonesSettingsRoute + '/power'
-                    },{
+                    }, {
                         name: 'Running Power',
                         subname: 'Customize Running Power zones',
                         icon: 'flash_on',
                         link: routeMap.zonesSettingsRoute + '/runningPower'
-                    },  {
+                    }, {
                         name: 'Cycling Cadence',
                         subname: 'Customize Cycling Cadence zones',
                         icon: 'autorenew',
@@ -326,7 +322,7 @@ class MainController {
 
 
             $mdDialog.show({
-                controller: ($scope: any, ReleaseNotesService: ReleaseNotesService, $window: IWindowService) => {
+                controller: ($scope: any, ReleaseNotesService: IReleaseNotesService, $window: IWindowService) => {
 
                     $scope.releaseNotes = ReleaseNotesService.data;
 
@@ -379,7 +375,7 @@ class MainController {
         };
 
         $scope.syncNow = (forceSync: boolean) => {
-            chrome.tabs.getCurrent((tab: Tab) => {
+            chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
                 $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=675, location=0');
             });
         };
@@ -444,5 +440,3 @@ class MainController {
         };
     }
 }
-
-app.controller('MainController', MainController);

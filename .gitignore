@@ -1,9 +1,20 @@
+# common
 .idea/
 *.git/
 */.gitignore
 **/node_modules/
 dist/
 package/
-specs/**/*.js
 chrome-win32/
-ftpConfig.json
+
+# core
+plugin/core/**/*.js
+plugin/core/**/*.map
+
+# Webapp
+plugin/options/**/*.js
+plugin/options/**/*.map
+
+# specs
+specs/**/*.js
+specs/**/*.map

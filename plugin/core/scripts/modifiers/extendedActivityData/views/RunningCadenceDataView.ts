@@ -1,4 +1,7 @@
-class RunningCadenceDataView extends AbstractCadenceDataView {
+import {AbstractCadenceDataView} from "./AbstractCadenceDataView";
+import {IUserSettings} from "../../../interfaces/IUserSettings";
+import {ICadenceData} from "../../../interfaces/IActivityData";
+export class RunningCadenceDataView extends AbstractCadenceDataView {
 
     protected userSettings: IUserSettings;
 

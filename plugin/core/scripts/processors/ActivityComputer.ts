@@ -1,4 +1,15 @@
-class ActivityComputer {
+import {Helper} from "../Helper";
+import * as _ from "underscore";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {
+    IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData,
+    IHeartRateData,
+    IHrrZone,
+    IMoveData, IPaceData,
+    IPowerData, ISpeedData, IZone
+} from "../interfaces/IActivityData";
+
+export class ActivityComputer {
 
     public static MOVING_THRESHOLD_KPH: number = 0.1; // Kph
     public static CADENCE_THRESHOLD_RPM: number = 35; // RPMs

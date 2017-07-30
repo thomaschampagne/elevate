@@ -1,4 +1,8 @@
-class NearbySegmentsModifier implements IModifier {
+import {ISegmentInfo} from "../processors/SegmentProcessor";
+import * as _ from "underscore";
+import {IAppResources} from "../interfaces/IAppResources";
+
+export class NearbySegmentsModifier implements IModifier {
 
     protected appResources: IAppResources;
     protected segments: Array<ISegmentInfo>;

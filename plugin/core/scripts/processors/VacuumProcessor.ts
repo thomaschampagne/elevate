@@ -1,7 +1,9 @@
-/**
- *   Contructor
- */
-class VacuumProcessor {
+import * as _ from "underscore";
+import {Helper} from "../Helper";
+import {env} from "../../config/env";
+import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
+
+export class VacuumProcessor {
 
     public static cachePrefix: string = 'stravistix_activityStream_';
 
@@ -246,7 +248,7 @@ class VacuumProcessor {
 
         if (parsingTime) {
             // Remove text from date, format time to hh:mm:ss
-            cleanData = Helper.HHMMSStoSeconds(cleanData);
+            cleanData = Helper.HHMMSStoSeconds(cleanData).toString();
 
             if (_.isNaN(cleanData)) {
                 return null;

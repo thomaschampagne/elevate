@@ -1,4 +1,9 @@
-interface EffortInfo {
+import {Helper} from "../Helper";
+import * as _ from "underscore";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
+
+export interface EffortInfo {
     // values obtained from the HTTP request
     id: number; // segment effort id
     activity_id: number;
@@ -22,11 +27,11 @@ interface EffortInfo {
     __dateTime: Date; // field added by us: start_date_local_raw converted into machine readable format (how is this different from start_date_local?)
 }
 
-interface LeaderBoardData {
+export interface LeaderBoardData {
     top_results: EffortInfo[];
 }
 
-class ActivitySegmentTimeComparisonModifier implements IModifier {
+export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
     protected showDifferenceToKOM: boolean;
     protected showDifferenceToPR: boolean;
@@ -169,12 +174,17 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                         positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
                     }
 
-                    let komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
+                    let komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")).toString(),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
                     if (this.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + this.crTitle() + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                        let sign: string = (Math.sign(komDiffTime) == 1) ? "+" : "-";
+                        deltaKomCell.html("<span title=\"Time difference with current "
+                            + this.crTitle()
+                            + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true)
+                            + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>"
+                            + sign + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
@@ -203,6 +213,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             this.modify();
         };
         waitForSegmentsSectionRemoved();
+
     }
 
     protected findOutGender(): void {
@@ -218,7 +229,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         this.deltaYearPRLabel = "&Delta;yPR";
     }
 
-    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<Date>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<Date> {
+    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<any> {
 
         if (!page) {
             page = 1;

@@ -1,7 +1,14 @@
+import * as _ from "underscore";
 import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
+import {IPromise} from "angular";
+import {IAthleteProfile} from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
+import {IStorageUsage} from "../../../core/modules/StorageManager";
+import {userSettings} from "../../../core/scripts/UserSettings";
+import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
 
-class ChromeStorageService {
+export class ChromeStorageService {
 
     protected $q: IQService;
 
@@ -125,6 +132,7 @@ class ChromeStorageService {
     }
 }
 
-app.factory('ChromeStorageService', ['$q', ($q: IQService) => {
+export let chromeStorageService = ['$q', ($q: IQService) => {
     return new ChromeStorageService($q);
-}]);
+}];
+

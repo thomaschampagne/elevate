@@ -1,10 +1,14 @@
-interface ReleaseNotesService {
+
+import {IReleaseNote, releaseNotes} from "../../../core/scripts/ReleaseNotes";
+
+export interface IReleaseNotesService {
     data: Array<IReleaseNote>;
 }
 
-app.factory('ReleaseNotesService', () => {
-    let releaseNotesService: ReleaseNotesService = {
+export let releaseNotesService = () => {
+    let _releaseNotesService: IReleaseNotesService = {
         data: releaseNotes
     };
-    return releaseNotesService;
-});
+    return _releaseNotesService;
+};
+

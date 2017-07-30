@@ -1,4 +1,9 @@
-class SegmentRecentEffortsHRATimeModifier implements IModifier {
+import {EffortInfo, LeaderBoardData} from "./ActivitySegmentTimeComparisonModifier";
+import {Helper} from "../Helper";
+import * as _ from "underscore";
+import {IUserSettings} from "../interfaces/IUserSettings";
+
+export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
     protected userSettings: IUserSettings;
     protected athleteId: number;
@@ -444,7 +449,7 @@ class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                     // insert the elements into the SVG
                     let firstMark = chart.find("circle").eq(0);
-                    firstMark.before(mappedMarks);
+                    firstMark.before(<any> mappedMarks);
 
                     let bestMark = chart.find("circle").filter(".personal-best-mark");
                     bestMark.after(lines);

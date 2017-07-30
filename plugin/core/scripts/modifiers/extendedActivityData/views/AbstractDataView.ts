@@ -1,4 +1,11 @@
-abstract class AbstractDataView {
+import * as _ from "underscore";
+import * as Chart from "chart.js";
+import {LinearTickOptions} from "chart.js";
+import {Helper} from "../../../Helper";
+import {IAppResources} from "../../../interfaces/IAppResources";
+import {ISpeedUnitData, IZone} from "../../../interfaces/IActivityData";
+
+export abstract class AbstractDataView {
 
     protected units: string;
     protected chart: any;

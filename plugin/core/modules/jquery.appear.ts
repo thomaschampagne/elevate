@@ -17,6 +17,7 @@ interface JQuery {
 
 interface JQueryStatic {
     force_appear: Function;
+    expr: any;
 }
 
 (function ($: JQueryStatic) {
@@ -105,7 +106,7 @@ interface JQueryStatic {
         }
     });
 
-    $.extend({
+    $.extend($, {
         // force elements's appearance check
         force_appear: function () {
             if (check_binded) {

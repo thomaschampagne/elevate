@@ -1,4 +1,16 @@
-class ActivityQRCodeDisplayModifier implements IModifier {
+import {IAppResources} from "../interfaces/IAppResources";
+
+declare class QRCode {
+    constructor(elementId: string, options: any);
+    static CorrectLevel: {
+        L: string;
+        M: string;
+        Q: string;
+        H: string;
+    }
+}
+
+export class ActivityQRCodeDisplayModifier implements IModifier {
 
     protected appResources: IAppResources;
     protected activityId: number;

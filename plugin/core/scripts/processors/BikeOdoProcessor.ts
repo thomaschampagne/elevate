@@ -1,4 +1,8 @@
-class BikeOdoProcessor {
+import {VacuumProcessor} from "./VacuumProcessor";
+import * as _ from "underscore";
+import {env} from "../../config/env";
+
+export class BikeOdoProcessor {
 
     protected cacheKey: string;
     protected vacuumProcessor: VacuumProcessor;

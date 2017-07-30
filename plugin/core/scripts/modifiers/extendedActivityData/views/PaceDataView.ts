@@ -1,4 +1,9 @@
-class PaceDataView extends AbstractDataView {
+import * as _ from "underscore";
+import {AbstractDataView} from "./AbstractDataView";
+import {Helper} from "../../../Helper";
+import {IPaceData, IZone} from "../../../interfaces/IActivityData";
+
+export class PaceDataView extends AbstractDataView {
 
     protected paceData: IPaceData;
 

@@ -1,4 +1,8 @@
-class XtdZone {
+
+import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
+import {IZone} from "../../../../core/scripts/interfaces/IActivityData";
+
+export class XtdZone {
 
     static $inject: string[] = ['$scope', 'AvoidInputKeysService'];
 
@@ -22,7 +26,7 @@ class XtdZone {
     }
 }
 
-app.directive('xtdZone', [() => {
+export let xtdZone = [() => {
 
     return <any>{
         scope: {
@@ -38,4 +42,4 @@ app.directive('xtdZone', [() => {
         templateUrl: 'directives/xtdZones/templates/xtdZone.html'
     };
 
-}]);
+}];

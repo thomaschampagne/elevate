@@ -1,4 +1,8 @@
-class CyclingCadenceDataView extends AbstractCadenceDataView {
+import {AbstractCadenceDataView} from "./AbstractCadenceDataView";
+import {Helper} from "../../../Helper";
+import {ICadenceData} from "../../../interfaces/IActivityData";
+
+export class CyclingCadenceDataView extends AbstractCadenceDataView {
 
     constructor(cadenceData: ICadenceData, units: string) {
         super(cadenceData, units);

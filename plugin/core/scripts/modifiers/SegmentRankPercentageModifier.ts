@@ -1,4 +1,6 @@
-class SegmentRankPercentageModifier implements IModifier {
+import * as _ from "underscore";
+
+export class SegmentRankPercentageModifier implements IModifier {
 
     protected intervalId: number;
 

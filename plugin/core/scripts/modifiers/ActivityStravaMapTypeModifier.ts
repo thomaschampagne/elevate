@@ -1,4 +1,4 @@
-class ActivityStravaMapTypeModifier implements IModifier {
+export class ActivityStravaMapTypeModifier implements IModifier {
 
     protected mapType: string;
 

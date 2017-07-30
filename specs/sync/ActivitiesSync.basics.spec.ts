@@ -1,4 +1,10 @@
-/// <reference path="../typings/specs.d.ts" />
+import * as _ from "underscore";
+import * as Q from "q";
+import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
+import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/core/scripts/interfaces/ISync";
+import {clone, editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer', () => {
 

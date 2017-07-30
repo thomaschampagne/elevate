@@ -1,4 +1,15 @@
-interface IProfileConfiguredRibbonScope extends IScope {
+import * as _ from "underscore";
+import {IScope, ILocationService, IWindowService} from "angular";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {AthleteSettingsController} from "../controllers/AthleteSettingsController";
+
+import {IAthleteProfile} from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
+import Tab = chrome.tabs.Tab;
+import {StorageManager} from "../../../core/modules/StorageManager";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {routeMap} from "../Config";
+
+export interface IProfileConfiguredRibbonScope extends IScope {
     checkLocalSyncedAthleteProfileEqualsRemote: () => void;
     isProfileConfigured: boolean;
     showHistoryNonConsistent: boolean;
@@ -8,7 +19,7 @@ interface IProfileConfiguredRibbonScope extends IScope {
     goToAthleteSettings: () => void;
 }
 
-class ProfileConfiguredRibbon {
+export class ProfileConfiguredRibbon {
 
     /**
      *
@@ -112,11 +123,11 @@ class ProfileConfiguredRibbon {
     }
 }
 
-app.directive('profileConfiguredRibbon', [() => {
+export let profileConfiguredRibbon = [() => {
 
     return <any> {
         controller: ProfileConfiguredRibbon,
         templateUrl: 'directives/templates/profileConfiguredRibbon.html'
 
     };
-}]);
+}];

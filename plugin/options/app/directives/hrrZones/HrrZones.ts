@@ -1,11 +1,19 @@
-class HrrZones {
+import * as _ from "underscore";
+import * as angular from "angular";
+import {ChromeStorageService} from "../../services/ChromeStorageService";
+import {IAnchorScrollService, ILocationService} from "angular";
+
+import {userSettings} from "../../../../core/scripts/UserSettings";
+import {IHrrZone} from "../../../../core/scripts/interfaces/IActivityData";
+
+export class HrrZones {
 
     public static maxHrZonesCount: number = 50;
     public static minHrZonesCount: number = 3;
 
     public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
 
-    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         // Setup default step
         $scope.step = 0.1;
@@ -94,7 +102,7 @@ class HrrZones {
 
         $scope.resetHrZone = ($event: MouseEvent) => {
 
-            let confirm: IConfirmDialog = $mdDialog.confirm()
+            let confirm: angular.material.IConfirmDialog = $mdDialog.confirm()
                 .title('Reset zones')
                 .textContent('You are going to reset your custom heart rate reserve zones to default factory values. Are you sure?')
                 .targetEvent($event)
@@ -137,7 +145,7 @@ class HrrZones {
         $scope.setupStep = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, localStep: number, localZoneType: string) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, localStep: number, localZoneType: string) => {
 
                     $scope.step = localStep;
                     $scope.zoneType = localZoneType;
@@ -170,7 +178,7 @@ class HrrZones {
 
             let exportData: string = angular.toJson($scope.hrrZones);
 
-            let exportPrompt: IPromptDialog = $mdDialog.prompt()
+            let exportPrompt: angular.material.IPromptDialog = $mdDialog.prompt()
                 .title('Exporting Heartrate Reserve Zones')
                 .textContent('Copy data inside field.')
                 .ariaLabel('Copy data inside field.')
@@ -227,7 +235,7 @@ class HrrZones {
         $scope.showHelper = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, userMaxHr: number, userRestHr: number) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, userMaxHr: number, userRestHr: number) => {
 
                     $scope.userMaxHr = userMaxHr;
                     $scope.userRestHr = userRestHr;
@@ -347,7 +355,7 @@ class HrrZones {
     }
 }
 
-app.directive('hrrZones', [() => {
+export let hrrZones = [() => {
 
     return <any> {
         templateUrl: 'directives/hrrZones/templates/hrrZones.html',
@@ -359,4 +367,4 @@ app.directive('hrrZones', [() => {
         controller: HrrZones
     };
 
-}]);
+}];

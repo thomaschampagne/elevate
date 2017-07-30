@@ -1,13 +1,15 @@
-interface ICommonSettingsService {
+
+
+export interface ICommonSettingsService {
     provideSections: () => Array<ISection>;
 }
 
-interface ISection {
+export interface ISection {
     sectionTitle: string;
     sectionContent: Array<ISectionContent>;
 }
 
-interface ISectionContent {
+export interface ISectionContent {
     optionKey: string;
     optionType: string;
     optionTitle: string;
@@ -38,12 +40,12 @@ interface ISectionContent {
      */
     disableTooltip?: boolean;
 }
-interface IListItem {
+export interface IListItem {
     key: string;
     name: string;
 }
 
-app.factory('CommonSettingsService', () => {
+export let commonSettingsService = () => {
 
     let commonSettingsService: ICommonSettingsService = {
         provideSections: null
@@ -415,4 +417,5 @@ app.factory('CommonSettingsService', () => {
         return sections;
     };
     return commonSettingsService;
-});
+};
+

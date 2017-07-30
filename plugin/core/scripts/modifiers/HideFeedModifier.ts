@@ -1,4 +1,7 @@
-class HideFeedModifier implements IModifier {
+import {IUserSettings} from "../interfaces/IUserSettings";
+import * as _ from "underscore";
+
+export class HideFeedModifier implements IModifier {
 
     private static VIRTUAL_RIDE: string = "virtualride";
     private static RIDE: string = "ride";

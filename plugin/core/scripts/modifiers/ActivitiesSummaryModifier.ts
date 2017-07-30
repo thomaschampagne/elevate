@@ -1,4 +1,7 @@
-class ActivitiesSummaryModifier implements IModifier {
+import {Helper} from "../Helper";
+import * as _ from "underscore";
+
+export class ActivitiesSummaryModifier implements IModifier {
 
     protected averageSpeedOrPace(pace: number, distance: number, time: number) {
         time /= 60;

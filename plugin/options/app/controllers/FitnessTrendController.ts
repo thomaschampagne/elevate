@@ -1,6 +1,11 @@
-import IControllerConstructor = angular.IControllerConstructor;
-import Injectable = angular.Injectable;
-class FitnessTrendController {
+import * as _ from "underscore";
+import {IControllerConstructor, Injectable} from "angular";
+import {FitnessDataService, IFitnessActivity} from "../services/FitnessDataService";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+
+export class FitnessTrendController {
 
     static $inject = ['$rootScope', '$scope', 'ChromeStorageService', 'FitnessDataService'];
 
@@ -58,4 +63,3 @@ class FitnessTrendController {
         }
     }
 }
-app.controller("FitnessTrendController",  <Injectable<IControllerConstructor>> FitnessTrendController);

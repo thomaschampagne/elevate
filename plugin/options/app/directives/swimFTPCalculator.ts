@@ -1,18 +1,23 @@
-interface ISwimCalculationMethod {
+import {IScope} from "angular";
+import * as moment from "moment";
+import * as _ from "underscore";
+
+
+export interface ISwimCalculationMethod {
     active: boolean;
     name: string;
     params: Array<{hint: string, value: number}>;
     formula: Function;
 }
 
-interface IScopeSwimFTPCalculator extends IScope {
+export interface IScopeSwimFTPCalculator extends IScope {
     calculationMethods: Array<ISwimCalculationMethod>;
     methodChanged: (selectedMethod: ISwimCalculationMethod) => void;
     userSwimFtp: number;
     onMethodSelected: Function;
 }
 
-class SwimFTPCalculator {
+export class SwimFTPCalculator {
 
     public static $inject: string[] = ['$scope'];
 
@@ -79,7 +84,7 @@ class SwimFTPCalculator {
     }
 }
 
-app.directive('swimFtpCalculator', [() => {
+export let swimFtpCalculator =  [() => {
 
     return <any>{
         controller: SwimFTPCalculator,
@@ -89,4 +94,4 @@ app.directive('swimFtpCalculator', [() => {
         },
         templateUrl: 'directives/templates/swimFTPCalculator.html'
     };
-}]);
+}];

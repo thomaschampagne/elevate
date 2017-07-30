@@ -1,4 +1,16 @@
-class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
+import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
+import {SpeedDataView} from "./views/SpeedDataView";
+import {CyclingPowerDataView} from "./views/CyclingPowerDataView";
+import {CyclingCadenceDataView} from "./views/CyclingCadenceDataView";
+import {CyclingGradeDataView} from "./views/CyclingGradeDataView";
+import {AscentSpeedDataView} from "./views/AscentSpeedDataView";
+import {ElevationDataView} from "./views/ElevationDataView";
+import {Helper} from "../../Helper";
+import {ActivityProcessor} from "../../processors/ActivityProcessor";
+import {IUserSettings} from "../../interfaces/IUserSettings";
+import {IAppResources} from "../../interfaces/IAppResources";
+
+export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
     constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
         super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);

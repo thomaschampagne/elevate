@@ -1,4 +1,6 @@
-class HidePremiumModifier implements IModifier {
+import * as _ from "underscore";
+
+export class HidePremiumModifier implements IModifier {
 
     public modify(): void {
 

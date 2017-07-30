@@ -1,9 +1,11 @@
-import Axis = d3.svg.Axis;
-import Linear = d3.scale.Linear;
-import Scale = d3.time.Scale;
+import * as _ from "underscore";
+import {Helper} from "../Helper";
+import {StorageManager} from "../../modules/StorageManager";
+import {IAppResources} from "../interfaces/IAppResources";
 
-class AthleteStatsModifier implements IModifier {
+export class AthleteStatsModifier implements IModifier {
 
+    protected d3: any;
     protected appResources: IAppResources;
     protected cacheKey_: string;
     protected distanceUnit: string;
@@ -18,6 +20,7 @@ class AthleteStatsModifier implements IModifier {
     public static metersToFeetsFactor: number = 3.2808399;
 
     constructor(appResources: IAppResources, yearTargets: any) {
+
         this.appResources = appResources;
         this.cacheKey_ = 'activitiesHistoryData';
         this.distanceUnit = "km";
@@ -29,25 +32,33 @@ class AthleteStatsModifier implements IModifier {
 
     protected init(activities: any): void {
 
-        this.processData(activities, this.progressThisYear, this.distanceInKilometers, this.elevationInMeters, this.distanceUnit);
+        // Dynamically inject d3js from node modules because strava don't provide it in this page
+        SystemJS.import('npm:d3/d3.js').then((d3: any) => {
 
-        this.progressThisYear.find("#athleteStatsLoading").remove();
+            this.d3 = d3;
 
-        this.progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click((e: any) => {
-            e.preventDefault();
-            this.handleProgressStatsForceRefresh();
-        });
+            console.debug('d3js v' + this.d3.version + ' has been dynamically injected from node modules via SystemJS');
 
-        this.progressThisYear.find('#stravistix_yearProgress_incVirtualRides').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
-        this.progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', () => {
-            StorageManager.setCookie('stravistix_yearProgress_incVirtualRides', $('#stravistix_yearProgress_incVirtualRides').prop('checked'), 365);
-            this.handleProgressStatsForceRefresh();
-        });
+            this.processData(activities, this.progressThisYear, this.distanceInKilometers, this.elevationInMeters, this.distanceUnit);
 
-        this.progressThisYear.find('#stravistix_yearProgress_incCommutes').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incCommutes') === "true");
-        this.progressThisYear.find('#stravistix_yearProgress_incCommutes').on('click', () => {
-            StorageManager.setCookie('stravistix_yearProgress_incCommutes', $('#stravistix_yearProgress_incCommutes').prop('checked'), 365);
-            this.handleProgressStatsForceRefresh();
+            this.progressThisYear.find("#athleteStatsLoading").remove();
+
+            this.progressThisYear.find("#athleteStatsLoadingForceRefresh").show().click((e: any) => {
+                e.preventDefault();
+                this.handleProgressStatsForceRefresh();
+            });
+
+            this.progressThisYear.find('#stravistix_yearProgress_incVirtualRides').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incVirtualRides') === "true");
+            this.progressThisYear.find('#stravistix_yearProgress_incVirtualRides').on('click', () => {
+                StorageManager.setCookie('stravistix_yearProgress_incVirtualRides', $('#stravistix_yearProgress_incVirtualRides').prop('checked'), 365);
+                this.handleProgressStatsForceRefresh();
+            });
+
+            this.progressThisYear.find('#stravistix_yearProgress_incCommutes').prop('checked', StorageManager.getCookie('stravistix_yearProgress_incCommutes') === "true");
+            this.progressThisYear.find('#stravistix_yearProgress_incCommutes').on('click', () => {
+                StorageManager.setCookie('stravistix_yearProgress_incCommutes', $('#stravistix_yearProgress_incCommutes').prop('checked'), 365);
+                this.handleProgressStatsForceRefresh();
+            });
         });
     }
 
@@ -277,7 +288,7 @@ class AthleteStatsModifier implements IModifier {
             }));
         });
 
-        let prepareChart = function (activities: any) {
+        let prepareChart = (activities: any) => {
             let i: any,
                 j: any,
                 numberOfDays: any = 366,
@@ -332,7 +343,7 @@ class AthleteStatsModifier implements IModifier {
                             return Helper.formatNumber(value, 0);
                     }
                 },
-                processData = function () {
+                processData = () => {
                     data = [];
                     for (i = 0, max = activities.length; i < max; i++) {
                         activity = activities[i];
@@ -483,8 +494,8 @@ class AthleteStatsModifier implements IModifier {
                     });
 
                     maxValue = 0;
-                    data.forEach(function (item: any) {
-                        i = d3.max(item.values);
+                    data.forEach((item: any) => {
+                        i = this.d3.max(item.values);
                         if (i > maxValue) {
                             maxValue = i;
                         }
@@ -499,39 +510,39 @@ class AthleteStatsModifier implements IModifier {
                 height = $(container).height();
 
             let margin: any = {
-                top: 20,
-                right: 80,
-                bottom: 30,
-                left: 90
-            },
+                    top: 20,
+                    right: 80,
+                    bottom: 30,
+                    left: 90
+                },
                 w = width - margin.left - margin.right,
                 h = height - margin.top - margin.bottom;
 
-            let y = d3.scale.linear()
+            let y = this.d3.scale.linear()
                 .domain([minValue, maxValue])
                 .range([h, 0]);
 
-            let yAxis: Axis = d3.svg.axis()
+            let yAxis: d3.svg.Axis = this.d3.svg.axis()
                 .scale(y)
                 .orient("left")
                 .tickFormat(function (d: any) {
                     return formatValue(d);
                 });
 
-            let x = d3.time.scale()
+            let x = this.d3.time.scale()
                 .domain([firstDayDate, lastDayDate])
                 .range([0, w]);
 
             let months: Array<string> = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-            let xAxis: Axis = d3.svg.axis()
+            let xAxis: d3.svg.Axis = this.d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
-                .ticks(d3.time.months)
+                .ticks(this.d3.time.months)
                 .tickSize(16, 0)
-                .tickFormat(d3.time.format("%B"));
+                .tickFormat(this.d3.time.format("%B"));
 
-            let svg = d3.select("#athleteStatChart").append("svg")
+            let svg = this.d3.select("#athleteStatChart").append("svg")
                 .attr("width", w + margin.left + margin.right)
                 .attr("height", h + margin.top + margin.bottom);
 
@@ -549,7 +560,7 @@ class AthleteStatsModifier implements IModifier {
                 .attr("x", 6)
                 .attr("y", 6);
 
-            let line = d3.svg.line()
+            let line = this.d3.svg.line()
                 .y(function (d: any, i: any) {
                     return y(d) + margin.top;
                 })
@@ -563,7 +574,7 @@ class AthleteStatsModifier implements IModifier {
                 }).interpolate("basis");
 
             // #195 - D3 method for generation of target line
-            let targetProjection = d3.svg.line()
+            let targetProjection = this.d3.svg.line()
                 .y(function (d: any, i: any) {
                     return y(d) + margin.top;
                 })
@@ -575,7 +586,7 @@ class AthleteStatsModifier implements IModifier {
                     return x(dateFrom) + margin.left;
                 }).interpolate("linear");
 
-            let color: Function = d3.scale.category10(),
+            let color: Function = this.d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
             let generateLines = function () {

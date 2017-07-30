@@ -1,4 +1,6 @@
-class ActivityScrollingModifier implements IModifier {
+import * as _ from "underscore";
+
+export class ActivityScrollingModifier implements IModifier {
 
     public modify(): void {
 

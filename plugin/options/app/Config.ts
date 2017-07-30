@@ -1,7 +1,7 @@
 /**
  * Declaring Angular App Properties
  */
-let routeMap: any = {
+export let routeMap: any = {
     commonSettingsRoute: '/commonSettings',
     athleteSettingsRoute: '/athleteSettings',
     hrrZonesSettingsRoute: '/hrrZonesSettings',
@@ -14,6 +14,6 @@ let routeMap: any = {
     shareRoute: '/share'
 };
 
-let properties: any = {
+export let properties: any = {
     donateAmount: '25usd'
 };
