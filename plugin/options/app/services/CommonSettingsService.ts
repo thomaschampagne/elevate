@@ -1,5 +1,3 @@
-
-
 export interface ICommonSettingsService {
     provideSections: () => Array<ISection>;
 }
@@ -40,6 +38,7 @@ export interface ISectionContent {
      */
     disableTooltip?: boolean;
 }
+
 export interface IListItem {
     key: string;
     name: string;
@@ -379,15 +378,6 @@ export let commonSettingsService = () => {
                 optionLabels: ['Running'],
                 optionHtml: 'Note: this target/goal is independent from strava premium annual goal',
                 min: 0
-            }]
-        }, {
-            sectionTitle: 'Miscellaneous',
-            sectionContent: [{
-                optionKey: 'hidePremiumFeatures',
-                optionType: 'checkbox',
-                optionTitle: 'Hide Premium visuals',
-                optionLabels: ['All'],
-                optionHtml: 'This option is not intended to remove premium features from Strava!<br/><br/>The intention is just to hide them when you aware with "I don\'t want or I will not be able to pay for it"!<br/><br/>It\'s recommended to get <a href="https://www.strava.com/premium" target="_blank">Strava Premium</a> if you can. This extension will not bring premium features to you! It just adds some to enhance the experience.<br/><br/><i>(works for free account only)</i>. ',
             }]
         }, {
             sectionTitle: 'Hidden/Beta features',

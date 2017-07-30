@@ -37,7 +37,6 @@ import {
     RunningTemperatureModifier
 } from "./modifiers/RunningDataModifier";
 import {ActivityStravaMapTypeModifier} from "./modifiers/ActivityStravaMapTypeModifier";
-import {HidePremiumModifier} from "./modifiers/HidePremiumModifier";
 import {ActivityBikeOdoModifier} from "./modifiers/ActivityBikeOdoModifier";
 import {GoalsModifier} from "./modifiers/GoalsModifier";
 import {IActivityBasicInfo} from "./interfaces/IActivityData";
@@ -124,7 +123,6 @@ export class StravistiX {
         this.handleSegmentRankPercentage();
         this.handleSegmentHRAP();
         this.handleActivityStravaMapType();
-        this.handleHidePremium();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
         this.handleGoalsModifier();
@@ -628,27 +626,6 @@ export class StravistiX {
 
         let activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this._userSettings.activityStravaMapType);
         activityStravaMapTypeModifier.modify();
-    }
-
-    /**
-     *
-     */
-    protected handleHidePremium(): void {
-
-        // Eject premium users of this "Hiding" feature
-        // Even if they checked "ON" the hide premium option
-        if (this.isPremium) {
-            return;
-        }
-
-        if (!this._userSettings.hidePremiumFeatures) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleHidePremium()");
-
-        let hidePremiumModifier: HidePremiumModifier = new HidePremiumModifier();
-        hidePremiumModifier.modify();
     }
 
     protected handleHideFeed(): void {

@@ -30,7 +30,6 @@ export interface IUserSettings {
     activateRunningCadence: boolean;
     activateRunningTemperature: boolean;
     activityStravaMapType: string;
-    hidePremiumFeatures: boolean;
     displaySegmentRankPercentage: boolean;
     displayNearbySegments: boolean;
     displayMotivationScore: boolean;
