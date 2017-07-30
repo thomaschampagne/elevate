@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";
 import {ILocationService, ISCEService} from "angular";
 import {ChromeStorageService} from "../services/ChromeStorageService";
@@ -36,7 +36,7 @@ export class CommonSettingsController {
                         }
 
                     } else if (option.optionType === 'list') {
-                        option.active = _.findWhere(option.optionList, {
+                        option.active = _.find(option.optionList, {
                             key: _.propertyOf(userSettingsSynced)(option.optionKey)
                         });
                     } else if (option.optionType === 'number') {
@@ -67,7 +67,7 @@ export class CommonSettingsController {
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
             _.each($scope.sections, (section: ISection) => {
-                let optionFound: ISectionContent = _.findWhere(section.sectionContent, {
+                let optionFound: ISectionContent = _.find(section.sectionContent, {
                     optionKey: subOptionKey
                 });
                 if (optionFound) {
@@ -108,7 +108,7 @@ export class CommonSettingsController {
 
             _.each($scope.sections, (section: ISection) => {
 
-                let optionSearch: ISectionContent = _.findWhere(section.sectionContent, {
+                let optionSearch: ISectionContent = _.find(section.sectionContent, {
                     optionKey: optionKeyParam
                 });
 

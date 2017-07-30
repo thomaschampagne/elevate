@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as angular from "angular";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {IWindowService, IScope} from "angular";

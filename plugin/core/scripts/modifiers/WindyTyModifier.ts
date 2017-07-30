@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {IAppResources} from "../interfaces/IAppResources";
 

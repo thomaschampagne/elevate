@@ -1,5 +1,5 @@
 import {Helper} from "../Helper";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {IAppResources} from "../interfaces/IAppResources";
 
@@ -330,9 +330,11 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
                 return left.elapsed_time_raw - right.elapsed_time_raw;
             });
 
-            let currentActivityResult = _.findWhere(resultsThisYear, {
+            let predicate = <Partial<EffortInfo>> {
                 __dateTime: currentSegmentEffortDateTime
-            });
+            };
+
+            let currentActivityResult = _.find(resultsThisYear, predicate);
 
             let previousBestResultThisYear: EffortInfo = null;
             _.some(resultsThisYear, (result: EffortInfo) => {

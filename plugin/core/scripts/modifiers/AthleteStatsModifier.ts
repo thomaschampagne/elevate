@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {Helper} from "../Helper";
 import {StorageManager} from "../../modules/StorageManager";
 import {IAppResources} from "../interfaces/IAppResources";

@@ -1,5 +1,5 @@
 import * as Q from "q";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {IAppResources} from "../interfaces/IAppResources";

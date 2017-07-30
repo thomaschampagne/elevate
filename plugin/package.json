@@ -50,7 +50,6 @@
     "q": "^1.5.0",
     "qrcode-js-package": "^1.0.4",
     "systemjs": "^0.20.15",
-    "systemjs-plugin-css": "^0.1.35",
-    "underscore": "^1.8.3"
+    "systemjs-plugin-css": "^0.1.35"
   }
 }

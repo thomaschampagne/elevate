@@ -1,5 +1,5 @@
 import {Helper} from "../Helper";
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 export class ActivitiesSummaryModifier implements IModifier {
 

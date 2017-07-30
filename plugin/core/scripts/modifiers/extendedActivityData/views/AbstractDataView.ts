@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as Chart from "chart.js";
 import {LinearTickOptions} from "chart.js";
 import {Helper} from "../../../Helper";

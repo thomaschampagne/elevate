@@ -1,6 +1,6 @@
 import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
 import {Helper} from "../Helper";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IStorageUsage, StorageManager} from "../../modules/StorageManager";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {IAppResources} from "../interfaces/IAppResources";

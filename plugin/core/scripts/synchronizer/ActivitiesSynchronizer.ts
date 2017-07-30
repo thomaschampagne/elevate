@@ -1,6 +1,6 @@
 import {Helper} from "../Helper";
 import * as Q from "q";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {ActivitiesProcessor} from "../processors/ActivitiesProcessor";
 import {StorageManager} from "../../modules/StorageManager";
 import {IUserSettings} from "../interfaces/IUserSettings";
@@ -92,7 +92,7 @@ export class ActivitiesSynchronizer {
 
                 // Exist raw activity id in history?
                 // Seek for activity in just interrogated pages
-                let foundComputedActivity: ISyncActivityComputed = _.findWhere(computedActivities, {id: rawActivity.id});
+                let foundComputedActivity: ISyncActivityComputed = _.find(computedActivities, {id: rawActivity.id});
 
                 if (foundComputedActivity) { // Yes  => Check for an edit..
 
@@ -199,7 +199,7 @@ export class ActivitiesSynchronizer {
                             console.warn('Stream not found for activity <' + data.reason.activityId + '>', data);
 
                             // Add to activities list without even if no stream...
-                            let newlyDetectedActivity: ISyncRawStravaActivity = _.findWhere(rawActivities, {id: data.reason.activityId});
+                            let newlyDetectedActivity: ISyncRawStravaActivity = _.find(rawActivities, {id: data.reason.activityId});
                             let activityWithStream: ISyncActivityWithStream = <ISyncActivityWithStream> newlyDetectedActivity;
                             activityWithStream.hasPowerMeter = null;
                             activityWithStream.stream = null;
@@ -208,7 +208,7 @@ export class ActivitiesSynchronizer {
                         } else if (data.state === 'fulfilled') {
 
                             // Find raw activities of fetched stream and push
-                            let newlyDetectedActivity: ISyncRawStravaActivity = _.findWhere(rawActivities, {id: data.value.activityId});
+                            let newlyDetectedActivity: ISyncRawStravaActivity = _.find(rawActivities, {id: data.value.activityId});
 
                             let hasPowerMeter: boolean = true;
                             if (_.isEmpty(data.value.watts)) {
@@ -533,7 +533,7 @@ export class ActivitiesSynchronizer {
                     });
 
                     // Ensure activity unicity
-                    this._hasBeenComputedActivities = _.uniq(this._hasBeenComputedActivities, (item) => {
+                    this._hasBeenComputedActivities = _.uniqBy(this._hasBeenComputedActivities, (item: ISyncActivityComputed) => {
                         return item.id;
                     });
 
@@ -634,7 +634,7 @@ export class ActivitiesSynchronizer {
                 // Apply names/types changes
                 if (this._globalHistoryChanges.edited.length > 0) {
                     _.each(this._globalHistoryChanges.edited, (editData) => {
-                        let activityToEdit: ISyncActivityComputed = _.findWhere((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+                        let activityToEdit: ISyncActivityComputed = _.find((<Array<ISyncActivityComputed>> computedActivitiesStored.data), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
                         activityToEdit.name = editData.name;
                         activityToEdit.type = editData.type;
                         activityToEdit.display_type = editData.display_type;
@@ -644,7 +644,7 @@ export class ActivitiesSynchronizer {
                 // Apply deletions
                 if (this._globalHistoryChanges.deleted.length > 0) {
                     _.each(this._globalHistoryChanges.deleted, (deleteId: number) => {
-                        computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.findWhere(computedActivitiesStored.data, {
+                        computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.find(computedActivitiesStored.data, {
                             id: deleteId
                         }));
                     });

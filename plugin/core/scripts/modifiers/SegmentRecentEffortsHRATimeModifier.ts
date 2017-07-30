@@ -1,6 +1,6 @@
 import {EffortInfo, LeaderBoardData} from "./ActivitySegmentTimeComparisonModifier";
 import {Helper} from "../Helper";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 
 export class SegmentRecentEffortsHRATimeModifier implements IModifier {

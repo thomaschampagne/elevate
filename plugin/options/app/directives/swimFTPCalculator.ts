@@ -1,6 +1,6 @@
 import {IScope} from "angular";
 import * as moment from "moment";
-import * as _ from "underscore";
+import * as _ from "lodash";
 
 
 export interface ISwimCalculationMethod {

@@ -12,7 +12,7 @@ export function ComputeAnalysisWorker() {
         SystemJS.config(mainThreadEvent.data.systemJsConfig);
 
         Promise.all([
-            SystemJS.import('chrome-extension://' + mainThreadEvent.data.appResources.extensionId + '/node_modules/underscore/underscore-min.js'),
+            SystemJS.import('chrome-extension://' + mainThreadEvent.data.appResources.extensionId + '/node_modules/lodash/lodash.min.js'),
             SystemJS.import('chrome-extension://' + mainThreadEvent.data.appResources.extensionId + '/core/scripts/Helper.js'),
         ]).then(() => {
 

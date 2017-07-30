@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {env} from "../config/env";
 import {Helper} from "./Helper";
 import {AbstractExtendedDataModifier} from "./modifiers/extendedActivityData/AbstractExtendedDataModifier";

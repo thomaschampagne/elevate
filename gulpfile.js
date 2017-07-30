@@ -25,7 +25,7 @@
  */
 let fs = require('fs');
 let exec = require('child_process').exec;
-let _ = require('underscore');
+let _ = require('lodash');
 let gulp = require('gulp');
 let plugins = require('gulp-load-plugins')();
 let util = require('gulp-util');
@@ -64,7 +64,7 @@ let CORE_JAVASCRIPT_SCRIPTS = [
     'plugin/node_modules/chart.js/dist/Chart.bundle.js',
     'plugin/node_modules/qrcode-js-package/qrcode.min.js',
     'plugin/node_modules/fancybox/dist/js/jquery.fancybox.pack.js',
-    'plugin/node_modules/underscore/underscore-min.js',
+    'plugin/node_modules/lodash/lodash.min.js',
     'plugin/node_modules/jquery/dist/jquery.js'
 ];
 

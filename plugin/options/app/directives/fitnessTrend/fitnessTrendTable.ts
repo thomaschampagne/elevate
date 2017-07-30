@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IWindowService} from "angular";
 import {FitnessTrendController} from "../../controllers/FitnessTrendController";
 import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDataService";
@@ -24,7 +24,7 @@ export class FitnessTrendTable {
             $scope.useSwimStressScore = message.useSwimStressScore;
 
             // Filter fitnessData: remove preview days
-            let fitnessData = _.where(message.fitnessData, {
+            let fitnessData = _.filter(message.fitnessData, {
                 previewDay: false
             });
 

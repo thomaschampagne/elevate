@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {AbstractDataView} from "./views/AbstractDataView";
 import {HeaderView} from "./views/HeaderView";
 import {HeartRateDataView} from "./views/HeartRateDataView";

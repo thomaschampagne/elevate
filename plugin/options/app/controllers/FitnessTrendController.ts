@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IControllerConstructor, Injectable} from "angular";
 import {FitnessDataService, IFitnessActivity} from "../services/FitnessDataService";
 import {ChromeStorageService} from "../services/ChromeStorageService";

@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import * as moment from "moment";
 import {IPromise, IQService} from "angular";
 import {Moment} from "moment";
@@ -177,7 +177,7 @@ export class FitnessDataService {
 
             while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-                let activitiesWithFitnessThatDay: Array<IActivitiesWithFitness> = _.where(cleanedActivities, {
+                let activitiesWithFitnessThatDay: Array<IActivitiesWithFitness> = _.filter(cleanedActivities, {
                     year: currentDayMoment.year(),
                     dayOfYear: currentDayMoment.dayOfYear()
                 });

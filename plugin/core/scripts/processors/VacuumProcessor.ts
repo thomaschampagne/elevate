@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {Helper} from "../Helper";
 import {env} from "../../config/env";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";

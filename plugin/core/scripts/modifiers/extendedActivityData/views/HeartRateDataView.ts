@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {AbstractDataView} from "./AbstractDataView";
 import {StravistiX} from "../../../StravistiX";
 import {Helper} from "../../../Helper";

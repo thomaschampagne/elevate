@@ -1,5 +1,5 @@
 import {Helper} from "../Helper";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IUserSettings} from "../interfaces/IUserSettings";
 import {
     IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData,

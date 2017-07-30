@@ -1,5 +1,5 @@
 import {IUserSettings} from "../interfaces/IUserSettings";
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {IAppResources} from "../interfaces/IAppResources";
 
 export class GoogleMapsModifier implements IModifier {

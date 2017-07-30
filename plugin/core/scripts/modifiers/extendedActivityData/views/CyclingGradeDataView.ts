@@ -1,4 +1,4 @@
-import * as _ from "underscore";
+import * as _ from "lodash";
 import {AbstractGradeDataView} from "./AbstractGradeDataView";
 import {IGradeData} from "../../../interfaces/IActivityData";
 

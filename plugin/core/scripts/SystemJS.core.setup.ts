@@ -28,7 +28,7 @@ const _coreConfig: ICoreConfig = {
             'jquery': 'npm:jquery/dist/jquery.js',
             'dms': 'npm:geodesy/dms.js',
             'sphericalLatLon': 'npm:geodesy/latlon-spherical.js',
-            'underscore': 'npm:underscore/underscore-min.js',
+            'lodash': 'npm:lodash/lodash.min.js',
             'fancybox': 'npm:fancybox/dist/js/jquery.fancybox.pack.js',
             'file-saver': 'npm:file-saver/FileSaver.min.js',
 
