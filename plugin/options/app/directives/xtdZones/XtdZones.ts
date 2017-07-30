@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import * as angular from "angular";;
+import * as angular from "angular";
 import {ChromeStorageService} from "../../services/ChromeStorageService";
 import {IAnchorScrollService, ILocationService} from "angular";
 import {userSettings} from "../../../../core/scripts/UserSettings";

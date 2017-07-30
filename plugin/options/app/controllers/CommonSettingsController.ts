@@ -26,7 +26,7 @@ export class CommonSettingsController {
 
                     if (option.optionType === 'checkbox') {
 
-                        // option.active = _.propertyOf(userSettingsSynced)(option.optionKey);;
+                        // option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
                         option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
 
                         if (option.optionEnableSub) {
