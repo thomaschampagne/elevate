@@ -1,4 +1,4 @@
-class DisplayFlyByFeedModifier implements IModifier {
+export class DisplayFlyByFeedModifier implements IModifier {
 
     public modify(): void {
         // Add flyby button in dashboard

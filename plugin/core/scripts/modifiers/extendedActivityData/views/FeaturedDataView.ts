@@ -1,4 +1,10 @@
-class FeaturedDataView extends AbstractDataView {
+import * as _ from "underscore";
+import {AbstractDataView} from "./AbstractDataView";
+import {Helper} from "../../../Helper";
+import {IUserSettings} from "../../../interfaces/IUserSettings";
+import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../interfaces/IActivityData";
+
+export class FeaturedDataView extends AbstractDataView {
 
     protected analysisData: IAnalysisData;
     protected basicInfo: IActivityBasicInfo;

@@ -1,4 +1,13 @@
-class ActivitiesProcessor {
+import * as Q from "q";
+import * as _ from "underscore";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
+import {IAppResources} from "../interfaces/IAppResources";
+import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../interfaces/ISync";
+import {IActivityStatsMap, IAnalysisData} from "../interfaces/IActivityData";
+import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+
+export class ActivitiesProcessor {
 
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
@@ -129,7 +138,8 @@ class ActivitiesProcessor {
             activityStatsMap: activityStatsMap,
             activityStream: activityWithStream.stream,
             bounds: null,
-            returnZones: false
+            returnZones: false,
+            systemJsConfig: SystemJS.getConfig()
         };
 
         computeAnalysisThread.postMessage(threadMessage);

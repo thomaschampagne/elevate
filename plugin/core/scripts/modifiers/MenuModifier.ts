@@ -1,7 +1,10 @@
 /**
  * Handles main burger menu
  */
-class MenuModifier implements IModifier {
+import {IAppResources} from "../interfaces/IAppResources";
+
+
+export class MenuModifier implements IModifier {
 
     private athleteId: number;
     private appResources: IAppResources;
@@ -48,8 +51,8 @@ class MenuModifier implements IModifier {
         html += "</ul>";
         html += "</li>";
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
+        if (window.navigator.geolocation) {
+            window.navigator.geolocation.getCurrentPosition(
                 (position: Position) => {
                     $('.sx_menu_heatmap').attr('href', 'http://labs.strava.com/heatmap/#12/' + position.coords.longitude + '/' + position.coords.latitude + '/gray/both');
                     $('.sx_menu_heatmap').attr('target', '_blank');

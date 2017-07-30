@@ -1,4 +1,6 @@
-class AscentSpeedDataView extends AbstractDataView {
+import {AbstractDataView} from "./AbstractDataView";
+import {IElevationData} from "../../../interfaces/IActivityData";
+export class AscentSpeedDataView extends AbstractDataView {
 
     protected elevationData: IElevationData;
 

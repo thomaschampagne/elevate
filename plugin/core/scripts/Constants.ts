@@ -1,5 +1,7 @@
-let Constants: Constants = {
-    VERSION: chrome.runtime.getManifest().version,
-    EXTENSION_ID: chrome.runtime.id,
-    OPTIONS_URL: 'chrome-extension://' + chrome.runtime.id + '/options/app/index.html'
+import {IConstants} from "./interfaces/IConstants";
+
+export const constants: IConstants = {
+    VERSION: null,
+    EXTENSION_ID: null,
+    OPTIONS_URL: null
 };

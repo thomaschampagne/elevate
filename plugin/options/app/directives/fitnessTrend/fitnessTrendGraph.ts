@@ -1,4 +1,14 @@
-interface IFitnessTrendGraphScope extends IScope {
+import * as _ from "underscore";
+import * as d3 from "d3";
+import * as moment from "moment";
+import * as angular from "angular";
+import { ILocationService, IScope, IWindowService } from "angular";
+import { IFitnessActivity } from "../../services/FitnessDataService";
+import { FitnessTrendController } from "../../controllers/FitnessTrendController";
+import { routeMap } from "../../Config";
+import { IColors } from "../../Colors";
+
+export interface IFitnessTrendGraphScope extends IScope {
     nvd3api: any;
     userFTP: number;
     userSwimFTP: number;
@@ -28,9 +38,9 @@ interface IFitnessTrendGraphScope extends IScope {
     updateFitnessChartGraph: (lastMonthPeriodChange: boolean, fromOrToDateChange: boolean) => void;
     toDateChanged: () => void;
     fromDateChanged: () => void;
-    lastMonthsPeriodChanged: (periodSelected: {days: number, label: string}) => void;
-    periodSelected: {days: Number, label: String};
-    periodsToWatch: {days: Number, label: String}[];
+    lastMonthsPeriodChanged: (periodSelected: { days: number, label: string }) => void;
+    periodSelected: { days: Number, label: String };
+    periodsToWatch: { days: Number, label: String }[];
     activityTypes: Array<string>;
     fitnessChartOptions: any;
     fitnessChartData: IFitnessGraphData;
@@ -38,22 +48,22 @@ interface IFitnessTrendGraphScope extends IScope {
     loadFitnessData(): void;
 }
 
-interface IFitnessGraphData {
-    curves: {key: string, values: Array<any>, color: string, area?: boolean, classed?: string}[];
+export interface IFitnessGraphData {
+    curves: { key: string, values: Array<any>, color: string, area?: boolean, classed?: string }[];
     yDomain: Array<number>;
 }
 
-interface ITrainingZone {
+export interface ITrainingZone {
     name: string;
     level: number;
     color: string;
 }
 
-class FitnessTrendGraph {
+export class FitnessTrendGraph {
 
     static $inject: string[] = ['$scope', '$colors', '$window', '$mdDialog', '$location'];
 
-    constructor(public $scope: IFitnessTrendGraphScope, public $colors: IColors, public $window: IWindowService, public $mdDialog: IDialogService, public $location: ILocationService) {
+    constructor(public $scope: IFitnessTrendGraphScope, public $colors: IColors, public $window: IWindowService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService) {
 
         let onGraphDrawTimeStart: number;
         let onGraphDrawnTimeDone: number;
@@ -178,7 +188,7 @@ class FitnessTrendGraph {
             $scope.periodSelected = $scope.periodsToWatch[6];
         }
 
-        $scope.lastMonthsPeriodChanged = (periodSelected: {days: number, label: string}) => {
+        $scope.lastMonthsPeriodChanged = (periodSelected: { days: number, label: string }) => {
             let index: number = _.indexOf($scope.periodsToWatch, periodSelected);
             if (index !== -1) {
                 localStorage.setItem('lastMonthPeriodSelected', index.toString()); // Store value
@@ -271,7 +281,7 @@ class FitnessTrendGraph {
 
         $scope.makeTooltip = (d: any) => {
 
-            let fitnessObject: IFitnessActivity = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
+            let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.findWhere($scope.fitnessData, {
                 timestamp: d.value
             }));
 
@@ -426,7 +436,7 @@ class FitnessTrendGraph {
                         dispatch: {
                             elementClick: function (d: any) {
                                 // Open activities on point click
-                                let fitnessObject: IFitnessActivity = <IFitnessActivity> (_.findWhere($scope.fitnessData, {
+                                let fitnessObject: IFitnessActivity = <IFitnessActivity>(_.findWhere($scope.fitnessData, {
                                     timestamp: d.point.x
                                 }));
 
@@ -740,9 +750,10 @@ class FitnessTrendGraph {
     }
 }
 
-app.directive('fitnessTrendGraph', [() => {
-    return <any> {
+export let fitnessTrendGraph = [() => {
+    return <any>{
         templateUrl: 'directives/fitnessTrend/templates/fitnessTrendGraph.html',
         controller: FitnessTrendGraph
     };
-}]);
+}];
+

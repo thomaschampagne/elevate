@@ -1,4 +1,9 @@
-class VirtualPartnerModifier implements IModifier {
+import * as _ from "underscore";
+import {saveAs} from 'file-saver';
+import {VacuumProcessor} from "../processors/VacuumProcessor";
+import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
+
+export class VirtualPartnerModifier implements IModifier {
 
     protected vacuumProcessor: VacuumProcessor;
     protected activityId: number;

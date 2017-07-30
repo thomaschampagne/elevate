@@ -4,33 +4,18 @@
 <head>
     <title>StravistiX</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="../../node_modules/angular-material/angular-material.css">
-    <link rel="stylesheet" href="../../node_modules/angular-material-icons/angular-material-icons.css">
-    <link rel="stylesheet" href="../../node_modules/angular-material-data-table/dist/md-data-table.min.css"
-          type="text/css"/>
-    <link rel="stylesheet" href="../../node_modules/nvd3/build/nv.d3.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="../../node_modules/angular/angular.js"></script>
-    <script src="../../node_modules/angular-route/angular-route.js"></script>
-    <script src="../../node_modules/angular-sanitize/angular-sanitize.js"></script>
-    <script src="../../node_modules/angular-animate/angular-animate.js"></script>
-    <script src="../../node_modules/angular-aria/angular-aria.js"></script>
-    <script src="../../node_modules/angular-messages/angular-messages.js"></script>
-    <script src="../../node_modules/angular-material/angular-material.js"></script>
-    <script src="../../node_modules/angular-material-icons/angular-material-icons.js"></script>
-    <script src="../../node_modules/angular-material-data-table/dist/md-data-table.min.js"></script>
-    <script src="../../node_modules/d3/d3.js"></script>
-    <script src="../../node_modules/nvd3/build/nv.d3.min.js"></script>
-    <script src="../../node_modules/angular-nvd3/dist/angular-nvd3.min.js"></script>
-    <script src="../../node_modules/moment/moment.js"></script>
-    <script src="../../node_modules/angular-moment/angular-moment.js"></script>
-    <script src="../../node_modules/underscore/underscore-min.js"></script>
-    <script src="../../node_modules/file-saver/FileSaver.min.js"></script>
+    <script src="../../node_modules/systemjs/dist/system.js"></script>
+    <script src="./SystemJS.options.setup.js"></script>
 </head>
 
-<body class="md-body-1">
-<div ng-app="App" ng-controller="MainController" layout="row" layout-fill ng-cloak>
+<!--
+Hide "body" (or #App) html element by default and wait for angular bootstrap.
+=> This avoid DOM flickering on load before angular is loaded
+-->
+<body id="App" style="display: none;" class="md-body-1" >
+
+<div ng-controller="MainController" layout="row" layout-fill ng-cloak>
     <md-sidenav class="md-sidenav-left md-whiteframe-5dp" md-component-id="left" md-is-locked-open="sideNavLockedOpen">
         <md-content flex="grow">
             <div layout="row" layout-align="center center" layout-padding>
@@ -42,7 +27,8 @@
                 </div>
             </div>
             <md-divider></md-divider>
-            <md-list style="padding: 0; margin: 0;" ng-repeat="section in uiStructure.sidenav.sections" ng-hide="section.hide">
+            <md-list style="padding: 0; margin: 0;" ng-repeat="section in uiStructure.sidenav.sections"
+                     ng-hide="section.hide">
                 <md-list-item ng-click="(section.actions.length) ? section.expand=!section.expand : forward(section)">
                     <md-icon style="color: {{colors.strava}};">{{section.icon}}</md-icon>
                     <p>
@@ -132,10 +118,10 @@
                     </md-button>
                     <md-menu-content width="4">
                         <!--<md-menu-item>-->
-                            <!--<md-button ng-click="clearHistory()">-->
-                                <!--<md-icon>delete</md-icon>-->
-                                <!--Clear your history-->
-                            <!--</md-button>-->
+                        <!--<md-button ng-click="clearHistory()">-->
+                        <!--<md-icon>delete</md-icon>-->
+                        <!--Clear your history-->
+                        <!--</md-button>-->
                         <!--</md-menu-item>-->
                         <md-menu-item>
                             <md-button ng-click="openStravaClub($event)" aria-label="Share">
@@ -186,48 +172,6 @@
     </section>
 </div>
 
-<!-- Specifics StravistiX includes -->
-<script src="../../core/scripts/Constants.js"></script>
-<script src="../../core/scripts/UserSettings.js"></script>
-<script src="../../core/scripts/ReleaseNotes.js"></script>
-<script src="../../core/scripts/Helper.js"></script>
-
-<!-- Angular App -->
-<script src="App.js"></script>
-<script src="Config.js"></script>
-<script src="../../core/modules/StorageManager.js"></script>
-
-<!-- Angular controllers -->
-<script src="controllers/MainController.js"></script>
-<script src="controllers/CommonSettingsController.js"></script>
-<script src="controllers/FitnessTrendController.js"></script>
-<script src="controllers/YearProgressController.js"></script>
-<script src="controllers/AthleteSettingsController.js"></script>
-<script src="controllers/HrrZonesSettingsController.js"></script>
-<script src="controllers/XtdZonesSettingsController.js"></script>
-<!-- <script src="controllers/DonateController.js"></script> -->
-
-<!-- Angular services -->
-<script src="services/AvoidInputKeysService.js"></script>
-<script src="services/CommonSettingsService.js"></script>
-<script src="services/ChromeStorageService.js"></script>
-<script src="services/FitnessDataService.js"></script>
-<script src="services/ReleaseNotesService.js"></script>
-
-<!-- Angular directives -->
-<script src="directives/hrrZones/HrrZones.js"></script>
-<script src="directives/hrrZones/HrrZone.js"></script>
-<script src="directives/xtdZones/XtdZones.js"></script>
-<script src="directives/xtdZones/XtdZone.js"></script>
-<script src="directives/fitnessTrend/fitnessTrendGraph.js"></script>
-<script src="directives/fitnessTrend/fitnessTrendTable.js"></script>
-<script src="directives/profileConfiguredRibbon.js"></script>
-<script src="directives/restoreHistory.js"></script>
-<script src="directives/swimFTPCalculator.js"></script>
-
-<!-- Angular filters -->
-<script src="filters/HrrToBpmFilter.js"></script>
-<script src="filters/XtdDataFilter.js"></script>
 </body>
 
 </html>

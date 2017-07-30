@@ -1,3 +1,5 @@
-class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
+import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
+
+export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
 }

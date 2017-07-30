@@ -1,4 +1,13 @@
-class ActivityProcessor {
+import * as _ from "underscore";
+import {env} from "../../config/env";
+import {VacuumProcessor} from "./VacuumProcessor";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
+import {IAppResources} from "../interfaces/IAppResources";
+import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../interfaces/IActivityData";
+
+export class ActivityProcessor {
 
     public static cachePrefix: string = 'stravistix_activity_';
     protected appResources: IAppResources;
@@ -84,6 +93,7 @@ class ActivityProcessor {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
+
             // Create a blob from 'ComputeAnalysisWorker' function variable as a string
             let blob: Blob = new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], {type: 'application/javascript'});
 
@@ -106,7 +116,8 @@ class ActivityProcessor {
             activityStatsMap: activityStatsMap,
             activityStream: activityStream,
             bounds: bounds,
-            returnZones: true
+            returnZones: true,
+            systemJsConfig: SystemJS.getConfig()
         };
 
         this.computeAnalysisThread.postMessage(threadMessage);

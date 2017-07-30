@@ -1,4 +1,8 @@
-interface ISegmentInfo {
+import * as _ from "underscore";
+import {VacuumProcessor} from "./VacuumProcessor";
+import {env} from "../../config/env";
+
+export interface ISegmentInfo {
     id: number;
     name: string;
     climb_category: number;
@@ -11,7 +15,7 @@ interface ISegmentInfo {
     type: string;
 }
 
-class SegmentProcessor {
+export class SegmentProcessor {
 
     public static cachePrefix: string = 'stravistix_nearbySegments_';
 

@@ -1,8 +1,15 @@
-class CommonSettingsController {
+import * as _ from "underscore";
+import * as angular from "angular";
+import {ILocationService, ISCEService} from "angular";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {ICommonSettingsService, ISection, ISectionContent} from "../services/CommonSettingsService";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+
+export class CommonSettingsController {
 
     static $inject = ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$location', '$mdDialog', '$sce'];
 
-    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: IDialogService, $sce: ISCEService) {
+    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
 
         // Define options structure
         $scope.sections = CommonSettingsService.provideSections();
@@ -142,5 +149,3 @@ class CommonSettingsController {
 
     }
 }
-
-app.controller('CommonSettingsController', CommonSettingsController);

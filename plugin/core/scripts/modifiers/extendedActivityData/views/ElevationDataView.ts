@@ -1,6 +1,6 @@
-class ElevationDataView extends AbstractDataView {
-
-
+import {AbstractDataView} from "./AbstractDataView";
+import {IElevationData} from "../../../interfaces/IActivityData";
+export class ElevationDataView extends AbstractDataView {
     protected elevationData: IElevationData;
 
     constructor(elevationData: IElevationData, units: string) {

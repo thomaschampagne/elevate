@@ -1,4 +1,8 @@
-class GoogleMapsModifier implements IModifier {
+import {IUserSettings} from "../interfaces/IUserSettings";
+import * as _ from "underscore";
+import {IAppResources} from "../interfaces/IAppResources";
+
+export class GoogleMapsModifier implements IModifier {
 
     protected activityId: number;
     protected appResources: IAppResources;

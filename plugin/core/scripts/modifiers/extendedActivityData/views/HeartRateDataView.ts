@@ -1,4 +1,11 @@
-class HeartRateDataView extends AbstractDataView {
+import * as _ from "underscore";
+import {AbstractDataView} from "./AbstractDataView";
+import {StravistiX} from "../../../StravistiX";
+import {Helper} from "../../../Helper";
+import {IUserSettings} from "../../../interfaces/IUserSettings";
+import {IHeartRateData} from "../../../interfaces/IActivityData";
+
+export class HeartRateDataView extends AbstractDataView {
 
     protected heartRateData: IHeartRateData;
 

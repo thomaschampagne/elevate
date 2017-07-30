@@ -1,4 +1,8 @@
-class WindyTyModifier implements IModifier {
+import * as _ from "underscore";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
+
+export class WindyTyModifier implements IModifier {
 
     protected activityId: number;
     protected appResources: IAppResources;
@@ -88,13 +92,13 @@ class WindyTyModifier implements IModifier {
 
         $("#pagenav").append($(html)).each(() => {
 
-            $('[data-wheater-windyty]').click((evt: Event) => {
+            $('[data-wheater-windyty]').click((evt: JQuery.Event) => {
                 evt.preventDefault();
                 evt.stopPropagation();
                 this.showWeather($(evt.target).attr('data-wheater-windyty'));
             });
 
-            $('#stravistix_weather_title').click((evt) => {
+            $('#stravistix_weather_title').click((evt: JQuery.Event) => {
 
                 evt.preventDefault();
                 evt.stopPropagation();

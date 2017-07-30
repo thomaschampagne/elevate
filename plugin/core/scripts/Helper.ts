@@ -1,4 +1,8 @@
-class Helper {
+import * as Q from "q";
+import {IStorageUsage} from "../modules/StorageManager";
+import {ISpeedUnitData} from "./interfaces/IActivityData";
+
+export class Helper {
 
     public static KPH_TO_MPH_RATIO: number = 0.621371;
     public static getFromStorageMethod: string = 'getFromStorage';
@@ -21,7 +25,7 @@ class Helper {
         return speedUnitData;
     }
 
-    public static HHMMSStoSeconds(str: string): string { // TODO Must return number WTF ?!
+    public static HHMMSStoSeconds(str: string): number {
 
         let p: Array<string> = str.split(':'),
             s: any = 0,
@@ -31,7 +35,7 @@ class Helper {
             s += m * parseInt(p.pop(), 10);
             m *= 60;
         }
-        return (<string>s);
+        return s;
     }
 
     public static secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
@@ -210,7 +214,6 @@ class Helper {
 
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
-
 
     public static secondsToDHM(sec_num: number, trimZeros?: boolean): string {
         let days: number = Math.floor(sec_num / 86400);

@@ -1,7 +1,12 @@
-import Moment = moment.Moment;
-import IPromise = angular.IPromise;
+import * as _ from "underscore";
+import * as moment from "moment";
+import {IPromise, IQService} from "angular";
+import {Moment} from "moment";
+import {ChromeStorageService} from "./ChromeStorageService";
 
-interface IActivitiesWithFitness {
+import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
+
+export interface IActivitiesWithFitness {
     id: number;
     date: Date; // TODO Store Moment instead?!
     timestamp: number;
@@ -14,7 +19,7 @@ interface IActivitiesWithFitness {
     swimStressScore?: number;
 }
 
-interface IActivitiesWithFitnessDaysOff {
+export interface IActivitiesWithFitnessDaysOff {
     ids: Array<number>;
     date: Date;
     timestamp: number;
@@ -27,7 +32,7 @@ interface IActivitiesWithFitnessDaysOff {
     previewDay: boolean;
 }
 
-interface IFitnessActivity {
+export interface IFitnessActivity {
     ids: Array<number>;
     date: string;
     timestamp: number;
@@ -43,11 +48,11 @@ interface IFitnessActivity {
     previewDay: boolean;
 }
 
-interface IFitnessActivityTable extends IFitnessActivity {
+export interface IFitnessActivityTable extends IFitnessActivity {
     activitiesNameStr: string;
 }
 
-class FitnessDataService {
+export class FitnessDataService {
 
     public static FUTURE_DAYS_PREVIEW: number = 14;
 
@@ -383,9 +388,10 @@ class FitnessDataService {
     }
 }
 
-app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
+export let fitnessDataService = ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
     return new FitnessDataService($q, chromeStorageService);
-}]);
+}];
+
 
 /**
  * @return

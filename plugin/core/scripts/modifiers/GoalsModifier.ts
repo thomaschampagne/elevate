@@ -8,7 +8,7 @@ const GOAL_MARKER_TEXT_WIDTH = 40;
  * tracker found in the #progress-goals-v2 element. The bars track monthly
  * and weekly progress towards the overall annual goal.
  */
-class GoalsModifier implements IModifier {
+export class GoalsModifier implements IModifier {
 
     private $element: JQuery;
 

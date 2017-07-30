@@ -1,4 +1,6 @@
-abstract class AbstractCadenceDataView extends AbstractDataView {
+import {AbstractDataView} from "./AbstractDataView";
+import {ICadenceData} from "../../../interfaces/IActivityData";
+export abstract class AbstractCadenceDataView extends AbstractDataView {
 
     protected cadenceData: ICadenceData;
 

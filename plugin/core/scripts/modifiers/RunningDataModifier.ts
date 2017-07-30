@@ -28,26 +28,26 @@ abstract class AbstractRunningDataModifier implements IModifier {
 
 }
 
-class RunningHeartRateModifier extends AbstractRunningDataModifier {
+export class RunningHeartRateModifier extends AbstractRunningDataModifier {
     constructor() {
         super('heartrate');
     }
 }
 
 
-class RunningCadenceModifier extends AbstractRunningDataModifier {
+export class RunningCadenceModifier extends AbstractRunningDataModifier {
     constructor() {
         super('cadence');
     }
 }
 
-class RunningTemperatureModifier extends AbstractRunningDataModifier {
+export class RunningTemperatureModifier extends AbstractRunningDataModifier {
     constructor() {
         super('temp');
     }
 }
 
-class RunningGradeAdjustedPaceModifier extends AbstractRunningDataModifier {
+export class RunningGradeAdjustedPaceModifier extends AbstractRunningDataModifier {
     constructor() {
         super('grade_adjusted_pace');
     }

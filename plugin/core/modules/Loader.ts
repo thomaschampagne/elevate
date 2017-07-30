@@ -1,4 +1,4 @@
-class Loader {
+export class Loader {
 
     protected loadingFinished: any;
     protected totalRequired: any;
@@ -49,14 +49,8 @@ class Loader {
     }
 
     injectJS(codeString: string): void {
-
         let inner: HTMLScriptElement = document.createElement('script');
-
         inner.textContent = codeString;
-        inner.onload = () => {
-            inner.remove();
-        };
-
         (document.head || document.documentElement).appendChild(inner);
     }
 }

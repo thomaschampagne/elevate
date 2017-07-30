@@ -1,4 +1,15 @@
-class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
+import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
+import {PaceDataView} from "./views/PaceDataView";
+import {RunningPowerDataView} from "./views/RunningPowerDataView";
+import {RunningCadenceDataView} from "./views/RunningCadenceDataView";
+import {RunningGradeDataView} from "./views/RunningGradeDataView";
+import {ElevationDataView} from "./views/ElevationDataView";
+import {Helper} from "../../Helper";
+import {ActivityProcessor} from "../../processors/ActivityProcessor";
+import {IUserSettings} from "../../interfaces/IUserSettings";
+import {IAppResources} from "../../interfaces/IAppResources";
+
+export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
     constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
         super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);

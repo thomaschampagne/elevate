@@ -1,4 +1,10 @@
-class FitnessTrendTable {
+import * as _ from "underscore";
+import {IWindowService} from "angular";
+import {FitnessTrendController} from "../../controllers/FitnessTrendController";
+import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDataService";
+
+
+export class FitnessTrendTable {
 
     static $inject: string[] = ['$scope', '$window'];
 
@@ -143,10 +149,11 @@ class FitnessTrendTable {
 
 }
 
-app.directive('fitnessTrendTable', [() => {
+export let fitnessTrendTable = [() => {
     return <any> {
         templateUrl: 'directives/fitnessTrend/templates/fitnessTrendTable.html',
         controller: FitnessTrendTable
     };
-}]);
+}];
+
 

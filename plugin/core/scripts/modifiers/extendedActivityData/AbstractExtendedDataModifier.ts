@@ -1,5 +1,16 @@
-///<reference path="views/HeaderView.ts"/>
-abstract class AbstractExtendedDataModifier {
+import * as _ from "underscore";
+import {AbstractDataView} from "./views/AbstractDataView";
+import {HeaderView} from "./views/HeaderView";
+import {HeartRateDataView} from "./views/HeartRateDataView";
+import {FeaturedDataView} from "./views/FeaturedDataView";
+import {Helper} from "../../Helper";
+import {ActivityProcessor} from "../../processors/ActivityProcessor";
+import {StorageManager} from "../../../modules/StorageManager";
+import {IUserSettings} from "../../interfaces/IUserSettings";
+import {IAppResources} from "../../interfaces/IAppResources";
+import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../interfaces/IActivityData";
+
+export abstract class AbstractExtendedDataModifier {
 
     public static TYPE_ACTIVITY: number = 0;
     public static TYPE_SEGMENT: number = 1;

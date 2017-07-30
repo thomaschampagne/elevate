@@ -1,4 +1,14 @@
-declare let L: any;
+/*
+ *  Use d3 version provided by strava.com
+ *  And do not inject d3 as 'import * as d3 from "d3";'
+ */
+declare let d3: any; // Injected by strava.com
+
+import * as _ from "underscore";
+import {Helper} from "../Helper";
+import {IUserSettings} from "../interfaces/IUserSettings";
+
+declare let L: any; // Injected by strava.com
 
 function BestSplitWorker() {
 
@@ -358,7 +368,6 @@ function BestSplitWorker() {
         };
     }
 
-
     this.onmessage = (message: MessageEvent) => {
 
         if (message.data && message.data.split && message.data.activity && message.data.options) {
@@ -379,7 +388,7 @@ function BestSplitWorker() {
     };
 }
 
-class ActivityBestSplitsModifier implements IModifier {
+export class ActivityBestSplitsModifier implements IModifier {
 
     public static Units = {
 
@@ -430,7 +439,7 @@ class ActivityBestSplitsModifier implements IModifier {
         this.hasPowerMeter = hasPowerMeter;
         this.splitsConfiguration = splitsConfiguration;
         this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function () {
-            };
+        };
         this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
         this.cacheKeyPrefix = 'stravistix_bestsplit_' + this.activityId + '_';
     }
@@ -714,7 +723,7 @@ class ActivityBestSplitsModifier implements IModifier {
             "</tr>" +
             "</tfoot>" +
             "<tbody class='splits-list'>" +
-            "</tbody" +
+            "</tbody>" +
             "</table>");
 
         bestSplitsSection.append(splitsTable);
@@ -799,7 +808,7 @@ class ActivityBestSplitsModifier implements IModifier {
             saveSplitsConfiguration(splitsArray);
         });
 
-        $("#best-split-new-add").click((e: Event) => {
+        $("#best-split-new-add").click((e: JQuery.Event) => {
             e.preventDefault();
             let splitLength = parseInt($("#best-split-new-length").val());
             if (splitLength < 1) {

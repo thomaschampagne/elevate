@@ -1,4 +1,18 @@
-/// <reference path="../typings/specs.d.ts" />
+import {
+    ActivitiesSynchronizer, IAthleteProfile,
+    ISyncResult
+} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import * as _ from "underscore"
+import * as Q from "q";
+import {ActivitiesProcessor} from "../../plugin/core/scripts/processors/ActivitiesProcessor";
+import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
+import {
+    ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify,
+    ISyncRawStravaActivity
+} from "../../plugin/core/scripts/interfaces/ISync";
+import {IAnalysisData} from "../../plugin/core/scripts/interfaces/IActivityData";
+import {clone, editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer syncing with stubs', () => {
 

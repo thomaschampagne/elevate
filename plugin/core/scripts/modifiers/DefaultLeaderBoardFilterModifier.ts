@@ -1,4 +1,4 @@
-class DefaultLeaderBoardFilterModifier implements IModifier {
+export class DefaultLeaderBoardFilterModifier implements IModifier {
 
     protected defaultLeaderBoardFilter: string;
 
