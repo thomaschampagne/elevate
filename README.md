@@ -44,7 +44,7 @@ StravistiX is using bellow frameworks/libs/tools:
 * Node package manager (npm) provided by [nodejs.org](https://nodejs.org) to fetch modules from [npmjs.com](https://www.npmjs.com/).
 * [Gulp](http://gulpjs.com/) task runner.
 * [Chart.js](http://www.chartjs.org/) Simple yet flexible JavaScript charting.
-* [lodash](https://lodash.com) that provides a whole mess of useful functional programming helpers.
+* [Lodash](https://lodash.com) that provides a whole mess of useful functional programming helpers.
 * [AngularJS 1.*](https://angularjs.org/) for options page.
 * [Angular Material](https://material.angularjs.org) design 1.* for options page.
 * [TypeScript](https://www.typescriptlang.org) that adds typing & class-based syntax over javascript then compile back to JavaScript (ES5/ES2015/ES6).
@@ -115,6 +115,10 @@ gulp watch
 ```
 _Note: Make sure to declare your new resources in **gulpfile.js** to see them copied to **dist/** folder_ 
 
+Run unit testing suite:
+```
+gulp specs
+```
 ### 3.2/ Create a package archive
 ```
 gulp package
