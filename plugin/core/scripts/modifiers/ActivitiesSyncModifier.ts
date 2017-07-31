@@ -37,7 +37,9 @@ export class ActivitiesSyncModifier implements IModifier {
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
         html += '           <span style="font-size: 28px;">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension.' +
-            '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation<br/><a href="' + this.appResources.settingsLink + '#!/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" style="font-weight: bold; color: #e94e1b;">&#187; Configure auto sync here &#171;</a><br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
+            '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation' +
+            '<br/><br/><a href="' + this.appResources.settingsLink + '#!/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" class="btn btn-sm btn-primary">Configure Auto Sync</a>' +
+            '<br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
             'Closing window stops synchronization. It will close itself when done.';
         html += '       </div>';
         html += '       <div class="progressBarGroup">';
@@ -80,7 +82,7 @@ export class ActivitiesSyncModifier implements IModifier {
 
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
-            $('#storageUsage').html('Extension local storage occupation: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB');
+            $('#storageUsage').html('Extension local storage occupation: <strong>' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB</strong>');
         });
     }
 
@@ -153,12 +155,9 @@ export class ActivitiesSyncModifier implements IModifier {
 
         }, (progress: ISyncNotify) => {
 
-            // console.log(progress);
-
             // Global progress
             $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);
             $('#totalProgressText').html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
-
 
             // Step
             let stepMessage: string = '';
@@ -179,19 +178,19 @@ export class ActivitiesSyncModifier implements IModifier {
                     this.updateStorageUsage();
                     break;
                 case 'updatingLastSyncDateTime':
-                    stepMessage = 'Updating your last synchronization date...';
+                    stepMessage = 'Updating your last synchronization date... And you\'re done.';
                     break;
             }
 
-            $('#syncStep').html('Activity group <' + progress.pageGroupId + '> ' + stepMessage);
+            $('#syncStep').html('Activity group <strong>' + progress.pageGroupId + '</strong> &#10141; ' + stepMessage);
             $('#syncStepProgressBar').val(progress.progress);
             $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
 
             document.title = 'History synchronization @ ' + (progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
 
             // Infos
-            $('#totalActivities').html('Total activities found <' + progress.totalActivities + '>');
-            $('#browsedActivitiesCount').html('Total activities processed <' + progress.browsedActivitiesCount + '>');
+            $('#totalActivities').html('Total activities found <strong>' + progress.totalActivities + '</strong>');
+            $('#browsedActivitiesCount').html('Total activities processed <strong>' + progress.browsedActivitiesCount + '</strong>');
         });
     }
 }
