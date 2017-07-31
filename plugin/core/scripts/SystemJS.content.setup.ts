@@ -10,6 +10,9 @@ SystemJS.config({
     },
     map: {
         'lodash': 'npm:lodash/lodash.min.js',
+    },
+    'lodash': {
+        format: 'cjs',
     }
 });
 

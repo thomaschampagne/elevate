@@ -52,6 +52,9 @@ const _coreConfig: ICoreConfig = {
             },
             'file-saver': {
                 format: 'cjs',
+            },
+            'lodash': {
+                format: 'cjs',
             }
         }
     },
