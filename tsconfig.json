@@ -1,6 +1,6 @@
 {
   "files": [
-    "plugin/plugin.d.ts"
+    "plugin/core/core.d.ts"
   ],
   "include": [
     // Core
