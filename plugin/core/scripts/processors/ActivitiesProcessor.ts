@@ -1,10 +1,10 @@
-import * as Q from "q";
 import * as _ from "lodash";
-import {IUserSettings} from "../interfaces/IUserSettings";
-import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {IAppResources} from "../interfaces/IAppResources";
-import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../interfaces/ISync";
+import * as Q from "q";
 import {IActivityStatsMap, IAnalysisData} from "../interfaces/IActivityData";
+import {IAppResources} from "../interfaces/IAppResources";
+import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
+import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../interfaces/ISync";
+import {IUserSettings} from "../interfaces/IUserSettings";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
 export class ActivitiesProcessor {
@@ -17,20 +17,20 @@ export class ActivitiesProcessor {
         this.userSettings = userSettings;
     }
 
-    public static outputFields: Array<string> = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
+    public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
 
     /**
      * @return Activities array with computed stats
      */
-    public compute(activitiesWithStream: Array<ISyncActivityWithStream>): Q.IPromise<Array<ISyncActivityComputed>> {
+    public compute(activitiesWithStream: ISyncActivityWithStream[]): Q.IPromise<ISyncActivityComputed[]> {
 
-        let deferred = Q.defer<Array<ISyncActivityComputed>>();
+        const deferred = Q.defer<ISyncActivityComputed[]>();
 
         let computedActivitiesPercentageCount: number = 0;
 
-        let activitiesComputedResults: Array<IAnalysisData> = [];
+        let activitiesComputedResults: IAnalysisData[] = [];
 
-        let queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: ISyncActivityWithStream, index: number) => {
+        const queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: ISyncActivityWithStream, index: number) => {
 
             return promise.then(() => {
 
@@ -38,10 +38,10 @@ export class ActivitiesProcessor {
 
                     activitiesComputedResults.push(activityComputed);
 
-                    let notify: ISyncNotify = {
-                        step: 'computedActivitiesPercentage',
+                    const notify: ISyncNotify = {
+                        step: "computedActivitiesPercentage",
                         progress: computedActivitiesPercentageCount / activitiesWithStream.length * 100,
-                        index: index,
+                        index,
                         activityId: activityWithStream.id,
                     };
 
@@ -60,16 +60,16 @@ export class ActivitiesProcessor {
 
             if (activitiesComputedResults.length !== activitiesWithStream.length) {
 
-                let errMessage: string = 'activitiesComputedResults length mismatch with activitiesWithStream length: ' + activitiesComputedResults.length + ' != ' + activitiesWithStream.length + ')';
+                const errMessage: string = "activitiesComputedResults length mismatch with activitiesWithStream length: " + activitiesComputedResults.length + " != " + activitiesWithStream.length + ")";
                 deferred.reject(errMessage);
 
             } else {
 
-                let activitiesComputed: Array<ISyncActivityComputed> = [];
+                let activitiesComputed: ISyncActivityComputed[] = [];
 
                 _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
-                    let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields);
+                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields) as ISyncActivityComputed;
                     activityComputed.extendedStats = computedResult;
                     activitiesComputed.push(activityComputed);
 
@@ -81,9 +81,9 @@ export class ActivitiesProcessor {
                 });
 
                 // Finishing... force progress @ 100% for compute progress callback
-                let notify: ISyncNotify = {
-                    step: 'computedActivitiesPercentage',
-                    progress: 100
+                const notify: ISyncNotify = {
+                    step: "computedActivitiesPercentage",
+                    progress: 100,
                 };
 
                 deferred.notify(notify);
@@ -106,11 +106,11 @@ export class ActivitiesProcessor {
 
     protected createActivityStatMap(activityWithStream: ISyncActivityWithStream): IActivityStatsMap {
 
-        let statsMap: IActivityStatsMap = {
+        const statsMap: IActivityStatsMap = {
             distance: parseInt(activityWithStream.distance),
             elevation: parseInt(activityWithStream.elevation_gain),
             avgPower: null, // Toughness Score will not be computed
-            averageSpeed: null // Toughness Score will not be computed
+            averageSpeed: null, // Toughness Score will not be computed
         };
 
         return statsMap;
@@ -118,28 +118,28 @@ export class ActivitiesProcessor {
 
     protected computeActivity(activityWithStream: ISyncActivityWithStream): Q.IPromise<IAnalysisData> {
 
-        let deferred = Q.defer<IAnalysisData>();
+        const deferred = Q.defer<IAnalysisData>();
 
         // Lets create that worker/thread!
-        let computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], {
-            type: 'application/javascript'
+        const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
+            type: "application/javascript",
         })));
 
         // Create activity stats map from given activity
-        let activityStatsMap: IActivityStatsMap = this.createActivityStatMap(activityWithStream);
+        const activityStatsMap: IActivityStatsMap = this.createActivityStatMap(activityWithStream);
 
-        let threadMessage: IComputeActivityThreadMessage = {
+        const threadMessage: IComputeActivityThreadMessage = {
             activityType: activityWithStream.type,
             isTrainer: activityWithStream.trainer,
             appResources: this.appResources,
             userSettings: this.userSettings,
             athleteWeight: this.userSettings.userWeight,
             hasPowerMeter: activityWithStream.hasPowerMeter,
-            activityStatsMap: activityStatsMap,
+            activityStatsMap,
             activityStream: activityWithStream.stream,
             bounds: null,
             returnZones: false,
-            systemJsConfig: SystemJS.getConfig()
+            systemJsConfig: SystemJS.getConfig(),
         };
 
         computeAnalysisThread.postMessage(threadMessage);
@@ -160,7 +160,7 @@ export class ActivitiesProcessor {
 
         computeAnalysisThread.onerror = (err) => {
 
-            let errorMessage: any = {
+            const errorMessage: any = {
                 errObject: err,
                 activityId: activityWithStream.id,
             };

@@ -1,5 +1,5 @@
-import {AbstractDataView} from "./AbstractDataView";
 import {IElevationData} from "../../../interfaces/IActivityData";
+import {AbstractDataView} from "./AbstractDataView";
 export class ElevationDataView extends AbstractDataView {
     protected elevationData: IElevationData;
 
@@ -29,12 +29,12 @@ export class ElevationDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, 'Average Elevation', 'm', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), 'Ascent', 'm', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), 'Descent', 'm', 'displayAdvancedElevationData');
+        this.insertContentAtGridPosition(0, 0, this.elevationData.avgElevation, "Average Elevation", "m", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(1, 0, this.elevationData.accumulatedElevationAscent.toFixed(0), "Ascent", "m", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(2, 0, this.elevationData.accumulatedElevationDescent.toFixed(0), "Descent", "m", "displayAdvancedElevationData");
 
-        this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, '25% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, '50% Quartile Elevation', 'm', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, '75% Quartile Elevation', 'm', 'displayAdvancedElevationData');
+        this.insertContentAtGridPosition(0, 1, this.elevationData.lowerQuartileElevation, "25% Quartile Elevation", "m", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(1, 1, this.elevationData.medianElevation, "50% Quartile Elevation", "m", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(2, 1, this.elevationData.upperQuartileElevation, "75% Quartile Elevation", "m", "displayAdvancedElevationData");
     }
 }

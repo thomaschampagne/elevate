@@ -1,11 +1,11 @@
-import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
-import {Helper} from "../Helper";
 import * as _ from "lodash";
-import {IStorageUsage, StorageManager} from "../../modules/StorageManager";
-import {IUserSettings} from "../interfaces/IUserSettings";
-import {IAppResources} from "../interfaces/IAppResources";
 import {env} from "../../config/env";
+import {IStorageUsage, StorageManager} from "../../modules/StorageManager";
+import {Helper} from "../Helper";
+import {IAppResources} from "../interfaces/IAppResources";
 import {ISyncNotify} from "../interfaces/ISync";
+import {IUserSettings} from "../interfaces/IUserSettings";
+import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
 
 export class ActivitiesSyncModifier implements IModifier {
 
@@ -30,42 +30,42 @@ export class ActivitiesSyncModifier implements IModifier {
     public modify(): void {
 
         // Make a white page !
-        $('body').children().remove();
+        $("body").children().remove();
 
-        let html = '';
-        html += '<div>';
+        let html = "";
+        html += "<div>";
         html += '    <div id="syncContainer">';
         html += '       <div id="syncMessage">';
         html += '           <span style="font-size: 28px;">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension.' +
-            '<br/><br/>Once the first sync done, your history will be automatically synced every <strong>' + this.userSettings.autoSyncMinutes + ' minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if ' + this.userSettings.autoSyncMinutes + ' minute(s) have been flow out since your last synchronisation' +
+            "<br/><br/>Once the first sync done, your history will be automatically synced every <strong>" + this.userSettings.autoSyncMinutes + " minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if " + this.userSettings.autoSyncMinutes + " minute(s) have been flow out since your last synchronisation" +
             '<br/><br/><a href="' + this.appResources.settingsLink + '#!/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync" target="_blank" class="btn btn-sm btn-primary">Configure Auto Sync</a>' +
-            '<br/><br/>Manual sync also works by clicking the same button.<br/><br/>' +
-            'Closing window stops synchronization. It will close itself when done.';
-        html += '       </div>';
+            "<br/><br/>Manual sync also works by clicking the same button.<br/><br/>" +
+            "Closing window stops synchronization. It will close itself when done.";
+        html += "       </div>";
         html += '       <div class="progressBarGroup">';
         html += '           <div id="totalProgress">Global synchronisation progress</div>';
         html += '           <progress id="syncProgressBar" value="0" max="100"></progress>';
         html += '           <span id="totalProgressText"></span>';
-        html += '        </div>';
+        html += "        </div>";
         html += '        <div class="progressBarGroup">';
         html += '           <div id="syncStep"></div>';
         html += '           <progress id="syncStepProgressBar" value="0" max="100"></progress>';
         html += '           <span id="syncStepProgressText"></span>';
-        html += '        </div>';
+        html += "        </div>";
         html += '        <div id="syncStatusError" style="display: none;">';
         html += '           <div style="padding-bottom: 20px;">Sync error occured. Maybe a network timeout error...<a href="#" onclick="window.location.reload();">Try to sync again</a></div>';
         html += '           <div id="syncStatusErrorContent" style="font-size: 11px;"></div>';
-        html += '        </div>';
+        html += "        </div>";
         html += '       <div id="syncInfos">';
         html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';
         html += '           <div style="padding-bottom: 10px;" id="browsedActivitiesCount"></div>';
         html += '           <div style="padding-bottom: 10px;" id="storageUsage"></div>';
         html += '           <div style="padding-bottom: 10px;" id="autoClose"></div>';
-        html += '       </div>';
-        html += '    </div>';
-        html += '</div>';
+        html += "       </div>";
+        html += "    </div>";
+        html += "</div>";
 
-        $('body').append(html).each(() => {
+        $("body").append(html).each(() => {
 
             this.updateStorageUsage();
 
@@ -82,13 +82,13 @@ export class ActivitiesSyncModifier implements IModifier {
 
     protected updateStorageUsage() {
         Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
-            $('#storageUsage').html('Extension local storage occupation: <strong>' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB</strong>');
+            $("#storageUsage").html("Extension local storage occupation: <strong>" + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + "MB</strong>");
         });
     }
 
     public cancelAutoClose(): void {
         clearInterval(this.closeWindowIntervalId);
-        $('#autoClose').hide();
+        $("#autoClose").hide();
     }
 
     protected sync(): void {
@@ -96,27 +96,27 @@ export class ActivitiesSyncModifier implements IModifier {
         // Start sync..
         this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
-            console.log('Sync finished', syncResult);
+            console.log("Sync finished", syncResult);
 
             // Reloading source tab if exist
             if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
-                console.log('Reloading source tab with id ' + this.sourceTabId);
+                console.log("Reloading source tab with id " + this.sourceTabId);
                 Helper.reloadBrowserTab(this.extensionId, this.sourceTabId); // Sending message to reload source tab which asked for a sync
             } else {
-                console.log('no source tab id given: no reload of source.');
+                console.log("no source tab id given: no reload of source.");
             }
 
             // Global progress
-            $('#syncProgressBar').val(100);
-            $('#totalProgressText').html('100%');
+            $("#syncProgressBar").val(100);
+            $("#totalProgressText").html("100%");
 
             // Register instance on the bridge
             window.__stravistix_bridge__.activitiesSyncModifierInstance = this;
 
             let timer: number = 5 * 1000; // 5s for debug...
             this.closeWindowIntervalId = setInterval(() => {
-                $('#autoClose').html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ', Edited:' + syncResult.globalHistoryChanges.edited.length + ', Deleted:' + syncResult.globalHistoryChanges.deleted.length +
-                    '. Closing in ' + (timer / 1000) + 's</span> <a href="#" onclick="javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()">Cancel auto close<a></div>');
+                $("#autoClose").html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ", Edited:" + syncResult.globalHistoryChanges.edited.length + ", Deleted:" + syncResult.globalHistoryChanges.deleted.length +
+                    ". Closing in " + (timer / 1000) + 's</span> <a href="#" onclick="javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
                     window.close();
                 }
@@ -125,72 +125,72 @@ export class ActivitiesSyncModifier implements IModifier {
 
         }, (err: any) => {
 
-            console.error('Sync error', err);
+            console.error("Sync error", err);
 
-            let errorUpdate: any = {
-                stravaId: (window.currentAthlete && window.currentAthlete.get('id') ? window.currentAthlete.get('id') : null),
-                error: {path: window.location.href, date: new Date(), content: err}
+            const errorUpdate: any = {
+                stravaId: (window.currentAthlete && window.currentAthlete.get("id") ? window.currentAthlete.get("id") : null),
+                error: {path: window.location.href, date: new Date(), content: err},
             };
 
             $.post({
-                url: env.endPoint + '/api/errorReport',
+                url: env.endPoint + "/api/errorReport",
                 data: JSON.stringify(errorUpdate),
-                dataType: 'json',
-                contentType: 'application/json',
+                dataType: "json",
+                contentType: "application/json",
                 success: (response: any) => {
-                    console.log('Commited: ', response);
+                    console.log("Commited: ", response);
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                    console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
-                }
+                    console.warn("Endpoint <" + env.endPoint + "> not reachable", jqXHR);
+                },
             });
 
-            $('#syncStatusError').show();
+            $("#syncStatusError").show();
 
             if (err && err.errObject) {
-                $('#syncStatusErrorContent').append("<div>ERROR on activity <" + err.activityId + ">: " + err.errObject.message + ". File: " + err.errObject.filename + ":" + err.errObject.lineno + ":" + err.errObject.colno + "</div>");
+                $("#syncStatusErrorContent").append("<div>ERROR on activity <" + err.activityId + ">: " + err.errObject.message + ". File: " + err.errObject.filename + ":" + err.errObject.lineno + ":" + err.errObject.colno + "</div>");
             } else {
-                $('#syncStatusErrorContent').append("<div>" + JSON.stringify(err) + "</div>");
+                $("#syncStatusErrorContent").append("<div>" + JSON.stringify(err) + "</div>");
             }
 
         }, (progress: ISyncNotify) => {
 
             // Global progress
-            $('#syncProgressBar').val(progress.browsedActivitiesCount / progress.totalActivities * 100);
-            $('#totalProgressText').html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%');
+            $("#syncProgressBar").val(progress.browsedActivitiesCount / progress.totalActivities * 100);
+            $("#totalProgressText").html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + "%");
 
             // Step
-            let stepMessage: string = '';
+            let stepMessage: string = "";
 
             switch (progress.step) {
 
-                case 'fetchActivitiesPercentage':
-                    stepMessage = 'Batch fetching...';
+                case "fetchActivitiesPercentage":
+                    stepMessage = "Batch fetching...";
                     break;
-                case 'fetchedStreamsPercentage':
-                    stepMessage = 'Fetching streams...';
+                case "fetchedStreamsPercentage":
+                    stepMessage = "Fetching streams...";
                     break;
-                case 'computedActivitiesPercentage':
-                    stepMessage = 'Computing extended statistics...';
+                case "computedActivitiesPercentage":
+                    stepMessage = "Computing extended statistics...";
                     break;
-                case 'savedComputedActivities':
-                    stepMessage = 'Saving results to local extension storage...';
+                case "savedComputedActivities":
+                    stepMessage = "Saving results to local extension storage...";
                     this.updateStorageUsage();
                     break;
-                case 'updatingLastSyncDateTime':
-                    stepMessage = 'Updating your last synchronization date... And you\'re done.';
+                case "updatingLastSyncDateTime":
+                    stepMessage = "Updating your last synchronization date... And you're done.";
                     break;
             }
 
-            $('#syncStep').html('Activity group <strong>' + progress.pageGroupId + '</strong> &#10141; ' + stepMessage);
-            $('#syncStepProgressBar').val(progress.progress);
-            $('#syncStepProgressText').html(progress.progress.toFixed(0) + '%');
+            $("#syncStep").html("Activity group <strong>" + progress.pageGroupId + "</strong> &#10141; " + stepMessage);
+            $("#syncStepProgressBar").val(progress.progress);
+            $("#syncStepProgressText").html(progress.progress.toFixed(0) + "%");
 
-            document.title = 'History synchronization @ ' + (progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + '%';
+            document.title = "History synchronization @ " + (progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + "%";
 
             // Infos
-            $('#totalActivities').html('Total activities found <strong>' + progress.totalActivities + '</strong>');
-            $('#browsedActivitiesCount').html('Total activities processed <strong>' + progress.browsedActivitiesCount + '</strong>');
+            $("#totalActivities").html("Total activities found <strong>" + progress.totalActivities + "</strong>");
+            $("#browsedActivitiesCount").html("Total activities processed <strong>" + progress.browsedActivitiesCount + "</strong>");
         });
     }
 }

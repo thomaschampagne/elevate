@@ -2,75 +2,75 @@ const _coreConfig: ICoreConfig = {
     systemJsConfig: {
         baseURL: null, // SystemJS baseURL is set on "startCoreEvent" event handling through "CoreSetup.listenForStartCoreEvent()"
         paths: {
-            'npm:': 'node_modules/',
-            'custom:': 'core/modules/'
+            "npm:": "node_modules/",
+            "custom:": "core/modules/",
         },
         packages: {
-            'core': {
-                format: 'cjs'
+            "core": {
+                format: "cjs",
             },
-            'npm:geodesy': {
-                format: 'cjs'
-            }
+            "npm:geodesy": {
+                format: "cjs",
+            },
         },
         map: {
 
             /* Npm Modules */
-            'css': 'npm:systemjs-plugin-css/css.js',
-            'chart.js': 'npm:chart.js/dist/Chart.bundle.js',
-            'd3': 'npm:d3/d3.js',
-            'q': 'npm:q/q.js',
-            'jquery': 'npm:jquery/dist/jquery.js',
-            'dms': 'npm:geodesy/dms.js',
-            'sphericalLatLon': 'npm:geodesy/latlon-spherical.js',
-            'lodash': 'npm:lodash/lodash.min.js',
-            'fancybox': 'npm:fancybox/dist/js/jquery.fancybox.pack.js',
-            'file-saver': 'npm:file-saver/FileSaver.min.js',
+            "css": "npm:systemjs-plugin-css/css.js",
+            "chart.js": "npm:chart.js/dist/Chart.bundle.js",
+            "d3": "npm:d3/d3.js",
+            "q": "npm:q/q.js",
+            "jquery": "npm:jquery/dist/jquery.js",
+            "dms": "npm:geodesy/dms.js",
+            "sphericalLatLon": "npm:geodesy/latlon-spherical.js",
+            "lodash": "npm:lodash/lodash.min.js",
+            "fancybox": "npm:fancybox/dist/js/jquery.fancybox.pack.js",
+            "file-saver": "npm:file-saver/FileSaver.min.js",
 
             /* Custom modules */
-            'jqueryAppear': 'custom:jquery.appear.js',
+            "jqueryAppear": "custom:jquery.appear.js",
 
             /* Styles */
-            'fancybox.css': 'npm:fancybox/dist/css/jquery.fancybox.css',
-            'core.css': 'core/css/core.css',
+            "fancybox.css": "npm:fancybox/dist/css/jquery.fancybox.css",
+            "core.css": "core/css/core.css",
         },
         meta: {
-            'fancybox.css': {
-                loader: 'css'
+            "fancybox.css": {
+                loader: "css",
             },
-            'core.css': {
-                loader: 'css'
+            "core.css": {
+                loader: "css",
             },
-            'sphericalLatLon': {
-                exports: 'LatLon',
-                format: 'global'
+            "sphericalLatLon": {
+                exports: "LatLon",
+                format: "global",
             },
-            'file-saver': {
-                format: 'cjs',
+            "file-saver": {
+                format: "cjs",
             },
-            'lodash': {
-                format: 'cjs',
+            "lodash": {
+                format: "cjs",
             },
-            'd3': {
-                format: 'cjs',
-            }
-        }
+            "d3": {
+                format: "cjs",
+            },
+        },
     },
     requiredNonEsModules: [ // Required non ES modules into the core
-        'jqueryAppear',
-        'fancybox',
-        'sphericalLatLon'
+        "jqueryAppear",
+        "fancybox",
+        "sphericalLatLon",
     ],
     requiredCss: [
-        'fancybox.css',
-        'core.css'
-    ]
+        "fancybox.css",
+        "core.css",
+    ],
 };
 
 interface ICoreConfig {
     systemJsConfig: SystemJSLoader.Config;
-    requiredNonEsModules: Array<string>;
-    requiredCss: Array<string>;
+    requiredNonEsModules: string[];
+    requiredCss: string[];
 }
 
 class CoreSetup {
@@ -84,7 +84,7 @@ class CoreSetup {
         this.coreConfig = {
             systemJsConfig: null,
             requiredNonEsModules: null,
-            requiredCss: null
+            requiredCss: null,
         };
         this.coreConfig.systemJsConfig = config.systemJsConfig;
         this.coreConfig.requiredNonEsModules = config.requiredNonEsModules;
@@ -96,7 +96,7 @@ class CoreSetup {
     }
 
     protected setupSystemJsConfig(extensionId: string) {
-        this.coreConfig.systemJsConfig.baseURL = 'chrome-extension://' + extensionId + '/';
+        this.coreConfig.systemJsConfig.baseURL = "chrome-extension://" + extensionId + "/";
         SystemJS.config(this.coreConfig.systemJsConfig);
     }
 
@@ -105,20 +105,20 @@ class CoreSetup {
         //Listen for the event
         addEventListener(CoreSetup.startCoreEvent, (eventReceived: any) => {
 
-            let startCoreData/*: IStartCoreData*/ = eventReceived.detail;
+            const startCoreData /*: IStartCoreData*/ = eventReceived.detail;
 
             this.setupSystemJsConfig(startCoreData.constants.EXTENSION_ID);
 
-            let requiredNonEsModulesPromises: Array<Promise<any>> = Array<Promise<any>>();
+            const requiredNonEsModulesPromises: Array<Promise<any>> = Array<Promise<any>>();
 
             for (let i: number = 0; i < this.coreConfig.requiredNonEsModules.length; i++) {
-                requiredNonEsModulesPromises.push(SystemJS.import(this.coreConfig.requiredNonEsModules[i]))
+                requiredNonEsModulesPromises.push(SystemJS.import(this.coreConfig.requiredNonEsModules[i]));
             }
 
-            let requiredCssPromises: Array<Promise<any>> = Array<Promise<any>>();
+            const requiredCssPromises: Array<Promise<any>> = Array<Promise<any>>();
 
             for (let i: number = 0; i < this.coreConfig.requiredCss.length; i++) {
-                requiredCssPromises.push(SystemJS.import(this.coreConfig.requiredCss[i]))
+                requiredCssPromises.push(SystemJS.import(this.coreConfig.requiredCss[i]));
             }
 
             // Load required non ES modules into the core
@@ -132,7 +132,7 @@ class CoreSetup {
 
             }).then(() => {
 
-                return SystemJS.import('core/scripts/Constants.js');
+                return SystemJS.import("core/scripts/Constants.js");
 
             }, (err) => {
                 console.error(err);
@@ -140,7 +140,7 @@ class CoreSetup {
             }).then((module) => {
 
                 module.constants = startCoreData.constants;
-                return SystemJS.import('core/scripts/StravistiX.js');
+                return SystemJS.import("core/scripts/StravistiX.js");
 
             }, (err) => {
                 console.error(err);

@@ -8,18 +8,18 @@ export interface IUserSettings {
     userFTP: number;
     userSwimFTP: number;
     userWeight: number;
-    userHrrZones: Array<IHrrZone>;
+    userHrrZones: IHrrZone[];
     zones: {
-        speed: Array<IZone>;
-        pace: Array<IZone>;
-        power: Array<IZone>;
-        runningPower: Array<IZone>;
-        cyclingCadence: Array<IZone>;
-        runningCadence: Array<IZone>;
-        grade: Array<IZone>;
-        elevation: Array<IZone>;
-        ascent: Array<IZone>;
-    }
+        speed: IZone[];
+        pace: IZone[];
+        power: IZone[];
+        runningPower: IZone[];
+        cyclingCadence: IZone[];
+        runningCadence: IZone[];
+        grade: IZone[];
+        elevation: IZone[];
+        ascent: IZone[];
+    };
     targetsYearRide: number;
     targetsYearRun: number;
     remoteLinks: boolean;

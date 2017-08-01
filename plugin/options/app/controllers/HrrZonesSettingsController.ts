@@ -1,11 +1,11 @@
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
-import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
 import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
 
 export class HrrZonesSettingsController {
 
-    static $inject = ['$scope', 'ChromeStorageService', 'AvoidInputKeysService'];
+    static $inject = ["$scope", "ChromeStorageService", "AvoidInputKeysService"];
 
     constructor($scope: any, chromeStorageService: ChromeStorageService, AvoidInputKeysService: IAvoidInputKeysService) {
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
@@ -16,8 +16,8 @@ export class HrrZonesSettingsController {
         });
 
         $scope.localStorageMustBeCleared = () => {
-            chromeStorageService.updateUserSetting('localStorageMustBeCleared', true, () => {
-                console.log('localStorageMustBeCleared has been updated to ' + true);
+            chromeStorageService.updateUserSetting("localStorageMustBeCleared", true, () => {
+                console.log("localStorageMustBeCleared has been updated to " + true);
             });
         };
 

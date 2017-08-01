@@ -1,6 +1,6 @@
-import * as _ from "lodash";
 import * as angular from "angular";
 import * as d3 from "d3";
+import * as _ from "lodash";
 import * as moment from "moment";
 import {Moment} from "moment";
 import {ChromeStorageService} from "../services/ChromeStorageService";
@@ -9,7 +9,7 @@ import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
 
 export interface IYearProgress {
     year: number;
-    progressions: Array<IProgression>;
+    progressions: IProgression[];
 }
 export interface IProgression {
     onTimestamp: number;
@@ -28,7 +28,7 @@ export interface YearProgressActivity extends ISyncActivityComputed {
 
 export class YearProgressComputer {
 
-    public compute(yearProgressActivities: Array<YearProgressActivity>, types: Array<string>): Array<IYearProgress> {
+    public compute(yearProgressActivities: YearProgressActivity[], types: string[]): IYearProgress[] {
 
         if (_.isEmpty(yearProgressActivities)) {
             return;
@@ -37,14 +37,13 @@ export class YearProgressComputer {
         // Keep from types
         yearProgressActivities = _.filter(yearProgressActivities, (activity: YearProgressActivity) => {
             if (_.indexOf(types, activity.type) !== -1) {
-                let momentStartTime: Moment = moment(activity.start_time);
+                const momentStartTime: Moment = moment(activity.start_time);
                 activity.year = momentStartTime.year();
                 activity.dayOfYear = momentStartTime.dayOfYear();
                 return true;
             }
-            return false
+            return false;
         });
-
 
         if (yearProgressActivities.length === 0) {
             return;
@@ -56,21 +55,20 @@ export class YearProgressComputer {
         });
 
         // Find along types date from & to / From: 1st january of first year / To: Today
-        let fromMoment: Moment = moment(_.first(yearProgressActivities).start_time).startOf('year'); // 1st january of first year
-        let todayMoment: Moment = moment().endOf('day'); // Today end of day
+        const fromMoment: Moment = moment(_.first(yearProgressActivities).start_time).startOf("year"); // 1st january of first year
+        const todayMoment: Moment = moment().endOf("day"); // Today end of day
 
         // Init required IYearProgress result
-        let result: Array<IYearProgress> = [];
-
+        const result: IYearProgress[] = [];
 
         // From 'fromMoment' to 'todayMoment' loop on days...
-        let currentDayMoment = moment(fromMoment);
+        const currentDayMoment = moment(fromMoment);
         let currentYearProgress: IYearProgress = null;
         let lastProgression: IProgression = null;
 
         while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-            let currentYear = currentDayMoment.year();
+            const currentYear = currentDayMoment.year();
             let progression: IProgression = null;
 
             // Create new year progress if current year do not exists
@@ -78,7 +76,7 @@ export class YearProgressComputer {
                 lastProgression = null; // New year then remove
                 currentYearProgress = {
                     year: currentYear,
-                    progressions: []
+                    progressions: [],
                 };
                 // Start totals from 0
                 progression = {
@@ -88,7 +86,7 @@ export class YearProgressComputer {
                     totalDistance: 0,
                     totalTime: 0,
                     totalElevation: 0,
-                    count: 0
+                    count: 0,
                 };
                 result.push(currentYearProgress); // register inside result
             } else {
@@ -100,14 +98,14 @@ export class YearProgressComputer {
                     totalDistance: lastProgression.totalDistance,
                     totalTime: lastProgression.totalTime,
                     totalElevation: lastProgression.totalElevation,
-                    count: lastProgression.count
+                    count: lastProgression.count,
                 };
             }
 
             // Find matching activities
-            let foundOnToday: Array<ISyncActivityComputed> = _.filter(yearProgressActivities, {
+            const foundOnToday: ISyncActivityComputed[] = _.filter(yearProgressActivities, {
                 year: currentDayMoment.year(),
-                dayOfYear: currentDayMoment.dayOfYear()
+                dayOfYear: currentDayMoment.dayOfYear(),
             });
 
             if (foundOnToday.length > 0) {
@@ -121,7 +119,7 @@ export class YearProgressComputer {
             }
             lastProgression = progression; // Keep tracking for tomorrow day.
             currentYearProgress.progressions.push(progression);
-            currentDayMoment.add(1, 'days'); // Add a day until todayMoment
+            currentDayMoment.add(1, "days"); // Add a day until todayMoment
         }
         return result;
     }
@@ -130,7 +128,7 @@ enum DataType {
     DISTANCE,
     TIME,
     ELEVATION,
-    COUNT
+    COUNT,
 }
 
 // TODO Targets?
@@ -138,11 +136,11 @@ enum DataType {
 
 export class YearProgressController {
 
-    public static $inject = ['$scope', 'ChromeStorageService', '$mdDialog'];
+    public static $inject = ["$scope", "ChromeStorageService", "$mdDialog"];
 
     constructor($scope: any, chromeStorageService: ChromeStorageService, $mdDialog: angular.material.IDialogService) {
 
-        let yearProgressComputer: YearProgressComputer = new YearProgressComputer();
+        const yearProgressComputer: YearProgressComputer = new YearProgressComputer();
 
         $scope.enabledFeature = true;
         $scope.computedActivities = [];
@@ -151,52 +149,49 @@ export class YearProgressController {
 
         // Data type
         $scope.dataType = [
-            {value: DataType.DISTANCE, text: 'Distance (km)'},
-            {value: DataType.TIME, text: 'Time (h)'},
-            {value: DataType.ELEVATION, text: 'Elevation (m)'},
-            {value: DataType.COUNT, text: 'Count'},
+            {value: DataType.DISTANCE, text: "Distance (km)"},
+            {value: DataType.TIME, text: "Time (h)"},
+            {value: DataType.ELEVATION, text: "Elevation (m)"},
+            {value: DataType.COUNT, text: "Count"},
         ];
 
-
-        $scope.dataTypeSelected = (localStorage.getItem('yearProgressDataType') && _.isNumber(parseInt(localStorage.getItem('yearProgressDataType')))) ? _.find($scope.dataType, {value: parseInt(localStorage.getItem('yearProgressDataType'))}) : $scope.dataType[0];
+        $scope.dataTypeSelected = (localStorage.getItem("yearProgressDataType") && _.isNumber(parseInt(localStorage.getItem("yearProgressDataType")))) ? _.find($scope.dataType, {value: parseInt(localStorage.getItem("yearProgressDataType"))}) : $scope.dataType[0];
         $scope.dataTypeChanged = () => {
-            localStorage.setItem('yearProgressDataType', $scope.dataTypeSelected.value); // Store value
+            localStorage.setItem("yearProgressDataType", $scope.dataTypeSelected.value); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
-
-
         $scope.typesChanged = () => {
-            localStorage.setItem('yearProgressActivitiesType', angular.toJson($scope.searchTypesSelected)); // Store value
+            localStorage.setItem("yearProgressActivitiesType", angular.toJson($scope.searchTypesSelected)); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         };
 
         $scope.showHelp = () => {
-            let todayMoment = moment().format('MMMM Do');
-            let dialog = $mdDialog.alert()
+            const todayMoment = moment().format("MMMM Do");
+            const dialog = $mdDialog.alert()
                 .htmlContent("This panel displays your progress for each beginning of year to current month and day. Today is " + todayMoment + ", this panel shows \"What I've accomplished by " + todayMoment + " of this year compared to previous years to the same date.\"")
-                .ok('Got it !');
+                .ok("Got it !");
             $mdDialog.show(dialog);
         };
 
         // Start...
-        chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
+        chromeStorageService.fetchComputedActivities().then((computedActivities: ISyncActivityComputed[]) => {
 
             $scope.computedActivities = computedActivities;
 
-            let typesCount = _.countBy(_.map($scope.computedActivities, 'type'));
+            const typesCount = _.countBy(_.map($scope.computedActivities, "type"));
 
-            let mostPerformedType: string = <string> _.first(_.last(_.sortBy(_.toPairs(typesCount), (value: any) => {
+            const mostPerformedType: string = _.first(_.last(_.sortBy(_.toPairs(typesCount), (value: any) => {
                 return value[1];
-            })));
+            }))) as string;
 
             // Try use types from localStorage or use the most performed sport by the user
-            $scope.searchTypesSelected = (localStorage.getItem('yearProgressActivitiesType')) ? angular.fromJson(localStorage.getItem('yearProgressActivitiesType')) : (mostPerformedType) ? [mostPerformedType] : null;
+            $scope.searchTypesSelected = (localStorage.getItem("yearProgressActivitiesType")) ? angular.fromJson(localStorage.getItem("yearProgressActivitiesType")) : (mostPerformedType) ? [mostPerformedType] : null;
 
             // Which text displayed in activities types?
-            $scope.getSearchTypesSelectedText = function () {
+            $scope.getSearchTypesSelectedText = function() {
                 if ($scope.searchTypesSelected.length) {
-                    return $scope.searchTypesSelected.length + ' selected';
+                    return $scope.searchTypesSelected.length + " selected";
                 } else {
                     return "Activities types";
                 }
@@ -211,22 +206,22 @@ export class YearProgressController {
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         });
 
-        $scope.applyData = function (computedActivities: Array<ISyncActivityComputed>, types: Array<string>, dataType: DataType) {
+        $scope.applyData = function(computedActivities: ISyncActivityComputed[], types: string[], dataType: DataType) {
 
-            let yearProgressions = yearProgressComputer.compute(<Array<YearProgressActivity>> computedActivities, types);
+            const yearProgressions = yearProgressComputer.compute(computedActivities as YearProgressActivity[], types);
 
             // Compute curves & rows
-            let curves: Array<any> = [];
-            let tableRows: Array<any> = [];
+            const curves: any[] = [];
+            const tableRows: any[] = [];
 
-            _.forEach(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: Array<IYearProgress>) => {
+            _.forEach(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: IYearProgress[]) => {
 
-                let yearValues: Array<{x: number, y: number}> = [];
+                const yearValues: Array<{x: number, y: number}> = [];
 
                 _.forEach(yearProgress.progressions, (progression: IProgression) => {
 
-                    let date = new Date(progression.onTimestamp);
-                    let flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
+                    const date = new Date(progression.onTimestamp);
+                    const flatDate = new Date(0, date.getMonth(), date.getDate(), 0, 0, 0, 0);
 
                     let value: number;
 
@@ -246,39 +241,39 @@ export class YearProgressController {
                     }
                     yearValues.push({
                         x: flatDate.getTime(),
-                        y: value
+                        y: value,
                     });
                 });
 
                 // Add row
-                let progressAtThisDayOfYear: IProgression = _.find(yearProgress.progressions, {
-                    onDayOfYear: moment().dayOfYear()
+                const progressAtThisDayOfYear: IProgression = _.find(yearProgress.progressions, {
+                    onDayOfYear: moment().dayOfYear(),
                 });
 
-                let tableRow: any = {};
+                const tableRow: any = {};
                 tableRow.year = yearProgress.year;
 
                 tableRow.totalDistance = progressAtThisDayOfYear.totalDistance / 1000;
 
                 // Formatting time manually as HH:MM
-                var totalTimeH = Math.floor(progressAtThisDayOfYear.totalTime/3600);
-                var totalTimeM = Math.floor((progressAtThisDayOfYear.totalTime%3600)/60);
-                tableRow.totalTime = totalTimeH + ":"+ ((totalTimeM < 10) ? '0' + totalTimeM.toString() : totalTimeM.toString()); 
-                
+                const totalTimeH = Math.floor(progressAtThisDayOfYear.totalTime / 3600);
+                const totalTimeM = Math.floor((progressAtThisDayOfYear.totalTime % 3600) / 60);
+                tableRow.totalTime = totalTimeH + ":" + ((totalTimeM < 10) ? "0" + totalTimeM.toString() : totalTimeM.toString());
+
                 tableRow.totalElevation = progressAtThisDayOfYear.totalElevation;
                 tableRow.count = progressAtThisDayOfYear.count;
                 if (yearProgressionsIterator[index - 1]) {
-                    var progressAtThisDayOfLastYear = _.find(yearProgressionsIterator[index - 1].progressions, {
-                        onDayOfYear: moment().dayOfYear()
+                    const progressAtThisDayOfLastYear = _.find(yearProgressionsIterator[index - 1].progressions, {
+                        onDayOfYear: moment().dayOfYear(),
                     });
                     tableRow.deltaPreviousDistance = (progressAtThisDayOfYear.totalDistance - progressAtThisDayOfLastYear.totalDistance) / 1000;
                     tableRow.deltaPreviousDistanceColor = (tableRow.deltaPreviousDistance >= 0) ? "green" : "red";
 
-                    var deltaPreviousTime = progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime
-                    var deltaPreviousTimeH = (deltaPreviousTime >= 0) ? Math.floor(deltaPreviousTime/3600): Math.ceil(deltaPreviousTime/3600);
-                    var deltaPreviousTimeM = (deltaPreviousTime >= 0) ? Math.floor((deltaPreviousTime%3600)/60) : Math.ceil((deltaPreviousTime%3600)/60);
-                    tableRow.deltaPreviousTime = deltaPreviousTimeH + ":"+ ((deltaPreviousTimeM > -10) ? '0' + Math.abs(deltaPreviousTimeM).toString() : Math.abs(deltaPreviousTimeM).toString());
-                    
+                    const deltaPreviousTime = progressAtThisDayOfYear.totalTime - progressAtThisDayOfLastYear.totalTime;
+                    const deltaPreviousTimeH = (deltaPreviousTime >= 0) ? Math.floor(deltaPreviousTime / 3600) : Math.ceil(deltaPreviousTime / 3600);
+                    const deltaPreviousTimeM = (deltaPreviousTime >= 0) ? Math.floor((deltaPreviousTime % 3600) / 60) : Math.ceil((deltaPreviousTime % 3600) / 60);
+                    tableRow.deltaPreviousTime = deltaPreviousTimeH + ":" + ((deltaPreviousTimeM > -10) ? "0" + Math.abs(deltaPreviousTimeM).toString() : Math.abs(deltaPreviousTimeM).toString());
+
                     tableRow.deltaPreviousTimeColor = (deltaPreviousTime >= 0) ? "green" : "red";
                     tableRow.deltaPreviousElevation = progressAtThisDayOfYear.totalElevation - progressAtThisDayOfLastYear.totalElevation;
                     tableRow.deltaPreviousElevationColor = (tableRow.deltaPreviousElevation >= 0) ? "green" : "red";
@@ -306,14 +301,14 @@ export class YearProgressController {
 
         $scope.graphOptions = {
             chart: {
-                type: 'lineChart',
+                type: "lineChart",
                 // height: window.innerHeight * 0.65,
                 height: 575,
                 margin: {
                     top: 20,
                     right: 50,
                     bottom: 80,
-                    left: 50
+                    left: 50,
                 },
                 x: (d: any) => {
                     return d.x;
@@ -334,39 +329,38 @@ export class YearProgressController {
                     },
                     tooltipHide: (e: any) => {
                         console.log("tooltipHide");
-                    }
+                    },
                 },
                 xAxis: {
                     ticks: 12,
                     tickFormat: (d: any) => {
-                        return moment(d).format('MMM Do');
+                        return moment(d).format("MMM Do");
                     },
-                    staggerLabels: true
+                    staggerLabels: true,
                 },
                 yAxis: {
                     ticks: 10,
                     tickFormat: (d: any) => {
-                        return d3.format('.01f')(d);
+                        return d3.format(".01f")(d);
                     },
                     axisLabelDistance: -10,
                 },
                 callback: (chart: any) => {
-                    console.log('Graph loaded');
+                    console.log("Graph loaded");
                     $scope.nvd3api.update();
 
-                }
-            }
+                },
+            },
         };
 
         $scope.selected = [];
 
         $scope.tableQuery = {
-            order: 'name',
+            order: "name",
             limit: 5,
-            page: 1
+            page: 1,
         };
 
     }
 }
-
-
+

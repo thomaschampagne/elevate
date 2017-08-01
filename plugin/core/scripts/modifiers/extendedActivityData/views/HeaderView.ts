@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {AbstractDataView} from "./AbstractDataView";
 import {Helper} from "../../../Helper";
 import {IActivityBasicInfo} from "../../../interfaces/IActivityData";
+import {AbstractDataView} from "./AbstractDataView";
 
 export class HeaderView extends AbstractDataView {
 
@@ -14,12 +14,11 @@ export class HeaderView extends AbstractDataView {
 
     render(): void {
 
-
         let detail: string;
         if (this.isSegmentEffortView && !_.isEmpty(this.basicInfo.segmentEffort)) { // Segment effort only
-            detail = 'SEGMENT EFFORT on <i>&lt;' + this.basicInfo.segmentEffort.name + '&gt;</i> // TIME ' + Helper.secondsToHHMMSS(this.basicInfo.segmentEffort.elapsedTimeSec);
+            detail = "SEGMENT EFFORT on <i>&lt;" + this.basicInfo.segmentEffort.name + "&gt;</i> // TIME " + Helper.secondsToHHMMSS(this.basicInfo.segmentEffort.elapsedTimeSec);
         } else { // Complete activity
-            detail = 'ACTIVITY <i>&lt;' + this.basicInfo.activityName + '&gt;</i>';
+            detail = "ACTIVITY <i>&lt;" + this.basicInfo.activityName + "&gt;</i>";
         }
 
         this.content += "<div style='width:100%; margin-left: 10px; margin-top: 10px; margin-bottom: 5px;font-size: 14px;'>";

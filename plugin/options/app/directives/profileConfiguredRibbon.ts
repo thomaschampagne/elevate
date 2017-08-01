@@ -1,7 +1,7 @@
+import {ILocationService, IScope, IWindowService} from "angular";
 import * as _ from "lodash";
-import {IScope, ILocationService, IWindowService} from "angular";
-import {ChromeStorageService} from "../services/ChromeStorageService";
 import {AthleteSettingsController} from "../controllers/AthleteSettingsController";
+import {ChromeStorageService} from "../services/ChromeStorageService";
 
 import {IAthleteProfile} from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
 import Tab = chrome.tabs.Tab;
@@ -40,7 +40,7 @@ export class ProfileConfiguredRibbon {
         return remoteEqualsLocal;
     }
 
-    public static $inject: string[] = ['$scope', 'ChromeStorageService', '$location', '$window'];
+    public static $inject: string[] = ["$scope", "ChromeStorageService", "$location", "$window"];
 
     constructor(public $scope: IProfileConfiguredRibbonScope, public chromeStorageService: ChromeStorageService, public $location: ILocationService, public $window: IWindowService) {
 
@@ -63,7 +63,7 @@ export class ProfileConfiguredRibbon {
                     return null;
                 }
 
-                let remoteAthleteProfile: IAthleteProfile = {
+                const remoteAthleteProfile: IAthleteProfile = {
                     userGender: userSettings.userGender,
                     userMaxHr: userSettings.userMaxHr,
                     userRestHr: userSettings.userRestHr,
@@ -75,7 +75,7 @@ export class ProfileConfiguredRibbon {
                 chromeStorageService.getLocalSyncedAthleteProfile().then((localSyncedAthleteProfile: IAthleteProfile) => {
                     // A previous sync has be done with theses athlete settings...
                     if (!_.isEmpty(localSyncedAthleteProfile)) {
-                        let remoteEqualsLocal: boolean = ProfileConfiguredRibbon.remoteAthleteProfileEqualsLocal(remoteAthleteProfile, localSyncedAthleteProfile);
+                        const remoteEqualsLocal: boolean = ProfileConfiguredRibbon.remoteAthleteProfileEqualsLocal(remoteAthleteProfile, localSyncedAthleteProfile);
                         $scope.showHistoryNonConsistent = !remoteEqualsLocal;
                     }
                 });
@@ -83,13 +83,13 @@ export class ProfileConfiguredRibbon {
             });
         };
         // ...Then execute...
-        if (!StorageManager.getCookie('hide_history_non_consistent')) {
+        if (!StorageManager.getCookie("hide_history_non_consistent")) {
             $scope.checkLocalSyncedAthleteProfileEqualsRemote();
         }
 
         $scope.hideHistoryNonConsistent = () => {
             $scope.showHistoryNonConsistent = false;
-            StorageManager.setCookieSeconds('hide_history_non_consistent', 'true', 24 * 3600); // Set for 1 day
+            StorageManager.setCookieSeconds("hide_history_non_consistent", "true", 24 * 3600); // Set for 1 day
         };
 
         $scope.goToAthleteSettings = () => {
@@ -101,7 +101,7 @@ export class ProfileConfiguredRibbon {
             chromeStorageService.getProfileConfigured().then((isConfigured: boolean) => {
                 if (!isConfigured) {
                     chromeStorageService.setProfileConfigured(true).then(() => {
-                        console.log('Profile configured');
+                        console.log("Profile configured");
                         $scope.isProfileConfigured = true;
                     });
                 } else {
@@ -112,7 +112,7 @@ export class ProfileConfiguredRibbon {
 
         $scope.syncNow = (forceSync: boolean) => {
             chrome.tabs.getCurrent((tab: Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=675, location=0');
+                $window.open("https://www.strava.com/dashboard?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id, "_blank", "width=700, height=675, location=0");
             });
         };
 
@@ -125,9 +125,9 @@ export class ProfileConfiguredRibbon {
 
 export let profileConfiguredRibbon = [() => {
 
-    return <any> {
+    return {
         controller: ProfileConfiguredRibbon,
-        templateUrl: 'directives/templates/profileConfiguredRibbon.html'
+        templateUrl: "directives/templates/profileConfiguredRibbon.html",
 
-    };
+    } as any;
 }];

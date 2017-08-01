@@ -1,7 +1,7 @@
+import {saveAs} from "file-saver";
 import * as _ from "lodash";
-import {saveAs} from 'file-saver';
-import {VacuumProcessor} from "../processors/VacuumProcessor";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
+import {VacuumProcessor} from "../processors/VacuumProcessor";
 
 export class VirtualPartnerModifier implements IModifier {
 
@@ -19,26 +19,26 @@ export class VirtualPartnerModifier implements IModifier {
             return;
         }
 
-        let view: any = Strava.Labs.Activities.SegmentLeaderboardView;
+        const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
 
         if (!view) {
             return;
         }
 
-        let functionRender: Function = view.prototype.render;
+        const functionRender: Function = view.prototype.render;
 
-        let that = this;
+        const that = this;
 
-        view.prototype.render = function () {
+        view.prototype.render = function() {
 
-            let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
+            const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
-            if ($('.stravistix_exportVpu').length < 1) {
+            const exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
+            if ($(".stravistix_exportVpu").length < 1) {
 
-                $('.effort-actions').first().after(exportButtonHtml).each(() => {
+                $(".effort-actions").first().after(exportButtonHtml).each(() => {
 
-                    $('#stravistix_exportVpu').click((evt) => {
+                    $("#stravistix_exportVpu").click((evt) => {
                         evt.preventDefault();
                         evt.stopPropagation();
                         that.displayDownloadPopup();
@@ -54,7 +54,7 @@ export class VirtualPartnerModifier implements IModifier {
     protected getSegmentInfos(effortId: number, callback: (segmentInfosResponse: any) => any): void {
 
         if (!effortId) {
-            console.error('No effort id found');
+            console.error("No effort id found");
             return;
         }
 
@@ -62,19 +62,19 @@ export class VirtualPartnerModifier implements IModifier {
         let segmentInfosResponse: any;
         $.when(
             $.ajax({
-                url: '/segment_efforts/' + effortId,
-                type: 'GET',
+                url: "/segment_efforts/" + effortId,
+                type: "GET",
                 beforeSend: (xhr: any) => {
                     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 },
-                dataType: 'json',
+                dataType: "json",
                 success: (xhrResponseText: any) => {
                     segmentInfosResponse = xhrResponseText;
                 },
                 error: (err) => {
                     console.error(err);
-                }
-            })
+                },
+            }),
         ).then(() => {
             callback(segmentInfosResponse);
         });
@@ -82,20 +82,20 @@ export class VirtualPartnerModifier implements IModifier {
 
     protected displayDownloadPopup() {
 
-        let effortId: number = parseInt(window.location.pathname.split('/')[4] || window.location.hash.replace('#', ''));
+        const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
 
-        let dlButton: string = '<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File (GPX)</a>';
-        let message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
+        const dlButton: string = '<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File (GPX)</a>';
+        const message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
 
-        $.fancybox('<div id="stravistix_popup_download_course_' + effortId + '">' + message + '</div>', {
+        $.fancybox('<div id="stravistix_popup_download_course_' + effortId + '">' + message + "</div>", {
             afterShow: () => {
-                $('#stravistix_download_course_' + effortId).html(dlButton).each(() => {
-                    $('#stravistix_download_course_' + effortId).on('click', () => {
+                $("#stravistix_download_course_" + effortId).html(dlButton).each(() => {
+                    $("#stravistix_download_course_" + effortId).on("click", () => {
                         this.downloadGpx(effortId);
-                        $('#stravistix_popup_download_course_' + effortId).html('Your GPX file is (being) dropped in your download folder...');
+                        $("#stravistix_popup_download_course_" + effortId).html("Your GPX file is (being) dropped in your download folder...");
                     });
                 });
-            }
+            },
         });
     }
 
@@ -103,7 +103,7 @@ export class VirtualPartnerModifier implements IModifier {
         this.getSegmentInfos(effortId, (segmentInfosResponse: any) => {
             this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream) => { // Get stream on page
                 if (_.isEmpty(activityStream.latlng)) {
-                    alert('No GPS Data found');
+                    alert("No GPS Data found");
                     return;
                 }
                 activityStream = this.cutStreamsAlongSegmentBounds(activityStream, segmentInfosResponse); // Cutting streams from start to endpoint of segment
@@ -113,8 +113,8 @@ export class VirtualPartnerModifier implements IModifier {
     }
 
     protected createGpxAndSave(courseName: string, effortId: number, activityStream: IActivityStream) {
-        let blob = new Blob([this.genGpxData(courseName, activityStream)], {type: "application/xml; charset=utf-8"});
-        let filename: string = "course_" + effortId + ".gpx";
+        const blob = new Blob([this.genGpxData(courseName, activityStream)], {type: "application/xml; charset=utf-8"});
+        const filename: string = "course_" + effortId + ".gpx";
         saveAs(blob, filename);
     }
 
@@ -122,15 +122,15 @@ export class VirtualPartnerModifier implements IModifier {
 
         let gpxString: string = '<?xml version="1.0" encoding="UTF-8"?>\n' +
             '<gpx creator="StravistiX" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">\n' +
-            '<metadata>\n' +
-            '<author>\n' +
-            '<name>StravistiX</name>\n' +
+            "<metadata>\n" +
+            "<author>\n" +
+            "<name>StravistiX</name>\n" +
             '<link href="http://thomaschampagne.github.io/stravistix/"/>\n' +
-            '</author>\n' +
-            '</metadata>\n' +
-            '<trk>\n' +
-            '<name>' + courseName + '</name>\n' +
-            '<trkseg>\n';
+            "</author>\n" +
+            "</metadata>\n" +
+            "<trk>\n" +
+            "<name>" + courseName + "</name>\n" +
+            "<trkseg>\n";
 
         for (let i: number = 0; i < activityStream.latlng.length; i++) {
 
@@ -139,34 +139,34 @@ export class VirtualPartnerModifier implements IModifier {
 
             // Altitude
             if (_.isNumber(activityStream.altitude[i])) {
-                gpxString += '<ele>' + activityStream.altitude[i] + '</ele>\n';
+                gpxString += "<ele>" + activityStream.altitude[i] + "</ele>\n";
             }
 
             // Time
-            gpxString += '<time>' + (new Date(activityStream.time[i] * 1000)).toISOString() + '</time>\n';
+            gpxString += "<time>" + (new Date(activityStream.time[i] * 1000)).toISOString() + "</time>\n";
 
             if (activityStream.heartrate || activityStream.cadence) {
 
-                gpxString += '<extensions>\n';
-                gpxString += '<gpxtpx:TrackPointExtension>\n';
+                gpxString += "<extensions>\n";
+                gpxString += "<gpxtpx:TrackPointExtension>\n";
 
                 if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-                    gpxString += '<gpxtpx:hr>' + activityStream.heartrate[i] + '</gpxtpx:hr>\n';
+                    gpxString += "<gpxtpx:hr>" + activityStream.heartrate[i] + "</gpxtpx:hr>\n";
                 }
                 if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-                    gpxString += '<gpxtpx:cad>' + activityStream.cadence[i] + '</gpxtpx:cad>\n';
+                    gpxString += "<gpxtpx:cad>" + activityStream.cadence[i] + "</gpxtpx:cad>\n";
                 }
 
-                gpxString += '</gpxtpx:TrackPointExtension>\n';
-                gpxString += '</extensions>\n';
+                gpxString += "</gpxtpx:TrackPointExtension>\n";
+                gpxString += "</extensions>\n";
             }
 
-            gpxString += '</trkpt>\n';
+            gpxString += "</trkpt>\n";
         }
 
-        gpxString += '</trkseg>\n';
-        gpxString += '</trk>\n';
-        gpxString += '</gpx>';
+        gpxString += "</trkseg>\n";
+        gpxString += "</trk>\n";
+        gpxString += "</gpx>";
 
         return gpxString;
     }

@@ -1,13 +1,13 @@
-import * as _ from "lodash";
 import * as angular from "angular";
 import {ILocationService, ISCEService} from "angular";
+import * as _ from "lodash";
+import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {ICommonSettingsService, ISection, ISectionContent} from "../services/CommonSettingsService";
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
 
 export class CommonSettingsController {
 
-    static $inject = ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$location', '$mdDialog', '$sce'];
+    static $inject = ["$scope", "CommonSettingsService", "ChromeStorageService", "$location", "$mdDialog", "$sce"];
 
     constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
 
@@ -24,7 +24,7 @@ export class CommonSettingsController {
 
                 _.forEach(section.sectionContent, (option: ISectionContent) => {
 
-                    if (option.optionType === 'checkbox') {
+                    if (option.optionType === "checkbox") {
 
                         // option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
                         option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
@@ -35,14 +35,14 @@ export class CommonSettingsController {
                             });
                         }
 
-                    } else if (option.optionType === 'list') {
+                    } else if (option.optionType === "list") {
                         option.active = _.find(option.optionList, {
-                            key: _.propertyOf(userSettingsSynced)(option.optionKey)
+                            key: _.propertyOf(userSettingsSynced)(option.optionKey),
                         });
-                    } else if (option.optionType === 'number') {
+                    } else if (option.optionType === "number") {
                         option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
                     } else {
-                        console.error('Option type not supported');
+                        console.error("Option type not supported");
                     }
                 });
             });
@@ -53,7 +53,7 @@ export class CommonSettingsController {
         $scope.toggleCheckOption = (option: ISectionContent) => {
 
             chromeStorageService.updateUserSetting(option.optionKey, option.active, () => {
-                console.log(option.optionKey + ' has been updated to ' + option.active);
+                console.log(option.optionKey + " has been updated to " + option.active);
             });
 
             // Enable/disable sub option if needed
@@ -67,8 +67,8 @@ export class CommonSettingsController {
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
             _.forEach($scope.sections, (section: ISection) => {
-                let optionFound: ISectionContent = _.find(section.sectionContent, {
-                    optionKey: subOptionKey
+                const optionFound: ISectionContent = _.find(section.sectionContent, {
+                    optionKey: subOptionKey,
                 });
                 if (optionFound) {
                     optionFound.hidden = !show;
@@ -79,25 +79,24 @@ export class CommonSettingsController {
         $scope.toggleSelectOption = (option: ISectionContent) => {
 
             chromeStorageService.updateUserSetting(option.optionKey, option.active.key, () => {
-                console.log(option.optionKey + ' has been updated to ' + option.active);
+                console.log(option.optionKey + " has been updated to " + option.active);
             });
         };
-
 
         $scope.toggleIntegerOption = (option: ISectionContent) => {
 
             if (_.isNull(option.value) || _.isUndefined(option.value)) {
 
                 chromeStorageService.fetchUserSettings((userSettings: IUserSettings) => {
-                    let resetValue = _.propertyOf(userSettings)(option.optionKey);
-                    console.log(option.optionKey + ' value not compliant, Reset to  ' + resetValue);
+                    const resetValue = _.propertyOf(userSettings)(option.optionKey);
+                    console.log(option.optionKey + " value not compliant, Reset to  " + resetValue);
                     option.value = resetValue;
                 });
 
             } else {
                 // Save !
                 chromeStorageService.updateUserSetting(option.optionKey, option.value, () => {
-                    console.log(option.optionKey + ' has been updated to ' + option.value);
+                    console.log(option.optionKey + " has been updated to " + option.value);
                 });
             }
         };
@@ -108,8 +107,8 @@ export class CommonSettingsController {
 
             _.forEach($scope.sections, (section: ISection) => {
 
-                let optionSearch: ISectionContent = _.find(section.sectionContent, {
-                    optionKey: optionKeyParam
+                const optionSearch: ISectionContent = _.find(section.sectionContent, {
+                    optionKey: optionKeyParam,
                 });
 
                 if (optionSearch) {
@@ -128,15 +127,15 @@ export class CommonSettingsController {
                             $mdDialog.hide();
                         };
                     },
-                    templateUrl: 'views/modals/settingHint.html',
+                    templateUrl: "views/modals/settingHint.html",
                     parent: angular.element(document.body),
-                    clickOutsideToClose: true
+                    clickOutsideToClose: true,
                 });
             }
         };
 
         // Trigger auto click on activity page extended data click
-        let viewOptionHelperId: number = $location.search().viewOptionHelperId;
+        const viewOptionHelperId: number = $location.search().viewOptionHelperId;
 
         if (!_.isUndefined(viewOptionHelperId)) {
             $scope.displayOptionHelper(viewOptionHelperId);

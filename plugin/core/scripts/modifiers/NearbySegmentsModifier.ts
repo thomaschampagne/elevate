@@ -1,13 +1,13 @@
-import {ISegmentInfo} from "../processors/SegmentProcessor";
 import * as _ from "lodash";
 import {IAppResources} from "../interfaces/IAppResources";
+import {ISegmentInfo} from "../processors/SegmentProcessor";
 
 export class NearbySegmentsModifier implements IModifier {
 
     protected appResources: IAppResources;
-    protected segments: Array<ISegmentInfo>;
+    protected segments: ISegmentInfo[];
 
-    constructor(jsonSegments: Array<ISegmentInfo>, appResources: IAppResources) {
+    constructor(jsonSegments: ISegmentInfo[], appResources: IAppResources) {
         this.segments = jsonSegments;
         this.appResources = appResources;
     }
@@ -30,11 +30,11 @@ export class NearbySegmentsModifier implements IModifier {
                 segmentName += ", Cat. " + segment.climb_category_desc;
             }
 
-            segmentName += '</i>';
+            segmentName += "</i>";
 
-            if (segment.type === 'cycling') {
+            if (segment.type === "cycling") {
                 segmentIconType = "<span class='app-icon icon-ride icon-sm type' style='margin-right: 7px;'/>";
-            } else if (segment.type === 'running') {
+            } else if (segment.type === "running") {
                 segmentIconType = "<span class='app-icon icon-run icon-sm type' style='margin-right: 7px;'/>";
             } else {
                 segmentIconType = "";
@@ -47,6 +47,6 @@ export class NearbySegmentsModifier implements IModifier {
         html += "</div>";
         html += "</div>";
 
-        $(html).prependTo('.segment-activity-my-efforts');
+        $(html).prependTo(".segment-activity-my-efforts");
     }
 }

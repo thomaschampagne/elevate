@@ -23,4 +23,3 @@ declare class LatLon {
 
     destinationPoint(distance: number, number: number): LatLon;
 }
-

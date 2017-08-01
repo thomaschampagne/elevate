@@ -1,5 +1,5 @@
-import {AbstractDataView} from "./AbstractDataView";
 import {IElevationData} from "../../../interfaces/IActivityData";
+import {AbstractDataView} from "./AbstractDataView";
 export class AscentSpeedDataView extends AbstractDataView {
 
     protected elevationData: IElevationData;
@@ -30,20 +30,20 @@ export class AscentSpeedDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        let ascentSpeedAvg: number = this.elevationData.ascentSpeed.avg;
+        const ascentSpeedAvg: number = this.elevationData.ascentSpeed.avg;
         let ascentSpeedAvgDisplay: string;
 
         if (ascentSpeedAvg) {
             if (ascentSpeedAvg === -1) {
-                ascentSpeedAvgDisplay = '&infin;';
+                ascentSpeedAvgDisplay = "&infin;";
             } else {
                 ascentSpeedAvgDisplay = ascentSpeedAvg.toFixed(0);
             }
         }
 
-        this.insertContentAtGridPosition(0, 0, ascentSpeedAvgDisplay, 'Avg Ascent Speed or VAM', 'Vm/h', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(0, 1, this.elevationData.ascentSpeed.lowerQuartile, '25% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(1, 1, this.elevationData.ascentSpeed.median, '50% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
-        this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, '75% Quartile Ascent Speed', 'Vm/h', 'displayAdvancedElevationData');
+        this.insertContentAtGridPosition(0, 0, ascentSpeedAvgDisplay, "Avg Ascent Speed or VAM", "Vm/h", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(0, 1, this.elevationData.ascentSpeed.lowerQuartile, "25% Quartile Ascent Speed", "Vm/h", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(1, 1, this.elevationData.ascentSpeed.median, "50% Quartile Ascent Speed", "Vm/h", "displayAdvancedElevationData");
+        this.insertContentAtGridPosition(2, 1, this.elevationData.ascentSpeed.upperQuartile, "75% Quartile Ascent Speed", "Vm/h", "displayAdvancedElevationData");
     }
 }

@@ -8,17 +8,17 @@ export interface IActivityStatsMap {
 }
 
 export interface IActivityStream {
-    time: Array<number>;
-    latlng: Array<Array<number>>;
-    heartrate: Array<number>;
-    velocity_smooth: Array<number>;
-    cadence: Array<number>;
-    watts: Array<number>;
-    watts_calc: Array<number>;
-    grade_smooth: Array<number>;
-    distance: Array<number>;
-    altitude: Array<number>;
-    altitude_smooth?: Array<number>;
+    time: number[];
+    latlng: number[][];
+    heartrate: number[];
+    velocity_smooth: number[];
+    cadence: number[];
+    watts: number[];
+    watts_calc: number[];
+    grade_smooth: number[];
+    distance: number[];
+    altitude: number[];
+    altitude_smooth?: number[];
 }
 
 export interface IAnalysisData {
@@ -49,7 +49,7 @@ export interface ISpeedData {
     upperQuartileSpeed: number;
     varianceSpeed: number;
     standardDeviationSpeed: number;
-    speedZones: Array<IZone>;
+    speedZones: IZone[];
 }
 
 export interface IPaceData {
@@ -58,7 +58,7 @@ export interface IPaceData {
     medianPace: number;
     upperQuartilePace: number;
     variancePace: number;
-    paceZones: Array<IZone>;
+    paceZones: IZone[];
 
 }
 
@@ -75,7 +75,7 @@ export interface IPowerData {
     lowerQuartileWatts: number;
     medianWatts: number;
     upperQuartileWatts: number;
-    powerZones: Array<IZone>;
+    powerZones: IZone[];
 }
 
 export interface IHeartRateData {
@@ -88,7 +88,7 @@ export interface IHeartRateData {
     maxHeartRate: number;
     activityHeartRateReserve: number;
     activityHeartRateReserveMax: number;
-    hrrZones: Array<IHrrZone>;
+    hrrZones: IHrrZone[];
 }
 export interface ICadenceData {
     cadencePercentageMoving: number;
@@ -99,7 +99,7 @@ export interface ICadenceData {
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
-    cadenceZones: Array<IZone>;
+    cadenceZones: IZone[];
 }
 export interface IGradeData {
     avgGrade: number;
@@ -123,7 +123,7 @@ export interface IGradeData {
         down: number;
     };
     gradeProfile: string;
-    gradeZones: Array<IZone>;
+    gradeZones: IZone[];
 }
 
 export interface IElevationData {
@@ -133,8 +133,8 @@ export interface IElevationData {
     lowerQuartileElevation: number;
     medianElevation: number;
     upperQuartileElevation: number;
-    elevationZones: Array<IZone>;
-    ascentSpeedZones: Array<IZone>;
+    elevationZones: IZone[];
+    ascentSpeedZones: IZone[];
     ascentSpeed: IAscentSpeedData;
 }
 export interface IAscentSpeedData {

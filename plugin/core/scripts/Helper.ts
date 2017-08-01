@@ -5,29 +5,29 @@ import {ISpeedUnitData} from "./interfaces/IActivityData";
 export class Helper {
 
     public static KPH_TO_MPH_RATIO: number = 0.621371;
-    public static getFromStorageMethod: string = 'getFromStorage';
-    public static setToStorageMethod: string = 'setToStorage';
-    public static removeFromStorageMethod: string = 'removeFromStorage'
-    public static reloadBrowserTabMethod: string = 'reloadBrowserTab';
-    public static getStorageUsageMethod: string = 'getStorageUsage';
+    public static getFromStorageMethod: string = "getFromStorage";
+    public static setToStorageMethod: string = "setToStorage";
+    public static removeFromStorageMethod: string = "removeFromStorage";
+    public static reloadBrowserTabMethod: string = "reloadBrowserTab";
+    public static getStorageUsageMethod: string = "getStorageUsage";
 
     public static getSpeedUnitData(): ISpeedUnitData {
-        let measurementPreference: string = window.currentAthlete.get('measurement_preference');
-        let units: string = (measurementPreference == 'meters') ? 'km' : 'mi';
-        let speedUnitPerHour: string = (measurementPreference == 'meters') ? 'km/h' : 'mi/h';
-        let speedUnitFactor: number = (speedUnitPerHour == 'km/h') ? 1 : Helper.KPH_TO_MPH_RATIO;
+        const measurementPreference: string = window.currentAthlete.get("measurement_preference");
+        const units: string = (measurementPreference == "meters") ? "km" : "mi";
+        const speedUnitPerHour: string = (measurementPreference == "meters") ? "km/h" : "mi/h";
+        const speedUnitFactor: number = (speedUnitPerHour == "km/h") ? 1 : Helper.KPH_TO_MPH_RATIO;
 
-        let speedUnitData: ISpeedUnitData = {
-            speedUnitPerHour: speedUnitPerHour,
-            speedUnitFactor: speedUnitFactor,
-            units: units
+        const speedUnitData: ISpeedUnitData = {
+            speedUnitPerHour,
+            speedUnitFactor,
+            units,
         };
         return speedUnitData;
     }
 
     public static HHMMSStoSeconds(str: string): number {
 
-        let p: Array<string> = str.split(':'),
+        let p: string[] = str.split(":"),
             s: any = 0,
             m = 1;
 
@@ -40,30 +40,29 @@ export class Helper {
 
     public static secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
 
-        let secNum: number = Math.round(secondsParam); // don't forget the second param
-        let hours: number = Math.floor(secNum / 3600);
-        let minutes: number = Math.floor((secNum - (hours * 3600)) / 60);
-        let seconds: number = secNum - (hours * 3600) - (minutes * 60);
+        const secNum: number = Math.round(secondsParam); // don't forget the second param
+        const hours: number = Math.floor(secNum / 3600);
+        const minutes: number = Math.floor((secNum - (hours * 3600)) / 60);
+        const seconds: number = secNum - (hours * 3600) - (minutes * 60);
 
         let time: string = ((hours < 10) ? "0" + hours.toFixed(0) : hours.toFixed(0) );
-        time += ':' + ((minutes < 10) ? "0" + minutes.toFixed(0) : minutes.toFixed(0) );
-        time += ':' + ((seconds < 10) ? "0" + seconds.toFixed(0) : seconds.toFixed(0) );
+        time += ":" + ((minutes < 10) ? "0" + minutes.toFixed(0) : minutes.toFixed(0) );
+        time += ":" + ((seconds < 10) ? "0" + seconds.toFixed(0) : seconds.toFixed(0) );
 
         return (trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time);
     }
 
-
     public static trimLeadingZerosHHMMSS(time: string): string {
-        let result: string = time.replace(/^(0*:)*/, '').replace(/^0*/, '') || "0";
+        const result: string = time.replace(/^(0*:)*/, "").replace(/^0*/, "") || "0";
         if (result.indexOf(":") < 0) {
             return result + "s";
         }
         return result;
     }
 
-    public static weightedPercentiles(values: Array<number>, weights: Array<number>, percentiles: Array<number>): Array<number> {
+    public static weightedPercentiles(values: number[], weights: number[], percentiles: number[]): number[] {
         // inspired from https://en.wikipedia.org/wiki/Weighted_median and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
-        let list: Array<any> = [];
+        const list: any[] = [];
         let tot: number = 0;
         for (let i: number = 0; i < values.length; i++) {
             list.push({value: values[i], weight: weights[i]});
@@ -72,7 +71,7 @@ export class Helper {
         list.sort((a, b) => {
             return a.value - b.value;
         });
-        let result: Array<number> = [];
+        const result: number[] = [];
         for (let i: number = 0; i < percentiles.length; i++) {
             result.push(0);
         }
@@ -93,27 +92,27 @@ export class Helper {
 
     public static heartrateFromHeartRateReserve(hrr: number, maxHr: number, restHr: number): number {
         return Math.abs(Math.floor(hrr / 100 * (maxHr - restHr) + restHr));
-    };
+    }
 
     public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
         return (hr - restHr) / (maxHr - restHr);
-    };
+    }
 
     /**
      * Sending message to store key:value into storageType via background page
      */
     public static setToStorage(extensionId: string, storageType: string, key: string, value: any, callback?: Function): Q.Promise<any> {
 
-        let deferred: Q.Deferred<any> = Q.defer();
+        const deferred: Q.Deferred<any> = Q.defer();
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.setToStorageMethod,
             params: {
                 storage: storageType,
-                'key': key,
-                'value': value
-            }
+                key,
+                value,
+            },
         }, (response: any) => {
             if (callback) callback(response);
             deferred.resolve(response);
@@ -121,7 +120,6 @@ export class Helper {
 
         return deferred.promise;
     }
-
 
     /**
      * Sending message to get key:value into storageType via background page
@@ -133,15 +131,15 @@ export class Helper {
      */
     public static getFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
 
-        let deferred: Q.Deferred<any> = Q.defer();
+        const deferred: Q.Deferred<any> = Q.defer();
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.getFromStorageMethod,
             params: {
                 storage: storageType,
-                'key': key
-            }
+                key,
+            },
         }, (response: any) => {
             if (callback) callback(response);
             deferred.resolve(response);
@@ -152,15 +150,15 @@ export class Helper {
 
     public static removeFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
 
-        let deferred: Q.Deferred<any> = Q.defer();
+        const deferred: Q.Deferred<any> = Q.defer();
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.removeFromStorageMethod,
             params: {
                 storage: storageType,
-                'key': key
-            }
+                key,
+            },
         }, (response: any) => {
             if (callback) callback(response);
             deferred.resolve(response);
@@ -174,8 +172,8 @@ export class Helper {
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.reloadBrowserTabMethod,
             params: {
-                sourceTabId: sourceTabId,
-            }
+                sourceTabId,
+            },
         }, (response: any) => {
             console.log(response);
         });
@@ -183,14 +181,14 @@ export class Helper {
 
     public static getStorageUsage(extensionId: string, storageType: string, callback?: Function): Q.IPromise<IStorageUsage> {
 
-        let deferred: Q.Deferred<any> = Q.defer();
+        const deferred: Q.Deferred<any> = Q.defer();
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
             method: Helper.getStorageUsageMethod,
             params: {
-                storage: storageType
-            }
+                storage: storageType,
+            },
         }, (response: any) => {
             if (callback) callback(response.data);
             deferred.resolve(response.data);
@@ -205,28 +203,28 @@ export class Helper {
             d = d == undefined ? "." : d,
             t = t == undefined ? "," : t;
 
-        let s: any = n < 0 ? "-" : "";
+        const s: any = n < 0 ? "-" : "";
 
-        let i: any = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
+        const i: any = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
 
         let j: any;
         j = (j = i.length) > 3 ? j % 3 : 0;
 
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-    };
+    }
 
     public static secondsToDHM(sec_num: number, trimZeros?: boolean): string {
-        let days: number = Math.floor(sec_num / 86400);
-        let hours: number = Math.floor((sec_num - (days * 86400)) / 3600);
-        let minutes: number = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
+        const days: number = Math.floor(sec_num / 86400);
+        const hours: number = Math.floor((sec_num - (days * 86400)) / 3600);
+        const minutes: number = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
         if (trimZeros && days === 0) {
             if (hours === 0) {
-                return minutes + 'm';
+                return minutes + "m";
             }
-            return hours + 'h ' + minutes + 'm';
+            return hours + "h " + minutes + "m";
         }
-        return days + 'd ' + hours + 'h ' + minutes + 'm';
-    };
+        return days + "d " + hours + "h " + minutes + "m";
+    }
 
     public static guid(): string {
         // from http://stackoverflow.com/a/105074
@@ -234,24 +232,23 @@ export class Helper {
             return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         }
 
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-    };
+        return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+    }
 
     public static params(urlLocation: Location): any {
 
-        let params: any = {};
+        const params: any = {};
 
         if (urlLocation) {
-            let parts = urlLocation.search.substring(1).split('&');
+            const parts = urlLocation.search.substring(1).split("&");
             for (let i = 0; i < parts.length; i++) {
-                let nv: Array<string> = parts[i].split('=');
+                const nv: string[] = parts[i].split("=");
                 if (!nv[0]) continue;
                 params[nv[0]] = nv[1] || true;
             }
         }
         return params;
     }
-
 
     /**
      * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
@@ -286,8 +283,8 @@ export class Helper {
     public static versionCompare(v1: string, v2: string, options?: any): number {
         let lexicographical: boolean = options && options.lexicographical,
             zeroExtend = options && options.zeroExtend,
-            v1parts: Array<any> = v1.split('.'),
-            v2parts: Array<any> = v2.split('.');
+            v1parts: any[] = v1.split("."),
+            v2parts: any[] = v2.split(".");
 
         function isValidPart(x: string) {
             return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);

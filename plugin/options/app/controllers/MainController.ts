@@ -1,16 +1,16 @@
-import * as _ from "lodash";
 import * as angular from "angular";
-import * as moment from "moment";
-import {saveAs} from 'file-saver';
-import {ChromeStorageService} from "../services/ChromeStorageService";
 import {IIntervalService, ILocationService, IWindowService} from "angular";
-import {IReleaseNotesService} from "../services/ReleaseNotesService";
+import {saveAs} from "file-saver";
+import * as _ from "lodash";
+import * as moment from "moment";
 import {IStorageUsage} from "../../../core/modules/StorageManager";
-import {routeMap, properties} from "../Config";
+import {properties, routeMap} from "../Config";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {IReleaseNotesService} from "../services/ReleaseNotesService";
 
 export class MainController {
 
-    static $inject = ['$rootScope', 'ChromeStorageService', '$scope', '$location', '$mdSidenav', '$colors', '$mdDialog', '$window', '$interval', '$mdMedia'];
+    static $inject = ["$rootScope", "ChromeStorageService", "$scope", "$location", "$mdSidenav", "$colors", "$mdDialog", "$window", "$interval", "$mdMedia"];
 
     constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: angular.material.ISidenavService, $colors: any, $mdDialog: angular.material.IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: angular.material.IMedia) {
 
@@ -39,11 +39,11 @@ export class MainController {
 
         // Watch for window resize under 'gt-md' then dispatch event
         $scope.$watch(() => {
-            return $mdMedia('gt-md');
+            return $mdMedia("gt-md");
         }, (greaterThanMid: boolean) => {
             $scope.sideNavLockedOpen = greaterThanMid;
             setTimeout(() => {
-                $rootScope.$broadcast('window-resize-gt-md'); // Emit event after 750ms
+                $rootScope.$broadcast("window-resize-gt-md"); // Emit event after 750ms
             }, 750);
         });
 
@@ -54,9 +54,9 @@ export class MainController {
         $scope.forward = (target: any) => {
 
             if (target.message) {
-                let dialog = $mdDialog.confirm()
+                const dialog = $mdDialog.confirm()
                     .htmlContent(target.message)
-                    .cancel('Hide').ok('Push project higher !');
+                    .cancel("Hide").ok("Push project higher !");
                 $mdDialog.show(dialog).then(() => {
                     $scope.showDonation();
                 }, () => {
@@ -71,104 +71,104 @@ export class MainController {
         };
 
         $scope.uiStructure = {
-            mainTitle: 'Stravistix',
+            mainTitle: "Stravistix",
             sidenav: {
                 sections: [{
-                    id: 'FITNESS_TREND',
-                    name: 'Multisports Fitness Trend',
+                    id: "FITNESS_TREND",
+                    name: "Multisports Fitness Trend",
                     // subname: 'Multisports fitness trend based on activities having HR sensor',
-                    sup: 'BETA',
-                    icon: 'timeline',
+                    sup: "BETA",
+                    icon: "timeline",
                     link: routeMap.fitnessTrendRoute,
                 }, {
-                    id: 'YEAR_PROGRESSION',
-                    sup: 'NEW',
-                    name: 'Year Progressions',
-                    icon: 'timelapse',
+                    id: "YEAR_PROGRESSION",
+                    sup: "NEW",
+                    name: "Year Progressions",
+                    icon: "timelapse",
                     link: routeMap.yearProgressRoute,
                 }, {
-                    id: 'COMMON_SETTINGS',
-                    name: 'Common Settings',
-                    icon: 'settings',
-                    link: routeMap.commonSettingsRoute
+                    id: "COMMON_SETTINGS",
+                    name: "Common Settings",
+                    icon: "settings",
+                    link: routeMap.commonSettingsRoute,
                 }, {
-                    id: 'ATHLETE_SETTINGS',
-                    name: 'Athlete Settings',
-                    icon: 'accessibility',
-                    link: routeMap.athleteSettingsRoute
+                    id: "ATHLETE_SETTINGS",
+                    name: "Athlete Settings",
+                    icon: "accessibility",
+                    link: routeMap.athleteSettingsRoute,
                 }, {
-                    id: 'ZONES_SETTINGS',
-                    name: 'Zones Settings',
-                    icon: 'format_line_spacing',
+                    id: "ZONES_SETTINGS",
+                    name: "Zones Settings",
+                    icon: "format_line_spacing",
                     expand: false,
-                    link: 'link',
+                    link: "link",
                     actions: [{
-                        name: 'Heart rate reserve',
-                        subname: 'Customize Heartrate Reserve zones',
-                        icon: 'favorite',
-                        link: routeMap.hrrZonesSettingsRoute
+                        name: "Heart rate reserve",
+                        subname: "Customize Heartrate Reserve zones",
+                        icon: "favorite",
+                        link: routeMap.hrrZonesSettingsRoute,
                     }, {
-                        name: 'Cycling Speed',
-                        subname: 'Customize Cycling Speed zones',
-                        icon: 'directions_bike',
-                        link: routeMap.zonesSettingsRoute + '/speed'
+                        name: "Cycling Speed",
+                        subname: "Customize Cycling Speed zones",
+                        icon: "directions_bike",
+                        link: routeMap.zonesSettingsRoute + "/speed",
                     }, {
-                        name: 'Running Pace',
-                        subname: 'Customize Running Pace zones',
-                        icon: 'directions_walk',
-                        link: routeMap.zonesSettingsRoute + '/pace'
+                        name: "Running Pace",
+                        subname: "Customize Running Pace zones",
+                        icon: "directions_walk",
+                        link: routeMap.zonesSettingsRoute + "/pace",
                     }, {
-                        name: 'Cycling Power',
-                        subname: 'Customize Cycling Power zones',
-                        icon: 'flash_on',
-                        link: routeMap.zonesSettingsRoute + '/power'
+                        name: "Cycling Power",
+                        subname: "Customize Cycling Power zones",
+                        icon: "flash_on",
+                        link: routeMap.zonesSettingsRoute + "/power",
                     }, {
-                        name: 'Running Power',
-                        subname: 'Customize Running Power zones',
-                        icon: 'flash_on',
-                        link: routeMap.zonesSettingsRoute + '/runningPower'
+                        name: "Running Power",
+                        subname: "Customize Running Power zones",
+                        icon: "flash_on",
+                        link: routeMap.zonesSettingsRoute + "/runningPower",
                     }, {
-                        name: 'Cycling Cadence',
-                        subname: 'Customize Cycling Cadence zones',
-                        icon: 'autorenew',
-                        link: routeMap.zonesSettingsRoute + '/cyclingCadence'
+                        name: "Cycling Cadence",
+                        subname: "Customize Cycling Cadence zones",
+                        icon: "autorenew",
+                        link: routeMap.zonesSettingsRoute + "/cyclingCadence",
                     }, {
-                        name: 'Running Cadence',
-                        subname: 'Customize Running Cadence zones',
-                        icon: 'transfer_within_a_station',
-                        link: routeMap.zonesSettingsRoute + '/runningCadence'
+                        name: "Running Cadence",
+                        subname: "Customize Running Cadence zones",
+                        icon: "transfer_within_a_station",
+                        link: routeMap.zonesSettingsRoute + "/runningCadence",
                     }, {
-                        name: 'Grade',
-                        subname: 'Customize Grade zones',
-                        icon: 'trending_up',
-                        link: routeMap.zonesSettingsRoute + '/grade'
+                        name: "Grade",
+                        subname: "Customize Grade zones",
+                        icon: "trending_up",
+                        link: routeMap.zonesSettingsRoute + "/grade",
                     }, {
-                        name: 'Elevation',
-                        subname: 'Customize Elevation zones',
-                        icon: 'terrain',
-                        link: routeMap.zonesSettingsRoute + '/elevation'
+                        name: "Elevation",
+                        subname: "Customize Elevation zones",
+                        icon: "terrain",
+                        link: routeMap.zonesSettingsRoute + "/elevation",
                     }, {
-                        name: 'Cycling Ascent Speed',
-                        subname: 'Customize Cycling Ascent Speed zones',
-                        icon: 'call_made',
-                        link: routeMap.zonesSettingsRoute + '/ascent'
-                    }]
+                        name: "Cycling Ascent Speed",
+                        subname: "Customize Cycling Ascent Speed zones",
+                        icon: "call_made",
+                        link: routeMap.zonesSettingsRoute + "/ascent",
+                    }],
                 }, {
-                    id: 'DASHBOARD',
-                    name: 'Dashboard',
-                    icon: 'dashboard',
-                    link: 'link',
-                    sup: 'SOON',
-                    message: '<strong>Work in progress feature</strong></br></br>- Interrogate any stats of your history on a period. STX extended stats included.</br>- Interrogate by sports, by bike, ...</br>- Result goes in a tile in dashboard.</br>- Assign target in option: min, max, average or total to reach.</br>- Fully customisable.',
+                    id: "DASHBOARD",
+                    name: "Dashboard",
+                    icon: "dashboard",
+                    link: "link",
+                    sup: "SOON",
+                    message: "<strong>Work in progress feature</strong></br></br>- Interrogate any stats of your history on a period. STX extended stats included.</br>- Interrogate by sports, by bike, ...</br>- Result goes in a tile in dashboard.</br>- Assign target in option: min, max, average or total to reach.</br>- Fully customisable.",
                 }, {
-                    id: 'ACTIVITIES_GRID',
-                    name: 'Grid',
-                    icon: 'grid_on',
-                    link: 'link',
-                    sup: 'SOON',
-                    message: '<strong>Work in progress feature</strong></br></br>- All your activities in a table: <i>A column = A stat</i></br>- STX extended stats included.</br>- Fast searching along stats: Best TRIMP activity? Best W/KG ride ever? ...',
-                }]
-            }
+                    id: "ACTIVITIES_GRID",
+                    name: "Grid",
+                    icon: "grid_on",
+                    link: "link",
+                    sup: "SOON",
+                    message: "<strong>Work in progress feature</strong></br></br>- All your activities in a table: <i>A column = A stat</i></br>- STX extended stats included.</br>- Fast searching along stats: Best TRIMP activity? Best W/KG ride ever? ...",
+                }],
+            },
         };
 
         $scope.updateMenuAndToolbarAlongPageLoaded = () => {
@@ -180,8 +180,8 @@ export class MainController {
             }
 
             // Find subname or name to auto put title on load
-            let sectionFound: any = _.find($scope.uiStructure.sidenav.sections, {
-                link: $location.path()
+            const sectionFound: any = _.find($scope.uiStructure.sidenav.sections, {
+                link: $location.path(),
             });
 
             if (sectionFound) {
@@ -189,16 +189,16 @@ export class MainController {
             } else {
 
                 // Actions... of a section
-                let sectionsWithActions: any = _.filter($scope.uiStructure.sidenav.sections, (section: any) => {
+                const sectionsWithActions: any = _.filter($scope.uiStructure.sidenav.sections, (section: any) => {
                     return !_.isEmpty(section.actions);
                 });
 
                 let actionFound: any;
                 for (let i = 0; i < sectionsWithActions.length; i++) {
 
-                    let section: any = sectionsWithActions[i];
+                    const section: any = sectionsWithActions[i];
                     actionFound = _.find(section.actions, {
-                        link: path
+                        link: path,
                     });
 
                     if (actionFound) {
@@ -208,7 +208,7 @@ export class MainController {
                 }
 
                 if (!actionFound) {
-                    $scope.pageTitle = '';
+                    $scope.pageTitle = "";
                 } else {
                     $scope.pageTitle = (actionFound.subname) ? actionFound.subname : actionFound.name;
                 }
@@ -232,12 +232,12 @@ export class MainController {
                     };
 
                     $scope.goToPaypal = () => {
-                        $window.open('https://www.paypal.me/thomaschampagne/' + properties.donateAmount, '_blank');
+                        $window.open("https://www.paypal.me/thomaschampagne/" + properties.donateAmount, "_blank");
                     };
                 },
-                templateUrl: 'views/modals/donate.html',
+                templateUrl: "views/modals/donate.html",
                 parent: angular.element(document.body),
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
             });
         };
 
@@ -258,11 +258,11 @@ export class MainController {
                     };
 
                     $scope.shareTwitter = () => {
-                        $window.open('https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravistix%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20http://thomaschampagne.github.io/stravistix/.%20%23cycling%20%23running%20%23geek', '_blank');
+                        $window.open("https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you%20should%20try%20%23stravistix%20web%20extension%20by%20%40champagnethomas.%20Get%20it%20here%20%20http://thomaschampagne.github.io/stravistix/.%20%23cycling%20%23running%20%23geek", "_blank");
                     };
 
                     $scope.shareFacebook = () => {
-                        $window.open('https://www.facebook.com/stravistixforstrava', '_blank');
+                        $window.open("https://www.facebook.com/stravistixforstrava", "_blank");
                     };
 
                     $scope.openPluginPage = () => {
@@ -270,9 +270,9 @@ export class MainController {
                     };
 
                 },
-                templateUrl: 'views/modals/share.html',
+                templateUrl: "views/modals/share.html",
                 parent: angular.element(document.body),
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
             });
         };
         if (!_.isEmpty($location.search().showSharing)) {
@@ -283,43 +283,42 @@ export class MainController {
          * Plugin page
          */
         $scope.openPluginPage = () => {
-            $window.open('http://thomaschampagne.github.io/stravistix/', '_blank');
+            $window.open("http://thomaschampagne.github.io/stravistix/", "_blank");
         };
 
         /**
          * Strava club page
          */
         $scope.openStravaClub = () => {
-            $window.open('https://www.strava.com/clubs/stravistix', '_blank');
+            $window.open("https://www.strava.com/clubs/stravistix", "_blank");
         };
 
         /**
          * FAQ
          */
         $scope.openFAQ = () => {
-            $window.open('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions', '_blank');
+            $window.open("https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions", "_blank");
         };
 
         /**
          * bug report
          */
         $scope.openBugReport = () => {
-            let newIssueURL: string = 'https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20%0A%0A**Actual%20Behavior:**%20%0A%0A**Expected%20Behavior:**%20%0A%0A**Steps%20to%20Reproduce:**%20%0A-%20...%0A%20-%20...%0A%20-%20...%0A%0A**Chrome%20version**%20%0A%0A**Plugin%20version:**%20%0A%0A**Activities%20links?:**%20%0A%0A**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20%0A%0A```%20%0Aput%20console%20errors%20here%20if%20exist%20%0A```%20%0A%0A**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**';
-            $window.open(newIssueURL, '_blank');
+            const newIssueURL: string = "https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20%0A%0A**Actual%20Behavior:**%20%0A%0A**Expected%20Behavior:**%20%0A%0A**Steps%20to%20Reproduce:**%20%0A-%20...%0A%20-%20...%0A%20-%20...%0A%0A**Chrome%20version**%20%0A%0A**Plugin%20version:**%20%0A%0A**Activities%20links?:**%20%0A%0A**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20%0A%0A```%20%0Aput%20console%20errors%20here%20if%20exist%20%0A```%20%0A%0A**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**";
+            $window.open(newIssueURL, "_blank");
         };
 
         /**
          * Project sources
          */
         $scope.openProjectSources = () => {
-            $window.open('https://github.com/thomaschampagne/stravistix/', '_blank');
+            $window.open("https://github.com/thomaschampagne/stravistix/", "_blank");
         };
 
         /**
          * Release Notes
          */
         $scope.showReleaseNotes = () => {
-
 
             $mdDialog.show({
                 controller: ($scope: any, ReleaseNotesService: IReleaseNotesService, $window: IWindowService) => {
@@ -332,7 +331,7 @@ export class MainController {
 
                     $scope.showVersionDiff = (from: string, to: string) => {
                         if (from && to) {
-                            $window.open('https://github.com/thomaschampagne/stravistix/compare/' + from + '...' + to, '_blank');
+                            $window.open("https://github.com/thomaschampagne/stravistix/compare/" + from + "..." + to, "_blank");
                         }
                     };
 
@@ -341,10 +340,10 @@ export class MainController {
                     };
 
                 },
-                templateUrl: 'views/modals/releaseNotes.html',
+                templateUrl: "views/modals/releaseNotes.html",
                 scope: $scope.$new(),
                 parent: angular.element(document.body),
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
             });
         };
         if (!_.isEmpty($location.search().showReleaseNotes)) {
@@ -358,42 +357,42 @@ export class MainController {
             $mdDialog.show({
                 controller: ($scope: any) => {
                     chromeStorageService.getLocalStorageUsage().then((storageUsage: IStorageUsage) => {
-                        $scope.storageUsage = 'History size: ' + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + 'MB.';
+                        $scope.storageUsage = "History size: " + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + "MB.";
                     });
                     $scope.hide = () => {
                         $mdDialog.hide();
                     };
                 },
-                templateUrl: 'views/modals/about.html',
+                templateUrl: "views/modals/about.html",
                 parent: angular.element(document.body),
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
             });
         };
 
         $scope.openTwitter = () => {
-            $window.open('https://twitter.com/champagnethomas', '_blank');
+            $window.open("https://twitter.com/champagnethomas", "_blank");
         };
 
         $scope.syncNow = (forceSync: boolean) => {
             chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
-                $window.open('https://www.strava.com/dashboard?stravistixSync=true&forceSync=' + forceSync + '&sourceTabId=' + tab.id, '_blank', 'width=700, height=675, location=0');
+                $window.open("https://www.strava.com/dashboard?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id, "_blank", "width=700, height=675, location=0");
             });
         };
 
         $scope.clearHistory = () => {
-            let confirm = $mdDialog.confirm()
-                .title('Are you sure to delete your history?')
-                .textContent('Performing this action will clear your history of activities synced. Features which depends of your history will not be displayed anymore until you perform a new synchronization.')
-                .ariaLabel('Are you sure to delete your history?')
-                .ok('Delete my history')
-                .cancel('Cancel');
+            const confirm = $mdDialog.confirm()
+                .title("Are you sure to delete your history?")
+                .textContent("Performing this action will clear your history of activities synced. Features which depends of your history will not be displayed anymore until you perform a new synchronization.")
+                .ariaLabel("Are you sure to delete your history?")
+                .ok("Delete my history")
+                .cancel("Cancel");
 
             $mdDialog.show(confirm).then(() => {
 
-                chromeStorageService.removeFromLocalStorage('computedActivities').then(() => {
-                    return chromeStorageService.removeFromLocalStorage('lastSyncDateTime');
+                chromeStorageService.removeFromLocalStorage("computedActivities").then(() => {
+                    return chromeStorageService.removeFromLocalStorage("lastSyncDateTime");
                 }).then(() => {
-                    return chromeStorageService.removeFromLocalStorage('syncWithAthleteProfile');
+                    return chromeStorageService.removeFromLocalStorage("syncWithAthleteProfile");
                 }).then(() => {
                     $window.location.reload();
                 });
@@ -405,7 +404,7 @@ export class MainController {
 
         $scope.saveHistory = () => {
             chromeStorageService.getAllFromLocalStorage().then((data: any) => {
-                data = _.pick(data, 'lastSyncDateTime', 'syncWithAthleteProfile', 'computedActivities'); // Filter data to keep
+                data = _.pick(data, "lastSyncDateTime", "syncWithAthleteProfile", "computedActivities"); // Filter data to keep
 
                 if (_.isEmpty(data.computedActivities)) {
                     alert("No history to backup. Perform full sync at first");
@@ -414,13 +413,13 @@ export class MainController {
 
                 // Append current version
                 data.pluginVersion = chrome.runtime.getManifest().version;
-                let blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
-                let filename = moment().format('Y.M.D-H.mm') + '_v' + data.pluginVersion + '.history.json';
+                const blob = new Blob([angular.toJson(data)], {type: "application/json; charset=utf-8"});
+                const filename = moment().format("Y.M.D-H.mm") + "_v" + data.pluginVersion + ".history.json";
                 saveAs(blob, filename);
 
-                let dialog = $mdDialog.alert()
-                    .htmlContent('<i>' + filename + '</i> file should be dropped in your download folder.')
-                    .ok('Got it !');
+                const dialog = $mdDialog.alert()
+                    .htmlContent("<i>" + filename + "</i> file should be dropped in your download folder.")
+                    .ok("Got it !");
                 $mdDialog.show(dialog);
             });
         };
@@ -433,9 +432,9 @@ export class MainController {
                         $mdDialog.hide();
                     };
                 },
-                templateUrl: 'views/modals/restoreHistory.html',
+                templateUrl: "views/modals/restoreHistory.html",
                 parent: angular.element(document.body),
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
             });
         };
     }

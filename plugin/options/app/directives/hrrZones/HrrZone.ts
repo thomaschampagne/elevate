@@ -1,10 +1,10 @@
 
-import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
 import {IZone} from "../../../../core/scripts/interfaces/IActivityData";
+import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
 
 export class HrrZone {
 
-    static $inject: string[] = ['$scope', 'AvoidInputKeysService'];
+    static $inject: string[] = ["$scope", "AvoidInputKeysService"];
 
     constructor(public $scope: any, public AvoidInputKeysService: IAvoidInputKeysService) {
 
@@ -12,7 +12,7 @@ export class HrrZone {
             AvoidInputKeysService.apply(evt);
         };
 
-        $scope.$watch('hrrZone', (newHrZone: IZone, oldHrZone: IZone) => {
+        $scope.$watch("hrrZone", (newHrZone: IZone, oldHrZone: IZone) => {
             $scope.$parent.onZoneChange(parseInt($scope.hrrZoneId), oldHrZone, newHrZone);  // Notify parent scope when a zone has changed
         }, true);
 
@@ -25,21 +25,21 @@ export class HrrZone {
 
 export let hrrZone = [() => {
 
-    return <any> {
+    return {
 
         scope: {
-            hrrZoneId: '@hrrZoneId',
-            hrrZone: '=',
-            previousFromHrr: '@previousFromHrr',
-            nextToHrr: '@nextToHrr',
-            hrrZoneFirst: '@hrrZoneFirst',
-            hrrZoneLast: '@hrrZoneLast',
-            userMaxHr: '@userMaxHr',
-            userRestHr: '@userRestHr',
-            step: '@zoneStep'
+            hrrZoneId: "@hrrZoneId",
+            hrrZone: "=",
+            previousFromHrr: "@previousFromHrr",
+            nextToHrr: "@nextToHrr",
+            hrrZoneFirst: "@hrrZoneFirst",
+            hrrZoneLast: "@hrrZoneLast",
+            userMaxHr: "@userMaxHr",
+            userRestHr: "@userRestHr",
+            step: "@zoneStep",
         },
         controller: HrrZone,
-        templateUrl: 'directives/hrrZones/templates/hrrZone.html'
-    };
+        templateUrl: "directives/hrrZones/templates/hrrZone.html",
+    } as any;
 
 }];
