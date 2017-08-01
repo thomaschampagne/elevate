@@ -18,12 +18,7 @@ const _coreConfig: ICoreConfig = {
             /* Npm Modules */
             'css': 'npm:systemjs-plugin-css/css.js',
             'chart.js': 'npm:chart.js/dist/Chart.bundle.js',
-
-            // Do not inject d3 on core!
-            // It will be injected by strava.com
-            // or dynamically using SystemJS.import('npm:d3/d3.js')
-            'd3': '@empty',
-
+            'd3': 'npm:d3/d3.js',
             'q': 'npm:q/q.js',
             'jquery': 'npm:jquery/dist/jquery.js',
             'dms': 'npm:geodesy/dms.js',
@@ -54,6 +49,9 @@ const _coreConfig: ICoreConfig = {
                 format: 'cjs',
             },
             'lodash': {
+                format: 'cjs',
+            },
+            'd3': {
                 format: 'cjs',
             }
         }
