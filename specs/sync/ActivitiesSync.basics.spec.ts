@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import * as Q from "q";
 import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
@@ -7,26 +6,6 @@ import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/core/s
 import {clone, editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer', () => {
-
-    it('should test my promise ', (done: Function) => {
-
-        class Calc {
-            public static add(a: number, b: number): Q.Promise<number> {
-                let deferred: Q.Deferred<number> = Q.defer<number>();
-                deferred.resolve(a + b);
-                return deferred.promise;
-            }
-        }
-
-        let deferred = Q.defer();
-        deferred.resolve(3);
-        spyOn(Calc, 'add').and.returnValue(deferred.promise); // Mock example
-
-        Calc.add(10, 11).then((r: number) => {
-            expect(r).toEqual(3); // Spy resolves as 3... no 21...
-            done();
-        });
-    });
 
     it('should remove activity from array properly ', () => {
 
