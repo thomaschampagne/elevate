@@ -190,7 +190,25 @@ gulp.task('writeManifest', ['tsCompileToDist'], (done) => {
     }
 });
 
-gulp.task('build', ['writeManifest'], () => {
+gulp.task('buildWebApp', ['writeManifest'], (done) => {
+
+    util.log('Building angular 4 webapp...');
+
+    exec("cd ./plugin/webapp/ && ng build", (error, stdout, stderr) => { // TODO --prod --aot
+        if (error) {
+            util.log(error);
+            util.log(stderr);
+        } else {
+            util.log(stdout);
+            util.log('Build of webapp done...');
+            gulp.src(["./plugin/webapp/app/**/*"]).pipe(gulp.dest(DIST_FOLDER + '/webapp/app/')); // TODO refactor
+            done();
+        }
+    });
+});
+
+
+gulp.task('build', ['buildWebApp'], () => {
 
     util.log('Building destination folder with others files: core js scripts, stylesheets, common resources, options files');
 

@@ -6,7 +6,8 @@
     "postinstall": "npm --prefix ./plugin install ./plugin",
     "test": "gulp specs",
     "dev:core": "gulp cleanInlineSources && tsc -w",
-    "dev:webapp": "cd ./plugin/webapp/ && ng build --watch"
+    "dev:webapp": "cd ./plugin/webapp/ && ng build --watch",
+    "dev": "concurrently --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\""
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "@types/nvd3": "^1.8.37",
     "@types/q": "^1.0.2",
     "@types/systemjs": "^0.20.2",
+    "concurrently": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
