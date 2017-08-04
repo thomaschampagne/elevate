@@ -5,7 +5,8 @@
   "scripts": {
     "postinstall": "npm --prefix ./plugin install ./plugin",
     "test": "gulp specs",
-    "dev": "gulp cleanInlineSources && tsc -w"
+    "dev:core": "gulp cleanInlineSources && tsc -w",
+    "dev:webapp": "cd ./plugin/webapp/ && ng build --watch"
   },
   "repository": {
     "type": "git",
