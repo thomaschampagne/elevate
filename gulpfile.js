@@ -48,6 +48,8 @@ let CURRENT_COMMIT = null;
 /**
  * Global folder variable
  */
+let COMMON_JAVASCRIPT_SCRIPTS = ['plugin/common/**/*.js'];
+
 let CORE_JAVASCRIPT_SCRIPTS = [
     'plugin/core/config/env.js',
     'plugin/core/modules/*.js',
@@ -194,7 +196,7 @@ gulp.task('build', ['writeManifest'], () => {
 
     util.log('Building destination folder with others files: core js scripts, stylesheets, common resources, options files');
 
-    return gulp.src(_.union(CORE_JAVASCRIPT_SCRIPTS, CORE_STYLESHEETS, CORE_RESOURCES, OPTIONS_FILES), {
+    return gulp.src(_.union(COMMON_JAVASCRIPT_SCRIPTS, CORE_JAVASCRIPT_SCRIPTS, CORE_STYLESHEETS, CORE_RESOURCES, OPTIONS_FILES), {
         base: 'plugin/'
     }).pipe(gulp.dest(DIST_FOLDER));
 

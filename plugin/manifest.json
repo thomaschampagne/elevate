@@ -40,6 +40,7 @@
   ],
   "web_accessible_resources": [
     "node_modules/*",
+    "common/*",
     "core/modules/*",
     "core/system.core.config.js",
     "core/system.core.start.js",
@@ -49,7 +50,6 @@
     "core/scripts/modifiers/*",
     "core/scripts/*",
     "core/css/*",
-    "options/*",
     "core/icons/*"
   ],
   "externally_connectable": {
