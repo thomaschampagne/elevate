@@ -333,4 +333,8 @@ export class Helper {
         return a == null ? b : Math.min(a, b);
     }
 
+    public static convertMetersPerSecondsToKph(meterPerSeconds: number): number {
+        return meterPerSeconds * 3.6;
+    }
+
 }
