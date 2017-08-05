@@ -3,6 +3,9 @@
     "plugin/core/core.d.ts"
   ],
   "include": [
+    // Common
+    "plugin/common/**/*.ts",
+
     // Core
     "plugin/core/**/*.ts",
 
