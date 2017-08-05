@@ -3,9 +3,12 @@ const _coreConfig: ICoreConfig = {
         baseURL: null, // SystemJS baseURL is set on "startCoreEvent" event handling through "CoreSetup.listenForStartCoreEvent()"
         paths: {
             "npm:": "node_modules/",
-            "custom:": "core/modules/",
+            "modules:": "core/modules/",
         },
         packages: {
+            "common": {
+                format: 'cjs'
+            },
             "core": {
                 format: "cjs",
             },
@@ -28,7 +31,7 @@ const _coreConfig: ICoreConfig = {
             "file-saver": "npm:file-saver/FileSaver.min.js",
 
             /* Custom modules */
-            "jqueryAppear": "custom:jquery.appear.js",
+            "jqueryAppear": "modules:jquery.appear.js",
 
             /* Styles */
             "fancybox.css": "npm:fancybox/dist/css/jquery.fancybox.css",

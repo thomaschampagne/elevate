@@ -1,17 +1,15 @@
 import * as _ from 'lodash';
 import {IActivityStream} from '../../plugin/core/scripts/interfaces/IActivityData';
-import {CourseMaker, ICourseBounds} from '../../plugin/common/CourseMarker';
+import {CourseMaker, ExportTypes, ICourseBounds} from '../../plugin/common/CourseMarker';
 import {clone} from '../tools/SpecsTools';
 
 describe('CourseMaker', () => {
 
-    let courseMaker: CourseMaker;
-    let xmlParser: DOMParser;
+    let courseMaker: CourseMaker = new CourseMaker();
+    let xmlParser: DOMParser = new DOMParser();
     let activityStream: IActivityStream;
 
     beforeEach(() => {
-        courseMaker = new CourseMaker();
-        xmlParser = new DOMParser();
         activityStream = clone(window.__fixtures__['fixtures/activities/829770999/stream']);
     });
 
@@ -21,7 +19,7 @@ describe('CourseMaker', () => {
         let courseName: string = 'MyCourse';
 
         // When
-        let gpxStream: string = courseMaker.createGpx(courseName, activityStream);
+        let gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, activityStream);
         let xmlStream = xmlParser.parseFromString(gpxStream, 'text/xml');
 
         // Then ...
@@ -73,7 +71,7 @@ describe('CourseMaker', () => {
 
         // When
         try {
-            courseMaker.createGpx(courseName, activityStream);
+            courseMaker.create(ExportTypes.GPX, courseName, activityStream);
         } catch (err) {
             errorCatched = err;
         }
@@ -89,7 +87,7 @@ describe('CourseMaker', () => {
         let courseName: string = 'MyCourse';
 
         // When
-        let tcxStream: string = courseMaker.createTcx(courseName, activityStream);
+        let tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, activityStream);
         let xmlStream = xmlParser.parseFromString(tcxStream, 'text/xml');
 
         // Then
@@ -159,7 +157,7 @@ describe('CourseMaker', () => {
 
         // When
         try {
-            courseMaker.createTcx(courseName, activityStream);
+            courseMaker.create(ExportTypes.TCX, courseName, activityStream);
         } catch (err) {
             errorCatched = err;
         }
@@ -173,27 +171,27 @@ describe('CourseMaker', () => {
 
         // Given
         let courseName: string = 'MyCourse';
-        const bounds: ICourseBounds = {start: 200, end: 1200};
+        const bounds: ICourseBounds = {start: 200, end: 300};
 
         // When
-        let gpxStream: string = courseMaker.createGpx(courseName, clone(window.__fixtures__['fixtures/activities/829770999/stream']), bounds);
+        let gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, activityStream, bounds);
         let xmlStream = xmlParser.parseFromString(gpxStream, 'text/xml');
 
         // Then
         const trackPointsLength = xmlStream.getElementsByTagName('trkpt').length;
-        expect(trackPointsLength).toBe(1000);
+        expect(trackPointsLength).toBe(100);
 
     });
 
-    it('should export GPX with bounds', () => {
+    it('should export TCX with bounds', () => {
 
         // Given
         let courseName: string = 'MyCourse';
-        const bounds: ICourseBounds = {start: 200, end: 1200};
+        const bounds: ICourseBounds = {start: 300, end: 400};
 
         // When
-        let gpxStream: string = courseMaker.createTcx(courseName, clone(window.__fixtures__['fixtures/activities/829770999/stream']), bounds);
-        let xmlStream = xmlParser.parseFromString(gpxStream, 'text/xml');
+        let tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, activityStream, bounds);
+        let xmlStream = xmlParser.parseFromString(tcxStream, 'text/xml');
 
         // Then
         const trackPointsLength = xmlStream.getElementsByTagName('TrainingCenterDatabase')[0]
@@ -203,7 +201,18 @@ describe('CourseMaker', () => {
             .getElementsByTagName('Track')[0]
             .getElementsByTagName('Trackpoint').length;
 
-        expect(trackPointsLength).toBe(1000);
+        expect(trackPointsLength).toBe(100);
+
+    });
+
+    it('should failed', () => {
+
+        // Given
+        let courseName: string = 'MyCourse';
+
+        expect(() => {
+            courseMaker.create(-1, courseName, activityStream); // When
+        }).toThrowError("Export type do not exist"); // Then
 
     });
 });

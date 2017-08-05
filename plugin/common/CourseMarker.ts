@@ -7,9 +7,35 @@ export interface ICourseBounds {
     end: number;
 }
 
+export enum ExportTypes {
+    GPX,
+    TCX
+}
+
 export class CourseMaker {
 
-    public createGpx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+    public create(exportType: ExportTypes, courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+
+        let courseData: string = null;
+
+        switch (exportType) {
+
+            case ExportTypes.GPX:
+                courseData = this.createGpx(courseName, activityStream, bounds);
+                break;
+
+            case ExportTypes.TCX:
+                courseData = this.createTcx(courseName, activityStream, bounds);
+                break;
+
+            default:
+                throw new Error("Export type do not exist");
+        }
+
+        return courseData;
+    }
+
+    private createGpx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
@@ -71,7 +97,7 @@ export class CourseMaker {
         return gpxString;
     }
 
-    public createTcx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+    private createTcx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);

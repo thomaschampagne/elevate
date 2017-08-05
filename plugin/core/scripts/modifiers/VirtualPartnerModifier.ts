@@ -2,15 +2,19 @@ import {saveAs} from "file-saver";
 import * as _ from "lodash";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
 import {VacuumProcessor} from "../processors/VacuumProcessor";
+import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/CourseMarker";
+
 
 export class VirtualPartnerModifier implements IModifier {
 
     protected vacuumProcessor: VacuumProcessor;
     protected activityId: number;
+    protected courseMaker: CourseMaker;
 
     constructor(activityId: number, vacuumProcessor: VacuumProcessor) {
         this.activityId = activityId;
         this.vacuumProcessor = vacuumProcessor;
+        this.courseMaker = new CourseMaker();
     }
 
     modify(): void {
@@ -29,11 +33,11 @@ export class VirtualPartnerModifier implements IModifier {
 
         const that = this;
 
-        view.prototype.render = function() {
+        view.prototype.render = function () {
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            const exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export segment effort for GPS device</a>';
+            const exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export this Segment Effort to your GPS</a>';
             if ($(".stravistix_exportVpu").length < 1) {
 
                 $(".effort-actions").first().after(exportButtonHtml).each(() => {
@@ -84,139 +88,56 @@ export class VirtualPartnerModifier implements IModifier {
 
         const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
 
-        const dlButton: string = '<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File (GPX)</a>';
+        const exportsType = [
+            ExportTypes.GPX,
+            ExportTypes.TCX
+        ];
+
         const message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
 
-        $.fancybox('<div id="stravistix_popup_download_course_' + effortId + '">' + message + "</div>", {
+        $.fancybox('<div width="250px" id="stravistix_popup_download_course_' + effortId + '">' + message + "</div>", {
+
             afterShow: () => {
-                $("#stravistix_download_course_" + effortId).html(dlButton).each(() => {
-                    $("#stravistix_download_course_" + effortId).on("click", () => {
-                        this.downloadGpx(effortId);
-                        $("#stravistix_popup_download_course_" + effortId).html("Your GPX file is (being) dropped in your download folder...");
+
+                _.forEach(exportsType, (type: ExportTypes) => {
+
+                    const exportTypeAsString: string = ExportTypes[type];
+
+                    const link: JQuery = $('<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File as ' + exportTypeAsString + '</a>').on("click", () => {
+
+                        this.download(effortId, type);
+                        $("#stravistix_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
+
                     });
+
+                    $("#stravistix_download_course_" + effortId).append(link);
+
                 });
             },
         });
     }
 
-    protected downloadGpx(effortId: number) {
+    protected download(effortId: number, exportType: ExportTypes) {
+
         this.getSegmentInfos(effortId, (segmentInfosResponse: any) => {
+
             this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream) => { // Get stream on page
                 if (_.isEmpty(activityStream.latlng)) {
                     alert("No GPS Data found");
                     return;
                 }
-                activityStream = this.cutStreamsAlongSegmentBounds(activityStream, segmentInfosResponse); // Cutting streams from start to endpoint of segment
-                this.createGpxAndSave(segmentInfosResponse.display_name, effortId, activityStream);
+
+                let bounds: ICourseBounds = {
+                    start: segmentInfosResponse.start_index,
+                    end: segmentInfosResponse.end_index
+                };
+
+                saveAs(new Blob([this.courseMaker.create(exportType, segmentInfosResponse.display_name, activityStream, bounds)], {type: "application/xml; charset=utf-8"}),
+                    "course_" + effortId + "." + ExportTypes[exportType].toLowerCase()); // Filename
+
             });
         });
     }
 
-    protected createGpxAndSave(courseName: string, effortId: number, activityStream: IActivityStream) {
-        const blob = new Blob([this.genGpxData(courseName, activityStream)], {type: "application/xml; charset=utf-8"});
-        const filename: string = "course_" + effortId + ".gpx";
-        saveAs(blob, filename);
-    }
 
-    protected genGpxData(courseName: string, activityStream: IActivityStream): string {
-
-        let gpxString: string = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-            '<gpx creator="StravistiX" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">\n' +
-            "<metadata>\n" +
-            "<author>\n" +
-            "<name>StravistiX</name>\n" +
-            '<link href="http://thomaschampagne.github.io/stravistix/"/>\n' +
-            "</author>\n" +
-            "</metadata>\n" +
-            "<trk>\n" +
-            "<name>" + courseName + "</name>\n" +
-            "<trkseg>\n";
-
-        for (let i: number = 0; i < activityStream.latlng.length; i++) {
-
-            // Position
-            gpxString += '<trkpt lat="' + activityStream.latlng[i][0] + '" lon="' + activityStream.latlng[i][1] + '">\n';
-
-            // Altitude
-            if (_.isNumber(activityStream.altitude[i])) {
-                gpxString += "<ele>" + activityStream.altitude[i] + "</ele>\n";
-            }
-
-            // Time
-            gpxString += "<time>" + (new Date(activityStream.time[i] * 1000)).toISOString() + "</time>\n";
-
-            if (activityStream.heartrate || activityStream.cadence) {
-
-                gpxString += "<extensions>\n";
-                gpxString += "<gpxtpx:TrackPointExtension>\n";
-
-                if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-                    gpxString += "<gpxtpx:hr>" + activityStream.heartrate[i] + "</gpxtpx:hr>\n";
-                }
-                if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-                    gpxString += "<gpxtpx:cad>" + activityStream.cadence[i] + "</gpxtpx:cad>\n";
-                }
-
-                gpxString += "</gpxtpx:TrackPointExtension>\n";
-                gpxString += "</extensions>\n";
-            }
-
-            gpxString += "</trkpt>\n";
-        }
-
-        gpxString += "</trkseg>\n";
-        gpxString += "</trk>\n";
-        gpxString += "</gpx>";
-
-        return gpxString;
-    }
-
-    protected cutStreamsAlongSegmentBounds(activityStream: IActivityStream, segmentInfosResponse: any): IActivityStream {
-
-        if (!_.isEmpty(activityStream.velocity_smooth)) {
-            activityStream.velocity_smooth = activityStream.velocity_smooth.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.time)) {
-            activityStream.time = activityStream.time.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.latlng)) {
-            activityStream.latlng = activityStream.latlng.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.heartrate)) {
-            activityStream.heartrate = activityStream.heartrate.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.watts)) {
-            activityStream.watts = activityStream.watts.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.watts_calc)) {
-            activityStream.watts_calc = activityStream.watts_calc.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.cadence)) {
-            activityStream.cadence = activityStream.cadence.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.grade_smooth)) {
-            activityStream.grade_smooth = activityStream.grade_smooth.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.altitude)) {
-            activityStream.altitude = activityStream.altitude.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.distance)) {
-            activityStream.distance = activityStream.distance.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        if (!_.isEmpty(activityStream.altitude_smooth)) {
-            activityStream.altitude_smooth = activityStream.altitude_smooth.slice(segmentInfosResponse.start_index, segmentInfosResponse.end_index);
-        }
-
-        return activityStream;
-    }
 }
