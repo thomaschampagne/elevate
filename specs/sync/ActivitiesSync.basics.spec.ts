@@ -3,13 +3,13 @@ import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts
 import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
 import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/core/scripts/interfaces/ISync";
-import {clone, editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
+import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer', () => {
 
     it('should remove activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -22,7 +22,7 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should edit activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
@@ -39,8 +39,8 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should detect activities added, modified and deleted ', () => {
 
-        let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
-        let rawPageOfActivities: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let computedActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
+        let rawPageOfActivities: Array<ISyncRawStravaActivity> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
 
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -80,8 +80,8 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should append history of pages where activities added, modified and deleted ', () => {
 
-        let userSettingsMock: IUserSettings = clone(window.__fixtures__['fixtures/userSettings/2470979']);
-        let appResourcesMock: IAppResources = clone(window.__fixtures__['fixtures/appResources/appResources']);
+        let userSettingsMock: IUserSettings = _.cloneDeep(window.__fixtures__['fixtures/userSettings/2470979']);
+        let appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__['fixtures/appResources/appResources']);
         let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         // Append

@@ -1,5 +1,5 @@
-import {saveAs} from "file-saver";
 import * as _ from "lodash";
+import {saveAs} from "file-saver";
 import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
 import {VacuumProcessor} from "../processors/VacuumProcessor";
 import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/CourseMarker";
@@ -96,22 +96,14 @@ export class VirtualPartnerModifier implements IModifier {
         const message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
 
         $.fancybox('<div width="250px" id="stravistix_popup_download_course_' + effortId + '">' + message + "</div>", {
-
             afterShow: () => {
-
                 _.forEach(exportsType, (type: ExportTypes) => {
-
                     const exportTypeAsString: string = ExportTypes[type];
-
                     const link: JQuery = $('<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File as ' + exportTypeAsString + '</a>').on("click", () => {
-
                         this.download(effortId, type);
                         $("#stravistix_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
-
                     });
-
                     $("#stravistix_download_course_" + effortId).append(link);
-
                 });
             },
         });
@@ -119,7 +111,7 @@ export class VirtualPartnerModifier implements IModifier {
 
     protected download(effortId: number, exportType: ExportTypes) {
 
-        this.getSegmentInfos(effortId, (segmentInfosResponse: any) => {
+        this.getSegmentInfos(effortId, (segmentData: any) => {
 
             this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream) => { // Get stream on page
                 if (_.isEmpty(activityStream.latlng)) {
@@ -128,11 +120,11 @@ export class VirtualPartnerModifier implements IModifier {
                 }
 
                 let bounds: ICourseBounds = {
-                    start: segmentInfosResponse.start_index,
-                    end: segmentInfosResponse.end_index
+                    start: segmentData.start_index,
+                    end: segmentData.end_index
                 };
 
-                saveAs(new Blob([this.courseMaker.create(exportType, segmentInfosResponse.display_name, activityStream, bounds)], {type: "application/xml; charset=utf-8"}),
+                saveAs(new Blob([this.courseMaker.create(exportType, segmentData.display_name, activityStream, bounds)], {type: "application/xml; charset=utf-8"}),
                     "course_" + effortId + "." + ExportTypes[exportType].toLowerCase()); // Filename
 
             });

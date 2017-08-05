@@ -1,9 +1,5 @@
 import * as _ from "lodash";
 
-export let clone = (obj: any): any => { // TODO use cloneDeep directly
-    return _.cloneDeep(obj);
-};
-
 export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
     return _.without(fromArray, _.find(fromArray, {
         id: activityId
