@@ -30,4 +30,9 @@ describe('Helper', () => {
         expect(Helper.versionCompare('4.9.8', '4.9.9')).toEqual(-1);
         expect(Helper.versionCompare('', '4.9.9')).toEqual(NaN);
     });
+
+    it('should convert meters per seconds tp KPH', () => {
+        expect(Helper.convertMetersPerSecondsToKph(10)).toEqual(36);
+    });
+
 });
