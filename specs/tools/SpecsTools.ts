@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 
 export let clone = (obj: any): any => {
-    return JSON.parse(JSON.stringify(obj));
+    return _.cloneDeep(obj);
 };
 
 export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
