@@ -24,6 +24,7 @@ module.exports = function (config) {
             'plugin/node_modules/chart.js/dist/Chart.bundle.js',
             'plugin/node_modules/d3/d3.js',
             'plugin/node_modules/file-saver/FileSaver.min.js',
+            'plugin/common/**/*.js',
             'plugin/core/**/*.js',
             'specs/**/*.js',
             'specs/fixtures/**/*.json'
@@ -40,6 +41,9 @@ module.exports = function (config) {
             serveFiles: [], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
             config: { // SystemJS configuration
                 packages: {
+                    'plugin/common/': {
+                        format: 'cjs'
+                    },
                     'plugin/core/': {
                         format: 'cjs'
                     },
@@ -77,7 +81,7 @@ module.exports = function (config) {
             // transform the filename
             transformPath: function (path) {
                 return path + '.js';
-            }
+            } 
         },
         colors: true,
         singleRun: true,

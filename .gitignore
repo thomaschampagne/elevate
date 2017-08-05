@@ -7,14 +7,19 @@ dist/
 package/
 chrome-win32/
 
+# common
+plugin/common/**/*.js
+plugin/common/**/*.map
+
 # core
 plugin/core/**/*.js
 plugin/core/**/*.map
 
-# Webapp
+# webapp
 plugin/options/**/*.js
 plugin/options/**/*.map
 
 # specs
 specs/**/*.js
 specs/**/*.map
+specs.log

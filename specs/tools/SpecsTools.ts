@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-export let clone = (obj: any): any => {
+export let clone = (obj: any): any => { // TODO use cloneDeep directly
     return _.cloneDeep(obj);
 };
 
