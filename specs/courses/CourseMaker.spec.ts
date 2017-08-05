@@ -1,33 +1,24 @@
 import * as _ from 'lodash';
 import {IActivityStream} from '../../plugin/core/scripts/interfaces/IActivityData';
-import {CourseMaker} from '../../plugin/common/CourseMarker';
+import {CourseMaker, ICourseBounds} from '../../plugin/common/CourseMarker';
 import {clone} from '../tools/SpecsTools';
 
-fdescribe('CourseMaker', () => {
+describe('CourseMaker', () => {
 
-    let courseMaker = new CourseMaker();
-    let xmlParser = new DOMParser();
+    let courseMaker: CourseMaker;
+    let xmlParser: DOMParser;
+    let activityStream: IActivityStream;
 
-    it('should export GPX stream when activityStream exists', () => {
-
-        // Given
-        let courseName: string = 'MyCourse';
-        let activityStream: IActivityStream = clone(window.__fixtures__['fixtures/activities/829770999/stream']);
-
-        // When
-        let gpxStream: string = courseMaker.createGpx(courseName, activityStream);
-
-        // Then
-        expect(gpxStream).not.toBeNull();
-        expect(_.isEmpty(gpxStream)).toBeFalsy();
-
+    beforeEach(() => {
+        courseMaker = new CourseMaker();
+        xmlParser = new DOMParser();
+        activityStream = clone(window.__fixtures__['fixtures/activities/829770999/stream']);
     });
 
     it('should export GPX stream with consistency data', () => {
 
         // Given
         let courseName: string = 'MyCourse';
-        let activityStream: IActivityStream = clone(window.__fixtures__['fixtures/activities/829770999/stream']);
 
         // When
         let gpxStream: string = courseMaker.createGpx(courseName, activityStream);
@@ -52,7 +43,7 @@ fdescribe('CourseMaker', () => {
             .nodeValue
         ).toBe(courseName);
 
-        // ... Check point length
+        // ... Check points length
         const trackPointsLength = xmlStream.getElementsByTagName('trkpt').length;
         expect(trackPointsLength).toBe(activityStream.time.length);
 
@@ -67,16 +58,152 @@ fdescribe('CourseMaker', () => {
         const extensions = firstTrackPointsLength.getElementsByTagName('extensions')[0];
         expect(extensions.getElementsByTagName('power')[0].childNodes[0].nodeValue).toMatch(/^62/);
 
-        const trackPointNamespaceURI = "http://www.garmin.com/xmlschemas/TrackPointExtension/v1";
+        const trackPointNamespaceURI = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
         const trackPointExtension = extensions.getElementsByTagNameNS(trackPointNamespaceURI, 'TrackPointExtension')[0];
-        expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, "hr")[0].childNodes[0].nodeValue).toMatch(/^104/);
-        expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, "cad")[0].childNodes[0].nodeValue).toMatch(/^69/);
+        expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, 'hr')[0].childNodes[0].nodeValue).toMatch(/^104/);
+        expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, 'cad')[0].childNodes[0].nodeValue).toMatch(/^69/);
+    });
+
+    it('should export GPX with no HRM, Cadence, altimeter & Power sensor', () => {
+
+        // Given
+        let courseName: string = 'MyCourse';
+        activityStream = _.omit(activityStream, ['heartrate', 'cadence', 'watts', 'watts_calc', 'altitude']);
+        let errorCatched = null;
+
+        // When
+        try {
+            courseMaker.createGpx(courseName, activityStream);
+        } catch (err) {
+            errorCatched = err;
+        }
+
+        // Then ...
+        expect(errorCatched).toBeNull();
+
     });
 
     it('should export TCX stream with consistency data', () => {
 
+        // Given
+        let courseName: string = 'MyCourse';
+
+        // When
+        let tcxStream: string = courseMaker.createTcx(courseName, activityStream);
+        let xmlStream = xmlParser.parseFromString(tcxStream, 'text/xml');
+
+        // Then
+        expect(xmlStream).not.toBeNull();
+        expect(_.isEmpty(xmlStream)).toBeFalsy();
+
+        // ... Common
+        const ActivityNode = xmlStream.getElementsByTagName('TrainingCenterDatabase')[0]
+            .getElementsByTagName('Activities')[0]
+            .getElementsByTagName('Activity')[0];
+
+        expect(ActivityNode.getElementsByTagName('Id')[0].childNodes[0].nodeValue).toBe(courseName);
+
+        const LapNode = ActivityNode.getElementsByTagName('Lap')[0];
+
+        expect(LapNode.getAttribute('StartTime')).toBe((new Date(0)).toISOString());
+        expect(LapNode.getElementsByTagName('TotalTimeSeconds')[0].childNodes[0].nodeValue).toMatch(/^2283$/);
+        expect(LapNode.getElementsByTagName('DistanceMeters')[0].childNodes[0].nodeValue).toMatch(/^15725/);
+        expect(LapNode.getElementsByTagName('MaximumSpeed')[0].childNodes[0].nodeValue).toMatch(/^53640/);
+        expect(LapNode.getElementsByTagName('AverageHeartRateBpm')[0]
+            .getElementsByTagName('Value')[0].childNodes[0].nodeValue).toMatch(/^149/);
+
+        expect(LapNode.getElementsByTagName('MaximumHeartRateBpm')[0]
+            .getElementsByTagName('Value')[0].childNodes[0].nodeValue).toMatch(/^172/);
+
+        expect(LapNode.getElementsByTagName('Cadence')[0].childNodes[0].nodeValue).toMatch(/^76/);
+
+        // ... Check points length
+        const trackPointsLength = ActivityNode.getElementsByTagName('Lap')[0].getElementsByTagName('Track')[0].getElementsByTagName('Trackpoint').length;
+        expect(trackPointsLength).toBe(activityStream.time.length);
+
+        // ... First track point
+        const firstTrackPoint = ActivityNode.getElementsByTagName('Lap')[0].getElementsByTagName('Track')[0].getElementsByTagName('Trackpoint')[0];
+
+        expect(firstTrackPoint.getElementsByTagName('Time')[0].childNodes[0].nodeValue).toBe((new Date(0)).toISOString());
+
+        expect(firstTrackPoint.getElementsByTagName('Position')[0]
+            .getElementsByTagName('LatitudeDegrees')[0].childNodes[0].nodeValue).toMatch(/^51.509485/);
+
+        expect(firstTrackPoint.getElementsByTagName('Position')[0]
+            .getElementsByTagName('LongitudeDegrees')[0].childNodes[0].nodeValue).toMatch(/^-0.080033/);
+
+        expect(firstTrackPoint.getElementsByTagName('AltitudeMeters')[0].childNodes[0].nodeValue).toMatch(/^20.2$/);
+
+        expect(firstTrackPoint.getElementsByTagName('DistanceMeters')[0].childNodes[0].nodeValue).toMatch(/^1.9$/);
+
+        expect(firstTrackPoint.getElementsByTagName('Cadence')[0].childNodes[0].nodeValue).toMatch(/^69$/);
+
+        expect(firstTrackPoint.getElementsByTagName('HeartRateBpm')[0]
+            .getElementsByTagName('Value')[0].childNodes[0].nodeValue).toMatch(/^104$/);
+
+        expect(firstTrackPoint.getElementsByTagName('Extensions')[0]
+            .getElementsByTagName('TPX')[0]
+            .getElementsByTagName('Speed')[0].childNodes[0].nodeValue).toBe('0');
+
+        expect(firstTrackPoint.getElementsByTagName('Extensions')[0]
+            .getElementsByTagName('TPX')[0]
+            .getElementsByTagName('Watts')[0].childNodes[0].nodeValue).toMatch(/^62/);
     });
 
-    // let stream: string = courseMaker.createTcx(courseName, activityStream); // TODO
-    // let stream: string = courseMaker.createGpx(courseName, bounds, activityStream); // TODO w/ bounds
+    it('should export TCX with no HRM, Cadence, altimeter & Power sensor', () => {
+
+        // Given
+        let courseName: string = 'MyCourse';
+        activityStream = _.omit(activityStream, ['heartrate', 'cadence', 'watts', 'watts_calc', 'altitude']);
+        let errorCatched = null;
+
+        // When
+        try {
+            courseMaker.createTcx(courseName, activityStream);
+        } catch (err) {
+            errorCatched = err;
+        }
+
+        // Then ...
+        expect(errorCatched).toBeNull();
+
+    });
+
+    it('should export GPX with bounds', () => {
+
+        // Given
+        let courseName: string = 'MyCourse';
+        const bounds: ICourseBounds = {start: 200, end: 1200};
+
+        // When
+        let gpxStream: string = courseMaker.createGpx(courseName, clone(window.__fixtures__['fixtures/activities/829770999/stream']), bounds);
+        let xmlStream = xmlParser.parseFromString(gpxStream, 'text/xml');
+
+        // Then
+        const trackPointsLength = xmlStream.getElementsByTagName('trkpt').length;
+        expect(trackPointsLength).toBe(1000);
+
+    });
+
+    it('should export GPX with bounds', () => {
+
+        // Given
+        let courseName: string = 'MyCourse';
+        const bounds: ICourseBounds = {start: 200, end: 1200};
+
+        // When
+        let gpxStream: string = courseMaker.createTcx(courseName, clone(window.__fixtures__['fixtures/activities/829770999/stream']), bounds);
+        let xmlStream = xmlParser.parseFromString(gpxStream, 'text/xml');
+
+        // Then
+        const trackPointsLength = xmlStream.getElementsByTagName('TrainingCenterDatabase')[0]
+            .getElementsByTagName('Activities')[0]
+            .getElementsByTagName('Activity')[0]
+            .getElementsByTagName('Lap')[0]
+            .getElementsByTagName('Track')[0]
+            .getElementsByTagName('Trackpoint').length;
+
+        expect(trackPointsLength).toBe(1000);
+
+    });
 });
