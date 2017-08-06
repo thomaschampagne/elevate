@@ -1,16 +1,35 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import "hammerjs";
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {RouterModule, Routes} from "@angular/router";
 
-import { AppComponent } from './app.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MaterialModule} from "./material.module";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
+import {AppComponent} from "./app.component";
+
+/*
+const appRoutes: Routes = [
+  {path: 'hero', component: HeroComponent},
+  {path: 'magic', component: MagicComponent},
+  {
+    path: "",
+    redirectTo: 'hero',
+    pathMatch: "full"
+  },
+];
+*/
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    // RouterModule.forRoot(appRoutes, {useHash: true}), // TODO move in proper module
+    BrowserAnimationsModule,
+    MaterialModule,
+    FlexLayoutModule
   ],
-  providers: [],
+  declarations: [AppComponent, /*HeroComponent, MagicComponent*/],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
