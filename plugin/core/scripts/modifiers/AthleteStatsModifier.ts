@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import {StorageManager} from "../../modules/StorageManager";
-import {Helper} from "../Helper";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {Helper} from "../../../common/scripts/Helper";
 import {IAppResources} from "../interfaces/IAppResources";
 
 export class AthleteStatsModifier implements IModifier {

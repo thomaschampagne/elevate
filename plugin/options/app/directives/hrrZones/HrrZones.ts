@@ -3,8 +3,8 @@ import {IAnchorScrollService, ILocationService} from "angular";
 import * as _ from "lodash";
 import {ChromeStorageService} from "../../services/ChromeStorageService";
 
-import {IHrrZone} from "../../../../core/scripts/interfaces/IActivityData";
-import {userSettings} from "../../../../core/scripts/UserSettings";
+import {IHrrZone} from "../../../../common/scripts/interfaces/IActivityData";
+import {userSettings} from "../../../../common/scripts/UserSettings";
 
 export class HrrZones {
 

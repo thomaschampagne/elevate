@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IActivityStream} from "../../plugin/core/scripts/interfaces/IActivityData";
-import {CourseMaker, ExportTypes, ICourseBounds} from "../../plugin/common/CourseMarker";
+import {IActivityStream} from "../../plugin/common/scripts/interfaces/IActivityData";
+import {CourseMaker, ExportTypes, ICourseBounds} from "../../plugin/common/scripts/CourseMarker";
 
 describe('CourseMaker', () => {
 

@@ -6,8 +6,8 @@ const _coreConfig: ICoreConfig = {
             "modules:": "core/modules/",
         },
         packages: {
-            "common": {
-                format: 'cjs'
+            "common/": {
+                format: "cjs",
             },
             "core": {
                 format: "cjs",
@@ -135,7 +135,7 @@ class CoreSetup {
 
             }).then(() => {
 
-                return SystemJS.import("core/scripts/Constants.js");
+                return SystemJS.import("common/scripts/Constants.js");
 
             }, (err) => {
                 console.error(err);

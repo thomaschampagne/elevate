@@ -2,11 +2,11 @@ import * as _ from "lodash";
 import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
 import {IPromise} from "angular";
-import {IStorageUsage} from "../../../core/modules/StorageManager";
-import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
-import {IAthleteProfile} from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
-import {userSettings} from "../../../core/scripts/UserSettings";
+import {IStorageUsage} from "../../../common/scripts/modules/StorageManager";
+import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {userSettings} from "../../../common/scripts/UserSettings";
+import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
 export class ChromeStorageService {
 
@@ -135,4 +135,4 @@ export class ChromeStorageService {
 export let chromeStorageService = ["$q", ($q: IQService) => {
     return new ChromeStorageService($q);
 }];
-
+

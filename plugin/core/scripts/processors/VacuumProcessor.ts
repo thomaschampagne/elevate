@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import {env} from "../../config/env";
-import {Helper} from "../Helper";
-import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
+import {Helper} from "../../../common/scripts/Helper";
+import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
 
 export class VacuumProcessor {
 

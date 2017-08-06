@@ -4,7 +4,10 @@ SystemJS.config({
         "npm:": "node_modules/",
     },
     packages: {
-        core: {
+        "common/": {
+            format: "cjs",
+        },
+        "core": {
             format: "cjs",
         },
     },
@@ -13,7 +16,7 @@ SystemJS.config({
     },
 });
 
-SystemJS.import("core/scripts/Background.js").then(() => {
+SystemJS.import("common/scripts/Background.js").then(() => {
     console.debug("Background module loaded by SystemJS");
 }, (err) => {
     console.error(err);

@@ -3,8 +3,8 @@
   "name": "StravistiX for Strava",
   "short_name": "StravistiX",
   "description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
-  "version": "5.9.0",
-  "version_name": "5.9.0 Stable",
+  "version": "5.10.0",
+  "version_name": "5.10.0 Stable",
   "background": {
     "scripts": [
       "node_modules/systemjs/dist/system.js",
@@ -44,13 +44,13 @@
     "core/modules/*",
     "core/system.core.config.js",
     "core/system.core.start.js",
-    "core/main.js",
     "core/config/*",
     "core/scripts/processors/*",
     "core/scripts/modifiers/*",
     "core/scripts/*",
     "core/css/*",
-    "core/icons/*"
+    "core/icons/*",
+    "options/*"
   ],
   "externally_connectable": {
     "matches": [

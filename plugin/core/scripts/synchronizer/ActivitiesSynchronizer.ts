@@ -1,25 +1,12 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {StorageManager} from "../../modules/StorageManager";
-import {Helper} from "../Helper";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {Helper} from "../../../common/scripts/Helper";
 import {IAppResources} from "../interfaces/IAppResources";
-import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify, ISyncRawStravaActivity} from "../interfaces/ISync";
-import {IUserSettings} from "../interfaces/IUserSettings";
+import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify, ISyncRawStravaActivity} from "../../../common/scripts/interfaces/ISync";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {ActivitiesProcessor} from "../processors/ActivitiesProcessor";
-
-export interface IAthleteProfile {
-    userGender: string;
-    userMaxHr: number;
-    userRestHr: number;
-    userFTP: number;
-
-    // Detect swim ftp changes cloud/local is not required to perform new full sync.
-    // Related computation with this param is currently not stored locally.
-    // Swim stress score computed on the fly inside fitness data computer
-    // userSwimFTP: number;
-
-    userWeight: number;
-}
+import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
 export interface IHistoryChanges {
     added: number[];

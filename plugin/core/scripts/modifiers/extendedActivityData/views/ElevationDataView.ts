@@ -1,4 +1,4 @@
-import {IElevationData} from "../../../interfaces/IActivityData";
+import {IElevationData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 export class ElevationDataView extends AbstractDataView {
     protected elevationData: IElevationData;

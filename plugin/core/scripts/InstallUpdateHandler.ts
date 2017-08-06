@@ -16,7 +16,7 @@ class InstallUpdateHandler {
 
     protected static getUserSettings(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            SystemJS.import("core/scripts/UserSettings.js").then((module) => {
+            SystemJS.import("common/scripts/UserSettings.js").then((module) => {
                 resolve(module.userSettings);
             }, (err) => {
                 reject(err);
@@ -26,7 +26,7 @@ class InstallUpdateHandler {
 
     protected static getHelper(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            SystemJS.import("core/scripts/Helper.js").then((module) => {
+            SystemJS.import("common/scripts/Helper.js").then((module) => {
                 resolve(module.Helper);
             }, (err) => {
                 reject(err);
@@ -36,7 +36,7 @@ class InstallUpdateHandler {
 
     protected static getStorageManager(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            SystemJS.import("core/modules/StorageManager.js").then((module) => {
+            SystemJS.import("common/scripts/modules/StorageManager.js").then((module) => {
                 resolve(module.StorageManager);
             }, (err) => {
                 reject(err);

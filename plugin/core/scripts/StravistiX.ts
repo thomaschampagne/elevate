@@ -1,13 +1,14 @@
 import * as _ from "lodash";
+import {Helper} from "../../common/scripts/Helper";
+import {IActivityBasicInfo} from "../../common/scripts/interfaces/IActivityData";
+import {ISyncNotify} from "../../common/scripts/interfaces/ISync";
+import {IUserSettings} from "../../common/scripts/interfaces/IUserSettings";
+import {StorageManager} from "../../common/scripts/modules/StorageManager";
+import {IReleaseNote, releaseNotes} from "../../common/scripts/ReleaseNotes";
 import {env} from "../config/env";
-import {StorageManager} from "../modules/StorageManager";
 import {AthleteUpdate} from "./Follow";
-import {Helper} from "./Helper";
-import {IActivityBasicInfo} from "./interfaces/IActivityData";
 import {IAppResources} from "./interfaces/IAppResources";
 import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
-import {ISyncNotify} from "./interfaces/ISync";
-import {IUserSettings} from "./interfaces/IUserSettings";
 import {ActivitiesSyncModifier} from "./modifiers/ActivitiesSyncModifier";
 import {ActivityBestSplitsModifier} from "./modifiers/ActivityBestSplitsModifier";
 import {ActivityBikeOdoModifier} from "./modifiers/ActivityBikeOdoModifier";
@@ -41,7 +42,6 @@ import {ActivityProcessor} from "./processors/ActivityProcessor";
 import {BikeOdoProcessor} from "./processors/BikeOdoProcessor";
 import {ISegmentInfo, SegmentProcessor} from "./processors/SegmentProcessor";
 import {VacuumProcessor} from "./processors/VacuumProcessor";
-import {IReleaseNote, releaseNotes} from "./ReleaseNotes";
 import {ActivitiesSynchronizer, ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
 
 export class StravistiX {
@@ -180,8 +180,13 @@ export class StravistiX {
             return;
         }
 
-        const ribbonMessage: string = '<a href="#" class="pluginInstallOrUpgrade_details"><img style="width: 24px;" src="' + this.appResources.systemUpdatesIcon + '" /> StravistiX ' + this.appResources.extVersion + " update</a> " + latestRelease.message + '. <a href="#" class="pluginInstallOrUpgrade_details">[show update details]</a>';
-        const ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 10px; padding-bottom: 10px;\"><div style="display:inline; font-size: 14px;">' + ribbonMessage + '</div><div style="display:inline; float: right; font-size: 14px; padding-right: 10px;"><a href="#" id="pluginInstallOrUpgrade_close">close (<span id="pluginInstallOrUpgrade_counter"></span>)</a></div></div>';
+        const ribbonMessage: string = '<strong><a href="#" class="pluginInstallOrUpgrade_details"><img style="width: 24px;" src="' + this.appResources.systemUpdatesIcon + '" /> StravistiX ' + this.appResources.extVersion + " update</a></strong> " + latestRelease.message + ".";
+        const ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 15px; padding-bottom: 15px;\">' +
+            '<div style="display:inline; font-size: 14px;">' + ribbonMessage + "</div>" +
+            '<div style="display:inline; float: right; font-size: 14px; padding-right: 10px;">' +
+            '<a href="#" style="padding-right: 15px;" class="pluginInstallOrUpgrade_details">[show details]</a>' +
+            '<a href="#" id="pluginInstallOrUpgrade_close">[close (<span id="pluginInstallOrUpgrade_counter"></span>)]</a>' +
+            "</div></div>";
 
         $("body").before(ribbonHtml).each(() => {
 
@@ -196,12 +201,12 @@ export class StravistiX {
             $("#pluginInstallOrUpgrade").hide();
             $("#pluginInstallOrUpgrade").slideDown(450);
 
-            let counter = 15000;
+            let counter = 25000;
             const refresh = 1000;
-            $("#pluginInstallOrUpgrade_counter").html((counter / 1000).toString());
+            $("#pluginInstallOrUpgrade_counter").html((("0" + (counter / 1000)).slice(-2)));
             const counterInterval = setInterval(() => {
                 counter -= refresh;
-                $("#pluginInstallOrUpgrade_counter").html((counter / 1000).toString());
+                $("#pluginInstallOrUpgrade_counter").html((("0" + (counter / 1000)).slice(-2)));
             }, refresh);
 
             setTimeout(() => {
@@ -329,7 +334,7 @@ export class StravistiX {
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcomingFixes: [],
             upcomingFeatures: [
-                "Years progressions reworked",
+                // 'Years progressions reworked',
                 "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
                 "Grid: All your activities in a table including stravistix extended stats as columns.",
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',

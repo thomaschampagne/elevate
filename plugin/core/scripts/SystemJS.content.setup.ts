@@ -4,7 +4,10 @@ SystemJS.config({
         "npm:": "node_modules/",
     },
     packages: {
-        core: {
+        "common/": {
+            format: "cjs",
+        },
+        "core": {
             format: "cjs",
         },
     },

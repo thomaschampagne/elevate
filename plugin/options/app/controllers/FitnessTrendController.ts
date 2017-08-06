@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {FitnessDataService, IFitnessActivity} from "../services/FitnessDataService";
 
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
 export class FitnessTrendController {
 

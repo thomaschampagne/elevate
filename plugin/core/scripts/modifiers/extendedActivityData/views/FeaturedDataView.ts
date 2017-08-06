@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../Helper";
-import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../interfaces/IActivityData";
-import {IUserSettings} from "../../../interfaces/IUserSettings";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
 import {AbstractDataView} from "./AbstractDataView";
 
 export class FeaturedDataView extends AbstractDataView {

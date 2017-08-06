@@ -1,7 +1,7 @@
 import * as angular from "angular";
 import {ILocationService, ISCEService} from "angular";
 import * as _ from "lodash";
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {ICommonSettingsService, ISection, ISectionContent} from "../services/CommonSettingsService";
 

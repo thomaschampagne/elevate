@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import {saveAs} from "file-saver";
-import {IActivityStatsMap, IActivityStream} from "../interfaces/IActivityData";
+import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
 import {VacuumProcessor} from "../processors/VacuumProcessor";
-import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/CourseMarker";
+import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/scripts/CourseMarker";
 
 
 export class VirtualPartnerModifier implements IModifier {

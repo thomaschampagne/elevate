@@ -18,7 +18,7 @@
     "node_modules"
   ],
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "lib": ["dom", "es6", "webworker"],
     "noImplicitAny": true,

@@ -1,5 +1,5 @@
-import {IStorageUsage, StorageManager} from "../modules/StorageManager";
 import {Helper} from "./Helper";
+import {IStorageUsage, StorageManager} from "./modules/StorageManager";
 
 class Background {
 

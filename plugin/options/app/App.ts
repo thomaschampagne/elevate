@@ -1,4 +1,5 @@
 import * as angular from "angular";
+import {IControllerConstructor, Injectable} from "angular";
 import "md.data.table";
 import "ngAnimate";
 import "ngAria";
@@ -6,9 +7,7 @@ import "ngMaterial";
 import "ngRoute";
 import "ngSanitize";
 import "nvd3";
-
-import {IControllerConstructor, IModule, Injectable} from "angular";
-import {constants} from "../../core/scripts/Constants";
+import {constants} from "../../common/scripts/Constants";
 import {$colors} from "./Colors";
 import {routeMap} from "./Config";
 import {AthleteSettingsController} from "./controllers/AthleteSettingsController";

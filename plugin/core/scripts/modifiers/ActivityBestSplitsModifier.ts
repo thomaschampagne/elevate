@@ -5,8 +5,8 @@
 declare let d3: any; // Injected by strava.com
 
 import * as _ from "lodash";
-import {Helper} from "../Helper";
-import {IUserSettings} from "../interfaces/IUserSettings";
+import {Helper} from "../../../common/scripts/Helper";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
 declare let L: any; // Injected by strava.com
 

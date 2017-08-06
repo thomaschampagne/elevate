@@ -1,4 +1,4 @@
-import {IPowerData} from "../../../interfaces/IActivityData";
+import {IPowerData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 export class RunningPowerDataView extends AbstractDataView {
 

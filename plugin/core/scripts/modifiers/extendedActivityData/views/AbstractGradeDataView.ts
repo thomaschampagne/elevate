@@ -1,5 +1,5 @@
-import {Helper} from "../../../Helper";
-import {IGradeData} from "../../../interfaces/IActivityData";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {IGradeData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 export abstract class AbstractGradeDataView extends AbstractDataView {
 

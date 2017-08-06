@@ -1,4 +1,4 @@
-import {userSettings} from "../scripts/UserSettings";
+import {userSettings} from "../UserSettings";
 
 export interface IStorageUsage {
     bytesInUse: number;

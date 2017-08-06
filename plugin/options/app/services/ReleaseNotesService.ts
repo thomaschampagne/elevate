@@ -1,5 +1,5 @@
 
-import {IReleaseNote, releaseNotes} from "../../../core/scripts/ReleaseNotes";
+import {IReleaseNote, releaseNotes} from "../../../common/scripts/ReleaseNotes";
 
 export interface IReleaseNotesService {
     data: IReleaseNote[];
@@ -11,4 +11,4 @@ export let releaseNotesService = () => {
     };
     return _releaseNotesService;
 };
-
+
