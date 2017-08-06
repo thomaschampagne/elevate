@@ -1,5 +1,5 @@
-import {IUserSettings} from "../interfaces/IUserSettings";
-import {IActivityStatsMap, IActivityStream} from "./IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
 import {IAppResources} from "./IAppResources";
 
 export interface IComputeActivityThreadMessage {

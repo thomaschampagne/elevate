@@ -1,13 +1,13 @@
 import * as _ from "lodash";
-import {Helper} from "../Helper";
+import {Helper} from "../../../common/scripts/Helper";
 import {
     IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData,
     IHeartRateData,
     IHrrZone,
     IMoveData, IPaceData,
     IPowerData, ISpeedData, IZone,
-} from "../interfaces/IActivityData";
-import {IUserSettings} from "../interfaces/IUserSettings";
+} from "../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
 export class ActivityComputer {
 

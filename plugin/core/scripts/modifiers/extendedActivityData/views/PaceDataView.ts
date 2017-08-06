@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {Helper} from "../../../Helper";
-import {IPaceData, IZone} from "../../../interfaces/IActivityData";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {IPaceData, IZone} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 
 export class PaceDataView extends AbstractDataView {

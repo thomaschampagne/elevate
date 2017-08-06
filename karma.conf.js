@@ -31,10 +31,10 @@ module.exports = function (config) {
         ],
         exclude: [
             '**/*.map',
+            'plugin/common/scripts/Background.js',
             'plugin/core/scripts/SystemJS.*.js',
             'plugin/core/scripts/InstallUpdateHandler.js',
             'plugin/core/scripts/interfaces/*.js',
-            'plugin/core/scripts/Background.js',
             'plugin/core/scripts/Content.js'
         ],
         systemjs: {

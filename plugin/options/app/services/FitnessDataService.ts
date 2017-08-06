@@ -4,7 +4,7 @@ import * as moment from "moment";
 import {Moment} from "moment";
 import {ChromeStorageService} from "./ChromeStorageService";
 
-import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
+import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
 
 export interface IActivitiesWithFitness {
     id: number;
@@ -457,4 +457,4 @@ export let fitnessDataService = ["$q", "ChromeStorageService", ($q: IQService, c
  },
  };
  };*/
-
+

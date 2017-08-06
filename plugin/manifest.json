@@ -44,7 +44,6 @@
     "core/modules/*",
     "core/system.core.config.js",
     "core/system.core.start.js",
-    "core/main.js",
     "core/config/*",
     "core/scripts/processors/*",
     "core/scripts/modifiers/*",

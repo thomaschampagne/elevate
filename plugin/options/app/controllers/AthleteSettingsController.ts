@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import {ISwimCalculationMethod, SwimFTPCalculator} from "../directives/swimFTPCalculator";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
 
 export interface IGenderList {
@@ -224,4 +224,4 @@ export class AthleteSettingsController {
     }
 
 }
-
+

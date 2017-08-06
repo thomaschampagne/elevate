@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import {env} from "../config/env";
-import {StorageManager} from "../modules/StorageManager";
+import {StorageManager} from "../../common/scripts/modules/StorageManager";
 import {AthleteUpdate} from "./Follow";
-import {Helper} from "./Helper";
-import {IActivityBasicInfo} from "./interfaces/IActivityData";
+import {Helper} from "../../common/scripts/Helper";
+import {IActivityBasicInfo} from "../../common/scripts/interfaces/IActivityData";
 import {IAppResources} from "./interfaces/IAppResources";
 import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
-import {ISyncNotify} from "./interfaces/ISync";
-import {IUserSettings} from "./interfaces/IUserSettings";
+import {ISyncNotify} from "../../common/scripts/interfaces/ISync";
+import {IUserSettings} from "../../common/scripts/interfaces/IUserSettings";
 import {ActivitiesSyncModifier} from "./modifiers/ActivitiesSyncModifier";
 import {ActivityBestSplitsModifier} from "./modifiers/ActivityBestSplitsModifier";
 import {ActivityBikeOdoModifier} from "./modifiers/ActivityBikeOdoModifier";
@@ -41,7 +41,7 @@ import {ActivityProcessor} from "./processors/ActivityProcessor";
 import {BikeOdoProcessor} from "./processors/BikeOdoProcessor";
 import {ISegmentInfo, SegmentProcessor} from "./processors/SegmentProcessor";
 import {VacuumProcessor} from "./processors/VacuumProcessor";
-import {IReleaseNote, releaseNotes} from "./ReleaseNotes";
+import {IReleaseNote, releaseNotes} from "../../common/scripts/ReleaseNotes";
 import {ActivitiesSynchronizer, ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
 
 export class StravistiX {

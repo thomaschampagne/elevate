@@ -1,5 +1,5 @@
 
-import {IZone} from "../../../../core/scripts/interfaces/IActivityData";
+import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
 import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
 
 export class HrrZone {

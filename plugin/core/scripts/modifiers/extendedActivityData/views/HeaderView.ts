@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {Helper} from "../../../Helper";
-import {IActivityBasicInfo} from "../../../interfaces/IActivityData";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {IActivityBasicInfo} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 
 export class HeaderView extends AbstractDataView {

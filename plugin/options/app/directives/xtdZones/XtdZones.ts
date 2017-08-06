@@ -1,9 +1,9 @@
 import * as angular from "angular";
 import {IAnchorScrollService, ILocationService} from "angular";
 import * as _ from "lodash";
-import {IZone} from "../../../../core/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../core/scripts/interfaces/IUserSettings";
-import {userSettings} from "../../../../core/scripts/UserSettings";
+import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
+import {userSettings} from "../../../../common/scripts/UserSettings";
 import {ChromeStorageService} from "../../services/ChromeStorageService";
 
 export class XtdZones {

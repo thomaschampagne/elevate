@@ -3,7 +3,7 @@ import {IIntervalService, ILocationService, IWindowService} from "angular";
 import {saveAs} from "file-saver";
 import * as _ from "lodash";
 import * as moment from "moment";
-import {IStorageUsage} from "../../../core/modules/StorageManager";
+import {IStorageUsage} from "../../../common/scripts/modules/StorageManager";
 import {properties, routeMap} from "../Config";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 import {IReleaseNotesService} from "../services/ReleaseNotesService";

@@ -1,9 +1,9 @@
 import * as _ from "lodash";
 import {env} from "../../config/env";
-import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../interfaces/IActivityData";
+import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
 import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {IUserSettings} from "../interfaces/IUserSettings";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {VacuumProcessor} from "./VacuumProcessor";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 

@@ -5,7 +5,7 @@ import * as moment from "moment";
 import {Moment} from "moment";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
-import {ISyncActivityComputed} from "../../../core/scripts/interfaces/ISync";
+import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
 
 export interface IYearProgress {
     year: number;
@@ -363,4 +363,4 @@ export class YearProgressController {
 
     }
 }
-
+

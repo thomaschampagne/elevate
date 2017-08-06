@@ -3,11 +3,11 @@ import * as _ from "lodash";
 import {AthleteSettingsController} from "../controllers/AthleteSettingsController";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
-import {IAthleteProfile} from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
 import Tab = chrome.tabs.Tab;
-import {StorageManager} from "../../../core/modules/StorageManager";
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {routeMap} from "../Config";
+import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
 export interface IProfileConfiguredRibbonScope extends IScope {
     checkLocalSyncedAthleteProfileEqualsRemote: () => void;
