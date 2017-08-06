@@ -1,4 +1,4 @@
-import {IAnalysisData} from "../../interfaces/IActivityData";
+import {IAnalysisData} from "../../../../common/scripts/interfaces/IActivityData";
 import {IComputeActivityThreadMessage} from "../../interfaces/IComputeActivityThreadMessage";
 import {ActivityComputer} from "../ActivityComputer";
 
@@ -13,7 +13,7 @@ export function ComputeAnalysisWorker() {
 
         Promise.all([
             SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/node_modules/lodash/lodash.min.js"),
-            SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/scripts/Helper.js"),
+            SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/common/scripts/Helper.js"),
         ]).then(() => {
 
             return SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/scripts/processors/ActivityComputer.js");

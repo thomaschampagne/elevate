@@ -1,5 +1,5 @@
-import {Helper} from "../../../Helper";
-import {ISpeedData} from "../../../interfaces/IActivityData";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {ISpeedData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 
 export class SpeedDataView extends AbstractDataView {

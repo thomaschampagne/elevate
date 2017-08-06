@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {IActivityStream} from '../core/scripts/interfaces/IActivityData';
-import {Helper} from '../core/scripts/Helper';
+import {IActivityStream} from './interfaces/IActivityData';
+import {Helper} from './Helper';
 
 export interface ICourseBounds {
     start: number;

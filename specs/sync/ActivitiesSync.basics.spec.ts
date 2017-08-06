@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import {IUserSettings} from "../../plugin/core/scripts/interfaces/IUserSettings";
+import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
-import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/core/scripts/interfaces/ISync";
+import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/common/scripts/interfaces/ISync";
 import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer', () => {

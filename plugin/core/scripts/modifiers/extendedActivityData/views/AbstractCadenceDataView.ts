@@ -1,4 +1,4 @@
-import {ICadenceData} from "../../../interfaces/IActivityData";
+import {ICadenceData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
 export abstract class AbstractCadenceDataView extends AbstractDataView {
 

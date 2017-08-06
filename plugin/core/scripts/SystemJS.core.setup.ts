@@ -2,71 +2,71 @@ const _coreConfig: ICoreConfig = {
     systemJsConfig: {
         baseURL: null, // SystemJS baseURL is set on "startCoreEvent" event handling through "CoreSetup.listenForStartCoreEvent()"
         paths: {
-            "npm:": "node_modules/",
-            "modules:": "core/modules/",
+            'npm:': 'node_modules/',
+            'modules:': 'core/modules/',
         },
         packages: {
-            "common": {
+            "common/": {
                 format: 'cjs'
             },
             "core": {
-                format: "cjs",
+                format: 'cjs',
             },
-            "npm:geodesy": {
-                format: "cjs",
-            },
+            'npm:geodesy': {
+                format: 'cjs',
+            }
         },
         map: {
 
             /* Npm Modules */
-            "css": "npm:systemjs-plugin-css/css.js",
-            "chart.js": "npm:chart.js/dist/Chart.bundle.js",
-            "d3": "npm:d3/d3.js",
-            "q": "npm:q/q.js",
-            "jquery": "npm:jquery/dist/jquery.js",
-            "dms": "npm:geodesy/dms.js",
-            "sphericalLatLon": "npm:geodesy/latlon-spherical.js",
-            "lodash": "npm:lodash/lodash.min.js",
-            "fancybox": "npm:fancybox/dist/js/jquery.fancybox.pack.js",
-            "file-saver": "npm:file-saver/FileSaver.min.js",
+            'css': 'npm:systemjs-plugin-css/css.js',
+            'chart.js': 'npm:chart.js/dist/Chart.bundle.js',
+            'd3': 'npm:d3/d3.js',
+            'q': 'npm:q/q.js',
+            'jquery': 'npm:jquery/dist/jquery.js',
+            'dms': 'npm:geodesy/dms.js',
+            'sphericalLatLon': 'npm:geodesy/latlon-spherical.js',
+            'lodash': 'npm:lodash/lodash.min.js',
+            'fancybox': 'npm:fancybox/dist/js/jquery.fancybox.pack.js',
+            'file-saver': 'npm:file-saver/FileSaver.min.js',
 
             /* Custom modules */
-            "jqueryAppear": "modules:jquery.appear.js",
+            'jqueryAppear': 'modules:jquery.appear.js',
 
             /* Styles */
-            "fancybox.css": "npm:fancybox/dist/css/jquery.fancybox.css",
-            "core.css": "core/css/core.css",
+            'fancybox.css': 'npm:fancybox/dist/css/jquery.fancybox.css',
+            'core.css': 'core/css/core.css',
         },
         meta: {
-            "fancybox.css": {
-                loader: "css",
+            'fancybox.css': {
+                loader: 'css',
             },
-            "core.css": {
-                loader: "css",
+            'core.css': {
+                loader: 'css',
             },
-            "sphericalLatLon": {
-                exports: "LatLon",
-                format: "global",
+            'sphericalLatLon': {
+                exports: 'LatLon',
+                format: 'global',
             },
-            "file-saver": {
-                format: "cjs",
+            'file-saver': {
+                format: 'cjs',
             },
-            "lodash": {
-                format: "cjs",
+            'lodash': {
+                format: 'cjs',
             },
-            "d3": {
-                format: "cjs",
+            'd3': {
+                format: 'cjs',
             },
         },
     },
     requiredNonEsModules: [ // Required non ES modules into the core
-        "jqueryAppear",
-        "fancybox",
-        "sphericalLatLon",
+        'jqueryAppear',
+        'fancybox',
+        'sphericalLatLon',
     ],
     requiredCss: [
-        "fancybox.css",
-        "core.css",
+        'fancybox.css',
+        'core.css',
     ],
 };
 
@@ -78,7 +78,7 @@ interface ICoreConfig {
 
 class CoreSetup {
 
-    public static startCoreEvent: string = "startCoreEvent"; // Same than Content.startCoreEvent
+    public static startCoreEvent: string = 'startCoreEvent'; // Same than Content.startCoreEvent
 
     protected coreConfig: ICoreConfig;
 
@@ -99,7 +99,7 @@ class CoreSetup {
     }
 
     protected setupSystemJsConfig(extensionId: string) {
-        this.coreConfig.systemJsConfig.baseURL = "chrome-extension://" + extensionId + "/";
+        this.coreConfig.systemJsConfig.baseURL = 'chrome-extension://' + extensionId + '/';
         SystemJS.config(this.coreConfig.systemJsConfig);
     }
 
@@ -135,7 +135,7 @@ class CoreSetup {
 
             }).then(() => {
 
-                return SystemJS.import("core/scripts/Constants.js");
+                return SystemJS.import('common/scripts/Constants.js');
 
             }, (err) => {
                 console.error(err);
@@ -143,7 +143,7 @@ class CoreSetup {
             }).then((module) => {
 
                 module.constants = startCoreData.constants;
-                return SystemJS.import("core/scripts/StravistiX.js");
+                return SystemJS.import('core/scripts/StravistiX.js');
 
             }, (err) => {
                 console.error(err);

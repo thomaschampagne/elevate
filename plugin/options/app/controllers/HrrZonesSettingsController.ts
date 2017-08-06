@@ -1,6 +1,6 @@
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
 
 export class HrrZonesSettingsController {

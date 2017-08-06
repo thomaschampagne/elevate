@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-import {Helper} from "../../../core/scripts/Helper";
+import {Helper} from "../../../common/scripts/Helper";
 
 export let xtdDataFilter = () => {
 
@@ -25,4 +25,4 @@ export let xtdDataFilter = () => {
 /**
  * Return the right preview value when using custom xtd zones along units type
  */
-
+

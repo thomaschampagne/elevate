@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {Helper} from "../Helper";
-import {IUserSettings} from "../interfaces/IUserSettings";
+import {Helper} from "../../../common/scripts/Helper";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {EffortInfo, LeaderBoardData} from "./ActivitySegmentTimeComparisonModifier";
 
 export class SegmentRecentEffortsHRATimeModifier implements IModifier {

@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {IGradeData} from "../../../interfaces/IActivityData";
+import {IGradeData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractGradeDataView} from "./AbstractGradeDataView";
 
 export class CyclingGradeDataView extends AbstractGradeDataView {

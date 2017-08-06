@@ -1,8 +1,8 @@
 import * as Chart from "chart.js";
 import {LinearTickOptions} from "chart.js";
 import * as _ from "lodash";
-import {Helper} from "../../../Helper";
-import {ISpeedUnitData, IZone} from "../../../interfaces/IActivityData";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {ISpeedUnitData, IZone} from "../../../../../common/scripts/interfaces/IActivityData";
 import {IAppResources} from "../../../interfaces/IAppResources";
 
 export abstract class AbstractDataView {

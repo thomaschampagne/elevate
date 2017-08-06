@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import {StorageManager} from "../../../modules/StorageManager";
-import {Helper} from "../../Helper";
-import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../interfaces/IActivityData";
+import {StorageManager} from "../../../../common/scripts/modules/StorageManager";
+import {Helper} from "../../../../common/scripts/Helper";
+import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../../common/scripts/interfaces/IActivityData";
 import {IAppResources} from "../../interfaces/IAppResources";
-import {IUserSettings} from "../../interfaces/IUserSettings";
+import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
 import {ActivityProcessor} from "../../processors/ActivityProcessor";
 import {AbstractDataView} from "./views/AbstractDataView";
 import {FeaturedDataView} from "./views/FeaturedDataView";

@@ -1,7 +1,7 @@
 import {IScope} from "angular";
 import * as _ from "lodash";
-import {IZone} from "../../../core/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../core/scripts/interfaces/IUserSettings";
+import {IZone} from "../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
 export interface IXtdData {
