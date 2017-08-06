@@ -106,6 +106,8 @@ let OPTIONS_FILES = [
 ];
 
 let INLINE_SOURCES = [
+    'plugin/common/**/*.js',
+    'plugin/common/**/*.map',
     'plugin/core/**/*.js',
     'plugin/core/**/*.map',
     'plugin/options/app/**/*.js',
