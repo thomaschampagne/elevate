@@ -226,8 +226,6 @@ gulp.task("makeArchive", ["build"], () => {
 
 gulp.task("specs", ["cleanInlineSources"], () => {
 
-    let esTarget = "es5"; // For EmacsScript target for specs on PhantomJS 2.1
-
     execTypeScriptCommand(() => {
 
         util.log("Running jasmine tests through Karma server");
@@ -240,7 +238,7 @@ gulp.task("specs", ["cleanInlineSources"], () => {
             }
         }).start();
 
-    }, esTarget);
+    });
 });
 
 gulp.task("cleanInlineSources", () => {
