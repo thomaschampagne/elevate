@@ -1,15 +1,15 @@
 SystemJS.config({
     baseURL: "chrome-extension://" + chrome.runtime.id + "/",
     paths: {
-        "npm:": "node_modules/"
+        "npm:": "node_modules/",
     },
     packages: {
         "common/": {
-            format: 'cjs'
+            format: "cjs",
         },
         "core": {
             format: "cjs",
-        }
+        },
     },
     map: {
         q: "npm:q/q.js",

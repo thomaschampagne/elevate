@@ -1,22 +1,22 @@
 SystemJS.config({
-    baseURL: 'chrome-extension://' + chrome.runtime.id + '/',
+    baseURL: "chrome-extension://" + chrome.runtime.id + "/",
     paths: {
-        'npm:': 'node_modules/',
+        "npm:": "node_modules/",
     },
     packages: {
         "common/": {
-            format: 'cjs'
+            format: "cjs",
         },
         "core": {
-            format: 'cjs',
-        }
+            format: "cjs",
+        },
     },
     map: {
-        "lodash": 'npm:lodash/lodash.min.js'
+        lodash: "npm:lodash/lodash.min.js",
     },
     lodash: {
-        format: 'cjs',
+        format: "cjs",
     },
 });
 
-SystemJS.import('core/scripts/Content.js').then(null, console.error.bind(console));
+SystemJS.import("core/scripts/Content.js").then(null, console.error.bind(console));

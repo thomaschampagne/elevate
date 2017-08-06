@@ -10,7 +10,7 @@ SystemJS.config({
             format: "cjs",
         },
         "pluginRoot:common/": {
-            format: 'cjs'
+            format: "cjs",
         },
         "pluginRoot:core/": {
             format: "cjs",
