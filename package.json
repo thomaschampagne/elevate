@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
-    "postinstall": "npm --prefix ./plugin install ./plugin",
+    "postinstall": "concurrently --names \"core+options,webapp\" \"npm install --prefix ./plugin ./plugin\" \"npm install --prefix ./plugin/webapp ./plugin/webapp\n",
     "test": "gulp specs",
     "dev:core": "gulp cleanInlineSources && tsc -w",
     "dev:webapp": "cd ./plugin/webapp/ && ng build --watch",
