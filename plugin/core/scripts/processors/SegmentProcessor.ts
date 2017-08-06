@@ -1,19 +1,23 @@
-interface ISegmentInfo {
+import * as _ from "lodash";
+import {env} from "../../config/env";
+import {VacuumProcessor} from "./VacuumProcessor";
+
+export interface ISegmentInfo {
     id: number;
     name: string;
     climb_category: number;
     climb_category_desc: number;
     avg_grade: number;
-    start_latlng: Array<number>;
-    end_latlng: Array<number>;
+    start_latlng: number[];
+    end_latlng: number[];
     elev_difference: number;
     distance: number;
     type: string;
 }
 
-class SegmentProcessor {
+export class SegmentProcessor {
 
-    public static cachePrefix: string = 'stravistix_nearbySegments_';
+    public static cachePrefix: string = "stravistix_nearbySegments_";
 
     protected vacuumProcessor: VacuumProcessor;
     protected segmentId: number;
@@ -23,10 +27,10 @@ class SegmentProcessor {
         this.segmentId = segmentId;
     }
 
-    getNearbySegmentsAround(callback: (segmentsInBounds: Array<ISegmentInfo>) => void): void {
+    getNearbySegmentsAround(callback: (segmentsInBounds: ISegmentInfo[]) => void): void {
 
         // NearbySegmentsAround cached?
-        let cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
+        const cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
 
         if (!_.isNull(cacheResult) && !env.debugMode) {
             if (env.debugMode) console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
@@ -34,15 +38,14 @@ class SegmentProcessor {
             return;
         }
 
-
         // Find search point of segment first
         this.getSegmentAroundSearchPoint((searchPoint: LatLon) => {
 
             // Prepare Bounding box 2 km around search point
-            let boundingBox: Array<number> = this.getBoundingBox(searchPoint, 2000);
+            const boundingBox: number[] = this.getBoundingBox(searchPoint, 2000);
 
             // Find segments in bounding box
-            this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: Array<ISegmentInfo>) => {
+            this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: ISegmentInfo[]) => {
 
                 if (env.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
                 try {
@@ -56,7 +59,7 @@ class SegmentProcessor {
         });
     }
 
-    getBoundingBox(point: LatLon, distance: number): Array<number> {
+    getBoundingBox(point: LatLon, distance: number): number[] {
 
         return [
             point.destinationPoint(distance, 180).lat,
@@ -66,20 +69,20 @@ class SegmentProcessor {
         ];
     }
 
-    getSegmentsInBoundingBox(boundingBox: Array<number>, callback: (segmentsData: Array<ISegmentInfo>) => void): void {
+    getSegmentsInBoundingBox(boundingBox: number[], callback: (segmentsData: ISegmentInfo[]) => void): void {
 
         this.vacuumProcessor.getSegmentsFromBounds(
-            boundingBox[0] + ',' + boundingBox[1],
-            boundingBox[2] + ',' + boundingBox[3],
+            boundingBox[0] + "," + boundingBox[1],
+            boundingBox[2] + "," + boundingBox[3],
             (segmentsData: any) => {
 
                 // Flag cycling/running
-                _.each(segmentsData.cycling.segments, (segment: any) => {
-                    segment.type = 'cycling';
+                _.forEach(segmentsData.cycling.segments, (segment: any) => {
+                    segment.type = "cycling";
                 });
 
-                _.each(segmentsData.running.segments, (segment: any) => {
-                    segment.type = 'running';
+                _.forEach(segmentsData.running.segments, (segment: any) => {
+                    segment.type = "running";
                 });
 
                 // Merge cycling/running arrays into one entry array
@@ -91,7 +94,7 @@ class SegmentProcessor {
                 });
 
                 callback(segmentsData);
-            }
+            },
         );
     }
 
@@ -99,11 +102,11 @@ class SegmentProcessor {
 
         this.vacuumProcessor.getSegmentStream(this.segmentId, (stream: any) => {
 
-            let startPoint: Array<number> = stream.latlng[0];
-            let midPoint: Array<number> = stream.latlng[(stream.latlng.length / 2).toFixed(0)];
-            let endPoint: Array<number> = stream.latlng[stream.latlng.length - 1];
+            const startPoint: number[] = stream.latlng[0];
+            const midPoint: number[] = stream.latlng[(stream.latlng.length / 2).toFixed(0)];
+            const endPoint: number[] = stream.latlng[stream.latlng.length - 1];
 
-            let approximateSearchPoint: Array<number> = [null, null];
+            const approximateSearchPoint: number[] = [null, null];
 
             // Add start + end vector
             approximateSearchPoint[0] = (startPoint[0] + endPoint[0]) / 2;
@@ -117,5 +120,3 @@ class SegmentProcessor {
         });
     }
 }
-
-

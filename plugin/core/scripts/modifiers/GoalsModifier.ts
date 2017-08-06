@@ -1,6 +1,5 @@
 const GOAL_MARKER_TEXT_WIDTH = 40;
 
-
 /**
  * Implements per-week/month annual goal tracking.
  *
@@ -8,7 +7,7 @@ const GOAL_MARKER_TEXT_WIDTH = 40;
  * tracker found in the #progress-goals-v2 element. The bars track monthly
  * and weekly progress towards the overall annual goal.
  */
-class GoalsModifier implements IModifier {
+export class GoalsModifier implements IModifier {
 
     private $element: JQuery;
 
@@ -35,17 +34,17 @@ class GoalsModifier implements IModifier {
      */
     public modify = (): void => {
         this.getActivities().then((activities) => {
-            this.$element.find('.tab-contents > .tab-content').each(
+            this.$element.find(".tab-contents > .tab-content").each(
                 (_, tab) => {
-                    let $tab = $(tab);
-                    let $view = $(tab).find('.js-view');
-                    let $edit = $(tab).find('.js-edit');
-                    let $barYearly = this.findProgressBar($view);
-                    let goal = this.findGoal($edit, 'year');
-                    let activityType = $tab.attr('data-sport');
+                    const $tab = $(tab);
+                    const $view = $(tab).find(".js-view");
+                    const $edit = $(tab).find(".js-edit");
+                    const $barYearly = this.findProgressBar($view);
+                    const goal = this.findGoal($edit, "year");
+                    let activityType = $tab.attr("data-sport");
                     activityType =
                         activityType[0].toUpperCase() + activityType.slice(1);
-                    let $actual = $barYearly.find('.actual');
+                    const $actual = $barYearly.find(".actual");
                     let actual = parseInt(
                         $actual.text().replace(/[^0-9]/g, ""), 10);
                     if (goal.value !== 0) {
@@ -62,7 +61,7 @@ class GoalsModifier implements IModifier {
                     }
                     // Add year label last so it doesn't get cloned
                     this.labelProgressBar($barYearly, (new Date()).getFullYear().toString());
-                }
+                },
             );
         });
     }
@@ -89,27 +88,27 @@ class GoalsModifier implements IModifier {
                                     activities: ActivityResource[],
                                     activityType: string,
                                     goal: Goal): void => {
-        let now = new Date();
-        let weekStart = new Date();
-        let day = weekStart.getDay() || 7;  // week starting on Monday
+        const now = new Date();
+        const weekStart = new Date();
+        const day = weekStart.getDay() || 7;  // week starting on Monday
         if (day !== 1) {
             weekStart.setHours(-24 * (day - 1));
         }
         weekStart.setHours(0, 0, 0, 0);
-        let weekProgress = day / 7;
-        let weekNumber = this.weekNumber();
-        let weekCount = this.weekCount();
-        let weeksRemaining = this.weekCount() - this.weekNumber() + 1;
-        let scaledGoal: Goal = {
+        const weekProgress = day / 7;
+        const weekNumber = this.weekNumber();
+        const weekCount = this.weekCount();
+        const weeksRemaining = this.weekCount() - this.weekNumber() + 1;
+        const scaledGoal: Goal = {
             value: goal.value / weeksRemaining,
             units: goal.units,
         };
-        let actual = this.calculateActual(
+        const actual = this.calculateActual(
             activities, weekStart, activityType, goal.units);
-        let bar = this.createProgressBar(
+        const bar = this.createProgressBar(
             $view, scaledGoal, actual, weekProgress);
         this.labelProgressBar(bar, "this week");
-        $view.append(bar)
+        $view.append(bar);
     }
 
     /**
@@ -124,9 +123,9 @@ class GoalsModifier implements IModifier {
      * week of the preceeding year only has a single day in it.
      */
     private weekNumber = (): number => {
-        let today = new Date();
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
-        let counter = new Date(today.getFullYear(), 0, 1);
+        const counter = new Date(today.getFullYear(), 0, 1);
         let week = 0;
         while (counter <= today) {
             week++;
@@ -142,9 +141,9 @@ class GoalsModifier implements IModifier {
      * starting on the first of January.
      */
     private weekCount = (): number => {
-        let now = new Date();
-        let counter = new Date(now.getFullYear(), 0, 1);
-        let newYear = new Date(now.getFullYear() + 1, 0, 1);
+        const now = new Date();
+        const counter = new Date(now.getFullYear(), 0, 1);
+        const newYear = new Date(now.getFullYear() + 1, 0, 1);
         let week = 0;
         while (counter < newYear) {
             week++;
@@ -175,41 +174,41 @@ class GoalsModifier implements IModifier {
                                      activities: ActivityResource[],
                                      activityType: string,
                                      goal: Goal): void => {
-        let now = new Date();
-        let monthStart = new Date();
+        const now = new Date();
+        const monthStart = new Date();
         monthStart.setHours(0, 0, 0, 0);
         monthStart.setDate(1);
-        let monthDays = new Date(
+        const monthDays = new Date(
             now.getFullYear(),
             now.getMonth() + 1,
-            0  // last day of previous month
+            0,  // last day of previous month
         ).getDate();
-        let monthProgress = now.getDate() / monthDays;
-        let monthsRemaining = 12 - monthStart.getMonth();
-        let scaledGoal: Goal = {
+        const monthProgress = now.getDate() / monthDays;
+        const monthsRemaining = 12 - monthStart.getMonth();
+        const scaledGoal: Goal = {
             value: goal.value / monthsRemaining,
             units: goal.units,
         };
-        let actual = this.calculateActual(
+        const actual = this.calculateActual(
             activities, monthStart, activityType, goal.units);
-        let bar = this.createProgressBar(
+        const bar = this.createProgressBar(
             $view, scaledGoal, actual, monthProgress);
         this.labelProgressBar(
             bar,
             [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December',
-            ][now.getMonth()]
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ][now.getMonth()],
         );
         $view.append(bar);
     }
@@ -223,26 +222,26 @@ class GoalsModifier implements IModifier {
      * cases, if *any* of the requests fail then the promise is rejected.
      */
     private getActivities = (): Promise<ActivityResource[]> => {
-        let activities: ActivityResource[] = [];
-        let monthStart = new Date();
+        const activities: ActivityResource[] = [];
+        const monthStart = new Date();
         monthStart.setHours(0, 0, 0, 0);
         monthStart.setDate(1);
         return new Promise<ActivityResource[]>((resolve, reject) => {
-            let request = (page: number) => {
+            const request = (page: number) => {
                 $.ajax({
                     url: `/athlete/training_activities`,
-                    type: 'GET',
+                    type: "GET",
                     data: {
-                        page: page,
+                        page,
                         new_activity_only: false,
                     },
-                    dataType: 'json',
+                    dataType: "json",
                     success: (response: ActivityCollectionPage) => {
                         let monthStartReached = false;
                         activities.push(... response.models);
-                        for (let activity of response.models) {
+                        for (const activity of response.models) {
                             // activity.start_date_local_raw is in seconds, monthStart is in ms
-                            if (activity.start_date_local_raw*1000 < +monthStart) {
+                            if (activity.start_date_local_raw * 1000 < +monthStart) {
                                 monthStartReached = true;
                             }
                         }
@@ -285,7 +284,7 @@ class GoalsModifier implements IModifier {
                                type: string,
                                units: GoalUnit): number => {
         let actual = 0;
-        for (let activity of activities) {
+        for (const activity of activities) {
             if (activity.start_date_local_raw < +since / 1000) {
                 break;
             }
@@ -316,29 +315,29 @@ class GoalsModifier implements IModifier {
      *      if no goal has been set.
      */
     private findGoal = ($edit: JQuery, period: GoalPeriod): Goal => {
-        let goalString = $edit.find(
+        const goalString = $edit.find(
             `[data-period="${period}"] .goal-value`).val();
         let goalNumeric = parseInt(goalString, 10);
         if (!goalNumeric) {
             goalNumeric = 0;
         }
-        let $units = $edit.find(`[data-period="${period}"] .goal-unit`);
-        let units = $units.find('button.active').attr('data-type');
+        const $units = $edit.find(`[data-period="${period}"] .goal-unit`);
+        const units = $units.find("button.active").attr("data-type");
         let goalUnits = GoalUnit.UNKNOWN;
-        if (units === 'distance') {
-            let unitsSymbol = $units.find('button.active').text().trim();
+        if (units === "distance") {
+            const unitsSymbol = $units.find("button.active").text().trim();
             if (unitsSymbol.charAt(unitsSymbol.length - 1) === "m") {  // Metric
                 goalUnits = GoalUnit.METRES;
-                if (unitsSymbol === 'km') {
+                if (unitsSymbol === "km") {
                     goalNumeric = goalNumeric * 1000;
                 }
             } else {  // Imperial
                 goalUnits = GoalUnit.YARDS;
-                if (unitsSymbol === 'mi') {
+                if (unitsSymbol === "mi") {
                     goalNumeric = goalNumeric * 1760;
                 }
             }
-        } else if (units === 'time') {
+        } else if (units === "time") {
             goalUnits = GoalUnit.HOURS;
         }
         return {
@@ -383,27 +382,27 @@ class GoalsModifier implements IModifier {
                                  goal: Goal,
                                  actual: number,
                                  progress: number): JQuery => {
-        let $sourceContainer = this.findProgressBar($view);
-        let $container = $sourceContainer.clone();
-        let $svg = $container.find('.chart-container svg');
-        let $tooltip = $container.find('.yearly-goal-tooltip');
-        let $tooltipSource = $sourceContainer.find('.yearly-goal-tooltip');
-        let formattedGoal = this.formatValue(goal.value, goal.units);
-        let formattedActual = this.formatValue(actual, goal.units, false);
-        let difference = (goal.value * progress) - actual;
-        let formattedDifference = this.formatValue(
+        const $sourceContainer = this.findProgressBar($view);
+        const $container = $sourceContainer.clone();
+        const $svg = $container.find(".chart-container svg");
+        const $tooltip = $container.find(".yearly-goal-tooltip");
+        const $tooltipSource = $sourceContainer.find(".yearly-goal-tooltip");
+        const formattedGoal = this.formatValue(goal.value, goal.units);
+        const formattedActual = this.formatValue(actual, goal.units, false);
+        const difference = (goal.value * progress) - actual;
+        const formattedDifference = this.formatValue(
             Math.abs(difference), goal.units);
         $container
-            .find('.primary-stats')
+            .find(".primary-stats")
             .contents()
-            .filter(function () {
+            .filter(function() {
                 return this.nodeType === 3;
             })
             .last()
             .replaceWith(` / ${formattedGoal}`)
         ;
         $container
-            .find('.primary-stats .actual')
+            .find(".primary-stats .actual")
             .text(formattedActual)
         ;
         if (difference > 0) {
@@ -411,14 +410,14 @@ class GoalsModifier implements IModifier {
         } else {
             $tooltip.text(`${formattedDifference} ahead of pace`);
         }
-        $svg.find('g').hover(
+        $svg.find("g").hover(
             () => {
-                $tooltip.attr('style', $tooltipSource.attr('style'));
-                $tooltip.addClass('yearly-goal-tooltip-visible');
+                $tooltip.attr("style", $tooltipSource.attr("style"));
+                $tooltip.addClass("yearly-goal-tooltip-visible");
             },
             () => {
-                $tooltip.removeClass('yearly-goal-tooltip-visible');
-            }
+                $tooltip.removeClass("yearly-goal-tooltip-visible");
+            },
         );
         this.updateProgressBarSVG($svg, goal, actual, progress);
         return $container;
@@ -441,41 +440,41 @@ class GoalsModifier implements IModifier {
                                     goal: Goal,
                                     actual: number,
                                     progress: number): void => {
-        let $container = $svg.find('rect.progress-bar-container');
-        let $fill = $svg.find('rect.progress-bar-fill');
-        let $marker = $svg.find('line.progress-marker');
-        let $markerText = $svg.find('text');
-        let width = parseInt($container.attr('width'), 10);
+        const $container = $svg.find("rect.progress-bar-container");
+        const $fill = $svg.find("rect.progress-bar-fill");
+        const $marker = $svg.find("line.progress-marker");
+        const $markerText = $svg.find("text");
+        let width = parseInt($container.attr("width"), 10);
         if ( actual > goal.value ) {
-            $container.attr('width', width * goal.value / actual);
-            width = parseInt($container.attr('width'));
+            $container.attr("width", width * goal.value / actual);
+            width = parseInt($container.attr("width"));
         }
         if (goal.value === 0) {
-            $fill.attr('width', width);
+            $fill.attr("width", width);
         } else {
-            $fill.attr('width', width * (actual / goal.value));
+            $fill.attr("width", width * (actual / goal.value));
         }
         if (progress >= 1) {
             progress = 1;
         } else if (progress <= 0) {
             progress = 0;
         }
-        let markerX = width * progress;
+        const markerX = width * progress;
         $marker
-            .attr('x1', markerX)
-            .attr('x2', markerX)
+            .attr("x1", markerX)
+            .attr("x2", markerX)
         ;
-        let markerTextAnchor = 'middle';
+        let markerTextAnchor = "middle";
         // GOAL_MARKER_TEXT_WIDTH is used as we can't know the actual
         // width until we actually add the <svg> element to the DOM.
         if (width - markerX < GOAL_MARKER_TEXT_WIDTH) {
-            markerTextAnchor = 'end';
+            markerTextAnchor = "end";
         } else if (markerX < GOAL_MARKER_TEXT_WIDTH) {
-            markerTextAnchor = 'start';
+            markerTextAnchor = "start";
         }
         $markerText
-            .attr('x', markerX)
-            .attr('text-anchor', markerTextAnchor)
+            .attr("x", markerX)
+            .attr("text-anchor", markerTextAnchor)
         ;
     }
 
@@ -485,15 +484,15 @@ class GoalsModifier implements IModifier {
      * This adds a small label to the progress bar at the top right.
      */
     private labelProgressBar = ($bar: JQuery, label: string): void => {
-        let $label = $('<span>');
+        const $label = $("<span>");
         $label
             .text(label)
-            .css('float', 'right')
-            .css('padding-top', '0.4em')
-            .css('text-transform', 'uppercase')
-            .css('font-size', '0.6em')
+            .css("float", "right")
+            .css("padding-top", "0.4em")
+            .css("text-transform", "uppercase")
+            .css("font-size", "0.6em")
         ;
-        $bar.find('.primary-stats').append($label);
+        $bar.find(".primary-stats").append($label);
     }
 
     /**
@@ -513,25 +512,24 @@ class GoalsModifier implements IModifier {
     private formatValue = (value: number,
                            units: GoalUnit,
                            includeUnits = true): string => {
-        let formattedValue = '';
-        let formattedUnits = '';
+        let formattedValue = "";
+        let formattedUnits = "";
         if (units === GoalUnit.METRES) {
-            formattedUnits = ' km';
+            formattedUnits = " km";
             formattedValue = (Math.round(value / 1000)).toLocaleString();
         } else if (units === GoalUnit.YARDS) {
-            formattedUnits = ' mi';
+            formattedUnits = " mi";
             formattedValue = (Math.round(value / 1760)).toLocaleString();
         } else if (units === GoalUnit.HOURS) {
-            formattedUnits = 'h';
+            formattedUnits = "h";
             formattedValue = Math.round(value).toLocaleString();
         }
         if (!includeUnits) {
-            formattedUnits = '';
+            formattedUnits = "";
         }
         return `${formattedValue}${formattedUnits}`;
     }
 }
-
 
 /**
  * Enumeration of possible `Goal` units.
@@ -543,7 +541,6 @@ enum GoalUnit {
     HOURS,
 }
 
-
 /**
  * Simple interface for representing goals.
  */
@@ -552,12 +549,10 @@ interface Goal {
     units: GoalUnit;
 }
 
-
 /**
  * Periods for goals that can be found by inspecting the HTML.
  */
-type GoalPeriod = 'week' | 'year';
-
+type GoalPeriod = "week" | "year";
 
 /**
  * Interface for /athlete/training_activities responses.
@@ -568,7 +563,6 @@ interface ActivityCollectionPage {
     perPage: number;
     total: number;
 }
-
 
 /**
  * Partial interface for /athlete/training_activities resources.

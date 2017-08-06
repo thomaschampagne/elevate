@@ -1,3 +1,7 @@
+import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
+import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
+import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
+
 describe('ActivityComputer', () => {
 
     it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {

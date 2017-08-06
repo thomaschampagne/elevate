@@ -1,4 +1,4 @@
-class ReliveCCModifier implements IModifier {
+export class ReliveCCModifier implements IModifier {
 
     private activityId: number;
 
@@ -13,28 +13,27 @@ class ReliveCCModifier implements IModifier {
 
         $("#pagenav").append($(html)).each(() => {
 
-            $('#stravistix_relivecc').click((evt: Event) => {
+            $("#stravistix_relivecc").click((evt: JQuery.Event) => {
 
                 evt.preventDefault();
                 evt.stopPropagation();
 
-                let url: string = 'https://www.relive.cc/view/' + this.activityId + '?r=stravistix';
+                const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
 
-                let windowWidth: number = 800;
-                let windowHeight: number = 600;
+                const windowWidth: number = 800;
+                const windowHeight: number = 600;
 
                 $.fancybox({
                     fitToView: true,
                     autoSize: true,
                     closeClick: false,
-                    openEffect: 'none',
-                    closeEffect: 'none',
-                    scrolling: 'no',
-                    'type': 'iframe',
-                    'content': '<iframe src="' + url + '" width="' + windowWidth + '" height="' + windowHeight + '" frameborder="0"></iframe>'
+                    openEffect: "none",
+                    closeEffect: "none",
+                    scrolling: "no",
+                    type: "iframe",
+                    content: '<iframe src="' + url + '" width="' + windowWidth + '" height="' + windowHeight + '" frameborder="0"></iframe>',
                 });
             });
         });
     }
 }
-

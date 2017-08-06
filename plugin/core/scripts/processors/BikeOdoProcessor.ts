@@ -1,4 +1,8 @@
-class BikeOdoProcessor {
+import * as _ from "lodash";
+import {env} from "../../config/env";
+import {VacuumProcessor} from "./VacuumProcessor";
+
+export class BikeOdoProcessor {
 
     protected cacheKey: string;
     protected vacuumProcessor: VacuumProcessor;
@@ -9,19 +13,19 @@ class BikeOdoProcessor {
         this.vacuumProcessor = vacuumProcessor;
         this.cacheAgingTime = 120 * 60; // 2 hours
         this.athleteId = athleteId;
-        this.cacheKey = 'stravistix_bikeOdo_' + athleteId + '_cache';
+        this.cacheKey = "stravistix_bikeOdo_" + athleteId + "_cache";
     }
 
-    public getBikeOdoOfAthlete(callback: (bikeOdoArray: Array<string>) => void): void {
+    public getBikeOdoOfAthlete(callback: (bikeOdoArray: string[]) => void): void {
 
-        let cache: string = localStorage.getItem(this.cacheKey);
-        let storedOdos: any = JSON.parse(localStorage.getItem(this.cacheKey));
+        const cache: string = localStorage.getItem(this.cacheKey);
+        const storedOdos: any = JSON.parse(localStorage.getItem(this.cacheKey));
 
         // Test if cache is still valid
         let cacheDeprecated: boolean = false;
-        let now: number = Math.floor(Date.now() / 1000);
+        const now: number = Math.floor(Date.now() / 1000);
         if (storedOdos && (now > storedOdos.cachedOnTimeStamp + this.cacheAgingTime)) {
-            console.log('bike ode cache is deprecated');
+            console.log("bike ode cache is deprecated");
             cacheDeprecated = true;
         }
 

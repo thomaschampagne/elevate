@@ -1,7 +1,14 @@
+import * as _ from "lodash";
 import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
+import {IPromise} from "angular";
+import {IStorageUsage} from "../../../common/scripts/modules/StorageManager";
+import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {userSettings} from "../../../common/scripts/UserSettings";
+import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
-class ChromeStorageService {
+export class ChromeStorageService {
 
     protected $q: IQService;
 
@@ -10,7 +17,7 @@ class ChromeStorageService {
     }
 
     public getAllFromLocalStorage(): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
+        const deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.get(null, (data: any) => {
             deferred.resolve(data);
         });
@@ -18,8 +25,8 @@ class ChromeStorageService {
     }
 
     public getFromLocalStorage(key: string): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
-        let object: any = {};
+        const deferred: IDeferred<any> = this.$q.defer();
+        const object: any = {};
         object[key] = null;
         chrome.storage.local.get(object, (data: any) => {
             deferred.resolve(data[key]);
@@ -28,14 +35,14 @@ class ChromeStorageService {
     }
 
     public setToLocalStorage(key: string, value: any): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
+        const deferred: IDeferred<any> = this.$q.defer();
 
-        let object: any = {};
+        const object: any = {};
         object[key] = value;
         chrome.storage.local.set(object, () => {
 
             if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError)
+                console.error(chrome.runtime.lastError);
                 deferred.reject(chrome.runtime.lastError);
             } else {
                 deferred.resolve();
@@ -46,7 +53,7 @@ class ChromeStorageService {
     }
 
     public removeFromLocalStorage(key: string): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
+        const deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.remove(key, () => {
             deferred.resolve();
         });
@@ -55,9 +62,9 @@ class ChromeStorageService {
 
     public getLastSyncDate(): IPromise<number> {
 
-        let deferred: IDeferred<number> = this.$q.defer();
+        const deferred: IDeferred<number> = this.$q.defer();
 
-        this.getFromLocalStorage('lastSyncDateTime').then((lastSyncDateTime: number) => {
+        this.getFromLocalStorage("lastSyncDateTime").then((lastSyncDateTime: number) => {
 
             if (_.isUndefined(lastSyncDateTime) || _.isNull(lastSyncDateTime) || !_.isNumber(lastSyncDateTime)) {
                 deferred.resolve(-1);
@@ -70,17 +77,17 @@ class ChromeStorageService {
     }
 
     public getLocalSyncedAthleteProfile(): IPromise<IAthleteProfile> {
-        return this.getFromLocalStorage('syncWithAthleteProfile');
+        return this.getFromLocalStorage("syncWithAthleteProfile");
     }
 
     public getProfileConfigured(): IPromise<boolean> {
-        return this.getFromLocalStorage('profileConfigured');
+        return this.getFromLocalStorage("profileConfigured");
     }
 
     public setProfileConfigured(status: boolean): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
+        const deferred: IDeferred<any> = this.$q.defer();
         chrome.storage.local.set({
-            profileConfigured: status
+            profileConfigured: status,
         }, () => {
             deferred.resolve();
         });
@@ -88,7 +95,7 @@ class ChromeStorageService {
     }
 
     public fetchUserSettings(callback?: (userSettingsSynced: IUserSettings) => void): IPromise<IUserSettings> {
-        let deferred: IDeferred<IUserSettings> = this.$q.defer();
+        const deferred: IDeferred<IUserSettings> = this.$q.defer();
         chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
             if (callback) callback(userSettingsSynced);
             deferred.resolve(userSettingsSynced);
@@ -97,8 +104,8 @@ class ChromeStorageService {
     }
 
     public updateUserSetting(key: string, value: any, callback?: () => void): IPromise<any> {
-        let deferred: IDeferred<any> = this.$q.defer();
-        let settingToBeUpdated: any = {};
+        const deferred: IDeferred<any> = this.$q.defer();
+        const settingToBeUpdated: any = {};
         settingToBeUpdated[key] = value;
         chrome.storage.sync.set(settingToBeUpdated, () => {
             if (callback) callback();
@@ -107,24 +114,25 @@ class ChromeStorageService {
         return deferred.promise;
     }
 
-    public fetchComputedActivities(): IPromise<Array<ISyncActivityComputed>> {
-        return <IPromise<Array<ISyncActivityComputed>>> this.getFromLocalStorage('computedActivities');
+    public fetchComputedActivities(): IPromise<ISyncActivityComputed[]> {
+        return this.getFromLocalStorage("computedActivities") as IPromise<ISyncActivityComputed[]>;
     }
 
     public getLocalStorageUsage(): IPromise<IStorageUsage> {
 
-        let deferred: IDeferred<IStorageUsage> = this.$q.defer();
+        const deferred: IDeferred<IStorageUsage> = this.$q.defer();
         chrome.storage.local.getBytesInUse((bytesInUse: number) => {
-            deferred.resolve(<IStorageUsage>{
-                bytesInUse: bytesInUse,
+            deferred.resolve({
+                bytesInUse,
                 quotaBytes: chrome.storage.local.QUOTA_BYTES,
-                percentUsage: bytesInUse / chrome.storage.local.QUOTA_BYTES * 100
-            });
+                percentUsage: bytesInUse / chrome.storage.local.QUOTA_BYTES * 100,
+            } as IStorageUsage);
         });
         return deferred.promise;
     }
 }
 
-app.factory('ChromeStorageService', ['$q', ($q: IQService) => {
+export let chromeStorageService = ["$q", ($q: IQService) => {
     return new ChromeStorageService($q);
-}]);
+}];
+

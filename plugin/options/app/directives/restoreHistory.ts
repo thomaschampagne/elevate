@@ -1,6 +1,11 @@
-class RestoreHistoryController {
+import * as angular from "angular";
+import {IScope, IWindowService} from "angular";
+import * as _ from "lodash";
+import {ChromeStorageService} from "../services/ChromeStorageService";
 
-    static $inject = ['ChromeStorageService', '$scope', '$window'];
+export class RestoreHistoryController {
+
+    static $inject = ["ChromeStorageService", "$scope", "$window"];
     private _chromeStorageService: ChromeStorageService;
     private _windowService: IWindowService;
 
@@ -18,9 +23,9 @@ class RestoreHistoryController {
     }
 }
 
-app.directive('restoreHistory', [() => {
+export let restoreHistory = [() => {
 
-    return <any>{
+    return {
 
         template: '<div><input type="file"/><md-button class="md-raised md-primary" ng-click="restore()">Restore</md-button></div>',
 
@@ -38,11 +43,11 @@ app.directive('restoreHistory', [() => {
 
                 if (!$scope.file) {
 
-                    alert('You must provide a backup file (.json)');
+                    alert("You must provide a backup file (.json)");
 
                 } else {
 
-                    let reader = new FileReader();
+                    const reader = new FileReader();
 
                     reader.readAsText($scope.file);
 
@@ -55,7 +60,7 @@ app.directive('restoreHistory', [() => {
                                 return;
                             }
 
-                            let restoredHistoryObject: any = angular.fromJson(loadEvent.target.result);
+                            const restoredHistoryObject: any = angular.fromJson(loadEvent.target.result);
 
                             if (_.isEmpty(restoredHistoryObject)) {
                                 alert("No data to restore here");
@@ -63,7 +68,7 @@ app.directive('restoreHistory', [() => {
                             }
 
                             if (!restoredHistoryObject.pluginVersion || restoredHistoryObject.pluginVersion !== chrome.runtime.getManifest().version) {
-                                alert("Backup file version do not match with the plugin version installed:\n\nFile version: " + restoredHistoryObject.pluginVersion + '\nCurrent plugin version:' + chrome.runtime.getManifest().version + '\n\nRedo a full sync or load compliant backup file.');
+                                alert("Backup file version do not match with the plugin version installed:\n\nFile version: " + restoredHistoryObject.pluginVersion + "\nCurrent plugin version:" + chrome.runtime.getManifest().version + "\n\nRedo a full sync or load compliant backup file.");
                                 return;
                             }
 
@@ -74,21 +79,21 @@ app.directive('restoreHistory', [() => {
                                 return;
                             }
 
-                            restoreHistoryController.chromeStorageService.setToLocalStorage('lastSyncDateTime', restoredHistoryObject.lastSyncDateTime).then(() => {
-                                return restoreHistoryController.chromeStorageService.setToLocalStorage('syncWithAthleteProfile', restoredHistoryObject.syncWithAthleteProfile);
+                            restoreHistoryController.chromeStorageService.setToLocalStorage("lastSyncDateTime", restoredHistoryObject.lastSyncDateTime).then(() => {
+                                return restoreHistoryController.chromeStorageService.setToLocalStorage("syncWithAthleteProfile", restoredHistoryObject.syncWithAthleteProfile);
                             }).then(() => {
-                                return restoreHistoryController.chromeStorageService.setToLocalStorage('computedActivities', restoredHistoryObject.computedActivities);
+                                return restoreHistoryController.chromeStorageService.setToLocalStorage("computedActivities", restoredHistoryObject.computedActivities);
                             }).then(() => {
 
-                                console.log('lastSyncDateTime restored');
-                                console.log('syncWithAthleteProfile restored');
-                                console.log('computedActivities restored');
+                                console.log("lastSyncDateTime restored");
+                                console.log("syncWithAthleteProfile restored");
+                                console.log("computedActivities restored");
 
                                 restoreHistoryController.windowService.location.reload();
 
                             }, (errors: any) => {
                                 console.error(errors);
-                                alert('Restore process failed. Show developer console to view errors (F12)' + errors);
+                                alert("Restore process failed. Show developer console to view errors (F12)" + errors);
                             });
 
                         });
@@ -96,6 +101,6 @@ app.directive('restoreHistory', [() => {
                 }
 
             };
-        }
-    }
-}]);
+        },
+    } as any;
+}];

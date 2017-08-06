@@ -98,7 +98,6 @@
   "feedHideCreatedRoutes": true,
   "feedHideRideActivitiesUnderDistance": 20,
   "feedHideRunActivitiesUnderDistance": 0,
-  "hidePremiumFeatures": true,
   "localStorageMustBeCleared": true,
   "remoteLinks": true,
   "reviveGoogleMaps": true,

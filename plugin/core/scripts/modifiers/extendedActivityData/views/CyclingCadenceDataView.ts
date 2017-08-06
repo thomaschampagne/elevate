@@ -1,4 +1,8 @@
-class CyclingCadenceDataView extends AbstractCadenceDataView {
+import {Helper} from "../../../../../common/scripts/Helper";
+import {ICadenceData} from "../../../../../common/scripts/interfaces/IActivityData";
+import {AbstractCadenceDataView} from "./AbstractCadenceDataView";
+
+export class CyclingCadenceDataView extends AbstractCadenceDataView {
 
     constructor(cadenceData: ICadenceData, units: string) {
         super(cadenceData, units);
@@ -20,14 +24,14 @@ class CyclingCadenceDataView extends AbstractCadenceDataView {
 
     protected insertDataIntoGrid(): void {
 
-        this.insertContentAtGridPosition(0, 0, this.cadenceData.cadencePercentageMoving.toFixed(2), 'Cadence % while moving', '%', 'displayCadenceData');
-        this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS(this.cadenceData.cadenceTimeMoving), 'Cadence Time while moving', '', 'displayCadenceData');
-        this.insertContentAtGridPosition(2, 0, this.cadenceData.crankRevolutions.toFixed(0), 'Crank Revolutions', '', 'displayCadenceData');
+        this.insertContentAtGridPosition(0, 0, this.cadenceData.cadencePercentageMoving.toFixed(2), "Cadence % while moving", "%", "displayCadenceData");
+        this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS(this.cadenceData.cadenceTimeMoving), "Cadence Time while moving", "", "displayCadenceData");
+        this.insertContentAtGridPosition(2, 0, this.cadenceData.crankRevolutions.toFixed(0), "Crank Revolutions", "", "displayCadenceData");
 
-        this.insertContentAtGridPosition(0, 1, this.cadenceData.lowerQuartileCadence, '25% Quartile Cadence', 'rpm', 'displayCadenceData');
-        this.insertContentAtGridPosition(1, 1, this.cadenceData.medianCadence, '50% Quartile Cadence', 'rpm', 'displayCadenceData');
-        this.insertContentAtGridPosition(2, 1, this.cadenceData.upperQuartileCadence, '75% Quartile Cadence', 'rpm', 'displayCadenceData');
+        this.insertContentAtGridPosition(0, 1, this.cadenceData.lowerQuartileCadence, "25% Quartile Cadence", "rpm", "displayCadenceData");
+        this.insertContentAtGridPosition(1, 1, this.cadenceData.medianCadence, "50% Quartile Cadence", "rpm", "displayCadenceData");
+        this.insertContentAtGridPosition(2, 1, this.cadenceData.upperQuartileCadence, "75% Quartile Cadence", "rpm", "displayCadenceData");
 
-        this.insertContentAtGridPosition(0, 2, this.cadenceData.standardDeviationCadence, 'Std Deviation &sigma;', 'rpm', 'displayCadenceData');
+        this.insertContentAtGridPosition(0, 2, this.cadenceData.standardDeviationCadence, "Std Deviation &sigma;", "rpm", "displayCadenceData");
     }
 }

@@ -1,4 +1,4 @@
-class ActivityStravaMapTypeModifier implements IModifier {
+export class ActivityStravaMapTypeModifier implements IModifier {
 
     protected mapType: string;
 
@@ -8,18 +8,18 @@ class ActivityStravaMapTypeModifier implements IModifier {
 
     modify(): void {
 
-        if (this.mapType === 'terrain') {
+        if (this.mapType === "terrain") {
             return;
         }
 
-        let mapGoal = this.mapType;
+        const mapGoal = this.mapType;
 
         setInterval(() => {
-            $('a.map-type-selector[data-map-type-id=' + mapGoal + ']')
-                .not('.once-only')
-                .addClass('once-only')
+            $("a.map-type-selector[data-map-type-id=" + mapGoal + "]")
+                .not(".once-only")
+                .addClass("once-only")
                 .click()
-                .parents('.drop-down-menu') // Close menu
+                .parents(".drop-down-menu") // Close menu
                 .click();
         }, 750);
     }

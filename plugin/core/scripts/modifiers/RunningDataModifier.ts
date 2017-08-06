@@ -10,9 +10,9 @@ abstract class AbstractRunningDataModifier implements IModifier {
 
     public modify(): void {
         this.intervalId = setInterval(() => {
-            let element: JQuery = $('#elevation-profile td[data-type=' + this.dataWatch + '] .toggle-button')
-                .not('.once-only')
-                .addClass('once-only');
+            const element: JQuery = $("#elevation-profile td[data-type=" + this.dataWatch + "] .toggle-button")
+                .not(".once-only")
+                .addClass("once-only");
 
             if (element.length === 0) {
                 clearInterval(this.intervalId);
@@ -20,7 +20,7 @@ abstract class AbstractRunningDataModifier implements IModifier {
 
             element.click();
 
-            if ($('#elevation-profile td[data-type=' + this.dataWatch + ']').find('.active').length) {
+            if ($("#elevation-profile td[data-type=" + this.dataWatch + "]").find(".active").length) {
                 clearInterval(this.intervalId);
             }
         }, AbstractRunningDataModifier.INTERVAL_DELAY);
@@ -28,27 +28,26 @@ abstract class AbstractRunningDataModifier implements IModifier {
 
 }
 
-class RunningHeartRateModifier extends AbstractRunningDataModifier {
+export class RunningHeartRateModifier extends AbstractRunningDataModifier {
     constructor() {
-        super('heartrate');
+        super("heartrate");
     }
 }
 
-
-class RunningCadenceModifier extends AbstractRunningDataModifier {
+export class RunningCadenceModifier extends AbstractRunningDataModifier {
     constructor() {
-        super('cadence');
+        super("cadence");
     }
 }
 
-class RunningTemperatureModifier extends AbstractRunningDataModifier {
+export class RunningTemperatureModifier extends AbstractRunningDataModifier {
     constructor() {
-        super('temp');
+        super("temp");
     }
 }
 
-class RunningGradeAdjustedPaceModifier extends AbstractRunningDataModifier {
+export class RunningGradeAdjustedPaceModifier extends AbstractRunningDataModifier {
     constructor() {
-        super('grade_adjusted_pace');
+        super("grade_adjusted_pace");
     }
 }

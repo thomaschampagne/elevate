@@ -1,8 +1,15 @@
-class CommonSettingsController {
+import * as angular from "angular";
+import {ILocationService, ISCEService} from "angular";
+import * as _ from "lodash";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {ChromeStorageService} from "../services/ChromeStorageService";
+import {ICommonSettingsService, ISection, ISectionContent} from "../services/CommonSettingsService";
 
-    static $inject = ['$scope', 'CommonSettingsService', 'ChromeStorageService', '$location', '$mdDialog', '$sce'];
+export class CommonSettingsController {
 
-    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: IDialogService, $sce: ISCEService) {
+    static $inject = ["$scope", "CommonSettingsService", "ChromeStorageService", "$location", "$mdDialog", "$sce"];
+
+    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
 
         // Define options structure
         $scope.sections = CommonSettingsService.provideSections();
@@ -13,29 +20,29 @@ class CommonSettingsController {
             $scope.userRestHr = userSettingsSynced.userRestHr;
             $scope.userFTP = userSettingsSynced.userFTP;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
-                _.each(section.sectionContent, (option: ISectionContent) => {
+                _.forEach(section.sectionContent, (option: ISectionContent) => {
 
-                    if (option.optionType === 'checkbox') {
+                    if (option.optionType === "checkbox") {
 
-                        // option.active = _.propertyOf(userSettingsSynced)(option.optionKey);;
+                        // option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
                         option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
 
                         if (option.optionEnableSub) {
-                            _.each(option.optionEnableSub, (subKey: string) => {
+                            _.forEach(option.optionEnableSub, (subKey: string) => {
                                 $scope.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.optionKey));
                             });
                         }
 
-                    } else if (option.optionType === 'list') {
-                        option.active = _.findWhere(option.optionList, {
-                            key: _.propertyOf(userSettingsSynced)(option.optionKey)
+                    } else if (option.optionType === "list") {
+                        option.active = _.find(option.optionList, {
+                            key: _.propertyOf(userSettingsSynced)(option.optionKey),
                         });
-                    } else if (option.optionType === 'number') {
+                    } else if (option.optionType === "number") {
                         option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
                     } else {
-                        console.error('Option type not supported');
+                        console.error("Option type not supported");
                     }
                 });
             });
@@ -46,22 +53,22 @@ class CommonSettingsController {
         $scope.toggleCheckOption = (option: ISectionContent) => {
 
             chromeStorageService.updateUserSetting(option.optionKey, option.active, () => {
-                console.log(option.optionKey + ' has been updated to ' + option.active);
+                console.log(option.optionKey + " has been updated to " + option.active);
             });
 
             // Enable/disable sub option if needed
             if (option.optionEnableSub) {
                 // Replace this to find option object from option.optionEnableSub
-                _.each(option.optionEnableSub, (subKey: string) => {
+                _.forEach(option.optionEnableSub, (subKey: string) => {
                     $scope.displaySubOption(subKey, option.active);
                 });
             }
         };
 
         $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-            _.each($scope.sections, (section: ISection) => {
-                let optionFound: ISectionContent = _.findWhere(section.sectionContent, {
-                    optionKey: subOptionKey
+            _.forEach($scope.sections, (section: ISection) => {
+                const optionFound: ISectionContent = _.find(section.sectionContent, {
+                    optionKey: subOptionKey,
                 });
                 if (optionFound) {
                     optionFound.hidden = !show;
@@ -72,25 +79,24 @@ class CommonSettingsController {
         $scope.toggleSelectOption = (option: ISectionContent) => {
 
             chromeStorageService.updateUserSetting(option.optionKey, option.active.key, () => {
-                console.log(option.optionKey + ' has been updated to ' + option.active);
+                console.log(option.optionKey + " has been updated to " + option.active);
             });
         };
-
 
         $scope.toggleIntegerOption = (option: ISectionContent) => {
 
             if (_.isNull(option.value) || _.isUndefined(option.value)) {
 
                 chromeStorageService.fetchUserSettings((userSettings: IUserSettings) => {
-                    let resetValue = _.propertyOf(userSettings)(option.optionKey);
-                    console.log(option.optionKey + ' value not compliant, Reset to  ' + resetValue);
+                    const resetValue = _.propertyOf(userSettings)(option.optionKey);
+                    console.log(option.optionKey + " value not compliant, Reset to  " + resetValue);
                     option.value = resetValue;
                 });
 
             } else {
                 // Save !
                 chromeStorageService.updateUserSetting(option.optionKey, option.value, () => {
-                    console.log(option.optionKey + ' has been updated to ' + option.value);
+                    console.log(option.optionKey + " has been updated to " + option.value);
                 });
             }
         };
@@ -99,10 +105,10 @@ class CommonSettingsController {
 
             let option: ISectionContent = null;
 
-            _.each($scope.sections, (section: ISection) => {
+            _.forEach($scope.sections, (section: ISection) => {
 
-                let optionSearch: ISectionContent = _.findWhere(section.sectionContent, {
-                    optionKey: optionKeyParam
+                const optionSearch: ISectionContent = _.find(section.sectionContent, {
+                    optionKey: optionKeyParam,
                 });
 
                 if (optionSearch) {
@@ -121,15 +127,15 @@ class CommonSettingsController {
                             $mdDialog.hide();
                         };
                     },
-                    templateUrl: 'views/modals/settingHint.html',
+                    templateUrl: "views/modals/settingHint.html",
                     parent: angular.element(document.body),
-                    clickOutsideToClose: true
+                    clickOutsideToClose: true,
                 });
             }
         };
 
         // Trigger auto click on activity page extended data click
-        let viewOptionHelperId: number = $location.search().viewOptionHelperId;
+        const viewOptionHelperId: number = $location.search().viewOptionHelperId;
 
         if (!_.isUndefined(viewOptionHelperId)) {
             $scope.displayOptionHelper(viewOptionHelperId);
@@ -142,5 +148,3 @@ class CommonSettingsController {
 
     }
 }
-
-app.controller('CommonSettingsController', CommonSettingsController);

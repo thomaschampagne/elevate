@@ -1,6 +1,15 @@
-class ActivityProcessor {
+import * as _ from "lodash";
+import {env} from "../../config/env";
+import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
+import {IAppResources} from "../interfaces/IAppResources";
+import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {VacuumProcessor} from "./VacuumProcessor";
+import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
-    public static cachePrefix: string = 'stravistix_activity_';
+export class ActivityProcessor {
+
+    public static cachePrefix: string = "stravistix_activity_";
     protected appResources: IAppResources;
     protected vacuumProcessor: VacuumProcessor;
     protected userHrrZones: any;
@@ -33,10 +42,10 @@ class ActivityProcessor {
         }
     }
 
-    public getAnalysisData(activityId: number, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
+    public getAnalysisData(activityId: number, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
 
         if (!this.activityType) {
-            console.error('No activity type set for ActivityProcessor');
+            console.error("No activity type set for ActivityProcessor");
         }
 
         // We are not using cache when bounds are given
@@ -47,7 +56,7 @@ class ActivityProcessor {
 
         if (useCache) {
             // Find in cache first is data exist
-            let cacheResult: IAnalysisData = <IAnalysisData> JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId));
+            const cacheResult: IAnalysisData = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as IAnalysisData;
 
             if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
                 console.log("Using existing activity cache mode");
@@ -80,12 +89,13 @@ class ActivityProcessor {
         });
     }
 
-    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: Array<number>, callback: (analysisData: IAnalysisData) => void): void {
+    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
+
             // Create a blob from 'ComputeAnalysisWorker' function variable as a string
-            let blob: Blob = new Blob(['(', ComputeAnalysisWorker.toString(), ')()'], {type: 'application/javascript'});
+            const blob: Blob = new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {type: "application/javascript"});
 
             // Keep track of blob URL to reuse it
             this.computeAnalysisWorkerBlobURL = URL.createObjectURL(blob);
@@ -96,17 +106,18 @@ class ActivityProcessor {
 
         // Send user and activity data to the thread
         // He will compute them in the background
-        let threadMessage: IComputeActivityThreadMessage = {
+        const threadMessage: IComputeActivityThreadMessage = {
             activityType: this.activityType,
             isTrainer: this.isTrainer,
             appResources: this.appResources,
             userSettings: this.userSettings,
-            athleteWeight: athleteWeight,
-            hasPowerMeter: hasPowerMeter,
-            activityStatsMap: activityStatsMap,
-            activityStream: activityStream,
-            bounds: bounds,
-            returnZones: true
+            athleteWeight,
+            hasPowerMeter,
+            activityStatsMap,
+            activityStream,
+            bounds,
+            returnZones: true,
+            systemJsConfig: SystemJS.getConfig(),
         };
 
         this.computeAnalysisThread.postMessage(threadMessage);
@@ -119,4 +130,3 @@ class ActivityProcessor {
         };
     }
 }
-

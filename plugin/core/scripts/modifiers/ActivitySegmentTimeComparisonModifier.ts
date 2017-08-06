@@ -1,4 +1,9 @@
-interface EffortInfo {
+import * as _ from "lodash";
+import {Helper} from "../../../common/scripts/Helper";
+import {IAppResources} from "../interfaces/IAppResources";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+
+export interface EffortInfo {
     // values obtained from the HTTP request
     id: number; // segment effort id
     activity_id: number;
@@ -22,11 +27,11 @@ interface EffortInfo {
     __dateTime: Date; // field added by us: start_date_local_raw converted into machine readable format (how is this different from start_date_local?)
 }
 
-interface LeaderBoardData {
+export interface LeaderBoardData {
     top_results: EffortInfo[];
 }
 
-class ActivitySegmentTimeComparisonModifier implements IModifier {
+export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
     protected showDifferenceToKOM: boolean;
     protected showDifferenceToPR: boolean;
@@ -60,7 +65,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         }
 
         // wait for Segments section load
-        let segments: JQuery = $("#segments");
+        const segments: JQuery = $("#segments");
         if (segments.length === 0) {
             setTimeout(() => {
                 this.modify();
@@ -83,7 +88,6 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         $("tr[data-segment-effort-id]").appear().on("appear", (event: Event, $items: any) => {
 
             if (!this.firstAppearDone) {
-
 
                 let timeColumnHeader = segments.find("table.segments th.time-col");
 
@@ -165,16 +169,21 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                     }
 
                     if (this.displaySegmentTimeComparisonPosition) {
-                        let percentRank: number = parseInt(segmentEffortInfo.overall_rank) / parseInt(segmentEffortInfo.overall_count);
+                        const percentRank: number = parseInt(segmentEffortInfo.overall_rank) / parseInt(segmentEffortInfo.overall_count);
                         positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
                     }
 
-                    let komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")),
+                    const komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")).toString(),
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
                     if (this.showDifferenceToKOM) {
-                        deltaKomCell.html("<span title=\"Time difference with current " + this.crTitle() + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(komDiffTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
+                        const sign: string = (Math.sign(komDiffTime) == 1) ? "+" : "-";
+                        deltaKomCell.html("<span title=\"Time difference with current "
+                            + this.crTitle()
+                            + " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true)
+                            + ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>"
+                            + sign + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) + "</span>");
                     }
 
                     if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
@@ -193,7 +202,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         $.force_appear();
 
         // when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run modifier function
-        let waitForSegmentsSectionRemoved = () => {
+        const waitForSegmentsSectionRemoved = () => {
             if ($("#segments.time-comparison-enabled").length !== 0) {
                 setTimeout(() => {
                     waitForSegmentsSectionRemoved();
@@ -203,12 +212,13 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             this.modify();
         };
         waitForSegmentsSectionRemoved();
+
     }
 
     protected findOutGender(): void {
         this.isFemale = false;
         if (!_.isUndefined(window.pageView)) {
-            this.isFemale = window.pageView.activityAthlete() && window.pageView.activityAthlete().get('gender') != "M";
+            this.isFemale = window.pageView.activityAthlete() && window.pageView.activityAthlete().get("gender") != "M";
         }
     }
 
@@ -218,7 +228,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         this.deltaYearPRLabel = "&Delta;yPR";
     }
 
-    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<Date>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<Date> {
+    protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<any> {
 
         if (!page) {
             page = 1;
@@ -231,9 +241,9 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
             fetchedLeaderboardData = [];
         }
 
-        let perPage: number = 50;
+        const perPage: number = 50;
 
-        let jqxhr: JQueryXHR = $.getJSON('/segments/' + segmentId + '/leaderboard?raw=true&page=' + page + '&per_page=' + perPage + '&viewer_context=false&filter=my_results');
+        const jqxhr: JQueryXHR = $.getJSON("/segments/" + segmentId + "/leaderboard?raw=true&page=" + page + "&per_page=" + perPage + "&viewer_context=false&filter=my_results");
 
         let currentSegmentEffortDateTime: Date = null;
 
@@ -304,7 +314,7 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
 
         if (this.showDifferenceToPR && this.showDifferenceToCurrentYearPR) {
 
-            let resultsThisYear: Array<EffortInfo> = [];
+            let resultsThisYear: EffortInfo[] = [];
 
             for (let j: number = 0; j < leaderBoardData.length; j++) {
                 if (leaderBoardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
@@ -319,9 +329,11 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                 return left.elapsed_time_raw - right.elapsed_time_raw;
             });
 
-            let currentActivityResult = _.findWhere(resultsThisYear, {
-                __dateTime: currentSegmentEffortDateTime
-            });
+            const predicate = {
+                __dateTime: currentSegmentEffortDateTime,
+            } as Partial<EffortInfo>;
+
+            const currentActivityResult = _.find(resultsThisYear, predicate);
 
             let previousBestResultThisYear: EffortInfo = null;
             _.some(resultsThisYear, (result: EffortInfo) => {
@@ -377,27 +389,27 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
         // invert percentage
         pct = 1 - pct;
 
-        let percentColors: Array<any> = [{
+        const percentColors: any[] = [{
             pct: 0.0,
             color: {
                 r: 0xff,
                 g: 0x55,
-                b: 0x55
-            }
+                b: 0x55,
+            },
         }, {
             pct: 0.5,
             color: {
                 r: 0xff,
                 g: 0xff,
-                b: 0
-            }
+                b: 0,
+            },
         }, {
             pct: 1.0,
             color: {
                 r: 0x00,
                 g: 0xff,
-                b: 0x00
-            }
+                b: 0x00,
+            },
         }];
 
         let i: number;
@@ -406,18 +418,18 @@ class ActivitySegmentTimeComparisonModifier implements IModifier {
                 break;
             }
         }
-        let lower: any = percentColors[i - 1];
-        let upper: any = percentColors[i];
-        let range: number = upper.pct - lower.pct;
-        let rangePct: number = (pct - lower.pct) / range;
-        let pctLower: number = 1 - rangePct;
-        let pctUpper: number = rangePct;
-        let color: any = {
+        const lower: any = percentColors[i - 1];
+        const upper: any = percentColors[i];
+        const range: number = upper.pct - lower.pct;
+        const rangePct: number = (pct - lower.pct) / range;
+        const pctLower: number = 1 - rangePct;
+        const pctUpper: number = rangePct;
+        const color: any = {
             r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
             g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+            b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper),
         };
-        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+        return "rgb(" + [color.r, color.g, color.b].join(",") + ")";
         // or output as hex if preferred
     }
 

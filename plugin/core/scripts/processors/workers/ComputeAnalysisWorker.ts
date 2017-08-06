@@ -1,42 +1,28 @@
-// Worker function executed by the main UI Thread
-function ComputeAnalysisWorker() {
+import {IAnalysisData} from "../../../../common/scripts/interfaces/IActivityData";
+import {IComputeActivityThreadMessage} from "../../interfaces/IComputeActivityThreadMessage";
+import {ActivityComputer} from "../ActivityComputer";
 
-    // required dependencies for worker job
-    this.required = [
-        '/core/scripts/Helper.js',
-        '/node_modules/underscore/underscore-min.js',
-        '/core/scripts/processors/ActivityComputer.js'
-    ];
+export function ComputeAnalysisWorker() {
 
-    // Message received from main script
-    // Lets begin that ******* compute !
-    this.onmessage = (mainThreadEvent: MessageEvent) => {
-        // Import required dependencies for worker job
-        this.importRequiredLibraries(this.required, mainThreadEvent.data.appResources.extensionId);
-        // Lets exec activity processing on extended stats
+    this.onmessage = function(mainThreadEvent: MessageEvent) {
 
-        let threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
-        let analysisComputer: ActivityComputer = new ActivityComputer(
-            threadMessage.activityType,
-            threadMessage.isTrainer,
-            threadMessage.userSettings,
-            threadMessage.athleteWeight,
-            threadMessage.hasPowerMeter,
-            threadMessage.activityStatsMap,
-            threadMessage.activityStream,
-            threadMessage.bounds,
-            threadMessage.returnZones
-        );
+        const threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
 
-        let result: IAnalysisData = analysisComputer.compute();
+        importScripts("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/node_modules/systemjs/dist/system.js");
+        SystemJS.config(mainThreadEvent.data.systemJsConfig);
 
-        // Result to main thread
-        this.postMessage(result);
-    };
+        Promise.all([
+            SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/node_modules/lodash/lodash.min.js"),
+            SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/common/scripts/Helper.js"),
+        ]).then(() => {
 
-    this.importRequiredLibraries = (libsFromExtensionPath: Array<string>, chromeExtensionId: string) => {
-        for (let i: number = 0; i < libsFromExtensionPath.length; i++) {
-            importScripts('chrome-extension://' + chromeExtensionId + libsFromExtensionPath[i]);
-        }
+            return SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/scripts/processors/ActivityComputer.js");
+
+        }).then((module: any) => {
+            const analysisComputer: ActivityComputer = new module.ActivityComputer(threadMessage.activityType, threadMessage.isTrainer, threadMessage.userSettings, threadMessage.athleteWeight, threadMessage.hasPowerMeter, threadMessage.activityStatsMap, threadMessage.activityStream, threadMessage.bounds, threadMessage.returnZones);
+            const result: IAnalysisData = analysisComputer.compute();
+            this.postMessage(result);
+        });
+
     };
 }

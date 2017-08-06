@@ -1,4 +1,4 @@
-class Loader {
+export class Loader {
 
     protected loadingFinished: any;
     protected totalRequired: any;
@@ -17,46 +17,40 @@ class Loader {
 
     loaded(): void {
         this.loadCount++;
-        if (this.loadCount == this.totalRequired && typeof this.loadingFinished === 'function') this.loadingFinished();
+        if (this.loadCount == this.totalRequired && typeof this.loadingFinished === "function") this.loadingFinished();
     }
 
     writeScript(src: string): void {
 
-        let ext: string = src.substr(src.lastIndexOf('.') + 1);
+        const ext: string = src.substr(src.lastIndexOf(".") + 1);
 
-        let head: HTMLElement = document.getElementsByTagName('head')[0];
+        const head: HTMLElement = document.getElementsByTagName("head")[0];
 
-        if (ext === 'js') {
-            let s: HTMLScriptElement = document.createElement('script');
+        if (ext === "js") {
+            const s: HTMLScriptElement = document.createElement("script");
             s.type = "text/javascript";
             s.async = false;
             s.src = src;
-            s.addEventListener('load', () => {
+            s.addEventListener("load", () => {
                 this.loaded();
             }, false);
             head.appendChild(s);
-        } else if (ext === 'css') {
-            let link: HTMLLinkElement = document.createElement('link');
+        } else if (ext === "css") {
+            const link: HTMLLinkElement = document.createElement("link");
             link.href = src;
-            link.addEventListener('load', () => {
+            link.addEventListener("load", () => {
                 this.loaded();
             }, false);
             // link.async = false;
-            link.type = 'text/css';
-            link.rel = 'stylesheet';
+            link.type = "text/css";
+            link.rel = "stylesheet";
             head.appendChild(link);
         }
     }
 
     injectJS(codeString: string): void {
-
-        let inner: HTMLScriptElement = document.createElement('script');
-
+        const inner: HTMLScriptElement = document.createElement("script");
         inner.textContent = codeString;
-        inner.onload = () => {
-            inner.remove();
-        };
-
         (document.head || document.documentElement).appendChild(inner);
     }
 }

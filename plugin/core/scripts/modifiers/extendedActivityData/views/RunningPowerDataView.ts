@@ -1,4 +1,6 @@
-class RunningPowerDataView extends AbstractDataView {
+import {IPowerData} from "../../../../../common/scripts/interfaces/IActivityData";
+import {AbstractDataView} from "./AbstractDataView";
+export class RunningPowerDataView extends AbstractDataView {
 
     protected powerData: IPowerData;
 
@@ -28,13 +30,13 @@ class RunningPowerDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        this.insertContentAtGridPosition(0, 0, this.powerData.avgWatts.toFixed(0), 'Average Power', 'W', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), 'Weighted Power', 'W', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(2, 0, this.powerData.variabilityIndex.toFixed(2), 'Variability Index', '', 'displayAdvancedPowerData');
+        this.insertContentAtGridPosition(0, 0, this.powerData.avgWatts.toFixed(0), "Average Power", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), "Weighted Power", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(2, 0, this.powerData.variabilityIndex.toFixed(2), "Variability Index", "", "displayAdvancedPowerData");
 
-        this.insertContentAtGridPosition(0, 1, this.powerData.lowerQuartileWatts, '25% Quartile Watts', 'W', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(1, 1, this.powerData.medianWatts, '50% Quartile Watts', 'W', 'displayAdvancedPowerData');
-        this.insertContentAtGridPosition(2, 1, this.powerData.upperQuartileWatts, '75% Quartile Watts', 'W', 'displayAdvancedPowerData');
+        this.insertContentAtGridPosition(0, 1, this.powerData.lowerQuartileWatts, "25% Quartile Watts", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(1, 1, this.powerData.medianWatts, "50% Quartile Watts", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(2, 1, this.powerData.upperQuartileWatts, "75% Quartile Watts", "W", "displayAdvancedPowerData");
 
     }
 }

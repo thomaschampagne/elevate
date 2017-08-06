@@ -1,4 +1,7 @@
-class HideFeedModifier implements IModifier {
+import * as _ from "lodash";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+
+export class HideFeedModifier implements IModifier {
 
     private static VIRTUAL_RIDE: string = "virtualride";
     private static RIDE: string = "ride";
@@ -18,31 +21,31 @@ class HideFeedModifier implements IModifier {
 
             // If hide challenges
             if (this.userSettings.feedHideChallenges) {
-                $('.feed-container').find('.challenge').remove();
+                $(".feed-container").find(".challenge").remove();
 
             }
 
             // If hide created routes
             if (this.userSettings.feedHideCreatedRoutes) {
-                $('div.feed>.min-view').each((index: number, element: Element) => {
-                    if ($('div.feed').find('div.entry-container').has('a[href*=\'/routes\']').length > 0) $(element).remove();
+                $("div.feed>.min-view").each((index: number, element: Element) => {
+                    if ($("div.feed").find("div.entry-container").has("a[href*='/routes']").length > 0) $(element).remove();
                 });
             }
 
             if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
 
-                let minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
-                let minRunDistanceToHide: number = this.userSettings.feedHideRunActivitiesUnderDistance;
+                const minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
+                const minRunDistanceToHide: number = this.userSettings.feedHideRunActivitiesUnderDistance;
 
-                $('div.feed>.activity').each((index: number, element: Element) => {
+                $("div.feed>.activity").each((index: number, element: Element) => {
 
-                    let type: string = $(element).find('.entry-type-icon .app-icon').attr('class').replace('icon-lg', '').replace('app-icon', '').replace('icon-dark', '').replace(/\s+/g, '').replace('icon-', '')
+                    const type: string = $(element).find(".entry-type-icon .app-icon").attr("class").replace("icon-lg", "").replace("app-icon", "").replace("icon-dark", "").replace(/\s+/g, "").replace("icon-", "");
 
-                    let distanceEl = _.filter($(element).find('ul.inline-stats').find('[class=unit]'), function (item) {
-                        return ($(item).html() == 'km' || $(item).html() == 'mi');
+                    const distanceEl = _.filter($(element).find("ul.inline-stats").find("[class=unit]"), function(item) {
+                        return ($(item).html() == "km" || $(item).html() == "mi");
                     });
 
-                    let distance: number = parseFloat($(distanceEl).parent().text().replace(',', '.'));
+                    const distance: number = parseFloat($(distanceEl).parent().text().replace(",", "."));
 
                     // Remove virtual rides
                     if (this.userSettings.feedHideVirtualRides && type === HideFeedModifier.VIRTUAL_RIDE) {
@@ -63,9 +66,9 @@ class HideFeedModifier implements IModifier {
             }
 
             // Cleaning time container with no activites
-            $('div.feed>.time-header').each((index: number, element: Element) => {
-                let timeHeaderElement: JQuery = $(element);
-                if (timeHeaderElement.nextUntil('.time-header').not('script').length === 0) {
+            $("div.feed>.time-header").each((index: number, element: Element) => {
+                const timeHeaderElement: JQuery = $(element);
+                if (timeHeaderElement.nextUntil(".time-header").not("script").length === 0) {
                     timeHeaderElement.remove();
                 }
             });

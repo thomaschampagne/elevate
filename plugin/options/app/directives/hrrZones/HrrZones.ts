@@ -1,11 +1,19 @@
-class HrrZones {
+import * as angular from "angular";
+import {IAnchorScrollService, ILocationService} from "angular";
+import * as _ from "lodash";
+import {ChromeStorageService} from "../../services/ChromeStorageService";
+
+import {IHrrZone} from "../../../../common/scripts/interfaces/IActivityData";
+import {userSettings} from "../../../../common/scripts/UserSettings";
+
+export class HrrZones {
 
     public static maxHrZonesCount: number = 50;
     public static minHrZonesCount: number = 3;
 
-    public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
+    public static $inject: string[] = ["$scope", "ChromeStorageService", "$mdDialog", "$location", "$anchorScroll"];
 
-    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         // Setup default step
         $scope.step = 0.1;
@@ -17,23 +25,23 @@ class HrrZones {
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
-                        .title('Oups')
-                        .textContent('You can\'t add more than ' + HrrZones.maxHrZonesCount + ' zones...')
-                        .ok('Got it!')
-                        .targetEvent($event)
+                        .title("Oups")
+                        .textContent("You can't add more than " + HrrZones.maxHrZonesCount + " zones...")
+                        .ok("Got it!")
+                        .targetEvent($event),
                 );
 
             } else {
 
-                let oldLastHrZone: IHrrZone = $scope.hrrZones[$scope.hrrZones.length - 1];
+                const oldLastHrZone: IHrrZone = $scope.hrrZones[$scope.hrrZones.length - 1];
 
                 // Computed middle value between oldLastHrZone.fromHrr and oldLastHrZone.toHrr
-                let betweenHrrValue: number = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
+                const betweenHrrValue: number = parseInt(((oldLastHrZone.fromHrr + oldLastHrZone.toHrr) / 2).toFixed(0));
 
                 // Creating new Hr Zone
-                let newLastHrZone: any = {
-                    "fromHrr": betweenHrrValue,
-                    "toHrr": oldLastHrZone.toHrr
+                const newLastHrZone: any = {
+                    fromHrr: betweenHrrValue,
+                    toHrr: oldLastHrZone.toHrr,
                 };
 
                 // Apply middle value computed to previous last zone (toHrr)
@@ -54,10 +62,10 @@ class HrrZones {
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
-                        .title('Oups')
-                        .textContent('You can\'t remove more than ' + HrrZones.minHrZonesCount + ' zones...')
-                        .ok('Got it!')
-                        .targetEvent($event)
+                        .title("Oups")
+                        .textContent("You can't remove more than " + HrrZones.minHrZonesCount + " zones...")
+                        .ok("Got it!")
+                        .targetEvent($event),
                 );
 
             } else {
@@ -94,12 +102,12 @@ class HrrZones {
 
         $scope.resetHrZone = ($event: MouseEvent) => {
 
-            let confirm: IConfirmDialog = $mdDialog.confirm()
-                .title('Reset zones')
-                .textContent('You are going to reset your custom heart rate reserve zones to default factory values. Are you sure?')
+            const confirm: angular.material.IConfirmDialog = $mdDialog.confirm()
+                .title("Reset zones")
+                .textContent("You are going to reset your custom heart rate reserve zones to default factory values. Are you sure?")
                 .targetEvent($event)
-                .ok('Yes. Reset')
-                .cancel('cancel');
+                .ok("Yes. Reset")
+                .cancel("cancel");
             $mdDialog.show(confirm).then(() => {
                 angular.copy(userSettings.userHrrZones, $scope.hrrZones);
                 $scope.saveHrZones();
@@ -109,26 +117,26 @@ class HrrZones {
         $scope.saveHrZones = ($event: MouseEvent) => {
 
             if (!$scope.areHrrZonesCompliant($scope.hrrZones)) {
-                alert('Zones are not compliant');
+                alert("Zones are not compliant");
                 return;
             }
 
             if (!_.isUndefined($scope.hrrZones)) {
-                chromeStorageService.updateUserSetting('userHrrZones', angular.fromJson(angular.toJson($scope.hrrZones)), () => {
+                chromeStorageService.updateUserSetting("userHrrZones", angular.fromJson(angular.toJson($scope.hrrZones)), () => {
 
-                    console.log('userHrrZones has been updated to: ' + angular.toJson($scope.hrrZones));
+                    console.log("userHrrZones has been updated to: " + angular.toJson($scope.hrrZones));
 
                     $mdDialog.show(
                         $mdDialog.alert()
                             .clickOutsideToClose(true)
-                            .title('Saved !')
-                            .textContent('Your ' + $scope.hrrZones.length + ' Heartrate reserve zones" have been saved.')
-                            .ok('Got it!')
-                            .targetEvent($event)
+                            .title("Saved !")
+                            .textContent("Your " + $scope.hrrZones.length + ' Heartrate reserve zones" have been saved.')
+                            .ok("Got it!")
+                            .targetEvent($event),
                     );
 
-                    chromeStorageService.updateUserSetting('localStorageMustBeCleared', true, () => {
-                        console.log('localStorageMustBeCleared has been updated to: ' + true);
+                    chromeStorageService.updateUserSetting("localStorageMustBeCleared", true, () => {
+                        console.log("localStorageMustBeCleared has been updated to: " + true);
                     });
                 });
             }
@@ -137,7 +145,7 @@ class HrrZones {
         $scope.setupStep = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, localStep: number, localZoneType: string) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, localStep: number, localZoneType: string) => {
 
                     $scope.step = localStep;
                     $scope.zoneType = localZoneType;
@@ -150,14 +158,14 @@ class HrrZones {
                         $mdDialog.hide(stepChoosen);
                     };
                 },
-                templateUrl: 'directives/templates/dialogs/stepDialog.html',
+                templateUrl: "directives/templates/dialogs/stepDialog.html",
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: true,
                 fullscreen: false,
                 locals: {
                     localStep: $scope.step,
-                    localZoneType: 'Heartrate Reserve'
+                    localZoneType: "Heartrate Reserve",
                 },
             }).then((stepChoosen) => {
                 if (stepChoosen) {
@@ -168,28 +176,28 @@ class HrrZones {
 
         $scope.export = ($event: MouseEvent) => {
 
-            let exportData: string = angular.toJson($scope.hrrZones);
+            const exportData: string = angular.toJson($scope.hrrZones);
 
-            let exportPrompt: IPromptDialog = $mdDialog.prompt()
-                .title('Exporting Heartrate Reserve Zones')
-                .textContent('Copy data inside field.')
-                .ariaLabel('Copy data inside field.')
+            const exportPrompt: angular.material.IPromptDialog = $mdDialog.prompt()
+                .title("Exporting Heartrate Reserve Zones")
+                .textContent("Copy data inside field.")
+                .ariaLabel("Copy data inside field.")
                 .initialValue(exportData)
                 .targetEvent($event)
-                .ok('Okay!');
+                .ok("Okay!");
             $mdDialog.show(exportPrompt);
         };
 
         $scope.import = ($event: MouseEvent) => {
 
-            let importPrompt = $mdDialog.prompt()
-                .title('Importing Heartrate Reserve Zones')
-                .textContent('Paste exported zones in input field.')
-                .ariaLabel('Paste exported zones in input field.')
-                .initialValue('')
+            const importPrompt = $mdDialog.prompt()
+                .title("Importing Heartrate Reserve Zones")
+                .textContent("Paste exported zones in input field.")
+                .ariaLabel("Paste exported zones in input field.")
+                .initialValue("")
                 .placeholder('Enter here something like [{ "from": a, "to": b }, { "from": b, "to": c }, { "from": c, "to": d }]')
                 .targetEvent($event)
-                .ok('Import');
+                .ok("Import");
 
             $mdDialog.show(importPrompt)
                 .then((importData) => {
@@ -197,7 +205,7 @@ class HrrZones {
                     if (importData) {
 
                         try {
-                            let jsonImportData: Array<IHrrZone> = angular.fromJson(importData);
+                            const jsonImportData: IHrrZone[] = angular.fromJson(importData);
 
                             if ($scope.areHrrZonesCompliant(jsonImportData)) {
 
@@ -205,7 +213,7 @@ class HrrZones {
                                 $scope.saveHrZones();
 
                             } else {
-                                throw new Error('not compliant');
+                                throw new Error("not compliant");
                             }
 
                         } catch (e) {
@@ -213,10 +221,10 @@ class HrrZones {
                             $mdDialog.show(
                                 $mdDialog.alert()
                                     .clickOutsideToClose(true)
-                                    .title('Oups')
-                                    .textContent('Importing Heartrate Reserve Zones data is not well formated or zones are upper than ' + HrrZones.maxHrZonesCount)
-                                    .ok('Got it!')
-                                    .targetEvent($event)
+                                    .title("Oups")
+                                    .textContent("Importing Heartrate Reserve Zones data is not well formated or zones are upper than " + HrrZones.maxHrZonesCount)
+                                    .ok("Got it!")
+                                    .targetEvent($event),
                             );
                             return;
                         }
@@ -227,7 +235,7 @@ class HrrZones {
         $scope.showHelper = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, userMaxHr: number, userRestHr: number) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, userMaxHr: number, userRestHr: number) => {
 
                     $scope.userMaxHr = userMaxHr;
                     $scope.userRestHr = userRestHr;
@@ -239,19 +247,19 @@ class HrrZones {
                         $mdDialog.cancel();
                     };
                 },
-                templateUrl: 'directives/hrrZones/templates/hrrZonesHelper.html',
+                templateUrl: "directives/hrrZones/templates/hrrZonesHelper.html",
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
                     userMaxHr: $scope.userMaxHr,
-                    userRestHr: $scope.userRestHr
+                    userRestHr: $scope.userRestHr,
                 },
                 clickOutsideToClose: true,
-                fullscreen: false
+                fullscreen: false,
             });
         };
 
-        $scope.areHrrZonesCompliant = (hrrZones: Array<IHrrZone>) => {
+        $scope.areHrrZonesCompliant = (hrrZones: IHrrZone[]) => {
 
             if (!hrrZones) {
                 return false;
@@ -289,7 +297,7 @@ class HrrZones {
 
         $scope.onZoneChange = (hrrZoneId: number, previousHrrZone: IHrrZone, newHrrZone: IHrrZone) => {
 
-            let fieldHasChanged: string = $scope.whichFieldHasChanged(previousHrrZone, newHrrZone);
+            const fieldHasChanged: string = $scope.whichFieldHasChanged(previousHrrZone, newHrrZone);
 
             if (_.isUndefined(fieldHasChanged)) {
                 return;
@@ -301,11 +309,11 @@ class HrrZones {
 
             } else if (hrrZoneId < $scope.hrrZones.length - 1) { // If middle zone
 
-                if (fieldHasChanged === 'toHrr') {
+                if (fieldHasChanged === "toHrr") {
 
                     $scope.handleToHrrChange(hrrZoneId);
 
-                } else if (fieldHasChanged === 'fromHrr') {
+                } else if (fieldHasChanged === "fromHrr") {
 
                     $scope.handleFromHrrChange(hrrZoneId);
                 }
@@ -322,11 +330,11 @@ class HrrZones {
         $scope.whichFieldHasChanged = (previousHrZone: IHrrZone, newHrZone: IHrrZone) => {
 
             if (previousHrZone.fromHrr !== newHrZone.fromHrr) {
-                return 'fromHrr';
+                return "fromHrr";
             }
 
             if (previousHrZone.toHrr !== newHrZone.toHrr) {
-                return 'toHrr';
+                return "toHrr";
             }
         };
 
@@ -340,23 +348,23 @@ class HrrZones {
 
         $scope.scrollToBottom = () => {
             setTimeout(() => {
-                $anchorScroll($location.hash('tools_bottom').hash());
+                $anchorScroll($location.hash("tools_bottom").hash());
             });
         };
 
     }
 }
 
-app.directive('hrrZones', [() => {
+export let hrrZones = [() => {
 
-    return <any> {
-        templateUrl: 'directives/hrrZones/templates/hrrZones.html',
+    return {
+        templateUrl: "directives/hrrZones/templates/hrrZones.html",
         scope: {
             hrrZones: "=",
             userMaxHr: "@userMaxHr",
-            userRestHr: "@userRestHr"
+            userRestHr: "@userRestHr",
         },
-        controller: HrrZones
-    };
+        controller: HrrZones,
+    } as any;
 
-}]);
+}];
