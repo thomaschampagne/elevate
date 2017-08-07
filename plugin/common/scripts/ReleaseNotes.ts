@@ -20,6 +20,22 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
     {
+        version: "5.10.1",
+        message: 'NEW: Added TCX export to "GPS Real Time Segments Efforts": Challenge yourself outside against a ghost! Plugin\'s performance has been also greatly improved !!',
+        hotFixes: [
+            "Fixed TCX export as Course instead of Activity (feature: GPS Real Time Segments Efforts)"
+        ],
+        features: [
+            'Added TCX export to "GPS Real Time Segments Efforts" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click "Export this Segment Effort to your GPS".',
+            'Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from "underscore" to a more fastest javascript library: "lodash".',
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            // "Fixed hidden premium labels and buttons (requested by strava.com)",
+            // "Fixed cases where plugin ran itself on login page & premium promotion page: display glitches could occur on these pages.",
+        ],
+    },
+    {
         version: "5.10.0",
         message: 'NEW: Added TCX export to "GPS Real Time Segments Efforts": Challenge yourself outside against a ghost! Plugin\'s performance has been also greatly improved !!',
         hotFixes: [],
