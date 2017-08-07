@@ -103,28 +103,24 @@ export class CourseMaker {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
         }
 
-        const startTime: string = (new Date(activityStream.time[0])).toISOString();
+        const startTime: number = activityStream.time[0];
+        const startDistance: number = activityStream.distance[0];
 
         let TotalTimeSeconds = 0;
-        _.forEach(activityStream.time, (value: number, index: number, list) => {
-            const previous = (list[index - 1]) ? list[index - 1] : 0;
-            TotalTimeSeconds += list[index] - previous;
-        });
-
         let DistanceMeters = 0;
-        _.forEach(activityStream.distance, (value: number, index: number, list) => {
-            const previous = (list[index - 1]) ? list[index - 1] : 0;
-            DistanceMeters += list[index] - previous;
-        });
+        if( activityStream.latlng.length > 0 ) {
+            TotalTimeSeconds += activityStream.time[activityStream.latlng.length-1] - startTime;
+            DistanceMeters += activityStream.distance[activityStream.latlng.length-1] - startDistance;
+        }
 
         let tcxString: string = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-            '<TrainingCenterDatabase xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd" xmlns:ns5="http://www.garmin.com/xmlschemas/ActivityGoals/v1" xmlns:ns3="http://www.garmin.com/xmlschemas/ActivityExtension/v2" xmlns:ns2="http://www.garmin.com/xmlschemas/UserProfile/v2" xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-            "<Activities>\n" +
-            '<Activity Sport="Other">\n' +
-            "<Id>" + courseName + "</Id>\n" +
-            '<Lap StartTime="' + startTime + '">\n' +
+            '<TrainingCenterDatabase xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd" xmlns:ns5="http://www.garmin.com/xmlschemas/ActivityGoals/v1" xmlns:ns3="http://www.garmin.com/xmlschemas/ActivityExtension/v2" xmlns:ns2="http://www.garmin.com/xmlschemas/UserProfile/v2" xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n' +
+            "<Courses>\n" +
+            "<Course>\n" +
+            "<Name>" + courseName + "</Name>\n" +
+            '<Lap>\n' +
             "<TotalTimeSeconds>" + TotalTimeSeconds + "</TotalTimeSeconds>\n" +
-            "<DistanceMeters>" + DistanceMeters + "</DistanceMeters>\n" +
+            "<DistanceMeters>" + Math.round(DistanceMeters) + "</DistanceMeters>\n" +
             "<MaximumSpeed>" + (Helper.convertMetersPerSecondsToKph(_.max(activityStream.velocity_smooth)) * 1000) + "</MaximumSpeed>\n" +
             "<Calories>" + 0 + "</Calories>\n";
 
@@ -143,14 +139,14 @@ export class CourseMaker {
             tcxString += "<Cadence>" + Math.round(_.sum(activityStream.cadence) / activityStream.cadence.length) + "</Cadence>\n";
         }
 
-        tcxString += "<TriggerMethod>Manual</TriggerMethod>\n";
+        tcxString += "</Lap>\n";
         tcxString += "<Track>\n";
 
         for (let i: number = 0; i < activityStream.latlng.length; i++) {
 
             tcxString += "<Trackpoint>\n";
 
-            tcxString += "<Time>" + (new Date(activityStream.time[i] * 1000)).toISOString() + "</Time>\n";
+            tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";
 
             tcxString += "<Position>\n";
             tcxString += "<LatitudeDegrees>" + activityStream.latlng[i][0] + "</LatitudeDegrees>\n";
@@ -161,7 +157,7 @@ export class CourseMaker {
                 tcxString += "<AltitudeMeters>" + activityStream.altitude[i] + "</AltitudeMeters>\n";
             }
 
-            tcxString += "<DistanceMeters>" + activityStream.distance[i] + "</DistanceMeters>\n";
+            tcxString += "<DistanceMeters>" + Math.round(activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
 
             if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
                 tcxString += "<Cadence>" + activityStream.cadence[i] + "</Cadence>\n";
@@ -175,7 +171,7 @@ export class CourseMaker {
 
             tcxString += "<Extensions>\n";
             tcxString += '<TPX xmlns="http://www.garmin.com/xmlschemas/ActivityExtension/v2">\n';
-            tcxString += "<Speed>" + activityStream.velocity_smooth[i] + "</Speed>\n";
+            // tcxString += "<Speed>" + activityStream.velocity_smooth[i] + "</Speed>\n";
 
             if (activityStream.watts && _.isNumber(activityStream.watts[i])) {
                 tcxString += "<Watts>" + activityStream.watts[i] + "</Watts>\n";
@@ -187,9 +183,8 @@ export class CourseMaker {
         }
 
         tcxString += "</Track>\n";
-        tcxString += "</Lap>\n";
-        tcxString += "</Activity>\n";
-        tcxString += "</Activities>\n";
+        tcxString += "</Course>\n";
+        tcxString += "</Courses>\n";
         tcxString += "</TrainingCenterDatabase>\n";
 
         return tcxString;
