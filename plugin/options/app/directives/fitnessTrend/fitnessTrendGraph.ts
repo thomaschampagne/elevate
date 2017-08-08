@@ -7,6 +7,8 @@ import { IColors } from "../../Colors";
 import { routeMap } from "../../Config";
 import { FitnessTrendController } from "../../controllers/FitnessTrendController";
 import { IFitnessActivity } from "../../services/FitnessDataService";
+import {Helper} from "../../../../common/scripts/Helper";
+import {ISpeedUnitData} from "../../../../common/scripts/interfaces/IActivityData";
 
 export interface IFitnessTrendGraphScope extends IScope {
     nvd3api: any;
