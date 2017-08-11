@@ -102,17 +102,8 @@ describe("CourseMaker", () => {
 
         const LapNode = CourseNode.getElementsByTagName("Lap")[0];
 
-        // expect(LapNode.getAttribute('StartTime')).toBe((new Date(0)).toISOString());
         expect(LapNode.getElementsByTagName("TotalTimeSeconds")[0].childNodes[0].nodeValue).toMatch(/^2283$/);
         expect(LapNode.getElementsByTagName("DistanceMeters")[0].childNodes[0].nodeValue).toMatch(/^15723/);
-        expect(LapNode.getElementsByTagName("MaximumSpeed")[0].childNodes[0].nodeValue).toMatch(/^53640/);
-        expect(LapNode.getElementsByTagName("AverageHeartRateBpm")[0]
-            .getElementsByTagName("Value")[0].childNodes[0].nodeValue).toMatch(/^149/);
-
-        expect(LapNode.getElementsByTagName("MaximumHeartRateBpm")[0]
-            .getElementsByTagName("Value")[0].childNodes[0].nodeValue).toMatch(/^172/);
-
-        expect(LapNode.getElementsByTagName("Cadence")[0].childNodes[0].nodeValue).toMatch(/^76/);
 
         // ... Check points length
         const trackPointsLength = CourseNode.getElementsByTagName("Track")[0].getElementsByTagName("Trackpoint").length;
@@ -136,9 +127,6 @@ describe("CourseMaker", () => {
         expect(firstTrackPoint.getElementsByTagName("HeartRateBpm")[0]
             .getElementsByTagName("Value")[0].childNodes[0].nodeValue).toMatch(/^104$/);
 
-        expect(firstTrackPoint.getElementsByTagName("Extensions")[0]
-            .getElementsByTagName("TPX")[0]
-            .getElementsByTagName("Watts")[0].childNodes[0].nodeValue).toMatch(/^62/);
     });
 
     it("should export TCX with no HRM, Cadence, altimeter & Power sensor", () => {
