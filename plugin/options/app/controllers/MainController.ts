@@ -103,11 +103,6 @@ export class MainController {
                     expand: false,
                     link: "link",
                     actions: [{
-                        name: "Heart rate reserve", // FIXME delte
-                        subname: "Customize Heartrate Reserve zones",
-                        icon: "favorite",
-                        link: routeMap.hrrZonesSettingsRoute,
-                    }, {
                         name: "Cycling Speed",
                         subname: "Customize Cycling Speed zones",
                         icon: "directions_bike",

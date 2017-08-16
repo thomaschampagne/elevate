@@ -132,7 +132,7 @@ let migration_from_previous_version_under_5_11_0 = function (Helper: any) {
                     currentUserSavedSettings.zones = {};
                 }
 
-                currentUserSavedSettings.zones.heartrate = newHeartRateZones;
+                currentUserSavedSettings.zones.heartRate = newHeartRateZones;
                 chrome.storage.sync.set(currentUserSavedSettings, () => { // Inject updated zones (inc. new heartrate)
                     removeDeprecatedHrrZonesKey(() => { // Remove deprecated hrr zones
                         chrome.storage.sync.get(null, (results: any) => { // Show final result

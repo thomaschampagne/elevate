@@ -88,8 +88,9 @@ export interface IHeartRateData {
     maxHeartRate: number;
     activityHeartRateReserve: number;
     activityHeartRateReserveMax: number;
-    hrrZones: IHrrZone[];
+    heartRateZones: IZone[];
 }
+
 export interface ICadenceData {
     cadencePercentageMoving: number;
     cadenceTimeMoving: number;
@@ -149,15 +150,6 @@ export interface IZone {
     to: number;
     s?: number;
     percentDistrib?: number;
-}
-
-export interface IHrrZone {
-    fromHrr: number;
-    toHrr: number;
-    percentDistrib?: number;
-    toHr?: number;
-    s?: number;
-    fromHr?: number;
 }
 
 export interface ISpeedUnitData {

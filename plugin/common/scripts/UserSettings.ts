@@ -9,16 +9,6 @@ export let userSettings: IUserSettings = {
     userFTP: null,
     userSwimFTP: null,
     userWeight: 70,
-    userHrrZones: [{fromHrr: 10, toHrr: 30}, {fromHrr: 30, toHrr: 40}, {
-        fromHrr: 40,
-        toHrr: 50,
-    }, {fromHrr: 50, toHrr: 55}, {fromHrr: 55, toHrr: 60}, {fromHrr: 60, toHrr: 65}, {
-        fromHrr: 65,
-        toHrr: 70,
-    }, {fromHrr: 70, toHrr: 75}, {fromHrr: 75, toHrr: 80}, {fromHrr: 80, toHrr: 85}, {
-        fromHrr: 85,
-        toHrr: 90,
-    }, {fromHrr: 90, toHrr: 95}, {fromHrr: 95, toHrr: 100}, {fromHrr: 100, toHrr: 110}],
     zones: {
         speed: [{from: 0, to: 7}, {from: 7, to: 9}, {from: 9, to: 11}, {from: 11, to: 13}, {
             from: 13,
@@ -46,7 +36,7 @@ export let userSettings: IUserSettings = {
             from: 540,
             to: 570,
         }, {from: 570, to: 720}, {from: 720, to: 900}],
-        heartrate: [{from: 77, to: 102}, {from: 102, to: 115}, {from: 115, to: 127}, {from: 127, to: 133}, {from: 133, to: 140}, {
+        heartRate: [{from: 77, to: 102}, {from: 102, to: 115}, {from: 115, to: 127}, {from: 127, to: 133}, {from: 133, to: 140}, {
             from: 140,
             to: 146
         }, {from: 146, to: 152}, {from: 152, to: 158}, {from: 158, to: 165}, {from: 165, to: 171}, {from: 171, to: 177}, {

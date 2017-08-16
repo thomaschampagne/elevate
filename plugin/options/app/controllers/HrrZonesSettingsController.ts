@@ -11,7 +11,7 @@ export class HrrZonesSettingsController {
         chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
-            $scope.zones = userSettingsSynced.userHrrZones;
+            // $scope.zones = userSettingsSynced.userHrrZones;
             $scope.$apply();
         });
 

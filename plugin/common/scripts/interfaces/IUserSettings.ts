@@ -1,4 +1,5 @@
-import {IHrrZone, IZone} from "./IActivityData";
+import {IZone} from "./IActivityData";
+
 export interface IUserSettings {
     autoSyncMinutes: number;
     localStorageMustBeCleared: boolean;
@@ -8,11 +9,10 @@ export interface IUserSettings {
     userFTP: number;
     userSwimFTP: number;
     userWeight: number;
-    userHrrZones: IHrrZone[]; // FIXME Delete
     zones: {
         speed: IZone[];
         pace: IZone[];
-        heartrate: IZone[];
+        heartRate: IZone[];
         power: IZone[];
         runningPower: IZone[];
         cyclingCadence: IZone[];

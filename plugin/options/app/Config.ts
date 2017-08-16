@@ -4,7 +4,6 @@
 export let routeMap: any = {
     commonSettingsRoute: "/commonSettings",
     athleteSettingsRoute: "/athleteSettings",
-    hrrZonesSettingsRoute: "/hrrZonesSettings",
     zonesSettingsRoute: "/zonesSettings",
     fitnessTrendRoute: "/fitnessTrend",
     yearProgressRoute: "/yearsProgress",
