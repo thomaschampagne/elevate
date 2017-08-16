@@ -8,10 +8,11 @@ export interface IUserSettings {
     userFTP: number;
     userSwimFTP: number;
     userWeight: number;
-    userHrrZones: IHrrZone[];
+    userHrrZones: IHrrZone[]; // FIXME Delete
     zones: {
         speed: IZone[];
         pace: IZone[];
+        heartrate: IZone[];
         power: IZone[];
         runningPower: IZone[];
         cyclingCadence: IZone[];
