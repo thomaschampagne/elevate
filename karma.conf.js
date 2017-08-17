@@ -1,6 +1,6 @@
 module.exports = function (config) {
     config.set({
-        basePath: '.',
+        basePath: './',
         browsers: [
             'PhantomJS',
             // 'Chrome'
