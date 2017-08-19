@@ -254,31 +254,6 @@ export class ActivityComputer {
         return preparedZones;
     }
 
-    /*
-    // FIXME delete that
-    protected finalizeDistributionComputationHrrZones(zones: IHrrZone[]): IHrrZone[] {
-
-         let total: number = 0;
-         let zone: IHrrZone;
-         for (let i: number = 0; i < zones.length; i++) {
-             zone = zones[i];
-             if (zone.s) {
-                 total += zone.s;
-             }
-             zone.percentDistrib = 0;
-         }
-
-         if (total > 0) {
-             for (let i: number = 0; i < zones.length; i++) {
-                 zone = zones[i];
-                 if (zone.s) {
-                     zone.percentDistrib = zone.s / total * 100;
-                 }
-             }
-         }
-         return zones;
-     }*/
-
     protected finalizeDistributionComputationZones(zones: IZone[]): IZone[] {
         let total: number = 0;
         let zone: IZone;
@@ -615,16 +590,6 @@ export class ActivityComputer {
         };
     }
 
-    /*
-    FIXME
-    protected getHrrZoneId(hrrZonesCount: number, hrrValue: number): number {
-         for (let zoneId: number = 0; zoneId < hrrZonesCount; zoneId++) {
-             if (hrrValue <= this.userSettings.userHrrZones[zoneId].toHrr) {
-                 return zoneId;
-             }
-         }
-     }
- */
     protected cadenceData(cadenceArray: any[], velocityArray: any[], timeArray: any[]): ICadenceData {
 
         if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray)) {

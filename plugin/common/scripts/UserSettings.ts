@@ -36,13 +36,10 @@ export let userSettings: IUserSettings = {
             from: 540,
             to: 570,
         }, {from: 570, to: 720}, {from: 720, to: 900}],
-        heartRate: [{from: 77, to: 102}, {from: 102, to: 115}, {from: 115, to: 127}, {from: 127, to: 133}, {from: 133, to: 140}, {
-            from: 140,
-            to: 146
-        }, {from: 146, to: 152}, {from: 152, to: 158}, {from: 158, to: 165}, {from: 165, to: 171}, {from: 171, to: 177}, {
-            from: 177,
-            to: 183
-        }, {from: 183, to: 190}, {from: 190, to: 202}],
+        heartRate: [{from: 120, to: 140}, {from: 140, to: 150}, {from: 150, to: 160}, {from: 160, to: 170}, {
+            from: 170,
+            to: 180
+        }, {from: 180, to: 185}, {from: 185, to: 190}, {from: 190, to: 195}, {from: 195, to: 210}],
         power: [{from: 0, to: 25}, {from: 25, to: 50}, {from: 50, to: 75}, {
             from: 75,
             to: 100,

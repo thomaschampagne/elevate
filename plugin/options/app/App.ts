@@ -13,7 +13,6 @@ import {routeMap} from "./Config";
 import {AthleteSettingsController} from "./controllers/AthleteSettingsController";
 import {CommonSettingsController} from "./controllers/CommonSettingsController";
 import {FitnessTrendController} from "./controllers/FitnessTrendController";
-import {HrrZonesSettingsController} from "./controllers/HrrZonesSettingsController";
 import {MainController} from "./controllers/MainController";
 import {XtdZonesSettingsController} from "./controllers/XtdZonesSettingsController";
 import {YearProgressController} from "./controllers/YearProgressController";
@@ -24,7 +23,6 @@ import {restoreHistory} from "./directives/restoreHistory";
 import {swimFtpCalculator} from "./directives/swimFTPCalculator";
 import {xtdZone} from "./directives/xtdZones/XtdZone";
 import {xtdZones} from "./directives/xtdZones/XtdZones";
-import {hrrToBpmFilter} from "./filters/HrrToBpmFilter";
 import {xtdDataFilter} from "./filters/XtdDataFilter";
 import {avoidInputKeysService} from "./services/AvoidInputKeysService";
 import {chromeStorageService} from "./services/ChromeStorageService";
@@ -74,11 +72,6 @@ angular.module("App", ngModules)
             controller: "AthleteSettingsController",
         });
 
-        $routeProvider.when(routeMap.hrrZonesSettingsRoute, {
-            templateUrl: "views/hrrZonesSettings.html",
-            controller: "HrrZonesSettingsController",
-        });
-
         $routeProvider.when(routeMap.zonesSettingsRoute + "/:zoneValue", {
             templateUrl: "views/XtdZonesSettingsController.html",
             controller: "XtdZonesSettingsController",
@@ -104,7 +97,6 @@ angular.module("App", ngModules)
     .controller("AthleteSettingsController", AthleteSettingsController)
     .controller("CommonSettingsController", CommonSettingsController)
     .controller("FitnessTrendController", FitnessTrendController as Injectable<IControllerConstructor>)
-    .controller("HrrZonesSettingsController", HrrZonesSettingsController)
     .controller("XtdZonesSettingsController", XtdZonesSettingsController)
     .controller("YearProgressController", YearProgressController)
 
@@ -118,7 +110,6 @@ angular.module("App", ngModules)
     .directive("restoreHistory", restoreHistory)
 
     // Filters
-    .filter("hrrToBpmFilter", hrrToBpmFilter)
     .filter("xtdDataFilter", xtdDataFilter)
     .factory("AvoidInputKeysService", avoidInputKeysService)
     .factory("ChromeStorageService", chromeStorageService)
