@@ -1,7 +1,12 @@
-import Moment = moment.Moment;
-import IPromise = angular.IPromise;
+import {IPromise, IQService} from "angular";
+import * as _ from "lodash";
+import * as moment from "moment";
+import {Moment} from "moment";
+import {ChromeStorageService} from "./ChromeStorageService";
 
-interface IActivitiesWithFitness {
+import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
+
+export interface IActivitiesWithFitness {
     id: number;
     date: Date; // TODO Store Moment instead?!
     timestamp: number;
@@ -11,28 +16,31 @@ interface IActivitiesWithFitness {
     activityName: string;
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
 }
 
-interface IActivitiesWithFitnessDaysOff {
-    ids: Array<number>;
+export interface IActivitiesWithFitnessDaysOff {
+    ids: number[];
     date: Date;
     timestamp: number;
-    type: Array<string>;
-    activitiesName: Array<string>;
+    type: string[];
+    activitiesName: string[];
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore: number;
     previewDay: boolean;
 }
 
-interface IFitnessActivity {
-    ids: Array<number>;
+export interface IFitnessActivity {
+    ids: number[];
     date: string;
     timestamp: number;
-    type: Array<string>;
-    activitiesName: Array<string>;
+    type: string[];
+    activitiesName: string[];
     trimpScore?: number;
     powerStressScore?: number;
+    swimStressScore?: number;
     finalStressScore?: number;
     ctl: number;
     atl: number;
@@ -40,11 +48,11 @@ interface IFitnessActivity {
     previewDay: boolean;
 }
 
-interface IFitnessActivityTable extends IFitnessActivity {
+export interface IFitnessActivityTable extends IFitnessActivity {
     activitiesNameStr: string;
 }
 
-class FitnessDataService {
+export class FitnessDataService {
 
     public static FUTURE_DAYS_PREVIEW: number = 14;
 
@@ -53,9 +61,11 @@ class FitnessDataService {
 
     protected $q: IQService;
     protected chromeStorageService: ChromeStorageService;
-    protected fitnessData: Array<IFitnessActivity>;
+    protected fitnessData: IFitnessActivity[];
     protected usePowerMeter: boolean = false;
     protected userFTP: number = -1;
+    protected useSwimStressScore: boolean = false;
+    protected userSwimFTP: number = -1;
 
     constructor(q: IQService, chromeStorageService: ChromeStorageService) {
         this.$q = q;
@@ -65,35 +75,42 @@ class FitnessDataService {
     /**
      * @return computed activities cleaned
      */
-    protected getCleanedComputedActivities(): IPromise<Array<IActivitiesWithFitness>> {
+    protected getCleanedComputedActivities(): IPromise<IActivitiesWithFitness[]> {
 
         if (this.userFTP === -1) {
-            console.error("userFTP must be set before");
+            console.error("userFTP must be set before calling this method");
+            return;
+        }
+
+        if (this.userSwimFTP === -1) {
+            console.error("userFTP must be set before calling this method");
             return;
         }
 
         this.onGetComputedActivitiesTimeStart = performance.now();
 
-        let deferred = this.$q.defer<Array<IActivitiesWithFitness>>();
+        const deferred = this.$q.defer<IActivitiesWithFitness[]>();
 
-        this.chromeStorageService.fetchComputedActivities().then((computedActivities: Array<ISyncActivityComputed>) => {
+        this.chromeStorageService.fetchComputedActivities().then((computedActivities: ISyncActivityComputed[]) => {
 
-            let cleanedActivities: Array<IActivitiesWithFitness> = [];
+            const cleanedActivities: IActivitiesWithFitness[] = [];
 
-            _.each(computedActivities, (activity: ISyncActivityComputed) => {
+            _.forEach(computedActivities, (activity: ISyncActivityComputed) => {
 
-                let hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
+                const hasHeartRateData: boolean = (activity.extendedStats && !_.isEmpty(activity.extendedStats.heartRateData) && _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
-                let isPowerMeterUsePossible: boolean = (activity.type == "Ride" || activity.type == "VirtualRide")
+                const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
                     && this.usePowerMeter && _.isNumber(this.userFTP)
                     && activity.extendedStats && activity.extendedStats.powerData
                     && activity.extendedStats.powerData.hasPowerMeter && _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-                if (hasHeartRateData || isPowerMeterUsePossible) {
+                const hasSwimmingData: boolean = this.useSwimStressScore && _.isNumber(this.userSwimFTP) && this.userSwimFTP > 0 && activity.type === "Swim" && _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw) && activity.moving_time_raw > 0;
 
-                    let momentStartTime: Moment = moment(activity.start_time);
+                if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
 
-                    let activityWithFitness: IActivitiesWithFitness = {
+                    const momentStartTime: Moment = moment(activity.start_time);
+
+                    const activityWithFitness: IActivitiesWithFitness = {
                         id: activity.id,
                         date: momentStartTime.toDate(),
                         timestamp: momentStartTime.toDate().getTime(),
@@ -112,6 +129,12 @@ class FitnessDataService {
                         activityWithFitness.powerStressScore = (activity.moving_time_raw * activity.extendedStats.powerData.weightedPower * (activity.extendedStats.powerData.weightedPower / this.userFTP) / (this.userFTP * 3600) * 100);
                     }
 
+                    if (hasSwimmingData) {
+                        const normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
+                        const swimIntensity = normalizedSwimSpeed / this.userSwimFTP; // Intensity = Normalized_Swim_Speed / Swim FTP
+                        activityWithFitness.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+                    }
+
                     cleanedActivities.push(activityWithFitness);
                 }
             });
@@ -128,45 +151,45 @@ class FitnessDataService {
     /**
      * @return Fitness object of computed activities including days off (= rest day)
      */
-    protected  getFitnessObjectsWithDaysOff(): IPromise<Array<IActivitiesWithFitnessDaysOff>> {
+    protected  getFitnessObjectsWithDaysOff(): IPromise<IActivitiesWithFitnessDaysOff[]> {
 
-        let deferred = this.$q.defer<Array<IActivitiesWithFitnessDaysOff>>();
+        const deferred = this.$q.defer<IActivitiesWithFitnessDaysOff[]>();
 
-        console.log('Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff');
+        console.log("Fetch fitnessObjectsWithDaysOff from fitnessDataService.getFitnessObjectsWithDaysOff");
 
-        this.getCleanedComputedActivities().then((cleanedActivities: Array<IActivitiesWithFitness>) => {
+        this.getCleanedComputedActivities().then((cleanedActivities: IActivitiesWithFitness[]) => {
 
             if (_.isEmpty(cleanedActivities)) {
-                deferred.reject('No ready activities');
+                deferred.reject("No ready activities");
                 return;
             }
 
             // From date is the first activity done in history
             // Subtract 1 day to from date (to show graph point with 1 day before) and on day start
-            let fromMoment = moment(_.first(cleanedActivities).date).subtract(1, 'days').startOf('day');
+            const fromMoment = moment(_.first(cleanedActivities).date).subtract(1, "days").startOf("day");
 
-            let todayMoment: Moment = moment().endOf('day'); // Today end of day
+            const todayMoment: Moment = moment().endOf("day"); // Today end of day
 
             // Now inject days off/resting
-            let everyDayFitnessObjects: Array<IActivitiesWithFitnessDaysOff> = [];
+            const everyDayFitnessObjects: IActivitiesWithFitnessDaysOff[] = [];
 
-            let currentDayMoment = moment(fromMoment);
+            const currentDayMoment = moment(fromMoment);
 
             while (currentDayMoment.isSameOrBefore(todayMoment)) {
 
-                let activitiesWithFitnessThatDay: Array<IActivitiesWithFitness> = _.where(cleanedActivities, {
+                const activitiesWithFitnessThatDay: IActivitiesWithFitness[] = _.filter(cleanedActivities, {
                     year: currentDayMoment.year(),
-                    dayOfYear: currentDayMoment.dayOfYear()
+                    dayOfYear: currentDayMoment.dayOfYear(),
                 });
 
-                let fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
+                const fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
                     ids: [],
                     date: currentDayMoment.toDate(),
                     timestamp: currentDayMoment.toDate().getTime(),
                     type: [],
                     activitiesName: [],
                     previewDay: false,
-                    finalStressScore: 0
+                    finalStressScore: 0,
                 };
 
                 if (activitiesWithFitnessThatDay.length) {
@@ -174,7 +197,7 @@ class FitnessDataService {
                     // Handle all activities done that day
                     for (let count: number = 0; count < activitiesWithFitnessThatDay.length; count++) {
 
-                        let fitnessActivity: IActivitiesWithFitness = activitiesWithFitnessThatDay[count];
+                        const fitnessActivity: IActivitiesWithFitness = activitiesWithFitnessThatDay[count];
 
                         fitnessObjectOnCurrentDay.ids.push(fitnessActivity.id);
                         fitnessObjectOnCurrentDay.activitiesName.push(fitnessActivity.activityName);
@@ -198,26 +221,42 @@ class FitnessDataService {
                             fitnessObjectOnCurrentDay.trimpScore += fitnessActivity.trimpScore;
                         }
 
+                        // SwimSS
+                        if (fitnessActivity.swimStressScore) { // Check for TRIMP score if available
+                            if (!fitnessObjectOnCurrentDay.swimStressScore) { // Initialize value if not exists
+                                fitnessObjectOnCurrentDay.swimStressScore = 0;
+                            }
+                            fitnessObjectOnCurrentDay.swimStressScore += fitnessActivity.swimStressScore;
+                        }
+
                         // Apply final stress score for that day
                         if (fitnessActivity.powerStressScore) { // Use PSS has priority over TRIMP
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.powerStressScore;
+
                         } else if (fitnessActivity.trimpScore) {
+
                             fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.trimpScore;
+
+                        } else if (fitnessActivity.swimStressScore) {
+
+                            fitnessObjectOnCurrentDay.finalStressScore += fitnessActivity.swimStressScore;
+
                         }
                     }
                 }
 
                 everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
 
-                currentDayMoment.add(1, 'days'); // Add a day until todayMoment
+                currentDayMoment.add(1, "days"); // Add a day until todayMoment
             }
 
             // Add 14 days as future "preview".
             for (let i: number = 1; i <= FitnessDataService.FUTURE_DAYS_PREVIEW; i++) {
 
-                let futureDate: Date = moment().add(i, 'days').startOf('day').toDate();
+                const futureDate: Date = moment().add(i, "days").startOf("day").toDate();
 
-                let fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
+                const fitnessObjectOnCurrentDay: IActivitiesWithFitnessDaysOff = {
                     ids: [],
                     date: futureDate,
                     timestamp: futureDate.getTime(),
@@ -225,10 +264,10 @@ class FitnessDataService {
                     activitiesName: [],
                     trimpScore: 0,
                     previewDay: true,
-                    finalStressScore: 0
+                    finalStressScore: 0,
                 };
 
-                everyDayFitnessObjects.push(fitnessObjectOnCurrentDay)
+                everyDayFitnessObjects.push(fitnessObjectOnCurrentDay);
             }
 
             deferred.resolve(everyDayFitnessObjects);
@@ -243,28 +282,28 @@ class FitnessDataService {
     /**
      * @return Compute CTl, ATL, TSB results with days off (= rest day)
      */
-    protected computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff: Array<IActivitiesWithFitnessDaysOff>): Array<IFitnessActivity> {
+    protected computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff: IActivitiesWithFitnessDaysOff[]): IFitnessActivity[] {
 
         let ctl: number = 0;
         let atl: number = 0;
         let tsb: number = 0;
-        let results: Array<IFitnessActivity> = [];
+        const results: IFitnessActivity[] = [];
 
-        _.each(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: Array<IActivitiesWithFitnessDaysOff>) => {
+        _.forEach(fitnessObjectsWithDaysOff, (trimpObject: IActivitiesWithFitnessDaysOff, index: number, list: IActivitiesWithFitnessDaysOff[]) => {
 
             ctl = ctl + (trimpObject.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
             atl = atl + (trimpObject.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
             tsb = ctl - atl;
 
-            let result: IFitnessActivity = {
+            const result: IFitnessActivity = {
                 ids: trimpObject.ids,
                 date: trimpObject.date.toLocaleDateString(),
                 timestamp: trimpObject.timestamp,
                 activitiesName: trimpObject.activitiesName,
                 type: trimpObject.type,
-                ctl: ctl,
-                atl: atl,
-                tsb: tsb,
+                ctl,
+                atl,
+                tsb,
                 previewDay: trimpObject.previewDay,
             };
 
@@ -276,6 +315,10 @@ class FitnessDataService {
                 result.powerStressScore = trimpObject.powerStressScore;
             }
 
+            if (_.isNumber(trimpObject.swimStressScore) && trimpObject.swimStressScore > 0) {
+                result.swimStressScore = trimpObject.swimStressScore;
+            }
+
             if (_.isNumber(trimpObject.finalStressScore) && trimpObject.finalStressScore > 0) {
                 result.finalStressScore = trimpObject.finalStressScore;
             }
@@ -285,12 +328,12 @@ class FitnessDataService {
             if (list[index - 1] && list[index - 1].previewDay !== list[index].previewDay) {
 
                 // First preview day here !
-                console.log('First preview day is', list[index].date);
+                console.log("First preview day is", list[index].date);
 
-                let lastResult = _.last(results);
+                const lastResult = _.last(results);
 
                 // Create a new result to fill the gap !
-                let fillTheCurvesGapWithFakeResult: IFitnessActivity = {
+                const fillTheCurvesGapWithFakeResult: IFitnessActivity = {
                     ids: null,
                     date: lastResult.date,
                     timestamp: lastResult.timestamp,
@@ -316,41 +359,38 @@ class FitnessDataService {
     /**
      * @return Fitness data objects including CTl, ATL, TSB results with days off (= rest day)
      */
-    public getFitnessData(usePowerMeter: boolean, userFTP: number): IPromise<Array<IFitnessActivity>> {
+    public getFitnessData(usePowerMeter: boolean, userFTP: number, useSwimStressScore: boolean, userSwimFTP: number): IPromise<IFitnessActivity[]> {
 
         this.usePowerMeter = usePowerMeter;
         this.userFTP = userFTP;
 
-        let deferred = this.$q.defer<Array<IFitnessActivity>>();
+        this.useSwimStressScore = useSwimStressScore;
+        this.userSwimFTP = userSwimFTP;
 
-        // if (!this.fitnessData) {
+        const deferred = this.$q.defer<IFitnessActivity[]>();
 
-        console.log('Fetch fitnessData from fitnessDataService.getFitnessData');
+        console.log("Fetch fitnessData from fitnessDataService.getFitnessData");
 
-        this.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: Array<IActivitiesWithFitnessDaysOff>) => {
+        this.getFitnessObjectsWithDaysOff().then((fitnessObjectsWithDaysOff: IActivitiesWithFitnessDaysOff[]) => {
 
             this.fitnessData = this.computeChronicAcuteBalanceTrainingLoad(fitnessObjectsWithDaysOff);
 
             deferred.resolve(this.fitnessData);
 
             this.onGetFitnessDataTimeDone = performance.now(); // track time
-            console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.")
+            console.log("Generating FitnessData from storage took " + (this.onGetFitnessDataTimeDone - this.onGetComputedActivitiesTimeStart).toFixed(0) + " ms.");
 
         }, (err: any) => {
             deferred.reject(err);
         });
 
-        // } else {
-        //     console.log('Fetch fitnessData from FitnessDataService local var');
-        //     deferred.resolve(this.fitnessData);
-        // }
         return deferred.promise;
     }
 }
 
-app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService, chromeStorageService: ChromeStorageService) => {
+export let fitnessDataService = ["$q", "ChromeStorageService", ($q: IQService, chromeStorageService: ChromeStorageService) => {
     return new FitnessDataService($q, chromeStorageService);
-}]);
+}];
 
 /**
  * @return
@@ -417,4 +457,3 @@ app.factory('FitnessDataService', ['$q', 'ChromeStorageService', ($q: IQService,
  },
  };
  };*/
-

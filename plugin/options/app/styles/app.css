@@ -1,0 +1,137 @@
+.zone-input-margin {
+    margin-top: 2;
+    margin-bottom: 0;
+}
+
+/* Animation of repeated-item for ngrepeat items*/
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+    transition: all 0.35s linear;
+    opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+    opacity: 1;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+    animation: 0.35s fadeAnimation;
+}
+
+@keyframes fadeAnimation {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* link */
+a:link {
+    color: #e94e1b;
+    text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+    color: #e94e1b;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
+
+.trendGraphTooltipTable {
+    padding: 0;
+    margin: 0;
+    width: 300px;
+    /*background: yellow;*/
+    /*color: #767676;*/
+}
+
+.trendGraphTooltipTable .underlined {
+    border-bottom: 1px solid #d0cecd;
+}
+
+.trendGraphTooltipTable .dayType {
+    font-weight: 300;
+    font-size: 16px;
+    text-align: center;
+}
+
+.trendGraphTooltipTable .hint {
+    text-align: center;
+}
+
+.trendGraphTooltipTable .title {
+    font-weight: bolder;
+    width: 75px;
+}
+
+/* SERIE 3: Activities points (.nv-series-3, 3 = ) */
+#fitnessGraph .nvd3.nv-line .nvd3.nv-scatter .nv-groups .nv-series-3 .nv-point {
+    fill-opacity: 1;
+    stroke-opacity: 1;
+    position: relative;
+    z-index: 8;
+}
+
+#fitnessGraph g.nv-series-3 path.nv-line {
+    stroke-opacity: 0;
+}
+
+/* SERIE 4, 5, 6: PREVIEW (.nv-series-3, 3 = ) */
+#fitnessGraph g.nv-series-4 path.nv-line {
+    stroke-dasharray: 4, 3;
+    stroke-opacity: 1;
+}
+
+#fitnessGraph g.nv-series-5 path.nv-line {
+    stroke-dasharray: 4, 3;
+    stroke-opacity: 1;
+}
+
+#fitnessGraph g.nv-series-6 path.nv-line {
+    stroke-dasharray: 4, 3;
+    stroke-opacity: 1;
+}
+
+/* SERIE 7 8 9 10 : training  constants */
+#fitnessGraph g.nv-series-7 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+#fitnessGraph g.nv-series-8 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+#fitnessGraph g.nv-series-9 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}
+
+#fitnessGraph g.nv-series-10 path.nv-line {
+    stroke-dasharray: 12, 17;
+    stroke-opacity: 0.5;
+}

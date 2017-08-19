@@ -1,75 +1,133 @@
-class VirtualPartnerModifier implements IModifier {
+import {saveAs} from "file-saver";
+import * as _ from "lodash";
+import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/scripts/CourseMarker";
+import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
+import {VacuumProcessor} from "../processors/VacuumProcessor";
 
+export class VirtualPartnerModifier implements IModifier {
+
+    protected vacuumProcessor: VacuumProcessor;
     protected activityId: number;
+    protected courseMaker: CourseMaker;
 
-    constructor(activityId: number) {
+    constructor(activityId: number, vacuumProcessor: VacuumProcessor) {
         this.activityId = activityId;
-
+        this.vacuumProcessor = vacuumProcessor;
+        this.courseMaker = new CourseMaker();
     }
 
-    modify(): void {
+    public modify(): void {
 
         if (!Strava.Labs) {
             return;
         }
 
-        let view: any = Strava.Labs.Activities.SegmentLeaderboardView;
+        const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
 
         if (!view) {
             return;
         }
 
-        let functionRender: Function = view.prototype.render;
+        const functionRender: Function = view.prototype.render;
 
-        let that = this;
+        const that = this;
 
-        view.prototype.render = function () {
+        view.prototype.render = function() {
 
-            let r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
+            const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            if ($('.stravistix_exportVpu').length < 1) {
+            const exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu" id="stravistix_exportVpu">Export this Segment Effort to your GPS</a>';
+            if ($(".stravistix_exportVpu").length < 1) {
 
-                let exportButtonHtml: string = '<a class="btn-block btn-xs button raceshape-btn stravistix_exportVpu" id="stravistix_exportVpu">Export effort as Virtual Partner</a>';
+                $(".effort-actions").first().after(exportButtonHtml).each(() => {
 
-                $('.raceshape-btn').first().after(exportButtonHtml).each(function () {
-
-                    $('#stravistix_exportVpu').click(function (evt) {
+                    $("#stravistix_exportVpu").click((evt) => {
                         evt.preventDefault();
                         evt.stopPropagation();
-                        that.displayRaceShapePopup();
+                        that.displayDownloadPopup();
                     });
-
                     return;
                 });
             }
-            /*
-             // TODO Support Running VPU
-             else {
-             // Running export
-             let exportButtonHtml = '<div class="spans8"><a href="/segments/6330649?filter=my_results">View My Efforts</a></div>';
-             $('.bottomless.inset').after(exportButtonHtml);
-             }*/
             return r;
         };
     }
 
-    protected displayRaceShapePopup() {
+    // TODO Refactor from AbstractExtendedDataModifier?
+    protected getSegmentInfos(effortId: number, callback: (segmentInfosResponse: any) => any): void {
 
-        let effortId: number = parseInt(window.location.pathname.split('/')[4] || window.location.hash.replace('#', ''));
+        if (!effortId) {
+            console.error("No effort id found");
+            return;
+        }
 
-        let coursesTypesExport: Array<string> = ['CRS', 'TCX', 'GPX'];
-
-        let dlButton: string = '';
-
-        _.each(coursesTypesExport, (type: string) => {
-            dlButton += '<a class="button btn-block btn-primary" style="margin-bottom: 15px;" href="http://raceshape.com/strava.export.php?effort=' + effortId + '|' + this.activityId + '&type=' + type + '">';
-            dlButton += 'Download effort as .' + type;
-            dlButton += '</a>';
+        // Get segment effort bounds
+        let segmentInfosResponse: any;
+        $.when(
+            $.ajax({
+                url: "/segment_efforts/" + effortId,
+                type: "GET",
+                beforeSend: (xhr: any) => {
+                    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                },
+                dataType: "json",
+                success: (xhrResponseText: any) => {
+                    segmentInfosResponse = xhrResponseText;
+                },
+                error: (err) => {
+                    console.error(err);
+                },
+            }),
+        ).then(() => {
+            callback(segmentInfosResponse);
         });
-
-        let title: string = 'Export effort as Virtual Partner';
-        let message: string = 'You are going to download a course file from raceshape.com.<br/><br/>If you are using a garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/>' + dlButton;
-
-        $.fancybox('<h3>' + title + '</h3><h4>' + message + '</h4>');
     }
+
+    protected displayDownloadPopup() {
+
+        const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
+
+        const exportsType = [
+            ExportTypes.GPX,
+            ExportTypes.TCX,
+        ];
+
+        const message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
+
+        $.fancybox('<div width="250px" id="stravistix_popup_download_course_' + effortId + '">' + message + "</div>", {
+            afterShow: () => {
+                _.forEach(exportsType, (type: ExportTypes) => {
+                    const exportTypeAsString: string = ExportTypes[type];
+                    const link: JQuery = $('<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File as ' + exportTypeAsString + "</a>").on("click", () => {
+                        this.download(effortId, type);
+                        $("#stravistix_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
+                    });
+                    $("#stravistix_download_course_" + effortId).append(link);
+                });
+            },
+        });
+    }
+
+    protected download(effortId: number, exportType: ExportTypes) {
+
+        this.getSegmentInfos(effortId, (segmentData: any) => {
+
+            this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream) => { // Get stream on page
+                if (_.isEmpty(activityStream.latlng)) {
+                    alert("No GPS Data found");
+                    return;
+                }
+
+                const bounds: ICourseBounds = {
+                    start: segmentData.start_index,
+                    end: segmentData.end_index,
+                };
+
+                saveAs(new Blob([this.courseMaker.create(exportType, segmentData.display_name, activityStream, bounds)], {type: "application/xml; charset=utf-8"}),
+                    "course_" + effortId + "." + ExportTypes[exportType].toLowerCase()); // Filename
+
+            });
+        });
+    }
+
 }

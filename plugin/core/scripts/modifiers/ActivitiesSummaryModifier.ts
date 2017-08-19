@@ -1,24 +1,27 @@
-class ActivitiesSummaryModifier implements IModifier {
+import * as _ from "lodash";
+import {Helper} from "../../../common/scripts/Helper";
+
+export class ActivitiesSummaryModifier implements IModifier {
 
     protected averageSpeedOrPace(pace: number, distance: number, time: number) {
         time /= 60;
         if (pace) {
-            let result: number = time / distance;
-            let minutes: number = Math.floor(result);
-            let seconds: number = (result - minutes) * 60;
+            const result: number = time / distance;
+            const minutes: number = Math.floor(result);
+            const seconds: number = (result - minutes) * 60;
             return minutes + ":" + ("00" + Helper.formatNumber(seconds, 0)).slice(-2);
         } else {
             time /= 60;
             return Helper.formatNumber(distance / time);
         }
-    };
+    }
 
     public modify(): void {
 
         let activitiesCountElementId: string = "totals-activities-count",
             $totals: JQuery = $("#totals"),
-            requests: Array<JQueryXHR> = [],
-            activityTypes: Array<any> = [],
+            requests: JQueryXHR[] = [],
+            activityTypes: any[] = [],
             distanceUnit: string = "km",
             elevationUnit: string = "m",
             speedUnit: string = "km/h",
@@ -26,10 +29,9 @@ class ActivitiesSummaryModifier implements IModifier {
         let speedUnitRatio: number = 1; // Default Kilometers
         let elevationUnitRatio: number = 1; // Default Kilometers
 
-
-        let waitForTotalActivitiesCountRemove = () => {
+        const waitForTotalActivitiesCountRemove = () => {
             if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function () {
+                setTimeout(function() {
                     waitForTotalActivitiesCountRemove();
                 }, 1000);
                 return;
@@ -37,8 +39,8 @@ class ActivitiesSummaryModifier implements IModifier {
             this.modify();
         };
 
-        let measurementPreference: string = window.currentAthlete ? window.currentAthlete.get('measurement_preference') : 'meters';
-        if (measurementPreference != 'meters') {
+        const measurementPreference: string = window.currentAthlete ? window.currentAthlete.get("measurement_preference") : "meters";
+        if (measurementPreference != "meters") {
             distanceUnit = "mi";
             elevationUnit = "ft";
             speedUnit = "mph";
@@ -51,29 +53,29 @@ class ActivitiesSummaryModifier implements IModifier {
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
 
-        _.each($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), (element) => {
+        _.forEach($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), (element) => {
 
-            let $this: JQuery = $(element),
+            const $this: JQuery = $(element),
                 $activityUrl: JQuery = $this.prev(".entry-title").find("a[href^='/activities/']"),
                 icon: JQuery = $this.closest("div.entity-details").find("div.app-icon"),
                 pace: boolean = icon.hasClass("icon-walk") || icon.hasClass("icon-run");
 
             if ($activityUrl.attr("href") !== null) {
 
-                let href: string = $activityUrl.attr("href");
+                const href: string = $activityUrl.attr("href");
 
                 if ($activityUrl.attr("href")) {
 
-                    let activityId: number = parseInt(_.last($activityUrl.attr("href").split('/')));
-                    let url: string = "/athlete/training_activities/" + activityId;
+                    const activityId: number = parseInt(_.last($activityUrl.attr("href").split("/")));
+                    const url: string = "/athlete/training_activities/" + activityId;
 
                     requests.push($.ajax({
-                        url: url,
+                        url,
                         type: "GET",
                         dataType: "json",
                         context: {
-                            pace: pace
-                        }
+                            pace,
+                        },
                     }));
                 }
             }
@@ -88,10 +90,10 @@ class ActivitiesSummaryModifier implements IModifier {
                     elevation: 0,
                     time: 0,
                     calories: 0,
-                    noAverage: true
+                    noAverage: true,
                 };
 
-            _.each(requests, (request: any) => {
+            _.forEach(requests, (request: any) => {
 
                 let data: any = request.responseJSON,
                     distance: number = data.distance_raw / 1000 * speedUnitRatio,
@@ -106,13 +108,13 @@ class ActivitiesSummaryModifier implements IModifier {
                     index += 1;
 
                     activityTypes[type] = activityTypes[index] = summary = {
-                        type: type,
+                        type,
                         count: 0,
                         distance: 0,
                         elevation: 0,
                         time: 0,
                         calories: 0,
-                        index: index
+                        index,
                     };
                 }
 
@@ -130,7 +132,6 @@ class ActivitiesSummaryModifier implements IModifier {
                 total.calories += calories;
             });
 
-
             activityTypes.sort((left, right) => {
                 return left.type.localeCompare(right.type);
             });
@@ -138,9 +139,9 @@ class ActivitiesSummaryModifier implements IModifier {
             if (activityTypes.length > 2) {
                 activityTypes.push(total);
             }
-            let $table: JQuery = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
+            const $table: JQuery = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
             activityTypes.forEach((type) => {
-                let $row: JQuery = $("<tr></tr>");
+                const $row: JQuery = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
                 $row.append("<td style='text-align: right'>" + type.count + "</td>");
                 $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.distance), 1) + " " + distanceUnit + "</td>");

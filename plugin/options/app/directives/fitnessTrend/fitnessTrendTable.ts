@@ -1,6 +1,11 @@
-class FitnessTrendTable {
+import {IWindowService} from "angular";
+import * as _ from "lodash";
+import {FitnessTrendController} from "../../controllers/FitnessTrendController";
+import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDataService";
 
-    static $inject: string[] = ['$scope', '$window'];
+export class FitnessTrendTable {
+
+    public static $inject: string[] = ["$scope", "$window"];
 
     constructor(public $scope: any, public $window: IWindowService) {
 
@@ -10,35 +15,36 @@ class FitnessTrendTable {
 
         $scope.$on(FitnessTrendController.fitnessDataLoaded, (event: any, message: any) => {
 
-            console.log('FitnessTrendTable: message ' + FitnessTrendController.fitnessDataLoaded + ' received');
+            console.log("FitnessTrendTable: message " + FitnessTrendController.fitnessDataLoaded + " received");
 
-            let fitnessDataForTable: Array<IFitnessActivityTable> = [];
+            const fitnessDataForTable: IFitnessActivityTable[] = [];
 
             $scope.usePowerMeter = message.usePowerMeter;
+            $scope.useSwimStressScore = message.useSwimStressScore;
 
             // Filter fitnessData: remove preview days
-            let fitnessData = _.where(message.fitnessData, {
-                previewDay: false
+            const fitnessData = _.filter(message.fitnessData, {
+                previewDay: false,
             });
 
-            _.each(fitnessData, (fitnessObj: IFitnessActivity) => {
+            _.forEach(fitnessData, (fitnessObj: IFitnessActivity) => {
 
-                let newFitnessObj: IFitnessActivityTable = <IFitnessActivityTable> _.clone(fitnessObj);
+                const newFitnessObj: IFitnessActivityTable = _.clone(fitnessObj) as IFitnessActivityTable;
 
                 if (newFitnessObj.activitiesName.length) {
 
-                    let finalActivityName = '';
-                    _.each(newFitnessObj.activitiesName, (name, index) => {
+                    let finalActivityName = "";
+                    _.forEach(newFitnessObj.activitiesName, (name, index) => {
                         if (index !== 0) {
-                            finalActivityName += ' <strong>+</strong> ';
+                            finalActivityName += " <strong>+</strong> ";
                         }
                         finalActivityName += name;
                     });
 
-                    let finalTypeName = '';
-                    _.each(newFitnessObj.type, (type, index) => {
+                    let finalTypeName = "";
+                    _.forEach(newFitnessObj.type, (type, index) => {
                         if (index > 0) {
-                            finalTypeName += ' <strong>+</strong> ';
+                            finalTypeName += " <strong>+</strong> ";
                         }
                         finalTypeName += type;
                     });
@@ -47,12 +53,14 @@ class FitnessTrendTable {
                     newFitnessObj.type = [finalTypeName];
                     newFitnessObj.trimpScore = (_.isNumber(newFitnessObj.trimpScore)) ? parseInt(newFitnessObj.trimpScore.toFixed(0)) : -1;
                     newFitnessObj.powerStressScore = (_.isNumber(newFitnessObj.powerStressScore)) ? parseInt(newFitnessObj.powerStressScore.toFixed(0)) : -1;
+                    newFitnessObj.swimStressScore = (_.isNumber(newFitnessObj.swimStressScore)) ? parseInt(newFitnessObj.swimStressScore.toFixed(0)) : -1;
                     newFitnessObj.finalStressScore = (_.isNumber(newFitnessObj.finalStressScore)) ? parseInt(newFitnessObj.finalStressScore.toFixed(0)) : -1;
                 } else {
-                    newFitnessObj.activitiesNameStr = '-';
-                    newFitnessObj.type = ['-'];
+                    newFitnessObj.activitiesNameStr = "-";
+                    newFitnessObj.type = ["-"];
                     newFitnessObj.trimpScore = -1;
                     newFitnessObj.powerStressScore = -1;
+                    newFitnessObj.swimStressScore = -1;
                     newFitnessObj.finalStressScore = -1;
                 }
 
@@ -74,26 +82,26 @@ class FitnessTrendTable {
             largeEditDialog: false,
             boundaryLinks: true,
             limitSelect: true,
-            pageSelect: true
+            pageSelect: true,
         };
 
         $scope.query = {
-            filter: '',
-            order: '-timestamp',
+            filter: "",
+            order: "-timestamp",
             limit: 10,
-            page: 1
+            page: 1,
         };
 
         $scope.filter = {
             options: {
-                debounce: 500
-            }
+                debounce: 500,
+            },
         };
 
         /**
          * Keep page after searching for activities
          */
-        $scope.$watch('query.filter', (newValue: any, oldValue: any) => {
+        $scope.$watch("query.filter", (newValue: any, oldValue: any) => {
 
             if (!oldValue) {
                 $scope.bookmarkPage = $scope.query.page;
@@ -112,24 +120,23 @@ class FitnessTrendTable {
 
         $scope.removeFilter = () => {
             $scope.filter.show = false;
-            $scope.query.filter = '';
+            $scope.query.filter = "";
         };
-
 
         $scope.refreshFitnessDataForTable = () => {
 
             let filter: string = $scope.query.filter;
-            filter = filter.replace(' ', '.*');
+            filter = filter.replace(" ", ".*");
             filter = filter.trim();
 
             $scope.fitnessDataForTableFiltered = _.filter($scope.const.fitnessDataForTable, (item: any) => {
-                return (item.activitiesName + item.type).match(new RegExp(filter, 'ig'));
+                return (item.activitiesName + item.type).match(new RegExp(filter, "ig"));
             });
         };
 
         $scope.openActivities = (fitnessObject: IFitnessActivityTable) => {
-            _.each(fitnessObject.ids, (activityId: number) => {
-                $window.open('https://www.strava.com/activities/' + activityId, '_blank');
+            _.forEach(fitnessObject.ids, (activityId: number) => {
+                $window.open("https://www.strava.com/activities/" + activityId, "_blank");
             });
         };
 
@@ -140,10 +147,9 @@ class FitnessTrendTable {
 
 }
 
-app.directive('fitnessTrendTable', [() => {
+export let fitnessTrendTable = [() => {
     return {
-        templateUrl: 'directives/fitnessTrend/templates/fitnessTrendTable.html',
-        controller: FitnessTrendTable
-    };
-}]);
-
+        templateUrl: "directives/fitnessTrend/templates/fitnessTrendTable.html",
+        controller: FitnessTrendTable,
+    } as any;
+}];

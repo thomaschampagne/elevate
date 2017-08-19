@@ -26,9 +26,17 @@
                 </th>
                 <th ng-if="usePowerMeter" md-column md-numeric md-order-by="powerStressScore">
                     <span>
-                        PSS
+                        Power SS
                         <md-tooltip md-direction="bottom">
                             Power Stress Score
+                        </md-tooltip>
+                    </span>
+                </th>
+                <th ng-if="useSwimStressScore" md-column md-numeric md-order-by="swimStressScore">
+                    <span>
+                        Swim SS
+                        <md-tooltip md-direction="bottom">
+                            Swim Stress Score
                         </md-tooltip>
                     </span>
                 </th>
@@ -48,6 +56,7 @@
                 <td md-cell ng-bind-html="fitnessObj.type"></td>
                 <td md-cell>{{(fitnessObj.trimpScore !== -1 ? fitnessObj.trimpScore : '-')}}</td>
                 <td md-cell ng-if="usePowerMeter">{{(fitnessObj.powerStressScore !== -1 ? fitnessObj.powerStressScore : '-')}}</td>
+                <td md-cell ng-if="useSwimStressScore">{{(fitnessObj.swimStressScore !== -1 ? fitnessObj.swimStressScore : '-')}}</td>
                 <td md-cell>{{(fitnessObj.finalStressScore !== -1 ? fitnessObj.finalStressScore : '-')}}</td>
                 <td md-cell>{{fitnessObj.ctl | number: 1}}</td>
                 <td md-cell>{{fitnessObj.atl | number: 1}}</td>

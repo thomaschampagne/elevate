@@ -1,3 +1,0 @@
-interface IModifier {
-    modify(): void;
-}

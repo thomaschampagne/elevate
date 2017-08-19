@@ -1,5 +1,6 @@
-import Jasmine = jasmine.Jasmine;
 import Spy = jasmine.Spy;
+import {VacuumProcessor} from '../../plugin/core/scripts/processors/VacuumProcessor';
+
 describe('VacuumProcessor', () => {
 
     it('should be a pro', () => {

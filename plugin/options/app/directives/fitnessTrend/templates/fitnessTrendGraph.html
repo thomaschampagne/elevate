@@ -40,21 +40,18 @@
                        aria-label="Use cycling power meter when available">
                 <md-icon>flash_on</md-icon>
                 <md-tooltip>
-                    Use cycling power meter when available
+                    Enable cycling power meter when available
                 </md-tooltip>
             </md-switch>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <md-switch ng-disabled="true" ng-model="useSwimStressScore" ng-click="tmpUseSwimStressScorePopup()"
+            <md-switch ng-model="useSwimStressScore" ng-change="useSwimStressScoreChanged()"
                        aria-label="Use swimming stress score (no HRM required)">
                 <md-icon>pool</md-icon>
                 <md-tooltip>
-                    Use swimming stress score (no HRM required)
+                    Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)
                 </md-tooltip>
             </md-switch>
             <span flex="5"></span>
-            <!--<md-button layout-align="start start" class="md-icon-button" ng-click="_todo()">-->
-            <!--<md-icon aria-label="Help">settings</md-icon>-->
-            <!--</md-button>-->
             <md-button layout-align="start start" class="md-icon-button" ng-click="showHelp()">
                 <md-icon aria-label="Help">info</md-icon>
             </md-button>
@@ -90,7 +87,7 @@
         <div layout="row" layout-align="start start">
 
             <div flex="100">
-                <nvd3 options="fitnessChartOptions" config="{deepWatchDataDepth: 0}" data="fitnessChartData.curves" api="nvd3api"
+                <nvd3 id="fitnessGraph" options="fitnessChartOptions" config="{deepWatchDataDepth: 0}" data="fitnessChartData.curves" api="nvd3api"
                       class="with-3d-shadow with-transitions"></nvd3>
             </div>
         </div>

@@ -1,0 +1,14 @@
+<div layout-padding>
+    <i>Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically calculated. <a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn more from TrainingPeaks.</a></i>
+    <div ng-repeat="method in calculationMethods">
+        <md-switch ng-model="method.active" aria-label="method.name" ng-change="methodChanged(method)">
+            {{method.name}}
+        </md-switch>
+        <div ng-repeat="param in method.params">
+            <md-input-container class="md-block">
+                <label>{{param.hint}}</label>
+                <input type="number" ng-model="param.value" ng-disabled="!method.active" ng-change="methodChanged(method)"/>
+            </md-input-container>
+        </div>
+    </div>
+</div>
