@@ -2,20 +2,20 @@ import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityCom
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
 
-describe('ActivityComputer', () => {
+describe("ActivityComputer", () => {
 
     // Cycling
-    it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
+    it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
 
         const powerMeter: boolean = false;
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/723224273/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/723224273/statsMap'];
+        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/723224273/stream"];
+        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
+        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();
@@ -99,29 +99,41 @@ describe('ActivityComputer', () => {
     });
 
     // Running power test
-    it('should compute correctly "Begin Running Ep 1 // Stade 40min" @ https://www.strava.com/activities/887284960', () => {
+    it("should compute correctly 'Begin Running Ep 1 // Stade 40min' @ https://www.strava.com/activities/887284960", () => {
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/887284960/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/887284960/statsMap'];
+        // Given
+        const activityType = "Run";
+        const isTrainer = false;
+        const hasPowerMeter = false;
+        const bounds: number[] = null;
+        const returnZones = true;
+        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/887284960/stream"];
+        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/887284960/statsMap"];
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
+        // When
+        let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight, hasPowerMeter, statsMap, stream, bounds, returnZones);
         let result: IAnalysisData = activityComputer.compute();
 
         console.log(result.powerData);
+
+        // Then
+        // TODO Expectation...
+
     });
 
     // Running estimation test
-    fit('should compute correctly "1/2 NCNR Run Club" @ https://www.strava.com/activities/874762067', () => {
+    it("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", () => {
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/874762067/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/874762067/statsMap'];
+        // Given
+        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/874762067/stream"];
+        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/874762067/statsMap"];
 
-        userSettingsMock.userGender = 'women';
+        userSettingsMock.userGender = "women";
         userSettingsMock.userWeight = 54.32;
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, true, statsMap, stream, null, true);
+        let activityComputer: ActivityComputer = new ActivityComputer("Run", false, userSettingsMock, userSettingsMock.userWeight, true, statsMap, stream, null, true);
         let resultWithPowerMeter: IAnalysisData = activityComputer.compute();
         expect(resultWithPowerMeter.powerData.avgWatts.toString()).toMatch(/^151/);
 
@@ -130,11 +142,17 @@ describe('ActivityComputer', () => {
         // Test without power data and power meter...
         delete stream.watts;
         delete stream.watts_calc;
-        activityComputer = new ActivityComputer('Run', false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
+        activityComputer = new ActivityComputer("Run", false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
         let resultWithoutPowerMeter: IAnalysisData = activityComputer.compute();
 
         console.log(resultWithoutPowerMeter.powerData);
 
+        // TODO Other examples with real running power data:
+        // https://www.strava.com/activities/849522984
+        // https://www.strava.com/activities/862889505
+
     });
+
+
 });
 
