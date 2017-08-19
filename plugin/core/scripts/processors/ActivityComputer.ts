@@ -127,7 +127,7 @@ export class ActivityComputer {
         this.movementData = null;
 
         if (activityStream.velocity_smooth) {
-            this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time);
+            this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_smooth);
         }
 
         // Q1 Speed
@@ -297,7 +297,7 @@ export class ActivityComputer {
         return currentValue * delta - ((currentValue - previousValue) * delta) / 2;
     }
 
-    protected moveData(velocityArray: number[], timeArray: number[]): IMoveData {
+    protected moveData(velocityArray: number[], timeArray: number[], gradeArray: number[]): IMoveData {
 
         if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -305,6 +305,8 @@ export class ActivityComputer {
 
         let genuineAvgSpeedSum: number = 0,
             genuineAvgSpeedSumCount: number = 0;
+        let genuineAvgGASpeedSum: number = 0,
+            genuineAvgGASpeedSumCount: number = 0;
         const speedsNonZero: number[] = [];
         const speedsNonZeroDuration: number[] = [];
         let speedVarianceSum: number = 0;
@@ -337,10 +339,31 @@ export class ActivityComputer {
                     // Compute variance speed
                     speedVarianceSum += Math.pow(currentSpeed, 2);
 
+                    let forSum = this.valueForSum(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
+
                     // distance
-                    genuineAvgSpeedSum += this.valueForSum(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
+                    genuineAvgSpeedSum += forSum;
                     // time
                     genuineAvgSpeedSumCount += movingSeconds;
+
+                    let grade = gradeArray[i];
+
+                    let gradeAdjust: number;
+
+                    if (grade > 0) {
+                        const upGradeAdjust = 4; // 1 m up means 4 m more forward
+                        gradeAdjust = 1 + grade * upGradeAdjust * 0.01;
+                    } else {
+                        const downGradeAdjust = 2; // 1 m down means 2 m less forward
+                        const maxDown = 0.15; // handle extremes - too steep downhill no longer helps
+                        let gradeDown = Math.min(maxDown, -grade);
+                        gradeAdjust = 1 - gradeDown * downGradeAdjust * 0.01;
+                    }
+
+                    // distance
+                    genuineAvgGASpeedSum += forSum * gradeAdjust;
+                    // time
+                    genuineAvgGASpeedSumCount += movingSeconds;
 
                     // Find speed zone id
                     const speedZoneId: number = this.getZoneId(this.userSettings.zones.speed, currentSpeed);
@@ -366,9 +389,11 @@ export class ActivityComputer {
 
         // Finalize compute of Speed
         const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
+        const genuineAvgGASpeed: number = genuineAvgGASpeedSum / genuineAvgGASpeedSumCount;
         const varianceSpeed: number = (speedVarianceSum / speedsNonZero.length) - Math.pow(genuineAvgSpeed, 2);
         const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
-        const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
+        const percentiles: Array<number> = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
+
 
         const speedData: ISpeedData = {
             genuineAvgSpeed,
@@ -384,6 +409,7 @@ export class ActivityComputer {
 
         const paceData: IPaceData = {
             avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+            avgGAP: parseInt(((1 / genuineAvgGASpeed) * 60 * 60).toFixed(0)), // send in seconds
             lowerQuartilePace: this.convertSpeedToPace(percentiles[0]),
             medianPace: this.convertSpeedToPace(percentiles[1]),
             upperQuartilePace: this.convertSpeedToPace(percentiles[2]),
