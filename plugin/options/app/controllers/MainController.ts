@@ -116,7 +116,7 @@ export class MainController {
                         name: "Heart Rate",
                         subname: "Customize Heart Rate zones",
                         icon: "favorite",
-                        link: routeMap.zonesSettingsRoute + "/heartrate",
+                        link: routeMap.zonesSettingsRoute + "/heartRate",
                     }, {
                         name: "Cycling Power",
                         subname: "Customize Cycling Power zones",

@@ -3,7 +3,7 @@ import {ChromeStorageService} from "../services/ChromeStorageService";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {IAvoidInputKeysService} from "../services/AvoidInputKeysService";
 
-export class HrrZonesSettingsController {
+export class HrrZonesSettingsController { // FIXME
 
     static $inject = ["$scope", "ChromeStorageService", "AvoidInputKeysService"];
 

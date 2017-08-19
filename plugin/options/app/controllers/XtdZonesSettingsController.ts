@@ -11,7 +11,7 @@ export interface IXtdData {
     step: number;
     min: number;
     max: number;
-    hasConvertion?: boolean;
+    hasConversion?: boolean;
 }
 
 export interface IXtdZonesSettingsScope extends IScope {
@@ -22,7 +22,7 @@ export interface IXtdZonesSettingsScope extends IScope {
     xtdListOptions: IXtdData[];
 }
 
-export class XtdZonesSettingsController { // FIXME Delete
+export class XtdZonesSettingsController {
 
     static $inject = ["$scope", "$routeParams", "ChromeStorageService"];
 
@@ -37,7 +37,7 @@ export class XtdZonesSettingsController { // FIXME Delete
                 step: 0.1,
                 min: 0,
                 max: 9999,
-                hasConvertion: true,
+                hasConversion: true
             }, {
                 name: "Running Pace",
                 value: "pace",
@@ -45,14 +45,14 @@ export class XtdZonesSettingsController { // FIXME Delete
                 step: 1,
                 min: 0,
                 max: 9999,
-                hasConvertion: true,
+                hasConversion: true
             }, {
                 name: "Heart Rate",
-                value: "heartrate",
+                value: "heartRate",
                 units: "BPM",
                 step: 1,
                 min: 0,
-                max: 9999,
+                max: 9999
             }, {
                 name: "Cycling Power",
                 value: "power",
