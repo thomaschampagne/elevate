@@ -1,12 +1,12 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
-import {IAppResources} from "../interfaces/IAppResources";
+import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
 import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify, ISyncRawStravaActivity} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {IAppResources} from "../interfaces/IAppResources";
 import {ActivitiesProcessor} from "../processors/ActivitiesProcessor";
-import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
 export interface IHistoryChanges {
     added: number[];
@@ -715,15 +715,15 @@ export class ActivitiesSynchronizer {
         this.totalRawActivityIds = [];
     }
 
-    saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
+    public saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
     }
 
-    saveLastSyncDateToLocal(timestamp: number) {
+    public saveLastSyncDateToLocal(timestamp: number) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
     }
 
-    getLastSyncDateFromLocal() {
+    public getLastSyncDateFromLocal() {
         return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
     }
 

@@ -27,7 +27,7 @@ export class SegmentProcessor {
         this.segmentId = segmentId;
     }
 
-    getNearbySegmentsAround(callback: (segmentsInBounds: ISegmentInfo[]) => void): void {
+    public getNearbySegmentsAround(callback: (segmentsInBounds: ISegmentInfo[]) => void): void {
 
         // NearbySegmentsAround cached?
         const cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
@@ -59,7 +59,7 @@ export class SegmentProcessor {
         });
     }
 
-    getBoundingBox(point: LatLon, distance: number): number[] {
+    public getBoundingBox(point: LatLon, distance: number): number[] {
 
         return [
             point.destinationPoint(distance, 180).lat,
@@ -69,7 +69,7 @@ export class SegmentProcessor {
         ];
     }
 
-    getSegmentsInBoundingBox(boundingBox: number[], callback: (segmentsData: ISegmentInfo[]) => void): void {
+    public getSegmentsInBoundingBox(boundingBox: number[], callback: (segmentsData: ISegmentInfo[]) => void): void {
 
         this.vacuumProcessor.getSegmentsFromBounds(
             boundingBox[0] + "," + boundingBox[1],
@@ -98,7 +98,7 @@ export class SegmentProcessor {
         );
     }
 
-    getSegmentAroundSearchPoint(callback: (latLon: LatLon) => void) {
+    public getSegmentAroundSearchPoint(callback: (latLon: LatLon) => void) {
 
         this.vacuumProcessor.getSegmentStream(this.segmentId, (stream: any) => {
 

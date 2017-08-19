@@ -408,4 +408,3 @@ export let commonSettingsService = () => {
     };
     return commonSettingsService;
 };
-

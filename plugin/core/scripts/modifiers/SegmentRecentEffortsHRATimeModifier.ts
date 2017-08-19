@@ -136,8 +136,8 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
                 const targetHR = maxHR;
 
                 class HRValueComputed {
-                    effort: EffortInfo;
-                    hraValue: number;
+                    public effort: EffortInfo;
+                    public hraValue: number;
 
                     constructor(effort: EffortInfo, hraValue?: number) {
                         this.effort = effort;

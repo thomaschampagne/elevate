@@ -23,7 +23,7 @@ export let releaseNotes: IReleaseNote[] = [
         version: "5.10.1",
         message: 'NEW: Added TCX export to "GPS Real Time Segments Efforts": Challenge yourself outside against a ghost! Plugin\'s performance has been also greatly improved !!',
         hotFixes: [
-            "Fixed TCX export as Course instead of Activity (feature: GPS Real Time Segments Efforts)"
+            "Fixed TCX export as Course instead of Activity (feature: GPS Real Time Segments Efforts)",
         ],
         features: [
             'Added TCX export to "GPS Real Time Segments Efforts" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click "Export this Segment Effort to your GPS".',

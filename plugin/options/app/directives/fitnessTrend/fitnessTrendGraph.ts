@@ -61,7 +61,7 @@ export interface ITrainingZone {
 
 export class FitnessTrendGraph {
 
-    static $inject: string[] = ["$scope", "$colors", "$window", "$mdDialog", "$location"];
+    public static $inject: string[] = ["$scope", "$colors", "$window", "$mdDialog", "$location"];
 
     constructor(public $scope: IFitnessTrendGraphScope, public $colors: IColors, public $window: IWindowService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService) {
 
@@ -754,4 +754,3 @@ export let fitnessTrendGraph = [() => {
         controller: FitnessTrendGraph,
     } as any;
 }];
-

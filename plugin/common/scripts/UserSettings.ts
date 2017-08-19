@@ -38,7 +38,7 @@ export let userSettings: IUserSettings = {
         }, {from: 570, to: 720}, {from: 720, to: 900}],
         heartRate: [{from: 120, to: 140}, {from: 140, to: 150}, {from: 150, to: 160}, {from: 160, to: 170}, {
             from: 170,
-            to: 180
+            to: 180,
         }, {from: 180, to: 185}, {from: 185, to: 190}, {from: 190, to: 195}, {from: 195, to: 210}],
         power: [{from: 0, to: 25}, {from: 25, to: 50}, {from: 50, to: 75}, {
             from: 75,

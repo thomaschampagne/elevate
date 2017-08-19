@@ -1,6 +1,6 @@
 import {Helper} from "../../../../common/scripts/Helper";
-import {IAppResources} from "../../interfaces/IAppResources";
 import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../../interfaces/IAppResources";
 import {ActivityProcessor} from "../../processors/ActivityProcessor";
 import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
 import {ElevationDataView} from "./views/ElevationDataView";

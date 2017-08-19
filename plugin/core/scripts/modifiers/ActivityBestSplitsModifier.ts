@@ -175,7 +175,7 @@ function BestSplitWorker() {
             return result;
         }
 
-        compute(split: any, activityJson: any, options: any): any {
+        public compute(split: any, activityJson: any, options: any): any {
 
             let max: number,
                 distance: number,
@@ -506,7 +506,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             "</tr>");
     }
 
-    modify(): void {
+    public modify(): void {
 
         // wait for Segments section load
         if ($("#segments").length === 0) {

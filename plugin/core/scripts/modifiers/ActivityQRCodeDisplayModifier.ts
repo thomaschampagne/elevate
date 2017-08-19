@@ -2,7 +2,7 @@ import {IAppResources} from "../interfaces/IAppResources";
 
 declare class QRCode {
     constructor(elementId: string, options: any);
-    static CorrectLevel: {
+    public static CorrectLevel: {
         L: string;
         M: string;
         Q: string;

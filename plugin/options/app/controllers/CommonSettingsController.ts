@@ -7,7 +7,7 @@ import {ICommonSettingsService, ISection, ISectionContent} from "../services/Com
 
 export class CommonSettingsController {
 
-    static $inject = ["$scope", "CommonSettingsService", "ChromeStorageService", "$location", "$mdDialog", "$sce"];
+    public static $inject = ["$scope", "CommonSettingsService", "ChromeStorageService", "$location", "$mdDialog", "$sce"];
 
     constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
 

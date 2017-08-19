@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
-import {IStorageUsage, StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
-import {IAppResources} from "../interfaces/IAppResources";
 import {ISyncNotify} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IStorageUsage, StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {env} from "../../config/env";
+import {IAppResources} from "../interfaces/IAppResources";
 import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
 
 export class ActivitiesSyncModifier implements IModifier {

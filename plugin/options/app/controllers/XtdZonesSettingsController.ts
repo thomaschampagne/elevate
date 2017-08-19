@@ -24,7 +24,7 @@ export interface IXtdZonesSettingsScope extends IScope {
 
 export class XtdZonesSettingsController {
 
-    static $inject = ["$scope", "$routeParams", "ChromeStorageService"];
+    public static $inject = ["$scope", "$routeParams", "ChromeStorageService"];
 
     constructor($scope: IXtdZonesSettingsScope, $routeParams: any, chromeStorageService: ChromeStorageService) {
 
@@ -37,7 +37,7 @@ export class XtdZonesSettingsController {
                 step: 0.1,
                 min: 0,
                 max: 9999,
-                hasConversion: true
+                hasConversion: true,
             }, {
                 name: "Running Pace",
                 value: "pace",
@@ -45,14 +45,14 @@ export class XtdZonesSettingsController {
                 step: 1,
                 min: 0,
                 max: 9999,
-                hasConversion: true
+                hasConversion: true,
             }, {
                 name: "Heart Rate",
                 value: "heartRate",
                 units: "BPM",
                 step: 1,
                 min: 0,
-                max: 9999
+                max: 9999,
             }, {
                 name: "Cycling Power",
                 value: "power",

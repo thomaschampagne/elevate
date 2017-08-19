@@ -13,7 +13,7 @@ SystemJS.config({
     },
     map: {
         q: "npm:q/q.js",
-        "lodash": "npm:lodash/lodash.min.js",
+        lodash: "npm:lodash/lodash.min.js",
     },
 });
 

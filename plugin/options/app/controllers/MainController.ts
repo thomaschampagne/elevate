@@ -10,7 +10,7 @@ import {IReleaseNotesService} from "../services/ReleaseNotesService";
 
 export class MainController {
 
-    static $inject = ["$rootScope", "ChromeStorageService", "$scope", "$location", "$mdSidenav", "$colors", "$mdDialog", "$window", "$interval", "$mdMedia"];
+    public static $inject = ["$rootScope", "ChromeStorageService", "$scope", "$location", "$mdSidenav", "$colors", "$mdDialog", "$window", "$interval", "$mdMedia"];
 
     constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: angular.material.ISidenavService, $colors: any, $mdDialog: angular.material.IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: angular.material.IMedia) {
 

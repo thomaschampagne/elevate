@@ -448,7 +448,7 @@ export class ActivityComputer {
                 if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
                     // Get average of power during these 30 seconds windows & power 4th
-                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
+                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function(a, b) { // The reduce function and implementation return the sum of array
                         return (a as number) + (b as number);
                     }, 0) / sumPowerTimeWindow.length, 4));
 
@@ -474,7 +474,7 @@ export class ActivityComputer {
         // Finalize compute of Power
         const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
+        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function(a, b) { // The reduce function and implementation return the sum of array
             return (a as number) + (b as number);
         }, 0) / sum4thPower.length));
 
@@ -563,7 +563,7 @@ export class ActivityComputer {
             }
         }
 
-        const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
+        const heartRateArraySorted: number[] = heartRateArray.sort(function(a, b) {
             return a - b;
         });
 

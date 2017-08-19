@@ -16,7 +16,7 @@ export class RemoteLinksModifier implements IModifier {
         this.activityId = activityId;
     }
 
-    modify(): void {
+    public modify(): void {
         if (!_.isUndefined(window.pageView)) {
             this.modifyActivityPage();
         }
@@ -26,7 +26,7 @@ export class RemoteLinksModifier implements IModifier {
         }
     }
 
-    modifyActivityPage(): void {
+    public modifyActivityPage(): void {
 
         const remoteViewActivityLinksArray: string[][] = [
             ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=stravistiX", ""],
@@ -74,7 +74,7 @@ export class RemoteLinksModifier implements IModifier {
         }
     }
 
-    modifySegmentPage(): void {
+    public modifySegmentPage(): void {
 
         // Segment external links
         const segmentData: string[] = window.location.pathname.match(/^\/segments\/(\d+)$/);

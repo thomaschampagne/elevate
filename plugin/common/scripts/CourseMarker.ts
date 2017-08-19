@@ -122,7 +122,7 @@ export class CourseMaker {
             "<Courses>\n" +
             "<Course>\n" +
             "<Name>" + courseName + "</Name>\n" +
-            '<Lap>\n' +
+            "<Lap>\n" +
             "<TotalTimeSeconds>" + TotalTimeSeconds + "</TotalTimeSeconds>\n" +
             "<DistanceMeters>" + DistanceMeters + "</DistanceMeters>\n" +
             "<Intensity>Active</Intensity>\n";
