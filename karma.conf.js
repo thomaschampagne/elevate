@@ -28,9 +28,9 @@ module.exports = function (config) {
             'plugin/core/**/*.js',
             'specs/**/*.js',
             'specs/fixtures/**/*.json'
+
         ],
         exclude: [
-            '**/*.map',
             'plugin/common/scripts/Background.js',
             'plugin/core/scripts/SystemJS.*.js',
             'plugin/core/scripts/InstallUpdateHandler.js',
@@ -38,7 +38,9 @@ module.exports = function (config) {
             'plugin/core/scripts/Content.js'
         ],
         systemjs: {
-            serveFiles: [], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
+            serveFiles: [
+                '**/*.map'
+            ], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
             config: { // SystemJS configuration
                 packages: {
                     'plugin/common/': {
