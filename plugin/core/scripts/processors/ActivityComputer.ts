@@ -1,11 +1,19 @@
 import * as _ from "lodash";
 import {Helper} from "../../../common/scripts/Helper";
 import {
-    IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData,
+    IActivityStatsMap,
+    IActivityStream,
+    IAnalysisData,
+    IAscentSpeedData,
+    ICadenceData,
+    IElevationData,
+    IGradeData,
     IHeartRateData,
-    IHrrZone,
-    IMoveData, IPaceData,
-    IPowerData, ISpeedData, IZone,
+    IMoveData,
+    IPaceData,
+    IPowerData,
+    ISpeedData,
+    IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
@@ -213,14 +221,14 @@ export class ActivityComputer {
         }
 
         return Math.sqrt(
-                Math.sqrt(
-                    Math.pow(activityStatsMap.elevation, 2) *
-                    activityStatsMap.avgPower *
-                    Math.pow(activityStatsMap.averageSpeed, 2) *
-                    Math.pow(activityStatsMap.distance, 2) *
-                    moveRatio,
-                ),
-            ) / 20;
+            Math.sqrt(
+                Math.pow(activityStatsMap.elevation, 2) *
+                activityStatsMap.avgPower *
+                Math.pow(activityStatsMap.averageSpeed, 2) *
+                Math.pow(activityStatsMap.distance, 2) *
+                moveRatio,
+            ),
+        ) / 20;
     }
 
     //noinspection JSUnusedGlobalSymbols
@@ -228,7 +236,7 @@ export class ActivityComputer {
         return ((value - minValue) / distributionStep);
     }
 
-    protected  getZoneId(zones: IZone[], value: number): number {
+    protected getZoneId(zones: IZone[], value: number): number {
         for (let zoneId: number = 0; zoneId < zones.length; zoneId++) {
             if (value <= zones[zoneId].to) {
                 return zoneId;
@@ -244,29 +252,6 @@ export class ActivityComputer {
             preparedZones.push(zone);
         });
         return preparedZones;
-    }
-
-    protected finalizeDistributionComputationHrrZones(zones: IHrrZone[]): IHrrZone[] {
-
-        let total: number = 0;
-        let zone: IHrrZone;
-        for (let i: number = 0; i < zones.length; i++) {
-            zone = zones[i];
-            if (zone.s) {
-                total += zone.s;
-            }
-            zone.percentDistrib = 0;
-        }
-
-        if (total > 0) {
-            for (let i: number = 0; i < zones.length; i++) {
-                zone = zones[i];
-                if (zone.s) {
-                    zone.percentDistrib = zone.s / total * 100;
-                }
-            }
-        }
-        return zones;
     }
 
     protected finalizeDistributionComputationZones(zones: IZone[]): IZone[] {
@@ -463,9 +448,9 @@ export class ActivityComputer {
                 if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
                     // Get average of power during these 30 seconds windows & power 4th
-                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function(a, b) { // The reduce function and implementation return the sum of array
-                            return (a as number) + (b as number);
-                        }, 0) / sumPowerTimeWindow.length, 4));
+                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
+                        return (a as number) + (b as number);
+                    }, 0) / sumPowerTimeWindow.length, 4));
 
                     timeWindowValue = 0; // Reset time window
                     sumPowerTimeWindow = []; // Reset sum of power window
@@ -489,9 +474,9 @@ export class ActivityComputer {
         // Finalize compute of Power
         const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function(a, b) { // The reduce function and implementation return the sum of array
-                return (a as number) + (b as number);
-            }, 0) / sum4thPower.length));
+        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
+            return (a as number) + (b as number);
+        }, 0) / sum4thPower.length));
 
         /*
          // If user has a power meters we prefer use the value given by strava
@@ -535,22 +520,15 @@ export class ActivityComputer {
             return null;
         }
 
+        this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
+
         let trainingImpulse: number = 0;
         const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
         let hrrSecondsCount: number = 0;
-        const hrrZonesCount: number = Object.keys(this.userSettings.userHrrZones).length;
         let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number, zoneId: number;
         let hrSum: number = 0;
         const heartRateArrayMoving: any[] = [];
         const heartRateArrayMovingDuration: any[] = [];
-
-        // Find HR for each Hrr of each zones
-        _.forEach(this.userSettings.userHrrZones, (zone: IHrrZone) => {
-            zone.fromHr = Helper.heartrateFromHeartRateReserve(zone.fromHrr, userMaxHr, userRestHr);
-            zone.toHr = Helper.heartrateFromHeartRateReserve(zone.toHrr, userMaxHr, userRestHr);
-            zone.s = 0;
-            zone.percentDistrib = null;
-        });
 
         for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
@@ -577,20 +555,20 @@ export class ActivityComputer {
                 trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
-                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
+                zoneId = this.getZoneId(this.userSettings.zones.heartRate, heartRateArray[i]);
 
                 if (!_.isUndefined(zoneId)) {
-                    this.userSettings.userHrrZones[zoneId].s += durationInSeconds;
+                    this.userSettings.zones.heartRate[zoneId].s += durationInSeconds;
                 }
             }
         }
 
-        const heartRateArraySorted: number[] = heartRateArray.sort(function(a, b) {
+        const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
             return a - b;
         });
 
         // Update zone distribution percentage
-        this.userSettings.userHrrZones = this.finalizeDistributionComputationHrrZones(this.userSettings.userHrrZones);
+        this.userSettings.zones.heartRate = this.finalizeDistributionComputationZones(this.userSettings.zones.heartRate);
 
         const averageHeartRate: number = hrSum / hrrSecondsCount;
         const maxHeartRate: number = heartRateArraySorted[heartRateArraySorted.length - 1];
@@ -598,10 +576,10 @@ export class ActivityComputer {
         const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
         const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-        const heartRateData: IHeartRateData = {
+        return {
             TRIMP: trainingImpulse,
             TRIMPPerHour,
-            hrrZones: (this.returnZones) ? this.userSettings.userHrrZones : null,
+            heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
             lowerQuartileHeartRate: percentiles[0],
             medianHeartRate: percentiles[1],
             upperQuartileHeartRate: percentiles[2],
@@ -610,16 +588,6 @@ export class ActivityComputer {
             activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
             activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
         };
-
-        return heartRateData;
-    }
-
-    protected getHrrZoneId(hrrZonesCount: number, hrrValue: number): number {
-        for (let zoneId: number = 0; zoneId < hrrZonesCount; zoneId++) {
-            if (hrrValue <= this.userSettings.userHrrZones[zoneId].toHrr) {
-                return zoneId;
-            }
-        }
     }
 
     protected cadenceData(cadenceArray: any[], velocityArray: any[], timeArray: any[]): ICadenceData {

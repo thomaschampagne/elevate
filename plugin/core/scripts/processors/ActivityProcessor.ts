@@ -12,7 +12,6 @@ export class ActivityProcessor {
     public static cachePrefix: string = "stravistix_activity_";
     protected appResources: IAppResources;
     protected vacuumProcessor: VacuumProcessor;
-    protected userHrrZones: any;
     protected zones: any;
     protected activityType: string;
     protected isTrainer: boolean;
@@ -24,7 +23,6 @@ export class ActivityProcessor {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
-        this.userHrrZones = this.userSettings.userHrrZones;
         this.zones = this.userSettings.zones;
     }
 

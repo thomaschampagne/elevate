@@ -5,7 +5,7 @@
             <!-- </br><span class="md-caption">{{xtdDataSelected.units}}</span> -->
         </div>
         <div flex="35" layout="row" layout-align="start center">
-            <div data-ng-switch data-on="xtdZoneFirst" flex="(xtdDataSelected.hasConvertion ? 45 : 60)" layout-align="center center">
+            <div data-ng-switch data-on="xtdZoneFirst" flex="(xtdDataSelected.hasConversion ? 45 : 60)" layout-align="center center">
                 <div data-ng-switch-when="true">
                     <md-input-container class="md-block zone-input-margin">
                         <label>From {{xtdDataSelected.units}}</label>
@@ -21,7 +21,7 @@
                     </md-input-container>
                 </div>
             </div>
-            <div flex="55" ng-if="xtdDataSelected.hasConvertion">
+            <div flex="55" ng-if="xtdDataSelected.hasConversion">
                 <md-input-container class="md-block zone-input-margin">
                     <md-icon>keyboard_arrow_right</md-icon>
                     <input type="text" aria-label="{{xtdZone.to | xtdDataFilter:xtdDataSelected.value}}" value="{{xtdZone.from | xtdDataFilter:xtdDataSelected.value}}" ng-disabled="true" />
@@ -31,7 +31,7 @@
         <div flex="10"></div>
         <!-- ____________________________ -->
         <div flex="35" layout="row" layout-align="end center">
-            <div data-ng-switch data-on="xtdZoneLast" flex="(xtdDataSelected.hasConvertion ? 45 : 60)" layout-align="center center">
+            <div data-ng-switch data-on="xtdZoneLast" flex="(xtdDataSelected.hasConversion ? 45 : 60)" layout-align="center center">
                 <div data-ng-switch-when="true">
                     <md-input-container class="md-block zone-input-margin">
                         <label>To {{xtdDataSelected.units}}</label>
@@ -47,7 +47,7 @@
                     </md-input-container>
                 </div>
             </div>
-            <div flex="55" ng-if="xtdDataSelected.hasConvertion">
+            <div flex="55" ng-if="xtdDataSelected.hasConversion">
                 <md-input-container class="md-block zone-input-margin">
                     <md-icon>keyboard_arrow_right</md-icon>
                     <input type="text" aria-label="{{xtdZone.to | xtdDataFilter:xtdDataSelected.value}}" value="{{xtdZone.to | xtdDataFilter:xtdDataSelected.value}}" ng-disabled="true" />
