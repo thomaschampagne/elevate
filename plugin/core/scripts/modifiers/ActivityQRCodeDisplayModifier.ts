@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import {IAppResources} from "../interfaces/IAppResources";
 
 declare class QRCode {

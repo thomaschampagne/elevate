@@ -139,7 +139,6 @@ export class ActivitiesProcessor {
             activityStream: activityWithStream.stream,
             bounds: null,
             returnZones: false,
-            systemJsConfig: SystemJS.getConfig(),
         };
 
         computeAnalysisThread.postMessage(threadMessage);

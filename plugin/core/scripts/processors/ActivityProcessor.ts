@@ -117,7 +117,6 @@ export class ActivityProcessor {
             activityStream,
             bounds,
             returnZones: true,
-            systemJsConfig: SystemJS.getConfig(),
         };
 
         this.computeAnalysisThread.postMessage(threadMessage);

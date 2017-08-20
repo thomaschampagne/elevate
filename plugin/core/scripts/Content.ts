@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import {constants} from "../../common/scripts/Constants";
-import {IConstants} from "../../common/scripts/interfaces/IConstants";
-import {IUserSettings} from "../../common/scripts/interfaces/IUserSettings";
-import {userSettings} from "../../common/scripts/UserSettings";
-import {Loader} from "../modules/Loader";
-import {IAppResources} from "./interfaces/IAppResources";
+import { constants } from "../../common/scripts/Constants";
+import { IConstants } from "../../common/scripts/interfaces/IConstants";
+import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { userSettings } from "../../common/scripts/UserSettings";
+import { Loader } from "../modules/Loader";
+import { IAppResources } from "./interfaces/IAppResources";
 
 interface IStartCoreData {
     chromeSettings: any;
@@ -87,13 +87,9 @@ export class Content {
             Content.loader.injectJS("let $ = jQuery;");
 
             Content.loader.require([
-                "node_modules/systemjs/dist/system.js", // Inject SystemJS module loader and start core app inner strava.com
+                "injectedScripts.js"
             ], () => {
-                Content.loader.require([
-                    "core/scripts/SystemJS.core.setup.js", // Now load SystemJS core setup
-                ], () => {
-                    this.emitStartCoreEvent(startCoreData);
-                });
+                this.emitStartCoreEvent(startCoreData);
             });
         });
 

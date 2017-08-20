@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 export class ReliveCCModifier implements IModifier {
 
     private activityId: number;

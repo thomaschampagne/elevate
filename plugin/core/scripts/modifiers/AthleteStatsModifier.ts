@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
+import * as $ from "jquery";
 import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
 import {IAppResources} from "../interfaces/IAppResources";
