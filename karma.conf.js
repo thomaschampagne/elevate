@@ -1,10 +1,7 @@
 module.exports = function (config) {
     config.set({
         basePath: './',
-        browsers: [
-            'PhantomJS',
-            // 'Chrome'
-        ],
+        browsers: ['PhantomJS', /* Chrome , 'ChromeCanary'*/],
         frameworks: ['systemjs', 'jasmine', 'promise'],
         plugins: [
             'karma-jasmine',
@@ -35,7 +32,8 @@ module.exports = function (config) {
             'plugin/core/scripts/SystemJS.*.js',
             'plugin/core/scripts/InstallUpdateHandler.js',
             'plugin/core/scripts/interfaces/*.js',
-            'plugin/core/scripts/Content.js'
+            'plugin/core/scripts/Content.js',
+            'plugin/core/modules/jquery.appear.js'
         ],
         systemjs: {
             serveFiles: [
@@ -83,7 +81,7 @@ module.exports = function (config) {
             // transform the filename
             transformPath: function (path) {
                 return path + '.js';
-            } 
+            }
         },
         colors: true,
         singleRun: true,

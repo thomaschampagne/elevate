@@ -16,10 +16,10 @@ import {
     IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {InconsistentParameters} from "../../../common/scripts/exceptions/InconsistentParameters";
 
 export class ActivityComputer {
 
-    public static GRAVITY_CONST: number = 9.81;
     public static MOVING_THRESHOLD_KPH: number = 0.1; // Kph
     public static CADENCE_THRESHOLD_RPM: number = 35; // RPMs
     public static GRADE_CLIMBING_LIMIT: number = 1.6;
@@ -134,28 +134,56 @@ export class ActivityComputer {
 
     /**
      * Create Running Power stream estimation
-     * References: http://sprott.physics.wisc.edu/technote/walkrun.htm
-     * @param athleteWeight Mass of athlete
-     * @param gradeAdjustedSpeedArray Adjusted speed along elevation in meters per seconds
+     * @param athleteWeight Mass of athlete in KG
+     * @param gradeAdjustedDistanceArray
+     * @param timeArray
      * @returns {Array<number>} Array of power
      */
-    // TODO Move from here
-    protected createRunningPowerStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>, timeArray: Array<number>): Array<number> {
+    public static createRunningPowerEstimationStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>, timeArray: Array<number>): Array<number> {
+
+        console.log("Estimating power data stream from athleteWeight (%d kg) and grade adjusted distance", athleteWeight);
+
+        if (!_.isNumber(athleteWeight)) {
+            throw new InconsistentParameters("athleteWeight required as number");
+        }
+
+        if (!_.isArray(gradeAdjustedDistanceArray)) {
+            throw new InconsistentParameters("gradeAdjustedDistanceArray required as array");
+        }
+
+        if (!_.isArray(timeArray)) {
+            throw new InconsistentParameters("timeArray required as array");
+        }
 
         let powerStream: Array<number> = [];
-
         for (let i = 0; i < timeArray.length; i++) {
-
             let power = 0;
             if (i > 0) {
-                let time = timeArray[i] - timeArray[i - 1];
-                let distance = gradeAdjustedDistanceArray[i] - gradeAdjustedDistanceArray[i - 1];
-                power = (athleteWeight * ActivityComputer.GRAVITY_CONST * (time / distance)) / time; // J/s = W
+                const time = timeArray[i] - timeArray[i - 1];
+                const distanceAdjusted = gradeAdjustedDistanceArray[i] - gradeAdjustedDistanceArray[i - 1];
+                power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time);
             }
-            console.log(power);
             powerStream.push(power);
         }
         return powerStream;
+    }
+
+    /**
+     *
+     * @param {number} weightKg
+     * @param {number} meters
+     * @param {number} seconds
+     * @returns {number} power watts
+     */
+    public static estimateRunningPower(weightKg: number, meters: number, seconds: number): number {
+        const minutes = seconds / 60;
+        const km = meters / 1000;
+        const pace = minutes / km;
+        const VO2Reserve = 210 / pace;
+        const VO2A = (VO2Reserve * weightKg) / 1000;
+        const HWatts = (75 * VO2A);
+        const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
+        return Math.round(HWatts + VWatts); // FIXME VWatts ?!
     }
 
     protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
@@ -190,16 +218,24 @@ export class ActivityComputer {
         // Normalized Watt per Kg
 
         // TODO FIXME if Running activity and no power meter... try to simulate power stream...
-        // athleteWeight = 54.32;
-        // hasPowerMeter = false;
-        // console.warn('athleteWeight: ' + athleteWeight);
-        if (this.activityType === 'Run' && !this.hasPowerMeter) {
-            activityStream.watts = this.createRunningPowerStream(athleteWeight, activityStream.grade_adjusted_distance, activityStream.time);
+        // TODO Check if owner of activity and use this.userSettings.userWeight
+        // TODO Enable estimation for all ! Since strava as cutted off power data
+        // athleteWeight = 68.9456; // Christophe
+        // athleteWeight = 54.32; // Mikala
+        // hasPowerMeter = false; // Force estimation computing
+
+        console.warn("hasPowerMeter: " + hasPowerMeter);
+
+        if (this.activityType === "Run" && !hasPowerMeter) {
+            try {
+                activityStream.watts = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, activityStream.grade_adjusted_distance, activityStream.time);
+            } catch (err) {
+                console.warn(err);
+            }
         }
 
         let powerData: IPowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
-
-        // console.warn(powerData); // TODO remove
+        console.warn(powerData); // TODO remove
 
         // TRaining IMPulse
         // %HRR Avg
@@ -488,7 +524,7 @@ export class ActivityComputer {
                 if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
                     // Get average of power during these 30 seconds windows & power 4th
-                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function(a, b) { // The reduce function and implementation return the sum of array
+                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
                         return (a as number) + (b as number);
                     }, 0) / sumPowerTimeWindow.length, 4));
 
@@ -514,7 +550,7 @@ export class ActivityComputer {
         // Finalize compute of Power
         const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function(a, b) { // The reduce function and implementation return the sum of array
+        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
             return (a as number) + (b as number);
         }, 0) / sum4thPower.length));
 
@@ -603,7 +639,7 @@ export class ActivityComputer {
             }
         }
 
-        const heartRateArraySorted: number[] = heartRateArray.sort(function(a, b) {
+        const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
             return a - b;
         });
 
