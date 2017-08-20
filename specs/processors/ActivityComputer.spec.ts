@@ -110,7 +110,7 @@ fdescribe("ActivityComputer", () => {
         const _expectedPower = 148;
 
         // When
-        let power = ActivityComputer.estimateRunningPower(weightKg, meters, totalSeconds);
+        let power = ActivityComputer.estimateRunningPower(weightKg, meters, totalSeconds, 25);
 
         // Then
         expect(power).toEqual(_expectedPower);
@@ -127,7 +127,8 @@ fdescribe("ActivityComputer", () => {
         let stream: IActivityStream = window.__fixtures__["fixtures/activities/874762067/stream"]; // Mikala run sample 1/2 NCNR Run Club
 
         // When
-        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.grade_adjusted_distance, stream.time);
+        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight,
+            stream.distance, stream.time, stream.altitude);
         let estimatedAvgPower: number = _.mean(powerArray);
 
         console.log(estimatedAvgPower);
@@ -149,7 +150,9 @@ fdescribe("ActivityComputer", () => {
         let stream: IActivityStream = window.__fixtures__["fixtures/activities/852961332/stream"]; // Stryd 3/6 lap test .... brrr
 
         // When
-        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.grade_adjusted_distance, stream.time);
+        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+            stream.time, stream.altitude);
+
         let estimatedAvgPower: number = _.mean(powerArray);
 
         console.log(estimatedAvgPower);
@@ -168,10 +171,14 @@ fdescribe("ActivityComputer", () => {
         const _expectedPower = 296;
         const _tolerance = 10;
         const athleteWeight = 79.4;
-        let stream: IActivityStream = window.__fixtures__["fixtures/activities/878683797/stream"]; // Two shooting ranges and a road dedicated to the inventor of Velcro
+
+        // Two shooting ranges and a road dedicated to the inventor of Velcro
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/878683797/stream"];
 
         // When
-        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.grade_adjusted_distance, stream.time);
+        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+            stream.time, stream.altitude);
+
         let estimatedAvgPower: number = _.mean(powerArray);
 
         console.log(estimatedAvgPower);
@@ -181,6 +188,32 @@ fdescribe("ActivityComputer", () => {
         expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
         expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
     });
+
+    fit("createRunningPowerEstimationStream should provide " +
+        "power stats estimations near real running power meter" +
+        "based on https://www.strava.com/activities/833008371", () => {
+
+        // Given
+        const _expectedPower = 310;
+        const _tolerance = 10;
+        const athleteWeight = 79.4;
+
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/833008371/stream"]; // Morning Run
+
+        // When
+        let powerArray: number[] = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+            stream.time, stream.altitude);
+
+        let estimatedAvgPower: number = _.mean(powerArray);
+
+        console.log(estimatedAvgPower);
+
+        // Then
+        expect(estimatedAvgPower).not.toBeNull();
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
+    });
+
 
     // Running power test
     xit("should compute correctly 'Begin Running Ep 1 // Stade 40min' " +
@@ -236,7 +269,6 @@ fdescribe("ActivityComputer", () => {
         // TODO Other examples with real running power data:
         // https://www.strava.com/activities/849522984
         // https://www.strava.com/activities/862889505
-        // https://www.strava.com/activities/852961332
 
     });
 

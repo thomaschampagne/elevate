@@ -135,13 +135,13 @@ export class ActivityComputer {
     /**
      * Create Running Power stream estimation
      * @param athleteWeight Mass of athlete in KG
-     * @param gradeAdjustedDistanceArray
+     * @param distanceArray
      * @param timeArray
      * @param altitudeArray
      * @returns {Array<number>} Array of power
      */
-    public static createRunningPowerEstimationStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>,
-                                                     timeArray: Array<number>): Array<number> {
+    public static createRunningPowerEstimationStream(athleteWeight: number, distanceArray: Array<number>,
+                                                     timeArray: Array<number>, altitudeArray: Array<number>): Array<number> {
 
         console.log("Estimating power data stream from athleteWeight (%d kg) and grade adjusted distance", athleteWeight);
 
@@ -149,8 +149,8 @@ export class ActivityComputer {
             throw new InconsistentParameters("athleteWeight required as number");
         }
 
-        if (!_.isArray(gradeAdjustedDistanceArray)) {
-            throw new InconsistentParameters("gradeAdjustedDistanceArray required as array");
+        if (!_.isArray(distanceArray)) {
+            throw new InconsistentParameters("distanceArray required as array");
         }
 
         if (!_.isArray(timeArray)) {
@@ -162,8 +162,9 @@ export class ActivityComputer {
             let power = 0;
             if (i > 0) {
                 const time = timeArray[i] - timeArray[i - 1];
-                const distanceAdjusted = gradeAdjustedDistanceArray[i] - gradeAdjustedDistanceArray[i - 1];
-                power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time);
+                const distanceAdjusted = distanceArray[i] - distanceArray[i - 1];
+                const elevationGain = altitudeArray[i] - altitudeArray[i - 1];
+                power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time, elevationGain);
             }
             powerStream.push(power);
         }
@@ -177,9 +178,11 @@ export class ActivityComputer {
      * @param {number} weightKg
      * @param {number} meters
      * @param {number} seconds
+     * @param elevationGain
      * @returns {number} power watts
      */
-    public static estimateRunningPower(weightKg: number, meters: number, seconds: number): number {
+    public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
+        const speed = meters / seconds;
         const minutes = seconds / 60;
         const km = meters / 1000;
         const minPerKmPace = minutes / km;
@@ -187,8 +190,31 @@ export class ActivityComputer {
         const VO2A = (VO2Reserve * weightKg) / 1000;
         const horizontalWatts = (75 * VO2A);
         // const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
-        // const VWatts = ((9.8 * weightKg) * (elevationGain)) / (minutes * 60);
-        const verticalWatts = ((weightKg * 9.81) / 4) / seconds;
+        // const verticalWatts = (9.8 * weightKg)  / seconds;
+        // const verticalWatts = ((weightKg * 9.81 * speed ) / 4) / seconds;
+        // const verticalWatts = ((weightKg * 9.81) / 25) / seconds;
+
+        // const elevation = _.clamp(elevationGain, 0, elevationGain);
+        // elevationGain = elevationGain;
+        // console.log(elevationGain);
+        // elevationGain = Math.abs(elevationGain) / 2.5;
+
+        // Not bad:
+        // elevationGain = Math.sqrt(Math.abs(elevationGain)) / 4.35;
+        // const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
+
+        // const verticalWatts = (weightKg * 9.81 * speed) / seconds;
+
+/*
+NOT BAD
+        elevationGain = Math.abs(elevationGain) / 3;
+        const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
+*/
+
+        // elevationGain = Math.abs(elevationGain) / 3;
+        const verticalWatts = (weightKg * 9.81 * elevationGain * speed) / seconds;
+
+
         return Math.round(horizontalWatts + verticalWatts);
     }
 
@@ -234,7 +260,8 @@ export class ActivityComputer {
 
         if (this.activityType === "Run" && !hasPowerMeter) {
             try {
-                activityStream.watts = ActivityComputer.createRunningPowerEstimationStream(athleteWeight, activityStream.grade_adjusted_distance, activityStream.time);
+                activityStream.watts = ActivityComputer.createRunningPowerEstimationStream(athleteWeight,
+                    activityStream.distance, activityStream.time, activityStream.altitude);
             } catch (err) {
                 console.warn(err);
             }
