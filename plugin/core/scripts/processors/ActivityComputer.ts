@@ -137,9 +137,11 @@ export class ActivityComputer {
      * @param athleteWeight Mass of athlete in KG
      * @param gradeAdjustedDistanceArray
      * @param timeArray
+     * @param altitudeArray
      * @returns {Array<number>} Array of power
      */
-    public static createRunningPowerEstimationStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>, timeArray: Array<number>): Array<number> {
+    public static createRunningPowerEstimationStream(athleteWeight: number, gradeAdjustedDistanceArray: Array<number>,
+                                                     timeArray: Array<number>): Array<number> {
 
         console.log("Estimating power data stream from athleteWeight (%d kg) and grade adjusted distance", athleteWeight);
 
@@ -169,7 +171,9 @@ export class ActivityComputer {
     }
 
     /**
-     *
+     * Return a power estimation from athlete weight and speed (m/s)
+     * https://alancouzens.com/blog/Run_Power.html (iframe https://alancouzens.com/blog/run_power.html)
+     * http://sprott.physics.wisc.edu/technote/walkrun.htm
      * @param {number} weightKg
      * @param {number} meters
      * @param {number} seconds
@@ -178,12 +182,14 @@ export class ActivityComputer {
     public static estimateRunningPower(weightKg: number, meters: number, seconds: number): number {
         const minutes = seconds / 60;
         const km = meters / 1000;
-        const pace = minutes / km;
-        const VO2Reserve = 210 / pace;
+        const minPerKmPace = minutes / km;
+        const VO2Reserve = 210 / minPerKmPace;
         const VO2A = (VO2Reserve * weightKg) / 1000;
-        const HWatts = (75 * VO2A);
-        const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
-        return Math.round(HWatts + VWatts); // FIXME VWatts ?!
+        const horizontalWatts = (75 * VO2A);
+        // const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
+        // const VWatts = ((9.8 * weightKg) * (elevationGain)) / (minutes * 60);
+        const verticalWatts = ((weightKg * 9.81) / 4) / seconds;
+        return Math.round(horizontalWatts + verticalWatts);
     }
 
     protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
