@@ -16,7 +16,7 @@ import {
     IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {InconsistentParameters} from "../../../common/scripts/exceptions/InconsistentParameters";
+import {RunningPowerEstimator} from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 
@@ -132,91 +132,6 @@ export class ActivityComputer {
         return this.smoothAltitude(activityStream, activityStatsMap.elevation);
     }
 
-    /**
-     * Create Running Power stream estimation
-     * @param athleteWeight Mass of athlete in KG
-     * @param distanceArray
-     * @param timeArray
-     * @param altitudeArray
-     * @returns {Array<number>} Array of power
-     */
-    public static createRunningPowerEstimationStream(athleteWeight: number, distanceArray: Array<number>,
-                                                     timeArray: Array<number>, altitudeArray: Array<number>): Array<number> {
-
-        console.log("Estimating power data stream from athleteWeight (%d kg) and grade adjusted distance", athleteWeight);
-
-        if (!_.isNumber(athleteWeight)) {
-            throw new InconsistentParameters("athleteWeight required as number");
-        }
-
-        if (!_.isArray(distanceArray)) {
-            throw new InconsistentParameters("distanceArray required as array");
-        }
-
-        if (!_.isArray(timeArray)) {
-            throw new InconsistentParameters("timeArray required as array");
-        }
-
-        let powerStream: Array<number> = [];
-        for (let i = 0; i < timeArray.length; i++) {
-            let power = 0;
-            if (i > 0) {
-                const time = timeArray[i] - timeArray[i - 1];
-                const distanceAdjusted = distanceArray[i] - distanceArray[i - 1];
-                const elevationGain = altitudeArray[i] - altitudeArray[i - 1];
-                power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time, elevationGain);
-            }
-            powerStream.push(power);
-        }
-        return powerStream;
-    }
-
-    /**
-     * Return a power estimation from athlete weight and speed (m/s)
-     * https://alancouzens.com/blog/Run_Power.html (iframe https://alancouzens.com/blog/run_power.html)
-     * http://sprott.physics.wisc.edu/technote/walkrun.htm
-     * @param {number} weightKg
-     * @param {number} meters
-     * @param {number} seconds
-     * @param elevationGain
-     * @returns {number} power watts
-     */
-    public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
-        const speed = meters / seconds;
-        const minutes = seconds / 60;
-        const km = meters / 1000;
-        const minPerKmPace = minutes / km;
-        const VO2Reserve = 210 / minPerKmPace;
-        const VO2A = (VO2Reserve * weightKg) / 1000;
-        const horizontalWatts = (75 * VO2A);
-        // const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
-        // const verticalWatts = (9.8 * weightKg)  / seconds;
-        // const verticalWatts = ((weightKg * 9.81 * speed ) / 4) / seconds;
-        // const verticalWatts = ((weightKg * 9.81) / 25) / seconds;
-
-        // const elevation = _.clamp(elevationGain, 0, elevationGain);
-        // elevationGain = elevationGain;
-        // console.log(elevationGain);
-        // elevationGain = Math.abs(elevationGain) / 2.5;
-
-        // Not bad:
-        // elevationGain = Math.sqrt(Math.abs(elevationGain)) / 4.35;
-        // const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
-
-        // const verticalWatts = (weightKg * 9.81 * speed) / seconds;
-
-/*
-NOT BAD
-        elevationGain = Math.abs(elevationGain) / 3;
-        const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
-*/
-
-        // elevationGain = Math.abs(elevationGain) / 3;
-        const verticalWatts = (weightKg * 9.81 * elevationGain * speed) / seconds;
-
-
-        return Math.round(horizontalWatts + verticalWatts);
-    }
 
     protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
 
@@ -260,7 +175,7 @@ NOT BAD
 
         if (this.activityType === "Run" && !hasPowerMeter) {
             try {
-                activityStream.watts = ActivityComputer.createRunningPowerEstimationStream(athleteWeight,
+                activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight,
                     activityStream.distance, activityStream.time, activityStream.altitude);
             } catch (err) {
                 console.warn(err);
