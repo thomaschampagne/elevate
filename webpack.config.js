@@ -6,13 +6,14 @@ module.exports = {
   entry: {
     contentScripts: path.join(__dirname, 'plugin/core/scripts/Content.ts'),
     injectedScripts: path.join(__dirname, 'plugin/core/scripts/ScriptsInjector.ts'),
-    background: path.join(__dirname, 'plugin/common/scripts/Background.ts')
+    background: path.join(__dirname, 'plugin/common/scripts/Background.ts'),
+    updateHandler: path.join(__dirname, 'plugin/core/scripts/InstallUpdateHandler.ts')
   },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js'
   },
-  devtool: 'inline-source-map',
+  // devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.css'],
     alias: {

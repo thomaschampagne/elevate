@@ -7,6 +7,7 @@
   "version_name": "5.10.0 Stable",
   "background": {
     "scripts": [
+      "updateHandler.js",
       "background.js"
     ]
   },

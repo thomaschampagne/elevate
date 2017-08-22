@@ -5,7 +5,7 @@ import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+import * as ComputeAnalysisWorker from "worker-loader?inline!./workers/ComputeAnalysisWorker";
 
 export class ActivitiesProcessor {
 
@@ -117,13 +117,10 @@ export class ActivitiesProcessor {
     }
 
     protected computeActivity(activityWithStream: ISyncActivityWithStream): Q.IPromise<IAnalysisData> {
-
         const deferred = Q.defer<IAnalysisData>();
 
         // Lets create that worker/thread!
-        const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
-            type: "application/javascript",
-        })));
+        const computeAnalysisThread: Worker = new ComputeAnalysisWorker();
 
         // Create activity stats map from given activity
         const activityStatsMap: IActivityStatsMap = this.createActivityStatMap(activityWithStream);

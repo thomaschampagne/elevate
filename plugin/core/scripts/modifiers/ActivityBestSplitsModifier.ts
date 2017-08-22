@@ -2,8 +2,6 @@
  *  Use d3 version provided by strava.com
  *  And do not inject d3 as 'import * as d3 from "d3";'
  */
-declare let d3: any; // Injected by strava.com
-
 import * as _ from "lodash";
 import * as $ from "jquery";
 import {Helper} from "../../../common/scripts/Helper";

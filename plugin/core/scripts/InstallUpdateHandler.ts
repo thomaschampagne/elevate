@@ -1,3 +1,8 @@
+
+import { userSettings } from "../../common/scripts/UserSettings";
+import { Helper } from "../../common/scripts/Helper";
+import { StorageManager } from "../../common/scripts/modules/StorageManager";
+
 class InstallUpdateHandler {
 
     protected static handleInstall() {
@@ -10,36 +15,6 @@ class InstallUpdateHandler {
                 url: chrome.extension.getURL("/options/app/index.html#!/"), // TODO Get from config/constants
             }, (tab: chrome.tabs.Tab) => {
                 console.log("First install. Display settings:", tab);
-            });
-        });
-    }
-
-    protected static getUserSettings(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            SystemJS.import("common/scripts/UserSettings.js").then((module) => {
-                resolve(module.userSettings);
-            }, (err) => {
-                reject(err);
-            });
-        });
-    }
-
-    protected static getHelper(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            SystemJS.import("common/scripts/Helper.js").then((module) => {
-                resolve(module.Helper);
-            }, (err) => {
-                reject(err);
-            });
-        });
-    }
-
-    protected static getStorageManager(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            SystemJS.import("common/scripts/modules/StorageManager.js").then((module) => {
-                resolve(module.StorageManager);
-            }, (err) => {
-                reject(err);
             });
         });
     }
@@ -61,26 +36,12 @@ class InstallUpdateHandler {
 
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
 
-        Promise.all([
-            this.getUserSettings(),
-            this.getHelper(),
-            this.getStorageManager(),
-        ]).then((modules) => {
+        console.debug("UserSettings on update", userSettings);
 
-            const userSettings = modules[0];
-            const Helper = modules[1];
-            const StorageManager = modules[2];
-
-            console.debug("UserSettings on update", userSettings);
-
-            // Clear local history if coming from version under 5.1.1
-            if (Helper.versionCompare("5.1.1", details.previousVersion) === 1) {
-                this.clearSyncCache(StorageManager);
-            }
-
-        }, (err) => {
-            console.error(err);
-        });
+        // Clear local history if coming from version under 5.1.1
+        if (Helper.versionCompare("5.1.1", details.previousVersion) === 1) {
+            this.clearSyncCache(StorageManager);
+        }
     }
 
     protected static clearSyncCache(injectedStorageManagerModule: any): void {

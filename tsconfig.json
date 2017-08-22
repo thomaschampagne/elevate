@@ -20,7 +20,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "lib": ["dom", "es6", "webworker"],
+    "lib": ["dom", "es6", "webworker", "scripthost"],
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,

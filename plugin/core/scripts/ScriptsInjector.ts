@@ -1,4 +1,5 @@
 import "fancyboxCss";
+import "../css/core.css";
 import { StravistiX } from "./StravistiX";
 import { constants } from "../../common/scripts/Constants";
 import * as $ from "jquery";

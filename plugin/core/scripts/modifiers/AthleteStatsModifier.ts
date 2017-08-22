@@ -1,4 +1,7 @@
-import * as d3 from "d3";
+/*
+ *  Use d3 version provided by strava.com
+ *  And do not inject d3 as 'import * as d3 from "d3";'
+ */
 import * as _ from "lodash";
 import * as $ from "jquery";
 import {StorageManager} from "../../../common/scripts/modules/StorageManager";
@@ -510,7 +513,7 @@ export class AthleteStatsModifier implements IModifier {
                 .domain([minValue, maxValue])
                 .range([h, 0]);
 
-            const yAxis: d3.svg.Axis = d3.svg.axis()
+            const yAxis: any = d3.svg.axis()
                 .scale(y)
                 .orient("left")
                 .tickFormat(function(d: any) {
@@ -523,7 +526,7 @@ export class AthleteStatsModifier implements IModifier {
 
             const months: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-            const xAxis: d3.svg.Axis = d3.svg.axis()
+            const xAxis: any = d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
                 .ticks(d3.time.months)

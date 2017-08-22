@@ -1,8 +1,15 @@
 declare let Strava: any;
 
+declare let d3: any;
+
 declare let follow: any; // variable for Google Analytics
 
 declare module "fancybox";
+
+declare module "worker-loader*" {
+    const content: any;
+    export = content;
+}
 
 interface JQueryStatic {
     fancybox: (str: any, options?: any) => void;
