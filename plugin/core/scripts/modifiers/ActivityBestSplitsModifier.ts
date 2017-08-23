@@ -630,7 +630,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             removeSplitSelection();
         });
 
-        $(document).on("click", "[data-activity-points]", {}, (eventObject: JQueryEventObject) => {
+        $(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
 
             if (map) {
 
@@ -781,7 +781,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             });
         };
 
-        $(document).on("click", ".best-split-remove", (event: JQueryEventObject) => {
+        (<any>$(document)).on("click", ".best-split-remove", (event: JQueryEventObject) => {
 
             event.preventDefault();
 
@@ -803,12 +803,12 @@ export class ActivityBestSplitsModifier implements IModifier {
 
         $("#best-split-new-add").click((e: JQuery.Event) => {
             e.preventDefault();
-            const splitLength = parseInt($("#best-split-new-length").val());
+            const splitLength = parseInt($("#best-split-new-length").val().toString());
             if (splitLength < 1) {
                 $("#best-split-new-length").focus();
                 return;
             }
-            const splitType = parseInt($("#best-split-new-unit").val());
+            const splitType = parseInt($("#best-split-new-unit").val().toString());
 
             const splitAlreadyExist = _.find(splitsArray, {
                 length: splitLength,

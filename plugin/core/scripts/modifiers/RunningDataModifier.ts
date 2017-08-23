@@ -9,7 +9,7 @@ abstract class AbstractRunningDataModifier implements IModifier {
     }
 
     public modify(): void {
-        this.intervalId = setInterval(() => {
+        this.intervalId = window.setInterval(() => {
             const element: JQuery = $("#elevation-profile td[data-type=" + this.dataWatch + "] .toggle-button")
                 .not(".once-only")
                 .addClass("once-only");

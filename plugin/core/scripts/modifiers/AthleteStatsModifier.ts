@@ -631,7 +631,7 @@ export class AthleteStatsModifier implements IModifier {
             generateLines();
 
             $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
-                const year: number = $(this).val();
+                const year: number = parseInt($(this).val().toString());
                 data.filter(function(item: any) {
                     return item.year == year;
                 }).forEach(function(item: any) {
