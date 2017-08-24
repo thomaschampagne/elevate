@@ -1,20 +1,21 @@
 <md-sidenav-container>
-  <md-sidenav #sidenav mode="side" opened="true">
-    <md-nav-list>
-      <md-list-item *ngFor="let link of links" (click)="onMenuClicked(link)">
-        <button md-icon-button >
-          <md-icon>info</md-icon>
-          {{ link }}
-        </button>
-      </md-list-item>
-    </md-nav-list>
-  </md-sidenav>
-  <md-toolbar color="primary">
-    <button md-icon-button (click)="sidenav.toggle()">
-      <md-icon>menu</md-icon>
-    </button>
-  </md-toolbar>
-  <div>
-    Main content
-  </div>
+	<md-sidenav #sidenav mode="side" opened="true">
+		<md-nav-list>
+			<md-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+						  routerLinkActive="{{item.routerLinkActive}}">
+				<button md-icon-button>
+					<md-icon>{{item.icon}}</md-icon>
+					{{ item.name }}
+				</button>
+			</md-list-item>
+		</md-nav-list>
+	</md-sidenav>
+	<md-toolbar color="primary">
+		<button md-icon-button (click)="sidenav.toggle()">
+			<md-icon>menu</md-icon>
+		</button>
+	</md-toolbar>
+	<div>
+		<router-outlet></router-outlet>
+	</div>
 </md-sidenav-container>
