@@ -7,14 +7,14 @@
   "version_name": "5.10.0 Stable",
   "background": {
     "scripts": [
-      "updateHandler.js",
-      "background.js"
+      "core/updateHandler.js",
+      "core/background.js"
     ]
   },
   "content_scripts": [
     {
       "js": [
-        "contentScripts.js"
+        "core/contentScripts.js"
       ],
       "run_at": "document_end",
       "matches": [
@@ -37,9 +37,8 @@
     "unlimitedStorage"
   ],
   "web_accessible_resources": [
-    "core/icons/*",
-    "options/*",
-    "injectedScripts.js"
+    "core/*",
+    "app/*"
   ],
   "externally_connectable": {
     "matches": [

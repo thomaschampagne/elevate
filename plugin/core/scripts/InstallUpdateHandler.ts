@@ -12,7 +12,7 @@ class InstallUpdateHandler {
         }, (tab: chrome.tabs.Tab) => {
             console.log("First install. Display website new tab:", tab);
             chrome.tabs.create({
-                url: chrome.extension.getURL("/options/app/index.html#!/"), // TODO Get from config/constants
+                url: chrome.extension.getURL("/app/index.html#!/"), // TODO Get from config/constants
             }, (tab: chrome.tabs.Tab) => {
                 console.log("First install. Display settings:", tab);
             });

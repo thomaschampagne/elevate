@@ -87,7 +87,7 @@ export class Content {
             Content.loader.injectJS("let $ = jQuery;");
 
             Content.loader.require([
-                "injectedScripts.js"
+                "core/injectedScripts.js"
             ], () => {
                 this.emitStartCoreEvent(startCoreData);
             });
@@ -98,7 +98,7 @@ export class Content {
     protected assignConstantsValues(constants: IConstants) {
         constants.VERSION = chrome.runtime.getManifest().version;
         constants.EXTENSION_ID = chrome.runtime.id;
-        constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/options/app/index.html";
+        constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/app/index.html";
     }
 
     protected emitStartCoreEvent(startCoreData: any) {
@@ -109,7 +109,7 @@ export class Content {
 }
 
 export let appResources: IAppResources = {
-    settingsLink: chrome.extension.getURL("/options/app/index.html"),
+    settingsLink: chrome.extension.getURL("/app/index.html"),
     logoStravistix: chrome.extension.getURL("/core/icons/logo_stravistix_no_circle.svg"),
     menuIconBlack: chrome.extension.getURL("/core/icons/ic_menu_24px_black.svg"),
     menuIconOrange: chrome.extension.getURL("/core/icons/ic_menu_24px_orange.svg"),
