@@ -1,5 +1,6 @@
 import * as _ from "lodash"
 import * as Q from "q";
+import * as $ from "jquery";
 import {
     ActivitiesSynchronizer,
     ISyncResult
@@ -13,7 +14,19 @@ import {
 } from "../../plugin/common/scripts/interfaces/ISync";
 import {IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
 import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
-import {IAthleteProfile} from '../../plugin/common/scripts/interfaces/IAthleteProfile';
+import {IAthleteProfile} from "../../plugin/common/scripts/interfaces/IAthleteProfile";
+
+import * as userSettingsObj from "../fixtures/userSettings/2470979.json";
+import * as appResourcesObj from "../fixtures/appResources/appResources.json";
+import * as activityStreamObj from "../fixtures/activities/723224273/stream.json";
+
+import * as rawPage1Obj from "../fixtures/sync/rawPage0120161213.json";
+import * as rawPage2Obj from "../fixtures/sync/rawPage0220161213.json";
+import * as rawPage3Obj from "../fixtures/sync/rawPage0320161213.json";
+import * as rawPage4Obj from "../fixtures/sync/rawPage0420161213.json";
+import * as rawPage5Obj from "../fixtures/sync/rawPage0520161213.json";
+import * as rawPage6Obj from "../fixtures/sync/rawPage0620161213.json";
+import * as rawPage7Obj from "../fixtures/sync/rawPage0720161213.json";
 
 describe('ActivitiesSynchronizer syncing with stubs', () => {
 
@@ -73,18 +86,18 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
         CHROME_STORAGE_STUB = {}; // Reset storage
 
-        userSettingsMock = _.cloneDeep(window.__fixtures__['fixtures/userSettings/2470979']);
-        appResourcesMock = _.cloneDeep(window.__fixtures__['fixtures/appResources/appResources']);
+        userSettingsMock = _.cloneDeep(<any>userSettingsObj);
+        appResourcesMock = _.cloneDeep(<any>appResourcesObj);
 
         // We have 7 pages
         rawPagesOfActivities = [
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213']), // Page 01 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0220161213']), // Page 02 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0320161213']), // Page 03 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0420161213']), // Page 04 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0520161213']), // Page 05 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0620161213']), // Page 06 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0720161213']), // Page 07 - 20 ACT
+            _.cloneDeep(<any>rawPage1Obj), // Page 01 - 20 ACT
+            _.cloneDeep(<any>rawPage2Obj), // Page 02 - 20 ACT
+            _.cloneDeep(<any>rawPage3Obj), // Page 03 - 20 ACT
+            _.cloneDeep(<any>rawPage4Obj), // Page 04 - 20 ACT
+            _.cloneDeep(<any>rawPage5Obj), // Page 05 - 20 ACT
+            _.cloneDeep(<any>rawPage6Obj), // Page 06 - 20 ACT
+            _.cloneDeep(<any>rawPage7Obj), // Page 07 - 20 ACT
         ];
         activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
@@ -104,7 +117,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         /**
          * Stubing activity stream promised, reduce @ 50 samples
          */
-        let stream: any = _.cloneDeep(window.__fixtures__['fixtures/activities/723224273/stream']);
+        let stream: any = _.cloneDeep(<any>activityStreamObj);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         spyOn(activitiesSynchronizer, 'fetchStreamByActivityId').and.callFake((activityId: number) => {

@@ -228,7 +228,8 @@ module.exports = [
         },
         {
           "test": /\.ts$/,
-          "loader": "@ngtools/webpack"
+          "loader": "@ngtools/webpack",
+          "exclude": [/node_modules/, /\.spec.ts?$/]
         }
       ]
     },
@@ -363,8 +364,8 @@ module.exports = [
     module: {
       loaders: [
         {
-          exclude: [/node_modules/, /\.spec.tsx?$/],
-          test: /\.tsx?$/,
+          exclude: [/node_modules/, /\.spec.ts?$/],
+          test: /\.ts?$/,
           loader: 'ts-loader'
         },
         {

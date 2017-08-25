@@ -4,12 +4,23 @@ import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSetting
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
 import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/common/scripts/interfaces/ISync";
 import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
+import * as rawPageOfActivitiesObj from "../fixtures/sync/rawPage0120161213.json";
+import * as computedActivitiesObj from "../fixtures/sync/computedActivities20161213.json";
+import * as userSettingsObj from "../fixtures/userSettings/2470979.json";
+import * as appResourcesObj from "../fixtures/appResources/appResources.json";
 
 describe('ActivitiesSynchronizer', () => {
 
-    it('should remove activity from array properly ', () => {
+    let rawPageOfActivities: Array<ISyncActivityComputed>;
+    let computedActivities: Array<ISyncActivityComputed>;
+    let appResourcesMock: IAppResources;
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+    beforeEach(() => {
+        rawPageOfActivities = _.cloneDeep((<any>rawPageOfActivitiesObj).models)
+        computedActivities = _.cloneDeep((<any>computedActivitiesObj).computedActivities);
+    });
+
+    it('should remove activity from array properly ', () => {
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -21,8 +32,6 @@ describe('ActivitiesSynchronizer', () => {
     });
 
     it('should edit activity from array properly ', () => {
-
-        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
@@ -39,9 +48,6 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should detect activities added, modified and deleted ', () => {
 
-        let computedActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
-        let rawPageOfActivities: Array<ISyncRawStravaActivity> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
-
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
         computedActivities = removeActivityFromArray(707356065, computedActivities); // Remove Ride "Je suis un gros lent !"
@@ -52,7 +58,7 @@ describe('ActivitiesSynchronizer', () => {
 
         // Now find+test changes
         // let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-        let changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
+        let changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(<any>rawPageOfActivities, computedActivities);
 
         expect(changes).not.toBeNull();
         expect(changes.deleted).toEqual([]);
@@ -80,8 +86,8 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should append history of pages where activities added, modified and deleted ', () => {
 
-        let userSettingsMock: IUserSettings = _.cloneDeep(window.__fixtures__['fixtures/userSettings/2470979']);
-        let appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__['fixtures/appResources/appResources']);
+        let userSettingsMock: IUserSettings = _.cloneDeep(<any>userSettingsObj);
+        let appResourcesMock: IAppResources = _.cloneDeep(<any>appResourcesObj);
         let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         // Append

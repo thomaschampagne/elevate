@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import {IActivityStream} from "../../plugin/common/scripts/interfaces/IActivityData";
 import {CourseMaker, ExportTypes, ICourseBounds} from "../../plugin/common/scripts/CourseMarker";
+import * as activityStreamObject from "../fixtures/activities/829770999/stream.json";
 
 describe('CourseMaker', () => {
 
@@ -9,9 +10,9 @@ describe('CourseMaker', () => {
     let activityStream: IActivityStream;
 
     beforeEach(() => {
-        activityStream = _.cloneDeep(window.__fixtures__['fixtures/activities/829770999/stream']);
+        activityStream = _.cloneDeepWith(activityStreamObject);
     });
-
+    
     it('should export GPX stream with consistency data', () => {
 
         // Given
