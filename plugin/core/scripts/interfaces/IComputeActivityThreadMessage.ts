@@ -13,5 +13,4 @@ export interface IComputeActivityThreadMessage {
     activityStream: IActivityStream;
     bounds: number[];
     returnZones: boolean;
-    systemJsConfig: SystemJSLoader.Config;
 }

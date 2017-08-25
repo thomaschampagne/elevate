@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import {constants} from "../../common/scripts/Constants";
-import {IConstants} from "../../common/scripts/interfaces/IConstants";
-import {IUserSettings} from "../../common/scripts/interfaces/IUserSettings";
-import {userSettings} from "../../common/scripts/UserSettings";
-import {Loader} from "../modules/Loader";
-import {IAppResources} from "./interfaces/IAppResources";
+import { constants } from "../../common/scripts/Constants";
+import { IConstants } from "../../common/scripts/interfaces/IConstants";
+import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { userSettings } from "../../common/scripts/UserSettings";
+import { Loader } from "../modules/Loader";
+import { IAppResources } from "./interfaces/IAppResources";
 
 interface IStartCoreData {
     chromeSettings: any;
@@ -87,13 +87,9 @@ export class Content {
             Content.loader.injectJS("let $ = jQuery;");
 
             Content.loader.require([
-                "node_modules/systemjs/dist/system.js", // Inject SystemJS module loader and start core app inner strava.com
+                "core/injectedScripts.js"
             ], () => {
-                Content.loader.require([
-                    "core/scripts/SystemJS.core.setup.js", // Now load SystemJS core setup
-                ], () => {
-                    this.emitStartCoreEvent(startCoreData);
-                });
+                this.emitStartCoreEvent(startCoreData);
             });
         });
 
@@ -102,7 +98,7 @@ export class Content {
     protected assignConstantsValues(constants: IConstants) {
         constants.VERSION = chrome.runtime.getManifest().version;
         constants.EXTENSION_ID = chrome.runtime.id;
-        constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/options/app/index.html";
+        constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/app/index.html";
     }
 
     protected emitStartCoreEvent(startCoreData: any) {
@@ -113,7 +109,7 @@ export class Content {
 }
 
 export let appResources: IAppResources = {
-    settingsLink: chrome.extension.getURL("/options/app/index.html"),
+    settingsLink: chrome.extension.getURL("/app/index.html"),
     logoStravistix: chrome.extension.getURL("/core/icons/logo_stravistix_no_circle.svg"),
     menuIconBlack: chrome.extension.getURL("/core/icons/ic_menu_24px_black.svg"),
     menuIconOrange: chrome.extension.getURL("/core/icons/ic_menu_24px_orange.svg"),

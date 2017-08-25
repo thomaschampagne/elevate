@@ -1,5 +1,9 @@
-import * as d3 from "d3";
+/*
+ *  Use d3 version provided by strava.com
+ *  And do not inject d3 as 'import * as d3 from "d3";'
+ */
 import * as _ from "lodash";
+import * as $ from "jquery";
 import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
 import {IAppResources} from "../interfaces/IAppResources";
@@ -509,7 +513,7 @@ export class AthleteStatsModifier implements IModifier {
                 .domain([minValue, maxValue])
                 .range([h, 0]);
 
-            const yAxis: d3.svg.Axis = d3.svg.axis()
+            const yAxis: any = d3.svg.axis()
                 .scale(y)
                 .orient("left")
                 .tickFormat(function(d: any) {
@@ -522,7 +526,7 @@ export class AthleteStatsModifier implements IModifier {
 
             const months: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-            const xAxis: d3.svg.Axis = d3.svg.axis()
+            const xAxis: any = d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
                 .ticks(d3.time.months)
@@ -627,7 +631,7 @@ export class AthleteStatsModifier implements IModifier {
             generateLines();
 
             $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
-                const year: number = $(this).val();
+                const year: number = parseInt($(this).val().toString());
                 data.filter(function(item: any) {
                     return item.year == year;
                 }).forEach(function(item: any) {

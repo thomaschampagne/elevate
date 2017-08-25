@@ -1,6 +1,10 @@
+import * as _ from "lodash";
 import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
+import * as userSettingsObj from '../fixtures/userSettings/2470979.json';
+import * as activityStreamObj from '../fixtures/activities/723224273/stream.json';
+import * as activityStatsMapObj from '../fixtures/activities/723224273/statsMap.json';
 
 describe('ActivityComputer', () => {
 
@@ -8,9 +12,9 @@ describe('ActivityComputer', () => {
 
         const powerMeter: boolean = false;
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/723224273/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/723224273/statsMap'];
+        let userSettingsMock: IUserSettings = _.cloneDeep(<any>userSettingsObj);
+        let stream: IActivityStream = _.cloneDeep(<any>activityStreamObj);
+        let statsMap: IActivityStatsMap = _.cloneDeep(<any>activityStatsMapObj);
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 

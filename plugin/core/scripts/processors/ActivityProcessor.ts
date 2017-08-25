@@ -5,7 +5,7 @@ import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {VacuumProcessor} from "./VacuumProcessor";
-import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+import * as ComputeAnalysisWorker from "worker-loader?inline!./workers/ComputeAnalysisWorker";
 
 export class ActivityProcessor {
 
@@ -16,7 +16,6 @@ export class ActivityProcessor {
     protected zones: any;
     protected activityType: string;
     protected isTrainer: boolean;
-    private computeAnalysisWorkerBlobURL: string;
     private computeAnalysisThread: Worker;
     private userSettings: IUserSettings;
 
@@ -90,19 +89,9 @@ export class ActivityProcessor {
     }
 
     protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
-
-        // Create worker blob URL if not exist
-        if (!this.computeAnalysisWorkerBlobURL) {
-
-            // Create a blob from 'ComputeAnalysisWorker' function variable as a string
-            const blob: Blob = new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {type: "application/javascript"});
-
-            // Keep track of blob URL to reuse it
-            this.computeAnalysisWorkerBlobURL = URL.createObjectURL(blob);
-        }
-
+        
         // Lets create that worker/thread!
-        this.computeAnalysisThread = new Worker(this.computeAnalysisWorkerBlobURL);
+        this.computeAnalysisThread = new ComputeAnalysisWorker();
 
         // Send user and activity data to the thread
         // He will compute them in the background
@@ -117,7 +106,6 @@ export class ActivityProcessor {
             activityStream,
             bounds,
             returnZones: true,
-            systemJsConfig: SystemJS.getConfig(),
         };
 
         this.computeAnalysisThread.postMessage(threadMessage);

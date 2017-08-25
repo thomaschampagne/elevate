@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import * as _ from "lodash";
 import {saveAs} from "file-saver";
 import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";

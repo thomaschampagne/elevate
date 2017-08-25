@@ -2,9 +2,8 @@
  *  Use d3 version provided by strava.com
  *  And do not inject d3 as 'import * as d3 from "d3";'
  */
-declare let d3: any; // Injected by strava.com
-
 import * as _ from "lodash";
+import * as $ from "jquery";
 import {Helper} from "../../../common/scripts/Helper";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
@@ -631,7 +630,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             removeSplitSelection();
         });
 
-        $(document).on("click", "[data-activity-points]", {}, (eventObject: JQueryEventObject) => {
+        $(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
 
             if (map) {
 
@@ -782,7 +781,7 @@ export class ActivityBestSplitsModifier implements IModifier {
             });
         };
 
-        $(document).on("click", ".best-split-remove", (event: JQueryEventObject) => {
+        (<any>$(document)).on("click", ".best-split-remove", (event: JQueryEventObject) => {
 
             event.preventDefault();
 
@@ -804,12 +803,12 @@ export class ActivityBestSplitsModifier implements IModifier {
 
         $("#best-split-new-add").click((e: JQuery.Event) => {
             e.preventDefault();
-            const splitLength = parseInt($("#best-split-new-length").val());
+            const splitLength = parseInt($("#best-split-new-length").val().toString());
             if (splitLength < 1) {
                 $("#best-split-new-length").focus();
                 return;
             }
-            const splitType = parseInt($("#best-split-new-unit").val());
+            const splitType = parseInt($("#best-split-new-unit").val().toString());
 
             const splitAlreadyExist = _.find(splitsArray, {
                 length: splitLength,

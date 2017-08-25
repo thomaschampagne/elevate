@@ -1,7 +1,8 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {IAppResources} from "../interfaces/IAppResources";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import $ from "../../modules/jquery.appear";
+import { Helper } from "../../../common/scripts/Helper";
+import { IAppResources } from "../interfaces/IAppResources";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 
 export interface EffortInfo {
     // values obtained from the HTTP request
@@ -84,7 +85,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
         // Used to update header with new columns names when first item has appear
         this.firstAppearDone = false;
-
+        
         $("tr[data-segment-effort-id]").appear().on("appear", (event: Event, $items: any) => {
 
             if (!this.firstAppearDone) {
@@ -432,5 +433,4 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
         return "rgb(" + [color.r, color.g, color.b].join(",") + ")";
         // or output as hex if preferred
     }
-
 }

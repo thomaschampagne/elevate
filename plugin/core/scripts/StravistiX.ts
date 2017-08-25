@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import * as _ from "lodash";
 import {Helper} from "../../common/scripts/Helper";
 import {IActivityBasicInfo} from "../../common/scripts/interfaces/IActivityData";

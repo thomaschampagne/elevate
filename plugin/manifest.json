@@ -7,16 +7,14 @@
   "version_name": "5.10.0 Stable",
   "background": {
     "scripts": [
-      "node_modules/systemjs/dist/system.js",
-      "core/scripts/InstallUpdateHandler.js",
-      "core/scripts/SystemJS.background.setup.js"
+      "core/updateHandler.js",
+      "core/background.js"
     ]
   },
   "content_scripts": [
     {
       "js": [
-        "node_modules/systemjs/dist/system.js",
-        "core/scripts/SystemJS.content.setup.js"
+        "core/contentScripts.js"
       ],
       "run_at": "document_end",
       "matches": [
@@ -30,7 +28,7 @@
     "48": "core/icons/48.png",
     "128": "core/icons/128.png"
   },
-  "options_page": "webapp/app/index.html",
+  "options_page": "app/index.html",
   "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
   "permissions": [
     "*://www.strava.com/*",
@@ -39,18 +37,8 @@
     "unlimitedStorage"
   ],
   "web_accessible_resources": [
-    "node_modules/*",
-    "common/*",
-    "core/modules/*",
-    "core/system.core.config.js",
-    "core/system.core.start.js",
-    "core/config/*",
-    "core/scripts/processors/*",
-    "core/scripts/modifiers/*",
-    "core/scripts/*",
-    "core/css/*",
-    "core/icons/*",
-    "options/*"
+    "core/*",
+    "app/*"
   ],
   "externally_connectable": {
     "matches": [
