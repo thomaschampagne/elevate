@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import * as $ from "jquery";
 import {IAppResources} from "../interfaces/IAppResources";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
