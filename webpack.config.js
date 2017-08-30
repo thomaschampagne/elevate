@@ -1,8 +1,9 @@
+const { SourceMapDevToolPlugin } = require("webpack");
 const webappConfig = require('./config/webapp.webpack.config');
 const coreConfig = require('./config/core.webpack.config');
 
 module.exports = function (env) {
-  if (env.dev) {
+  if (env && env.dev) {
     const devtool = "cheap-module-source-map";
     webappConfig.devtool = devtool;
     coreConfig.devtool = devtool;
