@@ -3,16 +3,16 @@ const exec = require("child_process").exec;
 const zipFolder = require("zip-folder");
 const moment = require("moment");
 
-module.exports = MakeArchivePlugin;
+module.exports = StravistixPackagePlugin;
 
-function MakeArchivePlugin(options) {
+function StravistixPackagePlugin(options) {
   if (!options || !options.sourceDir || !options.destinationDir || !options.manifestPath) {
     throw Error("options should be object which contains sourceDir destinationDir and manifestPath properties");
   }
   this.options = options;
 }
 
-MakeArchivePlugin.prototype.apply = function (compiler) {
+StravistixPackagePlugin.prototype.apply = function (compiler) {
   const options = this.options;
 
   compiler.plugin("done", (stats) => {

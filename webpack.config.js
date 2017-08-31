@@ -1,7 +1,7 @@
 const { SourceMapDevToolPlugin } = require("webpack");
 const webappConfig = require("./config/webapp.webpack.config");
 const coreConfig = require("./config/core.webpack.config");
-const MakeArchivePlugin = require("./config/make-archive-plugin");
+const StravistixPackagePlugin = require("./config/stravistix-package-plugin");
 
 module.exports = function (env) {
   if (env && env.dev) {
@@ -18,10 +18,10 @@ module.exports = function (env) {
       })
     );
 
-    if (env && env.archive) {
+    if (env && env.package) {
 
       coreConfig.plugins.push(
-        new MakeArchivePlugin({
+        new StravistixPackagePlugin({
           sourceDir: "./dist",
           destinationDir: "./package",
           manifestPath: "./dist/manifest.json",

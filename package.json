@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
-    "archive": "npm run build -- --env.archive",
-    "archive:preview": "npm run build -- --env.archive --env.preview",
+    "package": "npm run build -- --env.package",
+    "package:preview": "npm run build -- --env.package --env.preview",
     "build": "rimraf dist && webpack",
     "dev": "npm run build -- -w --env.dev",
     "test:core": "karma start ./karma.conf.js",
