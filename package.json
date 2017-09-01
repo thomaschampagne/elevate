@@ -126,6 +126,6 @@
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1",
     "worker-loader": "^0.8.1",
-    "zip-folder": "^1.0.0"
+    "zip-folder": "^1.0.0
   }
 }

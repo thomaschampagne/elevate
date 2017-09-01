@@ -19,7 +19,6 @@ module.exports = function (env) {
     );
 
     if (env && env.package) {
-
       coreConfig.plugins.push(
         new StravistixPackagePlugin({
           sourceDir: "./dist",
