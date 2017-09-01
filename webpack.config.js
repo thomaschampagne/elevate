@@ -362,6 +362,7 @@ module.exports = [
       }
     },
     "module": {
+      "noParse": /lodash/,
       "loaders": [
         {
           "exclude": [/node_modules/, /\.spec.ts?$/],
@@ -392,7 +393,7 @@ module.exports = [
           "to": "../manifest.json"
         }
       ]),
-      
+
       // add to uglyfy for future package task
       // new webpack.optimize.UglifyJsPlugin({
       //   sourceMap: true
