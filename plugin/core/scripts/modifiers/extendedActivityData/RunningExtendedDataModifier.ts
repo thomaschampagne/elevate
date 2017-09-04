@@ -46,20 +46,32 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
         let averageWatts: string = "-";
         if (this.userSettings.displayAdvancedPowerData) {
-            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts && this.analysisData.powerData.hasPowerMeter) {
+
+            if (this.analysisData.powerData
+                && this.analysisData.powerData.avgWatts
+            // && this.analysisData.powerData.hasPowerMeter // Commented from now: runners without power meter can now get an estimation of avg
+            ) {
                 averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
             }
-            this.insertContentAtGridPosition(0, 3, averageWatts, "Running Average Power", "w", "displayAdvancedPowerData");
+
+            let averageWattsTitle = "Average Power";
+            if (this.analysisData.powerData.isEstimatedRunningPower === true) {
+                averageWattsTitle = "Estimated " + averageWattsTitle;
+            }
+            this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", "displayAdvancedPowerData");
         }
 
         let weightedPower: string = "-";
         if (this.userSettings.displayAdvancedPowerData) {
-            if (this.analysisData.powerData && this.analysisData.powerData.weightedPower && this.analysisData.powerData.hasPowerMeter) {
-                weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
-            }
-            this.insertContentAtGridPosition(1, 3, weightedPower, "Running Weighted Power", "w", "displayAdvancedPowerData");
-        }
 
+            if (this.analysisData.powerData
+                && this.analysisData.powerData.weightedPower
+                && this.analysisData.powerData.hasPowerMeter
+            ) {
+                weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+                this.insertContentAtGridPosition(1, 3, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
+            }
+        }
     }
 
     protected placeSummaryPanel(panelAdded: () => void): void {
@@ -71,7 +83,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
         setTimeout(() => { // Execute at the end to make sure DOM is ready
             let htmlButton: string = "<section>";
-            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+            htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
             htmlButton += "Show extended statistics of effort";
             htmlButton += "</a>";
             htmlButton += "</section>";
@@ -101,7 +113,10 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.dataViews.push(paceDataView);
         }
 
-        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData) {
+        if (this.analysisData.powerData
+            && this.userSettings.displayAdvancedPowerData
+        // && this.analysisData.powerData.hasPowerMeter
+        ) {
             const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
             powerDataView.setAppResources(this.appResources);
             powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);

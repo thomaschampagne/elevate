@@ -77,6 +77,7 @@ export interface IPowerData {
     medianWatts: number;
     upperQuartileWatts: number;
     powerZones: IZone[];
+    isEstimatedRunningPower?: boolean;
 }
 
 export interface IHeartRateData {

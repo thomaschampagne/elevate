@@ -164,26 +164,37 @@ export class ActivityComputer {
         // Estimated Intensity factor
         // Normalized Watt per Kg
 
-        // TODO FIXME if Running activity and no power meter... try to simulate power stream...
-        // TODO Check if owner of activity and use this.userSettings.userWeight
-        // TODO Enable estimation for all ! Since strava as cutted off power data
-        // athleteWeight = 68.9456; // Christophe
-        // athleteWeight = 54.32; // Mikala
-        // hasPowerMeter = false; // Force estimation computing
+        let powerData: IPowerData;
 
-        console.warn("hasPowerMeter: " + hasPowerMeter);
+        // If Running activity with no power data, then try to estimate it for author of activity...
+        debugger;
+        if (this.activityType === "Run"
+            && _.isEmpty(activityStream.watts)
+        // && isAuthor // TODO..
+        ) {
+            // Use athlete weight given in settings for the author watching his run
+            athleteWeight = this.userSettings.userWeight;
 
-        if (this.activityType === "Run" && !hasPowerMeter) {
             try {
-                activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight,
-                    activityStream.distance, activityStream.time, activityStream.altitude);
+                console.log("Trying to  estimate wattage of this run...");
+                activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
+                    athleteWeight,
+                    activityStream.distance,
+                    activityStream.time, activityStream.altitude);
             } catch (err) {
-                console.warn(err);
+                console.error(err);
             }
-        }
 
-        let powerData: IPowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
-        console.warn(powerData); // TODO remove
+            const isEstimatedRunningPower = true;
+            powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+                activityStream.time, isEstimatedRunningPower);
+
+        } else {
+
+            powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+                activityStream.time);
+
+        }
 
         // TRaining IMPulse
         // %HRR Avg
@@ -422,14 +433,17 @@ export class ActivityComputer {
     }
 
     /**
-     * Andrew Coggan weighted power compute method (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
+     * Andrew Coggan weighted power compute method
+     * (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
      * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
      * 2) raise all the values obtained in step #1 to the 4th power.
      * 3) take the average of all of the values obtained in step #2.
      * 4) take the 4th root of the value obtained in step #3.
-     * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program like WKO+ to do the work for you <g>.)
+     * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
+     * like WKO+ to do the work for you <g>.)
      */
-    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[], velocityArray: number[], timeArray: number[]): IPowerData {
+    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[],
+                        velocityArray: number[], timeArray: number[], isEstimatedRunningPower?: boolean): IPowerData {
 
         if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
             return null;
@@ -534,6 +548,10 @@ export class ActivityComputer {
             upperQuartileWatts: percentiles[2],
             powerZones: (this.returnZones) ? powerZonesAlongActivityType : null, // Only while moving
         };
+
+        if(!_.isUndefined(isEstimatedRunningPower)){
+            powerData.isEstimatedRunningPower = isEstimatedRunningPower;
+        }
 
         return powerData;
     }
