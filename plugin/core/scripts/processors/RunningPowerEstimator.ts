@@ -13,8 +13,6 @@ export class RunningPowerEstimator {
     public static createRunningPowerEstimationStream(athleteWeight: number, distanceArray: Array<number>,
                                                      timeArray: Array<number>, altitudeArray: Array<number>): Array<number> {
 
-        console.log("Estimating power data stream from athleteWeight (%d kg) and grade adjusted distance", athleteWeight);
-
         if (!_.isNumber(athleteWeight)) {
             throw new InconsistentParameters("athleteWeight required as number");
         }

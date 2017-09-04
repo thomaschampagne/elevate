@@ -7,7 +7,7 @@ import {Helper} from "../../plugin/common/scripts/Helper";
 
 fdescribe("RunningPowerEstimator", () => {
 
-    const _estimationTolerance: number = 35; // W
+    const WATTS_TOLERANCE: number = 35.5; // W
 
     it("estimateRunningPower should provide a consistency average power compared to " +
         "real running power meter (based on https://www.strava.com/activities/874762067)", () => {
@@ -21,8 +21,8 @@ fdescribe("RunningPowerEstimator", () => {
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
 
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
     it("estimateRunningPower should provide a consistency average power compared to " +
@@ -39,12 +39,11 @@ fdescribe("RunningPowerEstimator", () => {
         // When
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
     // When
-
 
     it("estimateRunningPower should provide a consistency average power compared to " +
         "real running power meter (based on https://www.strava.com/activities/878683797)", () => {
@@ -54,14 +53,13 @@ fdescribe("RunningPowerEstimator", () => {
         const totalSeconds = Helper.HHMMSStoSeconds("01:14:52");
         const elevationGain = 148;
 
-
         const _expectedAvgPower = 296;
 
         // When
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
     it("estimateRunningPower should provide a consistency average power compared to " +
@@ -78,8 +76,8 @@ fdescribe("RunningPowerEstimator", () => {
         // When
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
     it("estimateRunningPower should provide a consistency average power compared to " +
@@ -90,14 +88,13 @@ fdescribe("RunningPowerEstimator", () => {
         const totalSeconds = Helper.HHMMSStoSeconds("00:44:23");
         const elevationGain = 56;
 
-
         const _expectedAvgPower = 215;
 
         // When
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
     it("estimateRunningPower should provide a consistency average power compared to " +
@@ -108,23 +105,21 @@ fdescribe("RunningPowerEstimator", () => {
         const totalSeconds = Helper.HHMMSStoSeconds("00:41:14");
         const elevationGain = 32;
 
-
         const _expectedAvgPower = 285;
 
         // When
         let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
-        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - _estimationTolerance);
-        expect(power).toBeLessThanOrEqual(_expectedAvgPower + _estimationTolerance);
+        expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
+        expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
     });
 
 
-    xit("createRunningPowerEstimationStream should provide " +
+    it("createRunningPowerEstimationStream should provide " +
         "power stats estimations near real running power meter  (based on https://www.strava.com/activities/874762067)", () => {
 
         // Given
         const _expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
-        const _tolerance = 10;
         const athleteWeight = 54.32;
         let stream: IActivityStream = window.__fixtures__["fixtures/activities/874762067/stream"]; // Mikala run sample 1/2 NCNR Run Club
 
@@ -133,21 +128,18 @@ fdescribe("RunningPowerEstimator", () => {
             stream.distance, stream.time, stream.altitude);
         let estimatedAvgPower: number = _.mean(powerArray);
 
-        console.log(estimatedAvgPower);
-
         // Then
         expect(estimatedAvgPower).not.toBeNull();
-        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
-        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
 
     });
 
-    xit("createRunningPowerEstimationStream should provide " +
+    it("createRunningPowerEstimationStream should provide " +
         "power stats estimations near real running power meter  (based on https://www.strava.com/activities/852961332)", () => {
 
         // Given
         const _expectedPower = 287;
-        const _tolerance = 10;
         const athleteWeight = 79.4;
         let stream: IActivityStream = window.__fixtures__["fixtures/activities/852961332/stream"]; // Stryd 3/6 lap test .... brrr
 
@@ -157,21 +149,18 @@ fdescribe("RunningPowerEstimator", () => {
 
         let estimatedAvgPower: number = _.mean(powerArray);
 
-        console.log(estimatedAvgPower);
-
         // Then
         expect(estimatedAvgPower).not.toBeNull();
-        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
-        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
     });
 
-    xit("createRunningPowerEstimationStream should provide " +
+    it("createRunningPowerEstimationStream should provide " +
         "power stats estimations near real running power meter" +
         "based on https://www.strava.com/activities/878683797", () => {
 
         // Given
         const _expectedPower = 296;
-        const _tolerance = 10;
         const athleteWeight = 79.4;
 
         // Two shooting ranges and a road dedicated to the inventor of Velcro
@@ -183,21 +172,18 @@ fdescribe("RunningPowerEstimator", () => {
 
         let estimatedAvgPower: number = _.mean(powerArray);
 
-        console.log(estimatedAvgPower);
-
         // Then
         expect(estimatedAvgPower).not.toBeNull();
-        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
-        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
     });
 
-    xit("createRunningPowerEstimationStream should provide " +
+    it("createRunningPowerEstimationStream should provide " +
         "power stats estimations near real running power meter" +
         "based on https://www.strava.com/activities/833008371", () => {
 
         // Given
         const _expectedPower = 310;
-        const _tolerance = 10;
         const athleteWeight = 79.4;
 
         let stream: IActivityStream = window.__fixtures__["fixtures/activities/833008371/stream"]; // Morning Run
@@ -208,17 +194,36 @@ fdescribe("RunningPowerEstimator", () => {
 
         let estimatedAvgPower: number = _.mean(powerArray);
 
-        console.log(estimatedAvgPower);
+        // Then
+        expect(estimatedAvgPower).not.toBeNull();
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+    });
+
+    // Running estimation test
+    it("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", () => {
+
+        // Given
+        const _expectedPower = 151;
+        const athleteWeight = 54.32;
+
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/874762067/stream"];
+
+        // When
+        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+            stream.time, stream.altitude);
+
+        let estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
-        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - _tolerance));
-        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + _tolerance));
+        expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
+        expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+
     });
 
-
     // Running power test
-    xit("should compute correctly 'Begin Running Ep 1 // Stade 40min' " +
+    it("should compute correctly 'Begin Running Ep 1 // Stade 40min' " +
         "@ https://www.strava.com/activities/887284960", () => {
 
         // Given
@@ -235,44 +240,15 @@ fdescribe("RunningPowerEstimator", () => {
         let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight, hasPowerMeter, statsMap, stream, bounds, returnZones);
         let result: IAnalysisData = activityComputer.compute();
 
-        console.log("avgWatts", result.powerData.avgWatts);
-        console.log("avgWattsPerKg", result.powerData.avgWattsPerKg);
-
         // Then
         expect(result.powerData).not.toBeNull();
-        // expect(result.powerData).not.toBeNull();
-    });
-
-    // Running estimation test
-    xit("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", () => {
-
-        // Given
-        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
-        let stream: IActivityStream = window.__fixtures__["fixtures/activities/874762067/stream"];
-        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/874762067/statsMap"];
-
-        userSettingsMock.userGender = "women";
-        userSettingsMock.userWeight = 54.32;
-
-        let activityComputer: ActivityComputer = new ActivityComputer("Run", false, userSettingsMock, userSettingsMock.userWeight, true, statsMap, stream, null, true);
-        let resultWithPowerMeter: IAnalysisData = activityComputer.compute();
-        expect(resultWithPowerMeter.powerData.avgWatts.toString()).toMatch(/^151/);
-
-        console.log(resultWithPowerMeter.powerData);
-
-        // Test without power data and power meter...
-        delete stream.watts;
-        delete stream.watts_calc;
-        activityComputer = new ActivityComputer("Run", false, userSettingsMock, userSettingsMock.userWeight, false, statsMap, stream, null, true);
-        let resultWithoutPowerMeter: IAnalysisData = activityComputer.compute();
-
-        console.log(resultWithoutPowerMeter.powerData);
-
-        // TODO Other examples with real running power data:
-        // https://www.strava.com/activities/849522984
-        // https://www.strava.com/activities/862889505
 
     });
+
+    /**
+     * Specs:
+     * - ..
+     */
 
 
 });
