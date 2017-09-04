@@ -43,8 +43,7 @@ export class RunningPowerEstimator {
 
     /**
      * Return a power estimation from athlete weight and speed (m/s)
-     * https://alancouzens.com/blog/Run_Power.html (iframe https://alancouzens.com/blog/run_power.html)
-     * http://sprott.physics.wisc.edu/technote/walkrun.htm
+     * From https://alancouzens.com/blog/Run_Power.html
      * @param {number} weightKg
      * @param {number} meters
      * @param {number} seconds
@@ -52,52 +51,13 @@ export class RunningPowerEstimator {
      * @returns {number} power watts
      */
     public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
-        const speed = meters / seconds;
-        const speedKph = (meters / seconds) / 3600;
         const minutes = seconds / 60;
         const km = meters / 1000;
         const minPerKmPace = minutes / km;
         const VO2Reserve = 210 / minPerKmPace;
         const VO2A = (VO2Reserve * weightKg) / 1000;
         const horizontalWatts = (75 * VO2A);
-        // const VWatts = 0; //((9.8 * weight) * (elevationGain)) / (minutes * 60);
-        // const verticalWatts = (9.8 * weightKg)  / seconds;
-        // const verticalWatts = ((weightKg * 9.81 * speed ) / 4) / seconds;
-        // const verticalWatts = ((weightKg * 9.81) / 25) / seconds;
-
-        // const elevation = _.clamp(elevationGain, 0, elevationGain);
-        // elevationGain = elevationGain;
-        // console.log(elevationGain);
-        // elevationGain = Math.abs(elevationGain) / 2.5;
-
-        // Not bad:
-        // elevationGain = Math.sqrt(Math.abs(elevationGain)) / 4.35;
-
-        // elevationGain = (elevationGain < 0 ) ? 0 : elevationGain;
-
-        const factor = elevationGain + Math.exp(speed * 1.2);
-        const verticalWatts = (weightKg * 9.81 * factor) / seconds;
-
-        // const verticalWatts = (weightKg * 9.81 * speed) / seconds;
-
-
-        // NOT BAD
-        //         elevationGain = Math.abs(elevationGain) / 3;
-        //         const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
-
-        // TODO @ check http://www.topendsports.com/testing/running-power.htm
-        // TODO correlation between Velocity & Power
-        /*
-        Figures are calculated from equations in: American College of Sports Medicine.
-        Guidelines for Exercise Testing and Prescription,
-        4th edition. Philadelphia: Lea & Febiger, 1991, p. 285-300.
-         */
-
-        // TODO https://www.researchgate.net/publication/246704204_Guidelines_for_exercise_testing_and_prescription_4th_edition_edited_by_american_college_of_sports_medicine_lea_febiger_philadelphia_1991_314_pages_illustrated_1500_isbn_0-8121-1324-1
-
-        // elevationGain = Math.abs(elevationGain) / 3;
-        // const verticalWatts = (weightKg * 9.81 * elevationGain * speed) / seconds;
+        const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
         return Math.round(horizontalWatts + verticalWatts);
     }
-
 }
