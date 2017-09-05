@@ -124,7 +124,9 @@ export class ActivityComputer {
                 activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
             }
 
-            // TODO gradeAdjustedSpeedArray slice...
+            if (!_.isEmpty(activityStream.grade_adjusted_distance)) {
+                activityStream.grade_adjusted_distance = activityStream.grade_adjusted_distance.slice(bounds[0], bounds[1]);
+            }
         }
     }
 
