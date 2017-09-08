@@ -715,6 +715,8 @@ export class ActivityComputer {
         let durationInSeconds: number, durationCount: number = 0;
         let distance: number = 0;
         let currentSpeed: number;
+        let maxGrade: number = 0;
+        let minGrade: number = 0;
 
         const gradeArrayMoving: any[] = [];
         const gradeArrayDistance: any[] = [];
@@ -722,6 +724,12 @@ export class ActivityComputer {
         for (let i: number = 0; i < gradeArray.length; i++) { // Loop on samples
 
             if (i > 0) {
+                if (gradeArray[i] > maxGrade) {
+                    maxGrade = gradeArray[i];
+                }
+                if (gradeArray[i] < minGrade) {
+                    minGrade = gradeArray[i];
+                }
                 currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
                 // Compute distribution for graph/table
                 if (currentSpeed > 0) { // If moving...
@@ -797,6 +805,8 @@ export class ActivityComputer {
 
         const gradeData: IGradeData = {
             avgGrade,
+            maxGrade: maxGrade,
+            minGrade: minGrade,
             lowerQuartileGrade: percentiles[0],
             medianGrade: percentiles[1],
             upperQuartileGrade: percentiles[2],
