@@ -4,13 +4,14 @@ import * as Q from "q";
 import {env} from "../config/env";
 import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
 import {ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
+import {HerokuEndpoints} from "../../common/scripts/modules/HerokuEndpoint";
 
 const currentDate: any = new Date();
-(function(i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
+(function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
     i.GoogleAnalyticsObject = r;
-    i[r] = i[r] || function() {
-            (i[r].q = i[r].q || []).push(arguments);
-        }, i[r].l = 1 * currentDate;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments);
+    }, i[r].l = 1 * currentDate;
     a = s.createElement(o),
         m = s.getElementsByTagName(o)[0];
     a.async = 1;
@@ -74,9 +75,10 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
     public static commit(athleteUpdate: IAthleteUpdate): Q.IPromise<any> {
 
         const deferred = Q.defer<ISyncResult>();
+        const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/athlete/update";
 
         $.post({
-            url: env.endPoint + "/api/athlete/update",
+            url: endPoint,
             data: JSON.stringify(athleteUpdate),
             dataType: "json",
             contentType: "application/json",
@@ -84,7 +86,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
                 deferred.resolve(response);
             },
             error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                console.warn("Endpoint <" + env.endPoint + "> not reachable", jqXHR);
+                console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
                 deferred.reject({textStatus, errorThrown});
             },
         });

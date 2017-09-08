@@ -13,5 +13,5 @@ export let env: Env = {
     simulateUpdate: false, // Must be false in release
     debugMode: false, // Must be false in release
     useActivityStreamCache: true, // Must be true in release
-    endPoint: "https://stravistix-thomaschampagne.rhcloud.com", // StravistiX endPoint for new features
+    endPoint: "https://stravistix-prod-${id}.herokuapp.com", // StravistiX endPoint for new features
 };
