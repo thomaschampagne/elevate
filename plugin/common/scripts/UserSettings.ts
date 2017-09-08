@@ -228,6 +228,7 @@ export let userSettings: IUserSettings = {
     enableBothLegsCadence: false,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+    feedHideSuggestedAthletes: false,
     feedHideVirtualRides: false,
     feedHideRideActivitiesUnderDistance: 0,
     feedHideRunActivitiesUnderDistance: 0,
