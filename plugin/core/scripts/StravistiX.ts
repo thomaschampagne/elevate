@@ -637,7 +637,7 @@ export class StravistiX {
             return;
         }
 
-        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance && !this._userSettings.feedHideVirtualRides) {
+        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance && !this._userSettings.feedHideVirtualRides && !this._userSettings.feedHideSuggestedAthletes) {
             return;
         }
 
