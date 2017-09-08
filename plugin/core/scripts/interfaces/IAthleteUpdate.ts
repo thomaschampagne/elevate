@@ -4,7 +4,7 @@ export interface IAthleteUpdate {
     name: string;
     status: number;
     lastSeen?: Date;
-    country?: string;
+    locale?: string;
     hrMin?: number;
     hrMax?: number;
     __v?: number; // Mongoose version doc

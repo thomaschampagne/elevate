@@ -31,7 +31,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
      * @param version
      * @param isPremium
      * @param isPro
-     * @param country
+     * @param locale
      * @param hrMin
      * @param hrMax
      * @returns {IAthleteUpdate}
@@ -41,7 +41,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
                          version: string,
                          isPremium: boolean,
                          isPro: boolean,
-                         country?: string,
+                         locale?: string,
                          hrMin?: number,
                          hrMax?: number): IAthleteUpdate {
 
@@ -65,8 +65,8 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
             hrMax,
         };
 
-        if (!_.isEmpty(country)) {
-            athleteUpdate.country = country;
+        if (!_.isEmpty(locale)) {
+            athleteUpdate.locale = locale;
         }
 
         return athleteUpdate;
