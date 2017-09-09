@@ -45,7 +45,7 @@ export class VacuumProcessor {
      *  Get the strava athlete id connected
      *  @returns the strava athlete id
      */
-    public getAthleteIdAuthorOfActivity(): number {
+    public getActivityAthleteId(): number {
 
         if (_.isUndefined(window.pageView)) {
             return null;

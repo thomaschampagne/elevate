@@ -20,8 +20,6 @@ export abstract class AbstractExtendedDataModifier {
     protected activityType: string;
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
-    protected athleteId: number;
-    protected athleteIdAuthorOfActivity: number;
     protected basicInfo: IActivityBasicInfo;
     protected isAuthorOfViewedActivity: boolean;
     protected speedUnitsData: ISpeedUnitData;
@@ -32,17 +30,16 @@ export abstract class AbstractExtendedDataModifier {
     protected content: string;
     protected dataViews: AbstractDataView[] = [];
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfo: any, type: number) {
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
 
         this.activityProcessor = activityProcessor;
         this.activityId = activityId;
         this.activityType = activityType;
         this.appResources = appResources;
         this.userSettings = userSettings;
-        this.athleteId = athleteId;
-        this.athleteIdAuthorOfActivity = athleteIdAuthorOfActivity;
         this.basicInfo = basicInfo;
-        this.isAuthorOfViewedActivity = (this.athleteIdAuthorOfActivity == this.athleteId);
+        this.isAuthorOfViewedActivity = isAuthorOfViewedActivity;
         this.speedUnitsData = Helper.getSpeedUnitData();
         this.type = type;
 
@@ -71,11 +68,12 @@ export abstract class AbstractExtendedDataModifier {
                             // Check is owner of activity
                             if (this.isAuthorOfViewedActivity) {
                                 // Check if profileConfigured locally. Ask user to double check is athlete settings
-                                Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, "profileConfigured").then((profileConfigured: any) => {
-                                    if (!profileConfigured  || !profileConfigured.data) {
-                                        $("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#!/athleteSettings'>Did you check your athlete settings before?</a>");
-                                    }
-                                });
+                                Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, "profileConfigured")
+                                    .then((profileConfigured: any) => {
+                                        if (!profileConfigured || !profileConfigured.data) {
+                                            $("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#!/athleteSettings'>Did you check your athlete settings before?</a>");
+                                        }
+                                    });
                             }
                         });
                     });
@@ -104,13 +102,13 @@ export abstract class AbstractExtendedDataModifier {
 
         let summaryGrid: string = "";
         summaryGrid += "<div>";
-        summaryGrid += '<div class="summaryGrid">';
+        summaryGrid += "<div class=\"summaryGrid\">";
         summaryGrid += "<table>";
 
         for (let i: number = 0; i < rows; i++) {
             summaryGrid += "<tr>";
             for (let j: number = 0; j < columns; j++) {
-                summaryGrid += '<td data-column="' + j + '" data-row="' + i + '">';
+                summaryGrid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
                 summaryGrid += "</td>";
             }
             summaryGrid += "</tr>";
@@ -135,9 +133,9 @@ export abstract class AbstractExtendedDataModifier {
         let activityHeartRateReserve: string = "-";
         let activityHeartRateReserveUnit: string = "%";
         if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-            trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
+            trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
             activityHeartRateReserve = this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0);
-            activityHeartRateReserveUnit = '%  <span class="summarySubGridTitle">(Max: ' + this.analysisData.heartRateData.activityHeartRateReserveMax.toFixed(0) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
+            activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.analysisData.heartRateData.activityHeartRateReserveMax.toFixed(0) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
         }
         this.insertContentAtGridPosition(0, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
         this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
@@ -147,7 +145,7 @@ export abstract class AbstractExtendedDataModifier {
         let climbTimeExtra: string = "";
         if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
             climbTime = Helper.secondsToHHMMSS(this.analysisData.gradeData.upFlatDownInSeconds.up);
-            climbTimeExtra = '<span class="summarySubGridTitle">(' + (this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100).toFixed(0) + "% of time)</span>";
+            climbTimeExtra = "<span class=\"summarySubGridTitle\">(" + (this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100).toFixed(0) + "% of time)</span>";
         }
 
         this.insertContentAtGridPosition(0, 2, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
@@ -156,8 +154,8 @@ export abstract class AbstractExtendedDataModifier {
 
     protected placeExtendedStatsButton(buttonAdded: () => void): void {
 
-        let htmlButton: string = '<section style="text-align: center;">';
-        htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
+        let htmlButton: string = "<section style=\"text-align: center;\">";
+        htmlButton += "<a class=\"button btn-block btn-primary\" id=\"extendedStatsButton\" href=\"#\">";
         htmlButton += "Show extended statistics";
         htmlButton += "</a>";
         htmlButton += "</section>";
@@ -274,7 +272,7 @@ export abstract class AbstractExtendedDataModifier {
             transitionOut: "none",
             closeBtn: false,
             type: "iframe",
-            content: '<div class="stravistiXExtendedData">' + this.content + "</div>",
+            content: "<div class=\"stravistiXExtendedData\">" + this.content + "</div>",
         });
 
         // For each view start making the assossiated graphs
@@ -333,7 +331,7 @@ export abstract class AbstractExtendedDataModifier {
         const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.summaryGrid) {
-            const content: string = '<span class="summaryGridDataContainer" ' + onClickHtmlBehaviour + ">" + data + ' <span class="summaryGridUnits">' + units + '</span><br /><span class="summaryGridTitle">' + title + "</span></span>";
+            const content: string = "<span class=\"summaryGridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"summaryGridUnits\">" + units + "</span><br /><span class=\"summaryGridTitle\">" + title + "</span></span>";
             this.summaryGrid.find("[data-column=" + columnId + "][data-row=" + rowId + "]").html(content);
         } else {
             console.error("Grid is not initialized");

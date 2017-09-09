@@ -11,8 +11,9 @@ import {RunningPowerDataView} from "./views/RunningPowerDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
-        super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
+        super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
     }
 
     protected insertContentSummaryGridContent(): void {
