@@ -40,7 +40,7 @@ export class RunningPowerEstimator {
     }
 
     /**
-     * Return a power estimation from athlete weight and speed (m/s)
+     * Return run power estimation from athlete weight and speed (m/s) into the equivalent bike watts
      * From https://alancouzens.com/blog/Run_Power.html
      * @param {number} weightKg
      * @param {number} meters
@@ -49,13 +49,17 @@ export class RunningPowerEstimator {
      * @returns {number} power watts
      */
     public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
+
+        const runningEcoVolumeO2PerKm = 210; // Units: (ml/kg/km)
+        const cyclingEcoWattsPerVolumeO2 = 75; // Units: W/L
+
         const minutes = seconds / 60;
         const km = meters / 1000;
-        const minPerKmPace = minutes / km;
-        const VO2Reserve = 210 / minPerKmPace;
-        const VO2A = (VO2Reserve * weightKg) / 1000;
-        const horizontalWatts = (75 * VO2A);
-        const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds;
+        const minPerKmPace = minutes / km; // Units: min/km
+        const VO2Consumed = runningEcoVolumeO2PerKm / minPerKmPace; // (ml/kg/km) / (min/km), Units: (ml/kg/min) equals to a "V02"
+        const VO2ConsumedByAthlete = VO2Consumed * weightKg; // Units: ml/min
+        const horizontalWatts = cyclingEcoWattsPerVolumeO2 * VO2ConsumedByAthlete / 1000; // Units: W / min
+        const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds; // Units kg/
         return Math.round(horizontalWatts + verticalWatts);
     }
 }
