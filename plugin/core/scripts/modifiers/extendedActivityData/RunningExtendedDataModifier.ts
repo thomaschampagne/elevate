@@ -57,6 +57,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             let averageWattsTitle = "Average Power";
             if (this.analysisData.powerData.isEstimatedRunningPower === true) {
                 averageWattsTitle = "Estimated " + averageWattsTitle;
+                averageWatts = "<span style='font-size: 14px;'>~</span>" + averageWatts;
             }
             this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", "displayAdvancedPowerData");
         }

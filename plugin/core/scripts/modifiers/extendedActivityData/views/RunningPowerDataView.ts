@@ -32,19 +32,20 @@ export class RunningPowerDataView extends AbstractDataView {
     protected insertDataIntoGrid(): void {
 
         const isRealPower = !(this.powerData.isEstimatedRunningPower === true);
-        const containsEstimatedIfItsTheCase = isRealPower ? "" : "Estimated ";
+        const printEstimatedWordWhenRealPower = isRealPower ? "" : "Estimated ";
+        const printEstimatedTildWhenRealPower = isRealPower ? "" : "<span style='font-size: 14px;'>~</span>";
 
-        this.insertContentAtGridPosition(0, 0, this.powerData.avgWatts.toFixed(0), containsEstimatedIfItsTheCase + "Average Power", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(0, 0, printEstimatedTildWhenRealPower + this.powerData.avgWatts.toFixed(0), printEstimatedWordWhenRealPower + "Average Power", "W", "displayAdvancedPowerData");
 
         if (isRealPower) {
-            this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), containsEstimatedIfItsTheCase + "Weighted Power", "W", "displayAdvancedPowerData");
+            this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), printEstimatedWordWhenRealPower + "Weighted Power", "W", "displayAdvancedPowerData");
         }
 
-        this.insertContentAtGridPosition(2, 0, this.powerData.variabilityIndex.toFixed(2), containsEstimatedIfItsTheCase + "Variability Index", "", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(2, 0, printEstimatedTildWhenRealPower + this.powerData.variabilityIndex.toFixed(2), printEstimatedWordWhenRealPower + "Variability Index", "", "displayAdvancedPowerData");
 
-        this.insertContentAtGridPosition(0, 1, this.powerData.lowerQuartileWatts, containsEstimatedIfItsTheCase + "25% Quartile Watts", "W", "displayAdvancedPowerData");
-        this.insertContentAtGridPosition(1, 1, this.powerData.medianWatts, containsEstimatedIfItsTheCase + "50% Quartile Watts", "W", "displayAdvancedPowerData");
-        this.insertContentAtGridPosition(2, 1, this.powerData.upperQuartileWatts, containsEstimatedIfItsTheCase + "75% Quartile Watts", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(0, 1, printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts, printEstimatedWordWhenRealPower + "25% Quartile Watts", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(1, 1, printEstimatedTildWhenRealPower + this.powerData.medianWatts, printEstimatedWordWhenRealPower + "50% Quartile Watts", "W", "displayAdvancedPowerData");
+        this.insertContentAtGridPosition(2, 1, printEstimatedTildWhenRealPower + this.powerData.upperQuartileWatts, printEstimatedWordWhenRealPower + "75% Quartile Watts", "W", "displayAdvancedPowerData");
 
     }
 }
