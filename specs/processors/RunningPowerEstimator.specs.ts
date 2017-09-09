@@ -5,7 +5,7 @@ import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSetting
 import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
 import {Helper} from "../../plugin/common/scripts/Helper";
 
-fdescribe("RunningPowerEstimator", () => {
+describe("RunningPowerEstimator", () => {
 
     const WATTS_TOLERANCE: number = 35.5; // W
 
