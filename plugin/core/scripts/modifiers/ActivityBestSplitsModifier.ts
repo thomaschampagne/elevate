@@ -804,12 +804,12 @@ export class ActivityBestSplitsModifier implements IModifier {
 
         $("#best-split-new-add").click((e: JQuery.Event) => {
             e.preventDefault();
-            const splitLength = parseInt($("#best-split-new-length").val());
+            const splitLength = parseInt($("#best-split-new-length").val().toString());
             if (splitLength < 1) {
                 $("#best-split-new-length").focus();
                 return;
             }
-            const splitType = parseInt($("#best-split-new-unit").val());
+            const splitType = parseInt($("#best-split-new-unit").val().toString());
 
             const splitAlreadyExist = _.find(splitsArray, {
                 length: splitLength,

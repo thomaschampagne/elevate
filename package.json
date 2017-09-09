@@ -44,6 +44,7 @@
     "@types/lodash": "^4.14.71",
     "@types/nvd3": "^1.8.37",
     "@types/q": "^1.0.2",
+    "@types/qrcode": "^0.8.0",
     "@types/systemjs": "^0.20.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",

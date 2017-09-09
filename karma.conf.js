@@ -21,6 +21,7 @@ module.exports = function (config) {
             'plugin/node_modules/chart.js/dist/Chart.bundle.js',
             'plugin/node_modules/d3/d3.js',
             'plugin/node_modules/file-saver/FileSaver.min.js',
+            'plugin/node_modules/qrcode/build/qrcode.min.js',
             'plugin/common/**/*.js',
             'plugin/core/**/*.js',
             'specs/**/*.js',
@@ -62,6 +63,7 @@ module.exports = function (config) {
                     'lodash': 'npm@plugin:lodash/lodash.min.js',
                     'chart.js': 'npm@plugin:chart.js/dist/Chart.bundle.js',
                     'd3': 'npm@plugin:d3/d3.js',
+                    "qrcode": "npm@plugin:qrcode/build/qrcode.min.js",
                     'file-saver': 'npm@plugin:file-saver/FileSaver.min.js'
                 }
             }
