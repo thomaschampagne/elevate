@@ -6,6 +6,7 @@ import {IStorageUsage, StorageManager} from "../../../common/scripts/modules/Sto
 import {env} from "../../config/env";
 import {IAppResources} from "../interfaces/IAppResources";
 import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
+import {HerokuEndpoints} from "../../../common/scripts/modules/HerokuEndpoint";
 
 export class ActivitiesSyncModifier implements IModifier {
 
@@ -132,8 +133,10 @@ export class ActivitiesSyncModifier implements IModifier {
                 error: {path: window.location.href, date: new Date(), content: err},
             };
 
+            const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+
             $.post({
-                url: env.endPoint + "/api/errorReport",
+                url: endPoint,
                 data: JSON.stringify(errorUpdate),
                 dataType: "json",
                 contentType: "application/json",
@@ -141,7 +144,7 @@ export class ActivitiesSyncModifier implements IModifier {
                     console.log("Commited: ", response);
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                    console.warn("Endpoint <" + env.endPoint + "> not reachable", jqXHR);
+                    console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
                 },
             });
 
