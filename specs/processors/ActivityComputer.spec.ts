@@ -1,8 +1,6 @@
 import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
-import * as _ from "lodash";
-import {RunningPowerEstimator} from "../../plugin/core/scripts/processors/RunningPowerEstimator";
 
 describe("ActivityComputer", () => {
 
@@ -17,7 +15,10 @@ describe("ActivityComputer", () => {
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
+        const isActivityAuthor = true;
+        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+            isActivityAuthor, powerMeter, statsMap, stream, null, true);
+
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();

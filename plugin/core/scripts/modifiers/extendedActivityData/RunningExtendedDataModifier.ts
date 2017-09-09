@@ -45,22 +45,22 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.insertContentAtGridPosition(1, 2, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
         }
 
-        let averageWatts: string = "-";
         if (this.userSettings.displayAdvancedPowerData) {
 
-            if (this.analysisData.powerData
-                && this.analysisData.powerData.avgWatts
-            // && this.analysisData.powerData.hasPowerMeter // Commented from now: runners without power meter can now get an estimation of avg
+            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts
+            /* && this.analysisData.powerData.hasPowerMeter // From v5.11.0 runners without a running power meter are able to get an estimation of avg wattage */
             ) {
-                averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
-            }
 
-            let averageWattsTitle = "Average Power";
-            if (this.analysisData.powerData.isEstimatedRunningPower === true) {
-                averageWattsTitle = "Estimated " + averageWattsTitle;
-                averageWatts = "<span style='font-size: 14px;'>~</span>" + averageWatts;
+                let averageWatts: string = this.analysisData.powerData.avgWatts.toFixed(0);
+                let averageWattsTitle = "Average Power";
+
+                if (this.analysisData.powerData.isEstimatedRunningPower === true) {
+                    averageWattsTitle = "Estimated " + averageWattsTitle;
+                    averageWatts = "<span style='font-size: 14px;'>~</span>" + averageWatts;
+                }
+
+                this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", "displayAdvancedPowerData");
             }
-            this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", "displayAdvancedPowerData");
         }
 
         let weightedPower: string = "-";

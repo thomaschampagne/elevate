@@ -35,6 +35,7 @@ export class ActivityComputer {
     protected userSettings: IUserSettings;
     protected movementData: IMoveData;
     protected athleteWeight: number;
+    protected isActivityAuthor: boolean;
     protected hasPowerMeter: boolean;
     protected activityStatsMap: IActivityStatsMap;
     protected activityStream: IActivityStream;
@@ -42,6 +43,7 @@ export class ActivityComputer {
     protected returnZones: boolean;
 
     constructor(activityType: string, isTrainer: boolean, userSettings: IUserSettings, athleteWeight: number,
+                isActivityAuthor: boolean,
                 hasPowerMeter: boolean,
                 activityStatsMap: IActivityStatsMap,
                 activityStream: IActivityStream,
@@ -52,6 +54,7 @@ export class ActivityComputer {
         this.isTrainer = isTrainer;
         this.userSettings = userSettings;
         this.athleteWeight = athleteWeight;
+        this.isActivityAuthor = isActivityAuthor;
         this.hasPowerMeter = hasPowerMeter;
         this.activityStatsMap = activityStatsMap;
         this.activityStream = activityStream;
@@ -165,16 +168,12 @@ export class ActivityComputer {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-
         let powerData: IPowerData;
 
-        // If Running activity with no power data, then try to estimate it for author of activity...
-        debugger;
-        if (this.activityType === "Run"
-            && _.isEmpty(activityStream.watts)
-        // && isAuthor // TODO..
-        ) {
-            // Use athlete weight given in settings for the author watching his run
+        // If Running activity with no power data, then try to estimate it for the author of activity...
+        if (this.activityType === "Run" && _.isEmpty(activityStream.watts) && this.isActivityAuthor) {
+
+            // Override athlete weight given in settings for the author watching his run
             athleteWeight = this.userSettings.userWeight;
 
             try {
@@ -551,7 +550,7 @@ export class ActivityComputer {
             powerZones: (this.returnZones) ? powerZonesAlongActivityType : null, // Only while moving
         };
 
-        if(!_.isUndefined(isEstimatedRunningPower)){
+        if (!_.isUndefined(isEstimatedRunningPower)) {
             powerData.isEstimatedRunningPower = isEstimatedRunningPower;
         }
 

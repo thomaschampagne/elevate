@@ -229,6 +229,7 @@ describe("RunningPowerEstimator", () => {
         // Given
         const activityType = "Run";
         const isTrainer = false;
+        const isActivityAuthor = true;
         const hasPowerMeter = false;
         const bounds: number[] = null;
         const returnZones = true;
@@ -237,18 +238,13 @@ describe("RunningPowerEstimator", () => {
         let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/887284960/statsMap"];
 
         // When
-        let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight, hasPowerMeter, statsMap, stream, bounds, returnZones);
+        let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+            isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+        
         let result: IAnalysisData = activityComputer.compute();
 
         // Then
         expect(result.powerData).not.toBeNull();
 
     });
-
-    /**
-     * Specs:
-     * - ..
-     */
-
-
 });

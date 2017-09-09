@@ -39,9 +39,8 @@ export class RunningPowerDataView extends AbstractDataView {
 
         if (isRealPower) {
             this.insertContentAtGridPosition(1, 0, this.powerData.weightedPower.toFixed(0), printEstimatedWordWhenRealPower + "Weighted Power", "W", "displayAdvancedPowerData");
+            this.insertContentAtGridPosition(2, 0, this.powerData.variabilityIndex.toFixed(2), printEstimatedWordWhenRealPower + "Variability Index", "", "displayAdvancedPowerData");
         }
-
-        this.insertContentAtGridPosition(2, 0, printEstimatedTildWhenRealPower + this.powerData.variabilityIndex.toFixed(2), printEstimatedWordWhenRealPower + "Variability Index", "", "displayAdvancedPowerData");
 
         this.insertContentAtGridPosition(0, 1, printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts, printEstimatedWordWhenRealPower + "25% Quartile Watts", "W", "displayAdvancedPowerData");
         this.insertContentAtGridPosition(1, 1, printEstimatedTildWhenRealPower + this.powerData.medianWatts, printEstimatedWordWhenRealPower + "50% Quartile Watts", "W", "displayAdvancedPowerData");
