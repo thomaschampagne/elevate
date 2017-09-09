@@ -7,7 +7,7 @@ import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
-export class ActivitiesProcessor {
+export class MultipleActivityProcessor {
 
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
@@ -69,7 +69,7 @@ export class ActivitiesProcessor {
 
                 _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
-                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields) as ISyncActivityComputed;
+                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as ISyncActivityComputed;
                     activityComputed.extendedStats = computedResult;
                     activitiesComputed.push(activityComputed);
 

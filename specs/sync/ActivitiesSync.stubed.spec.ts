@@ -4,7 +4,7 @@ import {
     ActivitiesSynchronizer,
     ISyncResult
 } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import {ActivitiesProcessor} from "../../plugin/core/scripts/processors/ActivitiesProcessor";
+import {MultipleActivityProcessor} from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
 import {
@@ -120,11 +120,11 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
 
         /**
-         * Stub ActivitiesProcessor:compute. Create fake analysis results
+         * Stub MultipleActivityProcessor:compute. Create fake analysis results
          */
-        spyOn(activitiesSynchronizer.activitiesProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+        spyOn(activitiesSynchronizer.multipleActivityProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
             let defer = Q.defer();
-            console.log("Spy activitiesSynchronizer.activitiesProcessor:compute called");
+            console.log("Spy activitiesSynchronizer.multipleActivityProcessor:compute called");
             let activitiesComputed: Array<ISyncActivityComputed> = [];
             let fakeAnalysisData: IAnalysisData = {
                 moveRatio: null,
@@ -138,7 +138,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
                 elevationData: null,
             };
             _.forEach(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
-                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, ActivitiesProcessor.outputFields);
+                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, MultipleActivityProcessor.outputFields);
                 activityComputed.extendedStats = fakeAnalysisData;
                 activitiesComputed.push(activityComputed);
             });
@@ -304,7 +304,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         // Getting all pages (7)
         activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
 
-            expect(activitiesSynchronizer.activitiesProcessor.compute).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesSynchronizer.multipleActivityProcessor.compute).toHaveBeenCalled(); // Ensure spy call
             expect(activitiesComputed).not.toBeNull();
             expect(activitiesComputed.length).toEqual(140);
 
