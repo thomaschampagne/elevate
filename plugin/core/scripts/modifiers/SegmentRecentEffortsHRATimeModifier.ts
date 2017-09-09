@@ -19,7 +19,7 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
     public modify(): void {
 
         if (this.userSettings.displayRecentEffortsHRAdjustedPacePower) {
-            this.hraTimeLoop = setInterval(() => {
+            this.hraTimeLoop = window.setInterval(() => {
                 this.hraTime();
             }, 750);
         }

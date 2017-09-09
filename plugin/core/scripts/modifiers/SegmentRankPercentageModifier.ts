@@ -6,8 +6,8 @@ export class SegmentRankPercentageModifier implements IModifier {
 
     constructor() { }
 
-    public modify(): void {
-        this.intervalId = setInterval(() => this.addPercentageRanking(), 750);
+    modify(): void {
+        this.intervalId = window.setInterval(() => this.addPercentageRanking(), 750);
     }
 
     public addPercentageRanking(): void {
