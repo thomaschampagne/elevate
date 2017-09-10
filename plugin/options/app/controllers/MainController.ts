@@ -10,7 +10,7 @@ import {IReleaseNotesService} from "../services/ReleaseNotesService";
 
 export class MainController {
 
-    static $inject = ["$rootScope", "ChromeStorageService", "$scope", "$location", "$mdSidenav", "$colors", "$mdDialog", "$window", "$interval", "$mdMedia"];
+    public static $inject = ["$rootScope", "ChromeStorageService", "$scope", "$location", "$mdSidenav", "$colors", "$mdDialog", "$window", "$interval", "$mdMedia"];
 
     constructor($rootScope: any, chromeStorageService: ChromeStorageService, $scope: any, $location: ILocationService, $mdSidenav: angular.material.ISidenavService, $colors: any, $mdDialog: angular.material.IDialogService, $window: IWindowService, $interval: IIntervalService, $mdMedia: angular.material.IMedia) {
 
@@ -103,11 +103,6 @@ export class MainController {
                     expand: false,
                     link: "link",
                     actions: [{
-                        name: "Heart rate reserve",
-                        subname: "Customize Heartrate Reserve zones",
-                        icon: "favorite",
-                        link: routeMap.hrrZonesSettingsRoute,
-                    }, {
                         name: "Cycling Speed",
                         subname: "Customize Cycling Speed zones",
                         icon: "directions_bike",
@@ -117,6 +112,11 @@ export class MainController {
                         subname: "Customize Running Pace zones",
                         icon: "directions_walk",
                         link: routeMap.zonesSettingsRoute + "/pace",
+                    }, {
+                        name: "Heart Rate",
+                        subname: "Customize Heart Rate zones",
+                        icon: "favorite",
+                        link: routeMap.zonesSettingsRoute + "/heartRate",
                     }, {
                         name: "Cycling Power",
                         subname: "Customize Cycling Power zones",

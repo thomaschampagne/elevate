@@ -4,10 +4,10 @@ import {AthleteSettingsController} from "../controllers/AthleteSettingsControlle
 import {ChromeStorageService} from "../services/ChromeStorageService";
 
 import Tab = chrome.tabs.Tab;
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {routeMap} from "../Config";
-import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
 
 export interface IProfileConfiguredRibbonScope extends IScope {
     checkLocalSyncedAthleteProfileEqualsRemote: () => void;

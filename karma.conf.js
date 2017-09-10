@@ -1,10 +1,7 @@
 module.exports = function (config) {
     config.set({
-        basePath: '.',
-        browsers: [
-            'PhantomJS',
-            // 'Chrome'
-        ],
+        basePath: './',
+        browsers: ['PhantomJS', /* Chrome , 'ChromeCanary'*/],
         frameworks: ['systemjs', 'jasmine', 'promise'],
         plugins: [
             'karma-jasmine',
@@ -24,21 +21,25 @@ module.exports = function (config) {
             'plugin/node_modules/chart.js/dist/Chart.bundle.js',
             'plugin/node_modules/d3/d3.js',
             'plugin/node_modules/file-saver/FileSaver.min.js',
+            'plugin/node_modules/qrcode/build/qrcode.min.js',
             'plugin/common/**/*.js',
             'plugin/core/**/*.js',
             'specs/**/*.js',
             'specs/fixtures/**/*.json'
+
         ],
         exclude: [
-            '**/*.map',
             'plugin/common/scripts/Background.js',
             'plugin/core/scripts/SystemJS.*.js',
             'plugin/core/scripts/InstallUpdateHandler.js',
             'plugin/core/scripts/interfaces/*.js',
-            'plugin/core/scripts/Content.js'
+            'plugin/core/scripts/Content.js',
+            'plugin/core/modules/jquery.appear.js'
         ],
         systemjs: {
-            serveFiles: [], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
+            serveFiles: [
+                '**/*.map'
+            ], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
             config: { // SystemJS configuration
                 packages: {
                     'plugin/common/': {
@@ -62,6 +63,7 @@ module.exports = function (config) {
                     'lodash': 'npm@plugin:lodash/lodash.min.js',
                     'chart.js': 'npm@plugin:chart.js/dist/Chart.bundle.js',
                     'd3': 'npm@plugin:d3/d3.js',
+                    "qrcode": "npm@plugin:qrcode/build/qrcode.min.js",
                     'file-saver': 'npm@plugin:file-saver/FileSaver.min.js'
                 }
             }
@@ -81,7 +83,7 @@ module.exports = function (config) {
             // transform the filename
             transformPath: function (path) {
                 return path + '.js';
-            } 
+            }
         },
         colors: true,
         singleRun: true,

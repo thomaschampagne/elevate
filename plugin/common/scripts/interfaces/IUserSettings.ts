@@ -1,4 +1,5 @@
-import {IHrrZone, IZone} from "./IActivityData";
+import {IZone} from "./IActivityData";
+
 export interface IUserSettings {
     autoSyncMinutes: number;
     localStorageMustBeCleared: boolean;
@@ -8,10 +9,10 @@ export interface IUserSettings {
     userFTP: number;
     userSwimFTP: number;
     userWeight: number;
-    userHrrZones: IHrrZone[];
     zones: {
         speed: IZone[];
         pace: IZone[];
+        heartRate: IZone[];
         power: IZone[];
         runningPower: IZone[];
         cyclingCadence: IZone[];
@@ -44,6 +45,7 @@ export interface IUserSettings {
     enableBothLegsCadence: boolean;
     feedHideChallenges: boolean;
     feedHideCreatedRoutes: boolean;
+    feedHideSuggestedAthletes: boolean;
     feedHideVirtualRides: boolean;
     feedHideRideActivitiesUnderDistance: number;
     feedHideRunActivitiesUnderDistance: number;

@@ -9,16 +9,6 @@ export let userSettings: IUserSettings = {
     userFTP: null,
     userSwimFTP: null,
     userWeight: 70,
-    userHrrZones: [{fromHrr: 10, toHrr: 30}, {fromHrr: 30, toHrr: 40}, {
-        fromHrr: 40,
-        toHrr: 50,
-    }, {fromHrr: 50, toHrr: 55}, {fromHrr: 55, toHrr: 60}, {fromHrr: 60, toHrr: 65}, {
-        fromHrr: 65,
-        toHrr: 70,
-    }, {fromHrr: 70, toHrr: 75}, {fromHrr: 75, toHrr: 80}, {fromHrr: 80, toHrr: 85}, {
-        fromHrr: 85,
-        toHrr: 90,
-    }, {fromHrr: 90, toHrr: 95}, {fromHrr: 95, toHrr: 100}, {fromHrr: 100, toHrr: 110}],
     zones: {
         speed: [{from: 0, to: 7}, {from: 7, to: 9}, {from: 9, to: 11}, {from: 11, to: 13}, {
             from: 13,
@@ -46,6 +36,10 @@ export let userSettings: IUserSettings = {
             from: 540,
             to: 570,
         }, {from: 570, to: 720}, {from: 720, to: 900}],
+        heartRate: [{from: 120, to: 140}, {from: 140, to: 150}, {from: 150, to: 160}, {from: 160, to: 170}, {
+            from: 170,
+            to: 180,
+        }, {from: 180, to: 185}, {from: 185, to: 190}, {from: 190, to: 195}, {from: 195, to: 210}],
         power: [{from: 0, to: 25}, {from: 25, to: 50}, {from: 50, to: 75}, {
             from: 75,
             to: 100,
@@ -231,9 +225,10 @@ export let userSettings: IUserSettings = {
     displayAdvancedGradeData: true,
     displayAdvancedElevationData: true,
     displayBikeOdoInActivity: true,
-    enableBothLegsCadence: false,
+    enableBothLegsCadence: true,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+    feedHideSuggestedAthletes: false,
     feedHideVirtualRides: false,
     feedHideRideActivitiesUnderDistance: 0,
     feedHideRunActivitiesUnderDistance: 0,

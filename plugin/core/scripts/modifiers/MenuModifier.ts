@@ -13,7 +13,7 @@ export class MenuModifier implements IModifier {
         this.appResources = appResources;
     }
 
-    modify(): void {
+    public modify(): void {
 
         // Add kom-map to global navigation
         const globalNav: JQuery = $(".global-nav");

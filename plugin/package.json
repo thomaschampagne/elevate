@@ -48,7 +48,7 @@
     "moment": "^2.18.1",
     "nvd3": "^1.8.5",
     "q": "^1.5.0",
-    "qrcode-js-package": "^1.0.4",
+    "qrcode": "^0.9.0",
     "systemjs": "^0.20.15",
     "systemjs-plugin-css": "^0.1.35"
   }

@@ -18,8 +18,8 @@ interface Window {
 declare class LatLon {
     constructor(lat: number, lon: number);
 
-    lat: number;
-    lon: number;
+    public lat: number;
+    public lon: number;
 
-    destinationPoint(distance: number, number: number): LatLon;
+    public destinationPoint(distance: number, number: number): LatLon;
 }

@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import {IActivityStatsMap, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
-import {IAppResources} from "../interfaces/IAppResources";
-import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
+import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
-export class ActivitiesProcessor {
+export class MultipleActivityProcessor {
 
     protected appResources: IAppResources;
     protected userSettings: IUserSettings;
@@ -69,7 +69,7 @@ export class ActivitiesProcessor {
 
                 _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
 
-                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], ActivitiesProcessor.outputFields) as ISyncActivityComputed;
+                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as ISyncActivityComputed;
                     activityComputed.extendedStats = computedResult;
                     activitiesComputed.push(activityComputed);
 

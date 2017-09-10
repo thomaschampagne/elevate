@@ -11,4 +11,3 @@ export let releaseNotesService = () => {
     };
     return _releaseNotesService;
 };
-

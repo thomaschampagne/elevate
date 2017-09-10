@@ -74,6 +74,8 @@ describe('ActivityComputer', () => {
         expect(result.cadenceData.upperQuartileCadence.toString()).toMatch(/^93/);
 
         expect(result.gradeData.avgGrade.toString()).toMatch(/^0.016110032/);
+        expect(result.gradeData.avgMaxGrade.toString()).toMatch(/^8.82/);
+        expect(result.gradeData.avgMinGrade.toString()).toMatch(/^-9.19/);
         expect(result.gradeData.lowerQuartileGrade.toString()).toMatch(/^-1.3/);
         expect(result.gradeData.medianGrade.toString()).toMatch(/^0/);
         expect(result.gradeData.upperQuartileGrade.toString()).toMatch(/^1.5/);

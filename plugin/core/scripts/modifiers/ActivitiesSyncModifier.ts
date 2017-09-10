@@ -1,11 +1,12 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
-import {IStorageUsage, StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
-import {IAppResources} from "../interfaces/IAppResources";
 import {ISyncNotify} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IStorageUsage, StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {env} from "../../config/env";
+import {IAppResources} from "../interfaces/IAppResources";
 import {ActivitiesSynchronizer, ISyncResult} from "../synchronizer/ActivitiesSynchronizer";
+import {HerokuEndpoints} from "../../../common/scripts/modules/HerokuEndpoint";
 
 export class ActivitiesSyncModifier implements IModifier {
 
@@ -114,7 +115,7 @@ export class ActivitiesSyncModifier implements IModifier {
             window.__stravistix_bridge__.activitiesSyncModifierInstance = this;
 
             let timer: number = 5 * 1000; // 5s for debug...
-            this.closeWindowIntervalId = setInterval(() => {
+            this.closeWindowIntervalId = window.setInterval(() => {
                 $("#autoClose").html('<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' + syncResult.globalHistoryChanges.added.length + ", Edited:" + syncResult.globalHistoryChanges.edited.length + ", Deleted:" + syncResult.globalHistoryChanges.deleted.length +
                     ". Closing in " + (timer / 1000) + 's</span> <a href="#" onclick="javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()">Cancel auto close<a></div>');
                 if (timer <= 0) {
@@ -132,8 +133,10 @@ export class ActivitiesSyncModifier implements IModifier {
                 error: {path: window.location.href, date: new Date(), content: err},
             };
 
+            const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+
             $.post({
-                url: env.endPoint + "/api/errorReport",
+                url: endPoint,
                 data: JSON.stringify(errorUpdate),
                 dataType: "json",
                 contentType: "application/json",
@@ -141,7 +144,7 @@ export class ActivitiesSyncModifier implements IModifier {
                     console.log("Commited: ", response);
                 },
                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                    console.warn("Endpoint <" + env.endPoint + "> not reachable", jqXHR);
+                    console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
                 },
             });
 

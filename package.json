@@ -4,8 +4,13 @@
   "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
     "postinstall": "npm --prefix ./plugin install ./plugin",
-    "test": "gulp specs",
-    "dev": "gulp cleanInlineSources && tsc -w"
+    "ts:compile": "tsc",
+    "ts:watch": "tsc -w",
+    "pretest": "gulp cleanInlineSources && npm run ts:compile",
+    "test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
+    "test:phantom": "npm run ts:compile && node ./node_modules/karma/bin/karma start karma.conf.js --single-run --browserConsoleLogOptions.terminal",
+    "test:chrome": "npm run ts:compile && node ./node_modules/karma/bin/karma start karma.conf.js --no-single-run --browsers Chrome --browserConsoleLogOptions.terminal",
+    "dev": "gulp cleanInlineSources && npm run ts:watch"
   },
   "repository": {
     "type": "git",
@@ -39,6 +44,7 @@
     "@types/lodash": "^4.14.71",
     "@types/nvd3": "^1.8.37",
     "@types/q": "^1.0.2",
+    "@types/qrcode": "^0.8.0",
     "@types/systemjs": "^0.20.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
@@ -57,6 +63,7 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-json-fixtures-preprocessor": "0.0.6",
+    "karma-opera-launcher": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-promise": "^0.1.0",
     "karma-systemjs": "^0.16.0",

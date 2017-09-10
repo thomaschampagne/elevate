@@ -12,7 +12,7 @@ export class HeaderView extends AbstractDataView {
         this.basicInfo = basicInfo;
     }
 
-    render(): void {
+    public render(): void {
 
         let detail: string;
         if (this.isSegmentEffortView && !_.isEmpty(this.basicInfo.segmentEffort)) { // Segment effort only

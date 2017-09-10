@@ -25,4 +25,3 @@ export let xtdDataFilter = () => {
 /**
  * Return the right preview value when using custom xtd zones along units type
  */
-

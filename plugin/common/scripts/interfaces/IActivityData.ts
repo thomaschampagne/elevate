@@ -88,8 +88,9 @@ export interface IHeartRateData {
     maxHeartRate: number;
     activityHeartRateReserve: number;
     activityHeartRateReserveMax: number;
-    hrrZones: IHrrZone[];
+    heartRateZones: IZone[];
 }
+
 export interface ICadenceData {
     cadencePercentageMoving: number;
     cadenceTimeMoving: number;
@@ -99,29 +100,21 @@ export interface ICadenceData {
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
+    upFlatDownCadencePaceData?: IUpFlatDown;
     cadenceZones: IZone[];
 }
+
 export interface IGradeData {
     avgGrade: number;
+    avgMaxGrade: number;
+    avgMinGrade: number;
     lowerQuartileGrade: number;
     medianGrade: number;
     upperQuartileGrade: number;
-    upFlatDownInSeconds: {
-        up: number;
-        flat: number;
-        down: number;
-        total: number;
-    };
-    upFlatDownMoveData: {
-        up: number;
-        flat: number;
-        down: number;
-    };
-    upFlatDownDistanceData: {
-        up: number;
-        flat: number;
-        down: number;
-    };
+    upFlatDownInSeconds: IUpFlatDownSumTotal;
+    upFlatDownMoveData: IUpFlatDown;
+    upFlatDownDistanceData: IUpFlatDown;
+    upFlatDownCadencePaceData: IUpFlatDown | null;
     gradeProfile: string;
     gradeZones: IZone[];
 }
@@ -137,6 +130,7 @@ export interface IElevationData {
     ascentSpeedZones: IZone[];
     ascentSpeed: IAscentSpeedData;
 }
+
 export interface IAscentSpeedData {
     avg: number;
     lowerQuartile: number;
@@ -144,20 +138,27 @@ export interface IAscentSpeedData {
     upperQuartile: number;
 }
 
+export interface IUpFlatDown {
+    up: number;
+    flat: number;
+    down: number;
+}
+
+export interface IUpFlatDownSumTotal extends IUpFlatDown {
+    total: number;
+}
+
+export interface IUpFlatDownSumCounter extends IUpFlatDown {
+    countUp: number;
+    countFlat: number;
+    countDown: number;
+}
+
 export interface IZone {
     from: number;
     to: number;
     s?: number;
     percentDistrib?: number;
-}
-
-export interface IHrrZone {
-    fromHrr: number;
-    toHrr: number;
-    percentDistrib?: number;
-    toHr?: number;
-    s?: number;
-    fromHr?: number;
 }
 
 export interface ISpeedUnitData {

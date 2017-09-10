@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import {Helper} from "./Helper";
 import {IActivityStream} from "./interfaces/IActivityData";
 
 export interface ICourseBounds {
@@ -108,9 +107,14 @@ export class CourseMaker {
 
         let TotalTimeSeconds = 0;
         let DistanceMeters = 0;
-        if( activityStream.latlng.length > 0 ) {
-            TotalTimeSeconds += activityStream.time[activityStream.latlng.length-1] - startTime;
-            DistanceMeters += activityStream.distance[activityStream.latlng.length-1] - startDistance;
+        if (activityStream.latlng.length > 0) {
+            TotalTimeSeconds += activityStream.time[activityStream.latlng.length - 1] - startTime;
+            DistanceMeters += activityStream.distance[activityStream.latlng.length - 1] - startDistance;
+        }
+
+        // Keep Name field to 15 characters or fewer
+        if (courseName.length > 15) {
+            courseName = courseName.slice(0, 15);
         }
 
         let tcxString: string = '<?xml version="1.0" encoding="UTF-8"?>\n' +
@@ -118,26 +122,10 @@ export class CourseMaker {
             "<Courses>\n" +
             "<Course>\n" +
             "<Name>" + courseName + "</Name>\n" +
-            '<Lap>\n' +
+            "<Lap>\n" +
             "<TotalTimeSeconds>" + TotalTimeSeconds + "</TotalTimeSeconds>\n" +
-            "<DistanceMeters>" + Math.round(DistanceMeters) + "</DistanceMeters>\n" +
-            "<MaximumSpeed>" + (Helper.convertMetersPerSecondsToKph(_.max(activityStream.velocity_smooth)) * 1000) + "</MaximumSpeed>\n" +
-            "<Calories>" + 0 + "</Calories>\n";
-
-        if (activityStream.heartrate && activityStream.heartrate.length > 0) {
-            tcxString += "<AverageHeartRateBpm>\n";
-            tcxString += "<Value>" + Math.round(_.sum(activityStream.heartrate) / activityStream.heartrate.length) + "</Value>\n";
-            tcxString += "</AverageHeartRateBpm>\n";
-            tcxString += "<MaximumHeartRateBpm>\n";
-            tcxString += "<Value>" + _.max(activityStream.heartrate) + "</Value>\n";
-            tcxString += "</MaximumHeartRateBpm>\n";
-        }
-
-        tcxString += "<Intensity>Active</Intensity>\n";
-
-        if (activityStream.cadence && activityStream.cadence.length > 0) {
-            tcxString += "<Cadence>" + Math.round(_.sum(activityStream.cadence) / activityStream.cadence.length) + "</Cadence>\n";
-        }
+            "<DistanceMeters>" + DistanceMeters + "</DistanceMeters>\n" +
+            "<Intensity>Active</Intensity>\n";
 
         tcxString += "</Lap>\n";
         tcxString += "<Track>\n";
@@ -145,47 +133,31 @@ export class CourseMaker {
         for (let i: number = 0; i < activityStream.latlng.length; i++) {
 
             tcxString += "<Trackpoint>\n";
-
             tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";
-
             tcxString += "<Position>\n";
             tcxString += "<LatitudeDegrees>" + activityStream.latlng[i][0] + "</LatitudeDegrees>\n";
             tcxString += "<LongitudeDegrees>" + activityStream.latlng[i][1] + "</LongitudeDegrees>\n";
             tcxString += "</Position>\n";
-
             if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
                 tcxString += "<AltitudeMeters>" + activityStream.altitude[i] + "</AltitudeMeters>\n";
             }
+            tcxString += "<DistanceMeters>" + (activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
 
-            tcxString += "<DistanceMeters>" + Math.round(activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
+            if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
+                tcxString += "<HeartRateBpm><Value>" + activityStream.heartrate[i] + "</Value></HeartRateBpm>\n";
+            }
 
             if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
                 tcxString += "<Cadence>" + activityStream.cadence[i] + "</Cadence>\n";
             }
 
-            if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-                tcxString += "<HeartRateBpm>\n";
-                tcxString += "<Value>" + activityStream.heartrate[i] + "</Value>\n";
-                tcxString += "</HeartRateBpm>\n";
-            }
-
-            tcxString += "<Extensions>\n";
-            tcxString += '<TPX xmlns="http://www.garmin.com/xmlschemas/ActivityExtension/v2">\n';
-            // tcxString += "<Speed>" + activityStream.velocity_smooth[i] + "</Speed>\n";
-
-            if (activityStream.watts && _.isNumber(activityStream.watts[i])) {
-                tcxString += "<Watts>" + activityStream.watts[i] + "</Watts>\n";
-            }
-
-            tcxString += "</TPX>\n";
-            tcxString += "</Extensions>\n";
             tcxString += "</Trackpoint>\n";
         }
 
         tcxString += "</Track>\n";
         tcxString += "</Course>\n";
         tcxString += "</Courses>\n";
-        tcxString += "</TrainingCenterDatabase>\n";
+        tcxString += "</TrainingCenterDatabase>";
 
         return tcxString;
     }

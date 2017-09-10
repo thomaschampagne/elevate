@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
 import {Helper} from "../../../common/scripts/Helper";
 import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
+import {env} from "../../config/env";
 
 export class VacuumProcessor {
 
@@ -363,7 +363,7 @@ export class VacuumProcessor {
     /**
      * @returns
      */
-    getSegmentStream(segmentId: number, callback: Function): void {
+    public getSegmentStream(segmentId: number, callback: Function): void {
 
         $.ajax({
             url: "/stream/segments/" + segmentId,
@@ -381,7 +381,7 @@ export class VacuumProcessor {
     /**
      * @returns Array of bikes/odo
      */
-    getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
+    public getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
 
         if (_.isUndefined(window.pageView)) {
             callback(null);
@@ -414,12 +414,12 @@ export class VacuumProcessor {
         });
     }
 
-    getActivityTime(): string {
+    public getActivityTime(): string {
         const activityTime: string = $(".activity-summary-container").find("time").text().trim();
         return (activityTime) ? activityTime : null;
     }
 
-    getActivityName(): string {
+    public getActivityName(): string {
         const activityName: string = $(".activity-summary-container").find(".marginless.activity-name").text().trim();
         return (activityName) ? activityName : null;
     }

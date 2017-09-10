@@ -25,25 +25,31 @@ export class HeartRateDataView extends AbstractDataView {
 
         let htmlTable: string = "";
         htmlTable += "<div>";
-        htmlTable += '<div style="height:500px; overflow:auto;">';
-        htmlTable += '<table class="distributionTable">';
+        htmlTable += "<div style=\"height:500px; overflow:auto;\">";
+        htmlTable += "<table class=\"distributionTable\">";
 
         htmlTable += "<tr>"; // Zone
         htmlTable += "<td>ZONE</td>"; // Zone
-        htmlTable += "<td>%HRR</td>"; // bpm
         htmlTable += "<td>BPM</td>"; // bpm
+        htmlTable += "<td>%HRR</td>"; // %HRR
         htmlTable += "<td>TIME</td>"; // Time
         htmlTable += "<td>% ZONE</td>"; // % in zone
         htmlTable += "</tr>";
 
         let zoneId: number = 1;
-        for (const zone in this.heartRateData.hrrZones) {
+        for (const zone in this.heartRateData.heartRateZones) {
+
+            let fromHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].from, this.userSettings.userMaxHr, this.userSettings.userRestHr) * 100;
+            fromHRR = Math.round(fromHRR);
+            let toHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].to, this.userSettings.userMaxHr, this.userSettings.userRestHr) * 100;
+            toHRR = Math.round(toHRR);
+
             htmlTable += "<tr>"; // Zone
             htmlTable += "<td>Z" + zoneId + "</td>"; // Zone
-            htmlTable += "<td>" + this.heartRateData.hrrZones[zone].fromHrr + "% - " + this.heartRateData.hrrZones[zone].toHrr + "%" + "</th>"; // %HRR
-            htmlTable += "<td>" + this.heartRateData.hrrZones[zone].fromHr + " - " + this.heartRateData.hrrZones[zone].toHr + "</td>"; // bpm%
-            htmlTable += "<td>" + Helper.secondsToHHMMSS(this.heartRateData.hrrZones[zone].s) + "</td>"; // Time%
-            htmlTable += "<td>" + this.heartRateData.hrrZones[zone].percentDistrib.toFixed(0) + "%</td>"; // % in zone
+            htmlTable += "<td>" + this.heartRateData.heartRateZones[zone].from + " - " + this.heartRateData.heartRateZones[zone].to + "</th>"; // BPM
+            htmlTable += "<td>" + fromHRR + "% - " + toHRR + "%</td>"; // %HRR
+            htmlTable += "<td>" + Helper.secondsToHHMMSS(this.heartRateData.heartRateZones[zone].s) + "</td>"; // Time%
+            htmlTable += "<td>" + this.heartRateData.heartRateZones[zone].percentDistrib.toFixed(0) + "%</td>"; // % in zone
             htmlTable += "</tr>";
             zoneId++;
         }
@@ -60,14 +66,14 @@ export class HeartRateDataView extends AbstractDataView {
         const labelsData: string[] = [];
         let zone: any;
 
-        for (zone in this.heartRateData.hrrZones) {
-            const label: string = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.hrrZones[zone].fromHrr + "-" + this.heartRateData.hrrZones[zone].toHrr + "%";
+        for (zone in this.heartRateData.heartRateZones) {
+            const label: string = "Z" + (parseInt(zone) + 1) + " " + this.heartRateData.heartRateZones[zone].from + "-" + this.heartRateData.heartRateZones[zone].to + " bpm";
             labelsData.push(label);
         }
 
         const hrDistributionInMinutesArray: string[] = [];
-        for (zone in this.heartRateData.hrrZones) {
-            hrDistributionInMinutesArray.push((this.heartRateData.hrrZones[zone].s / 60).toFixed(2));
+        for (zone in this.heartRateData.heartRateZones) {
+            hrDistributionInMinutesArray.push((this.heartRateData.heartRateZones[zone].s / 60).toFixed(2));
         }
 
         this.graphData = {
@@ -99,13 +105,18 @@ export class HeartRateDataView extends AbstractDataView {
 
         const hr: string[] = tooltip.title[0].split(" ")[1].replace("%", "").split("-");
 
-        tooltip.body[0].lines[0] = Helper.heartrateFromHeartRateReserve(parseInt(hr[0]), StravistiX.instance.userSettings.userMaxHr, StravistiX.instance.userSettings.userRestHr) + " - " + Helper.heartrateFromHeartRateReserve(parseInt(hr[1]), StravistiX.instance.userSettings.userMaxHr, StravistiX.instance.userSettings.userRestHr) + " bpm held during " + Helper.secondsToHHMMSS(timeInMinutes * 60);
+        tooltip.body[0].lines[0] = Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[0]),
+            StravistiX.instance.userSettings.userMaxHr, StravistiX.instance.userSettings.userRestHr) * 100) +
+            " - " + Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[1]),
+                StravistiX.instance.userSettings.userMaxHr,
+                StravistiX.instance.userSettings.userRestHr) * 100) +
+            " %HRR during " + Helper.secondsToHHMMSS(timeInMinutes * 60);
     }
 
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle('<img src="' + this.appResources.heartBeatIcon + '" style="vertical-align: baseline; height:20px;"/> HEART RATE <a target="_blank" href="' + this.appResources.settingsLink + '#!/hrrZonesSettings" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.heartBeatIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> HEART RATE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/heartRate\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 3); // (col, row)

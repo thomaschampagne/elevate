@@ -1,11 +1,22 @@
 import * as _ from "lodash";
 import {Helper} from "../../../common/scripts/Helper";
 import {
-    IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData,
+    IActivityStatsMap,
+    IActivityStream,
+    IAnalysisData,
+    IAscentSpeedData,
+    ICadenceData,
+    IElevationData,
+    IGradeData,
     IHeartRateData,
-    IHrrZone,
-    IMoveData, IPaceData,
-    IPowerData, ISpeedData, IZone,
+    IMoveData,
+    IPaceData,
+    IPowerData,
+    ISpeedData,
+    IUpFlatDown,
+    IUpFlatDownSumCounter,
+    IUpFlatDownSumTotal,
+    IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
@@ -161,21 +172,24 @@ export class ActivityComputer {
         // Q3 HR
         const heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
+        // Avg grade
+        // Q1/Q2/Q3 grade
+        const gradeData: IGradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence);
+
         // Cadence percentage
         // Time Cadence
         // Crank revolution
         const cadenceData: ICadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.time);
-
-        // Avg grade
-        // Q1/Q2/Q3 grade
-        const gradeData: IGradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance);
+        // ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
+        if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
+            cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
+        }
 
         // Avg grade
         // Q1/Q2/Q3 elevation
         const elevationData: IElevationData = this.elevationData(activityStream);
 
         // Return an array with all that shit...
-
         const analysisData: IAnalysisData = {
             moveRatio,
             toughnessScore,
@@ -213,14 +227,14 @@ export class ActivityComputer {
         }
 
         return Math.sqrt(
-                Math.sqrt(
-                    Math.pow(activityStatsMap.elevation, 2) *
-                    activityStatsMap.avgPower *
-                    Math.pow(activityStatsMap.averageSpeed, 2) *
-                    Math.pow(activityStatsMap.distance, 2) *
-                    moveRatio,
-                ),
-            ) / 20;
+            Math.sqrt(
+                Math.pow(activityStatsMap.elevation, 2) *
+                activityStatsMap.avgPower *
+                Math.pow(activityStatsMap.averageSpeed, 2) *
+                Math.pow(activityStatsMap.distance, 2) *
+                moveRatio,
+            ),
+        ) / 20;
     }
 
     //noinspection JSUnusedGlobalSymbols
@@ -228,7 +242,7 @@ export class ActivityComputer {
         return ((value - minValue) / distributionStep);
     }
 
-    protected  getZoneId(zones: IZone[], value: number): number {
+    protected getZoneId(zones: IZone[], value: number): number {
         for (let zoneId: number = 0; zoneId < zones.length; zoneId++) {
             if (value <= zones[zoneId].to) {
                 return zoneId;
@@ -244,29 +258,6 @@ export class ActivityComputer {
             preparedZones.push(zone);
         });
         return preparedZones;
-    }
-
-    protected finalizeDistributionComputationHrrZones(zones: IHrrZone[]): IHrrZone[] {
-
-        let total: number = 0;
-        let zone: IHrrZone;
-        for (let i: number = 0; i < zones.length; i++) {
-            zone = zones[i];
-            if (zone.s) {
-                total += zone.s;
-            }
-            zone.percentDistrib = 0;
-        }
-
-        if (total > 0) {
-            for (let i: number = 0; i < zones.length; i++) {
-                zone = zones[i];
-                if (zone.s) {
-                    zone.percentDistrib = zone.s / total * 100;
-                }
-            }
-        }
-        return zones;
     }
 
     protected finalizeDistributionComputationZones(zones: IZone[]): IZone[] {
@@ -463,9 +454,9 @@ export class ActivityComputer {
                 if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
                     // Get average of power during these 30 seconds windows & power 4th
-                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function(a, b) { // The reduce function and implementation return the sum of array
-                            return (a as number) + (b as number);
-                        }, 0) / sumPowerTimeWindow.length, 4));
+                    sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
+                        return (a as number) + (b as number);
+                    }, 0) / sumPowerTimeWindow.length, 4));
 
                     timeWindowValue = 0; // Reset time window
                     sumPowerTimeWindow = []; // Reset sum of power window
@@ -489,9 +480,9 @@ export class ActivityComputer {
         // Finalize compute of Power
         const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
 
-        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function(a, b) { // The reduce function and implementation return the sum of array
-                return (a as number) + (b as number);
-            }, 0) / sum4thPower.length));
+        const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
+            return (a as number) + (b as number);
+        }, 0) / sum4thPower.length));
 
         /*
          // If user has a power meters we prefer use the value given by strava
@@ -535,22 +526,15 @@ export class ActivityComputer {
             return null;
         }
 
+        this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
+
         let trainingImpulse: number = 0;
         const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
         let hrrSecondsCount: number = 0;
-        const hrrZonesCount: number = Object.keys(this.userSettings.userHrrZones).length;
         let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number, zoneId: number;
         let hrSum: number = 0;
         const heartRateArrayMoving: any[] = [];
         const heartRateArrayMovingDuration: any[] = [];
-
-        // Find HR for each Hrr of each zones
-        _.forEach(this.userSettings.userHrrZones, (zone: IHrrZone) => {
-            zone.fromHr = Helper.heartrateFromHeartRateReserve(zone.fromHrr, userMaxHr, userRestHr);
-            zone.toHr = Helper.heartrateFromHeartRateReserve(zone.toHrr, userMaxHr, userRestHr);
-            zone.s = 0;
-            zone.percentDistrib = null;
-        });
 
         for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
@@ -577,20 +561,20 @@ export class ActivityComputer {
                 trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
                 // Count Heart Rate Reserve distribution
-                zoneId = this.getHrrZoneId(hrrZonesCount, heartRateReserveAvg * 100);
+                zoneId = this.getZoneId(this.userSettings.zones.heartRate, heartRateArray[i]);
 
                 if (!_.isUndefined(zoneId)) {
-                    this.userSettings.userHrrZones[zoneId].s += durationInSeconds;
+                    this.userSettings.zones.heartRate[zoneId].s += durationInSeconds;
                 }
             }
         }
 
-        const heartRateArraySorted: number[] = heartRateArray.sort(function(a, b) {
+        const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
             return a - b;
         });
 
         // Update zone distribution percentage
-        this.userSettings.userHrrZones = this.finalizeDistributionComputationHrrZones(this.userSettings.userHrrZones);
+        this.userSettings.zones.heartRate = this.finalizeDistributionComputationZones(this.userSettings.zones.heartRate);
 
         const averageHeartRate: number = hrSum / hrrSecondsCount;
         const maxHeartRate: number = heartRateArraySorted[heartRateArraySorted.length - 1];
@@ -598,10 +582,10 @@ export class ActivityComputer {
         const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
         const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-        const heartRateData: IHeartRateData = {
+        return {
             TRIMP: trainingImpulse,
             TRIMPPerHour,
-            hrrZones: (this.returnZones) ? this.userSettings.userHrrZones : null,
+            heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
             lowerQuartileHeartRate: percentiles[0],
             medianHeartRate: percentiles[1],
             upperQuartileHeartRate: percentiles[2],
@@ -610,16 +594,6 @@ export class ActivityComputer {
             activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
             activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
         };
-
-        return heartRateData;
-    }
-
-    protected getHrrZoneId(hrrZonesCount: number, hrrValue: number): number {
-        for (let zoneId: number = 0; zoneId < hrrZonesCount; zoneId++) {
-            if (hrrValue <= this.userSettings.userHrrZones[zoneId].toHrr) {
-                return zoneId;
-            }
-        }
     }
 
     protected cadenceData(cadenceArray: any[], velocityArray: any[], timeArray: any[]): ICadenceData {
@@ -710,7 +684,7 @@ export class ActivityComputer {
         return cadenceData;
     }
 
-    protected gradeData(gradeArray: number[], velocityArray: number[], timeArray: number[], distanceArray: number[]): IGradeData {
+    protected gradeData(gradeArray: number[], velocityArray: number[], timeArray: number[], distanceArray: number[], cadenceArray: number[]): IGradeData {
 
         if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -724,36 +698,50 @@ export class ActivityComputer {
             gradeCount: number = 0;
 
         let gradeZones: IZone[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
-        const upFlatDownInSeconds: any = {
+        const upFlatDownInSeconds: IUpFlatDownSumTotal = {
             up: 0,
             flat: 0,
             down: 0,
-            total: 0,
+            total: 0
         };
 
         // Currently deals with avg speed/pace
-        const upFlatDownMoveData: any = {
+        const upFlatDownMoveData: IUpFlatDown = {
             up: 0,
             flat: 0,
-            down: 0,
+            down: 0
         };
 
-        const upFlatDownDistanceData: any = {
+        const upFlatDownDistanceData: IUpFlatDown = {
+            up: 0,
+            flat: 0,
+            down: 0
+        };
+
+        const upFlatDownCadenceData: IUpFlatDownSumCounter = {
             up: 0,
             flat: 0,
             down: 0,
+            countUp: 0,
+            countFlat: 0,
+            countDown: 0
         };
 
         let durationInSeconds: number, durationCount: number = 0;
         let distance: number = 0;
         let currentSpeed: number;
+        let avgMinGrade: number = 0;
+        let avgMaxGrade: number = 0;
 
         const gradeArrayMoving: any[] = [];
         const gradeArrayDistance: any[] = [];
 
+        const hasCadenceData: boolean = !_.isEmpty(cadenceArray);
+
         for (let i: number = 0; i < gradeArray.length; i++) { // Loop on samples
 
             if (i > 0) {
+
                 currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
                 // Compute distribution for graph/table
                 if (currentSpeed > 0) { // If moving...
@@ -783,18 +771,36 @@ export class ActivityComputer {
                         // distance
                         upFlatDownDistanceData.up += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while climbing
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.up += cadenceArray[i];
+                            upFlatDownCadenceData.countUp++; // Increment added cadence count
+                        }
+
                     } else if (gradeArray[i] < ActivityComputer.GRADE_DOWNHILL_LIMIT) { // DOWNHILL
                         // time
                         upFlatDownInSeconds.down += durationInSeconds;
                         // distance
                         upFlatDownDistanceData.down += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while downhill
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.down += cadenceArray[i];
+                            upFlatDownCadenceData.countDown++; // Increment added cadence count
+                        }
+
                     } else { // FLAT
+
                         // time
                         upFlatDownInSeconds.flat += durationInSeconds;
                         // distance
                         upFlatDownDistanceData.flat += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while on flat
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.flat += cadenceArray[i];
+                            upFlatDownCadenceData.countFlat++; // Increment added cadence count
+                        }
                     }
                 }
             }
@@ -820,15 +826,29 @@ export class ActivityComputer {
         upFlatDownDistanceData.down = upFlatDownDistanceData.down / 1000;
         upFlatDownDistanceData.flat = upFlatDownDistanceData.flat / 1000;
 
-        const avgGrade: number = gradeSum / gradeCount;
+        // Compute cadence pace up/down/flat
+        upFlatDownCadenceData.up = upFlatDownCadenceData.up / upFlatDownCadenceData.countUp;
+        upFlatDownCadenceData.down = upFlatDownCadenceData.down / upFlatDownCadenceData.countDown;
+        upFlatDownCadenceData.flat = upFlatDownCadenceData.flat / upFlatDownCadenceData.countFlat;
 
         // Update zone distribution percentage
         gradeZones = this.finalizeDistributionComputationZones(gradeZones);
-
         const percentiles: number[] = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
+
+        const avgGrade: number = gradeSum / gradeCount;
+        // Find min and max grade
+        let sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
+            return grade;
+        });
+        const minMaxGradeSamplePercentage = 0.25; //%
+        const gradeSamplesReadCount = Math.floor(sortedGradeArray.length * minMaxGradeSamplePercentage / 100);
+        avgMinGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, 0, gradeSamplesReadCount)) : _.first(sortedGradeArray);
+        avgMaxGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount)) : _.last(sortedGradeArray);
 
         const gradeData: IGradeData = {
             avgGrade,
+            avgMaxGrade: avgMaxGrade,
+            avgMinGrade: avgMinGrade,
             lowerQuartileGrade: percentiles[0],
             medianGrade: percentiles[1],
             upperQuartileGrade: percentiles[2],
@@ -836,11 +856,15 @@ export class ActivityComputer {
             upFlatDownInSeconds,
             upFlatDownMoveData,
             upFlatDownDistanceData,
+            upFlatDownCadencePaceData: (hasCadenceData) ? {
+                up: upFlatDownCadenceData.up,
+                flat: upFlatDownCadenceData.flat,
+                down: upFlatDownCadenceData.down
+            } : null,
             gradeProfile,
         };
 
         return gradeData;
-
     }
 
     protected elevationData(activityStream: IActivityStream): IElevationData {

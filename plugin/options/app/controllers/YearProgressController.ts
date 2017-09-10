@@ -363,4 +363,3 @@ export class YearProgressController {
 
     }
 }
-

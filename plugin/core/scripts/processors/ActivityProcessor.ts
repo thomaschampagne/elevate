@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {env} from "../../config/env";
 import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {VacuumProcessor} from "./VacuumProcessor";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
@@ -12,7 +12,6 @@ export class ActivityProcessor {
     public static cachePrefix: string = "stravistix_activity_";
     protected appResources: IAppResources;
     protected vacuumProcessor: VacuumProcessor;
-    protected userHrrZones: any;
     protected zones: any;
     protected activityType: string;
     protected isTrainer: boolean;
@@ -24,7 +23,6 @@ export class ActivityProcessor {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
-        this.userHrrZones = this.userSettings.userHrrZones;
         this.zones = this.userSettings.zones;
     }
 

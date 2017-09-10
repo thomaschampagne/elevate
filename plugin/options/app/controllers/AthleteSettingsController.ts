@@ -37,7 +37,6 @@ export class AthleteSettingsController {
             $scope.gender = _.find($scope.genderList, {
                 type: userSettingsSynced.userGender,
             });
-            $scope.zones = userSettingsSynced.userHrrZones;
             $scope.$apply();
 
         });
@@ -224,4 +223,3 @@ export class AthleteSettingsController {
     }
 
 }
-

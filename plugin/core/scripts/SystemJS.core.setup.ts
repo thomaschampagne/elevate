@@ -28,6 +28,7 @@ const _coreConfig: ICoreConfig = {
             "sphericalLatLon": "npm:geodesy/latlon-spherical.js",
             "lodash": "npm:lodash/lodash.min.js",
             "fancybox": "npm:fancybox/dist/js/jquery.fancybox.pack.js",
+            "qrcode": "npm:qrcode/build/qrcode.min.js",
             "file-saver": "npm:file-saver/FileSaver.min.js",
 
             /* Custom modules */

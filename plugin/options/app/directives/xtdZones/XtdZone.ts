@@ -4,7 +4,7 @@ import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
 
 export class XtdZone {
 
-    static $inject: string[] = ["$scope", "AvoidInputKeysService"];
+    public static $inject: string[] = ["$scope", "AvoidInputKeysService"];
 
     constructor(public $scope: any, public AvoidInputKeysService: IAvoidInputKeysService) {
 

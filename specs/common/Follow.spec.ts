@@ -1,4 +1,3 @@
-
 import {AthleteUpdate} from "../../plugin/core/scripts/Follow";
 import {IAthleteUpdate} from "../../plugin/core/scripts/interfaces/IAthleteUpdate";
 
@@ -21,7 +20,7 @@ describe('Generate Athlete Update', () => {
         expect(doe.name).toEqual('John Doe');
         expect(doe.version).toEqual('5.0.0');
         expect(doe.status).toEqual(0);
-        expect(doe.country).toEqual('France');
+        expect(doe.locale).toEqual("France");
         expect(doe.hrMin).toEqual(65);
         expect(doe.hrMax).toEqual(190);
     });
@@ -44,7 +43,7 @@ describe('Generate Athlete Update', () => {
         expect(doe.name).toEqual('My Self');
         expect(doe.version).toEqual('5.0.0');
         expect(doe.status).toEqual(1);
-        expect(doe.country).toEqual('France');
+        expect(doe.locale).toEqual("France");
         expect(doe.hrMax).toEqual(190);
         expect(doe.hrMin).toEqual(65);
     });
@@ -66,7 +65,7 @@ describe('Generate Athlete Update', () => {
         expect(froom.name).not.toEqual('John Doe');
         expect(froom.version).toEqual('5.1.0');
         expect(froom.status).toEqual(2);
-        expect(froom.country).toEqual('United KingHome');
+        expect(froom.locale).toEqual("United KingHome");
 
         // Another pro
         let cavendish: IAthleteUpdate = AthleteUpdate.create(
@@ -79,7 +78,7 @@ describe('Generate Athlete Update', () => {
         );
         expect(cavendish).not.toBeNull();
         expect(cavendish.status).toEqual(2);
-        expect(cavendish.country).toBeUndefined();
+        expect(cavendish.locale).toBeUndefined();
 
     });
 

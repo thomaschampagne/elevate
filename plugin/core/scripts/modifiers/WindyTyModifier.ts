@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IAppResources} from "../interfaces/IAppResources";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
 
 export class WindyTyModifier implements IModifier {
 

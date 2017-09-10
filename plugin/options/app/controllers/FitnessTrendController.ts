@@ -7,7 +7,7 @@ import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 
 export class FitnessTrendController {
 
-    static $inject = ["$rootScope", "$scope", "ChromeStorageService", "FitnessDataService"];
+    public static $inject = ["$rootScope", "$scope", "ChromeStorageService", "FitnessDataService"];
 
     public static fitnessDataLoaded: string = "fitnessDataLoaded";
 

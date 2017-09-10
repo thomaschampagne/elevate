@@ -303,6 +303,12 @@ export let commonSettingsService = () => {
                 optionLabels: ["All"],
                 optionHtml: "This will hide all routes created in the dashboard feed.",
             }, {
+                optionKey: 'feedHideSuggestedAthletes',
+                optionType: 'checkbox',
+                optionTitle: 'Hide suggested athletes',
+                optionLabels: ['All'],
+                optionHtml: 'This will hide the "You Should Follow" section from the dashboard feed sidebar',
+            }, {
                 optionKey: "feedHideVirtualRides",
                 optionType: "checkbox",
                 optionTitle: "Hide virtual rides.",
@@ -408,4 +414,3 @@ export let commonSettingsService = () => {
     };
     return commonSettingsService;
 };
-

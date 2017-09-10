@@ -1,12 +1,12 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
-import {IAppResources} from "../interfaces/IAppResources";
+import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
 import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify, ISyncRawStravaActivity} from "../../../common/scripts/interfaces/ISync";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {ActivitiesProcessor} from "../processors/ActivitiesProcessor";
-import {IAthleteProfile} from '../../../common/scripts/interfaces/IAthleteProfile';
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
+import {IAppResources} from "../interfaces/IAppResources";
+import {MultipleActivityProcessor} from "../processors/MultipleActivityProcessor";
 
 export interface IHistoryChanges {
     added: number[];
@@ -33,7 +33,7 @@ export class ActivitiesSynchronizer {
     protected totalRawActivityIds: number[] = [];
     public static pagesPerGroupToRead: number = 2; // = 40 activities with 20 activities per page.
     protected _hasBeenComputedActivities: ISyncActivityComputed[] = null;
-    protected _activitiesProcessor: ActivitiesProcessor;
+    protected _multipleActivityProcessor: MultipleActivityProcessor;
     protected _endReached: boolean = false;
 
     private _globalHistoryChanges: IHistoryChanges = {
@@ -46,7 +46,7 @@ export class ActivitiesSynchronizer {
         this.appResources = appResources;
         this.userSettings = userSettings;
         this.extensionId = this.appResources.extensionId;
-        this._activitiesProcessor = new ActivitiesProcessor(this.appResources, this.userSettings);
+        this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings);
     }
 
     public appendGlobalHistoryChanges(historyIn: IHistoryChanges): void {
@@ -410,7 +410,7 @@ export class ActivitiesSynchronizer {
 
         this.fetchWithStream(lastSyncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: ISyncActivityWithStream[]) => {
 
-            return this._activitiesProcessor.compute(activitiesWithStreams);
+            return this._multipleActivityProcessor.compute(activitiesWithStreams);
 
         }, (err: any) => {
 
@@ -715,15 +715,15 @@ export class ActivitiesSynchronizer {
         this.totalRawActivityIds = [];
     }
 
-    saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
+    public saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
     }
 
-    saveLastSyncDateToLocal(timestamp: number) {
+    public saveLastSyncDateToLocal(timestamp: number) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
     }
 
-    getLastSyncDateFromLocal() {
+    public getLastSyncDateFromLocal() {
         return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
     }
 
@@ -735,8 +735,8 @@ export class ActivitiesSynchronizer {
         return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities);
     }
 
-    get activitiesProcessor(): ActivitiesProcessor {
-        return this._activitiesProcessor;
+    get multipleActivityProcessor(): MultipleActivityProcessor {
+        return this._multipleActivityProcessor;
     }
 
     get hasBeenComputedActivities(): ISyncActivityComputed[] {

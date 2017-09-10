@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {Helper} from "../../../common/scripts/Helper";
+import {StorageManager} from "../../../common/scripts/modules/StorageManager";
 import {IAppResources} from "../interfaces/IAppResources";
 
 export class AthleteStatsModifier implements IModifier {
@@ -627,7 +627,7 @@ export class AthleteStatsModifier implements IModifier {
             generateLines();
 
             $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
-                const year: number = $(this).val();
+                const year: number = parseInt($(this).val().toString());
                 data.filter(function(item: any) {
                     return item.year == year;
                 }).forEach(function(item: any) {
@@ -766,7 +766,7 @@ export class AthleteStatsModifier implements IModifier {
         }
     }
 
-    handleProgressStatsForceRefresh(): void {
+    public handleProgressStatsForceRefresh(): void {
         localStorage.removeItem(this.cacheKey_);
         window.location.reload();
     }

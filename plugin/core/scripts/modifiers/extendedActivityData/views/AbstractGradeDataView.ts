@@ -1,6 +1,7 @@
 import {Helper} from "../../../../../common/scripts/Helper";
 import {IGradeData} from "../../../../../common/scripts/interfaces/IActivityData";
 import {AbstractDataView} from "./AbstractDataView";
+
 export abstract class AbstractGradeDataView extends AbstractDataView {
 
     protected gradeData: IGradeData;
@@ -21,7 +22,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
         this.content += this.generateSectionTitle('<img src="' + this.appResources.areaChartIcon + '" style="vertical-align: baseline; height:20px;"/> GRADE <a target="_blank" href="' + this.appResources.settingsLink + '#!/zonesSettings/grade" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
 
         // Creates a grid
-        this.makeGrid(3, 6); // (col, row)
+        this.makeGrid(3, 7); // (col, row)
 
         this.insertDataIntoGrid();
         this.generateCanvasForGraph();
@@ -53,5 +54,9 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
         this.insertContentAtGridPosition(0, 5, ((distanceUp !== 0) ? distanceUp.toFixed(1) : "-"), "Climbing distance", this.speedUnitsData.units, "displayAdvancedGradeData");
         this.insertContentAtGridPosition(1, 5, ((distanceFlat !== 0) ? distanceFlat.toFixed(1) : "-"), "Flat distance", this.speedUnitsData.units, "displayAdvancedGradeData");
         this.insertContentAtGridPosition(2, 5, ((distanceDown !== 0) ? distanceDown.toFixed(1) : "-"), "Downhill distance", this.speedUnitsData.units, "displayAdvancedGradeData");
+
+        this.insertContentAtGridPosition(0, 6, this.gradeData.avgGrade.toFixed(1), "Avg grade", "%", "displayAdvancedGradeData");
+        this.insertContentAtGridPosition(1, 6, this.gradeData.avgMaxGrade.toFixed(1), "Max uphill grade", "%", "displayAdvancedGradeData");
+        this.insertContentAtGridPosition(2, 6, this.gradeData.avgMinGrade.toFixed(1), "Max downhill grade", "%", "displayAdvancedGradeData");
     }
 }
