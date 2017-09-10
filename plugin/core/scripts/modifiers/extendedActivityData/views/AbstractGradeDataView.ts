@@ -56,7 +56,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
         this.insertContentAtGridPosition(2, 5, ((distanceDown !== 0) ? distanceDown.toFixed(1) : "-"), "Downhill distance", this.speedUnitsData.units, "displayAdvancedGradeData");
 
         this.insertContentAtGridPosition(0, 6, this.gradeData.avgGrade.toFixed(1), "Avg grade", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(1, 6, this.gradeData.maxGrade.toFixed(1), "Max uphill grade", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(2, 6, this.gradeData.minGrade.toFixed(1), "Max downhill grade", "%", "displayAdvancedGradeData");
+        this.insertContentAtGridPosition(1, 6, this.gradeData.avgMaxGrade.toFixed(1), "Max uphill grade", "%", "displayAdvancedGradeData");
+        this.insertContentAtGridPosition(2, 6, this.gradeData.avgMinGrade.toFixed(1), "Max downhill grade", "%", "displayAdvancedGradeData");
     }
 }
