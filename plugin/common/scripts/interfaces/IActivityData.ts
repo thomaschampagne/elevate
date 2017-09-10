@@ -100,8 +100,10 @@ export interface ICadenceData {
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
+    upFlatDownCadencePaceData?: IUpFlatDown;
     cadenceZones: IZone[];
 }
+
 export interface IGradeData {
     avgGrade: number;
     avgMaxGrade: number;
@@ -109,22 +111,10 @@ export interface IGradeData {
     lowerQuartileGrade: number;
     medianGrade: number;
     upperQuartileGrade: number;
-    upFlatDownInSeconds: {
-        up: number;
-        flat: number;
-        down: number;
-        total: number;
-    };
-    upFlatDownMoveData: {
-        up: number;
-        flat: number;
-        down: number;
-    };
-    upFlatDownDistanceData: {
-        up: number;
-        flat: number;
-        down: number;
-    };
+    upFlatDownInSeconds: IUpFlatDownSumTotal;
+    upFlatDownMoveData: IUpFlatDown;
+    upFlatDownDistanceData: IUpFlatDown;
+    upFlatDownCadencePaceData: IUpFlatDown | null;
     gradeProfile: string;
     gradeZones: IZone[];
 }
@@ -140,11 +130,28 @@ export interface IElevationData {
     ascentSpeedZones: IZone[];
     ascentSpeed: IAscentSpeedData;
 }
+
 export interface IAscentSpeedData {
     avg: number;
     lowerQuartile: number;
     median: number;
     upperQuartile: number;
+}
+
+export interface IUpFlatDown {
+    up: number;
+    flat: number;
+    down: number;
+}
+
+export interface IUpFlatDownSumTotal extends IUpFlatDown {
+    total: number;
+}
+
+export interface IUpFlatDownSumCounter extends IUpFlatDown {
+    countUp: number;
+    countFlat: number;
+    countDown: number;
 }
 
 export interface IZone {

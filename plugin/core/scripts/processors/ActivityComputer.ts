@@ -13,6 +13,9 @@ import {
     IPaceData,
     IPowerData,
     ISpeedData,
+    IUpFlatDown,
+    IUpFlatDownSumCounter,
+    IUpFlatDownSumTotal,
     IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
@@ -169,21 +172,24 @@ export class ActivityComputer {
         // Q3 HR
         const heartRateData: IHeartRateData = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
+        // Avg grade
+        // Q1/Q2/Q3 grade
+        const gradeData: IGradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence);
+
         // Cadence percentage
         // Time Cadence
         // Crank revolution
         const cadenceData: ICadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.time);
-
-        // Avg grade
-        // Q1/Q2/Q3 grade
-        const gradeData: IGradeData = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance);
+        // ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
+        if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
+            cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
+        }
 
         // Avg grade
         // Q1/Q2/Q3 elevation
         const elevationData: IElevationData = this.elevationData(activityStream);
 
         // Return an array with all that shit...
-
         const analysisData: IAnalysisData = {
             moveRatio,
             toughnessScore,
@@ -678,7 +684,7 @@ export class ActivityComputer {
         return cadenceData;
     }
 
-    protected gradeData(gradeArray: number[], velocityArray: number[], timeArray: number[], distanceArray: number[]): IGradeData {
+    protected gradeData(gradeArray: number[], velocityArray: number[], timeArray: number[], distanceArray: number[], cadenceArray: number[]): IGradeData {
 
         if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
             return null;
@@ -692,24 +698,33 @@ export class ActivityComputer {
             gradeCount: number = 0;
 
         let gradeZones: IZone[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
-        const upFlatDownInSeconds: any = {
+        const upFlatDownInSeconds: IUpFlatDownSumTotal = {
             up: 0,
             flat: 0,
             down: 0,
-            total: 0,
+            total: 0
         };
 
         // Currently deals with avg speed/pace
-        const upFlatDownMoveData: any = {
+        const upFlatDownMoveData: IUpFlatDown = {
             up: 0,
             flat: 0,
-            down: 0,
+            down: 0
         };
 
-        const upFlatDownDistanceData: any = {
+        const upFlatDownDistanceData: IUpFlatDown = {
+            up: 0,
+            flat: 0,
+            down: 0
+        };
+
+        const upFlatDownCadenceData: IUpFlatDownSumCounter = {
             up: 0,
             flat: 0,
             down: 0,
+            countUp: 0,
+            countFlat: 0,
+            countDown: 0
         };
 
         let durationInSeconds: number, durationCount: number = 0;
@@ -720,6 +735,8 @@ export class ActivityComputer {
 
         const gradeArrayMoving: any[] = [];
         const gradeArrayDistance: any[] = [];
+
+        const hasCadenceData: boolean = !_.isEmpty(cadenceArray);
 
         for (let i: number = 0; i < gradeArray.length; i++) { // Loop on samples
 
@@ -754,18 +771,36 @@ export class ActivityComputer {
                         // distance
                         upFlatDownDistanceData.up += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while climbing
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.up += cadenceArray[i];
+                            upFlatDownCadenceData.countUp++; // Increment added cadence count
+                        }
+
                     } else if (gradeArray[i] < ActivityComputer.GRADE_DOWNHILL_LIMIT) { // DOWNHILL
                         // time
                         upFlatDownInSeconds.down += durationInSeconds;
                         // distance
                         upFlatDownDistanceData.down += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while downhill
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.down += cadenceArray[i];
+                            upFlatDownCadenceData.countDown++; // Increment added cadence count
+                        }
+
                     } else { // FLAT
+
                         // time
                         upFlatDownInSeconds.flat += durationInSeconds;
                         // distance
                         upFlatDownDistanceData.flat += distance;
 
+                        // If cadence sensor exists, then try add up cadence data (not null) while on flat
+                        if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+                            upFlatDownCadenceData.flat += cadenceArray[i];
+                            upFlatDownCadenceData.countFlat++; // Increment added cadence count
+                        }
                     }
                 }
             }
@@ -791,13 +826,16 @@ export class ActivityComputer {
         upFlatDownDistanceData.down = upFlatDownDistanceData.down / 1000;
         upFlatDownDistanceData.flat = upFlatDownDistanceData.flat / 1000;
 
-        const avgGrade: number = gradeSum / gradeCount;
+        // Compute cadence pace up/down/flat
+        upFlatDownCadenceData.up = upFlatDownCadenceData.up / upFlatDownCadenceData.countUp;
+        upFlatDownCadenceData.down = upFlatDownCadenceData.down / upFlatDownCadenceData.countDown;
+        upFlatDownCadenceData.flat = upFlatDownCadenceData.flat / upFlatDownCadenceData.countFlat;
 
         // Update zone distribution percentage
         gradeZones = this.finalizeDistributionComputationZones(gradeZones);
-
         const percentiles: number[] = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
 
+        const avgGrade: number = gradeSum / gradeCount;
         // Find min and max grade
         let sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
             return grade;
@@ -818,11 +856,15 @@ export class ActivityComputer {
             upFlatDownInSeconds,
             upFlatDownMoveData,
             upFlatDownDistanceData,
+            upFlatDownCadencePaceData: (hasCadenceData) ? {
+                up: upFlatDownCadenceData.up,
+                flat: upFlatDownCadenceData.flat,
+                down: upFlatDownCadenceData.down
+            } : null,
             gradeProfile,
         };
 
         return gradeData;
-
     }
 
     protected elevationData(activityStream: IActivityStream): IElevationData {
