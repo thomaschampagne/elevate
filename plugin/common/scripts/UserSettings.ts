@@ -225,7 +225,7 @@ export let userSettings: IUserSettings = {
     displayAdvancedGradeData: true,
     displayAdvancedElevationData: true,
     displayBikeOdoInActivity: true,
-    enableBothLegsCadence: false,
+    enableBothLegsCadence: true,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
     feedHideSuggestedAthletes: false,
