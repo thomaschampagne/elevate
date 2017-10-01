@@ -1,7 +1,10 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-class RemoteLinksModifier implements IModifier {
+import * as _ from "lodash";
+import {IAppResources} from "../interfaces/IAppResources";
+
+export class RemoteLinksModifier implements IModifier {
 
     protected appResources: IAppResources;
     protected authorOfActivity: boolean;
@@ -13,7 +16,7 @@ class RemoteLinksModifier implements IModifier {
         this.activityId = activityId;
     }
 
-    modify(): void {
+    public modify(): void {
         if (!_.isUndefined(window.pageView)) {
             this.modifyActivityPage();
         }
@@ -23,20 +26,19 @@ class RemoteLinksModifier implements IModifier {
         }
     }
 
-    modifyActivityPage(): void {
+    public modifyActivityPage(): void {
 
-        let remoteViewActivityLinksArray: Array<Array<string>> = [
-            ["VeloViewer", 'http://veloviewer.com/activities/', '?referrer=stravistiX', ''],
-            ["Surface", 'http://strava-tools.raceshape.com/erea/?url=', '', '']
+        const remoteViewActivityLinksArray: string[][] = [
+            ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=stravistiX", ""],
+            ["Surface", "http://strava-tools.raceshape.com/erea/?url=", "", ""],
         ];
-
 
         // Activity page
         // Adding remote view links on left panel
         let html: string = "<li class='group'>";
         html += "<div class='title' id='stravistix_remote_title' style='font-size: 14px; cursor: pointer;'>Remote Views</div>";
         html += "<ul style='display: none;' id='stravistix_remoteViews'>";
-        _.each(remoteViewActivityLinksArray, (linkArray: Array<string>) => {
+        _.forEach(remoteViewActivityLinksArray, (linkArray: string[]) => {
             html += "<li>";
             html += "<a data-menu='' " + linkArray[3] + " target='_blank' style='color: #333;' href='" + linkArray[1] + this.activityId + linkArray[2] + "'>" + linkArray[0] + "</a>";
         });
@@ -45,20 +47,20 @@ class RemoteLinksModifier implements IModifier {
 
         $("#pagenav").append($(html)).each(() => {
 
-            $('[data-remote-views]').click((evt: Event) => {
+            $("[data-remote-views]").click((evt: JQuery.Event) => {
                 evt.preventDefault();
                 evt.stopPropagation();
             });
 
-            $('#stravistix_remote_title').click((evt: Event) => {
+            $("#stravistix_remote_title").click((evt: JQuery.Event) => {
 
                 evt.preventDefault();
                 evt.stopPropagation();
 
-                if ($('#stravistix_remoteViews').is(':visible')) {
-                    $('#stravistix_remoteViews').slideUp();
+                if ($("#stravistix_remoteViews").is(":visible")) {
+                    $("#stravistix_remoteViews").slideUp();
                 } else {
-                    $('#stravistix_remoteViews').slideDown();
+                    $("#stravistix_remoteViews").slideDown();
                 }
 
             });
@@ -67,39 +69,39 @@ class RemoteLinksModifier implements IModifier {
 
         // Add tcx export
         if (this.authorOfActivity) {
-            let htmlForTCXExport: string = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
+            const htmlForTCXExport: string = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
             $(".actions-menu .slide-menu .options").append(htmlForTCXExport);
         }
     }
 
-    modifySegmentPage(): void {
+    public modifySegmentPage(): void {
 
         // Segment external links
-        let segmentData: Array<string> = window.location.pathname.match(/^\/segments\/(\d+)$/);
+        const segmentData: string[] = window.location.pathname.match(/^\/segments\/(\d+)$/);
 
         if (_.isNull(segmentData)) {
             return;
         }
 
         // Getting segment id
-        let segmentId: number = parseInt(segmentData[1]);
+        const segmentId: number = parseInt(segmentData[1]);
 
-        let remoteViewSegmentLinksArray: Array<Array<string>> = [
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.veloviewerIcon + "'/> <span>VeloViewer</span>", 'http://veloviewer.com/segment/', '?referrer=stravistiX'],
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details (Jonathan Okeeffe)</span>", 'http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=', '']
+        const remoteViewSegmentLinksArray: string[][] = [
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.veloviewerIcon + "'/> <span>VeloViewer</span>", "http://veloviewer.com/segment/", "?referrer=stravistiX"],
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details (Jonathan Okeeffe)</span>", "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=", ""],
         ];
         let html: string = "<div class='dropdown' style='padding-bottom: 10px;'>";
         html += "<div class='drop-down-menu' style='width: 100%;' >";
         html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
         html += "<ul class='options' style='z-index: 999;'>";
 
-        _.each(remoteViewSegmentLinksArray, (linkArray: Array<string>) => {
+        _.forEach(remoteViewSegmentLinksArray, (linkArray: string[]) => {
             html += "<li><a target='_blank' href='" + linkArray[1] + segmentId + linkArray[2] + "'>" + linkArray[0] + "</a></li>";
         });
         html += "</ul>";
         html += "</div>";
         html += "</div>";
-        $(html).prependTo('.segment-activity-my-efforts');
+        $(html).prependTo(".segment-activity-my-efforts");
     }
 
 }

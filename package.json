@@ -1,8 +1,16 @@
 {
-  "name": "Make",
-  "description": "Make StravistiX distribution structure and builds archive",
+  "name": "stravistixdevwrapper",
+  "version": "1.0.0",
+  "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
-    "test": "gulp specs"
+    "postinstall": "npm --prefix ./plugin install ./plugin",
+    "ts:compile": "tsc",
+    "ts:watch": "tsc -w",
+    "pretest": "gulp cleanInlineSources && npm run ts:compile",
+    "test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
+    "test:phantom": "npm run ts:compile && node ./node_modules/karma/bin/karma start karma.conf.js --single-run --browserConsoleLogOptions.terminal",
+    "test:chrome": "npm run ts:compile && node ./node_modules/karma/bin/karma start karma.conf.js --no-single-run --browsers Chrome --browserConsoleLogOptions.terminal",
+    "dev": "gulp cleanInlineSources && npm run ts:watch"
   },
   "repository": {
     "type": "git",
@@ -13,13 +21,31 @@
     "email": "th.champagne@gmail.com",
     "web": "http://thomaschampagne.github.io"
   },
-  "contributors": {
-    "name": "Thomas Champagne",
-    "email": "th.champagne@gmail.com",
-    "web": "http://thomaschampagne.github.io"
-  },
+  "contributors": [
+    {
+      "name": "Thomas Champagne",
+      "email": "th.champagne@gmail.com",
+      "web": "http://thomaschampagne.github.io"
+    }
+  ],
   "readme": "None",
   "devDependencies": {
+    "@types/angular": "^1.6.27",
+    "@types/angular-material": "^1.1.52",
+    "@types/chart.js": "^2.6.0",
+    "@types/chrome": "0.0.47",
+    "@types/d3": "^3.5.38",
+    "@types/file-saver": "0.0.1",
+    "@types/filesystem": "0.0.28",
+    "@types/filewriter": "0.0.28",
+    "@types/googlemaps": "^3.26.16",
+    "@types/jasmine": "^2.5.53",
+    "@types/jquery": "^3.2.9",
+    "@types/lodash": "^4.14.71",
+    "@types/nvd3": "^1.8.37",
+    "@types/q": "^1.0.2",
+    "@types/qrcode": "^0.8.0",
+    "@types/systemjs": "^0.20.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
@@ -28,19 +54,25 @@
     "gulp-json-editor": "^2.2.1",
     "gulp-load-plugins": "^1.5.0",
     "gulp-options": "^1.1.1",
-    "gulp-typescript": "^2.14.1",
+    "gulp-typescript": "^3.1.7",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^3.2.0",
-    "jasmine": "^2.5.3",
-    "karma": "^1.5.0",
+    "jasmine": "^2.6.0",
+    "karma": "^1.7.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-json-fixtures-preprocessor": "0.0.6",
+    "karma-opera-launcher": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.4",
+    "karma-promise": "^0.1.0",
+    "karma-systemjs": "^0.16.0",
     "karma-typescript": "^2.1.7",
+    "lodash": "^4.17.4",
     "run-sequence": "^1.2.2",
-    "underscore": "^1.8.3",
-    "vinyl-ftp": "^0.4.5"
+    "systemjs": "^0.19.0",
+    "systemjs-plugin-babel": "0.0.25",
+    "traceur": "0.0.111",
+    "typescript": "^2.4.2"
   }
 }

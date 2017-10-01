@@ -1,49 +1,34 @@
-/// <reference path="../typings/specs.d.ts" />
+import * as _ from "lodash";
+import {ActivitiesSynchronizer, IHistoryChanges} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
+import {ISyncActivityComputed, ISyncRawStravaActivity} from "../../plugin/common/scripts/interfaces/ISync";
+import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
 
 describe('ActivitiesSynchronizer', () => {
 
-    it('should test my promise ', (done: Function) => {
-
-        class Calc {
-            public static add(a: number, b: number): Q.Promise<number> {
-                let deferred: Q.Deferred<number> = Q.defer<number>();
-                deferred.resolve(a + b);
-                return deferred.promise;
-            }
-        }
-
-        let deferred = Q.defer();
-        deferred.resolve(3);
-        spyOn(Calc, 'add').and.returnValue(deferred.promise); // Mock example
-
-        Calc.add(10, 11).then((r: number) => {
-            expect(r).toEqual(3); // Spy resolves as 3... no 21...
-            done();
-        });
-    });
-
     it('should remove activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        expect(_.findWhere(rawPageOfActivities, {id: 722210052})).toBeUndefined();
+        expect(_.find(rawPageOfActivities, {id: 722210052})).toBeUndefined();
         expect(rawPageOfActivities.length).toEqual(sourceCount - 1);
 
     });
 
     it('should edit activity from array properly ', () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
         let sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        let foundBack: ISyncActivityComputed = _.findWhere(rawPageOfActivities, {id: 722210052});
+        let foundBack: ISyncActivityComputed = _.find(rawPageOfActivities, {id: 722210052});
         expect(foundBack).toBeDefined();
         expect(foundBack.name).toEqual("New_Name");
         expect(foundBack.type).toEqual("Ride");
@@ -54,8 +39,8 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should detect activities added, modified and deleted ', () => {
 
-        let computedActivities: Array<ISyncActivityComputed> = clone(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
-        let rawPageOfActivities: Array<ISyncRawStravaActivity> = clone(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
+        let computedActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__['fixtures/sync/computedActivities20161213'].computedActivities);
+        let rawPageOfActivities: Array<ISyncRawStravaActivity> = _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213'].models);
 
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -78,13 +63,13 @@ describe('ActivitiesSynchronizer', () => {
         expect(_.indexOf(changes.added, 999999999)).toEqual(-1); // Fake
 
         expect(changes.edited.length).toEqual(2);
-        expect(_.findWhere(changes.edited, {id: 799672885})).toBeDefined();
-        expect(_.findWhere(changes.edited, {id: 708752345})).toBeDefined();
-        let findWhere: any = _.findWhere(changes.edited, {id: 799672885});
+        expect(_.find(changes.edited, {id: 799672885})).toBeDefined();
+        expect(_.find(changes.edited, {id: 708752345})).toBeDefined();
+        let findWhere: any = _.find(changes.edited, {id: 799672885});
         expect(findWhere.name).toEqual("Run comeback");
         expect(findWhere.type).toEqual("Run");
         expect(findWhere.display_type).toEqual("Run");
-        findWhere = _.findWhere(changes.edited, {id: 708752345});
+        findWhere = _.find(changes.edited, {id: 708752345});
         expect(findWhere.name).toEqual("MTB @ Bastille");
         expect(findWhere.type).toEqual("Ride");
         expect(findWhere.display_type).toEqual("Ride");
@@ -95,8 +80,8 @@ describe('ActivitiesSynchronizer', () => {
 
     it('should append history of pages where activities added, modified and deleted ', () => {
 
-        let userSettingsMock: IUserSettings = clone(window.__fixtures__['fixtures/userSettings/2470979']);
-        let appResourcesMock: IAppResources = clone(window.__fixtures__['fixtures/appResources/appResources']);
+        let userSettingsMock: IUserSettings = _.cloneDeep(window.__fixtures__['fixtures/userSettings/2470979']);
+        let appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__['fixtures/appResources/appResources']);
         let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         // Append

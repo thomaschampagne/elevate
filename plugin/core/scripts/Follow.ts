@@ -1,35 +1,28 @@
 // This code is from Google, so let's not modify it too much, just add gaNewElem and gaElems:
-declare let follow: any; // variable for GA
+import * as _ from "lodash";
+import * as Q from "q";
+import {env} from "../config/env";
+import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
+import {ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
+import {HerokuEndpoints} from "../../common/scripts/modules/HerokuEndpoint";
 
-var currentDate: any = new Date();
+const currentDate: any = new Date();
 (function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
-    i['GoogleAnalyticsObject'] = r;
+    i.GoogleAnalyticsObject = r;
     i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * currentDate;
+        (i[r].q = i[r].q || []).push(arguments);
+    }, i[r].l = 1 * currentDate;
     a = s.createElement(o),
         m = s.getElementsByTagName(o)[0];
     a.async = 1;
     a.src = g;
-    m.parentNode.insertBefore(a, m)
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'follow');
+    m.parentNode.insertBefore(a, m);
+})(window, document, "script", "//www.google-analytics.com/analytics.js", "follow");
 
-follow('create', env.analyticsTrackingID, 'auto');
-follow('send', 'pageview');
+follow("create", env.analyticsTrackingID, "auto");
+follow("send", "pageview");
 
-interface IAthleteUpdate { // TODO Refactor outside + rerun specs
-    stravaId: number,
-    version: string,
-    name: string,
-    status: number,
-    lastSeen?: Date,
-    country?: string,
-    hrMin?: number,
-    hrMax?: number,
-    __v?: number // Mongoose version doc
-}
-
-class AthleteUpdate { // TODO Refactor outside + rerun specs
+export class AthleteUpdate { // TODO Refactor outside + rerun specs
 
     /**
      * Provide IAthleteUpdate object
@@ -38,7 +31,7 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
      * @param version
      * @param isPremium
      * @param isPro
-     * @param country
+     * @param locale
      * @param hrMin
      * @param hrMax
      * @returns {IAthleteUpdate}
@@ -48,7 +41,7 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
                          version: string,
                          isPremium: boolean,
                          isPro: boolean,
-                         country?: string,
+                         locale?: string,
                          hrMin?: number,
                          hrMax?: number): IAthleteUpdate {
 
@@ -63,36 +56,41 @@ class AthleteUpdate { // TODO Refactor outside + rerun specs
         if (isPro) {
             status = 2;
         }
-        let athleteUpdate: IAthleteUpdate = {
-            stravaId: stravaId,
+        const athleteUpdate: IAthleteUpdate = {
+            stravaId,
             name: _.isEmpty(name) ? null : name,
-            version: version,
-            status: status,
-            hrMin: hrMin,
-            hrMax: hrMax
+            version,
+            status,
+            hrMin,
+            hrMax,
         };
 
-        if (!_.isEmpty(country)) {
-            athleteUpdate.country = country;
+        if (!_.isEmpty(locale)) {
+            athleteUpdate.locale = locale;
         }
 
         return athleteUpdate;
     }
 
-    public static commit(athleteUpdate: IAthleteUpdate): void {
+    public static commit(athleteUpdate: IAthleteUpdate): Q.IPromise<any> {
+
+        const deferred = Q.defer<ISyncResult>();
+        const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/athlete/update";
 
         $.post({
-            url: env.endPoint + '/api/athlete/update',
+            url: endPoint,
             data: JSON.stringify(athleteUpdate),
-            dataType: 'json',
-            contentType: 'application/json',
+            dataType: "json",
+            contentType: "application/json",
             success: (response: any) => {
-                console.log('Updated: ', response);
+                deferred.resolve(response);
             },
             error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                console.warn('Endpoint <' + env.endPoint + '> not reachable', jqXHR);
-            }
+                console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
+                deferred.reject({textStatus, errorThrown});
+            },
         });
 
+        return deferred.promise;
     }
 }

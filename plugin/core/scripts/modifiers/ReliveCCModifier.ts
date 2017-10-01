@@ -1,4 +1,4 @@
-class ReliveCCModifier implements IModifier {
+export class ReliveCCModifier implements IModifier {
 
     private activityId: number;
 
@@ -9,33 +9,31 @@ class ReliveCCModifier implements IModifier {
     public modify(): void {
 
         let html: string = "<li class='group'>";
-        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive Ride <sup style='color:#FC4C02; font-size:10px;'>NEW</sup></div>";
+        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive <sup style='color:#FC4C02; font-size:10px;'>NEW</sup></div>";
 
         $("#pagenav").append($(html)).each(() => {
 
-            $('#stravistix_relivecc').click((evt: Event) => {
+            $("#stravistix_relivecc").click((evt: JQuery.Event) => {
 
                 evt.preventDefault();
                 evt.stopPropagation();
 
-                let url: string = 'https://www.relive.cc/view/' + this.activityId;
+                const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
 
-                let embedUrl: string = url + '/embed';
-
-                let windowWidth: number = window.innerWidth * 0.50;
+                const windowWidth: number = 800;
+                const windowHeight: number = 600;
 
                 $.fancybox({
                     fitToView: true,
                     autoSize: true,
                     closeClick: false,
-                    openEffect: 'none',
-                    closeEffect: 'none',
-                    scrolling: 'no',
-                    'type': 'iframe',
-                    'content': '<div style="text-align:center;"><a href="' + url + '" target="_blank">View in relive.cc website</a></div><iframe src="' + embedUrl + '" width="' + windowWidth + '" height="' + windowWidth * 9 / 16 + '" frameborder="0"></iframe>'
+                    openEffect: "none",
+                    closeEffect: "none",
+                    scrolling: "no",
+                    type: "iframe",
+                    content: '<iframe src="' + url + '" width="' + windowWidth + '" height="' + windowHeight + '" frameborder="0"></iframe>',
                 });
             });
         });
     }
 }
-

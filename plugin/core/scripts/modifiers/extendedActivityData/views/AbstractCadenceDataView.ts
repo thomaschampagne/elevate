@@ -1,4 +1,7 @@
-abstract class AbstractCadenceDataView extends AbstractDataView {
+import {ICadenceData} from "../../../../../common/scripts/interfaces/IActivityData";
+import {AbstractDataView} from "./AbstractDataView";
+
+export abstract class AbstractCadenceDataView extends AbstractDataView {
 
     protected cadenceData: ICadenceData;
 
@@ -9,5 +12,21 @@ abstract class AbstractCadenceDataView extends AbstractDataView {
         this.setGraphTitleFromUnits();
         this.setupDistributionGraph(this.cadenceData.cadenceZones);
         this.setupDistributionTable(this.cadenceData.cadenceZones);
+    }
+
+    public render(): void {
+
+        // Creates a grid
+        this.makeGrid(3, 4); // (col, row)
+
+        this.insertDataIntoGrid();
+        this.generateCanvasForGraph();
+
+        // Push grid, graph and table to content view
+        this.injectToContent();
+    }
+
+    protected insertDataIntoGrid(): void {
+
     }
 }

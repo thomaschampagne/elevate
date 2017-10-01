@@ -17,38 +17,39 @@ interface JQuery {
 
 interface JQueryStatic {
     force_appear: Function;
+    expr: any;
 }
 
-(function ($: JQueryStatic) {
-    let selectors: Array<JQuery> = [];
+(function($: JQueryStatic) {
+    const selectors: JQuery[] = [];
 
     let check_binded: boolean = false;
     let check_lock: boolean = false;
-    let defaults: any = {
+    const defaults: any = {
         interval: 250,
-        force_process: false
+        force_process: false,
     };
 
-    let $window: JQuery = $(window);
+    const $window: JQuery = $(window);
 
-    let $prior_appeared: Array<JQuery> = [];
+    const $prior_appeared: JQuery[] = [];
 
     function process() {
         check_lock = false;
         for (let index: number = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
-            let $appeared = $(selectors[index]).filter(function () {
-                return $(this).is(':appeared');
+            const $appeared = $(selectors[index]).filter(function() {
+                return $(this).is(":appeared");
             });
 
-            $appeared.trigger('appear', [$appeared]);
+            $appeared.trigger("appear", [$appeared]);
 
             if ($prior_appeared[index]) {
-                let $disappeared: JQuery = $prior_appeared[index].not($appeared);
-                $disappeared.trigger('disappear', [$disappeared]);
+                const $disappeared: JQuery = $prior_appeared[index].not($appeared);
+                $disappeared.trigger("disappear", [$disappeared]);
             }
             $prior_appeared[index] = $appeared;
         }
-    };
+    }
 
     function add_selector(selector: JQuery) {
         selectors.push(selector);
@@ -56,22 +57,22 @@ interface JQueryStatic {
     }
 
     // "appeared" custom filter
-    $.expr[':']['appeared'] = function (element: HTMLElement) {
-        let $element: JQuery = $(element);
-        if (!$element.is(':visible')) {
+    $.expr[":"].appeared = function(element: HTMLElement) {
+        const $element: JQuery = $(element);
+        if (!$element.is(":visible")) {
             return false;
         }
 
-        let window_left: number = $window.scrollLeft();
-        let window_top: number = $window.scrollTop();
-        let offset: any = $element.offset();
-        let left: number = offset.left;
-        let top: number = offset.top;
+        const window_left: number = $window.scrollLeft();
+        const window_top: number = $window.scrollTop();
+        const offset: any = $element.offset();
+        const left: number = offset.left;
+        const top: number = offset.top;
 
         if (top + $element.height() >= window_top &&
-            top - ($element.data('appear-top-offset') || 0) <= window_top + $window.height() &&
+            top - ($element.data("appear-top-offset") || 0) <= window_top + $window.height() &&
             left + $element.width() >= window_left &&
-            left - ($element.data('appear-left-offset') || 0) <= window_left + $window.width()) {
+            left - ($element.data("appear-left-offset") || 0) <= window_left + $window.width()) {
             return true;
         } else {
             return false;
@@ -80,11 +81,11 @@ interface JQueryStatic {
 
     $.fn.extend({
         // watching for element's appearance in browser viewport
-        appear: function (options: any) {
-            let opts: any = $.extend({}, defaults, options || {});
-            let selector = this.selector || this;
+        appear(options: any) {
+            const opts: any = $.extend({}, defaults, options || {});
+            const selector = this.selector || this;
             if (!check_binded) {
-                let on_check = function () {
+                const on_check = function() {
                     if (check_lock) {
                         return;
                     }
@@ -102,19 +103,19 @@ interface JQueryStatic {
             }
             add_selector(selector);
             return $(selector);
-        }
+        },
     });
 
-    $.extend({
+    $.extend($, {
         // force elements's appearance check
-        force_appear: function () {
+        force_appear() {
             if (check_binded) {
                 process();
                 return true;
             }
             return false;
-        }
+        },
     });
-})(function () {
+})(function() {
     return jQuery;
 }());

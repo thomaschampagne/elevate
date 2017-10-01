@@ -1,11 +1,19 @@
-class XtdZones {
+import * as angular from "angular";
+import {IAnchorScrollService, ILocationService} from "angular";
+import * as _ from "lodash";
+import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
+import {userSettings} from "../../../../common/scripts/UserSettings";
+import {ChromeStorageService} from "../../services/ChromeStorageService";
+
+export class XtdZones {
 
     public static maxZonesCount: number = 50;
     public static minZonesCount: number = 3;
 
-    public static $inject: string[] = ['$scope', 'ChromeStorageService', '$mdDialog', '$location', '$anchorScroll'];
+    public static $inject: string[] = ["$scope", "ChromeStorageService", "$mdDialog", "$location", "$anchorScroll"];
 
-    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
+    constructor(public $scope: any, public chromeStorageService: ChromeStorageService, public $mdDialog: angular.material.IDialogService, public $location: ILocationService, public $anchorScroll: IAnchorScrollService) {
 
         $scope.addZone = ($event: MouseEvent) => {
 
@@ -14,23 +22,23 @@ class XtdZones {
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
-                        .title('Oups')
-                        .textContent('You can\'t add more than ' + XtdZones.maxZonesCount + ' zones...')
-                        .ok('Got it!')
-                        .targetEvent($event)
+                        .title("Oups")
+                        .textContent("You can't add more than " + XtdZones.maxZonesCount + " zones...")
+                        .ok("Got it!")
+                        .targetEvent($event),
                 );
 
             } else {
 
-                let oldLastZone: IZone = $scope.xtdZones[$scope.xtdZones.length - 1];
+                const oldLastZone: IZone = $scope.xtdZones[$scope.xtdZones.length - 1];
 
                 // Computed middle value between oldLastZone.from and oldLastZone.to
-                let betweenValue: number = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
+                const betweenValue: number = parseInt(((oldLastZone.from + oldLastZone.to) / 2).toFixed(0));
 
                 // Creating new Zone
-                let newLastZone: IZone = {
+                const newLastZone: IZone = {
                     from: betweenValue,
-                    to: oldLastZone.to
+                    to: oldLastZone.to,
                 };
 
                 // Apply middle value computed to previous last zone (to)
@@ -51,10 +59,10 @@ class XtdZones {
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
-                        .title('Oups')
-                        .textContent('You can\'t remove more than ' + XtdZones.minZonesCount + ' zones...')
-                        .ok('Got it!')
-                        .targetEvent($event)
+                        .title("Oups")
+                        .textContent("You can't remove more than " + XtdZones.minZonesCount + " zones...")
+                        .ok("Got it!")
+                        .targetEvent($event),
                 );
 
             } else {
@@ -91,12 +99,12 @@ class XtdZones {
 
         $scope.resetZone = ($event: MouseEvent) => {
 
-            let confirm: IConfirmDialog = $mdDialog.confirm()
-                .title('Reset zones')
-                .textContent('You are going to reset ' + $scope.xtdDataSelected.name + ' zones to default factory values. Are you sure?')
+            const confirm: angular.material.IConfirmDialog = $mdDialog.confirm()
+                .title("Reset zones")
+                .textContent("You are going to reset " + $scope.xtdDataSelected.name + " zones to default factory values. Are you sure?")
                 .targetEvent($event)
-                .ok('Yes. Reset')
-                .cancel('cancel');
+                .ok("Yes. Reset")
+                .cancel("cancel");
 
             $mdDialog.show(confirm).then(() => {
                 angular.copy(_.propertyOf(userSettings.zones)($scope.xtdDataSelected.value), $scope.xtdZones);
@@ -107,7 +115,7 @@ class XtdZones {
         $scope.saveZones = ($event: MouseEvent) => {
 
             if (!$scope.areZonesCompliant($scope.xtdZones)) {
-                alert('Zones are not compliant');
+                alert("Zones are not compliant");
                 return;
             }
 
@@ -115,7 +123,7 @@ class XtdZones {
 
                 chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
                     // Update zones with new one
-                    let zones: any = userSettingsSynced.zones;
+                    const zones: any = userSettingsSynced.zones;
                     zones[$scope.xtdDataSelected.value] = angular.fromJson(angular.toJson($scope.xtdZones));
 
                     chrome.storage.sync.set(userSettingsSynced, () => {
@@ -123,14 +131,14 @@ class XtdZones {
                         $mdDialog.show(
                             $mdDialog.alert()
                                 .clickOutsideToClose(true)
-                                .title('Saved !')
-                                .textContent('Your ' + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
-                                .ok('Got it!')
-                                .targetEvent($event)
+                                .title("Saved !")
+                                .textContent("Your " + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
+                                .ok("Got it!")
+                                .targetEvent($event),
                         );
 
-                        chromeStorageService.updateUserSetting('localStorageMustBeCleared', true, () => {
-                            console.log('localStorageMustBeCleared has been updated to: ' + true);
+                        chromeStorageService.updateUserSetting("localStorageMustBeCleared", true, () => {
+                            console.log("localStorageMustBeCleared has been updated to: " + true);
                         });
                     });
                 });
@@ -140,7 +148,7 @@ class XtdZones {
         $scope.setupStep = ($event: MouseEvent) => {
 
             $mdDialog.show({
-                controller: ($scope: any, $mdDialog: IDialogService, localStep: number, localZoneType: string) => {
+                controller: ($scope: any, $mdDialog: angular.material.IDialogService, localStep: number, localZoneType: string) => {
 
                     $scope.step = localStep;
                     $scope.zoneType = localZoneType;
@@ -153,14 +161,14 @@ class XtdZones {
                         $mdDialog.hide(stepChoosen);
                     };
                 },
-                templateUrl: 'directives/templates/dialogs/stepDialog.html',
+                templateUrl: "directives/templates/dialogs/stepDialog.html",
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: true,
                 fullscreen: false,
                 locals: {
                     localStep: $scope.xtdDataSelected.step,
-                    localZoneType: $scope.xtdDataSelected.name
+                    localZoneType: $scope.xtdDataSelected.name,
                 },
             }).then((stepChoosen: number) => {
                 if (stepChoosen) {
@@ -171,28 +179,28 @@ class XtdZones {
 
         $scope.export = ($event: MouseEvent) => {
 
-            let exportData = angular.toJson($scope.xtdZones);
+            const exportData = angular.toJson($scope.xtdZones);
 
-            let exportPrompt: IPromptDialog = $mdDialog.prompt()
-                .title('Exporting ' + $scope.xtdDataSelected.name + ' zones')
-                .textContent('Copy data inside field.')
-                .ariaLabel('Copy data inside field.')
+            const exportPrompt: angular.material.IPromptDialog = $mdDialog.prompt()
+                .title("Exporting " + $scope.xtdDataSelected.name + " zones")
+                .textContent("Copy data inside field.")
+                .ariaLabel("Copy data inside field.")
                 .initialValue(exportData)
                 .targetEvent($event)
-                .ok('Okay!');
+                .ok("Okay!");
             $mdDialog.show(exportPrompt);
         };
 
         $scope.import = ($event: MouseEvent) => {
 
-            let importPrompt = $mdDialog.prompt()
-                .title('Importing ' + $scope.xtdDataSelected.name + ' zones')
-                .textContent('Paste exported zones in input field.')
-                .ariaLabel('Paste exported zones in input field.')
-                .initialValue('')
+            const importPrompt = $mdDialog.prompt()
+                .title("Importing " + $scope.xtdDataSelected.name + " zones")
+                .textContent("Paste exported zones in input field.")
+                .ariaLabel("Paste exported zones in input field.")
+                .initialValue("")
                 .placeholder('Enter here something like [{ "from": a, "to": b }, { "from": b, "to": c }, { "from": c, "to": d }]')
                 .targetEvent($event)
-                .ok('Import');
+                .ok("Import");
 
             $mdDialog.show(importPrompt)
                 .then((importData) => {
@@ -200,7 +208,7 @@ class XtdZones {
                     if (importData) {
 
                         try {
-                            let jsonImportData: Array<IZone> = angular.fromJson(importData);
+                            const jsonImportData: IZone[] = angular.fromJson(importData);
 
                             if ($scope.areZonesCompliant(jsonImportData)) {
 
@@ -208,7 +216,7 @@ class XtdZones {
                                 $scope.saveZones();
 
                             } else {
-                                throw new Error('not compliant');
+                                throw new Error("not compliant");
                             }
 
                         } catch (e) {
@@ -216,10 +224,10 @@ class XtdZones {
                             $mdDialog.show(
                                 $mdDialog.alert()
                                     .clickOutsideToClose(true)
-                                    .title('Oups')
-                                    .textContent($scope.xtdDataSelected.name + ' zones data is not well formated or zones are upper than ' + XtdZones.maxZonesCount)
-                                    .ok('Got it!')
-                                    .targetEvent($event)
+                                    .title("Oups")
+                                    .textContent($scope.xtdDataSelected.name + " zones data is not well formated or zones are upper than " + XtdZones.maxZonesCount)
+                                    .ok("Got it!")
+                                    .targetEvent($event),
                             );
                             return;
                         }
@@ -227,7 +235,7 @@ class XtdZones {
                 });
         };
 
-        $scope.areZonesCompliant = (zones: Array<IZone>) => {
+        $scope.areZonesCompliant = (zones: IZone[]) => {
 
             if (!zones) {
                 return false;
@@ -265,7 +273,7 @@ class XtdZones {
 
         $scope.onZoneChange = (zoneId: number, previousZone: IZone, newZone: IZone) => {
 
-            let fieldHasChanged: string = $scope.whichFieldHasChanged(previousZone, newZone);
+            const fieldHasChanged: string = $scope.whichFieldHasChanged(previousZone, newZone);
 
             if (_.isUndefined(fieldHasChanged)) {
                 return;
@@ -277,11 +285,11 @@ class XtdZones {
 
             } else if (zoneId < $scope.xtdZones.length - 1) { // If middle zone
 
-                if (fieldHasChanged === 'to') {
+                if (fieldHasChanged === "to") {
 
                     $scope.handleToChange(zoneId);
 
-                } else if (fieldHasChanged === 'from') {
+                } else if (fieldHasChanged === "from") {
 
                     $scope.handleFromChange(zoneId);
                 }
@@ -298,11 +306,11 @@ class XtdZones {
         $scope.whichFieldHasChanged = (previousZone: IZone, newZone: IZone) => {
 
             if (previousZone.from !== newZone.from) {
-                return 'from';
+                return "from";
             }
 
             if (previousZone.to !== newZone.to) {
-                return 'to';
+                return "to";
             }
         };
 
@@ -317,22 +325,22 @@ class XtdZones {
         $scope.scrollToBottom = () => {
 
             setTimeout(() => {
-                $anchorScroll($location.hash('tools_bottom').hash());
+                $anchorScroll($location.hash("tools_bottom").hash());
             });
         };
 
     }
 }
 
-app.directive('xtdZones', [() => {
+export let xtdZones = [() => {
 
     return {
-        templateUrl: 'directives/xtdZones/templates/xtdZones.html',
+        templateUrl: "directives/xtdZones/templates/xtdZones.html",
         scope: {
             xtdZones: "=",
-            xtdDataSelected: "="
+            xtdDataSelected: "=",
         },
-        controller: XtdZones
-    };
+        controller: XtdZones,
+    } as any;
 
-}]);
+}];

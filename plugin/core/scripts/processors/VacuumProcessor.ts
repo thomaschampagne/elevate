@@ -1,9 +1,11 @@
-/**
- *   Contructor
- */
-class VacuumProcessor {
+import * as _ from "lodash";
+import {Helper} from "../../../common/scripts/Helper";
+import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
+import {env} from "../../config/env";
 
-    public static cachePrefix: string = 'stravistix_activityStream_';
+export class VacuumProcessor {
+
+    public static cachePrefix: string = "stravistix_activityStream_";
 
     /**
      *  Get the strava athlete id connected
@@ -30,8 +32,8 @@ class VacuumProcessor {
     public getAthleteName(): string {
         let athleteName: string = null;
         try {
-            if (!_.isUndefined(window.currentAthlete) && !_.isUndefined(window.currentAthlete.get('display_name'))) {
-                athleteName = window.currentAthlete.get('display_name');
+            if (!_.isUndefined(window.currentAthlete) && !_.isUndefined(window.currentAthlete.get("display_name"))) {
+                athleteName = window.currentAthlete.get("display_name");
             }
         } catch (err) {
             if (env.debugMode) console.warn(err);
@@ -53,11 +55,11 @@ class VacuumProcessor {
             return null;
         }
 
-        if (_.isUndefined(window.pageView.activityAthlete().get('id'))) {
+        if (_.isUndefined(window.pageView.activityAthlete().get("id"))) {
             return null;
         }
 
-        return window.pageView.activityAthlete().get('id');
+        return window.pageView.activityAthlete().get("id");
     }
 
     /**
@@ -89,7 +91,7 @@ class VacuumProcessor {
     public getProStatus(): boolean {
 
         let proStatus: boolean = false;
-        let currentAthlete: any = this.getCurrentAthlete();
+        const currentAthlete: any = this.getCurrentAthlete();
 
         try {
             if (currentAthlete && currentAthlete.attributes && currentAthlete.attributes.pro) {
@@ -103,7 +105,6 @@ class VacuumProcessor {
         return proStatus;
     }
 
-
     /**
      *  ...
      *  @returns ...
@@ -111,7 +112,6 @@ class VacuumProcessor {
     public getActivityId(): number {
         return (_.isUndefined(window.pageView)) ? null : window.pageView.activity().id;
     }
-
 
     /**
      *  ...
@@ -127,93 +127,93 @@ class VacuumProcessor {
      */
     protected getActivityStatsMap(): IActivityStatsMap {
 
-        let actStatsContainer: JQuery = $(".activity-summary-container");
+        const actStatsContainer: JQuery = $(".activity-summary-container");
 
         // Get Distance
-        let distance: number = this.formatActivityDataValue(
-            actStatsContainer.find('.inline-stats.section').children().first().text(),
+        const distance: number = this.formatActivityDataValue(
+            actStatsContainer.find(".inline-stats.section").children().first().text(),
             false, false, true, false);
 
         // Get Moving Time
         let movingTime: number = this.formatActivityDataValue(
-            actStatsContainer.find('.inline-stats.section').children().first().next().text(),
+            actStatsContainer.find(".inline-stats.section").children().first().next().text(),
             true, false, false, false);
 
         // Get Elevation
-        let elevation: number = this.formatActivityDataValue(
-            actStatsContainer.find('.inline-stats.section').children().first().next().next().text(),
+        const elevation: number = this.formatActivityDataValue(
+            actStatsContainer.find(".inline-stats.section").children().first().next().next().text(),
             false, true, false, false);
 
         // Get Estimated Average Power
-        let avgPower: number = this.formatActivityDataValue(
-            $('[data-glossary-term*=definition-average-power]').parent().parent().children().first().text(),
+        const avgPower: number = this.formatActivityDataValue(
+            $("[data-glossary-term*=definition-average-power]").parent().parent().children().first().text(),
             false, false, false, false);
 
-        let weightedPower: number = this.formatActivityDataValue(
-            $('[data-glossary-term*=definition-weighted-average-power]').parent().parent().children().first().text(),
+        const weightedPower: number = this.formatActivityDataValue(
+            $("[data-glossary-term*=definition-weighted-average-power]").parent().parent().children().first().text(),
             false, false, false, false);
 
         // Get Energy Output
-        let energyOutput: number = this.formatActivityDataValue(
-            actStatsContainer.find('.inline-stats.section.secondary-stats').children().first().next().children().first().text(),
+        const energyOutput: number = this.formatActivityDataValue(
+            actStatsContainer.find(".inline-stats.section.secondary-stats").children().first().next().children().first().text(),
             false, false, false, true);
 
         // Get Elapsed Time
         let elapsedTime: number = this.formatActivityDataValue(
-            $('[data-glossary-term*=definition-elapsed-time]').parent().parent().children().last().text(),
+            $("[data-glossary-term*=definition-elapsed-time]").parent().parent().children().last().text(),
             true, false, false, false);
 
         // Try to get it another way. (Running races)
         if (!elapsedTime) {
             elapsedTime = this.formatActivityDataValue(
-                $('.section.more-stats').children().last().text(),
+                $(".section.more-stats").children().last().text(),
                 true, false, false, false);
         }
 
         // Invert movingTime and elapsedTime. Theses values seems to be inverted in running races (https://www.strava.com/activities/391338398)
         if (elapsedTime - movingTime < 0) {
-            let elapsedTimeCopy: number = elapsedTime;
+            const elapsedTimeCopy: number = elapsedTime;
             elapsedTime = movingTime;
             movingTime = elapsedTimeCopy;
         }
 
         // Get Average speed
         let averageSpeed: number = this.formatActivityDataValue(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().children().first().children().first().next().text(),
+            actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().children().first().children().first().next().text(),
             false, false, false, false);
 
         // If no average speed found, try to get pace instead.
         if (!averageSpeed) {
             averageSpeed = this.formatActivityDataValue(
-                $('[data-glossary-term*=definition-moving-time]').parent().parent().first().next().children().first().text(),
+                $("[data-glossary-term*=definition-moving-time]").parent().parent().first().next().children().first().text(),
                 true, false, false, false);
 
             averageSpeed = 1 / averageSpeed; // invert to km per seconds
             averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
 
-            let measurementPreference: string = window.currentAthlete.get('measurement_preference');
-            let speedFactor: number = (measurementPreference == 'meters') ? 1 : 0.62137;
+            const measurementPreference: string = window.currentAthlete.get("measurement_preference");
+            const speedFactor: number = (measurementPreference == "meters") ? 1 : 0.62137;
             averageSpeed = averageSpeed / speedFactor; // Always give PKH here
         }
 
-        let averageHeartRate: number = this.formatActivityDataValue(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().has('abbr').text(),
+        const averageHeartRate: number = this.formatActivityDataValue(
+            actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().next().children().first().children().first().next().has("abbr").text(),
             false, false, false, false);
 
-        let maxHeartRate: number = this.formatActivityDataValue(
-            actStatsContainer.find('.section.more-stats').find('.unstyled').children().first().next().next().children().first().children().first().next().next().text(),
+        const maxHeartRate: number = this.formatActivityDataValue(
+            actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().next().children().first().children().first().next().next().text(),
             false, false, false, false);
 
         // Create activityData Map
-        let activityCommonStats: IActivityStatsMap = {
-            distance: distance,
+        const activityCommonStats: IActivityStatsMap = {
+            distance,
             // movingTime: movingTime,
-            elevation: elevation,
-            avgPower: avgPower,
+            elevation,
+            avgPower,
             // weightedPower: weightedPower,
             // energyOutput: energyOutput,
             // elapsedTime: elapsedTime,
-            averageSpeed: averageSpeed
+            averageSpeed,
             // averageHeartRate: averageHeartRate
             // maxHeartRate: maxHeartRate
         };
@@ -229,37 +229,37 @@ class VacuumProcessor {
 
         // Common clean
         let cleanData: string = dataIn.toLowerCase();
-        cleanData = cleanData.replace(new RegExp(/\s/g), '');
-        cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), '');
-        cleanData = cleanData.replace(new RegExp(/æ/g), '');
-        cleanData = cleanData.replace(new RegExp(/ç/g), '');
-        cleanData = cleanData.replace(new RegExp(/[èéêë]/g), '');
-        cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), '');
-        cleanData = cleanData.replace(new RegExp(/ñ/g), '');
-        cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), '');
+        cleanData = cleanData.replace(new RegExp(/\s/g), "");
+        cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), "");
+        cleanData = cleanData.replace(new RegExp(/æ/g), "");
+        cleanData = cleanData.replace(new RegExp(/ç/g), "");
+        cleanData = cleanData.replace(new RegExp(/[èéêë]/g), "");
+        cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), "");
+        cleanData = cleanData.replace(new RegExp(/ñ/g), "");
+        cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), "");
         cleanData = cleanData.replace(new RegExp(/œ/g), "o");
-        cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), '');
-        cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), '');
-        cleanData = cleanData.replace(/\s/g, '').trim();
-        cleanData = cleanData.replace(/[\n\r]/g, '');
-        cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, '').trim();
+        cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), "");
+        cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), "");
+        cleanData = cleanData.replace(/\s/g, "").trim();
+        cleanData = cleanData.replace(/[\n\r]/g, "");
+        cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, "").trim();
 
         if (parsingTime) {
             // Remove text from date, format time to hh:mm:ss
-            cleanData = Helper.HHMMSStoSeconds(cleanData);
+            cleanData = Helper.HHMMSStoSeconds(cleanData).toString();
 
             if (_.isNaN(cleanData)) {
                 return null;
             }
 
         } else if (parsingElevation) {
-            cleanData = cleanData.replace(' ', '').replace(',', '');
+            cleanData = cleanData.replace(" ", "").replace(",", "");
         } else if (parsingDistance) {
-            cleanData = cleanData.replace(',', '.');
+            cleanData = cleanData.replace(",", ".");
         } else if (parsingEnergy) {
-            cleanData = cleanData.replace(',', '.').replace('.', '');
+            cleanData = cleanData.replace(",", ".").replace(".", "");
         } else {
-            cleanData = cleanData.replace(',', '.');
+            cleanData = cleanData.replace(",", ".");
         }
 
         return parseFloat(cleanData);
@@ -278,7 +278,7 @@ class VacuumProcessor {
             return;
         }
 
-        let url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
+        const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
 
         $.ajax(url).done((activityStream: IActivityStream) => {
 
@@ -295,7 +295,7 @@ class VacuumProcessor {
                     activityCommonStats: this.getActivityStatsMap(),
                     stream: activityStream,
                     athleteWeight: this.getAthleteWeight(),
-                    hasPowerMeter: hasPowerMeter
+                    hasPowerMeter,
                 }));
             } catch (err) {
                 console.warn(err);
@@ -311,49 +311,49 @@ class VacuumProcessor {
      */
     public getSegmentsFromBounds(vectorA: string, vectorB: string, callback: (segmentsUnify: any) => void): void {
 
-        let segmentsUnify: any = {
+        const segmentsUnify: any = {
             cycling: null,
-            running: null
+            running: null,
         };
 
         $.when(
             $.ajax({
-                url: '/api/v3/segments/search',
+                url: "/api/v3/segments/search",
                 data: {
-                    bounds: vectorA + ',' + vectorB,
-                    min_cat: '0',
-                    max_cat: '5',
-                    activity_type: 'cycling'
+                    bounds: vectorA + "," + vectorB,
+                    min_cat: "0",
+                    max_cat: "5",
+                    activity_type: "cycling",
                 },
-                type: 'GET',
+                type: "GET",
                 crossDomain: true, // enable this
-                dataType: 'jsonp',
+                dataType: "jsonp",
                 success: (xhrResponseText: any) => {
                     segmentsUnify.cycling = xhrResponseText;
                 },
                 error: (err: any) => {
                     console.error(err);
-                }
+                },
             }),
 
             $.ajax({
-                url: '/api/v3/segments/search',
+                url: "/api/v3/segments/search",
                 data: {
-                    bounds: vectorA + ',' + vectorB,
-                    min_cat: '0',
-                    max_cat: '5',
-                    activity_type: 'running'
+                    bounds: vectorA + "," + vectorB,
+                    min_cat: "0",
+                    max_cat: "5",
+                    activity_type: "running",
                 },
-                type: 'GET',
+                type: "GET",
                 crossDomain: true, // enable this
-                dataType: 'jsonp',
+                dataType: "jsonp",
                 success: (xhrResponseText: any) => {
                     segmentsUnify.running = xhrResponseText;
                 },
                 error: (err: any) => {
                     console.error(err);
-                }
-            })
+                },
+            }),
         ).then(() => {
             callback(segmentsUnify);
         });
@@ -363,25 +363,25 @@ class VacuumProcessor {
     /**
      * @returns
      */
-    getSegmentStream(segmentId: number, callback: Function): void {
+    public getSegmentStream(segmentId: number, callback: Function): void {
 
         $.ajax({
-            url: '/stream/segments/' + segmentId,
-            dataType: 'json',
-            type: 'GET',
+            url: "/stream/segments/" + segmentId,
+            dataType: "json",
+            type: "GET",
             success: (xhrResponseText: any) => {
                 callback(xhrResponseText);
             },
             error: (err: any) => {
                 console.error(err);
-            }
+            },
         });
     }
 
     /**
      * @returns Array of bikes/odo
      */
-    getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
+    public getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
 
         if (_.isUndefined(window.pageView)) {
             callback(null);
@@ -393,19 +393,19 @@ class VacuumProcessor {
             return;
         }
 
-        let url: string = location.protocol + "//www.strava.com/athletes/" + athleteId;
+        const url: string = location.protocol + "//www.strava.com/athletes/" + athleteId;
 
         $.ajax({
-            url: url,
-            dataType: 'json'
+            url,
+            dataType: "json",
         }).always((data: any) => {
 
-            let bikeOdoArray: any = {};
+            const bikeOdoArray: any = {};
 
-            _.each($(data.responseText).find('div.gear>table>tbody>tr'), (element: Element) => {
+            _.forEach($(data.responseText).find("div.gear>table>tbody>tr"), (element: Element) => {
 
-                let bikeName: string = $(element).find('td').first().text().trim();
-                let bikeOdo: string = $(element).find('td').last().text().trim();
+                const bikeName: string = $(element).find("td").first().text().trim();
+                const bikeOdo: string = $(element).find("td").last().text().trim();
 
                 bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeName)))] = bikeOdo;
             });
@@ -414,13 +414,13 @@ class VacuumProcessor {
         });
     }
 
-    getActivityTime(): string {
-        let activityTime: string = $(".activity-summary-container").find('time').text().trim();
+    public getActivityTime(): string {
+        const activityTime: string = $(".activity-summary-container").find("time").text().trim();
         return (activityTime) ? activityTime : null;
     }
 
-    getActivityName(): string {
-        let activityName: string = $(".activity-summary-container").find('.marginless.activity-name').text().trim();
+    public getActivityName(): string {
+        const activityName: string = $(".activity-summary-container").find(".marginless.activity-name").text().trim();
         return (activityName) ? activityName : null;
     }
 }

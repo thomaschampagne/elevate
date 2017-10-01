@@ -1,4 +1,11 @@
-abstract class AbstractDataView {
+import * as Chart from "chart.js";
+import {LinearTickOptions} from "chart.js";
+import * as _ from "lodash";
+import {Helper} from "../../../../../common/scripts/Helper";
+import {ISpeedUnitData, IZone} from "../../../../../common/scripts/interfaces/IActivityData";
+import {IAppResources} from "../../../interfaces/IAppResources";
+
+export abstract class AbstractDataView {
 
     protected units: string;
     protected chart: any;
@@ -10,7 +17,7 @@ abstract class AbstractDataView {
     protected graph: JQuery;
     protected graphData: any;
     protected graphTitle: string;
-    protected mainColor: Array<number>;
+    protected mainColor: number[];
     protected table: JQuery;
     protected appResources: IAppResources;
     protected isAuthorOfViewedActivity: boolean;
@@ -19,8 +26,8 @@ abstract class AbstractDataView {
     protected speedUnitsData: ISpeedUnitData;
 
     constructor(units?: string) {
-        this.content = '';
-        this.viewTitle = '';
+        this.content = "";
+        this.viewTitle = "";
         this.units = units;
         this.hasGraph = true;
         this.mainColor = [0, 0, 0]; // Default ribbon color is black
@@ -44,7 +51,7 @@ abstract class AbstractDataView {
     }
 
     public setGraphTitleFromUnits(): void {
-        this.graphTitle = (('' + this.units).toUpperCase() + ' distribution in minutes');
+        this.graphTitle = (("" + this.units).toUpperCase() + " distribution in minutes");
     }
 
     public setActivityType(type: string): void {
@@ -62,41 +69,41 @@ abstract class AbstractDataView {
     protected generateCanvasForGraph(): void {
 
         if (!this.units) {
-            console.error('View must have unit');
+            console.error("View must have unit");
             return;
         }
 
         let graphWidth: number = window.innerWidth * 0.4;
-        let screenRatio: number = window.innerWidth / window.innerHeight;
+        const screenRatio: number = window.innerWidth / window.innerHeight;
 
         // Apply bigger graph width if screen over 4/3...
         if (screenRatio - 0.1 > (4 / 3)) {
             graphWidth = graphWidth * 1.3;
         }
 
-        let htmlCanvas: string = '';
-        htmlCanvas += '<div>';
-        htmlCanvas += '<div>';
+        let htmlCanvas: string = "";
+        htmlCanvas += "<div>";
+        htmlCanvas += "<div>";
         htmlCanvas += '<canvas id="' + this.canvasId + '" height="450" width="' + graphWidth + '"></canvas>';
-        htmlCanvas += '</div>';
+        htmlCanvas += "</div>";
         this.graph = $(htmlCanvas);
     }
 
-    protected setupDistributionGraph(zones: Array<IZone>, ratio?: number): void {
+    protected setupDistributionGraph(zones: IZone[], ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;
         }
 
-        let labelsData: Array<string> = [];
+        const labelsData: string[] = [];
         let zone: any;
 
         for (zone in zones) {
-            let label: string = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1).replace('.0', '') + " to " + (zones[zone].to * ratio).toFixed(1).replace('.0', '') + " " + this.units;
+            const label: string = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1).replace(".0", "") + " to " + (zones[zone].to * ratio).toFixed(1).replace(".0", "") + " " + this.units;
             labelsData.push(label);
         }
 
-        let distributionArray: Array<string> = [];
+        const distributionArray: string[] = [];
         for (zone in zones) {
             distributionArray.push((zones[zone].s / 60).toFixed(2));
         }
@@ -110,8 +117,8 @@ abstract class AbstractDataView {
                 borderWidth: 1,
                 hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
                 hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                data: distributionArray
-            }]
+                data: distributionArray,
+            }],
         };
     }
 
@@ -127,7 +134,7 @@ abstract class AbstractDataView {
     public displayGraph(): void {
 
         if (!this.canvasId) {
-            console.error('View Id must exist in ' + typeof this);
+            console.error("View Id must exist in " + typeof this);
             return;
         }
 
@@ -136,22 +143,22 @@ abstract class AbstractDataView {
         }
 
         // Generating the chart
-        let canvas: HTMLCanvasElement = <HTMLCanvasElement> document.getElementById(this.canvasId);
+        const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
         this.chart = new Chart(canvas.getContext("2d"), {
-            type: 'bar',
+            type: "bar",
             data: this.graphData,
             options: {
                 tooltips: {
                     custom: this.customTooltips,
                 },
                 scales: {
-                    yAxes: [<LinearTickOptions> {
+                    yAxes: [{
                         ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
+                            beginAtZero: true,
+                        },
+                    } as LinearTickOptions],
+                },
+            },
         });
         this.chart = this.chart.clear();
     }
@@ -163,89 +170,89 @@ abstract class AbstractDataView {
             return;
         }
 
-        let lineValue: string = tooltip.body[0].lines[0];
+        const lineValue: string = tooltip.body[0].lines[0];
 
-        let timeInMinutes: any = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
+        const timeInMinutes: any = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
             return parseFloat(value);
         }));
 
-        tooltip.body[0].lines[0] = 'Zone held during ' + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
+        tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
     }
 
-    protected setupDistributionTable(zones: Array<IZone>, ratio?: number): void {
+    protected setupDistributionTable(zones: IZone[], ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;
         }
 
         if (!this.units) {
-            console.error('View must have units.');
+            console.error("View must have units.");
             return;
         }
 
-        let htmlTable: string = '';
-        htmlTable += '<div>';
+        let htmlTable: string = "";
+        htmlTable += "<div>";
         htmlTable += '<div style="height:500px; overflow:auto;">';
         htmlTable += '<table class="distributionTable">';
 
         // Generate htmlTable header
-        htmlTable += '<tr>'; // Zone
-        htmlTable += '<td>ZONE</td>'; // Zone
-        htmlTable += '<td>FROM ' + this.units.toUpperCase() + '</td>'; // bpm
-        htmlTable += '<td>TO ' + this.units.toUpperCase() + '</td>'; // bpm
-        htmlTable += '<td>TIME</td>'; // Time
-        htmlTable += '<td>% ZONE</td>'; // % in zone
-        htmlTable += '</tr>';
+        htmlTable += "<tr>"; // Zone
+        htmlTable += "<td>ZONE</td>"; // Zone
+        htmlTable += "<td>FROM " + this.units.toUpperCase() + "</td>"; // bpm
+        htmlTable += "<td>TO " + this.units.toUpperCase() + "</td>"; // bpm
+        htmlTable += "<td>TIME</td>"; // Time
+        htmlTable += "<td>% ZONE</td>"; // % in zone
+        htmlTable += "</tr>";
 
         let zoneId: number = 1;
         let zone: any;
         for (zone in zones) {
-            htmlTable += '<tr>'; // Zone
-            htmlTable += '<td>Z' + zoneId + '</td>'; // Zone
-            htmlTable += '<td>' + (zones[zone].from * ratio).toFixed(1) + '</th>'; // %HRR
-            htmlTable += '<td>' + (zones[zone].to * ratio).toFixed(1) + '</th>'; // %HRR
-            htmlTable += '<td>' + Helper.secondsToHHMMSS(zones[zone].s) + '</td>'; // Time%
-            htmlTable += '<td>' + zones[zone].percentDistrib.toFixed(1) + '%</td>'; // % in zone
-            htmlTable += '</tr>';
+            htmlTable += "<tr>"; // Zone
+            htmlTable += "<td>Z" + zoneId + "</td>"; // Zone
+            htmlTable += "<td>" + (zones[zone].from * ratio).toFixed(1) + "</th>"; // %HRR
+            htmlTable += "<td>" + (zones[zone].to * ratio).toFixed(1) + "</th>"; // %HRR
+            htmlTable += "<td>" + Helper.secondsToHHMMSS(zones[zone].s) + "</td>"; // Time%
+            htmlTable += "<td>" + zones[zone].percentDistrib.toFixed(1) + "%</td>"; // % in zone
+            htmlTable += "</tr>";
             zoneId++;
         }
 
-        htmlTable += '</table>';
-        htmlTable += '</div>';
-        htmlTable += '</div>';
+        htmlTable += "</table>";
+        htmlTable += "</div>";
+        htmlTable += "</div>";
         this.table = $(htmlTable);
     }
 
     protected makeGrid(columns: number, rows: number): void {
 
-        let grid: string = '';
-        grid += '<div>';
+        let grid: string = "";
+        grid += "<div>";
         grid += '<div class="grid">';
-        grid += '<table>';
+        grid += "<table>";
 
         for (let i: number = 0; i < rows; i++) {
-            grid += '<tr>';
+            grid += "<tr>";
             for (let j: number = 0; j < columns; j++) {
                 grid += '<td data-column="' + j + '" data-row="' + i + '">';
-                grid += '</td>';
+                grid += "</td>";
             }
-            grid += '</tr>';
+            grid += "</tr>";
         }
-        grid += '</table>';
-        grid += '</div>';
-        grid += '</div>';
+        grid += "</table>";
+        grid += "</div>";
+        grid += "</div>";
         this.grid = $(grid);
     }
 
     protected insertContentAtGridPosition(columnId: number, rowId: number, data: any, title: string, units: string, userSettingKey: string): void {
 
-        let onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+        const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.grid) {
-            let content: string = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + '>' + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + '</span></span>';
-            this.grid.find('[data-column=' + columnId + '][data-row=' + rowId + ']').html(content);
+            const content: string = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + ">" + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + "</span></span>";
+            this.grid.find("[data-column=" + columnId + "][data-row=" + rowId + "]").html(content);
         } else {
-            console.error('Grid is not initialized');
+            console.error("Grid is not initialized");
         }
     }
 
