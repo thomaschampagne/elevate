@@ -20,6 +20,21 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
     {
+        version: "5.11.1",
+        message: "<i>Hot fixed year progress missing in strava \"My Profile\" page.</i> <strong>V5.11.0 note:</strong> Added cadence pace on climbs, flats & downhills sections. And max uphill & downhill grades. And more...",
+        hotFixes: [],
+        features: [
+            "Added average cadence pace when on climbs, flats or downhills sections",
+            "Added max uphill & downhill grades on activities pages.",
+            "Added an option to hide suggested athletes on dashboard",
+            "Changed heart rate zones inputs from %HRR to BPM. %HRR remains available on data display.",
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            "Fixed year progressions missing in strava \"My Profile\" page"
+        ],
+    },
+    {
         version: "5.11.0",
         message: "NEW: Added cadence pace on climbs, flats or downhills sections. And max uphill & downhill grades. And more...",
         hotFixes: [],
