@@ -65,7 +65,7 @@ describe("CourseMaker", () => {
 
         // Given
         let courseName: string = "MyCourse";
-        activityStream = _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
+        activityStream = <IActivityStream> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
         let errorCatched = null;
 
         // When
@@ -133,7 +133,7 @@ describe("CourseMaker", () => {
 
         // Given
         let courseName: string = "MyCourse";
-        activityStream = _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
+        activityStream = <IActivityStream> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
         let errorCatched = null;
 
         // When

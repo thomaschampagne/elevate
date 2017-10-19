@@ -531,7 +531,8 @@ export class ActivityComputer {
         let trainingImpulse: number = 0;
         const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
         let hrrSecondsCount: number = 0;
-        let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number, zoneId: number;
+        let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number,
+            zoneId: number;
         let hrSum: number = 0;
         const heartRateArrayMoving: any[] = [];
         const heartRateArrayMovingDuration: any[] = [];
@@ -984,8 +985,8 @@ export class ActivityComputer {
         };
 
         if (skipAscentSpeedCompute) {
-            elevationData = _.omit(elevationData, "ascentSpeedZones");
-            elevationData = _.omit(elevationData, "ascentSpeed");
+            elevationData = <IElevationData> _.omit(elevationData, "ascentSpeedZones");
+            elevationData = <IElevationData> _.omit(elevationData, "ascentSpeed");
         }
 
         return elevationData;
