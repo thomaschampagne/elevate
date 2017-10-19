@@ -19,7 +19,7 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
         super.insertDataIntoGrid();
         this.insertContentAtGridPosition(0, 0, this.cadenceData.cadencePercentageMoving.toFixed(2), "Cadence % while moving", "%", "displayCadenceData");
         this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS(this.cadenceData.cadenceTimeMoving), "Cadence Time while moving", "", "displayCadenceData");
-        this.insertContentAtGridPosition(2, 0, this.cadenceData.crankRevolutions.toFixed(0), "Crank Revolutions", "", "displayCadenceData");
+        this.insertContentAtGridPosition(2, 0, this.cadenceData.totalHits.toFixed(0), "Crank Revolutions", "", "displayCadenceData");
 
         if (this.cadenceData.upFlatDownCadencePaceData) {
             this.insertContentAtGridPosition(0, 1, this.cadenceData.upFlatDownCadencePaceData.up.toFixed(0), "Climbing avg cadence", this.units, "displayCadenceData");

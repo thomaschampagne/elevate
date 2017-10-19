@@ -64,6 +64,6 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
         this.insertContentAtGridPosition(1, 2, this.cadenceData.medianCadence, "50% Quartile Cadence", this.units, "displayCadenceData");
         this.insertContentAtGridPosition(2, 2, this.cadenceData.upperQuartileCadence, "75% Quartile Cadence", this.units, "displayCadenceData");
 
-        // this.insertContentAtGridPosition(0, 1, this.cadenceData.crankRevolutions.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING
+        // this.insertContentAtGridPosition(0, 1, this.cadenceData.totalHits.toFixed(0), 'Total Stride', '', 'displayCadenceData'); // DELAYED_FOR_TESTING
     }
 }
