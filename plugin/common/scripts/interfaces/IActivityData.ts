@@ -96,15 +96,15 @@ export interface ICadenceData {
     cadenceTimeMoving: number;
     averageCadenceMoving: number;
     standardDeviationCadence: number;
-    totalHits: number;
+    totalOccurrences: number;
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
     upFlatDownCadencePaceData?: IUpFlatDown;
-    averageDistancePerHit: number;
-    lowerQuartileDistancePerHit: number;
-    medianDistancePerHit: number;
-    upperQuartileDistancePerHit: number;
+    averageDistancePerOccurrence: number;
+    lowerQuartileDistancePerOccurrence: number;
+    medianDistancePerOccurrence: number;
+    upperQuartileDistancePerOccurrence: number;
     cadenceZones: IZone[];
 }
 

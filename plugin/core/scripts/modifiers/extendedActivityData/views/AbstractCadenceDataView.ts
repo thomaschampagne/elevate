@@ -17,7 +17,7 @@ export abstract class AbstractCadenceDataView extends AbstractDataView {
     public render(): void {
 
         // Creates a grid
-        this.makeGrid(3, 4); // (col, row)
+        this.makeGrid(3, 5); // (col, row)
 
         this.insertDataIntoGrid();
         this.generateCanvasForGraph();

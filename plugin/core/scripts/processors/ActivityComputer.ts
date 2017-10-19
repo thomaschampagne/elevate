@@ -613,7 +613,7 @@ export class ActivityComputer {
         const hasDistanceData = !_.isEmpty(distanceArray);
 
         // recomputing crank revolutions using cadence data
-        let totalHits: number = 0;
+        let totalOccurrences: number = 0;
 
         // On Moving
         let cadenceSumOnMoving: number = 0;
@@ -637,8 +637,8 @@ export class ActivityComputer {
         const cadencesOnMoving: number[] = [];
         const cadencesDuration: number[] = [];
 
-        const distancesPerHitOnMoving: number[] = []; // Can be: Each time a foot touch the ground while running OR Each crank revolution for Cycling
-        const distancesPerHitDuration: number[] = [];
+        const distancesPerOccurrenceOnMoving: number[] = []; // Can be: Each time a foot touch the ground while running OR Each crank revolution for Cycling
+        const distancesPerOccurrenceDuration: number[] = [];
 
         for (let i: number = 0; i < cadenceArray.length; i++) {
 
@@ -647,9 +647,9 @@ export class ActivityComputer {
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
                 // Recomputing crank revolutions using cadence data
-                const hitsOnPeriod = this.discreteValueBetween(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60 /* Minutes */);
+                const occurrencesOnPeriod = this.discreteValueBetween(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60 /* Minutes */);
 
-                totalHits += hitsOnPeriod;
+                totalOccurrences += occurrencesOnPeriod;
 
                 if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
 
@@ -670,25 +670,24 @@ export class ActivityComputer {
 
                         // Compute distance traveled foreach "hit":
                         // - Running: Each time a foot touch the ground
-                        // TODO - Cycling: Each crank revolution for Cycling
+                        // - Cycling: Each crank revolution for Cycling
                         if (hasDistanceData && (this.activityType === "Ride" || this.activityType === "Run")) {
 
                             const metersTravelled = (distanceArray[i] - distanceArray[i - 1]);
 
-                            let hitDistance: number = null;
+                            let occurrenceDistance: number = null;
 
                             if (this.activityType === "Ride") {
-                                // TODO Cycling: find distance performed with 1 crank revolution
+                                occurrenceDistance = metersTravelled / occurrencesOnPeriod; // Aka Crank revolutions on delta time
                             }
 
                             if (this.activityType === "Run") {
-                                // Multiply hitsOnPeriod by 2 for strides with 2 legs representation
-                                hitDistance = metersTravelled / (hitsOnPeriod * 2);
+                                occurrenceDistance = metersTravelled / (occurrencesOnPeriod * 2); // Aka strides with 2 legs representation on delta time
                             }
 
-                            if (!_.isNull(hitDistance)) {
-                                distancesPerHitOnMoving.push(hitDistance);
-                                distancesPerHitDuration.push(durationInSeconds)
+                            if (!_.isNull(occurrenceDistance)) {
+                                distancesPerOccurrenceOnMoving.push(occurrenceDistance);
+                                distancesPerOccurrenceDuration.push(durationInSeconds)
                             }
                         }
                     }
@@ -711,24 +710,23 @@ export class ActivityComputer {
         // Update zone distribution percentage
         cadenceZones = this.finalizeDistributionComputationZones(cadenceZones);
 
-
         const cadencesPercentiles: number[] = Helper.weightedPercentiles(cadencesOnMoving, cadencesDuration, [0.25, 0.5, 0.75]);
 
-        const distancesPerHitPercentiles: number[] = Helper.weightedPercentiles(distancesPerHitOnMoving, distancesPerHitDuration, [0.25, 0.5, 0.75]);
+        const distancesPerOccurrencePercentiles: number[] = Helper.weightedPercentiles(distancesPerOccurrenceOnMoving, distancesPerOccurrenceDuration, [0.25, 0.5, 0.75]);
 
         const cadenceData: ICadenceData = {
             cadencePercentageMoving: cadenceRatioOnMovingTime * 100,
             cadenceTimeMoving: cadenceSumDurationOnMoving,
             averageCadenceMoving: averageCadenceOnMovingTime,
             standardDeviationCadence: parseFloat(standardDeviationCadence.toFixed(1)),
-            totalHits: totalHits,
+            totalOccurrences: totalOccurrences,
             lowerQuartileCadence: cadencesPercentiles[0],
             medianCadence: cadencesPercentiles[1],
             upperQuartileCadence: cadencesPercentiles[2],
-            averageDistancePerHit: _.mean(distancesPerHitOnMoving),
-            lowerQuartileDistancePerHit: distancesPerHitPercentiles[0],
-            medianDistancePerHit: distancesPerHitPercentiles[1],
-            upperQuartileDistancePerHit: distancesPerHitPercentiles[2],
+            averageDistancePerOccurrence: _.mean(distancesPerOccurrenceOnMoving),
+            lowerQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[0],
+            medianDistancePerOccurrence: distancesPerOccurrencePercentiles[1],
+            upperQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[2],
             cadenceZones: (this.returnZones) ? cadenceZones : null,
         };
 
