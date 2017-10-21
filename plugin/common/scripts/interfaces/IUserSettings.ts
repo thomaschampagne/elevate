@@ -55,6 +55,7 @@ export interface IUserSettings {
     displaySegmentTimeComparisonPosition: boolean;
     reviveGoogleMaps: boolean;
     displayRecentEffortsHRAdjustedPacePower: boolean;
+    displayRunningPowerEstimation: boolean;
     reviveGoogleMapsLayerType: string;
     displayActivityBestSplits: boolean;
     bestSplitsConfiguration: any; // TODO Type this !

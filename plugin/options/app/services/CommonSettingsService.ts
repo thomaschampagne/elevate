@@ -392,16 +392,21 @@ export let commonSettingsService = () => {
                 optionType: "checkbox",
                 optionTitle: "Enable Hidden/Beta features",
                 optionLabels: ["All"],
-                optionEnableSub: ["displayRecentEffortsHRAdjustedPacePower"],
+                optionEnableSub: ["displayRunningPowerEstimation", "displayRecentEffortsHRAdjustedPacePower"],
                 optionHtml: "Show features which are hidden. Example: BETA features.",
+            }, {
+                optionKey: "displayRunningPowerEstimation",
+                optionType: "checkbox",
+                optionTitle: "Display running power estimation on your activities",
+                optionLabels: ["Running"],
+                optionHtml: "Display a running power estimation of your running activities. This estimation can be compared with cycling power (in watts) for a given running pace: especially useful for triathletes.<br/><br/>- Only works on <strong>your</strong> running activities which don\'t have any power data mapped to strava. (FYI: Real running power data coming from sensors like \"Stryd\" are no longer mapped in strava activities)<br/>- Make sure to <strong>setup your weight</strong> properly in athlete settings<br/><br/><i>Algorithm designed by Alan Couzens, Master of Science. Learn more about this feature <a target='_blank' href='https://alancouzens.com/blog/Run_Power.html'>here</a>.</i>",
             }, {
                 optionKey: "displayRecentEffortsHRAdjustedPacePower",
                 optionType: "checkbox",
                 optionTitle: "Display running estimated paces & cycling estimated powers from most painful effort on a segment (Experimental)",
                 optionLabels: ["Cycling", "Running"],
                 optionHtml: "Experimental at the moment. This feature gives you a fitness trend in your segments. You can see estimations in \"Your recent efforts\" graph displayed on a segment page.<br /><br /><strong>Running:</strong> Display estimated <strong>paces</strong> based on best average heart rate of all efforts in a segment.<br /><br /><strong>Cycling:</strong> Display estimated <strong>powers</strong> based on best average heart rate of all efforts in a segment.",
-            }
-            ],
+            }]
         }];
 
         return sections;

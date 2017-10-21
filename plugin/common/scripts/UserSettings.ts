@@ -238,6 +238,7 @@ export let userSettings: IUserSettings = {
     displaySegmentTimeComparisonPosition: true,
     displayRecentEffortsHRAdjustedPacePower: false,
     reviveGoogleMaps: true,
+    displayRunningPowerEstimation: true,
     reviveGoogleMapsLayerType: "terrain",
     displayActivityBestSplits: true,
     bestSplitsConfiguration: null,
