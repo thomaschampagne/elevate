@@ -237,7 +237,6 @@ export let userSettings: IUserSettings = {
     displaySegmentTimeComparisonToCurrentYearPR: true,
     displaySegmentTimeComparisonPosition: true,
     displayRecentEffortsHRAdjustedPacePower: false,
-    displayExtendedGoals: false,
     reviveGoogleMaps: true,
     reviveGoogleMapsLayerType: "terrain",
     displayActivityBestSplits: true,

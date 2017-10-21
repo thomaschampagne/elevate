@@ -129,7 +129,6 @@ export class StravistiX {
         this.handleActivityStravaMapType();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
-        this.handleGoalsModifier();
         this.handleOnFlyActivitiesSync();
         this.handleActivitiesSyncFromOutside();
 
@@ -1146,33 +1145,6 @@ export class StravistiX {
             }, (err: any) => {
                 console.error(err);
             });
-        }
-    }
-
-    /**
-     * Check for goals element and enable GoalsModifier.
-     *
-     * This checks the document for a #progress-goals-v2 element. If
-     * found then the GoalsModifier is enabled and bound to the element.
-     * However, note that the modifier only works for the current athelete,
-     * and hence is only enabled on the dashboard and current user's profile
-     * pages.
-     *
-     * If the `displayExtendedGoals` user setting is false then this
-     * handler does nothing.
-     */
-    protected handleGoalsModifier(): void {
-        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
-            return;
-        }
-        const goals = $("#progress-goals-v2");
-        if (goals.length > 0) {
-            const pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
-            const pageDashboard = new RegExp("^/dashboard");
-            if (window.location.pathname.match(pageProfile)
-                || window.location.pathname.match(pageDashboard)) {
-                new GoalsModifier(goals).modify();
-            }
         }
     }
 

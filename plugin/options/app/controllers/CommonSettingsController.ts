@@ -9,7 +9,8 @@ export class CommonSettingsController {
 
     public static $inject = ["$scope", "CommonSettingsService", "ChromeStorageService", "$location", "$mdDialog", "$sce"];
 
-    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService, $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
+    constructor($scope: any, CommonSettingsService: ICommonSettingsService, chromeStorageService: ChromeStorageService,
+                $location: ILocationService, $mdDialog: angular.material.IDialogService, $sce: ISCEService) {
 
         // Define options structure
         $scope.sections = CommonSettingsService.provideSections();

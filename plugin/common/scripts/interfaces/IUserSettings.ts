@@ -53,7 +53,6 @@ export interface IUserSettings {
     displaySegmentTimeComparisonToPR: boolean;
     displaySegmentTimeComparisonToCurrentYearPR: boolean;
     displaySegmentTimeComparisonPosition: boolean;
-    displayExtendedGoals: boolean;
     reviveGoogleMaps: boolean;
     displayRecentEffortsHRAdjustedPacePower: boolean;
     reviveGoogleMapsLayerType: string;
