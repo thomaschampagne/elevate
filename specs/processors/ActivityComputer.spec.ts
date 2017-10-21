@@ -68,7 +68,7 @@ describe('ActivityComputer', () => {
         expect(result.cadenceData.cadenceTimeMoving.toString()).toMatch(/^5463/);
         expect(result.cadenceData.averageCadenceMoving.toString()).toMatch(/^84.1687717/);
         expect(result.cadenceData.standardDeviationCadence.toString()).toMatch(/^15.7/);
-        expect(result.cadenceData.crankRevolutions.toString()).toMatch(/^7740.983333/);
+        expect(result.cadenceData.totalOccurrences.toString()).toMatch(/^7740.983333/);
         expect(result.cadenceData.lowerQuartileCadence.toString()).toMatch(/^79/);
         expect(result.cadenceData.medianCadence.toString()).toMatch(/^87/);
         expect(result.cadenceData.upperQuartileCadence.toString()).toMatch(/^93/);

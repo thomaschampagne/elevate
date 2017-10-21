@@ -104,7 +104,7 @@ export let commonSettingsService = () => {
                 optionType: "checkbox",
                 optionTitle: "Cadence data",
                 optionLabels: ["Cycling", "Running"],
-                optionHtml: "Add cadence data for your cycling activities:<br/><br/>- Cadence % while moving<br/>- Cadence Time while moving (hh:mm:ss)<br/>- Crank revolutions count.<br/><br/>Of course, a cadence sensor is required to get this feature.",
+                optionHtml: "Add cadence data for your cycling & running activities<br/><br/>Of course, a cadence sensor is required to get this feature.",
             }, {
                 optionKey: "displayAdvancedGradeData",
                 optionType: "checkbox",
