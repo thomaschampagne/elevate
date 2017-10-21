@@ -72,14 +72,14 @@ describe("ActivityComputer", () => {
         expect(result.cadenceData.cadenceTimeMoving.toString()).toMatch(/^5463/);
         expect(result.cadenceData.averageCadenceMoving.toString()).toMatch(/^84.1687717/);
         expect(result.cadenceData.standardDeviationCadence.toString()).toMatch(/^15.7/);
-        expect(result.cadenceData.crankRevolutions.toString()).toMatch(/^7740.983333/);
+        expect(result.cadenceData.totalOccurrences.toString()).toMatch(/^7740.983333/);
         expect(result.cadenceData.lowerQuartileCadence.toString()).toMatch(/^79/);
         expect(result.cadenceData.medianCadence.toString()).toMatch(/^87/);
         expect(result.cadenceData.upperQuartileCadence.toString()).toMatch(/^93/);
 
         expect(result.gradeData.avgGrade.toString()).toMatch(/^0.016110032/);
-        expect(result.gradeData.maxGrade.toString()).toMatch(/^10.5/);
-        expect(result.gradeData.minGrade.toString()).toMatch(/^-11.7/);
+        expect(result.gradeData.avgMaxGrade.toString()).toMatch(/^8.82/);
+        expect(result.gradeData.avgMinGrade.toString()).toMatch(/^-9.19/);
         expect(result.gradeData.lowerQuartileGrade.toString()).toMatch(/^-1.3/);
         expect(result.gradeData.medianGrade.toString()).toMatch(/^0/);
         expect(result.gradeData.upperQuartileGrade.toString()).toMatch(/^1.5/);

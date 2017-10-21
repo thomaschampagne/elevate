@@ -226,7 +226,7 @@ export class AthleteStatsModifier implements IModifier {
             requests: JQueryXHR[] = [],
             activitiesFromCache: string = localStorage.getItem(this.cacheKey_),
             activitiesFromCacheObject: any[] = JSON.parse(activitiesFromCache) || [],
-            progress: JQuery = $("#progress-goals-v2");
+            progress: JQuery = $("#progress-goals");
 
         this.progressThisYear = $("<div class='section'><h3>My year progressions to current month/day (old version) <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides <input type='checkbox' id='stravistix_yearProgress_incCommutes'/> Include Commutes</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 

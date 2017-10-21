@@ -184,8 +184,8 @@ export class StravistiX {
             return;
         }
 
-        const ribbonMessage: string = "<strong><a href=\"#\" class=\"pluginInstallOrUpgrade_details\"><img style=\"width: 24px;\" src=\"" + this.appResources.systemUpdatesIcon + "\" /> StravistiX " + this.appResources.extVersion + " update</a></strong> " + latestRelease.message + ".";
-        const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 15px; padding-bottom: 15px;\">" +
+        const ribbonMessage: string = "<strong><a href=\"#\" class=\"pluginInstallOrUpgrade_details\"><img style=\"width: 24px;\" src=\"" + this.appResources.systemUpdatesIcon + "\" /> StravistiX v" + this.appResources.extVersion + ":</a></strong> " + latestRelease.message + ".";
+        const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: left; padding-left: 4%; padding-top: 15px; padding-bottom: 15px;\">" +
             "<div style=\"display:inline; font-size: 14px;\">" + ribbonMessage + "</div>" +
             "<div style=\"display:inline; float: right; font-size: 14px; padding-right: 10px;\">" +
             "<a href=\"#\" style=\"padding-right: 15px;\" class=\"pluginInstallOrUpgrade_details\">[show details]</a>" +
