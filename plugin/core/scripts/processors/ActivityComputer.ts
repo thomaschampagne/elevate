@@ -174,24 +174,14 @@ export class ActivityComputer {
         let powerData: IPowerData;
 
         // If Running activity with no power data, then try to estimate it for the author of activity...
-        if (this.activityType === "Run" && _.isEmpty(activityStream.watts) && this.isActivityAuthor) {
+        if (this.activityType === "Run"
+            && !this.hasPowerMeter
+            && this.isActivityAuthor) {
 
             // Override athlete weight given in settings for the author watching his run
             athleteWeight = this.userSettings.userWeight;
 
-            try {
-                console.log("Trying to  estimate wattage of this run...");
-                activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
-                    athleteWeight,
-                    activityStream.distance,
-                    activityStream.time, activityStream.altitude);
-            } catch (err) {
-                console.error(err);
-            }
-
-            const isEstimatedRunningPower = true;
-            powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
-                activityStream.time, isEstimatedRunningPower);
+            powerData = this.estimatedRunningPower(activityStream, athleteWeight, hasPowerMeter, userFTP);
 
         } else {
 
@@ -239,6 +229,24 @@ export class ActivityComputer {
         };
 
         return analysisData;
+    }
+
+    protected estimatedRunningPower(activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
+
+        try {
+            console.log("Trying to  estimate wattage of this run...");
+            activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
+                athleteWeight,
+                activityStream.distance,
+                activityStream.time, activityStream.altitude);
+        } catch (err) {
+            console.error(err);
+        }
+
+        const isEstimatedRunningPower = true;
+
+        return this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+            activityStream.time, isEstimatedRunningPower);
     }
 
     protected moveRatio(movingTime: number, elapsedTime: number): number {
@@ -730,7 +738,7 @@ export class ActivityComputer {
 
                             if (!_.isNull(occurrenceDistance)) {
                                 distancesPerOccurrenceOnMoving.push(occurrenceDistance);
-                                distancesPerOccurrenceDuration.push(durationInSeconds)
+                                distancesPerOccurrenceDuration.push(durationInSeconds);
                             }
                         }
                     }
