@@ -50,14 +50,6 @@ export class RunningPowerEstimator {
      */
     public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
 
-        // TODO See http://www.letsrun.com/forum/flat_read.php?thread=5067899&page=1
-        // TODO See http://web.archive.org/web/20080310073316/http://members.aol.com/BearFlag45/Biology1A/Reviews/energy.html
-        // TODO See http://www.exrx.net/Calculators/WalkRunMETs.html
-
-        // TODO see @ Calculate Running Economy: https://www.youtube.com/watch?v=VcEQ9Cqd_w0
-        // TODO See @ http://fellrnr.com/wiki/Running_Economy => Relative Running Economy
-
-
         const runningEcoVolumeO2PerKm = 210; // Units: (ml/kg/km)
         const cyclingEcoWattsPerVolumeO2 = 75; // Units: W/L // ??
 

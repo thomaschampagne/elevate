@@ -47,22 +47,31 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
         if (this.userSettings.displayAdvancedPowerData) {
 
-            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts
-            /* && this.analysisData.powerData.hasPowerMeter // From v5.11.0 runners without a running power meter are able to get an estimation of avg wattage */
-            ) {
+            let averageWatts = "-";
+            let averageWattsTitle = "Average Power";
+            let userSettingKey = "displayAdvancedPowerData";
 
-                let averageWatts: string = this.analysisData.powerData.avgWatts.toFixed(0);
-                let averageWattsTitle = "Average Power";
-                let userSettingKey = "displayAdvancedPowerData";
+            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts) {
 
-                if (this.analysisData.powerData.isEstimatedRunningPower === true) {
-                    averageWattsTitle = "Estimated " + averageWattsTitle;
-                    averageWatts = "<span style='font-size: 14px;'>~</span>" + averageWatts;
-                    userSettingKey = "displayRunningPowerEstimation";
+                if (this.analysisData.powerData.hasPowerMeter) {
+
+                    // Real running power data
+                    averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
+                    userSettingKey = "displayAdvancedPowerData";
+
+                } else {
+
+                    // Estimated running power data..
+                    if (this.userSettings.showHiddenBetaFeatures // Is beta estimated running power activated?
+                        && this.userSettings.displayRunningPowerEstimation) {
+                        averageWattsTitle = "Estimated " + averageWattsTitle;
+                        userSettingKey = "displayRunningPowerEstimation";
+                        averageWatts = "<span style='font-size: 14px;'>~</span>" + this.analysisData.powerData.avgWatts.toFixed(0);
+                    }
                 }
-
-                this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
             }
+
+            this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
         }
 
         let weightedPower: string = "-";
@@ -125,6 +134,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             powerDataView.setAppResources(this.appResources);
             powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
             powerDataView.setActivityType(this.activityType);
+            powerDataView.runningPowerEstimationEnabled = (this.userSettings.showHiddenBetaFeatures && this.userSettings.displayRunningPowerEstimation);
             powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
             this.dataViews.push(powerDataView);
         }
