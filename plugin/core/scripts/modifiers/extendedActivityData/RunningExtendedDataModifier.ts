@@ -126,17 +126,23 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.dataViews.push(paceDataView);
         }
 
-        if (this.analysisData.powerData
-            && this.userSettings.displayAdvancedPowerData
-        // && this.analysisData.powerData.hasPowerMeter
-        ) {
-            const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
-            powerDataView.setAppResources(this.appResources);
-            powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-            powerDataView.setActivityType(this.activityType);
-            powerDataView.runningPowerEstimationEnabled = (this.userSettings.showHiddenBetaFeatures && this.userSettings.displayRunningPowerEstimation);
-            powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-            this.dataViews.push(powerDataView);
+        // Power data
+        if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) { // Is feature enable?
+
+
+            // Is beta estimated running power activated?
+            const isEstimatedRunningPowerFeatureEnabled = this.userSettings.showHiddenBetaFeatures
+                && this.userSettings.displayRunningPowerEstimation;
+
+            if (this.analysisData.powerData.hasPowerMeter || isEstimatedRunningPowerFeatureEnabled) {
+
+                const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
+                powerDataView.setAppResources(this.appResources);
+                powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setActivityType(this.activityType);
+                powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+                this.dataViews.push(powerDataView);
+            }
         }
 
         if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
