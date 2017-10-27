@@ -88,12 +88,12 @@ export class RemoteLinksModifier implements IModifier {
 
         const remoteViewSegmentLinksArray: string[][] = [
             ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.veloviewerIcon + "'/> <span>VeloViewer</span>", "http://veloviewer.com/segment/", "?referrer=stravistiX"],
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details (Jonathan Okeeffe)</span>", "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=", ""],
+            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details by J.Okeeffe</span>", "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=", ""],
         ];
-        let html: string = "<div class='dropdown' style='padding-bottom: 10px;'>";
+        let html: string = "<div class='dropdown'>";
         html += "<div class='drop-down-menu' style='width: 100%;' >";
-        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
-        html += "<ul class='options' style='z-index: 999;'>";
+        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span></button>";
+        html += "<ul class='dropdown-menu'>";
 
         _.forEach(remoteViewSegmentLinksArray, (linkArray: string[]) => {
             html += "<li><a target='_blank' href='" + linkArray[1] + segmentId + linkArray[2] + "'>" + linkArray[0] + "</a></li>";
