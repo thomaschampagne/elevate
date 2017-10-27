@@ -9,7 +9,7 @@ export class ReliveCCModifier implements IModifier {
     public modify(): void {
 
         let html: string = "<li class='group'>";
-        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
+        html += "<div class='title' style='cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
 
         $("#pagenav").append($(html)).each(() => {
 

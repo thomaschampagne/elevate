@@ -36,7 +36,7 @@ export class RemoteLinksModifier implements IModifier {
         // Activity page
         // Adding remote view links on left panel
         let html: string = "<li class='group'>";
-        html += "<div class='title' id='stravistix_remote_title' style='font-size: 14px; cursor: pointer;'>Remote Views</div>";
+        html += "<div class='title' id='stravistix_remote_title' style='cursor: pointer;'>Remote Views</div>";
         html += "<ul style='display: none;' id='stravistix_remoteViews'>";
         _.forEach(remoteViewActivityLinksArray, (linkArray: string[]) => {
             html += "<li>";
