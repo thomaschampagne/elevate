@@ -19,6 +19,7 @@ export interface IActivityStream {
     distance: number[];
     altitude: number[];
     altitude_smooth?: number[];
+    grade_adjusted_distance: Array<number>;
 }
 
 export interface IAnalysisData {
@@ -76,6 +77,7 @@ export interface IPowerData {
     medianWatts: number;
     upperQuartileWatts: number;
     powerZones: IZone[];
+    isEstimatedRunningPower?: boolean;
 }
 
 export interface IHeartRateData {

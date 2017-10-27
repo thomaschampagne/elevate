@@ -7,6 +7,7 @@ export interface IComputeActivityThreadMessage {
     isTrainer: boolean;
     appResources: IAppResources;
     userSettings: IUserSettings;
+    isActivityAuthor: boolean;
     athleteWeight: number;
     hasPowerMeter: boolean;
     activityStatsMap: IActivityStatsMap;

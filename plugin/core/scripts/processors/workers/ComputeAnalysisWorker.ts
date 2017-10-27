@@ -19,7 +19,17 @@ export function ComputeAnalysisWorker() {
             return SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/scripts/processors/ActivityComputer.js");
 
         }).then((module: any) => {
-            const analysisComputer: ActivityComputer = new module.ActivityComputer(threadMessage.activityType, threadMessage.isTrainer, threadMessage.userSettings, threadMessage.athleteWeight, threadMessage.hasPowerMeter, threadMessage.activityStatsMap, threadMessage.activityStream, threadMessage.bounds, threadMessage.returnZones);
+            const analysisComputer: ActivityComputer = new module.ActivityComputer(
+                threadMessage.activityType,
+                threadMessage.isTrainer,
+                threadMessage.userSettings,
+                threadMessage.athleteWeight,
+                threadMessage.isActivityAuthor,
+                threadMessage.hasPowerMeter,
+                threadMessage.activityStatsMap,
+                threadMessage.activityStream,
+                threadMessage.bounds,
+                threadMessage.returnZones);
             const result: IAnalysisData = analysisComputer.compute();
             this.postMessage(result);
         });

@@ -45,7 +45,7 @@ export class VacuumProcessor {
      *  Get the strava athlete id connected
      *  @returns the strava athlete id
      */
-    public getAthleteIdAuthorOfActivity(): number {
+    public getActivityAthleteId(): number {
 
         if (_.isUndefined(window.pageView)) {
             return null;
@@ -278,7 +278,7 @@ export class VacuumProcessor {
             return;
         }
 
-        const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
+        const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_distance";
 
         $.ajax(url).done((activityStream: IActivityStream) => {
 

@@ -2,19 +2,23 @@ import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityCom
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
 
-describe('ActivityComputer', () => {
+describe("ActivityComputer", () => {
 
-    it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
+    // Cycling
+    it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
 
         const powerMeter: boolean = false;
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/723224273/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/723224273/statsMap'];
+        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/723224273/stream"];
+        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
+        const isActivityAuthor = true;
+        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+            isActivityAuthor, powerMeter, statsMap, stream, null, true);
+
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();
@@ -98,5 +102,6 @@ describe('ActivityComputer', () => {
         expect(result.elevationData.medianElevation.toString()).toMatch(/^231/);
         expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
     });
+
 });
 

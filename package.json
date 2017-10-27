@@ -1,5 +1,5 @@
 {
-  "name": "stravistixdevwrapper",
+  "name": "StravistixDevWrapper",
   "version": "1.0.0",
   "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
