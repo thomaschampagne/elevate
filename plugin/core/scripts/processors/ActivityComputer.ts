@@ -495,7 +495,7 @@ export class ActivityComputer {
 
         for (let i: number = 0; i < powerArray.length; i++) { // Loop on samples
 
-            if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+            if ((this.isTrainer || !velocityArray || _.isNumber(velocityArray[i])) && i > 0) {
 
                 // Compute distribution for graph/table
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -531,7 +531,7 @@ export class ActivityComputer {
         }
 
         // Finalize compute of Power
-        const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
+        const avgWatts: number = _.mean(powerArray);
 
         const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
             return (a as number) + (b as number);
