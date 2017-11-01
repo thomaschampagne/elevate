@@ -31,12 +31,12 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
         this.insertContentAtGridPosition(1, 2, this.cadenceData.medianCadence, "50% Cadence", "rpm", "displayCadenceData");
         this.insertContentAtGridPosition(2, 2, this.cadenceData.upperQuartileCadence, "75% Cadence", "rpm", "displayCadenceData");
 
-        this.insertContentAtGridPosition(0, 3, this.cadenceData.averageDistancePerOccurrence.toFixed(2), "Avg Dist. / Crank Rev.", "M", "displayCadenceData");
+        this.insertContentAtGridPosition(0, 3, this.cadenceData.averageDistancePerOccurrence.toFixed(2), "Avg Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
         this.insertContentAtGridPosition(1, 3, this.cadenceData.standardDeviationCadence, "Std Deviation &sigma;", "rpm", "displayCadenceData");
 
-        this.insertContentAtGridPosition(0, 4, this.cadenceData.lowerQuartileDistancePerOccurrence.toFixed(2), "25% Dist. / Crank Rev.", "M", "displayCadenceData");
-        this.insertContentAtGridPosition(1, 4, this.cadenceData.medianDistancePerOccurrence.toFixed(2), "50% Dist. / Crank Rev.", "M", "displayCadenceData");
-        this.insertContentAtGridPosition(2, 4, this.cadenceData.upperQuartileDistancePerOccurrence.toFixed(2), "75% Dist. / Crank Rev.", "M", "displayCadenceData");
+        this.insertContentAtGridPosition(0, 4, this.cadenceData.lowerQuartileDistancePerOccurrence.toFixed(2), "25% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+        this.insertContentAtGridPosition(1, 4, this.cadenceData.medianDistancePerOccurrence.toFixed(2), "50% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+        this.insertContentAtGridPosition(2, 4, this.cadenceData.upperQuartileDistancePerOccurrence.toFixed(2), "75% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
 
     }
 }
