@@ -19,6 +19,7 @@ import {
     IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {RunningPowerEstimator} from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 
@@ -37,6 +38,7 @@ export class ActivityComputer {
     protected userSettings: IUserSettings;
     protected movementData: IMoveData;
     protected athleteWeight: number;
+    protected isActivityAuthor: boolean;
     protected hasPowerMeter: boolean;
     protected activityStatsMap: IActivityStatsMap;
     protected activityStream: IActivityStream;
@@ -44,6 +46,7 @@ export class ActivityComputer {
     protected returnZones: boolean;
 
     constructor(activityType: string, isTrainer: boolean, userSettings: IUserSettings, athleteWeight: number,
+                isActivityAuthor: boolean,
                 hasPowerMeter: boolean,
                 activityStatsMap: IActivityStatsMap,
                 activityStream: IActivityStream,
@@ -54,6 +57,7 @@ export class ActivityComputer {
         this.isTrainer = isTrainer;
         this.userSettings = userSettings;
         this.athleteWeight = athleteWeight;
+        this.isActivityAuthor = isActivityAuthor;
         this.hasPowerMeter = hasPowerMeter;
         this.activityStatsMap = activityStatsMap;
         this.activityStream = activityStream;
@@ -125,12 +129,17 @@ export class ActivityComputer {
             if (!_.isEmpty(activityStream.altitude_smooth)) {
                 activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
             }
+
+            if (!_.isEmpty(activityStream.grade_adjusted_distance)) {
+                activityStream.grade_adjusted_distance = activityStream.grade_adjusted_distance.slice(bounds[0], bounds[1]);
+            }
         }
     }
 
     protected smoothAltitudeStream(activityStream: IActivityStream, activityStatsMap: IActivityStatsMap): any {
         return this.smoothAltitude(activityStream, activityStatsMap.elevation);
     }
+
 
     protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream): IAnalysisData {
 
@@ -162,7 +171,24 @@ export class ActivityComputer {
         // Estimated Variability index
         // Estimated Intensity factor
         // Normalized Watt per Kg
-        const powerData: IPowerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth, activityStream.time);
+        let powerData: IPowerData;
+
+        // If Running activity with no power data, then try to estimate it for the author of activity...
+        if (this.activityType === "Run"
+            && !this.hasPowerMeter
+            && this.isActivityAuthor) {
+
+            // Override athlete weight given in settings for the author watching his run
+            athleteWeight = this.userSettings.userWeight;
+
+            powerData = this.estimatedRunningPower(activityStream, athleteWeight, hasPowerMeter, userFTP);
+
+        } else {
+
+            powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+                activityStream.time);
+
+        }
 
         // TRaining IMPulse
         // %HRR Avg
@@ -179,7 +205,7 @@ export class ActivityComputer {
         // Cadence percentage
         // Time Cadence
         // Crank revolution
-        const cadenceData: ICadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.time);
+        const cadenceData: ICadenceData = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.distance, activityStream.time);
         // ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
         if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
             cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
@@ -203,6 +229,24 @@ export class ActivityComputer {
         };
 
         return analysisData;
+    }
+
+    protected estimatedRunningPower(activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
+
+        try {
+            console.log("Trying to  estimate wattage of this run...");
+            activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
+                athleteWeight,
+                activityStream.distance,
+                activityStream.time, activityStream.altitude);
+        } catch (err) {
+            console.error(err);
+        }
+
+        const isEstimatedRunningPower = true;
+
+        return this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+            activityStream.time, isEstimatedRunningPower);
     }
 
     protected moveRatio(movingTime: number, elapsedTime: number): number {
@@ -283,9 +327,15 @@ export class ActivityComputer {
         return zones;
     }
 
-    protected valueForSum(currentValue: number, previousValue: number, delta: number): number {
-        // discrete integral
-        return currentValue * delta - ((currentValue - previousValue) * delta) / 2;
+    /**
+     *
+     * @param {number} currentValue
+     * @param {number} previousValue
+     * @param {number} delta between current & previous values
+     * @returns {number} the discrete value
+     */
+    protected discreteValueBetween(currentValue: number, previousValue: number, delta: number): number {
+        return currentValue * delta - ((currentValue - previousValue) * delta) / 2; // Discrete integral
     }
 
     protected moveData(velocityArray: number[], timeArray: number[]): IMoveData {
@@ -329,7 +379,7 @@ export class ActivityComputer {
                     speedVarianceSum += Math.pow(currentSpeed, 2);
 
                     // distance
-                    genuineAvgSpeedSum += this.valueForSum(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
+                    genuineAvgSpeedSum += this.discreteValueBetween(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
                     // time
                     genuineAvgSpeedSumCount += movingSeconds;
 
@@ -404,14 +454,17 @@ export class ActivityComputer {
     }
 
     /**
-     * Andrew Coggan weighted power compute method (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
+     * Andrew Coggan weighted power compute method
+     * (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
      * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
      * 2) raise all the values obtained in step #1 to the 4th power.
      * 3) take the average of all of the values obtained in step #2.
      * 4) take the 4th root of the value obtained in step #3.
-     * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program like WKO+ to do the work for you <g>.)
+     * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
+     * like WKO+ to do the work for you <g>.)
      */
-    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[], velocityArray: number[], timeArray: number[]): IPowerData {
+    protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[],
+                        velocityArray: number[], timeArray: number[], isEstimatedRunningPower?: boolean): IPowerData {
 
         if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
             return null;
@@ -442,7 +495,7 @@ export class ActivityComputer {
 
         for (let i: number = 0; i < powerArray.length; i++) { // Loop on samples
 
-            if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
+            if ((this.isTrainer || !velocityArray || _.isNumber(velocityArray[i])) && i > 0) {
 
                 // Compute distribution for graph/table
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -466,7 +519,7 @@ export class ActivityComputer {
                 wattsSamplesOnMoveDuration.push(durationInSeconds);
 
                 // average over time
-                accumulatedWattsOnMove += this.valueForSum(powerArray[i], powerArray[i - 1], durationInSeconds);
+                accumulatedWattsOnMove += this.discreteValueBetween(powerArray[i], powerArray[i - 1], durationInSeconds);
                 wattSampleOnMoveCount += durationInSeconds;
 
                 const powerZoneId: number = this.getZoneId(powerZonesAlongActivityType, powerArray[i]);
@@ -478,7 +531,7 @@ export class ActivityComputer {
         }
 
         // Finalize compute of Power
-        const avgWatts: number = accumulatedWattsOnMove / wattSampleOnMoveCount;
+        const avgWatts: number = _.mean(powerArray);
 
         const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
             return (a as number) + (b as number);
@@ -517,6 +570,10 @@ export class ActivityComputer {
             powerZones: (this.returnZones) ? powerZonesAlongActivityType : null, // Only while moving
         };
 
+        if (!_.isUndefined(isEstimatedRunningPower)) {
+            powerData.isEstimatedRunningPower = isEstimatedRunningPower;
+        }
+
         return powerData;
     }
 
@@ -531,7 +588,8 @@ export class ActivityComputer {
         let trainingImpulse: number = 0;
         const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
         let hrrSecondsCount: number = 0;
-        let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number, zoneId: number;
+        let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number,
+            zoneId: number;
         let hrSum: number = 0;
         const heartRateArrayMoving: any[] = [];
         const heartRateArrayMovingDuration: any[] = [];
@@ -547,7 +605,7 @@ export class ActivityComputer {
                 // Compute heartrate data while moving from now
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
                 // average over time
-                hrSum += this.valueForSum(heartRateArray[i], heartRateArray[i - 1], durationInSeconds);
+                hrSum += this.discreteValueBetween(heartRateArray[i], heartRateArray[i - 1], durationInSeconds);
                 hrrSecondsCount += durationInSeconds;
 
                 heartRateArrayMoving.push(heartRateArray[i]);
@@ -596,14 +654,18 @@ export class ActivityComputer {
         };
     }
 
-    protected cadenceData(cadenceArray: any[], velocityArray: any[], timeArray: any[]): ICadenceData {
+    protected cadenceData(cadenceArray: number[], velocityArray: number[], distanceArray: number[],
+                          timeArray: number[]): ICadenceData {
 
         if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray)) {
             return null;
         }
 
+        const hasDistanceData = !_.isEmpty(distanceArray);
+
         // recomputing crank revolutions using cadence data
-        let crankRevolutions: number = 0;
+        let totalOccurrences: number = 0;
+
         // On Moving
         let cadenceSumOnMoving: number = 0;
         let cadenceSumDurationOnMoving: number = 0;
@@ -623,15 +685,22 @@ export class ActivityComputer {
         let cadenceZones: IZone[] = this.prepareZonesForDistributionComputation(cadenceZoneTyped);
 
         let durationInSeconds: number = 0;
-        const cadenceArrayMoving: any[] = [];
-        const cadenceArrayDuration: any[] = [];
+        const cadencesOnMoving: number[] = [];
+        const cadencesDuration: number[] = [];
+
+        const distancesPerOccurrenceOnMoving: number[] = []; // Can be: Each time a foot touch the ground while running OR Each crank revolution for Cycling
+        const distancesPerOccurrenceDuration: number[] = [];
 
         for (let i: number = 0; i < cadenceArray.length; i++) {
 
             if (i > 0) {
+
                 durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
-                // recomputing crank revolutions using cadence data
-                crankRevolutions += this.valueForSum(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60);
+
+                // Recomputing crank revolutions using cadence data
+                const occurrencesOnPeriod = this.discreteValueBetween(cadenceArray[i], cadenceArray[i - 1], durationInSeconds / 60 /* Minutes */);
+
+                totalOccurrences += occurrencesOnPeriod;
 
                 if ((this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) && i > 0) {
 
@@ -639,14 +708,39 @@ export class ActivityComputer {
 
                     // Rider is moving here..
                     if (cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
+
                         // Rider is moving here while cadence
                         cadenceOnMoveSampleCount++;
+
                         // cadence averaging over time
-                        cadenceSumOnMoving += this.valueForSum(cadenceArray[i], cadenceArray[i - 1], durationInSeconds);
+                        cadenceSumOnMoving += this.discreteValueBetween(cadenceArray[i], cadenceArray[i - 1], durationInSeconds);
                         cadenceSumDurationOnMoving += durationInSeconds;
                         cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
-                        cadenceArrayMoving.push(cadenceArray[i]);
-                        cadenceArrayDuration.push(durationInSeconds);
+                        cadencesOnMoving.push(cadenceArray[i]);
+                        cadencesDuration.push(durationInSeconds);
+
+                        // Compute distance traveled foreach "hit":
+                        // - Running: Each time a foot touch the ground
+                        // - Cycling: Each crank revolution for Cycling
+                        if (hasDistanceData && (this.activityType === "Ride" || this.activityType === "Run")) {
+
+                            const metersTravelled = (distanceArray[i] - distanceArray[i - 1]);
+
+                            let occurrenceDistance: number = null;
+
+                            if (this.activityType === "Ride") {
+                                occurrenceDistance = metersTravelled / occurrencesOnPeriod; // Aka Crank revolutions on delta time
+                            }
+
+                            if (this.activityType === "Run") {
+                                occurrenceDistance = metersTravelled / (occurrencesOnPeriod * 2); // Aka strides with 2 legs representation on delta time
+                            }
+
+                            if (!_.isNull(occurrenceDistance)) {
+                                distancesPerOccurrenceOnMoving.push(occurrenceDistance);
+                                distancesPerOccurrenceDuration.push(durationInSeconds);
+                            }
+                        }
                     }
 
                     const cadenceZoneId: number = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
@@ -667,17 +761,23 @@ export class ActivityComputer {
         // Update zone distribution percentage
         cadenceZones = this.finalizeDistributionComputationZones(cadenceZones);
 
-        const percentiles: number[] = Helper.weightedPercentiles(cadenceArrayMoving, cadenceArrayDuration, [0.25, 0.5, 0.75]);
+        const cadencesPercentiles: number[] = Helper.weightedPercentiles(cadencesOnMoving, cadencesDuration, [0.25, 0.5, 0.75]);
+
+        const distancesPerOccurrencePercentiles: number[] = Helper.weightedPercentiles(distancesPerOccurrenceOnMoving, distancesPerOccurrenceDuration, [0.25, 0.5, 0.75]);
 
         const cadenceData: ICadenceData = {
             cadencePercentageMoving: cadenceRatioOnMovingTime * 100,
             cadenceTimeMoving: cadenceSumDurationOnMoving,
             averageCadenceMoving: averageCadenceOnMovingTime,
             standardDeviationCadence: parseFloat(standardDeviationCadence.toFixed(1)),
-            crankRevolutions,
-            lowerQuartileCadence: percentiles[0],
-            medianCadence: percentiles[1],
-            upperQuartileCadence: percentiles[2],
+            totalOccurrences: totalOccurrences,
+            lowerQuartileCadence: cadencesPercentiles[0],
+            medianCadence: cadencesPercentiles[1],
+            upperQuartileCadence: cadencesPercentiles[2],
+            averageDistancePerOccurrence: _.mean(distancesPerOccurrenceOnMoving),
+            lowerQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[0],
+            medianDistancePerOccurrence: distancesPerOccurrencePercentiles[1],
+            upperQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[2],
             cadenceZones: (this.returnZones) ? cadenceZones : null,
         };
 
@@ -749,7 +849,7 @@ export class ActivityComputer {
                     distance = distanceArray[i] - distanceArray[i - 1];
 
                     // elevation gain
-                    gradeSum += this.valueForSum(gradeArray[i], gradeArray[i - 1], distance);
+                    gradeSum += this.discreteValueBetween(gradeArray[i], gradeArray[i - 1], distance);
                     // distance
                     gradeCount += distance;
 
@@ -910,7 +1010,7 @@ export class ActivityComputer {
                 // Compute average and normalized
 
                 // average elevation over distance
-                accumulatedElevation += this.valueForSum(altitudeArray[i], altitudeArray[i - 1], distance);
+                accumulatedElevation += this.discreteValueBetween(altitudeArray[i], altitudeArray[i - 1], distance);
                 elevationSampleCount += distance;
                 elevationSamples.push(altitudeArray[i]);
                 elevationSamplesDistance.push(distance);
@@ -984,8 +1084,8 @@ export class ActivityComputer {
         };
 
         if (skipAscentSpeedCompute) {
-            elevationData = _.omit(elevationData, "ascentSpeedZones");
-            elevationData = _.omit(elevationData, "ascentSpeed");
+            elevationData = <IElevationData> _.omit(elevationData, "ascentSpeedZones");
+            elevationData = <IElevationData> _.omit(elevationData, "ascentSpeed");
         }
 
         return elevationData;

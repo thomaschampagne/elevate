@@ -15,15 +15,17 @@ export class ActivityProcessor {
     protected zones: any;
     protected activityType: string;
     protected isTrainer: boolean;
-    private computeAnalysisWorkerBlobURL: string;
-    private computeAnalysisThread: Worker;
-    private userSettings: IUserSettings;
+    protected isActivityAuthor: boolean;
+    protected computeAnalysisWorkerBlobURL: string;
+    protected computeAnalysisThread: Worker;
+    protected userSettings: IUserSettings;
 
-    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings) {
+    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings, isActivityAuthor: boolean) {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
         this.zones = this.userSettings.zones;
+        this.isActivityAuthor = isActivityAuthor;
     }
 
     public setActivityType(activityType: string): void {
@@ -87,7 +89,9 @@ export class ActivityProcessor {
         });
     }
 
-    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
+    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
+                                                    activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[],
+                                                    callback: (analysisData: IAnalysisData) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
@@ -109,6 +113,7 @@ export class ActivityProcessor {
             isTrainer: this.isTrainer,
             appResources: this.appResources,
             userSettings: this.userSettings,
+            isActivityAuthor: this.isActivityAuthor,
             athleteWeight,
             hasPowerMeter,
             activityStatsMap,

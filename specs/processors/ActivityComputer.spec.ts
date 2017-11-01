@@ -2,19 +2,23 @@ import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityCom
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
 
-describe('ActivityComputer', () => {
+describe("ActivityComputer", () => {
 
-    it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', () => {
+    // Cycling
+    it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
 
         const powerMeter: boolean = false;
 
-        let userSettingsMock: IUserSettings = window.__fixtures__['fixtures/userSettings/2470979'];
-        let stream: IActivityStream = window.__fixtures__['fixtures/activities/723224273/stream'];
-        let statsMap: IActivityStatsMap = window.__fixtures__['fixtures/activities/723224273/statsMap'];
+        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
+        let stream: IActivityStream = window.__fixtures__["fixtures/activities/723224273/stream"];
+        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        let activityComputer: ActivityComputer = new ActivityComputer('Ride', powerMeter, userSettingsMock, userSettingsMock.userWeight, powerMeter, statsMap, stream, null, true);
+        const isActivityAuthor = true;
+        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+            isActivityAuthor, powerMeter, statsMap, stream, null, true);
+
         let result: IAnalysisData = activityComputer.compute();
 
         expect(result).not.toBeNull();
@@ -44,12 +48,12 @@ describe('ActivityComputer', () => {
         expect(result.paceData.variancePace.toString()).toMatch(/^47.995052362/);
 
         expect(result.powerData.hasPowerMeter).toEqual(false);
-        expect(result.powerData.avgWatts.toString()).toMatch(/^210.708782239/);
-        expect(result.powerData.avgWattsPerKg.toString()).toMatch(/^2.93058111598/);
-        expect(result.powerData.weightedPower.toString()).toMatch(/^245.240855956/);
-        expect(result.powerData.variabilityIndex.toString()).toMatch(/^1.1638853081/);
-        expect(result.powerData.punchFactor.toString()).toMatch(/^1.0218368998/);
-        expect(result.powerData.weightedWattsPerKg.toString()).toMatch(/^3.4108603053/);
+        expect(result.powerData.avgWatts.toString()).toMatch(/^210.685980088/);
+        expect(result.powerData.avgWattsPerKg.toString()).toMatch(/^2.9302639789/);
+        expect(result.powerData.weightedPower.toString()).toMatch(/^245.18579465/);
+        expect(result.powerData.variabilityIndex.toString()).toMatch(/^1.16374993034/);
+        expect(result.powerData.punchFactor.toString()).toMatch(/^1.021607477/);
+        expect(result.powerData.weightedWattsPerKg.toString()).toMatch(/^3.4100945014/);
         expect(result.powerData.lowerQuartileWatts.toString()).toMatch(/^92/);
         expect(result.powerData.medianWatts.toString()).toMatch(/^204/);
         expect(result.powerData.upperQuartileWatts.toString()).toMatch(/^304/);
@@ -68,7 +72,7 @@ describe('ActivityComputer', () => {
         expect(result.cadenceData.cadenceTimeMoving.toString()).toMatch(/^5463/);
         expect(result.cadenceData.averageCadenceMoving.toString()).toMatch(/^84.1687717/);
         expect(result.cadenceData.standardDeviationCadence.toString()).toMatch(/^15.7/);
-        expect(result.cadenceData.crankRevolutions.toString()).toMatch(/^7740.983333/);
+        expect(result.cadenceData.totalOccurrences.toString()).toMatch(/^7740.983333/);
         expect(result.cadenceData.lowerQuartileCadence.toString()).toMatch(/^79/);
         expect(result.cadenceData.medianCadence.toString()).toMatch(/^87/);
         expect(result.cadenceData.upperQuartileCadence.toString()).toMatch(/^93/);
@@ -98,5 +102,6 @@ describe('ActivityComputer', () => {
         expect(result.elevationData.medianElevation.toString()).toMatch(/^231/);
         expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
     });
+
 });
 

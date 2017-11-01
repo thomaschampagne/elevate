@@ -12,8 +12,9 @@ import {SpeedDataView} from "./views/SpeedDataView";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
-        super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
+        super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
     }
 
     protected insertContentSummaryGridContent(): void {
@@ -55,6 +56,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
             weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
             let labelWeightedPower: string = "Weighted Avg Power";
             if (!this.analysisData.powerData.hasPowerMeter) {
+                weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
                 labelWeightedPower = "Estimated " + labelWeightedPower;
             }
             this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, ' w <span class="summarySubGridTitle" style="font-size: 11px;">(Dr. A. Coggan formula)</span>', "displayAdvancedPowerData");
@@ -65,6 +67,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
             avgWattsPerKg = this.analysisData.powerData.avgWattsPerKg.toFixed(2);
             let labelWKg: string = "Watts Per Kilograms";
             if (!this.analysisData.powerData.hasPowerMeter) {
+                avgWattsPerKg = "<span style='font-size: 14px;'>~</span>" + avgWattsPerKg;
                 labelWKg = "Estimated " + labelWKg;
             }
             this.insertContentAtGridPosition(1, 4, avgWattsPerKg, labelWKg, " w/kg", "displayAdvancedPowerData");
@@ -73,7 +76,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
         let powerStressScore: string = "-";
         if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
 
-            let labelPSS: string;
+            let labelPSS: string = "Power Stress Score";
             if (this.analysisData.powerData.powerStressScore) {
                 powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
                 labelPSS = "Power Stress Score";
@@ -84,7 +87,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
                 */
             } else {
                 powerStressScore = "-";
-                labelPSS = "<i>Configure FTP in athlete settings</i>";
+                labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
             }
 
             this.insertContentAtGridPosition(0, 5, powerStressScore, labelPSS, "", "displayAdvancedPowerData");

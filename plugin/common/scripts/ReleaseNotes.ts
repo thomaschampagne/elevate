@@ -20,6 +20,21 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
     {
+        version: "5.12.0",
+        message: "Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",
+        hotFixes: [],
+        features: [
+            "Added Running stats: Stride length & total steps.",
+            "Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
+            "[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+        ],
+        hideFeatureReleaseNote: false,
+        fixes: [
+            "Fixed a wrong calculation of variability index due to incorrect average power (average power on moving was previously used).",
+            "Fixed hide virtual rides option not working since new strava UI.",
+        ],
+    },
+    {
         version: "5.11.1",
         message: "<i>Hot fixed year progress missing in strava \"My Profile\" page.</i> <strong>V5.11.0 note:</strong> Added cadence pace on climbs, flats & downhills sections. And max uphill & downhill grades. And more...",
         hotFixes: [],

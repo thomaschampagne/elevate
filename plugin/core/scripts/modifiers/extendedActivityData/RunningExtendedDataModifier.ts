@@ -11,8 +11,9 @@ import {RunningPowerDataView} from "./views/RunningPowerDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources, userSettings: IUserSettings, athleteId: number, athleteIdAuthorOfActivity: number, basicInfos: any, type: number) {
-        super(activityProcessor, activityId, activityType, appResources, userSettings, athleteId, athleteIdAuthorOfActivity, basicInfos, type);
+    constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
+        super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
     }
 
     protected insertContentSummaryGridContent(): void {
@@ -44,22 +45,46 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.insertContentAtGridPosition(1, 2, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
         }
 
-        let averageWatts: string = "-";
         if (this.userSettings.displayAdvancedPowerData) {
-            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts && this.analysisData.powerData.hasPowerMeter) {
-                averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
+
+            let averageWatts = "-";
+            let averageWattsTitle = "Average Power";
+            let userSettingKey = "displayAdvancedPowerData";
+
+            if (this.analysisData.powerData && this.analysisData.powerData.avgWatts) {
+
+                if (this.analysisData.powerData.hasPowerMeter) {
+
+                    // Real running power data
+                    averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
+                    userSettingKey = "displayAdvancedPowerData";
+
+                } else {
+
+                    // Estimated running power data..
+                    if (this.userSettings.showHiddenBetaFeatures // Is beta estimated running power activated?
+                        && this.userSettings.displayRunningPowerEstimation) {
+                        averageWattsTitle = "Estimated " + averageWattsTitle;
+                        userSettingKey = "displayRunningPowerEstimation";
+                        averageWatts = "<span style='font-size: 14px;'>~</span>" + this.analysisData.powerData.avgWatts.toFixed(0);
+                    }
+                }
             }
-            this.insertContentAtGridPosition(0, 3, averageWatts, "Running Average Power", "w", "displayAdvancedPowerData");
+
+            this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
         }
 
         let weightedPower: string = "-";
         if (this.userSettings.displayAdvancedPowerData) {
-            if (this.analysisData.powerData && this.analysisData.powerData.weightedPower && this.analysisData.powerData.hasPowerMeter) {
-                weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
-            }
-            this.insertContentAtGridPosition(1, 3, weightedPower, "Running Weighted Power", "w", "displayAdvancedPowerData");
-        }
 
+            if (this.analysisData.powerData
+                && this.analysisData.powerData.weightedPower
+                && this.analysisData.powerData.hasPowerMeter
+            ) {
+                weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+                this.insertContentAtGridPosition(1, 3, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
+            }
+        }
     }
 
     protected placeSummaryPanel(panelAdded: () => void): void {
@@ -71,7 +96,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
         setTimeout(() => { // Execute at the end to make sure DOM is ready
             let htmlButton: string = "<section>";
-            htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+            htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
             htmlButton += "Show extended statistics of effort";
             htmlButton += "</a>";
             htmlButton += "</section>";
@@ -101,13 +126,23 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
             this.dataViews.push(paceDataView);
         }
 
-        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData) {
-            const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
-            powerDataView.setAppResources(this.appResources);
-            powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
-            powerDataView.setActivityType(this.activityType);
-            powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-            this.dataViews.push(powerDataView);
+        // Power data
+        if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) { // Is feature enable?
+
+
+            // Is beta estimated running power activated?
+            const isEstimatedRunningPowerFeatureEnabled = this.userSettings.showHiddenBetaFeatures
+                && this.userSettings.displayRunningPowerEstimation;
+
+            if (this.analysisData.powerData.hasPowerMeter || isEstimatedRunningPowerFeatureEnabled) {
+
+                const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
+                powerDataView.setAppResources(this.appResources);
+                powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+                powerDataView.setActivityType(this.activityType);
+                powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+                this.dataViews.push(powerDataView);
+            }
         }
 
         if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {

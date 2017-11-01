@@ -47,17 +47,18 @@ import {ActivitiesSynchronizer, ISyncResult} from "./synchronizer/ActivitiesSync
 import {HerokuEndpoints} from "../../common/scripts/modules/HerokuEndpoint";
 
 export class StravistiX {
-
     public static instance: StravistiX = null;
-    public static versionInstalledKey: string = "versionInstalled";
 
+    public static versionInstalledKey: string = "versionInstalled";
     protected isPro: boolean;
+
     protected isPremium: boolean;
     protected athleteName: string;
-    protected athleteIdAuthorOfActivity: number;
+    protected activityAthleteId: number;
     protected activityId: number;
     protected athleteId: number;
     protected activityProcessor: ActivityProcessor;
+    protected isActivityAuthor: boolean;
     protected extensionId: string;
     protected appResources: IAppResources;
     protected _userSettings: IUserSettings;
@@ -70,10 +71,11 @@ export class StravistiX {
         this.appResources = appResources;
         this.extensionId = this.appResources.extensionId;
         this.vacuumProcessor = new VacuumProcessor();
-        this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings);
         this.athleteId = this.vacuumProcessor.getAthleteId();
         this.athleteName = this.vacuumProcessor.getAthleteName();
-        this.athleteIdAuthorOfActivity = this.vacuumProcessor.getAthleteIdAuthorOfActivity();
+        this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
+        this.isActivityAuthor = (this.activityAthleteId == this.athleteId);
+        this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings, this.isActivityAuthor);
         this.isPremium = this.vacuumProcessor.getPremiumStatus();
         this.isPro = this.vacuumProcessor.getProStatus();
         this.activityId = this.vacuumProcessor.getActivityId();
@@ -127,7 +129,6 @@ export class StravistiX {
         this.handleActivityStravaMapType();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
-        this.handleGoalsModifier();
         this.handleOnFlyActivitiesSync();
         this.handleActivitiesSyncFromOutside();
 
@@ -183,7 +184,7 @@ export class StravistiX {
         }
 
         const ribbonMessage: string = "<strong><a href=\"#\" class=\"pluginInstallOrUpgrade_details\"><img style=\"width: 24px;\" src=\"" + this.appResources.systemUpdatesIcon + "\" /> StravistiX v" + this.appResources.extVersion + ":</a></strong> " + latestRelease.message + ".";
-        const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: left; padding-left: 4%; padding-top: 15px; padding-bottom: 15px;\">" +
+        const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"position: absolute;z-index: 999; width: 100%; background-color: rgba(255, 212, 1, 1); text-align: left; padding-left: 4%; padding-top: 18px; padding-bottom: 18px;\">" +
             "<div style=\"display:inline; font-size: 14px;\">" + ribbonMessage + "</div>" +
             "<div style=\"display:inline; float: right; font-size: 14px; padding-right: 10px;\">" +
             "<a href=\"#\" style=\"padding-right: 15px;\" class=\"pluginInstallOrUpgrade_details\">[show details]</a>" +
@@ -475,7 +476,7 @@ export class StravistiX {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks()");
 
-        const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.athleteIdAuthorOfActivity === this.athleteId), this.activityId);
+        const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.activityAthleteId === this.athleteId), this.activityId);
         remoteLinksModifier.modify();
     }
 
@@ -699,8 +700,7 @@ export class StravistiX {
                     activityType,
                     this.appResources,
                     this._userSettings,
-                    this.athleteId,
-                    this.athleteIdAuthorOfActivity,
+                    this.isActivityAuthor,
                     basicInfo,
                     AbstractExtendedDataModifier.TYPE_ACTIVITY);
                 break;
@@ -711,8 +711,7 @@ export class StravistiX {
                     activityType,
                     this.appResources,
                     this._userSettings,
-                    this.athleteId,
-                    this.athleteIdAuthorOfActivity,
+                    this.isActivityAuthor,
                     basicInfo,
                     AbstractExtendedDataModifier.TYPE_ACTIVITY);
                 break;
@@ -784,8 +783,7 @@ export class StravistiX {
                         activityType,
                         that.appResources,
                         that._userSettings,
-                        that.athleteId,
-                        that.athleteIdAuthorOfActivity,
+                        that.isActivityAuthor,
                         basicInfo,
                         AbstractExtendedDataModifier.TYPE_SEGMENT);
                     break;
@@ -796,8 +794,7 @@ export class StravistiX {
                         activityType,
                         that.appResources,
                         that._userSettings,
-                        that.athleteId,
-                        that.athleteIdAuthorOfActivity,
+                        that.isActivityAuthor,
                         basicInfo,
                         AbstractExtendedDataModifier.TYPE_SEGMENT);
                     break;
@@ -864,7 +861,7 @@ export class StravistiX {
 
         if (env.debugMode) console.log("Execute handleActivityBikeOdo()");
 
-        const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.athleteIdAuthorOfActivity);
+        const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
         bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
             const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
             activityBikeOdoModifier.modify();
@@ -887,7 +884,7 @@ export class StravistiX {
 
         const activityType: string = window.pageView.activity().get("type");
         // PR only for my own activities
-        const isMyOwn: boolean = (this.athleteId == this.athleteIdAuthorOfActivity);
+        const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
 
@@ -1148,33 +1145,6 @@ export class StravistiX {
             }, (err: any) => {
                 console.error(err);
             });
-        }
-    }
-
-    /**
-     * Check for goals element and enable GoalsModifier.
-     *
-     * This checks the document for a #progress-goals-v2 element. If
-     * found then the GoalsModifier is enabled and bound to the element.
-     * However, note that the modifier only works for the current athelete,
-     * and hence is only enabled on the dashboard and current user's profile
-     * pages.
-     *
-     * If the `displayExtendedGoals` user setting is false then this
-     * handler does nothing.
-     */
-    protected handleGoalsModifier(): void {
-        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
-            return;
-        }
-        const goals = $("#progress-goals-v2");
-        if (goals.length > 0) {
-            const pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
-            const pageDashboard = new RegExp("^/dashboard");
-            if (window.location.pathname.match(pageProfile)
-                || window.location.pathname.match(pageDashboard)) {
-                new GoalsModifier(goals).modify();
-            }
         }
     }
 
