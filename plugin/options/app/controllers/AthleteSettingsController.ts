@@ -34,10 +34,9 @@ export class AthleteSettingsController {
             $scope.userSwimFTP = userSettingsSynced.userSwimFTP;
             $scope.userSwimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m($scope.userSwimFTP);
             $scope.userWeight = userSettingsSynced.userWeight;
-            $scope.gender = _.find($scope.genderList, {
+            $scope.gender = _.find($scope.genderList, <any> {
                 type: userSettingsSynced.userGender,
             });
-            $scope.zones = userSettingsSynced.userHrrZones;
             $scope.$apply();
 
         });
@@ -224,4 +223,3 @@ export class AthleteSettingsController {
     }
 
 }
-

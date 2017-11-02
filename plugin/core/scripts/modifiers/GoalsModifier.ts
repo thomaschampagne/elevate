@@ -317,7 +317,7 @@ export class GoalsModifier implements IModifier {
     private findGoal = ($edit: JQuery, period: GoalPeriod): Goal => {
         const goalString = $edit.find(
             `[data-period="${period}"] .goal-value`).val();
-        let goalNumeric = parseInt(goalString, 10);
+        let goalNumeric = parseInt(goalString.toString(), 10);
         if (!goalNumeric) {
             goalNumeric = 0;
         }

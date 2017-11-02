@@ -124,7 +124,7 @@ export class StorageManager {
 
     }
 
-    getStorageUsage(storageType: string, callback: (response: IStorageUsage) => void) {
+    public getStorageUsage(storageType: string, callback: (response: IStorageUsage) => void) {
 
         this.hasChromeLastError();
 

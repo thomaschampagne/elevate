@@ -1,5 +1,5 @@
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {IAppResources} from "./IAppResources";
 
 export interface IComputeActivityThreadMessage {
@@ -7,6 +7,7 @@ export interface IComputeActivityThreadMessage {
     isTrainer: boolean;
     appResources: IAppResources;
     userSettings: IUserSettings;
+    isActivityAuthor: boolean;
     athleteWeight: number;
     hasPowerMeter: boolean;
     activityStatsMap: IActivityStatsMap;

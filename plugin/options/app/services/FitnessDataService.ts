@@ -457,4 +457,3 @@ export let fitnessDataService = ["$q", "ChromeStorageService", ($q: IQService, c
  },
  };
  };*/
-

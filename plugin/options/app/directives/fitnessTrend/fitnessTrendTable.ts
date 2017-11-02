@@ -5,7 +5,7 @@ import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDat
 
 export class FitnessTrendTable {
 
-    static $inject: string[] = ["$scope", "$window"];
+    public static $inject: string[] = ["$scope", "$window"];
 
     constructor(public $scope: any, public $window: IWindowService) {
 
@@ -153,4 +153,3 @@ export let fitnessTrendTable = [() => {
         controller: FitnessTrendTable,
     } as any;
 }];
-

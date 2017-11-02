@@ -6,7 +6,7 @@ export class ActivityStravaMapTypeModifier implements IModifier {
         this.mapType = mapType;
     }
 
-    modify(): void {
+    public modify(): void {
 
         if (this.mapType === "terrain") {
             return;

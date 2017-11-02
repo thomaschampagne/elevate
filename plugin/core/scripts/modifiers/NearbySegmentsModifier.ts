@@ -13,10 +13,10 @@ export class NearbySegmentsModifier implements IModifier {
     }
 
     public modify(): void {
-        let html: string = "<div class='dropdown' style='padding-bottom: 10px;'>";
+        let html: string = "<div class='dropdown'>";
         html += "<div class='drop-down-menu' style='width: 100%;' >";
-        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.trackChangesIcon + "'/> <span>Nearby Cycling+Running Segments</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
-        html += "<ul class='options' style='max-height: 800px; z-index: 999;'>";
+        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.trackChangesIcon + "'/> <span>Nearby Segments</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
+        html += "<ul class='dropdown-menu' style='max-height: 800px;'>";
 
         let segment: ISegmentInfo;
         let segmentName: string;

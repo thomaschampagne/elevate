@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IAppResources} from "../interfaces/IAppResources";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
 
 export class GoogleMapsModifier implements IModifier {
 
@@ -182,11 +182,11 @@ export class GoogleMapsModifier implements IModifier {
         };
     }
 
-    getEffortId(): number {
+    public getEffortId(): number {
         return parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", "")) || null;
     }
 
-    isAnalysisSection(): boolean {
+    public isAnalysisSection(): boolean {
         return !_.isEmpty(window.location.pathname.match("analysis"));
     }
 

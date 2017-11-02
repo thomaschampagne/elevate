@@ -26,7 +26,7 @@ export class Content {
         this.appResources = appResources;
     }
 
-    isExtensionRunnableInThisContext(): boolean {
+    public isExtensionRunnableInThisContext(): boolean {
 
         let isRunnable: boolean = true;
 
@@ -55,7 +55,7 @@ export class Content {
         return isRunnable;
     }
 
-    start(): void {
+    public start(): void {
 
         // Skip execution if needed
         if (!this.isExtensionRunnableInThisContext()) {

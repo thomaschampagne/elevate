@@ -1,14 +1,13 @@
 import * as _ from "lodash"
 import * as Q from "q";
-import {
-    ActivitiesSynchronizer,
-    ISyncResult
-} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import {ActivitiesProcessor} from "../../plugin/core/scripts/processors/ActivitiesProcessor";
+import {ActivitiesSynchronizer, ISyncResult} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import {MultipleActivityProcessor} from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
 import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
 import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
 import {
-    ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify,
+    ISyncActivityComputed,
+    ISyncActivityWithStream,
+    ISyncNotify,
     ISyncRawStravaActivity
 } from "../../plugin/common/scripts/interfaces/ISync";
 import {IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
@@ -120,11 +119,11 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
 
         /**
-         * Stub ActivitiesProcessor:compute. Create fake analysis results
+         * Stub MultipleActivityProcessor:compute. Create fake analysis results
          */
-        spyOn(activitiesSynchronizer.activitiesProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+        spyOn(activitiesSynchronizer.multipleActivityProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
             let defer = Q.defer();
-            console.log("Spy activitiesSynchronizer.activitiesProcessor:compute called");
+            console.log("Spy activitiesSynchronizer.multipleActivityProcessor:compute called");
             let activitiesComputed: Array<ISyncActivityComputed> = [];
             let fakeAnalysisData: IAnalysisData = {
                 moveRatio: null,
@@ -138,7 +137,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
                 elevationData: null,
             };
             _.forEach(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
-                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, ActivitiesProcessor.outputFields);
+                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, MultipleActivityProcessor.outputFields);
                 activityComputed.extendedStats = fakeAnalysisData;
                 activitiesComputed.push(activityComputed);
             });
@@ -304,7 +303,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         // Getting all pages (7)
         activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
 
-            expect(activitiesSynchronizer.activitiesProcessor.compute).toHaveBeenCalled(); // Ensure spy call
+            expect(activitiesSynchronizer.multipleActivityProcessor.compute).toHaveBeenCalled(); // Ensure spy call
             expect(activitiesComputed).not.toBeNull();
             expect(activitiesComputed.length).toEqual(140);
 
@@ -459,9 +458,9 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 644365059})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 371317512})).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -479,9 +478,9 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length);
 
             // We should found "Running back... Hard" act anymore in storage
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 644365059})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 371317512})).toBeDefined();
 
             done();
         });
@@ -510,7 +509,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 657225503})).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -522,18 +521,18 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(1);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 657225503})).toBeDefined();
 
             // Now remove first activity and last...
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined();
 
             expect(addStravaActivity(799672885)).toBeTruthy();
             expect(addStravaActivity(367463594)).toBeTruthy();
 
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(138); // 140 - 2
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeUndefined();
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -546,8 +545,8 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined(); // must be defined!
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // must be defined!
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined(); // must be defined!
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined(); // must be defined!
             done();
         }, (err: any) => {
             console.log("!! ERROR !!", err); // Error...
@@ -706,10 +705,10 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(addStravaActivity(368210547)).toBeTruthy(); // "Natation"
 
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(137); // 140 - 3
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 723224273})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 556443499})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 368210547})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // Should exists. Not removed from CHROME_STORAGE_STUB.computedActivities
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 723224273})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 556443499})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 368210547})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined(); // Should exists. Not removed from CHROME_STORAGE_STUB.computedActivities
 
             /**
              * Edit 4 on various pages

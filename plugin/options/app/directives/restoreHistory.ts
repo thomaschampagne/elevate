@@ -5,7 +5,7 @@ import {ChromeStorageService} from "../services/ChromeStorageService";
 
 export class RestoreHistoryController {
 
-    static $inject = ["ChromeStorageService", "$scope", "$window"];
+    public static $inject = ["ChromeStorageService", "$scope", "$window"];
     private _chromeStorageService: ChromeStorageService;
     private _windowService: IWindowService;
 

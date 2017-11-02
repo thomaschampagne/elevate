@@ -4,7 +4,7 @@ export class Loader {
     protected totalRequired: any;
     protected loadCount: number;
 
-    require(scripts: string[], loadingFinished: Function): void {
+    public require(scripts: string[], loadingFinished: Function): void {
 
         this.loadCount = 0;
         this.totalRequired = scripts.length;
@@ -15,12 +15,12 @@ export class Loader {
         }
     }
 
-    loaded(): void {
+    public loaded(): void {
         this.loadCount++;
         if (this.loadCount == this.totalRequired && typeof this.loadingFinished === "function") this.loadingFinished();
     }
 
-    writeScript(src: string): void {
+    public writeScript(src: string): void {
 
         const ext: string = src.substr(src.lastIndexOf(".") + 1);
 
@@ -48,7 +48,7 @@ export class Loader {
         }
     }
 
-    injectJS(codeString: string): void {
+    public injectJS(codeString: string): void {
         const inner: HTMLScriptElement = document.createElement("script");
         inner.textContent = codeString;
         (document.head || document.documentElement).appendChild(inner);

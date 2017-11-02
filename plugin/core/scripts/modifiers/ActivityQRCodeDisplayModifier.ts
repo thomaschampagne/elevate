@@ -1,14 +1,5 @@
 import {IAppResources} from "../interfaces/IAppResources";
-
-declare class QRCode {
-    constructor(elementId: string, options: any);
-    static CorrectLevel: {
-        L: string;
-        M: string;
-        Q: string;
-        H: string;
-    };
-}
+import * as QRCode from "qrcode";
 
 export class ActivityQRCodeDisplayModifier implements IModifier {
 
@@ -29,16 +20,13 @@ export class ActivityQRCodeDisplayModifier implements IModifier {
             // Once dom inserted
             $("#activityFlashCodebutton").click(() => {
 
-                $.fancybox('<div align="center"><h2>#stravistix Activity Flash code</h2><h3>Scan from smartphone to get activity on Strava mobile app.</h3><p><div style="padding: 0px 60px 0px 60px;" id="qrcode"></div></p><h3>Save by right click on image then "Save image as..."</h3></div>');
+                $.fancybox('<div align="center"><h2>#stravistix Activity Flash code</h2><h3>Scan from your smartphone.</h3><p><canvas style="padding: 0px 60px 0px 60px;" id="qrcode"></canvas></p><h3>Save by right click on image then "Save image as..."</h3></div>');
 
-                const qrcode: any = new QRCode("qrcode", {
-                    text: "http://app.strava.com/activities/" + this.activityId,
-                    width: 384,
-                    height: 384,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H,
-                });
+                QRCode.toCanvas(document.getElementById("qrcode"),
+                    "http://app.strava.com/activities/" + this.activityId, (error) => {
+                        if (error) console.error(error)
+                        console.log('QRCode created');
+                    })
 
             });
 

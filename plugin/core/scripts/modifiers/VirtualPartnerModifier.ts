@@ -1,9 +1,8 @@
-import * as _ from "lodash";
 import {saveAs} from "file-saver";
+import * as _ from "lodash";
+import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/scripts/CourseMarker";
 import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
 import {VacuumProcessor} from "../processors/VacuumProcessor";
-import {CourseMaker, ExportTypes, ICourseBounds} from "../../../common/scripts/CourseMarker";
-
 
 export class VirtualPartnerModifier implements IModifier {
 
@@ -17,7 +16,7 @@ export class VirtualPartnerModifier implements IModifier {
         this.courseMaker = new CourseMaker();
     }
 
-    modify(): void {
+    public modify(): void {
 
         if (!Strava.Labs) {
             return;
@@ -33,7 +32,7 @@ export class VirtualPartnerModifier implements IModifier {
 
         const that = this;
 
-        view.prototype.render = function () {
+        view.prototype.render = function() {
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
@@ -90,7 +89,7 @@ export class VirtualPartnerModifier implements IModifier {
 
         const exportsType = [
             ExportTypes.GPX,
-            ExportTypes.TCX
+            ExportTypes.TCX,
         ];
 
         const message: string = 'Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id="stravistix_download_course_' + effortId + '"></div>';
@@ -99,7 +98,7 @@ export class VirtualPartnerModifier implements IModifier {
             afterShow: () => {
                 _.forEach(exportsType, (type: ExportTypes) => {
                     const exportTypeAsString: string = ExportTypes[type];
-                    const link: JQuery = $('<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File as ' + exportTypeAsString + '</a>').on("click", () => {
+                    const link: JQuery = $('<a class="button btn-block btn-primary" style="margin-bottom: 15px;">Download Course File as ' + exportTypeAsString + "</a>").on("click", () => {
                         this.download(effortId, type);
                         $("#stravistix_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
                     });
@@ -119,9 +118,9 @@ export class VirtualPartnerModifier implements IModifier {
                     return;
                 }
 
-                let bounds: ICourseBounds = {
+                const bounds: ICourseBounds = {
                     start: segmentData.start_index,
-                    end: segmentData.end_index
+                    end: segmentData.end_index,
                 };
 
                 saveAs(new Blob([this.courseMaker.create(exportType, segmentData.display_name, activityStream, bounds)], {type: "application/xml; charset=utf-8"}),
@@ -130,6 +129,5 @@ export class VirtualPartnerModifier implements IModifier {
             });
         });
     }
-
 
 }

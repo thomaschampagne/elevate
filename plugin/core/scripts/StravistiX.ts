@@ -31,7 +31,8 @@ import {ReliveCCModifier} from "./modifiers/ReliveCCModifier";
 import {RemoteLinksModifier} from "./modifiers/RemoteLinksModifier";
 import {
     RunningCadenceModifier,
-    RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
+    RunningGradeAdjustedPaceModifier,
+    RunningHeartRateModifier,
     RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import {SegmentRankPercentageModifier} from "./modifiers/SegmentRankPercentageModifier";
@@ -43,19 +44,21 @@ import {BikeOdoProcessor} from "./processors/BikeOdoProcessor";
 import {ISegmentInfo, SegmentProcessor} from "./processors/SegmentProcessor";
 import {VacuumProcessor} from "./processors/VacuumProcessor";
 import {ActivitiesSynchronizer, ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
+import {HerokuEndpoints} from "../../common/scripts/modules/HerokuEndpoint";
 
 export class StravistiX {
-
     public static instance: StravistiX = null;
-    public static versionInstalledKey: string = "versionInstalled";
 
+    public static versionInstalledKey: string = "versionInstalled";
     protected isPro: boolean;
+
     protected isPremium: boolean;
     protected athleteName: string;
-    protected athleteIdAuthorOfActivity: number;
+    protected activityAthleteId: number;
     protected activityId: number;
     protected athleteId: number;
     protected activityProcessor: ActivityProcessor;
+    protected isActivityAuthor: boolean;
     protected extensionId: string;
     protected appResources: IAppResources;
     protected _userSettings: IUserSettings;
@@ -68,10 +71,11 @@ export class StravistiX {
         this.appResources = appResources;
         this.extensionId = this.appResources.extensionId;
         this.vacuumProcessor = new VacuumProcessor();
-        this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings);
         this.athleteId = this.vacuumProcessor.getAthleteId();
         this.athleteName = this.vacuumProcessor.getAthleteName();
-        this.athleteIdAuthorOfActivity = this.vacuumProcessor.getAthleteIdAuthorOfActivity();
+        this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
+        this.isActivityAuthor = (this.activityAthleteId == this.athleteId);
+        this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings, this.isActivityAuthor);
         this.isPremium = this.vacuumProcessor.getPremiumStatus();
         this.isPro = this.vacuumProcessor.getProStatus();
         this.activityId = this.vacuumProcessor.getActivityId();
@@ -125,7 +129,6 @@ export class StravistiX {
         this.handleActivityStravaMapType();
         this.handleHideFeed();
         this.handleDisplayFlyByFeedModifier();
-        this.handleGoalsModifier();
         this.handleOnFlyActivitiesSync();
         this.handleActivitiesSyncFromOutside();
 
@@ -180,17 +183,17 @@ export class StravistiX {
             return;
         }
 
-        const ribbonMessage: string = '<strong><a href="#" class="pluginInstallOrUpgrade_details"><img style="width: 24px;" src="' + this.appResources.systemUpdatesIcon + '" /> StravistiX ' + this.appResources.extVersion + " update</a></strong> " + latestRelease.message + ".";
-        const ribbonHtml: string = '<div id="pluginInstallOrUpgrade" style=\"background-color: rgba(255, 212, 1, 0.57); text-align: center; padding-top: 15px; padding-bottom: 15px;\">' +
-            '<div style="display:inline; font-size: 14px;">' + ribbonMessage + "</div>" +
-            '<div style="display:inline; float: right; font-size: 14px; padding-right: 10px;">' +
-            '<a href="#" style="padding-right: 15px;" class="pluginInstallOrUpgrade_details">[show details]</a>' +
-            '<a href="#" id="pluginInstallOrUpgrade_close">[close (<span id="pluginInstallOrUpgrade_counter"></span>)]</a>' +
+        const ribbonMessage: string = "<strong><a href=\"#\" class=\"pluginInstallOrUpgrade_details\"><img style=\"width: 24px;\" src=\"" + this.appResources.systemUpdatesIcon + "\" /> StravistiX v" + this.appResources.extVersion + ":</a></strong> " + latestRelease.message + ".";
+        const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"position: absolute;z-index: 999; width: 100%; background-color: rgba(255, 212, 1, 1); text-align: left; padding-left: 4%; padding-top: 18px; padding-bottom: 18px;\">" +
+            "<div style=\"display:inline; font-size: 14px;\">" + ribbonMessage + "</div>" +
+            "<div style=\"display:inline; float: right; font-size: 14px; padding-right: 10px;\">" +
+            "<a href=\"#\" style=\"padding-right: 15px;\" class=\"pluginInstallOrUpgrade_details\">[show details]</a>" +
+            "<a href=\"#\" id=\"pluginInstallOrUpgrade_close\">[close (<span id=\"pluginInstallOrUpgrade_counter\"></span>)]</a>" +
             "</div></div>";
 
         $("body").before(ribbonHtml).each(() => {
 
-            const closeRibbon = function() {
+            const closeRibbon = function () {
                 $("#pluginInstallOrUpgrade").slideUp(450, () => {
                     $("#pluginInstallOrUpgrade").remove();
                 });
@@ -327,7 +330,7 @@ export class StravistiX {
         const latestRelease: IReleaseNote = _.first(releaseNotes);
 
         const updateMessageObj: any = {
-            logo: '<img src="' + this.appResources.logoStravistix + '"/>',
+            logo: "<img src=\"" + this.appResources.logoStravistix + "\"/>",
             title: "This browser was just updated to <strong>v" + this.appResources.extVersionName + "</strong> :)",
             hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
             features: (latestRelease.features) ? latestRelease.features : [],
@@ -338,13 +341,13 @@ export class StravistiX {
                 "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
                 "Grid: All your activities in a table including stravistix extended stats as columns.",
                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                'Stay tunned via <a target="_blank" href="https://twitter.com/champagnethomas">My Twitter</a> // Just created <a target="_blank" href="https://www.strava.com/clubs/stravistix">Strava Club</a>',
+                "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
             ],
         };
 
         let message: string = "";
         if (!_.isEmpty(latestRelease.message) && !previewBuild) {
-            message += '<div style="background: #eee; padding: 8px;">';
+            message += "<div style=\"background: #eee; padding: 8px;\">";
             message += latestRelease.message;
             message += "</div>";
         }
@@ -353,50 +356,50 @@ export class StravistiX {
         if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
             message += "<h5><strong>NEW in " + baseVersion[0] + "." + baseVersion[1] + ".x" + ":</strong></h5>";
             _.forEach(updateMessageObj.features, (feature: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + feature + "</h6>";
+                message += "<h6 style=\"margin-top: 12px;\">- " + feature + "</h6>";
             });
         }
 
         if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
             message += "<h5><strong>HOTFIXES " + this.appResources.extVersion + ":</strong></h5>";
             _.forEach(updateMessageObj.hotFixes, (hotFix: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + hotFix + "</h6>";
+                message += "<h6 style=\"margin-top: 12px;\">- " + hotFix + "</h6>";
             });
         }
 
         if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
             message += "<h5><strong>FIXED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
             _.forEach(updateMessageObj.fixes, (fix: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + fix + "</h6>";
+                message += "<h6 style=\"margin-top: 12px;\">- " + fix + "</h6>";
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcomingFixes) && !previewBuild) {
             message += "<h5><strong>Upcoming Fixes:</strong></h5>";
             _.forEach(updateMessageObj.upcomingFixes, (upcomingFixes: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + upcomingFixes + "</h6>";
+                message += "<h6 style=\"margin-top: 12px;\">- " + upcomingFixes + "</h6>";
             });
         }
 
         if (!_.isEmpty(updateMessageObj.upcomingFeatures) && !previewBuild) {
             message += "<h5><strong>Upcoming Features:</strong></h5>";
             _.forEach(updateMessageObj.upcomingFeatures, (upcomingFeatures: string) => {
-                message += '<h6 style="margin-top: 12px;">- ' + upcomingFeatures + "</h6>";
+                message += "<h6 style=\"margin-top: 12px;\">- " + upcomingFeatures + "</h6>";
             });
         }
 
         if (previewBuild) {
             updateMessageObj.title = this.appResources.extVersionName;
             const shortSha1Commit: string = this.appResources.extVersionName.slice(this.appResources.extVersionName.indexOf("@") + 1);
-            message += '<a href="https://github.com/thomaschampagne/stravistix/compare/master...' + shortSha1Commit + '" target="_blank">Git diff between ' + this.appResources.extVersionName + " and master (code in production)</a></br></br> ";
+            message += "<a href=\"https://github.com/thomaschampagne/stravistix/compare/master..." + shortSha1Commit + "\" target=\"_blank\">Git diff between " + this.appResources.extVersionName + " and master (code in production)</a></br></br> ";
         }
 
         // Donate button
-        message += '<a class="button btn-primary" target="_blank" id="extendedStatsButton" href="' + this.appResources.settingsLink + '#!/?showDonation=true">';
-        message += '<button style="font-size: 18px; width: 100%;" class="btn btn-primary btn-sm">Push this project higher !!!</button>';
+        message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#!/?showDonation=true\">";
+        message += "<button style=\"font-size: 18px; width: 100%;\" class=\"btn btn-primary btn-sm\">Push this project higher !!!</button>";
         message += "</a>";
 
-        $.fancybox('<div style="margin-left: auto; margin-right: auto; width: 25%;">' + updateMessageObj.logo + "</div><h2>" + updateMessageObj.title + "</h2>" + message);
+        $.fancybox("<div style=\"margin-left: auto; margin-right: auto; width: 25%;\">" + updateMessageObj.logo + "</div><h2>" + updateMessageObj.title + "</h2>" + message);
     }
 
     /**
@@ -442,7 +445,7 @@ export class StravistiX {
      */
     protected handlePreviewRibbon(): void {
         const globalStyle: string = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
-        const html: string = '<div id="updateRibbon" style="' + globalStyle + '"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
+        const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
         $("body").before(html);
     }
 
@@ -473,7 +476,7 @@ export class StravistiX {
 
         if (env.debugMode) console.log("Execute handleRemoteLinks()");
 
-        const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.athleteIdAuthorOfActivity === this.athleteId), this.activityId);
+        const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.activityAthleteId === this.athleteId), this.activityId);
         remoteLinksModifier.modify();
     }
 
@@ -637,7 +640,7 @@ export class StravistiX {
             return;
         }
 
-        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance && !this._userSettings.feedHideVirtualRides) {
+        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance && !this._userSettings.feedHideVirtualRides && !this._userSettings.feedHideSuggestedAthletes) {
             return;
         }
 
@@ -697,8 +700,7 @@ export class StravistiX {
                     activityType,
                     this.appResources,
                     this._userSettings,
-                    this.athleteId,
-                    this.athleteIdAuthorOfActivity,
+                    this.isActivityAuthor,
                     basicInfo,
                     AbstractExtendedDataModifier.TYPE_ACTIVITY);
                 break;
@@ -709,8 +711,7 @@ export class StravistiX {
                     activityType,
                     this.appResources,
                     this._userSettings,
-                    this.athleteId,
-                    this.athleteIdAuthorOfActivity,
+                    this.isActivityAuthor,
                     basicInfo,
                     AbstractExtendedDataModifier.TYPE_ACTIVITY);
                 break;
@@ -763,7 +764,7 @@ export class StravistiX {
 
         const that: StravistiX = this;
 
-        view.prototype.render = function() { // No arrow function here with! If yes loosing arguments
+        view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
@@ -782,8 +783,7 @@ export class StravistiX {
                         activityType,
                         that.appResources,
                         that._userSettings,
-                        that.athleteId,
-                        that.athleteIdAuthorOfActivity,
+                        that.isActivityAuthor,
                         basicInfo,
                         AbstractExtendedDataModifier.TYPE_SEGMENT);
                     break;
@@ -794,8 +794,7 @@ export class StravistiX {
                         activityType,
                         that.appResources,
                         that._userSettings,
-                        that.athleteId,
-                        that.athleteIdAuthorOfActivity,
+                        that.isActivityAuthor,
                         basicInfo,
                         AbstractExtendedDataModifier.TYPE_SEGMENT);
                     break;
@@ -862,7 +861,7 @@ export class StravistiX {
 
         if (env.debugMode) console.log("Execute handleActivityBikeOdo()");
 
-        const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.athleteIdAuthorOfActivity);
+        const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
         bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
             const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
             activityBikeOdoModifier.modify();
@@ -885,7 +884,7 @@ export class StravistiX {
 
         const activityType: string = window.pageView.activity().get("type");
         // PR only for my own activities
-        const isMyOwn: boolean = (this.athleteId == this.athleteIdAuthorOfActivity);
+        const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
 
         if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
 
@@ -1149,33 +1148,6 @@ export class StravistiX {
         }
     }
 
-    /**
-     * Check for goals element and enable GoalsModifier.
-     *
-     * This checks the document for a #progress-goals-v2 element. If
-     * found then the GoalsModifier is enabled and bound to the element.
-     * However, note that the modifier only works for the current athelete,
-     * and hence is only enabled on the dashboard and current user's profile
-     * pages.
-     *
-     * If the `displayExtendedGoals` user setting is false then this
-     * handler does nothing.
-     */
-    protected handleGoalsModifier(): void {
-        if (!this._userSettings.showHiddenBetaFeatures || !this._userSettings.displayExtendedGoals) {
-            return;
-        }
-        const goals = $("#progress-goals-v2");
-        if (goals.length > 0) {
-            const pageProfile = new RegExp(`^/athletes/${this.athleteId}$`);
-            const pageDashboard = new RegExp("^/dashboard");
-            if (window.location.pathname.match(pageProfile)
-                || window.location.pathname.match(pageDashboard)) {
-                new GoalsModifier(goals).modify();
-            }
-        }
-    }
-
     public get userSettings(): IUserSettings {
         return this._userSettings;
     }
@@ -1238,8 +1210,10 @@ export class StravistiX {
                                 error: {path: window.location.href, date: new Date(), content: err},
                             };
 
+                            const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+
                             $.post({
-                                url: env.endPoint + "/api/errorReport",
+                                url: endPoint,
                                 data: JSON.stringify(errorUpdate),
                                 dataType: "json",
                                 contentType: "application/json",
@@ -1247,7 +1221,7 @@ export class StravistiX {
                                     console.log("Commited: ", response);
                                 },
                                 error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-                                    console.warn("Endpoint <" + env.endPoint + "> not reachable", jqXHR);
+                                    console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
                                 },
                             });
 

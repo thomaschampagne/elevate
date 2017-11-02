@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
 import {Helper} from "../../../common/scripts/Helper";
 import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
+import {env} from "../../config/env";
 
 export class VacuumProcessor {
 
@@ -45,7 +45,7 @@ export class VacuumProcessor {
      *  Get the strava athlete id connected
      *  @returns the strava athlete id
      */
-    public getAthleteIdAuthorOfActivity(): number {
+    public getActivityAthleteId(): number {
 
         if (_.isUndefined(window.pageView)) {
             return null;
@@ -278,7 +278,7 @@ export class VacuumProcessor {
             return;
         }
 
-        const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng";
+        const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_distance";
 
         $.ajax(url).done((activityStream: IActivityStream) => {
 
@@ -363,7 +363,7 @@ export class VacuumProcessor {
     /**
      * @returns
      */
-    getSegmentStream(segmentId: number, callback: Function): void {
+    public getSegmentStream(segmentId: number, callback: Function): void {
 
         $.ajax({
             url: "/stream/segments/" + segmentId,
@@ -381,7 +381,7 @@ export class VacuumProcessor {
     /**
      * @returns Array of bikes/odo
      */
-    getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
+    public getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
 
         if (_.isUndefined(window.pageView)) {
             callback(null);
@@ -414,12 +414,12 @@ export class VacuumProcessor {
         });
     }
 
-    getActivityTime(): string {
+    public getActivityTime(): string {
         const activityTime: string = $(".activity-summary-container").find("time").text().trim();
         return (activityTime) ? activityTime : null;
     }
 
-    getActivityName(): string {
+    public getActivityName(): string {
         const activityName: string = $(".activity-summary-container").find(".marginless.activity-name").text().trim();
         return (activityName) ? activityName : null;
     }

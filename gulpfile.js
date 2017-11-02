@@ -62,7 +62,7 @@ let CORE_JAVASCRIPT_SCRIPTS = [
     "plugin/node_modules/geodesy/dms.js",
     "plugin/node_modules/geodesy/latlon-spherical.js",
     "plugin/node_modules/chart.js/dist/Chart.bundle.js",
-    "plugin/node_modules/qrcode-js-package/qrcode.min.js",
+    "plugin/node_modules/qrcode/build/qrcode.min.js",
     "plugin/node_modules/fancybox/dist/js/jquery.fancybox.pack.js",
     "plugin/node_modules/lodash/lodash.min.js",
     "plugin/node_modules/jquery/dist/jquery.js"

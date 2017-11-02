@@ -11,6 +11,7 @@ export interface IYearProgress {
     year: number;
     progressions: IProgression[];
 }
+
 export interface IProgression {
     onTimestamp: number;
     onYear: number;
@@ -124,6 +125,7 @@ export class YearProgressComputer {
         return result;
     }
 }
+
 enum DataType {
     DISTANCE,
     TIME,
@@ -155,7 +157,10 @@ export class YearProgressController {
             {value: DataType.COUNT, text: "Count"},
         ];
 
-        $scope.dataTypeSelected = (localStorage.getItem("yearProgressDataType") && _.isNumber(parseInt(localStorage.getItem("yearProgressDataType")))) ? _.find($scope.dataType, {value: parseInt(localStorage.getItem("yearProgressDataType"))}) : $scope.dataType[0];
+        $scope.dataTypeSelected = (localStorage.getItem("yearProgressDataType") && _.isNumber(parseInt(localStorage.getItem("yearProgressDataType"))))
+            ? _.find($scope.dataType, <any> {value: parseInt(localStorage.getItem("yearProgressDataType"))})
+            : $scope.dataType[0];
+
         $scope.dataTypeChanged = () => {
             localStorage.setItem("yearProgressDataType", $scope.dataTypeSelected.value); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
@@ -189,7 +194,7 @@ export class YearProgressController {
             $scope.searchTypesSelected = (localStorage.getItem("yearProgressActivitiesType")) ? angular.fromJson(localStorage.getItem("yearProgressActivitiesType")) : (mostPerformedType) ? [mostPerformedType] : null;
 
             // Which text displayed in activities types?
-            $scope.getSearchTypesSelectedText = function() {
+            $scope.getSearchTypesSelectedText = function () {
                 if ($scope.searchTypesSelected.length) {
                     return $scope.searchTypesSelected.length + " selected";
                 } else {
@@ -206,7 +211,7 @@ export class YearProgressController {
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         });
 
-        $scope.applyData = function(computedActivities: ISyncActivityComputed[], types: string[], dataType: DataType) {
+        $scope.applyData = function (computedActivities: ISyncActivityComputed[], types: string[], dataType: DataType) {
 
             const yearProgressions = yearProgressComputer.compute(computedActivities as YearProgressActivity[], types);
 
@@ -216,7 +221,7 @@ export class YearProgressController {
 
             _.forEach(yearProgressions, (yearProgress: IYearProgress, index: number, yearProgressionsIterator: IYearProgress[]) => {
 
-                const yearValues: Array<{x: number, y: number}> = [];
+                const yearValues: Array<{ x: number, y: number }> = [];
 
                 _.forEach(yearProgress.progressions, (progression: IProgression) => {
 
@@ -363,4 +368,3 @@ export class YearProgressController {
 
     }
 }
-

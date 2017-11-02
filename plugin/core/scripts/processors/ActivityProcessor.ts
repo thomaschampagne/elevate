@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
 import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
+import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {env} from "../../config/env";
 import {IAppResources} from "../interfaces/IAppResources";
 import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
 import {VacuumProcessor} from "./VacuumProcessor";
 import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
 
@@ -12,20 +12,20 @@ export class ActivityProcessor {
     public static cachePrefix: string = "stravistix_activity_";
     protected appResources: IAppResources;
     protected vacuumProcessor: VacuumProcessor;
-    protected userHrrZones: any;
     protected zones: any;
     protected activityType: string;
     protected isTrainer: boolean;
-    private computeAnalysisWorkerBlobURL: string;
-    private computeAnalysisThread: Worker;
-    private userSettings: IUserSettings;
+    protected isActivityAuthor: boolean;
+    protected computeAnalysisWorkerBlobURL: string;
+    protected computeAnalysisThread: Worker;
+    protected userSettings: IUserSettings;
 
-    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings) {
+    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings, isActivityAuthor: boolean) {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
-        this.userHrrZones = this.userSettings.userHrrZones;
         this.zones = this.userSettings.zones;
+        this.isActivityAuthor = isActivityAuthor;
     }
 
     public setActivityType(activityType: string): void {
@@ -89,7 +89,9 @@ export class ActivityProcessor {
         });
     }
 
-    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number, activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
+    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
+                                                    activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[],
+                                                    callback: (analysisData: IAnalysisData) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {
@@ -111,6 +113,7 @@ export class ActivityProcessor {
             isTrainer: this.isTrainer,
             appResources: this.appResources,
             userSettings: this.userSettings,
+            isActivityAuthor: this.isActivityAuthor,
             athleteWeight,
             hasPowerMeter,
             activityStatsMap,

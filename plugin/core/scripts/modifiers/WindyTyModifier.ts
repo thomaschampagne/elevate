@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IAppResources} from "../interfaces/IAppResources";
 import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import {IAppResources} from "../interfaces/IAppResources";
 
 export class WindyTyModifier implements IModifier {
 
@@ -81,7 +81,7 @@ export class WindyTyModifier implements IModifier {
         ];
 
         let html: string = "<li class='group'>";
-        html += "<div class='title' style='font-size: 14px; cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
+        html += "<div class='title' style='cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
         html += "<ul style='display: none;' id='stravistix_weatherList'>";
         $.each(remoteViewActivityLinksArray, function() {
             html += "<li>";
