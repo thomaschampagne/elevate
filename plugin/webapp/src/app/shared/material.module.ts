@@ -1,38 +1,38 @@
 import {NgModule} from "@angular/core";
 import {
-  MdButtonModule,
-  MdCheckboxModule,
-  MdInputModule,
-  MdMenuModule,
-  MdIconModule,
-  MdToolbarModule,
-  MdSidenavModule,
-  MdDialogModule,
-  MdListModule
+  MatButtonModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatMenuModule,
+  MatIconModule,
+  MatToolbarModule,
+  MatSidenavModule,
+  MatDialogModule,
+  MatListModule
 } from "@angular/material";
 
 @NgModule({
   imports: [
-    MdButtonModule,
-    MdCheckboxModule,
-    MdInputModule,
-    MdMenuModule,
-    MdIconModule,
-    MdToolbarModule,
-    MdSidenavModule,
-    MdDialogModule,
-    MdListModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatMenuModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatListModule
   ],
   exports: [
-    MdButtonModule,
-    MdCheckboxModule,
-    MdInputModule,
-    MdMenuModule,
-    MdIconModule,
-    MdToolbarModule,
-    MdSidenavModule,
-    MdDialogModule,
-    MdListModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatMenuModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatListModule
   ]
 })
 

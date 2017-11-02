@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
   "scripts": {
-    "postinstall": "concurrently --names \"core+options,webapp\" \"npm install --prefix ./plugin ./plugin\" \"npm install --prefix ./plugin/webapp ./plugin/webapp\n",
+    "postinstall": "./node_modules/concurrently/src/main.js --names \"core,webapp\" \"npm install --prefix ./plugin ./plugin\" \"npm install --prefix ./plugin/webapp ./plugin/webapp\"\n",
     "test": "gulp specs",
     "dev:core": "gulp cleanInlineSources && tsc -w",
     "dev:webapp": "cd ./plugin/webapp/ && ng build --watch",
-    "dev": "concurrently --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\""
+    "dev": "./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\""
   },
   "repository": {
     "type": "git",
