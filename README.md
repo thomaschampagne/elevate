@@ -52,22 +52,29 @@ StravistiX is using bellow frameworks/libs/tools:
 **[Learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/). Try it and buy it !**.
 
 ### 2.1/ Install NodeJS with node package manager
+
 You must run **npm** cli command via [nodejs.org](https://nodejs.org) to fetch JS dependencies.
+
+Node 8 is currently used in the project. Older version of node may not work.
 
 ### 2.2/ Install Gulp task runner and TypeScript via node package manager
 ```
-npm install --global gulp-cli typescript
+npm install --global yarn
 ```
+
+Why Yarn?! Because it's NPM in ultra fast, more reliable & more friendly :) [Discover Yarn](https://yarnpkg.com)
+
+Nevertheless, if you want to stick with **npm** then just replace **"yarn"** commands with the **"npm"** string.
 
 ### 2.3/ Install gulp plugins dependencies
 ```
-npm install
+yarn install
 ```
 This will install required gulp plugins in order to run project tasks. Gulp plugins are specified into **./package.json** file as **devDependencies**
 
 ### 2.4/ Build the project
 ```
-gulp build
+yarn run build
 ```
 First, this will download others JS dependencies (lodash, angular, chart.js, ...) specified in **plugin/package.json** file if not already downloaded.
 
@@ -92,44 +99,44 @@ Development must be done inside **plugin/** folder. You can code using TypeScrip
 >_Remember: [Here you can learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/)_
 >_Most IDE support TypeScript through plugins (Atom, Sublime, WebStorm, VisualStudio code, ...) @see https://www.typescriptlang.org/_
 
-Angular webapp (**plugin/options** folder) must be coded ideally with TypeScript @see [angular.io/guide/ts-to-js](https://angular.io/guide/ts-to-js)
+Angular WebApp (**plugin/options** folder) must be coded ideally with TypeScript @see [angular.io/guide/ts-to-js](https://angular.io/guide/ts-to-js)
 
 In chrome, use **plugin/** folder as Unpacked Extension for development
 
 To compile typescript project and listen for changes run:
 ```
-npm run dev
+yarn run dev
 ```
 
 To build the app, simply run the following command:
 ```
-gulp build
+yarn run build
 ```
 Needed files will be copied from **plugin/** to **dist/** folder. 
 
 To test the build in chrome, use now **dist/** folder as Unpacked Extension for development.
 
-You can automatically execute the _"gulp build"_ task on a file change with command:
+You can automatically execute the _"yarn run build"_ task on a file change with command:
 ```
-gulp watch
+yarn run dev
 ```
 _Note: Make sure to declare your new resources in **gulpfile.js** to see them copied to **dist/** folder_ 
 
 Run unit testing suite:
 ```
-gulp specs
+yarn test
 ```
 ### 3.2/ Create a package archive
 ```
-gulp package
+yarn run package
 ```
 This will create zip archive of **dist/** folder in **package/StravistiX\_vX.X.X\_[date].zip**
 
 ### 3.3/ Clean the project
 ```
-gulp clean
+yarn run clean
 ```
-This will clean **dist/**, **package/** & **plugin/node_modules/** folders & *.js *.map compiled sources
+This will clean **dist/**, **package/** & *.js *.map compiled sources
 
 4/ Git repository structure and GitFlow
 ==========
