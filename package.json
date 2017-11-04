@@ -7,6 +7,7 @@
     "build": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js build",
     "postinstall": "npm --prefix ./plugin install ./plugin",
     "package": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package",
+    "package:preview": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package --preview",
     "test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
     "test:phantom": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --single-run --browserConsoleLogOptions.terminal",
     "test:chrome": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --no-single-run --browsers Chrome --browserConsoleLogOptions.terminal",
