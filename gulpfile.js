@@ -196,7 +196,7 @@ gulp.task("writeManifest", ["tsCompileToDist"], (done) => {
 
 gulp.task('buildWebApp', ['writeManifest'], (done) => {
 
-    util.log('Building angular 4 webapp...');
+    util.log('Building webapp.');
 
     exec("cd ./plugin/webapp/ && ng build", (error, stdout, stderr) => { // TODO --prod --aot
         if (error) {
@@ -204,7 +204,7 @@ gulp.task('buildWebApp', ['writeManifest'], (done) => {
             util.log(stderr);
         } else {
             util.log(stdout);
-            util.log('Build of webapp done...');
+            util.log('Webapp build done.');
             gulp.src(["./plugin/webapp/app/**/*"]).pipe(gulp.dest(DIST_FOLDER + '/webapp/app/')); // TODO refactor
             done();
         }

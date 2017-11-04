@@ -106,7 +106,7 @@ export class AthleteSettingsController {
         $scope.userWeightChanged = () => {
 
             if (!_.isUndefined($scope.userWeight)) {
-                chromeStorageService.updateUserSetting("userWeight", $scope.userWeight, function() {
+                chromeStorageService.updateUserSetting("userWeight", $scope.userWeight, function () {
                     console.log("userWeight has been updated to " + $scope.userWeight);
                     $scope.localStorageMustBeCleared();
                     $scope.profileChanged();
@@ -193,7 +193,7 @@ export class AthleteSettingsController {
         };
 
         $scope.displayUserMaxHrHelper = ($event: any) => {
-            $scope.hintModal($event, "How to find your max Heart rate value", 'If you don\'t know your own max Heart rate then enter the value <strong> 220 - "your age" </strong>. <br /><br /> For example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>');
+            $scope.hintModal($event, "How to find your max Heart rate value", "If you don't know your own max Heart rate then enter the value <strong> 220 - \"your age\" </strong>. <br /><br /> For example, if you are 30 years old, then your max HR will be <strong> 220 - 30 = 190 </strong>");
         };
 
         $scope.displayUserRestHrHelper = ($event: any) => {
