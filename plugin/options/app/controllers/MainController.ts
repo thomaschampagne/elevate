@@ -180,7 +180,7 @@ export class MainController {
             }
 
             // Find subname or name to auto put title on load
-            const sectionFound: any = _.find($scope.uiStructure.sidenav.sections, {
+            const sectionFound: any = _.find($scope.uiStructure.sidenav.sections, <any> {
                 link: $location.path(),
             });
 
@@ -197,7 +197,7 @@ export class MainController {
                 for (let i = 0; i < sectionsWithActions.length; i++) {
 
                     const section: any = sectionsWithActions[i];
-                    actionFound = _.find(section.actions, {
+                    actionFound = _.find(section.actions, <any> {
                         link: path,
                     });
 

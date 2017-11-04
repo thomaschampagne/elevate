@@ -155,7 +155,9 @@ export class YearProgressController {
             {value: DataType.COUNT, text: "Count"},
         ];
 
-        $scope.dataTypeSelected = (localStorage.getItem("yearProgressDataType") && _.isNumber(parseInt(localStorage.getItem("yearProgressDataType")))) ? _.find($scope.dataType, {value: parseInt(localStorage.getItem("yearProgressDataType"))}) : $scope.dataType[0];
+        $scope.dataTypeSelected = (localStorage.getItem("yearProgressDataType") && _.isNumber(parseInt(localStorage.getItem("yearProgressDataType"))))
+            ? _.find($scope.dataType, <any> {value: parseInt(localStorage.getItem("yearProgressDataType"))})
+            : $scope.dataType[0];
         $scope.dataTypeChanged = () => {
             localStorage.setItem("yearProgressDataType", $scope.dataTypeSelected.value); // Store value
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
