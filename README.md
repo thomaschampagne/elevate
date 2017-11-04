@@ -102,15 +102,11 @@ To build the app, simply run the following command:
 ```
 npm run build
 ```
-Needed files will be copied from **plugin/** to **dist/** folder. 
+This will generate a **dist/** folder.
 
 To test the build in chrome, use now **dist/** folder as Unpacked Extension for development.
 
-You can automatically execute the _"npm run build"_ task on a file change with command:
-```
-npm run dev
-```
-_Note: Make sure to declare your new resources in **gulpfile.js** to see them copied to **dist/** folder_ 
+_Note: Make sure to declare any new resources in **gulpfile.js** to get them properly copied to **dist/** folder on a build task_ 
 
 Run unit testing suite:
 ```
@@ -134,5 +130,5 @@ This project repository is fitted for **GitFlow** branches management workflow. 
 
 5/ Code Editor
 ==========
-I used [**Visual Studio Code**](https://code.visualstudio.com/) editor.
+[**Visual Studio Code**](https://code.visualstudio.com/) editor was used for that project.
 
