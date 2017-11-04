@@ -20,7 +20,7 @@
     "clean:jsmap": "node ./node_modules/gulp/bin/gulp.js cleanInlineSources",
     "clean:dist": "node ./node_modules/rimraf/bin.js ./dist/",
     "clean:package": "node ./node_modules/rimraf/bin.js ./package/",
-    "clean:nodemodules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/",
+    "clean:nodemodules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
     "clean": "npm run clean:jsmap && npm run clean:dist && npm run clean:package",
     "wipe": "npm run clean:jsmap && npm run clean:dist && npm run clean:package && npm run clean:nodemodules"
   },
