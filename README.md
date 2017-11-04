@@ -12,10 +12,9 @@
 - [2/ Install from sources](#2-install-from-sources)
     + [2.0/ Infos](#20-infos)
     + [2.1/ Install NodeJS with node package manager](#21-install-nodejs-with-node-package-manager)
-    + [2.2/ Install Gulp task runner and TypeScript via node package manager](#22-install-gulp-task-runner-and-typescript-via-node-package-manager)
-    + [2.3/ Install gulp plugins dependencies](#23-install-gulp-plugins-dependencies)
-    + [2.4/ Build the project](#24-build-the-project)
-    + [2.5/ Loading the extension](#25-loading-the-extension)
+    + [2.2/ Install gulp plugins dependencies](#22-install-gulp-plugins-dependencies)
+    + [2.3/ Build the project](#23-build-the-project)
+    + [2.4/ Loading the extension](#24-loading-the-extension)
 - [3/ How to develop in ?](#3-how-to-develop-in-)
     + [3.1/ Making changes and view them](#31-making-changes-and-view-them)
     + [3.2/ Create a package archive](#32-create-a-package-archive)
@@ -57,30 +56,21 @@ You must run **npm** cli command via [nodejs.org](https://nodejs.org) to fetch J
 
 Node 8 is currently used in the project. Older version of node may not work.
 
-### 2.2/ Install Gulp task runner and TypeScript via node package manager
+### 2.2/ Install gulp plugins dependencies
 ```
-npm install --global yarn
-```
-
-Why Yarn?! Because it's NPM in ultra fast, more reliable & more friendly :) [Discover Yarn](https://yarnpkg.com)
-
-Nevertheless, if you want to stick with **npm** then just replace **"yarn"** commands with the **"npm"** string.
-
-### 2.3/ Install gulp plugins dependencies
-```
-yarn install
+npm install
 ```
 This will install required gulp plugins in order to run project tasks. Gulp plugins are specified into **./package.json** file as **devDependencies**
 
-### 2.4/ Build the project
+### 2.3/ Build the project
 ```
-yarn run build
+npm run build
 ```
 First, this will download others JS dependencies (lodash, angular, chart.js, ...) specified in **plugin/package.json** file if not already downloaded.
 
 Next, all the needed files from **plugin/** will be copied to **dist/** folder.
 
-### 2.5/ Loading the extension
+### 2.4/ Loading the extension
 
 You can now load extension from **chrome://extensions** chrome tab:
 
@@ -105,36 +95,36 @@ In chrome, use **plugin/** folder as Unpacked Extension for development
 
 To compile typescript project and listen for changes run:
 ```
-yarn run dev
+npm run dev
 ```
 
 To build the app, simply run the following command:
 ```
-yarn run build
+npm run build
 ```
 Needed files will be copied from **plugin/** to **dist/** folder. 
 
 To test the build in chrome, use now **dist/** folder as Unpacked Extension for development.
 
-You can automatically execute the _"yarn run build"_ task on a file change with command:
+You can automatically execute the _"npm run build"_ task on a file change with command:
 ```
-yarn run dev
+npm run dev
 ```
 _Note: Make sure to declare your new resources in **gulpfile.js** to see them copied to **dist/** folder_ 
 
 Run unit testing suite:
 ```
-yarn test
+npm test
 ```
 ### 3.2/ Create a package archive
 ```
-yarn run package
+npm run package
 ```
 This will create zip archive of **dist/** folder in **package/StravistiX\_vX.X.X\_[date].zip**
 
 ### 3.3/ Clean the project
 ```
-yarn run clean
+npm run clean
 ```
 This will clean **dist/**, **package/** & *.js *.map compiled sources
 
