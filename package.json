@@ -6,7 +6,7 @@
 		"dev": "node ./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\"",
 		"build": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js build",
 		"package": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package",
-		"postinstall": "node ./node_modules/concurrently/src/main.js --names \"core,webapp\" \"npm install --prefix ./plugin ./plugin\" \"npm install --prefix ./plugin/webapp ./plugin/webapp\"\n",
+		"postinstall": "cd ./plugin/ && npm install && cd ./webapp/ && npm install",
 		"package:preview": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package --preview",
 		"pretest": "npm run clean:jsmap && npm run tsc:compile",
 		"test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
