@@ -50,7 +50,8 @@
     "core/scripts/*",
     "core/css/*",
     "core/icons/*",
-    "options/*"
+    "options/*",
+    "webapp/dist/*"
   ],
   "externally_connectable": {
     "matches": [

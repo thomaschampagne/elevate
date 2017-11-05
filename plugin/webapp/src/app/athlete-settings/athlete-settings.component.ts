@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChromeStorageService } from "../services/chrome-storage.service";
 
 @Component({
 	selector: 'app-athlete-settings',
@@ -7,10 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AthleteSettingsComponent implements OnInit {
 
-	constructor() {
+	constructor(private chromeStorageService: ChromeStorageService) {
 	}
 
-	ngOnInit() {
+	public ngOnInit() {
+
+		/*this.chromeStorageService.getAllFromLocalStorage().subscribe(
+
+			(data: any) => {
+
+				console.warn(data);
+
+			}, (err: any) => {
+
+
+			}, () => {
+
+			}
+		);*/
 	}
 
 }

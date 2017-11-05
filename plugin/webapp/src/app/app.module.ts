@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from "./app-routing.module";
 import { AthleteSettingsComponent } from './athlete-settings/athlete-settings.component';
 import { CommonSettingsComponent } from './common-settings/common-settings.component';
+import { ChromeStorageService } from "./services/chrome-storage.service";
 
 @NgModule({
 	declarations: [
@@ -16,7 +17,7 @@ import { CommonSettingsComponent } from './common-settings/common-settings.compo
 		BrowserModule,
 		AppRoutingModule
 	],
-	providers: [],
+	providers: [ChromeStorageService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {
