@@ -11,6 +11,7 @@
 
     // AngularJS webapp
     "plugin/options/**/*.ts",
+    // TODO to be removed once migration done
     // specs
     "specs/**/*.ts"
   ],

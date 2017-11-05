@@ -18,11 +18,12 @@
     "tsc:compile": "npm run tsc:version && node ./node_modules/typescript/bin/tsc",
     "tsc:watch": "npm run tsc:version && node ./node_modules/typescript/bin/tsc --watch",
     "clean:jsmap": "node ./node_modules/gulp/bin/gulp.js cleanInlineSources",
-    "clean:dist": "node ./node_modules/rimraf/bin.js ./dist/",
+    "clean:rootDist": "node ./node_modules/rimraf/bin.js ./dist/",
+    "clean:webappDist": "echo TASK TO BE DONE",
     "clean:package": "node ./node_modules/rimraf/bin.js ./package/",
     "clean:nodemodules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
-    "clean": "npm run clean:jsmap && npm run clean:dist && npm run clean:package",
-    "wipe": "npm run clean:jsmap && npm run clean:dist && npm run clean:package && npm run clean:nodemodules"
+    "clean": "npm run clean:jsmap && npm run clean:rootDist && npm run clean:package && npm run clean:webappDist",
+    "wipe": "npm run clean:jsmap && npm run clean:rootDist && npm run clean:package && npm run clean:nodemodules"
   },
   "repository": {
     "type": "git",
