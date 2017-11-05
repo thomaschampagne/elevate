@@ -205,7 +205,7 @@ gulp.task('buildWebApp', ['writeManifest'], (done) => {
         } else {
             util.log(stdout);
             util.log('Webapp build done.');
-            gulp.src(["./plugin/webapp/app/**/*"]).pipe(gulp.dest(DIST_FOLDER + '/webapp/app/')); // TODO refactor
+            gulp.src(["./plugin/webapp/dist/**/*"]).pipe(gulp.dest(DIST_FOLDER + '/webapp/dist/')); // TODO refactor
             done();
         }
     });
