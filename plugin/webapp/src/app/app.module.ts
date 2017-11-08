@@ -7,6 +7,8 @@ import { AthleteSettingsComponent } from './athlete-settings/athlete-settings.co
 import { CommonSettingsComponent } from './common-settings/common-settings.component';
 import { ChromeStorageService } from "./services/chrome-storage.service";
 import { CommonSettingsService } from "./services/common-settings.service";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MaterialModule } from "./material.module";
 
 @NgModule({
 	declarations: [
@@ -16,6 +18,8 @@ import { CommonSettingsService } from "./services/common-settings.service";
 	],
 	imports: [
 		BrowserModule,
+		BrowserAnimationsModule,
+		MaterialModule,
 		AppRoutingModule
 	],
 	providers: [ChromeStorageService, CommonSettingsService],
