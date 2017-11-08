@@ -1,16 +1,21 @@
-<button mat-raised-button color="primary">Primary</button>
-
-<div style="background: red;">
-	NAV
-	<div *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
-		 routerLinkActive="{{item.routerLinkActive}}">
-		<button (click)="onMenuClicked(item)">
-			{{ item.name }}
+<mat-sidenav-container>
+	<mat-sidenav #sidenav mode="side" opened="true">
+		<mat-nav-list>
+			<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+						   routerLinkActive="{{item.routerLinkActive}}">
+				<button mat-icon-button>
+					<mat-icon>{{item.icon}}</mat-icon>
+					{{ item.name }}
+				</button>
+			</mat-list-item>
+		</mat-nav-list>
+	</mat-sidenav>
+	<mat-toolbar color="primary">
+		<button mat-icon-button (click)="sidenav.toggle()">
+			<mat-icon>menu</mat-icon>
 		</button>
+	</mat-toolbar>
+	<div>
+		<router-outlet></router-outlet>
 	</div>
-</div>
-<div style="background: cornflowerblue;">
-	CONTENT:
-	<router-outlet></router-outlet>
-</div>
-
+</mat-sidenav-container>
