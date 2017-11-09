@@ -32,6 +32,7 @@
 		<!--is list?-->
 		<mat-select
 			*ngIf="option.optionType == 'list'"
+			(change)="onOptionChange(option)"
 			[(ngModel)]="option.active">
 			<mat-option
 				*ngFor="let listItem of option.optionList"

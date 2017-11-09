@@ -65,6 +65,9 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 	public onOptionChange(option: IOption): void {
 
+		console.warn(option);
+		// debugger;
+
 		if (option.optionType == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
 			this.chromeStorageService.updateUserSetting(option.optionKey, option.active).then(() => {
@@ -73,7 +76,6 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 			// Enable/disable sub option if needed
 			if (option.optionEnableSub) {
-
 				// Replace this to find option object from option.optionEnableSub
 				_.forEach(option.optionEnableSub, (subKey: string) => {
 					this.displaySubOption(subKey, option.active);
@@ -81,7 +83,10 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 			}
 		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_LIST) {
 
-			// TODO
+			this.chromeStorageService.updateUserSetting(option.optionKey, option.active.key).then(() => {
+				console.log(option.optionKey + " has been updated to " + option.active);
+			});
+
 		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_NUMBER) {
 
 			// TODO
