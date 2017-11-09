@@ -15,4 +15,22 @@ export class ChromeStorageService {
 			});
 		});
 	}
+
+	public updateUserSetting(key: string, value: any): Promise<boolean> {
+
+		const settingToBeUpdated: any = {};
+
+		settingToBeUpdated[key] = value;
+
+		return new Promise<boolean>((resolve) => {
+
+			chrome.storage.sync.set(settingToBeUpdated, () => {
+
+				resolve(true);
+
+			});
+		});
+
+	}
+
 }

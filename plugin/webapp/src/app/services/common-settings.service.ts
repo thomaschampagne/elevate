@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 
 export interface ISection {
 	title: string;
-	content: ISectionContent[];
+	content: IOption[];
 }
 
-export interface ISectionContent {
+export interface IOption {
 	optionKey: string; // TODO rename just as "key"
 	optionType: string;
 	optionTitle: string;
@@ -44,6 +44,10 @@ export interface IListItem {
 
 @Injectable()
 export class CommonSettingsService {
+
+	public static TYPE_OPTION_CHECKBOX: string = "checkbox";
+	public static TYPE_OPTION_LIST: string = "list";
+	public static TYPE_OPTION_NUMBER: string = "number";
 
 	private _sections: ISection[] = [{
 		title: "Athlete History Synchronisation",

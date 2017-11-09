@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChromeStorageService } from "../services/chrome-storage.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { CommonSettingsService, ISection, ISectionContent } from "../services/common-settings.service";
+import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
 import * as _ from 'lodash';
 
 @Component({
@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 
 export class CommonSettingsComponent implements OnInit, OnDestroy {
 
+
 	private _sections: ISection[];
 
 	constructor(private chromeStorageService: ChromeStorageService,
@@ -19,8 +20,6 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit() {
-
-		console.debug("CommonSettingsComponent::ngOnInit()");
 
 		this._sections = this.commonSettingsService.sections;
 
@@ -33,9 +32,9 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 		_.forEach(this.sections, (section: ISection) => {
 
-			_.forEach(section.content, (option: ISectionContent) => {
+			_.forEach(section.content, (option: IOption) => {
 
-				if (option.optionType === "checkbox") {
+				if (option.optionType === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
 					option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
 
@@ -45,35 +44,66 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 						});
 					}
 
-				} else if (option.optionType === "list") {
+				} else if (option.optionType === CommonSettingsService.TYPE_OPTION_LIST) {
+
 					option.active = _.find(option.optionList, {
 						key: _.propertyOf(userSettingsSynced)(option.optionKey),
 					});
-				} else if (option.optionType === "number") {
+
+				} else if (option.optionType === CommonSettingsService.TYPE_OPTION_NUMBER) {
+
 					option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
+
 				} else {
+
 					console.error("Option type not supported");
+
 				}
 			});
 		});
 	}
 
-	private displaySubOption(subOptionKey: string, show: any) {
+	public onOptionChange(option: IOption): void {
 
-		/*
-        TODO
-        $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-                    _.forEach($scope.sections, (section: ISection) => {
-                        const optionFound: ISectionContent = _.find(section.content, {
-                            optionKey: subOptionKey,
-                        });
-                        if (optionFound) {
-                            optionFound.hidden = !show;
-                        }
-                    });
-                };*/
+		if (option.optionType == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+
+			this.chromeStorageService.updateUserSetting(option.optionKey, option.active).then(() => {
+				console.log(option.optionKey + " has been updated to " + option.active);
+			});
+
+			// Enable/disable sub option if needed
+			if (option.optionEnableSub) {
+
+				// Replace this to find option object from option.optionEnableSub
+				_.forEach(option.optionEnableSub, (subKey: string) => {
+					this.displaySubOption(subKey, option.active);
+				});
+			}
+		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_LIST) {
+
+			// TODO
+		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_NUMBER) {
+
+			// TODO
+		}
+
 
 	}
+
+	public displaySubOption(subOptionKey: string, show: boolean): void {
+
+		_.forEach(this.sections, (section: ISection) => {
+
+			const optionFound: IOption = _.find(section.content, {
+				optionKey: subOptionKey,
+			});
+
+			if (optionFound) {
+				optionFound.hidden = !show;
+			}
+		});
+	};
+
 
 	get sections(): ISection[] {
 		return this._sections;

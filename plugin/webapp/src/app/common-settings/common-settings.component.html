@@ -25,6 +25,7 @@
 		<mat-slide-toggle
 			*ngIf="option.optionType == 'checkbox'"
 			[(ngModel)]="option.active"
+			(change)="onOptionChange(option)"
 			aria-label="option.optionTitle">
 		</mat-slide-toggle>
 
