@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChromeStorageService } from "../services/chrome-storage.service";
+import { ChromeStorageService } from '../services/chrome-storage.service';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
 import * as _ from 'lodash';

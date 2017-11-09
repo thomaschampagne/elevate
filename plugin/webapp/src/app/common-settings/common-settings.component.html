@@ -7,55 +7,59 @@
 
 	<h2 matLine>{{section.title}}</h2>
 
-	<mat-list-item *ngFor="let option of section.content">
+	<ng-container *ngFor="let option of section.content">
 
-		<!--Icons along activity type-->
-		<span matListIcon *ngFor="let label of option.optionLabels">
-              <mat-icon *ngIf="label == 'Cycling'">directions_bike</mat-icon>
-              <mat-icon *ngIf="label == 'Running'">directions_walk</mat-icon>
-              <mat-icon *ngIf="label == 'All'">settings</mat-icon>
-		</span>
+		<mat-list-item *ngIf="!option.hidden">
 
-		<!--Title -->
-		<span matLine>{{option.optionTitle}}</span>
+			<!--Icons along activity type-->
+			<span matListIcon *ngFor="let label of option.optionLabels">
+				<mat-icon *ngIf="label == 'Cycling'">directions_bike</mat-icon>
+				<mat-icon *ngIf="label == 'Running'">directions_walk</mat-icon>
+				<mat-icon *ngIf="label == 'All'">settings</mat-icon>
+			</span>
+
+			<!--Title -->
+			<span matLine>{{option.optionTitle}}</span>
 
 
-		<!--Display proper input method-->
-		<!--is checkbox ?-->
-		<mat-slide-toggle
-			*ngIf="option.optionType == 'checkbox'"
-			[(ngModel)]="option.active"
-			(change)="onOptionChange(option)"
-			aria-label="option.optionTitle">
-		</mat-slide-toggle>
-
-		<!--is list?-->
-		<mat-select
-			*ngIf="option.optionType == 'list'"
-			(change)="onOptionChange(option)"
-			[(ngModel)]="option.active">
-			<mat-option
-				*ngFor="let listItem of option.optionList"
-				[value]="listItem">
-				{{listItem.name}}
-			</mat-option>
-		</mat-select>
-
-		<!--is input?-->
-		<mat-form-field
-			*ngIf="option.optionType == 'number'">
-			<!--ng-change="toggleIntegerOption(option)"-->
-			<input
-				matInput
-				type="number"
+			<!--Display proper input method-->
+			<!--is checkbox ?-->
+			<mat-slide-toggle
+				*ngIf="option.optionType == 'checkbox'"
+				[(ngModel)]="option.active"
 				(change)="onOptionChange(option)"
-				[(ngModel)]="option.value"
-				step="{{option.step}}"
-				min="{{option.min}}"
-				max="{{option.max}}"/>
-		</mat-form-field>
+				aria-label="option.optionTitle">
+			</mat-slide-toggle>
 
-	</mat-list-item>
+			<!--is list?-->
+			<mat-select
+				*ngIf="option.optionType == 'list'"
+				(change)="onOptionChange(option)"
+				[(ngModel)]="option.active">
+				<mat-option
+					*ngFor="let listItem of option.optionList"
+					[value]="listItem">
+					{{listItem.name}}
+				</mat-option>
+			</mat-select>
+
+			<!--is input?-->
+			<mat-form-field
+				*ngIf="option.optionType == 'number'">
+				<!--ng-change="toggleIntegerOption(option)"-->
+				<input
+					matInput
+					type="number"
+					(change)="onOptionChange(option)"
+					[(ngModel)]="option.value"
+					step="{{option.step}}"
+					min="{{option.min}}"
+					max="{{option.max}}"/>
+			</mat-form-field>
+
+		</mat-list-item>
+
+	</ng-container>
 
 	<mat-divider></mat-divider>
 </mat-list>
