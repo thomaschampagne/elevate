@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChromeStorageService } from "../services/chrome-storage.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
 import * as _ from 'lodash';
+import { userSettings } from "../../../../common/scripts/UserSettings";
 
 @Component({
 	selector: 'app-common-settings',
@@ -10,7 +11,7 @@ import * as _ from 'lodash';
 	styleUrls: ['./common-settings.component.scss']
 })
 
-export class CommonSettingsComponent implements OnInit, OnDestroy {
+export class CommonSettingsComponent implements OnInit {
 
 
 	private _sections: ISection[];
@@ -28,6 +29,10 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	/**
+	 *
+	 * @param {IUserSettings} userSettingsSynced
+	 */
 	private renderOptionsForEachSection(userSettingsSynced: IUserSettings) {
 
 		_.forEach(this.sections, (section: ISection) => {
@@ -63,10 +68,11 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	/**
+	 *
+	 * @param {IOption} option
+	 */
 	public onOptionChange(option: IOption): void {
-
-		console.warn(option);
-		// debugger;
 
 		if (option.optionType == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
@@ -89,12 +95,41 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_NUMBER) {
 
-			// TODO
+
+			if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
+
+				this.resetOptionToDefaultValue(option);
+
+			} else { // Save !
+
+				if (option.value < option.min || option.value > option.max) {
+					this.resetOptionToDefaultValue(option);
+				}
+
+				this.chromeStorageService.updateUserSetting(option.optionKey, option.value).then(() => {
+					console.log(option.optionKey + " has been updated to " + option.value);
+				});
+			}
 		}
 
 
 	}
 
+	/**
+	 *
+	 * @param {IOption} option
+	 */
+	private resetOptionToDefaultValue(option: IOption) {
+		const resetValue = _.propertyOf(userSettings)(option.optionKey);
+		console.log(option.optionKey + " value not compliant, Reset to  " + resetValue);
+		option.value = resetValue;
+	}
+
+	/**
+	 *
+	 * @param {string} subOptionKey
+	 * @param {boolean} show
+	 */
 	public displaySubOption(subOptionKey: string, show: boolean): void {
 
 		_.forEach(this.sections, (section: ISection) => {
@@ -114,6 +149,4 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 		return this._sections;
 	}
 
-	public ngOnDestroy(): void {
-	}
 }

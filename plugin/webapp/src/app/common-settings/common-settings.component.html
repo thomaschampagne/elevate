@@ -48,7 +48,7 @@
 			<input
 				matInput
 				type="number"
-				name="rate"
+				(change)="onOptionChange(option)"
 				[(ngModel)]="option.value"
 				step="{{option.step}}"
 				min="{{option.min}}"
