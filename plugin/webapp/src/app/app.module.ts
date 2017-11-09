@@ -9,15 +9,19 @@ import { ChromeStorageService } from "./services/chrome-storage.service";
 import { CommonSettingsService } from "./services/common-settings.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
+import { FormsModule } from "@angular/forms";
+import { AsHtmlPipe } from "./pipes/as-html.pipe";
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		AthleteSettingsComponent,
-		CommonSettingsComponent
+		CommonSettingsComponent,
+		AsHtmlPipe
 	],
 	imports: [
 		BrowserModule,
+		FormsModule,
 		BrowserAnimationsModule,
 		MaterialModule,
 		AppRoutingModule

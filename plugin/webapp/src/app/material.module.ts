@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {
 	MatButtonModule,
 	MatCardModule,
@@ -8,21 +8,24 @@ import {
 	MatIconModule,
 	MatInputModule,
 	MatListModule,
-	MatMenuModule,
-	MatSidenavModule,
+	MatMenuModule, MatOptionModule, MatSelectModule,
+	MatSidenavModule, MatSlideToggleModule,
 	MatSnackBarModule,
 	MatTableModule,
-	MatToolbarModule
+	MatToolbarModule, MatTooltipModule
 } from '@angular/material';
-import { CdkTableModule } from "@angular/cdk/table";
+import {CdkTableModule} from "@angular/cdk/table";
 
 @NgModule({
 	imports: [
 		MatButtonModule,
 		MatSnackBarModule,
 		MatCheckboxModule,
+		MatSelectModule,
+		MatOptionModule,
 		MatInputModule,
 		MatMenuModule,
+		MatTooltipModule,
 		MatIconModule,
 		MatToolbarModule,
 		MatSidenavModule,
@@ -31,14 +34,18 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatListModule,
 		MatTableModule,
 		CdkTableModule,
-		MatGridListModule
+		MatGridListModule,
+		MatSlideToggleModule
 	],
 	exports: [
 		MatButtonModule,
 		MatSnackBarModule,
 		MatCheckboxModule,
+		MatSelectModule,
+		MatOptionModule,
 		MatInputModule,
 		MatMenuModule,
+		MatTooltipModule,
 		MatIconModule,
 		MatToolbarModule,
 		MatSidenavModule,
@@ -47,7 +54,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatListModule,
 		MatTableModule,
 		CdkTableModule,
-		MatGridListModule
+		MatGridListModule,
+		MatSlideToggleModule
 	],
 	declarations: []
 })

@@ -1,4 +1,59 @@
+<mat-form-field>
+	<mat-icon>search</mat-icon>
+	<input matInput value="searchText" type="text" placeholder="Search for an option">
+</mat-form-field>
 
-<div *ngFor="let section of sections">
-	{{section.title}}
-</div>
+<mat-list *ngFor="let section of sections">
+
+	<h2 matLine>{{section.title}}</h2>
+
+	<mat-list-item *ngFor="let option of section.content">
+
+		<!--Icons along activity type-->
+		<span matListIcon *ngFor="let label of option.optionLabels">
+              <mat-icon *ngIf="label == 'Cycling'">directions_bike</mat-icon>
+              <mat-icon *ngIf="label == 'Running'">directions_walk</mat-icon>
+              <mat-icon *ngIf="label == 'All'">settings</mat-icon>
+		</span>
+
+		<!--Title -->
+		<span matLine>{{option.optionTitle}}</span>
+
+
+		<!--Display proper input method-->
+		<!--is checkbox ?-->
+		<mat-slide-toggle
+			*ngIf="option.optionType == 'checkbox'"
+			[(ngModel)]="option.active"
+			aria-label="option.optionTitle">
+		</mat-slide-toggle>
+
+		<!--is list?-->
+		<mat-select
+			*ngIf="option.optionType == 'list'"
+			[(ngModel)]="option.active">
+			<mat-option
+				*ngFor="let listItem of option.optionList"
+				[value]="listItem">
+				{{listItem.name}}
+			</mat-option>
+		</mat-select>
+
+		<!--is input?-->
+		<mat-form-field
+			*ngIf="option.optionType == 'number'">
+			<!--ng-change="toggleIntegerOption(option)"-->
+			<input
+				matInput
+				type="number"
+				name="rate"
+				[(ngModel)]="option.value"
+				step="{{option.step}}"
+				min="{{option.min}}"
+				max="{{option.max}}"/>
+		</mat-form-field>
+
+	</mat-list-item>
+
+	<mat-divider></mat-divider>
+</mat-list>

@@ -14,7 +14,8 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 	private _sections: ISection[];
 
-	constructor(private chromeStorageService: ChromeStorageService, private commonSettingsService: CommonSettingsService) {
+	constructor(private chromeStorageService: ChromeStorageService,
+				private commonSettingsService: CommonSettingsService) {
 	}
 
 	public ngOnInit() {
@@ -59,18 +60,18 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 	private displaySubOption(subOptionKey: string, show: any) {
 
-/*
-TODO
-$scope.displaySubOption = (subOptionKey: string, show: boolean) => {
-			_.forEach($scope.sections, (section: ISection) => {
-				const optionFound: ISectionContent = _.find(section.content, {
-					optionKey: subOptionKey,
-				});
-				if (optionFound) {
-					optionFound.hidden = !show;
-				}
-			});
-		};*/
+		/*
+        TODO
+        $scope.displaySubOption = (subOptionKey: string, show: boolean) => {
+                    _.forEach($scope.sections, (section: ISection) => {
+                        const optionFound: ISectionContent = _.find(section.content, {
+                            optionKey: subOptionKey,
+                        });
+                        if (optionFound) {
+                            optionFound.hidden = !show;
+                        }
+                    });
+                };*/
 
 	}
 

@@ -89,9 +89,6 @@
 		"systemjs": "^0.19.0",
 		"systemjs-plugin-babel": "0.0.25",
 		"traceur": "0.0.111",
-		"typescript": "^2.6.1"
-	},
-	"dependencies": {
-		"@angular/flex-layout": "^2.0.0-rc.1"
+		"typescript": "~2.4.2"
 	}
 }

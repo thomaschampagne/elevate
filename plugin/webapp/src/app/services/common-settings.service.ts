@@ -6,7 +6,7 @@ export interface ISection {
 }
 
 export interface ISectionContent {
-	optionKey: string;
+	optionKey: string; // TODO rename just as "key"
 	optionType: string;
 	optionTitle: string;
 	optionLabels: string[];
