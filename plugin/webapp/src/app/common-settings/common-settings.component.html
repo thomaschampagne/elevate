@@ -1,13 +1,13 @@
 <mat-form-field>
-	<mat-icon>search</mat-icon>
-	<input matInput value="searchText" type="text" placeholder="Search for an option">
+	<mat-icon matPrefix>search</mat-icon>
+	<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
 </mat-form-field>
 
 <mat-list *ngFor="let section of sections">
 
 	<h2 matLine>{{section.title}}</h2>
 
-	<ng-container *ngFor="let option of section.content">
+	<ng-container *ngFor="let option of section.content | filterBy: ['optionTitle']: searchText">
 
 		<mat-list-item *ngIf="!option.hidden">
 
@@ -44,9 +44,7 @@
 			</mat-select>
 
 			<!--is input?-->
-			<mat-form-field
-				*ngIf="option.optionType == 'number'">
-				<!--ng-change="toggleIntegerOption(option)"-->
+			<mat-form-field *ngIf="option.optionType == 'number'">
 				<input
 					matInput
 					type="number"

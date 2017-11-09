@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PipeTransform } from '@angular/core';
 import { ChromeStorageService } from '../services/chrome-storage.service';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
@@ -15,6 +15,7 @@ export class CommonSettingsComponent implements OnInit {
 
 
 	private _sections: ISection[];
+	private _searchText;
 
 	constructor(private chromeStorageService: ChromeStorageService,
 				private commonSettingsService: CommonSettingsService) {
@@ -149,4 +150,12 @@ export class CommonSettingsComponent implements OnInit {
 		return this._sections;
 	}
 
+
+	get searchText(): string {
+		return this._searchText;
+	}
+
+	set searchText(value: string) {
+		this._searchText = value;
+	}
 }

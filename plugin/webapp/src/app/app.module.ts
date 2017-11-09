@@ -10,21 +10,28 @@ import { CommonSettingsService } from "./services/common-settings.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { FormsModule } from "@angular/forms";
+import { NgPipesModule } from 'ngx-pipes';
 import { AsHtmlPipe } from "./pipes/as-html.pipe";
 
 @NgModule({
 	declarations: [
+
+		// Components
 		AppComponent,
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
+
+		// Pipes
 		AsHtmlPipe
+
 	],
 	imports: [
 		BrowserModule,
+		AppRoutingModule,
 		FormsModule,
-		BrowserAnimationsModule,
 		MaterialModule,
-		AppRoutingModule
+		BrowserAnimationsModule,
+		NgPipesModule
 	],
 	providers: [ChromeStorageService, CommonSettingsService],
 	bootstrap: [AppComponent]
