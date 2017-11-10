@@ -1,4 +1,4 @@
-import { Component, OnInit, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChromeStorageService } from '../services/chrome-storage.service';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
@@ -38,27 +38,27 @@ export class CommonSettingsComponent implements OnInit {
 
 		_.forEach(this.sections, (section: ISection) => {
 
-			_.forEach(section.content, (option: IOption) => {
+			_.forEach(section.options, (option: IOption) => {
 
-				if (option.optionType === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+				if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
-					option.active = _.propertyOf(userSettingsSynced)(option.optionKey);
+					option.active = _.propertyOf(userSettingsSynced)(option.key);
 
-					if (option.optionEnableSub) {
-						_.forEach(option.optionEnableSub, (subKey: string) => {
-							this.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.optionKey));
+					if (option.enableSubOption) {
+						_.forEach(option.enableSubOption, (subKey: string) => {
+							this.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.key));
 						});
 					}
 
-				} else if (option.optionType === CommonSettingsService.TYPE_OPTION_LIST) {
+				} else if (option.type === CommonSettingsService.TYPE_OPTION_LIST) {
 
-					option.active = _.find(option.optionList, {
-						key: _.propertyOf(userSettingsSynced)(option.optionKey),
+					option.active = _.find(option.list, {
+						key: _.propertyOf(userSettingsSynced)(option.key),
 					});
 
-				} else if (option.optionType === CommonSettingsService.TYPE_OPTION_NUMBER) {
+				} else if (option.type === CommonSettingsService.TYPE_OPTION_NUMBER) {
 
-					option.value = _.propertyOf(userSettingsSynced)(option.optionKey);
+					option.value = _.propertyOf(userSettingsSynced)(option.key);
 
 				} else {
 
@@ -75,26 +75,26 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public onOptionChange(option: IOption): void {
 
-		if (option.optionType == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+		if (option.type == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
-			this.chromeStorageService.updateUserSetting(option.optionKey, option.active).then(() => {
-				console.log(option.optionKey + " has been updated to " + option.active);
+			this.chromeStorageService.updateUserSetting(option.key, option.active).then(() => {
+				console.log(option.key + " has been updated to " + option.active);
 			});
 
 			// Enable/disable sub option if needed
-			if (option.optionEnableSub) {
-				// Replace this to find option object from option.optionEnableSub
-				_.forEach(option.optionEnableSub, (subKey: string) => {
+			if (option.enableSubOption) {
+				// Replace this to find option object from option.enableSubOption
+				_.forEach(option.enableSubOption, (subKey: string) => {
 					this.displaySubOption(subKey, option.active);
 				});
 			}
-		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_LIST) {
+		} else if (option.type == CommonSettingsService.TYPE_OPTION_LIST) {
 
-			this.chromeStorageService.updateUserSetting(option.optionKey, option.active.key).then(() => {
-				console.log(option.optionKey + " has been updated to " + option.active);
+			this.chromeStorageService.updateUserSetting(option.key, option.active.key).then(() => {
+				console.log(option.key + " has been updated to " + option.active);
 			});
 
-		} else if (option.optionType == CommonSettingsService.TYPE_OPTION_NUMBER) {
+		} else if (option.type == CommonSettingsService.TYPE_OPTION_NUMBER) {
 
 
 			if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
@@ -107,8 +107,8 @@ export class CommonSettingsComponent implements OnInit {
 					this.resetOptionToDefaultValue(option);
 				}
 
-				this.chromeStorageService.updateUserSetting(option.optionKey, option.value).then(() => {
-					console.log(option.optionKey + " has been updated to " + option.value);
+				this.chromeStorageService.updateUserSetting(option.key, option.value).then(() => {
+					console.log(option.key + " has been updated to " + option.value);
 				});
 			}
 		}
@@ -121,8 +121,8 @@ export class CommonSettingsComponent implements OnInit {
 	 * @param {IOption} option
 	 */
 	private resetOptionToDefaultValue(option: IOption) {
-		const resetValue = _.propertyOf(userSettings)(option.optionKey);
-		console.log(option.optionKey + " value not compliant, Reset to  " + resetValue);
+		const resetValue = _.propertyOf(userSettings)(option.key);
+		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
 	}
 
@@ -135,12 +135,12 @@ export class CommonSettingsComponent implements OnInit {
 
 		_.forEach(this.sections, (section: ISection) => {
 
-			const optionFound: IOption = _.find(section.content, {
-				optionKey: subOptionKey,
+			const foundOption: IOption = _.find(section.options, {
+				key: subOptionKey,
 			});
 
-			if (optionFound) {
-				optionFound.hidden = !show;
+			if (foundOption) {
+				foundOption.hidden = !show;
 			}
 		});
 	};

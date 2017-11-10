@@ -7,44 +7,44 @@
 
 	<h2 matLine>{{section.title}}</h2>
 
-	<ng-container *ngFor="let option of section.content | filterBy: ['optionTitle']: searchText">
+	<ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
 
 		<mat-list-item *ngIf="!option.hidden">
 
 			<!--Icons along activity type-->
-			<span matListIcon *ngFor="let label of option.optionLabels">
+			<span matListIcon *ngFor="let label of option.labels">
 				<mat-icon *ngIf="label == 'Cycling'">directions_bike</mat-icon>
 				<mat-icon *ngIf="label == 'Running'">directions_walk</mat-icon>
 				<mat-icon *ngIf="label == 'All'">settings</mat-icon>
 			</span>
 
 			<!--Title -->
-			<span matLine>{{option.optionTitle}}</span>
+			<span matLine>{{option.title}}</span>
 
 
 			<!--Display proper input method-->
 			<!--is checkbox ?-->
 			<mat-slide-toggle
-				*ngIf="option.optionType == 'checkbox'"
+				*ngIf="option.type == 'checkbox'"
 				[(ngModel)]="option.active"
 				(change)="onOptionChange(option)"
-				aria-label="option.optionTitle">
+				aria-label="option.title">
 			</mat-slide-toggle>
 
 			<!--is list?-->
 			<mat-select
-				*ngIf="option.optionType == 'list'"
+				*ngIf="option.type == 'list'"
 				(change)="onOptionChange(option)"
 				[(ngModel)]="option.active">
 				<mat-option
-					*ngFor="let listItem of option.optionList"
+					*ngFor="let listItem of option.list"
 					[value]="listItem">
 					{{listItem.name}}
 				</mat-option>
 			</mat-select>
 
 			<!--is input?-->
-			<mat-form-field *ngIf="option.optionType == 'number'">
+			<mat-form-field *ngIf="option.type == 'number'">
 				<input
 					matInput
 					type="number"
