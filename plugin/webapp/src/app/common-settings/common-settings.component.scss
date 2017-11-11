@@ -5,7 +5,7 @@ $config: mat-typography-config();
 
 .search-options {
 	margin: 20px $default-margin;
-	font-size: mat-font-size($config, headline);
+	font-size: mat-font-size($config, title);
 }
 
 .info, .tags {
