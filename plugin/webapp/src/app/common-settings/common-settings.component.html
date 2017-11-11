@@ -1,8 +1,18 @@
-<mat-form-field fxFill>
-	<mat-icon matPrefix>search</mat-icon>
-	<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
-</mat-form-field>
+<!--
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
+	<div fxFlex="33" style="border: 1px solid black;" fxLayoutAlign="center">A</div>
+	<div fxFlex="33" style="border: 1px solid black;">B</div>
+	<div fxFlex="33" style="border: 1px solid black;">C</div>
+</div>
+-->
+<!--fxLayoutAlign="space-around center"-->
 
+<div fxLayout="row" fxLayoutAlign="center center">
+	<mat-form-field>
+		<mat-icon matPrefix>search</mat-icon>
+		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
+	</mat-form-field>
+</div>
 <mat-list *ngFor="let section of sections">
 
 	<h1 matLine class="mat-headline">{{section.title}}</h1>

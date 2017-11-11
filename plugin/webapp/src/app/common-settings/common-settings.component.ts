@@ -7,6 +7,7 @@ import { userSettings } from "../../../../common/scripts/UserSettings";
 import { GotItDialogComponent, IGotItDialogData } from "../dialogs/noop-dialog/got-it-dialog.component";
 import { MatDialog } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
 	selector: 'app-common-settings',
@@ -23,6 +24,7 @@ export class CommonSettingsComponent implements OnInit {
 	constructor(private chromeStorageService: ChromeStorageService,
 				private commonSettingsService: CommonSettingsService,
 				private domSanitizer: DomSanitizer,
+				private route: ActivatedRoute,
 				private dialog: MatDialog) {
 	}
 
@@ -33,6 +35,8 @@ export class CommonSettingsComponent implements OnInit {
 		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
 			this.renderOptionsForEachSection(userSettingsSynced);
 		});
+
+		this.searchOptionsFromUrlQueryParams();
 	}
 
 	/**
@@ -168,18 +172,29 @@ export class CommonSettingsComponent implements OnInit {
 
 		if (option) {
 
-			const noopDialogData: IGotItDialogData = {
+			const gotItDialogData: IGotItDialogData = {
 				title: option.title,
 				html: this.domSanitizer.bypassSecurityTrustHtml(option.html)
 			};
-			const dialogRef = this.dialog.open(GotItDialogComponent, {
+
+			this.dialog.open(GotItDialogComponent, {
 				minWidth: GotItDialogComponent.MIN_WIDTH,
 				maxWidth: GotItDialogComponent.MAX_WIDTH,
-				data: noopDialogData
+				data: gotItDialogData
 			});
 		}
 	};
 
+	/**
+	 * Check query param: ?searchText=value and apply value to searchText data binding
+	 */
+	private searchOptionsFromUrlQueryParams() {
+		this.route.queryParams.subscribe(params => {
+			if (!_.isEmpty(params.searchText)) {
+				this._searchText = params.searchText;
+			}
+		});
+	}
 
 	get sections(): ISection[] {
 		return this._sections;
