@@ -13,6 +13,7 @@ import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from 'ngx-pipes';
 import { AsHtmlPipe } from "./pipes/as-html.pipe";
 import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
 	declarations: [
@@ -36,6 +37,7 @@ import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.compon
 		FormsModule,
 		MaterialModule,
 		BrowserAnimationsModule,
+		FlexLayoutModule,
 		NgPipesModule
 	],
 	providers: [ChromeStorageService, CommonSettingsService],
