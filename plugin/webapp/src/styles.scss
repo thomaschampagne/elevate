@@ -1,9 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
 
+/**
+ * Element style overriding
+ */
 html, body, mat-sidenav-container {
 	margin: 0;
 	width: auto;
 	height: 100%;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+mat-card {
+	margin: 10px;
+}
+
+/**
+ * Web app Custom typography
+ */
+$base-config: mat-typography-config(); // Create a config with the default typography levels.
+
+$web-app-config: mat-typography-config(// Define a typography config that will override the base typo
+	$headline: mat-typography-level(
+			mat-font-size($base-config, headline),
+			mat-line-height($base-config, headline),
+			300),
+	$title: mat-typography-level(
+			mat-font-size($base-config, title),
+			mat-line-height($base-config, title),
+			300),
+	$button: mat-typography-level(
+			mat-font-size($base-config, button),
+			mat-line-height($base-config, button),
+			300)
+);
+
+@include mat-base-typography($web-app-config); // Override typography CSS classes (e.g., mat-h1, mat-display-1, etc.).
+@include mat-checkbox-typography($web-app-config); // Override typography for a specific Angular Material components.
+@include angular-material-typography($web-app-config); // Override typography for all Angular Material, including mat-base-typography and all components.
+@include mat-core($web-app-config); // Override the typography in the core CSS.
