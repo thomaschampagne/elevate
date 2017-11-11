@@ -12,18 +12,23 @@ import { MaterialModule } from "./material.module";
 import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from 'ngx-pipes';
 import { AsHtmlPipe } from "./pipes/as-html.pipe";
+import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
 
 @NgModule({
 	declarations: [
-
 		// Components
 		AppComponent,
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
 
 		// Pipes
-		AsHtmlPipe
+		AsHtmlPipe,
 
+		// Dialogs
+		GotItDialogComponent
+	],
+	entryComponents: [
+		GotItDialogComponent
 	],
 	imports: [
 		BrowserModule,

@@ -4,6 +4,9 @@ import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettin
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
 import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
+import { GotItDialogComponent, IGotItDialogData } from "../dialogs/noop-dialog/got-it-dialog.component";
+import { MatDialog } from "@angular/material";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
 	selector: 'app-common-settings',
@@ -18,7 +21,9 @@ export class CommonSettingsComponent implements OnInit {
 	private _searchText;
 
 	constructor(private chromeStorageService: ChromeStorageService,
-				private commonSettingsService: CommonSettingsService) {
+				private commonSettingsService: CommonSettingsService,
+				private domSanitizer: DomSanitizer,
+				private dialog: MatDialog) {
 	}
 
 	public ngOnInit() {
@@ -143,6 +148,36 @@ export class CommonSettingsComponent implements OnInit {
 				foundOption.hidden = !show;
 			}
 		});
+	};
+
+
+	public showOptionDialog(optionKeyParam: string): void {
+
+		let option: IOption = null;
+
+		_.forEach(this.sections, (section: ISection) => {
+
+			const foundOption: IOption = _.find(section.options, {
+				key: optionKeyParam,
+			});
+
+			if (foundOption) {
+				option = foundOption;
+			}
+		});
+
+		if (option) {
+
+			const noopDialogData: IGotItDialogData = {
+				title: option.title,
+				html: this.domSanitizer.bypassSecurityTrustHtml(option.html)
+			};
+			const dialogRef = this.dialog.open(GotItDialogComponent, {
+				minWidth: GotItDialogComponent.MIN_WIDTH,
+				maxWidth: GotItDialogComponent.MAX_WIDTH,
+				data: noopDialogData
+			});
+		}
 	};
 
 

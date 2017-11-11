@@ -5,11 +5,11 @@
 
 <mat-list *ngFor="let section of sections">
 
-	<h2 matLine>{{section.title}}</h2>
+	<h1 matLine class="mat-headline">{{section.title}}</h1>
 
 	<ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
 
-		<mat-list-item *ngIf="!option.hidden">
+		<mat-list-item *ngIf="!option.hidden" (click)="showOptionDialog(option.key)">
 
 			<!--Icons along activity type-->
 			<span matListIcon *ngFor="let label of option.labels">
@@ -20,7 +20,6 @@
 
 			<!--Title -->
 			<span matLine>{{option.title}}</span>
-
 
 			<!--Display proper input method-->
 			<!--is checkbox ?-->
