@@ -1,72 +1,84 @@
-<!--
-<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-	<div fxFlex="33" style="border: 1px solid black;" fxLayoutAlign="center">A</div>
-	<div fxFlex="33" style="border: 1px solid black;">B</div>
-	<div fxFlex="33" style="border: 1px solid black;">C</div>
-</div>
--->
-<!--fxLayoutAlign="space-around center"-->
+<mat-card>
+	<mat-card-content>
+		<!--Search for options-->
+		<div fxLayout="row" fxLayoutAlign="center center">
+			<mat-form-field fxFill>
 
-<div fxLayout="row" fxLayoutAlign="center center">
-	<mat-form-field>
-		<mat-icon matPrefix>search</mat-icon>
-		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
-	</mat-form-field>
-</div>
-<mat-list *ngFor="let section of sections">
+				<span matPrefix>
+					<mat-icon>search</mat-icon>
+					&nbsp;&nbsp;
+				</span>
 
-	<h1 matLine class="mat-headline">{{section.title}}</h1>
-
-	<ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
-
-		<mat-list-item *ngIf="!option.hidden" (click)="showOptionDialog(option.key)">
-
-			<!--Icons along activity type-->
-			<span matListIcon *ngFor="let label of option.labels">
-				<mat-icon *ngIf="label == 'Cycling'">directions_bike</mat-icon>
-				<mat-icon *ngIf="label == 'Running'">directions_walk</mat-icon>
-				<mat-icon *ngIf="label == 'All'">settings</mat-icon>
-			</span>
-
-			<!--Title -->
-			<span matLine>{{option.title}}</span>
-
-			<!--Display proper input method-->
-			<!--is checkbox ?-->
-			<mat-slide-toggle
-				*ngIf="option.type == 'checkbox'"
-				[(ngModel)]="option.active"
-				(change)="onOptionChange(option)"
-				aria-label="option.title">
-			</mat-slide-toggle>
-
-			<!--is list?-->
-			<mat-select
-				*ngIf="option.type == 'list'"
-				(change)="onOptionChange(option)"
-				[(ngModel)]="option.active">
-				<mat-option
-					*ngFor="let listItem of option.list"
-					[value]="listItem">
-					{{listItem.name}}
-				</mat-option>
-			</mat-select>
-
-			<!--is input?-->
-			<mat-form-field *ngIf="option.type == 'number'">
-				<input
-					matInput
-					type="number"
-					(change)="onOptionChange(option)"
-					[(ngModel)]="option.value"
-					step="{{option.step}}"
-					min="{{option.min}}"
-					max="{{option.max}}"/>
+				<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
+				<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+						(click)="searchText=''">
+					<mat-icon>close</mat-icon>
+				</button>
 			</mat-form-field>
+		</div>
 
-		</mat-list-item>
+		<mat-list *ngFor="let section of sections;">
 
-	</ng-container>
+			<h2 class="mat-title">{{section.title}}</h2>
 
-	<mat-divider></mat-divider>
-</mat-list>
+			<ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
+
+				<mat-list-item *ngIf="!option.hidden">
+
+					<p matLine>
+						{{option.title}}
+						<sup>
+							<button mat-icon-button (click)="showOptionDialog(option.key)">
+								<mat-icon>help</mat-icon>
+							</button>
+						</sup>
+					</p>
+
+					<!-- Display new line only if option is not for 'All' -->
+					<p matLine *ngIf="option.labels.indexOf('All') == -1">
+						<i *ngFor="let label of option.labels; let i = index;">
+							{{label}}<span *ngIf="i < (option.labels.length - 1)">; </span>
+						</i>
+					</p>
+
+					<!--Display proper input method-->
+					<!--is checkbox ?-->
+					<mat-slide-toggle
+						*ngIf="option.type == 'checkbox'"
+						[(ngModel)]="option.active"
+						(change)="onOptionChange(option)"
+						aria-label="option.title">
+					</mat-slide-toggle>
+
+					<!--is list?-->
+					<mat-select
+						*ngIf="option.type == 'list'"
+						(change)="onOptionChange(option)"
+						[(ngModel)]="option.active">
+						<mat-option
+							*ngFor="let listItem of option.list"
+							[value]="listItem">
+							{{listItem.name}}
+						</mat-option>
+					</mat-select>
+
+					<!--is input?-->
+					<mat-form-field *ngIf="option.type == 'number'">
+						<input
+							matInput
+							type="number"
+							(change)="onOptionChange(option)"
+							[(ngModel)]="option.value"
+							step="{{option.step}}"
+							min="{{option.min}}"
+							max="{{option.max}}"/>
+					</mat-form-field>
+
+				</mat-list-item>
+
+			</ng-container>
+
+			<mat-divider></mat-divider>
+		</mat-list>
+	</mat-card-content>
+</mat-card>
