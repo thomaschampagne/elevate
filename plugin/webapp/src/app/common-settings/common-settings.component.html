@@ -1,30 +1,29 @@
-<mat-card>
-	<mat-card-content>
-		<!--Search for options-->
-		<div fxLayout="row" fxLayoutAlign="center center">
-			<mat-form-field fxFill>
+<!--Search for options-->
+<div class="search-options" fxLayout="row" fxLayoutAlign="center center">
+	<mat-form-field fxFill>
 
 				<span matPrefix>
 					<mat-icon>search</mat-icon>
 					&nbsp;&nbsp;
 				</span>
 
-				<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
-				<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
-						(click)="searchText=''">
-					<mat-icon>close</mat-icon>
-				</button>
-			</mat-form-field>
-		</div>
+		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
+		<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+				(click)="searchText=''">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+</div>
 
-		<mat-list *ngFor="let section of sections;">
-
-			<h2 class="mat-title">{{section.title}}</h2>
-
+<!--List sections and options-->
+<mat-card *ngFor="let section of sections;">
+	<mat-card-title>
+		{{section.title}}
+	</mat-card-title>
+	<mat-card-content>
+		<mat-list>
 			<ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
-
 				<mat-list-item *ngIf="!option.hidden">
-
 					<p matLine>
 						{{option.title}}
 						<sup>
@@ -75,10 +74,8 @@
 					</mat-form-field>
 
 				</mat-list-item>
-
 			</ng-container>
-
-			<mat-divider></mat-divider>
+			<!--<mat-divider></mat-divider>-->
 		</mat-list>
 	</mat-card-content>
 </mat-card>
