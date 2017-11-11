@@ -17,7 +17,6 @@ import { ActivatedRoute } from "@angular/router";
 
 export class CommonSettingsComponent implements OnInit {
 
-
 	private _sections: ISection[];
 	private _searchText;
 
@@ -36,8 +35,21 @@ export class CommonSettingsComponent implements OnInit {
 			this.renderOptionsForEachSection(userSettingsSynced);
 		});
 
-		this.searchOptionsFromUrlQueryParams();
+		// Watch query params to filter options from URL
+		// OR open option dialog from external
+		this.route.queryParams.subscribe(params => {
+
+			// Check query param: ?searchText=value and apply value to searchText data binding
+			if (!_.isEmpty(params.searchText)) {
+				this._searchText = params.searchText;
+			}
+
+			if (!_.isEmpty(params.viewOptionHelperId)) {
+				setTimeout(() => this.showOptionDialog(params.viewOptionHelperId)); // FIXME should be called without timeout. maybe in ngAfterContentInit?
+			}
+		});
 	}
+
 
 	/**
 	 *
@@ -155,6 +167,10 @@ export class CommonSettingsComponent implements OnInit {
 	};
 
 
+	/**
+	 *
+	 * @param {string} optionKeyParam
+	 */
 	public showOptionDialog(optionKeyParam: string): void {
 
 		let option: IOption = null;
@@ -185,16 +201,6 @@ export class CommonSettingsComponent implements OnInit {
 		}
 	};
 
-	/**
-	 * Check query param: ?searchText=value and apply value to searchText data binding
-	 */
-	private searchOptionsFromUrlQueryParams() {
-		this.route.queryParams.subscribe(params => {
-			if (!_.isEmpty(params.searchText)) {
-				this._searchText = params.searchText;
-			}
-		});
-	}
 
 	get sections(): ISection[] {
 		return this._sections;
