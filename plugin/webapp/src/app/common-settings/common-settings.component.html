@@ -1,13 +1,10 @@
 <!--Search for options-->
 <div class="search-options" fxLayout="row" fxLayoutAlign="center center">
 	<mat-form-field fxFill>
-
-				<span matPrefix>
-					<mat-icon>search</mat-icon>
-					&nbsp;&nbsp;
-				</span>
-
-		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search for an option">
+		<span matPrefix>
+			<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
+		</span>
+		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search">
 		<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
 				(click)="searchText=''">
 			<mat-icon>close</mat-icon>
@@ -28,14 +25,14 @@
 						{{option.title}}
 						<sup>
 							<button mat-icon-button (click)="showOptionDialog(option.key)">
-								<mat-icon>help</mat-icon>
+								<mat-icon class="info">info</mat-icon>
 							</button>
 						</sup>
 					</p>
 
 					<!-- Display new line only if option is not for 'All' -->
 					<p matLine *ngIf="option.labels.indexOf('All') == -1">
-						<i *ngFor="let label of option.labels; let i = index;">
+						<i *ngFor="let label of option.labels; let i = index;" class="tags">
 							{{label}}<span *ngIf="i < (option.labels.length - 1)">; </span>
 						</i>
 					</p>

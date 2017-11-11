@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'assets/styles/constant';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~@angular/material/theming';
-@import 'assets/styles/constant';
 
 /**
  * Element style overriding
@@ -18,7 +18,7 @@ mat-card {
 }
 
 /**
- * Web app Custom typography
+ * Web app Custom typography // TODO Extract in file
  */
 $base-config: mat-typography-config(); // Create a config with the default typography levels.
 
