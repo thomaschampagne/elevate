@@ -22,7 +22,7 @@
 		"clean:webappdist": "node ./node_modules/rimraf/bin.js ./plugin/webapp/dist/",
 		"clean:package": "node ./node_modules/rimraf/bin.js ./package/",
 		"clean:nodemodules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
-		"clean": "npm run clean:jsmap && npm run clean:rootdist && npm run clean:package && npm run clean:webappdist",
+		"clean": "npm run clean:jsmap && npm run clean:rootdist && npm run clean:webappdist && npm run clean:package",
 		"wipe": "npm run clean:jsmap && npm run clean:rootdist && npm run clean:package && npm run clean:nodemodules"
 	},
 	"repository": {
