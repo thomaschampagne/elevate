@@ -13,17 +13,17 @@
 		"test:phantom": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --single-run --browserConsoleLogOptions.terminal",
 		"test:chrome": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --no-single-run --browsers Chrome --browserConsoleLogOptions.terminal",
 		"dev:core": "npm run clean:jsmap && npm run tsc:watch",
-		"dev:webapp": "npm run clean:webappdist && npm run tsc:compile && cd ./plugin/webapp/ && ng build --watch",
+		"dev:webapp": "npm run clean:webapp-dist && npm run tsc:compile && cd ./plugin/webapp/ && ng build --watch",
 		"tsc:version": "echo TypeScript: && node ./node_modules/typescript/bin/tsc --version",
 		"tsc:compile": "npm run tsc:version && node ./node_modules/typescript/bin/tsc",
 		"tsc:watch": "npm run tsc:version && node ./node_modules/typescript/bin/tsc --watch",
 		"clean:jsmap": "node ./node_modules/gulp/bin/gulp.js cleanInlineSources",
-		"clean:rootdist": "node ./node_modules/rimraf/bin.js ./dist/",
-		"clean:webappdist": "node ./node_modules/rimraf/bin.js ./plugin/webapp/dist/",
+		"clean:root-dist": "node ./node_modules/rimraf/bin.js ./dist/",
+		"clean:webapp-dist": "node ./node_modules/rimraf/bin.js ./plugin/webapp/dist/",
 		"clean:package": "node ./node_modules/rimraf/bin.js ./package/",
-		"clean:nodemodules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
-		"clean": "npm run clean:jsmap && npm run clean:rootdist && npm run clean:webappdist && npm run clean:package",
-		"wipe": "npm run clean:jsmap && npm run clean:rootdist && npm run clean:package && npm run clean:nodemodules"
+		"clean:node-modules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
+		"clean": "npm run clean:jsmap && npm run clean:root-dist && npm run clean:webapp-dist && npm run clean:package",
+		"wipe": "npm run clean:jsmap && npm run clean:root-dist && npm run clean:package && npm run clean:node-modules"
 	},
 	"repository": {
 		"type": "git",
