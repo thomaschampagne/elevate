@@ -19,6 +19,13 @@ import { PlatformLocation } from "@angular/common";
 
 export class CommonSettingsComponent implements OnInit {
 
+	public static getOptionHelperDir(platformLocation: PlatformLocation) {
+		const location: Location = <Location> (<any> platformLocation).location;
+		const pathNames = location.pathname.split('/');
+		pathNames.pop();
+		return pathNames.join('/') + "/assets/option-helpers/";
+	}
+
 	private _sections: ISection[];
 	private _searchText;
 
@@ -32,7 +39,7 @@ export class CommonSettingsComponent implements OnInit {
 
 	public ngOnInit() {
 
-		this._sections = this.commonSettingsService.sections;
+		this.sections = this.commonSettingsService.sections;
 
 		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
 			this.renderOptionsForEachSection(userSettingsSynced);
@@ -48,7 +55,8 @@ export class CommonSettingsComponent implements OnInit {
 			}
 
 			if (!_.isEmpty(params.viewOptionHelperId)) {
-				setTimeout(() => this.showOptionHelperDialog(params.viewOptionHelperId)); // FIXME should be called without timeout. maybe in ngAfterContentInit?
+				// FIXME should be called without timeout. maybe in ngAfterContentInit?
+				setTimeout(() => this.showOptionHelperDialog(params.viewOptionHelperId));
 			}
 		});
 	}
@@ -210,17 +218,13 @@ export class CommonSettingsComponent implements OnInit {
 		}
 	};
 
-	public static getOptionHelperDir(platformLocation: PlatformLocation) {
-		const location: Location = <Location> (<any> platformLocation).location;
-		const pathNames = location.pathname.split('/');
-		pathNames.pop();
-		return pathNames.join('/') + "/assets/option-helpers/";
-	}
-
 	get sections(): ISection[] {
 		return this._sections;
 	}
 
+	set sections(value: ISection[]) {
+		this._sections = value;
+	}
 
 	get searchText(): string {
 		return this._searchText;
