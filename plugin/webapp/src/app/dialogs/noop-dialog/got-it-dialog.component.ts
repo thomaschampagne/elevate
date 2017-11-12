@@ -8,7 +8,7 @@ export interface IGotItDialogData {
 }
 
 @Component({
-	selector: 'app-noop-dialog',
+	selector: 'got-it-dialog',
 	templateUrl: './got-it-dialog.component.html',
 	styleUrls: ['./got-it-dialog.component.scss']
 })
