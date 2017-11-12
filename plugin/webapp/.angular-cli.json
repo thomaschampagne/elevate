@@ -19,9 +19,12 @@
 			"testTsconfig": "tsconfig.spec.json",
 			"prefix": "app",
 			"styles": [
-				"styles.scss"
+				"styles.scss",
+				"../node_modules/katex/dist/katex.min.css",
+				"../node_modules/github-markdown-css/github-markdown.css"
 			],
-			"scripts": [],
+			"scripts": [
+			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {
 				"dev": "environments/environment.ts",

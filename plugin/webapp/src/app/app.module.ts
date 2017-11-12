@@ -14,7 +14,6 @@ import { NgPipesModule } from 'ngx-pipes';
 import { AsHtmlPipe } from "./pipes/as-html.pipe";
 import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { MarkdownToHtmlModule } from "markdown-to-html-pipe";
 import { OptionHelperDialogComponent } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
 import { HttpClientModule } from "@angular/common/http";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
@@ -45,8 +44,7 @@ import { OptionHelperReaderService } from "./services/option-helper-reader.servi
 		MaterialModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
-		NgPipesModule,
-		MarkdownToHtmlModule
+		NgPipesModule
 	],
 	providers: [
 		ChromeStorageService,

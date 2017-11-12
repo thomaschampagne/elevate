@@ -60,7 +60,7 @@ export class CommonSettingsService {
 			type: "checkbox",
 			title: "Toughness Factor",
 			labels: ["Cycling"],
-			markdownTemplateUri: "Add a represention of how much you involved yourself in the cycling activity performed. A higher score indicates a better toughness.",
+			markdownTemplateUri: "",
 		}, {
 			key: "displayAdvancedPowerData",
 			type: "checkbox",

@@ -24,7 +24,7 @@
 		"clean:package": "node ./node_modules/rimraf/bin.js ./package/",
 		"clean:node-modules": "node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/webapp/node_modules/",
 		"clean": "npm run clean:jsmap && npm run clean:root-dist && npm run clean:webapp-dist && npm run clean:package",
-		"wipe": "npm run clean:jsmap && npm run clean:root-dist && npm run clean:package && npm run clean:node-modules"
+		"wipe": "npm run clean && npm run clean:node-modules"
 	},
 	"repository": {
 		"type": "git",
