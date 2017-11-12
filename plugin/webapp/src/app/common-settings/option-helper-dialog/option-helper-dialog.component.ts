@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from "@angular/material";
 import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
-import * as Emoji from "markdown-it-emoji";
 import * as _ from "lodash";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 
@@ -10,6 +9,13 @@ export interface IOptionHelperData {
 	title: string;
 	markdownData: string;
 }
+
+/**
+ * Notes:
+ * Math katex expressions reference:        https://khan.github.io/KaTeX/function-support.html
+ * Test markdown katex math expressions:    http://waylonflinn.github.io/markdown-it-katex/
+ * Supported emojis:                        https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/shortcuts.js
+ */
 
 @Component({
 	selector: 'option-helper-dialog',
@@ -28,7 +34,6 @@ export class OptionHelperDialogComponent implements OnInit {
 				private domSanitizer: DomSanitizer) {
 		this.markDownParser = new MarkDownIt();
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});
-		this.markDownParser.use(Emoji);
 	}
 
 	public ngOnInit() {
@@ -44,9 +49,3 @@ export class OptionHelperDialogComponent implements OnInit {
 		return this._dialogData;
 	}
 }
-/**
- * Notes:
- * Katex reference: https://khan.github.io/KaTeX/function-support.html
- * Test expression: http://waylonflinn.github.io/markdown-it-katex/
- * Emoji: https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/shortcuts.js
- */

@@ -197,12 +197,10 @@ export class CommonSettingsComponent implements OnInit {
 
 		if (option) {
 
-			const optionHelperDir = CommonSettingsComponent.getOptionHelperDir(this.platformLocation);
-
 			// Construct markdown template URI from asset option helper dir & option key
-			option.markdownTemplateUri = optionHelperDir + option.key + ".md";
+			const markdownTemplateUri = CommonSettingsComponent.getOptionHelperDir(this.platformLocation) + option.key + ".md";
 
-			this.optionHelperReaderService.get(option.markdownTemplateUri).then(markdownData => {
+			this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
 
 				const optionHelperData: IOptionHelperData = {
 					title: option.title,
