@@ -24,7 +24,7 @@
 					<p matLine>
 						{{option.title}}
 						<sup>
-							<button mat-icon-button (click)="showOptionDialog(option.key)">
+							<button mat-icon-button (click)="showOptionHelperDialog(option.key)">
 								<mat-icon class="info">info</mat-icon>
 							</button>
 						</sup>
@@ -72,7 +72,6 @@
 
 				</mat-list-item>
 			</ng-container>
-			<!--<mat-divider></mat-divider>-->
 		</mat-list>
 	</mat-card-content>
 </mat-card>

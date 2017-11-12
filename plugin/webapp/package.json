@@ -26,6 +26,7 @@
 		"@angular/router": "^5.0.0",
 		"core-js": "^2.4.1",
 		"hammerjs": "^2.0.8",
+		"markdown-to-html-pipe": "^1.2.3",
 		"ngx-pipes": "^2.0.3",
 		"rxjs": "^5.5.2",
 		"zone.js": "^0.8.14"

@@ -4,15 +4,17 @@ import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettin
 import { CommonSettingsService, IOption, ISection } from "../services/common-settings.service";
 import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
-import { GotItDialogComponent, IGotItDialogData } from "../dialogs/noop-dialog/got-it-dialog.component";
 import { MatDialog } from "@angular/material";
-import { DomSanitizer } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
+import { IOptionHelperData, OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
+import { OptionHelperReaderService } from "../services/option-helper-reader.service";
+import { PlatformLocation } from "@angular/common";
 
 @Component({
 	selector: 'app-common-settings',
 	templateUrl: './common-settings.component.html',
-	styleUrls: ['./common-settings.component.scss']
+	styleUrls: ['./common-settings.component.scss'],
+
 })
 
 export class CommonSettingsComponent implements OnInit {
@@ -20,9 +22,10 @@ export class CommonSettingsComponent implements OnInit {
 	private _sections: ISection[];
 	private _searchText;
 
-	constructor(private chromeStorageService: ChromeStorageService,
+	constructor(private platformLocation: PlatformLocation,
+				private chromeStorageService: ChromeStorageService,
 				private commonSettingsService: CommonSettingsService,
-				private domSanitizer: DomSanitizer,
+				private optionHelperReaderService: OptionHelperReaderService,
 				private route: ActivatedRoute,
 				private dialog: MatDialog) {
 	}
@@ -45,7 +48,7 @@ export class CommonSettingsComponent implements OnInit {
 			}
 
 			if (!_.isEmpty(params.viewOptionHelperId)) {
-				setTimeout(() => this.showOptionDialog(params.viewOptionHelperId)); // FIXME should be called without timeout. maybe in ngAfterContentInit?
+				setTimeout(() => this.showOptionHelperDialog(params.viewOptionHelperId)); // FIXME should be called without timeout. maybe in ngAfterContentInit?
 			}
 		});
 	}
@@ -82,9 +85,7 @@ export class CommonSettingsComponent implements OnInit {
 					option.value = _.propertyOf(userSettingsSynced)(option.key);
 
 				} else {
-
 					console.error("Option type not supported");
-
 				}
 			});
 		});
@@ -171,7 +172,7 @@ export class CommonSettingsComponent implements OnInit {
 	 *
 	 * @param {string} optionKeyParam
 	 */
-	public showOptionDialog(optionKeyParam: string): void {
+	public showOptionHelperDialog(optionKeyParam: string): void {
 
 		let option: IOption = null;
 
@@ -188,19 +189,33 @@ export class CommonSettingsComponent implements OnInit {
 
 		if (option) {
 
-			const gotItDialogData: IGotItDialogData = {
-				title: option.title,
-				html: this.domSanitizer.bypassSecurityTrustHtml(option.html)
-			};
+			const optionHelperDir = CommonSettingsComponent.getOptionHelperDir(this.platformLocation);
 
-			this.dialog.open(GotItDialogComponent, {
-				minWidth: GotItDialogComponent.MIN_WIDTH,
-				maxWidth: GotItDialogComponent.MAX_WIDTH,
-				data: gotItDialogData
+			// Construct markdown template URI from asset option helper dir & option key
+			option.markdownTemplateUri = optionHelperDir + option.key + ".md";
+
+			this.optionHelperReaderService.get(option.markdownTemplateUri).then(markdownData => {
+
+				const optionHelperData: IOptionHelperData = {
+					title: option.title,
+					markdownData: markdownData
+				};
+
+				this.dialog.open(OptionHelperDialogComponent, {
+					minWidth: OptionHelperDialogComponent.MIN_WIDTH,
+					maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
+					data: optionHelperData
+				});
 			});
 		}
 	};
 
+	public static getOptionHelperDir(platformLocation: PlatformLocation) {
+		const location: Location = <Location> (<any> platformLocation).location;
+		const pathNames = location.pathname.split('/');
+		pathNames.pop();
+		return pathNames.join('/') + "/assets/option-helpers/";
+	}
 
 	get sections(): ISection[] {
 		return this._sections;

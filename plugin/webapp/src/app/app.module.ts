@@ -14,6 +14,10 @@ import { NgPipesModule } from 'ngx-pipes';
 import { AsHtmlPipe } from "./pipes/as-html.pipe";
 import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { MarkdownToHtmlModule } from "markdown-to-html-pipe";
+import { OptionHelperDialogComponent } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
+import { HttpClientModule } from "@angular/common/http";
+import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 
 @NgModule({
 	declarations: [
@@ -26,21 +30,29 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 		AsHtmlPipe,
 
 		// Dialogs
-		GotItDialogComponent
+		GotItDialogComponent,
+		OptionHelperDialogComponent
 	],
 	entryComponents: [
-		GotItDialogComponent
+		GotItDialogComponent,
+		OptionHelperDialogComponent
 	],
 	imports: [
 		BrowserModule,
-		AppRoutingModule,
 		FormsModule,
+		HttpClientModule,
+		AppRoutingModule,
 		MaterialModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
-		NgPipesModule
+		NgPipesModule,
+		MarkdownToHtmlModule
 	],
-	providers: [ChromeStorageService, CommonSettingsService],
+	providers: [
+		ChromeStorageService,
+		CommonSettingsService,
+		OptionHelperReaderService
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {
