@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from "@angular/material";
-import * as markDownIt from "markdown-it";
+import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
+import * as Emoji from "markdown-it-emoji";
 import * as _ from "lodash";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 
@@ -21,12 +22,13 @@ export class OptionHelperDialogComponent implements OnInit {
 	public static MIN_WIDTH: string = '40%';
 
 	private html: SafeHtml;
-	private markDownParser: markDownIt.MarkdownIt;
+	private markDownParser: MarkDownIt.MarkdownIt;
 
 	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: IOptionHelperData,
 				private domSanitizer: DomSanitizer) {
-		this.markDownParser = new markDownIt();
+		this.markDownParser = new MarkDownIt();
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});
+		this.markDownParser.use(Emoji);
 	}
 
 	public ngOnInit() {
@@ -46,4 +48,5 @@ export class OptionHelperDialogComponent implements OnInit {
  * Notes:
  * Katex reference: https://khan.github.io/KaTeX/function-support.html
  * Test expression: http://waylonflinn.github.io/markdown-it-katex/
+ * Emoji: https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/shortcuts.js
  */
