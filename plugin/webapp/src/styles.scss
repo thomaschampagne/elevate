@@ -14,7 +14,9 @@ html, body, mat-sidenav-container {
 }
 
 mat-card {
-	margin: $default-margin;
+	margin-top: $default-margin;
+	margin-left: $default-margin;
+	margin-right: $default-margin;
 }
 
 /**

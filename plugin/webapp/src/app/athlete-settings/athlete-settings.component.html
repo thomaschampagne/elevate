@@ -1,3 +1,80 @@
-<p>
-	athlete-settings works!
-</p>
+<div layout="row" fxFlexAlign="center center">
+	<div fxFlex>
+		<mat-card class="gender-card">
+			<mat-card-title>
+				Gender
+			</mat-card-title>
+			<mat-card-content>
+				<mat-input-container fxFlex>
+					<mat-select aria-label="Gender">
+						<mat-option>A</mat-option>
+						<mat-option>B</mat-option>
+					</mat-select>
+				</mat-input-container>
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div fxFlex>
+		<mat-card>
+			<mat-card-title>
+				Weight
+			</mat-card-title>
+			<mat-card-content>
+				<mat-input-container fxFlex>
+					<input
+						matInput
+						type="number"
+						placeholder="Your weight in kilograms"/>
+				</mat-input-container>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>
+
+
+<mat-card>
+	<mat-card-title>
+		Heart rate
+		<mat-icon matTooltip="How to find your max Heart rate value If you don't know your own max Heart rate then enter the value 220 - 'your age' .
+		For example, if you are 30 years old, then your max HR will be 220 - 30 = 190">help
+		</mat-icon>
+	</mat-card-title>
+	<mat-card-content>
+
+		<!--<div layout="row" layout-align="start center">-->
+		<mat-input-container fxFill>
+			<input
+				matInput
+				type="number"
+				placeholder="Max heart rate in beats per minute"/>
+		</mat-input-container>
+		<!--<span fxFlex="1"></span>-->
+		<mat-input-container fxFill>
+			<input
+				matInput
+				type="number"
+				placeholder="Rest heart rate in beats per minute"/>
+		</mat-input-container>
+		<!--</div>-->
+
+	</mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-title>
+		Cycling Functional Threshold Power
+	</mat-card-title>
+	<mat-card-content>
+		To be done
+	</mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-title>
+		Swimming Functional Threshold Pace
+	</mat-card-title>
+	<mat-card-content>
+		To be done
+	</mat-card-content>
+</mat-card>
