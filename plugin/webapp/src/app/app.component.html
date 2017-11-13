@@ -5,15 +5,30 @@
 						   routerLinkActive="{{item.routerLinkActive}}">
 				<button mat-icon-button>
 					<mat-icon>{{item.icon}}</mat-icon>
-					{{ item.name }}
+					{{item.name}}
 				</button>
 			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>
-	<mat-toolbar color="primary">
+	<mat-toolbar color="accent">
+
 		<button mat-icon-button (click)="sidenav.toggle()">
 			<mat-icon>menu</mat-icon>
 		</button>
+
+		<span>{{title}}</span>
+
+		<span class="toolbar-spacer"></span>
+
+		<button mat-icon-button [matMenuTriggerFor]="menu">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+
+		<mat-menu #menu="matMenu">
+			<button mat-menu-item (click)="hello()">Fake</button>
+			<button mat-menu-item (click)="hello()">Fake</button>
+		</mat-menu>
+
 	</mat-toolbar>
 	<div>
 		<router-outlet></router-outlet>

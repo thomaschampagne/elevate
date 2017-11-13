@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { appRoutes } from "./app-routes";
+import {Component, OnInit} from '@angular/core';
+import {appRoutes} from "./app-routes";
+import {NavigationEnd, Router, RouterEvent} from "@angular/router";
+import * as _ from "lodash";
 
 export interface MainMenuItem {
 	name: string;
@@ -15,31 +17,54 @@ export interface MainMenuItem {
 })
 export class AppComponent implements OnInit {
 
-	private _mainMenuItems: MainMenuItem[];
+	private static updateToolBarTitle(url: string): string {
+		return _.startCase(_.upperFirst(_.last(_.split(url, '/'))));
+	}
 
-	get mainMenuItems(): MainMenuItem[] {
-		return this._mainMenuItems;
+	private _title: string;
+	private _mainMenuItems: MainMenuItem[] = [
+		{
+			name: 'Common Settings',
+			icon: 'settings',
+			routerLink: appRoutes.commonSettings,
+			routerLinkActive: true
+		},
+		{
+			name: 'Athlete Settings',
+			icon: 'accessibility',
+			routerLink: appRoutes.athleteSettings,
+			routerLinkActive: true
+		}
+	];
+
+	constructor(private router: Router) {
 	}
 
 	public ngOnInit(): void {
 
-		this._mainMenuItems = [
-			{
-				name: 'Common Settings',
-				icon: 'settings',
-				routerLink: appRoutes.commonSettings,
-				routerLinkActive: true
-			},
-			{
-				name: 'Athlete Settings',
-				icon: 'accessibility',
-				routerLink: appRoutes.athleteSettings,
-				routerLinkActive: true
+		this._title = AppComponent.updateToolBarTitle(this.router.url);
+
+		this.router.events.subscribe((routerEvent: RouterEvent) => {
+			if (routerEvent instanceof NavigationEnd) {
+				this._title = AppComponent.updateToolBarTitle(routerEvent.url);
 			}
-		];
+		});
 	}
 
 	public onMenuClicked(item: MainMenuItem): void {
 		console.log("Clicked %s", item.name);
 	}
+
+	get title(): string {
+		return this._title;
+	}
+
+	set title(value: string) {
+		this._title = value;
+	}
+
+	get mainMenuItems(): MainMenuItem[] {
+		return this._mainMenuItems;
+	}
+
 }
