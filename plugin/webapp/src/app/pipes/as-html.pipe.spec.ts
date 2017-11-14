@@ -1,6 +1,6 @@
 import { AsHtmlPipe } from './as-html.pipe';
 
-describe('AsHtmlPipe', () => {
+xdescribe('AsHtmlPipe', () => {
 
 	it('create an instance', () => {
 		// const pipe = new AsHtmlPipe();

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OptionHelperDialogComponent } from './option-helper-dialog.component';
 
-describe('OptionHelperDialogComponent', () => {
+xdescribe('OptionHelperDialogComponent', () => {
 	let component: OptionHelperDialogComponent;
 	let fixture: ComponentFixture<OptionHelperDialogComponent>;
 
