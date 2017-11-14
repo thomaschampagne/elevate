@@ -13,6 +13,8 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public ngOnInit() {
 
+
+
 		/*this.chromeStorageService.getAllFromLocalStorage().subscribe(
 
 			(data: any) => {

@@ -32,7 +32,6 @@
 	</div>
 </div>
 
-
 <mat-card>
 	<mat-card-title>
 		Heart rate
@@ -41,22 +40,27 @@
 		</mat-icon>
 	</mat-card-title>
 	<mat-card-content>
-
-		<!--<div layout="row" layout-align="start center">-->
-		<mat-input-container fxFill>
-			<input
-				matInput
-				type="number"
-				placeholder="Max heart rate in beats per minute"/>
-		</mat-input-container>
-		<!--<span fxFlex="1"></span>-->
-		<mat-input-container fxFill>
-			<input
-				matInput
-				type="number"
-				placeholder="Rest heart rate in beats per minute"/>
-		</mat-input-container>
-		<!--</div>-->
+		<div layout="row" layout-align="start center">
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="number"/>
+				<mat-placeholder>
+					<mat-icon>favorite</mat-icon>
+					Max heart rate in Beats Per Minute
+				</mat-placeholder>
+			</mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="number"/>
+				<mat-placeholder>
+					<mat-icon>favorite</mat-icon>
+					Rest heart rate in Beats Per Minute
+				</mat-placeholder>
+			</mat-form-field>
+		</div>
 
 	</mat-card-content>
 </mat-card>
