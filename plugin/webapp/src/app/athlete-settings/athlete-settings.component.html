@@ -25,7 +25,7 @@
 					<input
 						matInput
 						type="number"
-						placeholder="Your weight in kilograms"/>
+						placeholder="Weight in kilograms"/>
 				</mat-input-container>
 			</mat-card-content>
 		</mat-card>
@@ -35,20 +35,20 @@
 <mat-card>
 	<mat-card-title>
 		Heart rate
-		<mat-icon matTooltip="How to find your max Heart rate value If you don't know your own max Heart rate then enter the value 220 - 'your age' .
-		For example, if you are 30 years old, then your max HR will be 220 - 30 = 190">help
-		</mat-icon>
 	</mat-card-title>
 	<mat-card-content>
-		<div layout="row" layout-align="start center">
+		<div layout="row" layout-align="center center">
 			<mat-form-field fxFlex>
 				<input
 					matInput
 					type="number"/>
 				<mat-placeholder>
-					<mat-icon>favorite</mat-icon>
 					Max heart rate in Beats Per Minute
 				</mat-placeholder>
+				<mat-icon matSuffix
+						  matTooltip="If you don't know your own max heart rate then setup (220 - 'YOUR AGE') as value.">
+					info
+				</mat-icon>
 			</mat-form-field>
 			<span fxFlex="1"></span>
 			<mat-form-field fxFlex>
@@ -56,12 +56,11 @@
 					matInput
 					type="number"/>
 				<mat-placeholder>
-					<mat-icon>favorite</mat-icon>
 					Rest heart rate in Beats Per Minute
 				</mat-placeholder>
+				<mat-icon matSuffix matTooltip="Measure your rest heart rate by lying down in your bed.">info</mat-icon>
 			</mat-form-field>
 		</div>
-
 	</mat-card-content>
 </mat-card>
 
@@ -70,7 +69,15 @@
 		Cycling Functional Threshold Power
 	</mat-card-title>
 	<mat-card-content>
-		To be done
+		<mat-card-content>
+			<mat-input-container fxFlex>
+				<input
+					matInput
+					type="number" min="10" max="2500"
+					placeholder="Cycling FTP in watts"/>
+				<mat-icon matSuffix matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">info</mat-icon>
+			</mat-input-container>
+		</mat-card-content>
 	</mat-card-content>
 </mat-card>
 
