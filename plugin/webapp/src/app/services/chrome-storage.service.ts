@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { userSettings } from "../../../../common/scripts/UserSettings";
+import * as _ from "lodash";
 
 @Injectable()
 export class ChromeStorageService {
@@ -12,6 +13,20 @@ export class ChromeStorageService {
 		return new Promise<IUserSettings>((resolve) => {
 			chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
 				resolve(userSettingsSynced);
+			});
+		});
+	}
+
+
+	public getUserSetting(key: string): Promise<any> {
+		return new Promise<any>((resolve, reject) => {
+			chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
+				const value = userSettingsSynced[key];
+				if (!_.isUndefined(value)) {
+					resolve(value);
+				} else {
+					reject(key + " not found in user settings")
+				}
 			});
 		});
 	}

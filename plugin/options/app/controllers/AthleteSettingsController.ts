@@ -48,11 +48,11 @@ export class AthleteSettingsController {
         };
 
         $scope.userGenderChanged = (gender: IGenderList) => {
-            chromeStorageService.updateUserSetting("userGender", gender.type, () => {
-                console.log("userGender has been updated to " + gender.type);
-                $scope.localStorageMustBeCleared();
-                $scope.profileChanged();
-            });
+			chromeStorageService.updateUserSetting("userGender", gender.type, () => {
+				console.log("userGender has been updated to " + gender.type);
+				$scope.localStorageMustBeCleared();
+				$scope.profileChanged();
+			});
         };
 
         $scope.userMaxHrChanged = () => {

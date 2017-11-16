@@ -5,10 +5,16 @@
 				Gender
 			</mat-card-title>
 			<mat-card-content>
-				<mat-input-container fxFlex>
-					<mat-select aria-label="Gender">
-						<mat-option>A</mat-option>
-						<mat-option>B</mat-option>
+				<mat-input-container fxFill>
+					<mat-select
+						aria-label="Gender"
+						(change)="onGenderChanged()"
+						[(ngModel)]="gender">
+						<mat-option
+							*ngFor="let gender of GENDER_LIST;"
+							[value]="gender.type">
+							{{gender.display}}
+						</mat-option>
 					</mat-select>
 				</mat-input-container>
 			</mat-card-content>
@@ -21,10 +27,12 @@
 				Weight
 			</mat-card-title>
 			<mat-card-content>
-				<mat-input-container fxFlex>
+				<mat-input-container fxFill>
 					<input
 						matInput
-						type="number"
+						type="number" min="10" max="999"
+						[(ngModel)]="weight"
+						(change)="onWeightChanged()"
 						placeholder="Weight in kilograms"/>
 				</mat-input-container>
 			</mat-card-content>
@@ -41,7 +49,9 @@
 			<mat-form-field fxFlex>
 				<input
 					matInput
-					type="number"/>
+					type="number" min="10" max="999"
+					[(ngModel)]="maxHr"
+					(change)="onMaxHrChanged()"/>
 				<mat-placeholder>
 					Max heart rate in Beats Per Minute
 				</mat-placeholder>
@@ -54,7 +64,9 @@
 			<mat-form-field fxFlex>
 				<input
 					matInput
-					type="number"/>
+					type="number" min="10" max="999"
+					[(ngModel)]="restHr"
+					(change)="onRestHrChanged()"/>
 				<mat-placeholder>
 					Rest heart rate in Beats Per Minute
 				</mat-placeholder>
@@ -70,11 +82,13 @@
 	</mat-card-title>
 	<mat-card-content>
 		<mat-card-content>
-			<mat-input-container fxFlex>
+			<mat-input-container fxFill>
 				<input
 					matInput
-					type="number" min="10" max="2500"
-					placeholder="Cycling FTP in watts"/>
+					type="number" min="10" max="9999"
+					placeholder="Cycling FTP in watts"
+					[(ngModel)]="ftp"
+					(change)="onCyclingFtpChanged()"/>
 				<mat-icon matSuffix matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">info</mat-icon>
 			</mat-input-container>
 		</mat-card-content>
