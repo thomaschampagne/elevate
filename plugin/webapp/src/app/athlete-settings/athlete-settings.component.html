@@ -89,7 +89,10 @@
 					placeholder="Cycling FTP in watts"
 					[(ngModel)]="ftp"
 					(change)="onCyclingFtpChanged()"/>
-				<mat-icon matSuffix matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">info</mat-icon>
+				<mat-icon matSuffix
+						  matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">
+					info
+				</mat-icon>
 			</mat-input-container>
 		</mat-card-content>
 	</mat-card-content>
@@ -100,6 +103,35 @@
 		Swimming Functional Threshold Pace
 	</mat-card-title>
 	<mat-card-content>
-		To be done
+		<div layout="row" layout-align="center center">
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					step="0.2"
+					type="number" min="0" max="9999"
+					[(ngModel)]="swimFtp"
+					(change)="onSwimFtpChanged(false)"/>
+				<mat-placeholder>
+					Enter <strong>meters / min (e.g. 31)</strong>
+				</mat-placeholder>
+			</mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="text" maxlength="6"
+					pattern="^[0-9]+:[0-5]{1}[0-9]{1}$"
+					[(ngModel)]="swimFtp100m"
+					(change)="onSwimFtp100mChanged()"/>
+				<mat-placeholder>
+					OR enter as <strong>mm:ss / 100 meters (e.g. 03:15)</strong>
+				</mat-placeholder>
+			</mat-form-field>
+		</div>
+
+		<!--Calculator-->
+		<h2 class="mat-headline">Calculator</h2>
+		<app-swim-ftp-helper [swimFtp]="swimFtp" (swimFtpChange)="swimFtp=$event; onSwimFtpChanged(false);"></app-swim-ftp-helper>
+
 	</mat-card-content>
 </mat-card>

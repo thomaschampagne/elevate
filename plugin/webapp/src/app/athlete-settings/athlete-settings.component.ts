@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ChromeStorageService } from "../services/chrome-storage.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { MatSnackBar } from "@angular/material";
+import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 
 interface IGender {
 	type: string;
@@ -15,7 +16,6 @@ interface IGender {
 	styleUrls: ['./athlete-settings.component.scss']
 })
 export class AthleteSettingsComponent implements OnInit {
-
 
 	public static SETTINGS_KEY_CLEAR_LOCAL_STORAGE: string = "localStorageMustBeCleared";
 	public static SETTINGS_KEY_USER_WEIGHT: any = "userWeight";
@@ -45,6 +45,8 @@ export class AthleteSettingsComponent implements OnInit {
 
 	private _ftp: number;
 
+	private _swimFtp100m: string;
+
 
 	constructor(private chromeStorageService: ChromeStorageService,
 				private snackBar: MatSnackBar) {
@@ -63,8 +65,7 @@ export class AthleteSettingsComponent implements OnInit {
 			this._weight = userSettings.userWeight;
 			this._ftp = userSettings.userFTP;
 			this._swimFtp = userSettings.userSwimFTP;
-
-			// this.swimFTP100m = SwimFTPCalculator.convertMPerMinToTimePer100m(this.userSwimFTP); // TODO
+			this._swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(this._swimFtp);
 
 		});
 
@@ -93,7 +94,7 @@ export class AthleteSettingsComponent implements OnInit {
 				error => this.snackBar.open("Error: " + error)
 			);
 
-			this.popInvalidInputs();
+			this.popError();
 		}
 	}
 
@@ -107,7 +108,7 @@ export class AthleteSettingsComponent implements OnInit {
 			if (this.maxHr <= this.restHr) { // Compliant HR values ?!
 
 				// No... reset !
-				this.popInvalidHeartRateInputs();
+				this.popHeartRateError();
 
 				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
 					saved => this.maxHr = saved,
@@ -127,7 +128,7 @@ export class AthleteSettingsComponent implements OnInit {
 				error => this.snackBar.open("Error: " + error)
 			);
 
-			this.popInvalidInputs();
+			this.popError();
 		}
 	}
 
@@ -140,7 +141,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 			if (this.maxHr <= this.restHr) {
 
-				this.popInvalidHeartRateInputs();
+				this.popHeartRateError();
 
 				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
 					saved => this.restHr = saved,
@@ -156,7 +157,7 @@ export class AthleteSettingsComponent implements OnInit {
 				saved => this.restHr = saved,
 				error => this.snackBar.open("Error: " + error)
 			);
-			this.popInvalidInputs();
+			this.popError();
 		}
 	}
 
@@ -167,15 +168,91 @@ export class AthleteSettingsComponent implements OnInit {
 
 		if (_.isNumber(this.ftp) && this.ftp < 0) {
 
-			this.popInvalidInputs();
+			// Wrong value...
+			this.popError();
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP).then(
 				saved => this.ftp = saved,
 				error => this.snackBar.open("Error: " + error)
 			);
 
 		} else {
+			// Ok...
 			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP, this.ftp);
 		}
+	}
+
+	/**
+	 * Watch value changes from field directly OR from swim FTP calculator
+	 */
+	public onSwimFtpChanged(isFtp100mChange: boolean) {
+
+		if (!isFtp100mChange) {
+			this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(this.swimFtp); // Update min/100m field
+		}
+
+		if (_.isNumber(this.swimFtp) && this.swimFtp < 0) {
+			// Wrong value...
+			this.popError();
+			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
+				saved => {
+					this.swimFtp = saved;
+					this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(saved);
+				},
+				error => this.snackBar.open("Error: " + error)
+			);
+
+		} else {
+			// Ok...
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP, this.swimFtp);
+		}
+
+	}
+
+	/**
+	 *
+	 */
+	public onSwimFtp100mChanged() {
+
+		let hasErrors: boolean = false;
+
+		if (_.isEmpty(this.swimFtp100m)) {
+
+			// Ok...
+			this.swimFtp = null;
+			this.onSwimFtpChanged(true); // Trigger save & swimFtp100m new value
+
+		} else {
+
+			if (this.swimFtp100m.match("[0-9]+:[0-5]{1}[0-9]{1}")) {
+
+				// Ok...
+				const split = this.swimFtp100m.split(":");
+				const minutes = parseInt(split[0]);
+				const seconds = parseInt(split[1]);
+				const totalSeconds = minutes * 60 + seconds;
+				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
+
+				if (_.isFinite(this.swimFtp)) {
+					this.onSwimFtpChanged(true); // Trigger save & swimFtp100m new value
+				} else {
+					hasErrors = true;
+				}
+
+			} else {
+				hasErrors = true;
+			}
+		}
+
+		if (hasErrors) {
+			// Wrong value...
+			this.popError();
+			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
+				saved => this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(saved),
+				error => this.snackBar.open("Error: " + error)
+			);
+		}
+
+
 	}
 
 	/**
@@ -191,8 +268,9 @@ export class AthleteSettingsComponent implements OnInit {
 
 		this.localStorageMustBeCleared();
 
+		// TODO.. profileChanged not yet implemented
 		console.warn("profileChanged not yet implemented")
-		// TODO..
+
 		/*chromeStorageService.getProfileConfigured().then((configured: boolean) => {
 			if (!configured) {
 				chromeStorageService.setProfileConfigured(true).then(() => {
@@ -217,14 +295,22 @@ export class AthleteSettingsComponent implements OnInit {
 		return this.chromeStorageService.getUserSetting(key);
 	}
 
-	private popInvalidInputs() {
-		this.snackBar.open("Invalid value entered. Reset to default", 'Close', {
+	private popError(customMessage?: string) {
+
+		let message: string = "Invalid value entered. Reset to previous value.";
+
+		if (customMessage) {
+			message = customMessage;
+		}
+
+		this.snackBar.open(message, 'Close', {
 			duration: 2500
 		});
 	}
 
-	private popInvalidHeartRateInputs() {
-		this.snackBar.open("Invalid value entered: Max HR is lower than Rest HR. Reset to default", 'Close', {
+	private popHeartRateError() {
+		this.snackBar.open("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value",
+			'Close', {
 			duration: 2500
 		});
 	}
@@ -279,5 +365,14 @@ export class AthleteSettingsComponent implements OnInit {
 
 	set ftp(value: number) {
 		this._ftp = value;
+	}
+
+
+	get swimFtp100m(): string {
+		return this._swimFtp100m;
+	}
+
+	set swimFtp100m(value: string) {
+		this._swimFtp100m = value;
 	}
 }

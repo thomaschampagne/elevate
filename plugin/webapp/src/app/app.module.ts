@@ -11,24 +11,26 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from 'ngx-pipes';
-import { AsHtmlPipe } from "./pipes/as-html.pipe";
 import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { OptionHelperDialogComponent } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
 import { HttpClientModule } from "@angular/common/http";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
+import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
 
 @NgModule({
 	declarations: [
-		// Components
+		/**
+		 * App Components
+		 */
 		AppComponent,
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
+		SwimFtpHelperComponent,
 
-		// Pipes
-		AsHtmlPipe,
-
-		// Dialogs
+		/**
+		 * Dialogs
+		 */
 		GotItDialogComponent,
 		OptionHelperDialogComponent
 	],
