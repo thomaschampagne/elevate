@@ -102,7 +102,7 @@ export class SwimFtpHelperComponent implements OnInit {
 
 			if (_.isFinite(swimFtp) && _.isNumber(swimFtp) && swimFtp > 0) {
 
-				this._swimFtp = (_.isNumber(swimFtp) && swimFtp >= 0) ? parseFloat(swimFtp.toFixed(2)) : null;
+				this._swimFtp = (_.isNumber(swimFtp) && swimFtp >= 0) ? parseFloat(swimFtp.toFixed(3)) : null;
 
 			} else {
 				this._swimFtp = null;

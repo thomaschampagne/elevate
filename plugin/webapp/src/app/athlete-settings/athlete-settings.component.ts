@@ -185,9 +185,9 @@ export class AthleteSettingsComponent implements OnInit {
 	/**
 	 * Watch value changes from field directly OR from swim FTP calculator
 	 */
-	public onSwimFtpChanged(isFtp100mChange: boolean) {
+	public onSwimFtpChanged(changeFromPaceField?: boolean) {
 
-		if (!isFtp100mChange) {
+		if (_.isUndefined(changeFromPaceField) || !changeFromPaceField) { // If change is not from "hh:mm:ss / 100m" pace field
 			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.swimFtp); // Update min/100m field
 		}
 
@@ -218,11 +218,13 @@ export class AthleteSettingsComponent implements OnInit {
 
 		this.swimFtp100m = this.swimFtp100m.trim();
 
-		if (_.isEmpty(this.swimFtp100m)) {
+		if (_.isEmpty(this.swimFtp100m) || this.swimFtp100m == "00:00:00") {
 
 			// Ok...
 			this.swimFtp = null;
-			this.onSwimFtpChanged(true); // Trigger save & swimFtp100m new value
+			this.swimFtp100m = null;
+			const changeFromPaceField = true;
+			this.onSwimFtpChanged(changeFromPaceField); // Trigger save & swimFtp100m new value
 
 		} else {
 
@@ -234,10 +236,11 @@ export class AthleteSettingsComponent implements OnInit {
 				const minutes = parseInt(split[1]);
 				const seconds = parseInt(split[2]);
 				const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(2));
+				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
 
 				if (_.isFinite(this.swimFtp)) {
-					this.onSwimFtpChanged(true); // Trigger save & swimFtp100m new value
+					const changeFromPaceField = true;
+					this.onSwimFtpChanged(changeFromPaceField); // Trigger save & swimFtp100m new value
 				} else {
 					hasErrors = true;
 				}
