@@ -14,6 +14,9 @@ import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
 // TODO Listen from route params and load proper zones!
 export class ZonesSettingsComponent implements OnInit {
 
+	public static maxZonesCount: number = 50;
+	public static minZonesCount: number = 3;
+
 	private _zoneDefinitionSelected: string;
 	private _zoneDefinitions: IZoneDefinition[] = ZONE_DEFINITIONS;
 	private _userZones: IUserZones;
@@ -26,7 +29,13 @@ export class ZonesSettingsComponent implements OnInit {
 	public ngOnInit() {
 
 		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
+
+			// Load user zones data
 			this._userZones = userSettingsSynced.zones;
+
+			// Set cycling speed zones as default current zones
+			this._currentZones = _.propertyOf(this._userZones)("speed");
+			this._zoneDefinitionSelected = "speed";
 		});
 	}
 
@@ -43,6 +52,14 @@ export class ZonesSettingsComponent implements OnInit {
 
 	set userZones(value: IUserZones) {
 		this._userZones = value;
+	}
+
+	get currentZones(): IZone[] {
+		return this._currentZones;
+	}
+
+	set currentZones(value: IZone[]) {
+		this._currentZones = value;
 	}
 
 	get zoneDefinitions(): IZoneDefinition[] {

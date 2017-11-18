@@ -1,3 +1,57 @@
-<p>
-	zone works!
-</p>
+<mat-card>
+	<mat-card-content>
+		<div layout="row" fxFlexAlign="center center">
+
+			<span fxFlex>Z{{zoneId + 1}}</span>
+
+			<!--FROM FIELD-->
+			<div [ngSwitch]="isFirstZone"> <!-- FIRST ZONE ??? -->
+				<mat-form-field *ngSwitchCase="true"> <!-- IS FIRST ZONE -->
+					<input
+						matInput
+						type="number"
+						min="{{currentZones.min}}"
+						max="{{zone.to}}"
+						step="{{currentZones.step}}"
+						[(ngModel)]="zone.from"
+					/>
+				</mat-form-field>
+				<mat-form-field *ngSwitchCase="false"> <!-- IS NOT FIRST ZONE -->
+					<input
+						matInput
+						type="number"
+						min="{{prevZoneFrom}}"
+						max="{{zone.to}}"
+						step="{{currentZones.step}}"
+						[(ngModel)]="zone.from"
+					/>
+				</mat-form-field>
+			</div>
+			<span fxFlex="1"></span>
+
+			<!--TO FIELD-->
+			<div [ngSwitch]="isLastZone"> <!-- FIRST ZONE ??? -->
+				<mat-form-field *ngSwitchCase="true"> <!-- IS FIRST ZONE -->
+					<input
+						matInput
+						type="number"
+						min="{{zone.from}}"
+						max="{{currentZones.max}}"
+						step="{{currentZones.step}}"
+						[(ngModel)]="zone.to"
+					/>
+				</mat-form-field>
+				<mat-form-field *ngSwitchCase="false"> <!-- IS NOT FIRST ZONE -->
+					<input
+						matInput
+						type="number"
+						min="{{zone.from}}"
+						max="{{nextZoneTo}}"
+						step="{{currentZones.step}}"
+						[(ngModel)]="zone.to"
+					/>
+				</mat-form-field>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>
