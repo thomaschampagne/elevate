@@ -17,6 +17,7 @@ import { OptionHelperDialogComponent } from "./common-settings/option-helper-dia
 import { HttpClientModule } from "@angular/common/http";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
+import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
 		SwimFtpHelperComponent,
+		ZonesSettingsComponent,
 
 		/**
 		 * Dialogs

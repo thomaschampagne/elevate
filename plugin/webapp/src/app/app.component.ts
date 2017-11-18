@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {appRoutes} from "./app-routes";
-import {NavigationEnd, Router, RouterEvent} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { appRoutes } from "./app-routes";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 
 export interface MainMenuItem {
@@ -33,6 +33,12 @@ export class AppComponent implements OnInit {
 			name: 'Athlete Settings',
 			icon: 'accessibility',
 			routerLink: appRoutes.athleteSettings,
+			routerLinkActive: true
+		},
+		{
+			name: 'Zones Settings',
+			icon: 'format_line_spacing',
+			routerLink: appRoutes.zonesSettings,
 			routerLinkActive: true
 		}
 	];

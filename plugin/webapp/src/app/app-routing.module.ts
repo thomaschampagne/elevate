@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { appRoutes } from "./app-routes";
 import { AthleteSettingsComponent } from "./athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "./common-settings/common-settings.component";
+import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 
 const routes: Routes = [
 	{
@@ -12,6 +13,10 @@ const routes: Routes = [
 	{
 		path: appRoutes.commonSettings,
 		component: CommonSettingsComponent,
+	},
+	{
+		path: appRoutes.zonesSettings,
+		component: ZonesSettingsComponent,
 	},
 	{
 		path: '',
