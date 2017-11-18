@@ -3,6 +3,7 @@ import {IUserSettings} from "./interfaces/IUserSettings";
 export let userSettings: IUserSettings = {
     autoSyncMinutes: 60,
     localStorageMustBeCleared: false,
+	systemUnit: "metric",
     userGender: "men",
     userMaxHr: 190,
     userRestHr: 65,

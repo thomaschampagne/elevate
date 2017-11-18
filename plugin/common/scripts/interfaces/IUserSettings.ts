@@ -3,6 +3,7 @@ import {IZone} from "./IActivityData";
 export interface IUserSettings {
     autoSyncMinutes: number;
     localStorageMustBeCleared: boolean;
+	systemUnit: string;
     userGender: string;
     userMaxHr: number;
     userRestHr: number;
