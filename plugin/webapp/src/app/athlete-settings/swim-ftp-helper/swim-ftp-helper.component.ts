@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from "lodash";
 
@@ -21,9 +20,20 @@ interface IFormulaParams {
 })
 export class SwimFtpHelperComponent implements OnInit {
 
-	public static convertMPerMinToTimePer100m(swimFTP: number): string {
-		// FIXME Error when swimFTP under 0.8 m/min
-		return (!swimFTP || swimFTP <= 0) ? "" : moment(((1 / swimFTP) * 60 * 100) * 1000).format("mm:ss");
+	/**
+	 * Convert swimming speed to swimming pace
+	 * @param {number} swimFtp: speed in meters / min
+	 * @returns {string} Swim FTP pace hh:mm:ss / 100 meters
+	 */
+	public static convertSwimSpeedToPace(swimFtp: number): string {
+
+		let totalSeconds = 1 / (swimFtp / 60) * 100;
+		const hours = ("00" + Math.floor(totalSeconds / 3600)).slice(-2);
+		totalSeconds %= 3600;
+		const minutes = ("00" + Math.round(totalSeconds / 60)).slice(-2);
+		const seconds = ("00" + Math.round(totalSeconds % 60)).slice(-2);
+
+		return (!swimFtp || swimFtp <= 0) ? "" : hours + ":" + minutes + ":" + seconds;
 	}
 
 	@Input("swimFtp")
@@ -79,7 +89,7 @@ export class SwimFtpHelperComponent implements OnInit {
 
 		// alert(selectedMethod.active)
 
-		if(selectedMethod.active) {
+		if (selectedMethod.active) {
 
 			// Make all other method inactive
 			const othersMethods = _.reject(this._calculationMethods, (method: any) => {

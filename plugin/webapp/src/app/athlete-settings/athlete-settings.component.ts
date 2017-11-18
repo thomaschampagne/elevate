@@ -65,7 +65,7 @@ export class AthleteSettingsComponent implements OnInit {
 			this._weight = userSettings.userWeight;
 			this._ftp = userSettings.userFTP;
 			this._swimFtp = userSettings.userSwimFTP;
-			this._swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(this._swimFtp);
+			this._swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this._swimFtp);
 
 		});
 
@@ -187,7 +187,7 @@ export class AthleteSettingsComponent implements OnInit {
 	public onSwimFtpChanged(isFtp100mChange: boolean) {
 
 		if (!isFtp100mChange) {
-			this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(this.swimFtp); // Update min/100m field
+			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.swimFtp); // Update min/100m field
 		}
 
 		if (_.isNumber(this.swimFtp) && this.swimFtp < 0) {
@@ -196,7 +196,7 @@ export class AthleteSettingsComponent implements OnInit {
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => {
 					this.swimFtp = saved;
-					this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(saved);
+					this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved);
 				},
 				error => this.snackBar.open("Error: " + error)
 			);
@@ -215,6 +215,8 @@ export class AthleteSettingsComponent implements OnInit {
 
 		let hasErrors: boolean = false;
 
+		this.swimFtp100m = this.swimFtp100m.trim();
+
 		if (_.isEmpty(this.swimFtp100m)) {
 
 			// Ok...
@@ -223,13 +225,14 @@ export class AthleteSettingsComponent implements OnInit {
 
 		} else {
 
-			if (this.swimFtp100m.match("[0-9]+:[0-5]{1}[0-9]{1}")) {
+			if (this.swimFtp100m.match("^[0-9]+:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1}$")) {
 
 				// Ok...
 				const split = this.swimFtp100m.split(":");
-				const minutes = parseInt(split[0]);
-				const seconds = parseInt(split[1]);
-				const totalSeconds = minutes * 60 + seconds;
+				const hours = parseInt(split[0]);
+				const minutes = parseInt(split[1]);
+				const seconds = parseInt(split[2]);
+				const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
 
 				if (_.isFinite(this.swimFtp)) {
@@ -247,7 +250,7 @@ export class AthleteSettingsComponent implements OnInit {
 			// Wrong value...
 			this.popError();
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
-				saved => this.swimFtp100m = SwimFtpHelperComponent.convertMPerMinToTimePer100m(saved),
+				saved => this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved),
 				error => this.snackBar.open("Error: " + error)
 			);
 		}
