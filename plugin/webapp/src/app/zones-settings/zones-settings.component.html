@@ -1,3 +1,25 @@
-<p>
-	zones-settings works!
-</p>
+<!--Zone selection-->
+<div>
+	<mat-form-field>
+		<mat-select
+			aria-label="Zone selection"
+			(change)="onZoneDefinitionSelected()"
+			[(ngModel)]="zoneDefinitionSelected">
+			<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef.value">
+				{{zoneDef.name}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+
+	<!--<div *ngFor="let zone of zones;">-->
+
+	<!--	<div xtd-zone="xtdZone"
+             zone-id="{{$index}}"
+             previous-from="{{xtdZones[$index - 1].from}}"
+             next-to="{{xtdZones[$index + 1].to}}"
+             xtd-zone-first="{{$index == 0}}"
+             xtd-zone-last="{{$index == (xtdZones.length - 1)}}"
+             xtd-data-selected="xtdDataSelected"></div>-->
+	<!--</div>-->
+</div>
