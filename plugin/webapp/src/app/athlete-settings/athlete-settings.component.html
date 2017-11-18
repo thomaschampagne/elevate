@@ -130,8 +130,20 @@
 		</div>
 
 		<!--Calculator-->
-		<h2 class="mat-headline">Calculator</h2>
-		<app-swim-ftp-helper [swimFtp]="swimFtp" (swimFtpChange)="swimFtp=$event; onSwimFtpChanged(false);"></app-swim-ftp-helper>
+		<mat-slide-toggle
+			[(ngModel)]="isSwimFtpCalculatorEnabled"
+			(change)="isSwimFtpCalculatorEnabled!=isSwimFtpCalculatorEnabled;"
+			aria-label="Show swim ftp calculator"
+			class="swim-ftp-calculator-toggle">
+			Show swim ftp calculator
+		</mat-slide-toggle>
+
+		<ng-container *ngIf="isSwimFtpCalculatorEnabled">
+			<mat-divider></mat-divider>
+			<h2 class="mat-title">Swimming Functional Threshold Pace Calculator</h2>
+			<app-swim-ftp-helper [swimFtp]="swimFtp"
+								 (swimFtpChange)="swimFtp=$event; onSwimFtpChanged(false);"></app-swim-ftp-helper>
+		</ng-container>
 
 	</mat-card-content>
 </mat-card>

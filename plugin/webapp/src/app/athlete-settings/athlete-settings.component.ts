@@ -47,6 +47,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	private _swimFtp100m: string;
 
+	private _isSwimFtpCalculatorEnabled: boolean = false;
 
 	constructor(private chromeStorageService: ChromeStorageService,
 				private snackBar: MatSnackBar) {
@@ -233,7 +234,7 @@ export class AthleteSettingsComponent implements OnInit {
 				const minutes = parseInt(split[1]);
 				const seconds = parseInt(split[2]);
 				const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
+				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(2));
 
 				if (_.isFinite(this.swimFtp)) {
 					this.onSwimFtpChanged(true); // Trigger save & swimFtp100m new value
@@ -377,5 +378,13 @@ export class AthleteSettingsComponent implements OnInit {
 
 	set swimFtp100m(value: string) {
 		this._swimFtp100m = value;
+	}
+
+	get isSwimFtpCalculatorEnabled(): boolean {
+		return this._isSwimFtpCalculatorEnabled;
+	}
+
+	set isSwimFtpCalculatorEnabled(value: boolean) {
+		this._isSwimFtpCalculatorEnabled = value;
 	}
 }
