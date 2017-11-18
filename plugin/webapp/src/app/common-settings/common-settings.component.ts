@@ -16,8 +16,6 @@ import { PlatformLocation } from "@angular/common";
 	styleUrls: ['./common-settings.component.scss'],
 
 })
-// TODO Unit system: Metric or Imperial
-// TODO Deals with wind system..
 export class CommonSettingsComponent implements OnInit {
 
 	public static getOptionHelperDir(platformLocation: PlatformLocation) {

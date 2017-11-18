@@ -61,7 +61,6 @@ export interface IUserSettings {
     displayActivityBestSplits: boolean;
     bestSplitsConfiguration: any; // TODO Type this !
     temperatureUnit: string;
-    windUnit: string;
     showHiddenBetaFeatures: boolean;
     displayReliveCCLink: boolean;
 }

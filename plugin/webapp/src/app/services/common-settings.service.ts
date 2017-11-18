@@ -46,7 +46,7 @@ export class CommonSettingsService {
 				key: "imperial",
 				name: "Imperial",
 			}],
-			title: "Web-app measurement system",
+			title: "App measurement system",
 		}, {
 			key: "temperatureUnit",
 			type: "list",
@@ -59,27 +59,6 @@ export class CommonSettingsService {
 				name: "Celsius",
 			}],
 			title: "Temperature",
-		}, {
-			key: "windUnit",
-			type: "list",
-			labels: ["All"],
-			list: [{
-				key: "mph",
-				name: "Miles per hour",
-			}, {
-				key: "km/h",
-				name: "Kilometers per hour",
-			}, {
-				key: "m/s",
-				name: "Meters per second",
-			}, {
-				key: "kn",
-				name: "Knots",
-			}, {
-				key: "bft",
-				name: "Beaufort scale",
-			}],
-			title: "Wind Speed",
 		}],
 	}, {
 		title: "Athlete History Synchronisation",

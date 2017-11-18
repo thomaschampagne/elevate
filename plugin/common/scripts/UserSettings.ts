@@ -243,8 +243,7 @@ export let userSettings: IUserSettings = {
     reviveGoogleMapsLayerType: "terrain",
     displayActivityBestSplits: true,
     bestSplitsConfiguration: null,
-    temperatureUnit: "F",
-    windUnit: "mph",
+    temperatureUnit: "C",
     showHiddenBetaFeatures: false,
     displayReliveCCLink: true,
 };
