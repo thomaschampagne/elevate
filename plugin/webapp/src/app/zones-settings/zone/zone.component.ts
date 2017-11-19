@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
 import { ZonesService } from "../../services/zones.service";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
 	selector: 'app-zone',
@@ -34,14 +35,24 @@ export class ZoneComponent implements OnInit {
 	@Input("zoneDefinition")
 	private _zoneDefinition: IZoneDefinition;
 
-	constructor(private zonesService: ZonesService) {
+	constructor(private zonesService: ZonesService,
+				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit() {
 	}
 
 	public onRemoveZone(zoneId: number) {
-		this.zonesService.removeZone(zoneId);
+
+		this.zonesService.removeZone(zoneId)
+			.then(
+				message => this.popSnack(message),
+				error => this.popSnack(error)
+			);
+	}
+
+	private popSnack(message: string): void {
+		this.snackBar.open(message, 'Close', {duration: 2500});
 	}
 
 	get zone(): IZone {
