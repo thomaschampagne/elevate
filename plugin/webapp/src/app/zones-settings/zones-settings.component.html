@@ -13,13 +13,13 @@
 
 	<app-zone-tool-bar></app-zone-tool-bar>
 
-	<app-zone *ngFor="let zone of currentZones; let zoneIndex = index;"
+	<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
 			  [zone]="zone"
-			  [zoneId]="zoneIndex"
-			  [prevZoneFrom]="(currentZones[zoneIndex - 1]) ? currentZones[zoneIndex - 1].from : null"
-			  [nextZoneTo]="(currentZones[zoneIndex + 1]) ? currentZones[zoneIndex + 1].to : null"
-			  [isFirstZone]="(zoneIndex == 0)"
-			  [isLastZone]="(zoneIndex == (currentZones.length - 1))"
+			  [zoneId]="zoneId"
+			  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
+			  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
+			  [isFirstZone]="(zoneId == 0)"
+			  [isLastZone]="(zoneId == (currentZones.length - 1))"
 			  [currentZones]="currentZones"
 			  [zoneDefinition]="zoneDefinitionSelected">
 	</app-zone>

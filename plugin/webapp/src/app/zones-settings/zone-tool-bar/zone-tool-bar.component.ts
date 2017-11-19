@@ -14,12 +14,11 @@ export class ZoneToolBarComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private zonesService: ZonesService,
-				private snackBar: MatSnackBar) {
+				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
 	public ngOnInit() {
 	}
-
 
 	public onAddZone() {
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
 import { ZonesService } from "../../services/zones.service";
@@ -9,7 +9,7 @@ import { MatSnackBar } from "@angular/material";
 	templateUrl: './zone.component.html',
 	styleUrls: ['./zone.component.scss']
 })
-export class ZoneComponent implements OnInit {
+export class ZoneComponent implements OnInit, OnChanges {
 
 	@Input("zone")
 	private _zone: IZone;
@@ -36,10 +36,40 @@ export class ZoneComponent implements OnInit {
 	private _zoneDefinition: IZoneDefinition;
 
 	constructor(private zonesService: ZonesService,
-				private snackBar: MatSnackBar) {
+				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
 	public ngOnInit() {
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+
+		// @see https://www.concretepage.com/angular-2/angular-2-4-onchanges-simplechanges-example
+
+		console.debug(changes, this._zoneId, this._zone);
+
+		console.debug(changes.hasOwnProperty('_prevZoneFrom'));
+		console.debug(changes.hasOwnProperty('_nextZoneTo'));
+
+		console.debug(changes['_prevZoneFrom']);
+		console.debug(changes['_nextZoneTo']);
+
+
+		if (changes['_prevZoneFrom']) {
+			const prevZoneFrom = changes['_prevZoneFrom'].currentValue;
+			console.warn(prevZoneFrom);
+		}
+
+		/*
+		for (let propName in changes) {
+			let change = changes[propName];
+			let curVal  = JSON.stringify(change.currentValue);
+			let prevVal = JSON.stringify(change.previousValue);
+
+			console.log(curVal);
+			console.log(prevVal);
+		}
+		*/
 	}
 
 	public onRemoveZone(zoneId: number) {
@@ -52,6 +82,7 @@ export class ZoneComponent implements OnInit {
 	}
 
 	private popSnack(message: string): void {
+		// TODO pop Snack from parent?! instead inject snackBar for each zones. low Perf ?!
 		this.snackBar.open(message, 'Close', {duration: 2500});
 	}
 
