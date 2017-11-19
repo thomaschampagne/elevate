@@ -14,11 +14,12 @@ import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
 // TODO Listen from route params and load proper zones!
 export class ZonesSettingsComponent implements OnInit {
 
-	public static maxZonesCount: number = 50;
-	public static minZonesCount: number = 3;
+	public static DEFAULT_ZONE_VALUE: string = "speed";
+	public static MAX_ZONES_COUNT: number = 50;
+	public static MIN_ZONES_COUNT: number = 3;
 
-	private _zoneDefinitionSelected: string;
 	private _zoneDefinitions: IZoneDefinition[] = ZONE_DEFINITIONS;
+	private _zoneDefinitionSelected: IZoneDefinition;
 	private _userZones: IUserZones;
 	private _currentZones: IZone[];
 
@@ -34,15 +35,21 @@ export class ZonesSettingsComponent implements OnInit {
 			this._userZones = userSettingsSynced.zones;
 
 			// Set cycling speed zones as default current zones
-			this._currentZones = _.propertyOf(this._userZones)("speed");
-			this._zoneDefinitionSelected = "speed";
+			this.loadDefaultZone();
 		});
+	}
+
+	private loadDefaultZone() {
+		this._currentZones = _.propertyOf(this._userZones)(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
+		this._zoneDefinitionSelected = _.find(this.zoneDefinitions, {value: ZonesSettingsComponent.DEFAULT_ZONE_VALUE});
 	}
 
 	public onZoneDefinitionSelected() {
 
 		console.debug("selected: ", this._zoneDefinitionSelected);
-		this._currentZones = _.propertyOf(this._userZones)(this._zoneDefinitionSelected);
+
+		this._currentZones = _.propertyOf(this._userZones)(this._zoneDefinitionSelected.value);
+
 		console.debug("currentZones to be edited: ", this._currentZones);
 	}
 
@@ -70,11 +77,11 @@ export class ZonesSettingsComponent implements OnInit {
 		this._zoneDefinitions = value;
 	}
 
-	get zoneDefinitionSelected(): string {
+	get zoneDefinitionSelected(): IZoneDefinition {
 		return this._zoneDefinitionSelected;
 	}
 
-	set zoneDefinitionSelected(value: string) {
+	set zoneDefinitionSelected(value: IZoneDefinition) {
 		this._zoneDefinitionSelected = value;
 	}
 

@@ -19,11 +19,13 @@ import { OptionHelperReaderService } from "./services/option-helper-reader.servi
 import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
 import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 import { ZoneComponent } from "./zones-settings/zone/zone.component";
+import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-bar.component";
 
 @NgModule({
 	declarations: [
+
 		/**
-		 * App Components
+		 * Components
 		 */
 		AppComponent,
 		AthleteSettingsComponent,
@@ -31,6 +33,7 @@ import { ZoneComponent } from "./zones-settings/zone/zone.component";
 		SwimFtpHelperComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
+		ZoneToolBarComponent,
 
 		/**
 		 * Dialogs

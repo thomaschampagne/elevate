@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { IZoneDefinition } from "../zone-definitions";
 
 @Component({
 	selector: 'app-zone',
@@ -28,6 +29,9 @@ export class ZoneComponent implements OnInit {
 
 	@Input("currentZones")
 	private _currentZones: IZone[];
+
+	@Input("zoneDefinition")
+	private _zoneDefinition: IZoneDefinition;
 
 	constructor() {
 	}
@@ -89,5 +93,13 @@ export class ZoneComponent implements OnInit {
 
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
+	}
+
+	get zoneDefinition(): IZoneDefinition {
+		return this._zoneDefinition;
+	}
+
+	set zoneDefinition(value: IZoneDefinition) {
+		this._zoneDefinition = value;
 	}
 }
