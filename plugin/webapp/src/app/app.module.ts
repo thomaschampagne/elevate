@@ -20,6 +20,7 @@ import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-
 import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 import { ZoneComponent } from "./zones-settings/zone/zone.component";
 import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-bar.component";
+import { ZonesService } from "./services/zones.service";
 
 @NgModule({
 	declarations: [
@@ -58,7 +59,8 @@ import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-b
 	providers: [
 		ChromeStorageService,
 		CommonSettingsService,
-		OptionHelperReaderService
+		OptionHelperReaderService,
+		ZonesService
 	],
 	bootstrap: [AppComponent]
 })

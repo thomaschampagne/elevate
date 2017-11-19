@@ -5,6 +5,7 @@ import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
+import { ZonesService } from "../services/zones.service";
 
 @Component({
 	selector: 'app-zones-settings',
@@ -22,6 +23,7 @@ export class ZonesSettingsComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private chromeStorageService: ChromeStorageService,
+				private zonesService: ZonesService,
 				private route: ActivatedRoute) {
 	}
 
@@ -33,30 +35,38 @@ export class ZonesSettingsComponent implements OnInit {
 			this._userZones = userSettingsSynced.zones;
 
 			// Set cycling speed zones as default current zones
-			this.loadDefaultZone();
+			const cyclingSpeedZoneDefinition: IZoneDefinition = _.find(this.zoneDefinitions,
+				{
+					value: ZonesSettingsComponent.DEFAULT_ZONE_VALUE
+				}
+			);
+
+			this.loadZonesFromDefinition(cyclingSpeedZoneDefinition);
 		});
 	}
 
-	private loadDefaultZone() {
-		this._currentZones = _.propertyOf(this._userZones)(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
-		this._zoneDefinitionSelected = _.find(this.zoneDefinitions, {value: ZonesSettingsComponent.DEFAULT_ZONE_VALUE});
+	/**
+	 * Load current zones from a zone definition.
+	 * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
+	 * @param {IZoneDefinition} zoneDefinition
+	 */
+	private loadZonesFromDefinition(zoneDefinition: IZoneDefinition) {
+
+		// Load current zone from zone definition provided
+		this._currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
+
+		// Update current zones managed by the zones service
+		this.zonesService.currentZones = this._currentZones;
+
+		// Update the zone definition used
+		this._zoneDefinitionSelected = zoneDefinition;
 	}
 
+	/**
+	 * Use
+	 */
 	public onZoneDefinitionSelected() {
-
-		console.debug("selected: ", this._zoneDefinitionSelected);
-
-		this._currentZones = _.propertyOf(this._userZones)(this._zoneDefinitionSelected.value);
-
-		console.debug("currentZones to be edited: ", this._currentZones);
-	}
-
-	get userZones(): IUserZones {
-		return this._userZones;
-	}
-
-	set userZones(value: IUserZones) {
-		this._userZones = value;
+		this.loadZonesFromDefinition(this._zoneDefinitionSelected);
 	}
 
 	get currentZones(): IZone[] {
@@ -82,5 +92,4 @@ export class ZonesSettingsComponent implements OnInit {
 	set zoneDefinitionSelected(value: IZoneDefinition) {
 		this._zoneDefinitionSelected = value;
 	}
-
 }

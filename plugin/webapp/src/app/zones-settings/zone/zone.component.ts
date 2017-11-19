@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
+import { ZonesService } from "../../services/zones.service";
 
 @Component({
 	selector: 'app-zone',
@@ -33,10 +34,14 @@ export class ZoneComponent implements OnInit {
 	@Input("zoneDefinition")
 	private _zoneDefinition: IZoneDefinition;
 
-	constructor() {
+	constructor(private zonesService: ZonesService) {
 	}
 
 	public ngOnInit() {
+	}
+
+	public onRemoveZone(zoneId: number) {
+		this.zonesService.removeZone(zoneId);
 	}
 
 	get zone(): IZone {

@@ -3,7 +3,7 @@
 	<mat-form-field>
 		<mat-select
 			aria-label="Zone selection"
-			(change)="onZoneDefinitionSelected()"
+			(change)="onZoneDefinitionSelected(zoneDef)"
 			[(ngModel)]="zoneDefinitionSelected">
 			<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
 				{{zoneDef.name}}
@@ -11,9 +11,7 @@
 		</mat-select>
 	</mat-form-field>
 
-	<app-zone-tool-bar
-		[currentZones]="currentZones">
-	</app-zone-tool-bar>
+	<app-zone-tool-bar></app-zone-tool-bar>
 
 	<app-zone *ngFor="let zone of currentZones; let zoneIndex = index;"
 			  [zone]="zone"
@@ -25,4 +23,6 @@
 			  [currentZones]="currentZones"
 			  [zoneDefinition]="zoneDefinitionSelected">
 	</app-zone>
+
+	<app-zone-tool-bar></app-zone-tool-bar>
 </div>
