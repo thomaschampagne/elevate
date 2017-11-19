@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { MatSnackBar } from "@angular/material";
+import * as _ from "lodash";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -21,6 +22,9 @@ export class ZoneToolBarComponent implements OnInit {
 	public ngOnInit() {
 	}
 
+	/**
+	 *
+	 */
 	public onAddZone() {
 
 		if (this._currentZones.length >= ZoneToolBarComponent.MAX_ZONES_COUNT) {
@@ -56,8 +60,55 @@ export class ZoneToolBarComponent implements OnInit {
 		}
 	}
 
-	public onRemoveZone() {
+	/**
+	 *
+	 */
+	public onRemoveZone(zoneId?: number) {
 
+		if (this._currentZones.length <= ZoneToolBarComponent.MIN_ZONES_COUNT) {
+
+			this.snackBar.open("You can't remove more than " + ZoneToolBarComponent.MIN_ZONES_COUNT + " zones...",
+				'Close',
+				{duration: 2500}
+			);
+
+		} else {
+
+			let message;
+			if (_.isNumber(zoneId) && zoneId === 0) {
+
+				// First zone... just remove it...
+				this._currentZones.splice(zoneId, 1);
+				message = "Zone <" + (zoneId + 1) + "> has been removed."; // TODO Check message OK
+
+			} else if (_.isNumber(zoneId) && zoneId !== this._currentZones.length - 1) {
+
+				// Delete middle zone id here...
+				// Update next zone
+				this._currentZones[zoneId + 1].from = this._currentZones[zoneId - 1].to;
+
+				// Remove zone
+				this._currentZones.splice(zoneId, 1);
+
+				message = "Zone <" + (zoneId + 1) + "> has been removed."; // TODO Check message OK
+
+			} else {
+
+				// Delete last zone
+				this._currentZones.pop();
+
+				message = "Zone <" + (this._currentZones.length + 1) + "> has been removed."; // TODO Check message OK
+
+				// Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
+				// let oldLastZone = this._currentZones[this._currentZones.length - 1];
+				// this._currentZones[this._currentZones.length - 1].to = oldLastZone.to;
+			}
+
+			this.snackBar.open(message,
+				'Close',
+				{duration: 2500}
+			);
+		}
 	}
 
 	get currentZones(): IZone[] {
