@@ -34,6 +34,33 @@ export class CommonSettingsService {
 	public static TYPE_OPTION_NUMBER: string = "number";
 
 	private _sections: ISection[] = [{
+		title: "Units",
+		options: [{
+			key: "systemUnit",
+			type: "list",
+			labels: ["All"],
+			list: [{
+				key: "metric",
+				name: "Metric",
+			}, {
+				key: "imperial",
+				name: "Imperial",
+			}],
+			title: "App system units",
+		}, {
+			key: "temperatureUnit",
+			type: "list",
+			labels: ["All"],
+			list: [{
+				key: "F",
+				name: "Fahrenheit",
+			}, {
+				key: "C",
+				name: "Celsius",
+			}],
+			title: "Temperature",
+		}],
+	}, {
 		title: "Athlete History Synchronisation",
 		options: [{
 			key: "autoSyncMinutes",
@@ -273,42 +300,6 @@ export class CommonSettingsService {
 			title: "Hide running activities under distance.",
 			labels: ["Running"],
 			min: 0,
-		}],
-	}, {
-		title: "Weather units",
-		options: [{
-			key: "temperatureUnit",
-			type: "list",
-			labels: ["All"],
-			list: [{
-				key: "F",
-				name: "Fahrenheit",
-			}, {
-				key: "C",
-				name: "Celsius",
-			}],
-			title: "Temperature",
-		}, {
-			key: "windUnit",
-			type: "list",
-			labels: ["All"],
-			list: [{
-				key: "mph",
-				name: "Miles per hour",
-			}, {
-				key: "km/h",
-				name: "Kilometers per hour",
-			}, {
-				key: "m/s",
-				name: "Meters per second",
-			}, {
-				key: "kn",
-				name: "Knots",
-			}, {
-				key: "bft",
-				name: "Beaufort scale",
-			}],
-			title: "Wind Speed",
 		}],
 	}, {
 		title: "StravistiX Year progression targets for " + (new Date()).getFullYear(),

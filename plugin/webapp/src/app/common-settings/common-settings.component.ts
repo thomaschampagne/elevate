@@ -16,7 +16,6 @@ import { PlatformLocation } from "@angular/common";
 	styleUrls: ['./common-settings.component.scss'],
 
 })
-
 export class CommonSettingsComponent implements OnInit {
 
 	public static getOptionHelperDir(platformLocation: PlatformLocation) {

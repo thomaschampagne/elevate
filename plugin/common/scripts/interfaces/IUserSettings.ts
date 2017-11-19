@@ -16,6 +16,7 @@ export interface IUserZones {
 export interface IUserSettings {
 	autoSyncMinutes: number;
 	localStorageMustBeCleared: boolean;
+	systemUnit: string;
 	userGender: string;
 	userMaxHr: number;
 	userRestHr: number;
@@ -62,7 +63,6 @@ export interface IUserSettings {
 	displayActivityBestSplits: boolean;
 	bestSplitsConfiguration: any; // TODO Type this !
 	temperatureUnit: string;
-	windUnit: string;
 	showHiddenBetaFeatures: boolean;
 	displayReliveCCLink: boolean;
 }

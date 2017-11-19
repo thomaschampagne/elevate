@@ -1,8 +1,9 @@
-import {IUserSettings} from "./interfaces/IUserSettings";
+import { IUserSettings } from "./interfaces/IUserSettings";
 
 export let userSettings: IUserSettings = {
     autoSyncMinutes: 60,
     localStorageMustBeCleared: false,
+	systemUnit: "metric",
     userGender: "men",
     userMaxHr: 190,
     userRestHr: 65,
@@ -242,8 +243,7 @@ export let userSettings: IUserSettings = {
     reviveGoogleMapsLayerType: "terrain",
     displayActivityBestSplits: true,
     bestSplitsConfiguration: null,
-    temperatureUnit: "F",
-    windUnit: "mph",
+	temperatureUnit: "C",
     showHiddenBetaFeatures: false,
     displayReliveCCLink: true,
 };
