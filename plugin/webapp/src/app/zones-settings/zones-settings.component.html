@@ -11,7 +11,9 @@
 		</mat-select>
 	</mat-form-field>
 
-	<app-zone-tool-bar></app-zone-tool-bar>
+	<app-zone-tool-bar
+		[currentZones]="currentZones">
+	</app-zone-tool-bar>
 
 	<app-zone *ngFor="let zone of currentZones; let zoneIndex = index;"
 			  [zone]="zone"

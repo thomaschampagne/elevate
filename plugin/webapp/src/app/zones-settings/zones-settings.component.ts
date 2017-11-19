@@ -14,9 +14,7 @@ import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
 // TODO Listen from route params and load proper zones!
 export class ZonesSettingsComponent implements OnInit {
 
-	public static DEFAULT_ZONE_VALUE: string = "speed";
-	public static MAX_ZONES_COUNT: number = 50;
-	public static MIN_ZONES_COUNT: number = 3;
+	public static DEFAULT_ZONE_VALUE: string = "speed"; // equals Cycling Speed
 
 	private _zoneDefinitions: IZoneDefinition[] = ZONE_DEFINITIONS;
 	private _zoneDefinitionSelected: IZoneDefinition;
