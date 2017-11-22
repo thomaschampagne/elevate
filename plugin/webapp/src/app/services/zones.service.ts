@@ -5,43 +5,41 @@ import * as _ from "lodash";
 @Injectable()
 export class ZonesService {
 
-	public static MAX_ZONES_COUNT: number = 50;
-	public static MIN_ZONES_COUNT: number = 3;
+	private readonly MAX_ZONES_COUNT: number = 50;
+	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
 
 	constructor() {
 	}
 
-	/**
-	 *
-	 */
-	public addZone(): Promise<string> {
+	public addLastZone(): Promise<string> {
 
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
-			if (this._currentZones.length >= ZonesService.MAX_ZONES_COUNT) {
 
-				reject("You can't add more than " + ZonesService.MAX_ZONES_COUNT + " zones...");
+			if (this._currentZones.length >= this.getMaxZoneCount()) {
+
+				reject("You can't add more than " + this.getMaxZoneCount() + " zones...");
 
 			} else {
 
-				const oldLastZone: IZone = this._currentZones[this._currentZones.length - 1];
+				const oldLastZone: IZone = this.getLastZone();
 
 				// Computed middle value between oldLastZone.from and oldLastZone.to
-				const midValue: number = Math.floor((oldLastZone.from + oldLastZone.to) / 2);
+				const intermediateZoneValue: number = Math.floor((oldLastZone.from + oldLastZone.to) / 2);
 
 				// Creating new Zone
-				const newLastZone: IZone = {
-					from: midValue,
+				const lastZone: IZone = {
+					from: intermediateZoneValue,
 					to: oldLastZone.to,
 				};
 
 				// Apply middle value computed to previous last zone (to)
-				this._currentZones[this._currentZones.length - 1].to = midValue;
+				this._currentZones[this._currentZones.length - 1].to = intermediateZoneValue;
 
 				// Add the new last zone
-				this._currentZones.push(newLastZone);
+				this._currentZones.push(lastZone);
 
 				resolve("Zone <" + this._currentZones.length + "> has been added.");
 			}
@@ -51,14 +49,31 @@ export class ZonesService {
 	/**
 	 *
 	 */
+	public removeLastZone(): Promise<string> {
+
+		return new Promise((resolve: (message: string) => void,
+							reject: (error: string) => void) => {
+
+
+			// Delete last zone
+			this._currentZones.pop();
+
+			resolve("Zone <" + (this._currentZones.length + 1) + "> has been removed.");
+		});
+	}
+
+	/**
+	 *
+	 */
+	// TODO To be removed
 	public removeZone(zoneId?: number): Promise<string> {
 
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
 
-			if (this._currentZones.length <= ZonesService.MIN_ZONES_COUNT) {
+			if (this._currentZones.length <= this.getMinZoneCount()) {
 
-				reject("You can't remove more than " + ZonesService.MIN_ZONES_COUNT + " zones...");
+				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
 
 			} else {
 
@@ -94,6 +109,18 @@ export class ZonesService {
 				resolve(message);
 			}
 		});
+	}
+
+	public getLastZone() {
+		return _.last(this._currentZones);
+	}
+
+	public getMaxZoneCount(): number {
+		return this.MAX_ZONES_COUNT;
+	}
+
+	public getMinZoneCount(): number {
+		return this.MIN_ZONES_COUNT;
 	}
 
 	get currentZones(): IZone[] {

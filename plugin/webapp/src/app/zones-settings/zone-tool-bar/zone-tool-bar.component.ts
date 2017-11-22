@@ -20,9 +20,9 @@ export class ZoneToolBarComponent implements OnInit {
 	public ngOnInit() {
 	}
 
-	public onAddZone() {
+	public onAddLastZone() {
 
-		this.zonesService.addZone()
+		this.zonesService.addLastZone()
 			.then(
 				message => this.popSnack(message),
 				error => this.popSnack(error)
