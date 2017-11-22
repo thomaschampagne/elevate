@@ -46,7 +46,7 @@ export class ZoneComponent implements OnInit, OnChanges {
 
 		// @see https://www.concretepage.com/angular-2/angular-2-4-onchanges-simplechanges-example
 
-		console.debug(changes, this._zoneId, this._zone);
+		/*console.debug(changes, this._zoneId, this._zone);
 
 		console.debug(changes.hasOwnProperty('_prevZoneFrom'));
 		console.debug(changes.hasOwnProperty('_nextZoneTo'));
@@ -58,7 +58,7 @@ export class ZoneComponent implements OnInit, OnChanges {
 		if (changes['_prevZoneFrom']) {
 			const prevZoneFrom = changes['_prevZoneFrom'].currentValue;
 			console.warn(prevZoneFrom);
-		}
+		}*/
 
 		/*
 		for (let propName in changes) {

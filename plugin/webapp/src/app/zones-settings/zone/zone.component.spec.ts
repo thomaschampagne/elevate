@@ -1,16 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ZoneComponent } from './zone.component';
+import { MaterialModule } from "../../material.module";
+import { FormsModule } from "@angular/forms";
+import { ZonesService } from "../../services/zones.service";
 
-describe('ZoneComponent', () => {
+xdescribe('ZoneComponent', () => {
 	let component: ZoneComponent;
 	let fixture: ComponentFixture<ZoneComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ZoneComponent]
-		})
-			.compileComponents();
+			imports: [FormsModule, MaterialModule],
+			declarations: [ZoneComponent],
+			providers: [ZonesService]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
