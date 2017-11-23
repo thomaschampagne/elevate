@@ -1,6 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { ZonesService } from './zones.service';
 import * as _ from "lodash";
+import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 
 describe('ZonesService', () => {
 
@@ -13,7 +14,8 @@ describe('ZonesService', () => {
 		});
 
 		zoneService = TestBed.get(ZonesService);
-		zoneService.currentZones = [ // Set 10 fake zones
+
+		const USER_ZONES = [ // Set 10 fake zones
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -25,6 +27,8 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
+
+		zoneService.currentZones = USER_ZONES;
 	});
 
 	it('should be created', inject([ZonesService], (zoneService: ZonesService) => {
@@ -109,27 +113,80 @@ describe('ZonesService', () => {
 	});
 
 	it('should not remove last zone if MIN zone count reached', (done: Function) => {
-		// TODO
+
 		// Given
+		const MIN_ZONE_COUNT = 10;
+		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+
+
 		// When
+		const removeZoneLastPromise: Promise<string> = zoneService.removeLastZone();
+
 		// Then
-		throw new Error("Not implemented")
+		removeZoneLastPromise.then((result: string) => {
+
+			expect(result).toBeNull();
+			done();
+
+		}, (error: string) => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual("You can't remove more than " + MIN_ZONE_COUNT + " zones...");
+			expect(zoneService.currentZones.length).toBe(MIN_ZONE_COUNT);
+
+			done();
+		});
 	});
 
 	it('should remove zone at index', (done: Function) => {
-		// TODO
+
 		// Given
+		const removeIndex = 4;
+		const expectedZonesLength = 9;
+
 		// When
+		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+
 		// Then
-		throw new Error("Not implemented")
+		removeZoneAtIndexPromise.then((result: string) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
+			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+
+			const previousZone: IZone = zoneService.currentZones[removeIndex - 1];
+			const newNextZone: IZone = zoneService.currentZones[removeIndex]; // Is actually same index than the removed
+			expect(newNextZone.from).toBe(previousZone.to);
+
+			done();
+		});
 	});
 
 	it('should not remove zone at index if MIN zone count reached', (done: Function) => {
-		// TODO
+
 		// Given
+		const MIN_ZONE_COUNT = 10;
+		const removeIndex = 6;
+		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+
+
 		// When
+		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+
 		// Then
-		throw new Error("Not implemented")
+		removeZoneAtIndexPromise.then((result: string) => {
+
+			expect(result).toBeNull();
+			done();
+
+		}, (error: string) => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual("You can't remove more than " + MIN_ZONE_COUNT + " zones...");
+			expect(zoneService.currentZones.length).toBe(MIN_ZONE_COUNT);
+
+			done();
+		});
 	});
 
 	it('should notify the previous Zone ("TO") when his own "FROM" has been changed', (done: Function) => {

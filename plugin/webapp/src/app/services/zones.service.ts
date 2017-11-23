@@ -13,6 +13,10 @@ export class ZonesService {
 	constructor() {
 	}
 
+	/**
+	 *
+	 * @returns {Promise<string>}
+	 */
 	public addLastZone(): Promise<string> {
 
 		return new Promise((resolve: (message: string) => void,
@@ -48,17 +52,48 @@ export class ZonesService {
 
 	/**
 	 *
+	 * @returns {Promise<string>}
 	 */
 	public removeLastZone(): Promise<string> {
 
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
 
+			if (this._currentZones.length <= this.getMinZoneCount()) {
+				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
+			} else {
 
-			// Delete last zone
-			this._currentZones.pop();
+				this._currentZones.pop(); // Delete last zone
+				resolve("Zone <" + (this._currentZones.length + 1) + "> has been removed.");
+			}
 
-			resolve("Zone <" + (this._currentZones.length + 1) + "> has been removed.");
+		});
+	}
+
+	/**
+	 *
+	 * @param {number} index
+	 * @returns {Promise<string>}
+	 */
+	public removeZoneAtIndex(index: number): Promise<string> {
+
+		return new Promise((resolve: (message: string) => void,
+							reject: (error: string) => void) => {
+
+			if (this._currentZones.length <= this.getMinZoneCount()) {
+
+				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
+
+			} else {
+
+				// Update next from zone with previous zone to
+				this._currentZones[index + 1].from = this._currentZones[index - 1].to;
+
+				// Remove zone middle zone id here...
+				this._currentZones.splice(index, 1);
+
+				resolve("Zone <" + (index + 1) + "> has been removed.");
+			}
 		});
 	}
 
@@ -130,4 +165,6 @@ export class ZonesService {
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
 	}
+
+
 }
