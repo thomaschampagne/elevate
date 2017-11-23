@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
-import { ZonesService } from "../../services/zones.service";
+import { IZoneChange, IZoneChangeInstruction, ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
+import * as _ from "lodash";
 
 @Component({
 	selector: 'app-zone',
@@ -16,6 +17,12 @@ export class ZoneComponent implements OnInit, OnChanges {
 
 	@Input("zoneId")
 	private _zoneId: number;
+
+	@Input("zoneFrom")
+	private _zoneFrom: number;
+
+	@Input("zoneTo")
+	private _zoneTo: number;
 
 	@Input("prevZoneFrom")
 	private _prevZoneFrom: number;
@@ -40,39 +47,66 @@ export class ZoneComponent implements OnInit, OnChanges {
 	}
 
 	public ngOnInit() {
+
+		this.zonesService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+
+			const isChangeRequiredForMe = (!_.isNull(instruction) && (this._zoneId == instruction.destinationId));
+
+			if (isChangeRequiredForMe) {
+				setTimeout(() => this.applyInstructions(instruction)); // FIXME
+			}
+
+		}, error => {
+			console.error(error);
+		}, () => {
+			console.log("InstructionListener complete");
+		});
 	}
 
-	public ngOnChanges(changes: SimpleChanges): void {
+	public ngOnChanges(zoneChanges: SimpleChanges): void {
+		this.notifyChange(zoneChanges);
+	}
 
-		// @see https://www.concretepage.com/angular-2/angular-2-4-onchanges-simplechanges-example
+	public notifyChange(zoneChange): void {
 
-		/*console.debug(changes, this._zoneId, this._zone);
+		const isChangeFrom = !_.isUndefined(zoneChange['_zoneFrom']);
+		const isChangeTo = !_.isUndefined(zoneChange['_zoneTo']);
 
-		console.debug(changes.hasOwnProperty('_prevZoneFrom'));
-		console.debug(changes.hasOwnProperty('_nextZoneTo'));
+		if (isChangeFrom && isChangeTo) return; // Skip notify zone service on first component display
 
-		console.debug(changes['_prevZoneFrom']);
-		console.debug(changes['_nextZoneTo']);
+		if (isChangeFrom || isChangeTo) {
 
+			const zoneChangeNotification: IZoneChange = {
+				sourceId: this.zoneId,
+				from: false,
+				to: false,
+				value: null
+			};
 
-		if (changes['_prevZoneFrom']) {
-			const prevZoneFrom = changes['_prevZoneFrom'].currentValue;
-			console.warn(prevZoneFrom);
-		}*/
+			if (isChangeFrom) {
+				zoneChangeNotification.from = true;
+				zoneChangeNotification.value = this.zone.from;
+			} else if (isChangeTo) {
+				zoneChangeNotification.to = true;
+				zoneChangeNotification.value = this.zone.to;
+			}
 
-		/*
-		for (let propName in changes) {
-			let change = changes[propName];
-			let curVal  = JSON.stringify(change.currentValue);
-			let prevVal = JSON.stringify(change.previousValue);
-
-			console.log(curVal);
-			console.log(prevVal);
+			console.debug("NotifyChange with", zoneChangeNotification);
+			this.zonesService.notifyChange(zoneChangeNotification);
 		}
-		*/
 	}
 
-	public onRemoveZoneAtIndex(zoneId: number) {
+	private applyInstructions(instruction: IZoneChangeInstruction): void {
+
+		if (instruction.from) {
+			this.zone.from = instruction.value
+		}
+		if (instruction.to) {
+			this.zone.to = instruction.value
+		}
+	}
+
+	public onRemoveZoneAtIndex(zoneId: number): void {
 
 		this.zonesService.removeZoneAtIndex(zoneId)
 			.then(
@@ -100,6 +134,22 @@ export class ZoneComponent implements OnInit, OnChanges {
 
 	set zoneId(value: number) {
 		this._zoneId = value;
+	}
+
+	get zoneFrom(): number {
+		return this._zoneFrom;
+	}
+
+	set zoneFrom(value: number) {
+		this._zoneFrom = value;
+	}
+
+	get zoneTo(): number {
+		return this._zoneTo;
+	}
+
+	set zoneTo(value: number) {
+		this._zoneTo = value;
 	}
 
 	get prevZoneFrom(): number {

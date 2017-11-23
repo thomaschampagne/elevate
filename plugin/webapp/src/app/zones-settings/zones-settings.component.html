@@ -16,6 +16,8 @@
 	<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
 			  [zone]="zone"
 			  [zoneId]="zoneId"
+			  [zoneFrom]="currentZones[zoneId].from"
+			  [zoneTo]="currentZones[zoneId].to"
 			  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
 			  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
 			  [isFirstZone]="(zoneId == 0)"
