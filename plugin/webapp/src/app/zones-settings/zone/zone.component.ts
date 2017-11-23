@@ -72,9 +72,9 @@ export class ZoneComponent implements OnInit, OnChanges {
 		*/
 	}
 
-	public onRemoveZone(zoneId: number) {
+	public onRemoveZoneAtIndex(zoneId: number) {
 
-		this.zonesService.removeZone(zoneId)
+		this.zonesService.removeZoneAtIndex(zoneId)
 			.then(
 				message => this.popSnack(message),
 				error => this.popSnack(error)

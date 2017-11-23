@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { ZonesService } from './zones.service';
+import { IZoneChange, IZoneChangeInstruction, ZonesService } from './zones.service';
 import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 
@@ -190,35 +190,177 @@ describe('ZonesService', () => {
 	});
 
 	it('should notify the previous Zone ("TO") when his own "FROM" has been changed', (done: Function) => {
-		// TODO
-		// Given
-		// When
-		// Then
-		throw new Error("Not implemented")
+
+		// Given, increment +1 from of third sourceZone.
+		const index = 2;
+		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
+
+		const zoneChange: IZoneChange = {
+			sourceId: index,
+			from: true,
+			to: false,
+			value: updatedFromValue
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+
+			expect(_.isEmpty(instruction)).toBeFalsy();
+			expect(instruction.sourceId).toEqual(index);
+			expect(instruction.destinationId).toEqual(index - 1); // Must be the previous index
+
+			expect(instruction.to).toBeTruthy();
+			expect(instruction.from).toBeFalsy();
+			expect(instruction.value).toEqual(updatedFromValue);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+
 	});
 
 	it('should not notify the previous Zone if "FROM" has changed & zone edited is the first', (done: Function) => {
-		// TODO
-		// Given
-		// When
-		// Then
-		throw new Error("Not implemented")
+
+		// Given, increment +1 from of first source zone
+		const index = 0; // First zone
+		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
+
+		const zoneChange: IZoneChange = {
+			sourceId: index,
+			from: true,
+			to: false,
+			value: updatedFromValue
+		};
+
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+			expect(instruction).toBeNull();
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
 	});
 
+
 	it('should notify the next Zone ("FROM") when his own "TO" has been changed', (done: Function) => {
-		// TODO
-		// Given
-		// When
-		// Then
-		throw new Error("Not implemented")
+
+		// Given, decrement -1 a "to" zone.
+		const index = 7;
+		const updatedToValue: number = zoneService.currentZones[index].to - 1; // Apply the change
+
+		const zoneChange: IZoneChange = {
+			sourceId: index,
+			from: false,
+			to: true,
+			value: updatedToValue
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+
+			expect(_.isEmpty(instruction)).toBeFalsy();
+			expect(instruction.sourceId).toEqual(index);
+			expect(instruction.destinationId).toEqual(index + 1); // Must be the previous index
+
+			expect(instruction.from).toBeTruthy();
+			expect(instruction.to).toBeFalsy();
+			expect(instruction.value).toEqual(updatedToValue);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+
 	});
 
 	it('should not notify the next Zone if "TO" has changed & zone edited is the latest', (done: Function) => {
-		// TODO
-		// Given
-		// When
-		// Then
-		throw new Error("Not implemented")
+
+		// Given, increment +1 from of last source zone
+		const index = 9; // Last zone
+		const updatedToValue: number = zoneService.currentZones[index].to + 1; // Apply the change
+
+		const zoneChange: IZoneChange = {
+			sourceId: index,
+			from: false,
+			to: true,
+			value: updatedToValue
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+			expect(instruction).toBeNull();
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+
 	});
 
+	it('should fail when "from" & "to" change are equals', (done: Function) => {
+
+		// Given
+		const zoneChange: IZoneChange = {
+			sourceId: 5,
+			from: true,
+			to: true,
+			value: 99
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+			expect(instruction).toBeNull();
+			done();
+
+		}, error => {
+			expect(error).not.toBeNull();
+			expect(error).toBe("Impossible to notify both 'from' & 'to' changes at the same time");
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+	});
+
+	it('should fail when value is not a number', (done: Function) => {
+
+		// Given
+		const zoneChange: IZoneChange = {
+			sourceId: 3,
+			from: true,
+			to: false,
+			value: null
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+			expect(instruction).toBeNull();
+			done();
+
+		}, error => {
+			expect(error).not.toBeNull();
+			expect(error).toBe("Value provided is not a number");
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+	});
 });

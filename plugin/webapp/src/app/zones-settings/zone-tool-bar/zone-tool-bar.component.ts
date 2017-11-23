@@ -29,8 +29,8 @@ export class ZoneToolBarComponent implements OnInit {
 			);
 	}
 
-	public onRemoveZone() {
-		this.zonesService.removeZone()
+	public onRemoveLastZone() {
+		this.zonesService.removeLastZone()
 			.then(
 				message => this.popSnack(message),
 				error => this.popSnack(error)

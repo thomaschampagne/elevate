@@ -1,6 +1,18 @@
 import { Injectable } from '@angular/core';
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
+import { Subject } from "rxjs/Subject";
+
+export interface IZoneChange {
+	sourceId: number;
+	to: boolean;
+	from: boolean;
+	value: number;
+}
+
+export interface IZoneChangeInstruction extends IZoneChange {
+	destinationId: number;
+}
 
 @Injectable()
 export class ZonesService {
@@ -9,8 +21,10 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
+	private _instructionListener: Subject<IZoneChange>;
 
 	constructor() {
+		this._instructionListener = new Subject<IZoneChange>();
 	}
 
 	/**
@@ -97,53 +111,54 @@ export class ZonesService {
 		});
 	}
 
+
 	/**
 	 *
+	 * @param {IZoneChange} zoneChange
 	 */
-	// TODO To be removed
-	public removeZone(zoneId?: number): Promise<string> {
+	public notifyChange(zoneChange: IZoneChange): void {
 
-		return new Promise((resolve: (message: string) => void,
-							reject: (error: string) => void) => {
+		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
+			this._instructionListener.error("Impossible to notify both 'from' & 'to' changes at the same time");
+		}
 
-			if (this._currentZones.length <= this.getMinZoneCount()) {
+		if(!_.isNumber(zoneChange.value)) {
+			this._instructionListener.error("Value provided is not a number");
+		}
 
-				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
+		const isFirstZoneChange = (zoneChange.sourceId == 0);
+		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
 
-			} else {
+		let instruction: IZoneChangeInstruction = null;
 
-				let message;
-				if (_.isNumber(zoneId) && zoneId === 0) {
+		if (!isFirstZoneChange && !isLastZoneChange) {
 
-					// First zone... just remove it...
-					this._currentZones.splice(zoneId, 1);
-					message = "Zone <" + (zoneId + 1) + "> has been removed.";
+			instruction = {
+				sourceId: zoneChange.sourceId,
+				destinationId: null,
+				to: null,
+				from: null,
+				value: zoneChange.value,
+			};
 
-				} else if (_.isNumber(zoneId) && zoneId !== this._currentZones.length - 1) {
-
-					// Delete middle zone id here...
-					// Update next zone
-					this._currentZones[zoneId + 1].from = this._currentZones[zoneId - 1].to;
-
-					// Remove zone
-					this._currentZones.splice(zoneId, 1);
-
-					message = "Zone <" + (zoneId + 1) + "> has been removed.";
-
-				} else {
-
-					// Delete last zone
-					this._currentZones.pop();
-
-					message = "Zone <" + (this._currentZones.length + 1) + "> has been removed.";
-
-					// Uncomment bellow to get two latest zone merged on deletion. Else last zone will just popup...
-					// let oldLastZone = this._currentZones[this._currentZones.length - 1];
-					// this._currentZones[this._currentZones.length - 1].to = oldLastZone.to;
-				}
-				resolve(message);
+			if (zoneChange.from) {
+				instruction.destinationId = zoneChange.sourceId - 1;
+				instruction.from = false;
+				instruction.to = true;
 			}
-		});
+
+			if (zoneChange.to) {
+				instruction.destinationId = zoneChange.sourceId + 1;
+				instruction.from = true;
+				instruction.to = false;
+			}
+		}
+
+		this._instructionListener.next(instruction);
+	}
+
+	get instructionListener(): Subject<IZoneChange> {
+		return this._instructionListener;
 	}
 
 	public getLastZone() {
@@ -165,6 +180,5 @@ export class ZonesService {
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
 	}
-
 
 }
