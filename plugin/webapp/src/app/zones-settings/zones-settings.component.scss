@@ -1,0 +1,9 @@
+@import '../../assets/styles/constant';
+@import '~@angular/material/theming';
+
+$config: mat-typography-config();
+
+.zones-select {
+	margin: 20px $default-margin;
+	font-size: mat-font-size($config, title);
+}

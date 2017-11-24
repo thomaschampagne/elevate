@@ -1,6 +1,44 @@
-<button (click)="onAddLastZone()">Add</button>
-<button (click)="onRemoveLastZone()">Remove</button>
-<button (click)="onSaveZones()">Save</button>
-<button (click)="onResetZonesToDefault()">Reset</button>
-<button (click)="onImportZones()">Import</button>
-<button (click)="onExportZones()">Export</button>
+<mat-toolbar>
+
+	<mat-toolbar-row>
+
+		<span>Tools</span>
+
+		<span class="toolbar-spacer"></span>
+
+		<mat-form-field>
+			<input
+				matInput
+				type="number"
+				placeholder="Step"
+			/>
+
+		</mat-form-field>
+
+		<button mat-icon-button (click)="onAddLastZone()">
+			<mat-icon class="info">add</mat-icon>
+		</button>
+
+		<button mat-icon-button (click)="onRemoveLastZone()">
+			<mat-icon class="info">delete</mat-icon>
+		</button>
+
+		<button mat-icon-button (click)="onSaveZones()">
+			<mat-icon class="info">save</mat-icon>
+		</button>
+
+		<button mat-icon-button (click)="onResetZonesToDefault()">
+			<mat-icon class="info">refresh</mat-icon>
+		</button>
+
+		<button mat-icon-button (click)="onImportZones()">
+			<mat-icon class="info">vertical_align_bottom</mat-icon>
+		</button>
+
+		<button mat-icon-button (click)="onExportZones()">
+			<mat-icon class="info">vertical_align_top</mat-icon>
+		</button>
+
+	</mat-toolbar-row>
+
+</mat-toolbar>

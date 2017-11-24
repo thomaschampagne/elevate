@@ -1,6 +1,6 @@
 <!--Zone selection-->
-<div>
-	<mat-form-field>
+<div class="zones-select" fxLayout="row" fxLayoutAlign="center center">
+	<mat-form-field fxFlex="50">
 		<mat-select
 			aria-label="Zone selection"
 			(change)="onZoneDefinitionSelected(zoneDef)"
@@ -10,21 +10,21 @@
 			</mat-option>
 		</mat-select>
 	</mat-form-field>
-
-	<app-zone-tool-bar></app-zone-tool-bar>
-
-	<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
-			  [zone]="zone"
-			  [zoneId]="zoneId"
-			  [zoneFrom]="currentZones[zoneId].from"
-			  [zoneTo]="currentZones[zoneId].to"
-			  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
-			  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
-			  [isFirstZone]="(zoneId == 0)"
-			  [isLastZone]="(zoneId == (currentZones.length - 1))"
-			  [currentZones]="currentZones"
-			  [zoneDefinition]="zoneDefinitionSelected">
-	</app-zone>
-
-	<app-zone-tool-bar></app-zone-tool-bar>
 </div>
+
+<app-zone-tool-bar></app-zone-tool-bar>
+
+<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
+		  [zone]="zone"
+		  [zoneId]="zoneId"
+		  [zoneFrom]="currentZones[zoneId].from"
+		  [zoneTo]="currentZones[zoneId].to"
+		  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
+		  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
+		  [isFirstZone]="(zoneId == 0)"
+		  [isLastZone]="(zoneId == (currentZones.length - 1))"
+		  [currentZones]="currentZones"
+		  [zoneDefinition]="zoneDefinitionSelected">
+</app-zone>
+
+<app-zone-tool-bar></app-zone-tool-bar>

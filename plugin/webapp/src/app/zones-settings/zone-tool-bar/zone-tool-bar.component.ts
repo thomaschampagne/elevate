@@ -3,7 +3,6 @@ import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import { NotImplementedException } from "../../exceptions/NotImplementedException";
-import { Router } from "@angular/router";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -16,7 +15,6 @@ export class ZoneToolBarComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private zonesService: ZonesService,
-				private router: Router,
 				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
