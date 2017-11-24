@@ -225,6 +225,7 @@ describe('ZonesService', () => {
 
 	});
 
+
 	it('should not notify the previous Zone if "FROM" has changed & zone edited is the first', (done: Function) => {
 
 		// Given, increment +1 from of first source zone
@@ -252,12 +253,47 @@ describe('ZonesService', () => {
 		zoneService.notifyChange(zoneChange);
 	});
 
-
 	it('should notify the next Zone ("FROM") when his own "TO" has been changed', (done: Function) => {
 
 		// Given, decrement -1 a "to" zone.
 		const index = 7;
 		const updatedToValue: number = zoneService.currentZones[index].to - 1; // Apply the change
+
+		const zoneChange: IZoneChange = {
+			sourceId: index,
+			from: false,
+			to: true,
+			value: updatedToValue
+		};
+
+		// When, Then
+		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+
+			expect(_.isEmpty(instruction)).toBeFalsy();
+			expect(instruction.sourceId).toEqual(index);
+			expect(instruction.destinationId).toEqual(index + 1); // Must be the previous index
+
+			expect(instruction.from).toBeTruthy();
+			expect(instruction.to).toBeFalsy();
+			expect(instruction.value).toEqual(updatedToValue);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			done();
+		});
+
+		zoneService.notifyChange(zoneChange);
+
+	});
+
+	it('should notify the next Zone ("FROM") when his own "TO" has been changed & zone edited is the first', (done: Function) => {
+
+		// Given
+		const index = 0; // First zone
+		const updatedToValue: number = zoneService.currentZones[index].to + 4; // Apply the change
 
 		const zoneChange: IZoneChange = {
 			sourceId: index,

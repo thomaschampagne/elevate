@@ -122,24 +122,22 @@ export class ZonesService {
 			this._instructionListener.error("Impossible to notify both 'from' & 'to' changes at the same time");
 		}
 
-		if(!_.isNumber(zoneChange.value)) {
+		if (!_.isNumber(zoneChange.value)) {
 			this._instructionListener.error("Value provided is not a number");
 		}
 
 		const isFirstZoneChange = (zoneChange.sourceId == 0);
 		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
 
-		let instruction: IZoneChangeInstruction = null;
+		let instruction: IZoneChangeInstruction = {
+			sourceId: zoneChange.sourceId,
+			destinationId: null,
+			to: null,
+			from: null,
+			value: zoneChange.value,
+		};
 
 		if (!isFirstZoneChange && !isLastZoneChange) {
-
-			instruction = {
-				sourceId: zoneChange.sourceId,
-				destinationId: null,
-				to: null,
-				from: null,
-				value: zoneChange.value,
-			};
 
 			if (zoneChange.from) {
 				instruction.destinationId = zoneChange.sourceId - 1;
@@ -151,6 +149,30 @@ export class ZonesService {
 				instruction.destinationId = zoneChange.sourceId + 1;
 				instruction.from = true;
 				instruction.to = false;
+			}
+
+		} else if (isFirstZoneChange) {
+
+			if (zoneChange.to) {
+				instruction.destinationId = zoneChange.sourceId + 1;
+				instruction.from = true;
+				instruction.to = false;
+			}
+
+			if (zoneChange.from) {
+				instruction = null;
+			}
+
+		} else if (isLastZoneChange) {
+
+			if (zoneChange.to) {
+				instruction = null;
+			}
+
+			if (zoneChange.from) {
+				instruction.destinationId = zoneChange.sourceId - 1;
+				instruction.from = false;
+				instruction.to = true;
 			}
 		}
 
