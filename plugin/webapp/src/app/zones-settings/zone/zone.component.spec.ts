@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZoneComponent } from './zone.component';
+import { IZoneChangeType, ZoneComponent } from './zone.component';
 import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
 import { IZoneChange, ZonesService } from "../../services/zones.service";
@@ -35,7 +35,7 @@ describe('ZoneComponent', () => {
 		const sourceId = 5;
 		const zoneFrom = 50;
 		const zoneTo = 75;
-		const zoneChanges = {_zoneFrom: zoneFrom};
+		const changeType: IZoneChangeType = {from: true, to: false};
 
 		const expectedChange: IZoneChange = {
 			sourceId: sourceId,
@@ -52,7 +52,7 @@ describe('ZoneComponent', () => {
 		});
 
 		// When
-		component.notifyChange(zoneChanges);
+		component.notifyChange(changeType);
 
 		// Then
 		expect(zonesService.notifyChange).toHaveBeenCalledTimes(1);
@@ -66,7 +66,7 @@ describe('ZoneComponent', () => {
 		const sourceId = 5;
 		const zoneFrom = 50;
 		const zoneTo = 75;
-		const zoneChanges = {_zoneTo: zoneTo};
+		const changeType: IZoneChangeType = {from: false, to: true};
 
 		const expectedChange: IZoneChange = {
 			sourceId: sourceId,
@@ -83,7 +83,7 @@ describe('ZoneComponent', () => {
 		});
 
 		// When
-		component.notifyChange(zoneChanges);
+		component.notifyChange(changeType);
 
 		// Then
 		expect(zonesService.notifyChange).toHaveBeenCalledTimes(1);
@@ -96,11 +96,11 @@ describe('ZoneComponent', () => {
 		// Given
 		const zoneFrom = 50;
 		const zoneTo = 75;
-		const zoneChanges = {_zoneFrom: zoneFrom, _zoneTo: zoneTo};
+		const changeType: IZoneChangeType = {from: true, to: true};
 		spyOn(zonesService, 'notifyChange').and.stub();
 
 		// When
-		component.notifyChange(zoneChanges);
+		component.notifyChange(changeType);
 
 		// Then
 		expect(zonesService.notifyChange).toHaveBeenCalledTimes(0);

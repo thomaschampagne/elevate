@@ -1,16 +1,21 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
 import { IZoneChange, IZoneChangeInstruction, ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 
+export interface IZoneChangeType {
+	from: boolean;
+	to: boolean;
+}
+
 @Component({
 	selector: 'app-zone',
 	templateUrl: './zone.component.html',
 	styleUrls: ['./zone.component.scss']
 })
-export class ZoneComponent implements OnInit, OnChanges {
+export class ZoneComponent implements OnInit {
 
 	@Input("zone")
 	private _zone: IZone;
@@ -53,7 +58,7 @@ export class ZoneComponent implements OnInit, OnChanges {
 			const isChangeRequiredForMe = (!_.isNull(instruction) && (this._zoneId == instruction.destinationId));
 
 			if (isChangeRequiredForMe) {
-				setTimeout(() => this.applyInstructions(instruction)); // FIXME
+				setTimeout(() => this.applyInstructions(instruction)); // FIXME setTimeout instructions
 			}
 
 		}, error => {
@@ -63,18 +68,19 @@ export class ZoneComponent implements OnInit, OnChanges {
 		});
 	}
 
-	public ngOnChanges(zoneChanges: SimpleChanges): void {
-		this.notifyChange(zoneChanges);
+	public onZoneChange(changeType: IZoneChangeType): void {
+		this.notifyChange(changeType);
 	}
 
-	public notifyChange(zoneChange): void {
+	/**
+	 *
+	 * @param {IZoneChangeType} changeType
+	 */
+	public notifyChange(changeType: IZoneChangeType): void {
 
-		const isChangeFrom = !_.isUndefined(zoneChange['_zoneFrom']);
-		const isChangeTo = !_.isUndefined(zoneChange['_zoneTo']);
+		if (changeType.from && changeType.to) return; // Skip notify zone service on first component display
 
-		if (isChangeFrom && isChangeTo) return; // Skip notify zone service on first component display
-
-		if (isChangeFrom || isChangeTo) {
+		if (changeType.from || changeType.to) {
 
 			const zoneChangeNotification: IZoneChange = {
 				sourceId: this.zoneId,
@@ -83,10 +89,10 @@ export class ZoneComponent implements OnInit, OnChanges {
 				value: null
 			};
 
-			if (isChangeFrom) {
+			if (changeType.from) {
 				zoneChangeNotification.from = true;
 				zoneChangeNotification.value = this.zone.from;
-			} else if (isChangeTo) {
+			} else if (changeType.to) {
 				zoneChangeNotification.to = true;
 				zoneChangeNotification.value = this.zone.to;
 			}
