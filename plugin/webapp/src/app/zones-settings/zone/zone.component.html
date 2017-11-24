@@ -16,6 +16,7 @@
 					(change)="onZoneChange({from: true, to: false})"
 					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
 			<mat-form-field *ngSwitchCase="false" fxFill> <!-- IS NOT FIRST ZONE -->
@@ -29,6 +30,7 @@
 					(change)="onZoneChange({from: true, to: false})"
 					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
 		</div>
@@ -47,6 +49,7 @@
 					(change)="onZoneChange({from: false, to: true})"
 					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
 			<mat-form-field *ngSwitchCase="false" fxFill> <!-- IS NOT FIRST ZONE -->
@@ -60,6 +63,7 @@
 					(change)="onZoneChange({from: false, to: true})"
 					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
 		</div>
