@@ -2,6 +2,8 @@ import { inject, TestBed } from '@angular/core/testing';
 import { IZoneChange, IZoneChangeInstruction, ZonesService } from './zones.service';
 import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import { ChromeStorageService } from "./chrome-storage.service";
+import { IZoneDefinition, ZONE_DEFINITIONS } from "../zones-settings/zone-definitions";
 
 describe('ZonesService', () => {
 
@@ -10,7 +12,7 @@ describe('ZonesService', () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [ZonesService]
+			providers: [ZonesService, ChromeStorageService]
 		});
 
 		// Retrieve injected service
@@ -592,6 +594,84 @@ describe('ZonesService', () => {
 
 		done();
 
+	});
+
+	it('should reset zones to default', (done: Function) => {
+
+		// Given
+		const EXISTING_ZONES = [ // Set 10 fake zones
+			{from: 0, to: 110},
+			{from: 110, to: 210},
+			{from: 210, to: 310},
+			{from: 310, to: 410},
+			{from: 410, to: 510},
+			{from: 510, to: 611},
+			{from: 610, to: 710},
+			{from: 710, to: 810},
+			{from: 810, to: 910},
+			{from: 910, to: 1100},
+		];
+
+		const DEFAULT_SPEED_ZONES_MOCKED: IZone[] = [
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 30, to: 40},
+			{from: 40, to: 50}
+		];
+
+		const DEFAULT_USER_SETTINGS_MOCKED = {
+			zones: {
+				speed: DEFAULT_SPEED_ZONES_MOCKED
+			}
+		};
+
+		const SPEED_ZONE_DEFINITION_MOCKED: IZoneDefinition = _.find(ZONE_DEFINITIONS,
+			{
+				value: "speed"
+			}
+		);
+
+		zoneService.currentZones = EXISTING_ZONES;
+
+		const fetchUserSettingsSpy = spyOn(zoneService.chromeStorageService, 'fetchUserSettings').and.returnValue(Promise.resolve(DEFAULT_USER_SETTINGS_MOCKED));
+		const zoneDefinitionSpy = spyOnProperty(zoneService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
+		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant');
+
+		// When
+		const promiseReset: Promise<boolean> = zoneService.resetZonesToDefault();
+
+		// Then
+		promiseReset.then(() => {
+
+			expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
+			expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
+			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+
+			expect(zoneService.currentZones.length).toEqual(DEFAULT_SPEED_ZONES_MOCKED.length);
+			expect(zoneService.currentZones.length).not.toEqual(EXISTING_ZONES.length);
+			expect(_.last(zoneService.currentZones)).toEqual(_.last(DEFAULT_SPEED_ZONES_MOCKED));
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			done();
+		});
+
+	});
+
+	it('should save zone', (done: Function) => {
+
+		// Given
+
+		// When
+		zoneService.saveZones();
+
+		// Then
+
+		done();
 	});
 
 });

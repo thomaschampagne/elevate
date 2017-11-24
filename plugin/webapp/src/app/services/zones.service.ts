@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
+import { NotImplementedException } from "../exceptions/NotImplementedException";
+import { ChromeStorageService } from "./chrome-storage.service";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { IZoneDefinition } from "../zones-settings/zone-definitions";
 
 export interface IZoneChange {
 	sourceId: number;
@@ -22,8 +26,10 @@ export class ZonesService {
 
 	private _currentZones: IZone[];
 	private _instructionListener: Subject<IZoneChange>;
+	private _zoneDefinition: IZoneDefinition;
 
-	constructor() {
+
+	constructor(public chromeStorageService: ChromeStorageService /* TODO Private */) {
 		this._instructionListener = new Subject<IZoneChange>();
 	}
 
@@ -192,6 +198,10 @@ export class ZonesService {
 		this._instructionListener.next(instruction);
 	}
 
+	/**
+	 *
+	 * @returns {boolean}
+	 */
 	public isCurrentZonesCompliant(): boolean {
 
 		if (!this.currentZones) {
@@ -229,8 +239,50 @@ export class ZonesService {
 		return true;
 	}
 
+	/**
+	 *
+	 */
+	public saveZones(): void {
+		throw new NotImplementedException();
+	}
+
+	/**
+	 *
+	 */
+	public resetZonesToDefault(): Promise<boolean> {
+
+		return new Promise((resolve: (ok: boolean) => void,
+							reject: (error: string) => void) => {
+
+			this.chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
+
+				this.currentZones = _.propertyOf(userSettings.zones)(this.zoneDefinition.value);
+
+				if (this.isCurrentZonesCompliant()) {
+					resolve(true);
+				} else {
+					resolve(false);
+				}
+
+			}, error => {
+
+				reject(error);
+
+			});
+
+		});
+	}
+
 	get instructionListener(): Subject<IZoneChange> {
 		return this._instructionListener;
+	}
+
+	get zoneDefinition(): IZoneDefinition {
+		return this._zoneDefinition;
+	}
+
+	set zoneDefinition(value: IZoneDefinition) {
+		this._zoneDefinition = value;
 	}
 
 	public getLastZone() {
@@ -252,6 +304,5 @@ export class ZonesService {
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
 	}
-
 
 }

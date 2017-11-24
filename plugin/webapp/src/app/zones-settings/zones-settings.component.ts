@@ -55,8 +55,9 @@ export class ZonesSettingsComponent implements OnInit {
 		// Load current zone from zone definition provided
 		this._currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
 
-		// Update current zones managed by the zones service
+		// Update current zones & zone definition managed by the zones service
 		this.zonesService.currentZones = this._currentZones;
+		this.zonesService.zoneDefinition = zoneDefinition;
 
 		// Update the zone definition used
 		this._zoneDefinitionSelected = zoneDefinition;
