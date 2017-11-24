@@ -4,7 +4,6 @@ import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import { NotImplementedException } from "../../exceptions/NotImplementedException";
 import { Router } from "@angular/router";
-import { appRoutes } from "../../app-routes";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -43,13 +42,8 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onResetZonesToDefault(): void {
 		this.zonesService.resetZonesToDefault()
-			.then(
-				() => {
-
+			.then(() => {
 					this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-
-					this.router.navigate([appRoutes.zonesSettings]); // TODO refactor this reload
-
 				},
 				error => this.popSnack(error)
 			);

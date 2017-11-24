@@ -622,6 +622,7 @@ describe('ZonesService', () => {
 		zoneService.currentZones = FAKE_EXISTING_ZONES;
 		const zoneDefinitionSpy = spyOnProperty(zoneService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
 		const saveZonesSpy = spyOn(zoneService, 'saveZones').and.returnValue(Promise.resolve(true));
+		const zonesReloadRequestListenerSpy = spyOn(zoneService.zonesReloadRequestListener, 'next');
 
 		// When
 		const promiseReset: Promise<boolean> = zoneService.resetZonesToDefault();
@@ -631,6 +632,7 @@ describe('ZonesService', () => {
 
 			expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
 			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
+			expect(zonesReloadRequestListenerSpy).toHaveBeenCalledTimes(1);
 
 			expect(zoneService.currentZones.length).toEqual(userSettings.zones.speed.length);
 			expect(zoneService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);

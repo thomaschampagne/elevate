@@ -41,6 +41,12 @@ export class ZonesSettingsComponent implements OnInit {
 
 			this.loadZonesFromDefinition(cyclingSpeedZoneDefinition);
 		});
+
+		// Listen for reload request from ZonesService
+		// This may happen when ZoneService perform a reset of a zones set.
+		this.zonesService.zonesReloadRequestListener.subscribe((updatedZones: IZone[]) => {
+			this._currentZones = updatedZones; // Then
+		});
 	}
 
 	/**

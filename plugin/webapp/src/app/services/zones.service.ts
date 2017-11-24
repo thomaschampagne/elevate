@@ -25,11 +25,12 @@ export class ZonesService {
 
 	private _currentZones: IZone[];
 	private _instructionListener: Subject<IZoneChange>;
+	private _zonesReloadRequestListener: Subject<IZone[]>;
 	private _zoneDefinition: IZoneDefinition;
 
-
-	constructor(public chromeStorageService: ChromeStorageService /* TODO Private */) {
+	constructor(private _chromeStorageService: ChromeStorageService) {
 		this._instructionListener = new Subject<IZoneChange>();
+		this._zonesReloadRequestListener = new Subject<IZone[]>();
 	}
 
 	/**
@@ -247,7 +248,7 @@ export class ZonesService {
 
 			if (this.isZonesCompliant(this.currentZones)) {
 
-				this.chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
+				this._chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
 					.then(status => {
 						resolve(status);
 					});
@@ -269,9 +270,17 @@ export class ZonesService {
 			this.currentZones = _.clone(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
 
 			this.saveZones().then((status: boolean) => {
+
 				resolve(status);
+
+				this.zonesReloadRequestListener.next(this.currentZones);
+
 			}, error => {
-				reject(error)
+
+				reject(error);
+
+				this.zonesReloadRequestListener.error(error);
+
 			});
 
 		});
@@ -279,6 +288,10 @@ export class ZonesService {
 
 	get instructionListener(): Subject<IZoneChange> {
 		return this._instructionListener;
+	}
+
+	get zonesReloadRequestListener(): Subject<IZone[]> {
+		return this._zonesReloadRequestListener;
 	}
 
 	get zoneDefinition(): IZoneDefinition {
@@ -307,6 +320,10 @@ export class ZonesService {
 
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
+	}
+
+	get chromeStorageService(): ChromeStorageService {
+		return this._chromeStorageService;
 	}
 
 }
