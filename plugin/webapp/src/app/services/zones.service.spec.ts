@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { IZoneChange, IZoneChangeInstruction, ZonesService } from './zones.service';
+import { IZoneChangeBroadcast, IZoneChangeWhisper, ZonesService } from './zones.service';
 import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import { ChromeStorageService } from "./chrome-storage.service";
@@ -250,7 +250,7 @@ describe('ZonesService', () => {
 		const index = 2;
 		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
 
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
 			from: true,
 			to: false,
@@ -258,15 +258,15 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
 
-			expect(_.isEmpty(instruction)).toBeFalsy();
-			expect(instruction.sourceId).toEqual(index);
-			expect(instruction.destinationId).toEqual(index - 1); // Must be the previous index
+			expect(_.isEmpty(change)).toBeFalsy();
+			expect(change.sourceId).toEqual(index);
+			expect(change.destinationId).toEqual(index - 1); // Must be the previous index
 
-			expect(instruction.to).toBeTruthy();
-			expect(instruction.from).toBeFalsy();
-			expect(instruction.value).toEqual(updatedFromValue);
+			expect(change.to).toBeTruthy();
+			expect(change.from).toBeFalsy();
+			expect(change.value).toEqual(updatedFromValue);
 
 			done();
 
@@ -286,7 +286,7 @@ describe('ZonesService', () => {
 		const index = 0; // First zone
 		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
 
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
 			from: true,
 			to: false,
@@ -295,8 +295,8 @@ describe('ZonesService', () => {
 
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
-			expect(instruction).toBeNull();
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+			expect(change).toBeNull();
 			done();
 
 		}, error => {
@@ -313,7 +313,7 @@ describe('ZonesService', () => {
 		const index = 7;
 		const updatedToValue: number = zoneService.currentZones[index].to - 1; // Apply the change
 
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -321,15 +321,15 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
 
-			expect(_.isEmpty(instruction)).toBeFalsy();
-			expect(instruction.sourceId).toEqual(index);
-			expect(instruction.destinationId).toEqual(index + 1); // Must be the previous index
+			expect(_.isEmpty(change)).toBeFalsy();
+			expect(change.sourceId).toEqual(index);
+			expect(change.destinationId).toEqual(index + 1); // Must be the previous index
 
-			expect(instruction.from).toBeTruthy();
-			expect(instruction.to).toBeFalsy();
-			expect(instruction.value).toEqual(updatedToValue);
+			expect(change.from).toBeTruthy();
+			expect(change.to).toBeFalsy();
+			expect(change.value).toEqual(updatedToValue);
 
 			done();
 
@@ -349,7 +349,7 @@ describe('ZonesService', () => {
 		const index = 0; // First zone
 		const updatedToValue: number = zoneService.currentZones[index].to + 4; // Apply the change
 
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -357,15 +357,15 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
 
-			expect(_.isEmpty(instruction)).toBeFalsy();
-			expect(instruction.sourceId).toEqual(index);
-			expect(instruction.destinationId).toEqual(index + 1); // Must be the previous index
+			expect(_.isEmpty(change)).toBeFalsy();
+			expect(change.sourceId).toEqual(index);
+			expect(change.destinationId).toEqual(index + 1); // Must be the previous index
 
-			expect(instruction.from).toBeTruthy();
-			expect(instruction.to).toBeFalsy();
-			expect(instruction.value).toEqual(updatedToValue);
+			expect(change.from).toBeTruthy();
+			expect(change.to).toBeFalsy();
+			expect(change.value).toEqual(updatedToValue);
 
 			done();
 
@@ -385,7 +385,7 @@ describe('ZonesService', () => {
 		const index = 9; // Last zone
 		const updatedToValue: number = zoneService.currentZones[index].to + 1; // Apply the change
 
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -393,8 +393,8 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
-			expect(instruction).toBeNull();
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+			expect(change).toBeNull();
 			done();
 
 		}, error => {
@@ -409,7 +409,7 @@ describe('ZonesService', () => {
 	it('should fail when "from" & "to" change are equals', (done: Function) => {
 
 		// Given
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: 5,
 			from: true,
 			to: true,
@@ -417,8 +417,8 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
-			expect(instruction).toBeNull();
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+			expect(change).toBeNull();
 			done();
 
 		}, error => {
@@ -433,7 +433,7 @@ describe('ZonesService', () => {
 	it('should fail when value is not a number', (done: Function) => {
 
 		// Given
-		const zoneChange: IZoneChange = {
+		const zoneChange: IZoneChangeWhisper = {
 			sourceId: 3,
 			from: true,
 			to: false,
@@ -441,8 +441,8 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
-			expect(instruction).toBeNull();
+		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+			expect(change).toBeNull();
 			done();
 
 		}, error => {
@@ -622,7 +622,7 @@ describe('ZonesService', () => {
 		zoneService.currentZones = FAKE_EXISTING_ZONES;
 		const zoneDefinitionSpy = spyOnProperty(zoneService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
 		const saveZonesSpy = spyOn(zoneService, 'saveZones').and.returnValue(Promise.resolve(true));
-		const zonesReloadRequestListenerSpy = spyOn(zoneService.zonesReloadRequestListener, 'next');
+		const zonesUpdatesSpy = spyOn(zoneService.zonesUpdates, 'next');
 
 		// When
 		const promiseReset: Promise<boolean> = zoneService.resetZonesToDefault();
@@ -632,7 +632,7 @@ describe('ZonesService', () => {
 
 			expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
 			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
-			expect(zonesReloadRequestListenerSpy).toHaveBeenCalledTimes(1);
+			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
 
 			expect(zoneService.currentZones.length).toEqual(userSettings.zones.speed.length);
 			expect(zoneService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);

@@ -6,14 +6,14 @@ import { ChromeStorageService } from "./chrome-storage.service";
 import { IZoneDefinition } from "../zones-settings/zone-definitions";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 
-export interface IZoneChange {
+export interface IZoneChangeWhisper {
 	sourceId: number;
 	to: boolean;
 	from: boolean;
 	value: number;
 }
 
-export interface IZoneChangeInstruction extends IZoneChange {
+export interface IZoneChangeBroadcast extends IZoneChangeWhisper {
 	destinationId: number;
 }
 
@@ -24,13 +24,13 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
-	private _instructionListener: Subject<IZoneChange>;
-	private _zonesReloadRequestListener: Subject<IZone[]>;
+	private _singleZoneUpdate: Subject<IZoneChangeBroadcast>;
+	private _zonesUpdates: Subject<IZone[]>;
 	private _zoneDefinition: IZoneDefinition;
 
 	constructor(private _chromeStorageService: ChromeStorageService) {
-		this._instructionListener = new Subject<IZoneChange>();
-		this._zonesReloadRequestListener = new Subject<IZone[]>();
+		this._singleZoneUpdate = new Subject<IZoneChangeBroadcast>();
+		this._zonesUpdates = new Subject<IZone[]>();
 	}
 
 	/**
@@ -130,25 +130,24 @@ export class ZonesService {
 		});
 	}
 
-
 	/**
-	 *
-	 * @param {IZoneChange} zoneChange
+	 * Notify all <ZonesComponents> of a zone change that imply some instructions to 1 of them
+	 * @param {IZoneChangeWhisper} zoneChange
 	 */
-	public notifyChange(zoneChange: IZoneChange): void {
+	public notifyChange(zoneChange: IZoneChangeWhisper): void {
 
 		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
-			this._instructionListener.error("Impossible to notify both 'from' & 'to' changes at the same time");
+			this._singleZoneUpdate.error("Impossible to notify both 'from' & 'to' changes at the same time");
 		}
 
 		if (!_.isNumber(zoneChange.value)) {
-			this._instructionListener.error("Value provided is not a number");
+			this._singleZoneUpdate.error("Value provided is not a number");
 		}
 
 		const isFirstZoneChange = (zoneChange.sourceId == 0);
 		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
 
-		let instruction: IZoneChangeInstruction = {
+		let instruction: IZoneChangeBroadcast = {
 			sourceId: zoneChange.sourceId,
 			destinationId: null,
 			to: null,
@@ -195,7 +194,7 @@ export class ZonesService {
 			}
 		}
 
-		this._instructionListener.next(instruction);
+		this._singleZoneUpdate.next(instruction);
 	}
 
 	/**
@@ -273,25 +272,36 @@ export class ZonesService {
 
 				resolve(status);
 
-				this.zonesReloadRequestListener.next(this.currentZones);
+				// Notify ZonesSettingsComponent to tell him to reload his zones
+				this.zonesUpdates.next(this.currentZones);
 
 			}, error => {
 
 				reject(error);
 
-				this.zonesReloadRequestListener.error(error);
+				this.zonesUpdates.error(error);
 
 			});
 
 		});
 	}
 
-	get instructionListener(): Subject<IZoneChange> {
-		return this._instructionListener;
+	/**
+	 * Subscription mechanism for a <ZonesComponent>.  When a zone change occurs in zones, then all zones receive
+	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeBroadcast.destinationId>.
+	 * That <ZonesComponent> has to follow change instruction
+	 * @returns {Subject<IZoneChangeWhisper>}
+	 */
+	get singleZoneUpdate(): Subject<IZoneChangeBroadcast> {
+		return this._singleZoneUpdate;
 	}
 
-	get zonesReloadRequestListener(): Subject<IZone[]> {
-		return this._zonesReloadRequestListener;
+	/**
+	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
+	 * @returns {Subject<IZoneChangeWhisper>}
+	 */
+	get zonesUpdates(): Subject<IZone[]> {
+		return this._zonesUpdates;
 	}
 
 	get zoneDefinition(): IZoneDefinition {

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
-import { IZoneChange, IZoneChangeInstruction, ZonesService } from "../../services/zones.service";
+import { IZoneChangeBroadcast, IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 
@@ -53,12 +53,12 @@ export class ZoneComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.zonesService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
+		this.zonesService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
 
-			const isChangeRequiredForMe = (!_.isNull(instruction) && (this._zoneId == instruction.destinationId));
+			const isChangeForMe = (!_.isNull(change) && (this._zoneId == change.destinationId));
 
-			if (isChangeRequiredForMe) {
-				this.applyInstructions(instruction);
+			if (isChangeForMe) {
+				this.applyChangeToMe(change);
 			}
 
 		}, error => {
@@ -86,7 +86,7 @@ export class ZoneComponent implements OnInit {
 
 		if (changeType.from || changeType.to) {
 
-			const zoneChangeNotification: IZoneChange = {
+			const zoneChangeNotification: IZoneChangeWhisper = {
 				sourceId: this.zoneId,
 				from: false,
 				to: false,
@@ -105,7 +105,7 @@ export class ZoneComponent implements OnInit {
 		}
 	}
 
-	private applyInstructions(instruction: IZoneChangeInstruction): void {
+	private applyChangeToMe(instruction: IZoneChangeBroadcast): void {
 
 		if (instruction.from) {
 			this.zone.from = instruction.value

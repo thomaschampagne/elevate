@@ -16,7 +16,7 @@ import { userSettings } from "../../../../common/scripts/UserSettings";
 })
 export class ZonesSettingsComponent implements OnInit {
 
-	public static DEFAULT_ZONE_VALUE: string = "speed"; // equals Cycling Speed
+	public static DEFAULT_ZONE_VALUE: string = "speed";
 
 	private _zoneDefinitions: IZoneDefinition[] = ZONE_DEFINITIONS;
 	private _zoneDefinitionSelected: IZoneDefinition;
@@ -57,9 +57,9 @@ export class ZonesSettingsComponent implements OnInit {
 		});
 
 		// Listen for reload request from ZonesService
-		// This may happen when ZoneService perform a reset of a zones set.
-		this.zonesService.zonesReloadRequestListener.subscribe((updatedZones: IZone[]) => {
-			this._currentZones = updatedZones; // Then
+		// This happen when ZoneService perform a resetZonesToDefault of a zones set.
+		this.zonesService.zonesUpdates.subscribe((updatedZones: IZone[]) => {
+			this._currentZones = updatedZones;
 		});
 	}
 

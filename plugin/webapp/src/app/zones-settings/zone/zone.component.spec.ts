@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IZoneChangeType, ZoneComponent } from './zone.component';
 import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
-import { IZoneChange, ZonesService } from "../../services/zones.service";
+import { IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
 import { ChromeStorageService } from "../../services/chrome-storage.service";
 
 describe('ZoneComponent', () => {
@@ -43,7 +43,7 @@ describe('ZoneComponent', () => {
 		const zoneTo = 75;
 		const changeType: IZoneChangeType = {from: true, to: false};
 
-		const expectedChange: IZoneChange = {
+		const expectedChange: IZoneChangeWhisper = {
 			sourceId: sourceId,
 			from: true,
 			to: false,
@@ -74,7 +74,7 @@ describe('ZoneComponent', () => {
 		const zoneTo = 75;
 		const changeType: IZoneChangeType = {from: false, to: true};
 
-		const expectedChange: IZoneChange = {
+		const expectedChange: IZoneChangeWhisper = {
 			sourceId: sourceId,
 			from: false,
 			to: true,
