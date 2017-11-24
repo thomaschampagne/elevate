@@ -13,9 +13,11 @@ describe('ZonesService', () => {
 			providers: [ZonesService]
 		});
 
+		// Retrieve injected service
 		zoneService = TestBed.get(ZonesService);
 
-		const USER_ZONES = [ // Set 10 fake zones
+		// Set 10 fake zones
+		zoneService.currentZones = [
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -27,8 +29,6 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
-
-		zoneService.currentZones = USER_ZONES;
 	});
 
 	it('should be created', inject([ZonesService], (zoneService: ZonesService) => {
@@ -162,7 +162,6 @@ describe('ZonesService', () => {
 		});
 	});
 
-
 	it('should remove zone at index of first zone', (done: Function) => {
 
 		// Given
@@ -194,7 +193,7 @@ describe('ZonesService', () => {
 		// Given
 		const removeIndex = 9; // Last zone
 		const expectedZonesLength = 9;
-		const oldPreviousZone: IZone = _.clone(zoneService.currentZones[removeIndex -1]);
+		const oldPreviousZone: IZone = _.clone(zoneService.currentZones[removeIndex - 1]);
 
 		// When
 		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
@@ -277,7 +276,6 @@ describe('ZonesService', () => {
 		zoneService.notifyChange(zoneChange);
 
 	});
-
 
 	it('should not notify the previous Zone if "FROM" has changed & zone edited is the first', (done: Function) => {
 
@@ -452,4 +450,148 @@ describe('ZonesService', () => {
 
 		zoneService.notifyChange(zoneChange);
 	});
+
+	it('should return compliant zones', (done: Function) => {
+
+		// Given
+		zoneService.currentZones;
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeTruthy();
+
+		done();
+	});
+
+
+	it('should return not compliant zones with error on a "from"', (done: Function) => {
+
+		// Given
+		const MOCKED_ZONES = [ // Set 10 fake zones
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 99, to: 40}, // Mistake here (from: 99)!
+			{from: 40, to: 50},
+			{from: 50, to: 60},
+			{from: 60, to: 70},
+			{from: 70, to: 80},
+			{from: 80, to: 90},
+			{from: 90, to: 100}
+		];
+		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeFalsy();
+
+		done();
+	});
+
+	it('should return not compliant zones with error on a "to"', (done: Function) => {
+
+		// Given
+		const MOCKED_ZONES = [ // Set 10 fake zones
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 30, to: 40},
+			{from: 40, to: 50},
+			{from: 50, to: 61}, // Mistake here (to: 61)!
+			{from: 60, to: 70},
+			{from: 70, to: 80},
+			{from: 80, to: 90},
+			{from: 90, to: 100}
+		];
+		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeFalsy();
+
+		done();
+
+	});
+
+	it('should return not compliant zones with max zone count reached', (done: Function) => {
+
+		// Given
+		const MAX_ZONE_COUNT = 10;
+
+		const MOCKED_ZONES = [ // Set 10 fake zones
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 30, to: 40},
+			{from: 40, to: 50},
+			{from: 50, to: 61},
+			{from: 60, to: 70},
+			{from: 70, to: 80},
+			{from: 80, to: 90},
+			{from: 90, to: 100},
+			{from: 100, to: 110}, // Add a 11th zone
+		];
+
+		spyOn(zoneService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
+
+		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeFalsy();
+
+		done();
+
+	});
+
+	it('should return not compliant zones with min zone count reached', (done: Function) => {
+
+		// Given
+		const MIN_ZONE_COUNT = 5;
+
+		const MOCKED_ZONES = [ // Set 4 fake zones
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 30, to: 40}
+		];
+
+		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+
+		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeFalsy();
+		expect(zoneService.currentZones.length).toEqual(MOCKED_ZONES.length);
+
+		done();
+
+	});
+
+	it('should return not compliant zones is zone empty', (done: Function) => {
+
+		// Given
+		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(null);
+
+		// When
+		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+
+		// Then
+		expect(isCompliant).toBeFalsy();
+
+		done();
+
+	});
+
 });

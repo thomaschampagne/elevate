@@ -192,6 +192,43 @@ export class ZonesService {
 		this._instructionListener.next(instruction);
 	}
 
+	public isCurrentZonesCompliant(): boolean {
+
+		if (!this.currentZones) {
+			return false;
+		}
+
+		if (this.currentZones.length > this.getMaxZoneCount()) {
+			return false;
+		}
+
+		if (this.currentZones.length < this.getMinZoneCount()) {
+			return false;
+		}
+
+		for (let i = 0; i < this.currentZones.length; i++) {
+
+			if (i === 0) { // First zone
+				if (this.currentZones[i].to != this.currentZones[i + 1].from) {
+					return false;
+				}
+
+			} else if (i < (this.currentZones.length - 1)) { // Middle zone
+
+				if (this.currentZones[i].to != this.currentZones[i + 1].from || this.currentZones[i].from != this.currentZones[i - 1].to) {
+					return false;
+				}
+
+			} else { // Last zone
+				if (this.currentZones[i].from != this.currentZones[i - 1].to) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	get instructionListener(): Subject<IZoneChange> {
 		return this._instructionListener;
 	}
@@ -215,5 +252,6 @@ export class ZonesService {
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
 	}
+
 
 }
