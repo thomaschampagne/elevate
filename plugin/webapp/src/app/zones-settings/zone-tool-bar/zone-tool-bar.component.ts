@@ -3,6 +3,7 @@ import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import { NotImplementedException } from "../../exceptions/NotImplementedException";
+import { Router } from "@angular/router";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -15,6 +16,7 @@ export class ZoneToolBarComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private zonesService: ZonesService,
+				// private router: Router,
 				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
@@ -41,13 +43,18 @@ export class ZoneToolBarComponent implements OnInit {
 	public onResetZonesToDefault(): void {
 		this.zonesService.resetZonesToDefault()
 			.then(
-				() => this.popSnack(this.zonesService.zoneDefinition.name + " zones are reset."),
+				() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default"),
 				error => this.popSnack(error)
 			);
 	}
 
 	public onSaveZones(): void {
-		throw new NotImplementedException();
+
+		this.zonesService.saveZones()
+			.then(
+				() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
+				error => this.popSnack(error)
+			);
 	}
 
 	public onImportZones() {

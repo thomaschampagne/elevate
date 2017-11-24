@@ -273,11 +273,14 @@ export class ZonesService {
 
 				this.currentZones = _.cloneDeep(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
 
-
 				if (this.isCurrentZonesCompliant()) {
+
 					resolve(true);
+
 				} else {
+
 					resolve(false);
+
 				}
 
 			}, error => {
