@@ -8,7 +8,7 @@
 		"build:webapp": "cd ./plugin/webapp/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
 		"postinstall": "cd ./plugin/ && npm install && cd ./webapp/ && npm install",
 		"package:preview": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package --preview",
-		"dev": "node ./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\"",
+		"start": "node ./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\"",
 		"dev:core": "npm run clean:jsmap && npm run tsc:watch",
 		"dev:webapp": "npm run clean:webapp-dist && npm run tsc:compile && npm run build:webapp -- --watch",
 		"tsc:version": "echo TypeScript: && node ./node_modules/typescript/bin/tsc --version",
