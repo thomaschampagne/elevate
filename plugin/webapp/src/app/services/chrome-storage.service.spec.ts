@@ -12,4 +12,8 @@ describe('ChromeStorageService', () => {
 	it('should be created', inject([ChromeStorageService], (service: ChromeStorageService) => {
 		expect(service).toBeTruthy();
 	}));
+
+	it('should be update settings', inject([ChromeStorageService], (service: ChromeStorageService) => {
+		expect(service).toBeTruthy();
+	}));
 });

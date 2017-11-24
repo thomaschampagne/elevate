@@ -650,7 +650,7 @@ describe('ZonesService', () => {
 
 			expect(zoneService.currentZones.length).toEqual(DEFAULT_SPEED_ZONES_MOCKED.length);
 			expect(zoneService.currentZones.length).not.toEqual(EXISTING_ZONES.length);
-			expect(_.last(zoneService.currentZones)).toEqual(_.last(DEFAULT_SPEED_ZONES_MOCKED));
+			expect(zoneService.currentZones).toEqual(DEFAULT_SPEED_ZONES_MOCKED);
 
 			done();
 
@@ -665,11 +665,54 @@ describe('ZonesService', () => {
 	it('should save zone', (done: Function) => {
 
 		// Given
+		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant').and.returnValue(true);
+		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
+			.and.returnValue(Promise.resolve(true));
 
 		// When
-		zoneService.saveZones();
+		const promiseSave: Promise<boolean> = zoneService.saveZones();
 
 		// Then
+		promiseSave.then((status: boolean) => {
+
+			expect(status).toBeTruthy();
+			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			done();
+		});
+
+		done();
+	});
+
+	it('should not save zone', (done: Function) => {
+
+		// Given
+		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant').and.returnValue(false);
+		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
+			.and.returnValue(Promise.resolve(true));
+
+		// When
+		const promiseSave: Promise<boolean> = zoneService.saveZones();
+
+		// Then
+		promiseSave.then((status: boolean) => {
+
+			expect(status).not.toBeTruthy();
+			done();
+
+		}, error => {
+
+			expect(error).toBe("Zones not compliant");
+			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
+			done();
+		});
 
 		done();
 	});

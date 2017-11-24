@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
-import { NotImplementedException } from "../exceptions/NotImplementedException";
 import { ChromeStorageService } from "./chrome-storage.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZoneDefinition } from "../zones-settings/zone-definitions";
@@ -242,8 +241,24 @@ export class ZonesService {
 	/**
 	 *
 	 */
-	public saveZones(): void {
-		throw new NotImplementedException();
+	public saveZones(): Promise<boolean> {
+
+		return new Promise((resolve: (ok: boolean) => void,
+							reject: (error: string) => void) => {
+
+			if (this.isCurrentZonesCompliant()) {
+				resolve(true);
+			} else {
+				reject("Zones not compliant");
+				return;
+			}
+
+			// Save
+			this.chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
+				.then(status => {
+					resolve(status);
+				});
+		});
 	}
 
 	/**
