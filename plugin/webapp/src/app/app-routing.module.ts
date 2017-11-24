@@ -6,23 +6,11 @@ import { CommonSettingsComponent } from "./common-settings/common-settings.compo
 import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 
 const routes: Routes = [
-	{
-		path: appRoutes.athleteSettings,
-		component: AthleteSettingsComponent,
-	},
-	{
-		path: appRoutes.commonSettings,
-		component: CommonSettingsComponent,
-	},
-	{
-		path: appRoutes.zonesSettings,
-		component: ZonesSettingsComponent,
-	},
-	{
-		path: '',
-		redirectTo: appRoutes.commonSettings,
-		pathMatch: 'full'
-	},
+	{path: appRoutes.athleteSettings, component: AthleteSettingsComponent},
+	{path: appRoutes.commonSettings, component: CommonSettingsComponent},
+	{path: appRoutes.zonesSettings, component: ZonesSettingsComponent},
+	{path: appRoutes.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
+	{path: '', redirectTo: appRoutes.commonSettings, pathMatch: 'full'},
 ];
 
 @NgModule({

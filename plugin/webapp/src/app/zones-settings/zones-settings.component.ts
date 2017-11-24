@@ -5,13 +5,15 @@ import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "../services/zones.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { appRoutes } from "../app-routes";
+import { userSettings } from "../../../../common/scripts/UserSettings";
 
 @Component({
 	selector: 'app-zones-settings',
 	templateUrl: './zones-settings.component.html',
 	styleUrls: ['./zones-settings.component.scss']
 })
-// TODO Listen from route params and load proper zones!
 export class ZonesSettingsComponent implements OnInit {
 
 	public static DEFAULT_ZONE_VALUE: string = "speed"; // equals Cycling Speed
@@ -22,24 +24,36 @@ export class ZonesSettingsComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private chromeStorageService: ChromeStorageService,
+				private route: ActivatedRoute,
+				private router: Router,
 				private zonesService: ZonesService) {
 	}
 
 	public ngOnInit(): void {
 
+		// Load user zones config
 		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
 
 			// Load user zones data
 			this._userZones = userSettingsSynced.zones;
 
-			// Set cycling speed zones as default current zones
-			const cyclingSpeedZoneDefinition: IZoneDefinition = _.find(this.zoneDefinitions,
-				{
-					value: ZonesSettingsComponent.DEFAULT_ZONE_VALUE
-				}
-			);
+			// Check zoneValue provided in URL
+			this.route.params.subscribe(routeParams => {
 
-			this.loadZonesFromDefinition(cyclingSpeedZoneDefinition);
+				let zoneDefinition: IZoneDefinition = null;
+
+				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
+
+				if (hasZoneValueInRoute && _.has(userSettings.zones, routeParams.zoneValue)) {
+					zoneDefinition = this.getZoneDefinitionFromZoneValue(routeParams.zoneValue);
+				} else {
+					this.navigateToZone(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
+					return;
+				}
+
+				this.loadZonesFromDefinition(zoneDefinition);
+			});
+
 		});
 
 		// Listen for reload request from ZonesService
@@ -47,6 +61,15 @@ export class ZonesSettingsComponent implements OnInit {
 		this.zonesService.zonesReloadRequestListener.subscribe((updatedZones: IZone[]) => {
 			this._currentZones = updatedZones; // Then
 		});
+	}
+
+	/**
+	 *
+	 * @param {string} zoneValue
+	 * @returns {IZoneDefinition}
+	 */
+	private getZoneDefinitionFromZoneValue(zoneValue: string): IZoneDefinition {
+		return _.find(this.zoneDefinitions, {value: zoneValue});
 	}
 
 	/**
@@ -68,10 +91,15 @@ export class ZonesSettingsComponent implements OnInit {
 	}
 
 	/**
-	 * Use
+	 *
 	 */
 	public onZoneDefinitionSelected() {
-		this.loadZonesFromDefinition(this._zoneDefinitionSelected);
+		this.navigateToZone(this._zoneDefinitionSelected.value);
+	}
+
+	private navigateToZone(zoneValue: string) {
+		const selectedZoneUrl = appRoutes.zonesSettings + "/" + zoneValue;
+		this.router.navigate([selectedZoneUrl]);
 	}
 
 	get currentZones(): IZone[] {
