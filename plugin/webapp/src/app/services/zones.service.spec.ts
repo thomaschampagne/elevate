@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import { ChromeStorageService } from "./chrome-storage.service";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "../zones-settings/zone-definitions";
+import { userSettings } from "../../../../common/scripts/UserSettings";
 
 describe('ZonesService', () => {
 
@@ -456,10 +457,10 @@ describe('ZonesService', () => {
 	it('should return compliant zones', (done: Function) => {
 
 		// Given
-		zoneService.currentZones;
+		const currentZones = zoneService.currentZones;
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(currentZones);
 
 		// Then
 		expect(isCompliant).toBeTruthy();
@@ -486,7 +487,7 @@ describe('ZonesService', () => {
 		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
 
 		// Then
 		expect(isCompliant).toBeFalsy();
@@ -512,7 +513,7 @@ describe('ZonesService', () => {
 		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
 
 		// Then
 		expect(isCompliant).toBeFalsy();
@@ -532,7 +533,7 @@ describe('ZonesService', () => {
 			{from: 20, to: 30},
 			{from: 30, to: 40},
 			{from: 40, to: 50},
-			{from: 50, to: 61},
+			{from: 50, to: 60},
 			{from: 60, to: 70},
 			{from: 70, to: 80},
 			{from: 80, to: 90},
@@ -545,7 +546,7 @@ describe('ZonesService', () => {
 		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
 
 		// Then
 		expect(isCompliant).toBeFalsy();
@@ -571,7 +572,7 @@ describe('ZonesService', () => {
 		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
 
 		// Then
 		expect(isCompliant).toBeFalsy();
@@ -587,7 +588,7 @@ describe('ZonesService', () => {
 		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(null);
 
 		// When
-		const isCompliant: boolean = zoneService.isCurrentZonesCompliant();
+		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
 
 		// Then
 		expect(isCompliant).toBeFalsy();
@@ -599,7 +600,7 @@ describe('ZonesService', () => {
 	it('should reset zones to default', (done: Function) => {
 
 		// Given
-		const EXISTING_ZONES = [ // Set 10 fake zones
+		const FAKE_EXISTING_ZONES = [ // Set 10 fake zones
 			{from: 0, to: 110},
 			{from: 110, to: 210},
 			{from: 210, to: 310},
@@ -612,31 +613,15 @@ describe('ZonesService', () => {
 			{from: 910, to: 1100},
 		];
 
-		const DEFAULT_SPEED_ZONES_MOCKED: IZone[] = [
-			{from: 0, to: 10},
-			{from: 10, to: 20},
-			{from: 20, to: 30},
-			{from: 30, to: 40},
-			{from: 40, to: 50}
-		];
-
-		const DEFAULT_USER_SETTINGS_MOCKED = {
-			zones: {
-				speed: DEFAULT_SPEED_ZONES_MOCKED
-			}
-		};
-
 		const SPEED_ZONE_DEFINITION_MOCKED: IZoneDefinition = _.find(ZONE_DEFINITIONS,
 			{
 				value: "speed"
 			}
 		);
 
-		zoneService.currentZones = EXISTING_ZONES;
-
-		const fetchUserSettingsSpy = spyOn(zoneService.chromeStorageService, 'fetchUserSettings').and.returnValue(Promise.resolve(DEFAULT_USER_SETTINGS_MOCKED));
+		zoneService.currentZones = FAKE_EXISTING_ZONES;
 		const zoneDefinitionSpy = spyOnProperty(zoneService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
-		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant');
+		const saveZonesSpy = spyOn(zoneService, 'saveZones').and.returnValue(Promise.resolve(true));
 
 		// When
 		const promiseReset: Promise<boolean> = zoneService.resetZonesToDefault();
@@ -644,13 +629,12 @@ describe('ZonesService', () => {
 		// Then
 		promiseReset.then(() => {
 
-			expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
 			expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
-			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 
-			expect(zoneService.currentZones.length).toEqual(DEFAULT_SPEED_ZONES_MOCKED.length);
-			expect(zoneService.currentZones.length).not.toEqual(EXISTING_ZONES.length);
-			expect(zoneService.currentZones).toEqual(DEFAULT_SPEED_ZONES_MOCKED);
+			expect(zoneService.currentZones.length).toEqual(userSettings.zones.speed.length);
+			expect(zoneService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);
+			expect(zoneService.currentZones).toEqual(userSettings.zones.speed);
 
 			done();
 
@@ -665,7 +649,7 @@ describe('ZonesService', () => {
 	it('should save zone', (done: Function) => {
 
 		// Given
-		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant').and.returnValue(true);
+		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(true);
 		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
@@ -690,10 +674,10 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should not save zone', (done: Function) => {
+	it('Zones are not compliant', (done: Function) => {
 
 		// Given
-		const zonesCompliantSpy = spyOn(zoneService, 'isCurrentZonesCompliant').and.returnValue(false);
+		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(false);
 		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
@@ -708,7 +692,7 @@ describe('ZonesService', () => {
 
 		}, error => {
 
-			expect(error).toBe("Zones not compliant");
+			expect(error).toBe("Zones are not compliant");
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
 			done();

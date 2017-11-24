@@ -3,8 +3,8 @@ import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
 import { ChromeStorageService } from "./chrome-storage.service";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZoneDefinition } from "../zones-settings/zone-definitions";
+import { userSettings } from "../../../../common/scripts/UserSettings";
 
 export interface IZoneChange {
 	sourceId: number;
@@ -201,40 +201,39 @@ export class ZonesService {
 	 *
 	 * @returns {boolean}
 	 */
-	public isCurrentZonesCompliant(): boolean {
+	public isZonesCompliant(zone: IZone[]): boolean {
 
-		if (!this.currentZones) {
+		if (!zone) {
 			return false;
 		}
 
-		if (this.currentZones.length > this.getMaxZoneCount()) {
+		if (zone.length > this.getMaxZoneCount()) {
 			return false;
 		}
 
-		if (this.currentZones.length < this.getMinZoneCount()) {
+		if (zone.length < this.getMinZoneCount()) {
 			return false;
 		}
 
-		for (let i = 0; i < this.currentZones.length; i++) {
+		for (let i = 0; i < zone.length; i++) {
 
 			if (i === 0) { // First zone
-				if (this.currentZones[i].to != this.currentZones[i + 1].from) {
+				if (zone[i].to != zone[i + 1].from) {
 					return false;
 				}
 
-			} else if (i < (this.currentZones.length - 1)) { // Middle zone
+			} else if (i < (zone.length - 1)) { // Middle zone
 
-				if (this.currentZones[i].to != this.currentZones[i + 1].from || this.currentZones[i].from != this.currentZones[i - 1].to) {
+				if (zone[i].to != zone[i + 1].from || zone[i].from != zone[i - 1].to) {
 					return false;
 				}
 
 			} else { // Last zone
-				if (this.currentZones[i].from != this.currentZones[i - 1].to) {
+				if (zone[i].from != zone[i - 1].to) {
 					return false;
 				}
 			}
 		}
-
 		return true;
 	}
 
@@ -246,18 +245,16 @@ export class ZonesService {
 		return new Promise((resolve: (ok: boolean) => void,
 							reject: (error: string) => void) => {
 
-			if (this.isCurrentZonesCompliant()) {
-				resolve(true);
-			} else {
-				reject("Zones not compliant");
-				return;
-			}
+			if (this.isZonesCompliant(this.currentZones)) {
 
-			// Save
-			this.chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
-				.then(status => {
-					resolve(status);
-				});
+				this.chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
+					.then(status => {
+						resolve(status);
+					});
+
+			} else {
+				reject("Zones are not compliant");
+			}
 		});
 	}
 
@@ -269,24 +266,12 @@ export class ZonesService {
 		return new Promise((resolve: (ok: boolean) => void,
 							reject: (error: string) => void) => {
 
-			this.chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
+			this.currentZones = _.clone(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
 
-				this.currentZones = _.cloneDeep(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
-
-				if (this.isCurrentZonesCompliant()) {
-
-					resolve(true);
-
-				} else {
-
-					resolve(false);
-
-				}
-
+			this.saveZones().then((status: boolean) => {
+				resolve(status);
 			}, error => {
-
-				reject(error);
-
+				reject(error)
 			});
 
 		});

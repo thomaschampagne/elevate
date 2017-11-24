@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
 import { ChromeStorageService } from "../services/chrome-storage.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
@@ -23,8 +22,7 @@ export class ZonesSettingsComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	constructor(private chromeStorageService: ChromeStorageService,
-				private zonesService: ZonesService,
-				private route: ActivatedRoute) {
+				private zonesService: ZonesService) {
 	}
 
 	public ngOnInit(): void {

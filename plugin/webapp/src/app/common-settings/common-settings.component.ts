@@ -18,7 +18,7 @@ import { PlatformLocation } from "@angular/common";
 })
 export class CommonSettingsComponent implements OnInit {
 
-	public static getOptionHelperDir(platformLocation: PlatformLocation) {
+	public static getOptionHelperDir(platformLocation: PlatformLocation) { // TODO Unit test
 		const location: Location = <Location> (<any> platformLocation).location;
 		const pathNames = location.pathname.split('/');
 		pathNames.pop();
@@ -65,7 +65,7 @@ export class CommonSettingsComponent implements OnInit {
 	 *
 	 * @param {IUserSettings} userSettingsSynced
 	 */
-	private renderOptionsForEachSection(userSettingsSynced: IUserSettings) {
+	private renderOptionsForEachSection(userSettingsSynced: IUserSettings): void {
 
 		_.forEach(this.sections, (section: ISection) => {
 
@@ -149,7 +149,7 @@ export class CommonSettingsComponent implements OnInit {
 	 *
 	 * @param {IOption} option
 	 */
-	private resetOptionToDefaultValue(option: IOption) {
+	private resetOptionToDefaultValue(option: IOption): void {
 		const resetValue = _.propertyOf(userSettings)(option.key);
 		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;

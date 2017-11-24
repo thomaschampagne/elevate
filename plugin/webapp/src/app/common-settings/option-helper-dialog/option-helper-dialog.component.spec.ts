@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OptionHelperDialogComponent } from './option-helper-dialog.component';
+import { MaterialModule } from "../../material.module";
 
 xdescribe('OptionHelperDialogComponent', () => {
 	let component: OptionHelperDialogComponent;
@@ -8,9 +9,9 @@ xdescribe('OptionHelperDialogComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [OptionHelperDialogComponent]
-		})
-			.compileComponents();
+			imports: [MaterialModule],
+			declarations: [OptionHelperDialogComponent],
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {
