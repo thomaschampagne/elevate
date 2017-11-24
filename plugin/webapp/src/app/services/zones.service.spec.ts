@@ -165,17 +165,55 @@ describe('ZonesService', () => {
 
 	it('should remove zone at index of first zone', (done: Function) => {
 
-		// TODO should remove zone at index of first zone
-		throw new Error("TODO");
+		// Given
+		const removeIndex = 0; // First zone
+		const expectedZonesLength = 9;
+		const oldNextZone: IZone = _.clone(zoneService.currentZones[removeIndex + 1]);
+
+		// When
+		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+
+		// Then
+		removeZoneAtIndexPromise.then((result: string) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
+			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+
+			const newFirstZone: IZone = zoneService.currentZones[removeIndex]; // Is actually the new first zone
+			expect(newFirstZone.from).toBe(oldNextZone.from);
+			expect(newFirstZone.to).toBe(oldNextZone.to);
+
+			done();
+		});
 
 	});
 
-	it('should remove zone at index of first zone', (done: Function) => {
+	it('should remove zone at index of last zone', (done: Function) => {
 
-		// TODO should remove zone at index of last zone
-		throw new Error("TODO");
+		// Given
+		const removeIndex = 9; // Last zone
+		const expectedZonesLength = 9;
+		const oldPreviousZone: IZone = _.clone(zoneService.currentZones[removeIndex -1]);
+
+		// When
+		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+
+		// Then
+		removeZoneAtIndexPromise.then((result: string) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
+			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+
+			const newLastZone: IZone = _.last(zoneService.currentZones); // Is actually the new last zone
+			expect(newLastZone.from).toBe(oldPreviousZone.from);
+			expect(newLastZone.to).toBe(oldPreviousZone.to);
+
+			done();
+		});
+
 	});
-
 
 	it('should not remove zone at index if MIN zone count reached', (done: Function) => {
 

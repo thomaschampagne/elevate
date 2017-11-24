@@ -62,9 +62,13 @@ export class ZoneComponent implements OnInit {
 			}
 
 		}, error => {
+
 			console.error(error);
+
 		}, () => {
+
 			console.log("InstructionListener complete");
+
 		});
 	}
 

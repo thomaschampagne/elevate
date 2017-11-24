@@ -100,13 +100,26 @@ export class ZonesService {
 
 			} else {
 
-				// Update next from zone with previous zone to
-				this._currentZones[index + 1].from = this._currentZones[index - 1].to;
+				const isFirstZone = (index == 0);
+				const isLastZone = (index == (this._currentZones.length - 1));
 
-				// Remove zone middle zone id here...
-				this._currentZones.splice(index, 1);
+				if (isFirstZone || isLastZone) {
 
-				resolve("Zone <" + (index + 1) + "> has been removed.");
+					this._currentZones.splice(index, 1);
+
+					resolve("Zone <" + (index + 1) + "> has been removed.");
+
+				} else {
+
+					// Update next from zone with previous zone to
+					this._currentZones[index + 1].from = this._currentZones[index - 1].to;
+
+					// Remove zone middle zone id here...
+					this._currentZones.splice(index, 1);
+
+					resolve("Zone <" + (index + 1) + "> has been removed.");
+
+				}
 			}
 		});
 	}
