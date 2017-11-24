@@ -6,16 +6,21 @@ import { FormsModule } from "@angular/forms";
 import { IZoneChange, ZonesService } from "../../services/zones.service";
 
 describe('ZoneComponent', () => {
+
 	let component: ZoneComponent;
+
 	let fixture: ComponentFixture<ZoneComponent>;
+
 	let zonesService: ZonesService;
 
 	beforeEach(async(() => {
+
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
 			declarations: [ZoneComponent],
 			providers: [ZonesService]
 		}).compileComponents();
+
 		zonesService = TestBed.get(ZonesService);
 	}));
 
@@ -94,8 +99,6 @@ describe('ZoneComponent', () => {
 	it('should skip notify is from + to changes (On first display)', () => {
 
 		// Given
-		const zoneFrom = 50;
-		const zoneTo = 75;
 		const changeType: IZoneChangeType = {from: true, to: true};
 		spyOn(zonesService, 'notifyChange').and.stub();
 

@@ -14,6 +14,7 @@
 					max="{{zone.to}}"
 					step="{{currentZones.step}}"
 					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.from"
 				/>
 			</mat-form-field>
@@ -26,6 +27,7 @@
 					max="{{zone.to}}"
 					step="{{currentZones.step}}"
 					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.from"
 				/>
 			</mat-form-field>
@@ -43,6 +45,7 @@
 					max="{{currentZones.max}}"
 					step="{{currentZones.step}}"
 					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.to"
 				/>
 			</mat-form-field>
@@ -55,6 +58,7 @@
 					max="{{nextZoneTo}}"
 					step="{{currentZones.step}}"
 					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
 					[(ngModel)]="zone.to"
 				/>
 			</mat-form-field>

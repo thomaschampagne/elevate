@@ -101,7 +101,6 @@ export class ZoneComponent implements OnInit {
 				zoneChangeNotification.value = this.zone.to;
 			}
 
-			console.debug("NotifyChange with", zoneChangeNotification);
 			this.zonesService.notifyChange(zoneChangeNotification);
 		}
 	}
@@ -123,6 +122,26 @@ export class ZoneComponent implements OnInit {
 				message => this.popSnack(message),
 				error => this.popSnack(error)
 			);
+	}
+
+	/**
+	 * Avoid
+	 * @param {KeyboardEvent} event
+	 */
+	public onKeyDown(event: KeyboardEvent): void {
+
+		const whiteListCode = [
+			38, // Up arrow
+			40, // Down arrow
+			9, // Tab
+			16 // Shift
+		];
+
+		const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) == -1;
+
+		if (isKeyWhiteListed) {
+			event.preventDefault();
+		}
 	}
 
 	private popSnack(message: string): void {
