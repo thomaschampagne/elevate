@@ -162,6 +162,21 @@ describe('ZonesService', () => {
 		});
 	});
 
+
+	it('should remove zone at index of first zone', (done: Function) => {
+
+		// TODO should remove zone at index of first zone
+		throw new Error("TODO");
+
+	});
+
+	it('should remove zone at index of first zone', (done: Function) => {
+
+		// TODO should remove zone at index of last zone
+		throw new Error("TODO");
+	});
+
+
 	it('should not remove zone at index if MIN zone count reached', (done: Function) => {
 
 		// Given

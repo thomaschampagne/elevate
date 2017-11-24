@@ -58,7 +58,7 @@ export class ZoneComponent implements OnInit {
 			const isChangeRequiredForMe = (!_.isNull(instruction) && (this._zoneId == instruction.destinationId));
 
 			if (isChangeRequiredForMe) {
-				setTimeout(() => this.applyInstructions(instruction)); // FIXME setTimeout instructions
+				this.applyInstructions(instruction);
 			}
 
 		}, error => {
