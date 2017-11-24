@@ -36,7 +36,7 @@ export class CommonSettingsComponent implements OnInit {
 				private dialog: MatDialog) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 		this.sections = this.commonSettingsService.sections;
 

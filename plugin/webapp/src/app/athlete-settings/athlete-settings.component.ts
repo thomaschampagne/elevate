@@ -53,7 +53,7 @@ export class AthleteSettingsComponent implements OnInit {
 				private snackBar: MatSnackBar) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 		this.chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
 

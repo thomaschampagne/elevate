@@ -27,7 +27,7 @@ export class ZonesSettingsComponent implements OnInit {
 				private route: ActivatedRoute) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
 

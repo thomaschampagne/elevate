@@ -271,7 +271,8 @@ export class ZonesService {
 
 			this.chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
 
-				this.currentZones = _.propertyOf(userSettings.zones)(this.zoneDefinition.value);
+				this.currentZones = _.cloneDeep(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
+
 
 				if (this.isCurrentZonesCompliant()) {
 					resolve(true);

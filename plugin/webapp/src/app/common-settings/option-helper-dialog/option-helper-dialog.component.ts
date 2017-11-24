@@ -36,7 +36,7 @@ export class OptionHelperDialogComponent implements OnInit {
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 		if (_.isEmpty(this.dialogData.markdownData)) {
 			throw new Error("No markdown data provided. File is empty?!");
 		} else {

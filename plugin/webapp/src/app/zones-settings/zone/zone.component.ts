@@ -51,7 +51,7 @@ export class ZoneComponent implements OnInit {
 				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 		this.zonesService.instructionListener.subscribe((instruction: IZoneChangeInstruction) => {
 

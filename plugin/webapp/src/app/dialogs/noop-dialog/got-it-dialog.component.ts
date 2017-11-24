@@ -24,7 +24,7 @@ export class GotItDialogComponent implements OnInit {
 		this.dialogRef.close();
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 	}
 
 

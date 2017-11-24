@@ -4,6 +4,7 @@ import { IZoneChangeType, ZoneComponent } from './zone.component';
 import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
 import { IZoneChange, ZonesService } from "../../services/zones.service";
+import { ChromeStorageService } from "../../services/chrome-storage.service";
 
 describe('ZoneComponent', () => {
 
@@ -18,7 +19,7 @@ describe('ZoneComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
 			declarations: [ZoneComponent],
-			providers: [ZonesService]
+			providers: [ZonesService, ChromeStorageService]
 		}).compileComponents();
 
 		zonesService = TestBed.get(ZonesService);

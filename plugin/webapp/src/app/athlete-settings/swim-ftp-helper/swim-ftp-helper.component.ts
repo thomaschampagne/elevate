@@ -81,7 +81,7 @@ export class SwimFtpHelperComponent implements OnInit {
 	constructor() {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 	}
 
