@@ -4,8 +4,9 @@ import { ZoneToolBarComponent } from './zone-tool-bar.component';
 import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "../../material.module";
 import { ZonesService } from "../../services/zones.service";
+import { ChromeStorageService } from "../../services/chrome-storage.service";
 
-xdescribe('ZoneToolBarComponent', () => {
+describe('ZoneToolBarComponent', () => {
 	let component: ZoneToolBarComponent;
 	let fixture: ComponentFixture<ZoneToolBarComponent>;
 
@@ -13,7 +14,7 @@ xdescribe('ZoneToolBarComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
 			declarations: [ZoneToolBarComponent],
-			providers: [ZonesService]
+			providers: [ZonesService, ChromeStorageService]
 		}).compileComponents();
 	}));
 

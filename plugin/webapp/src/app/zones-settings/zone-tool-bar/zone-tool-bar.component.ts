@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
+import { NotImplementedException } from "../../exceptions/NotImplementedException";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -17,10 +18,10 @@ export class ZoneToolBarComponent implements OnInit {
 				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 	}
 
-	public onAddLastZone() {
+	public onAddLastZone(): void {
 
 		this.zonesService.addLastZone()
 			.then(
@@ -29,12 +30,32 @@ export class ZoneToolBarComponent implements OnInit {
 			);
 	}
 
-	public onRemoveLastZone() {
+	public onRemoveLastZone(): void {
 		this.zonesService.removeLastZone()
 			.then(
 				message => this.popSnack(message),
 				error => this.popSnack(error)
 			);
+	}
+
+	public onResetZonesToDefault(): void {
+		this.zonesService.resetZonesToDefault()
+			.then(
+				() => this.popSnack(this.zonesService.zoneDefinition.name + " zones are reset."),
+				error => this.popSnack(error)
+			);
+	}
+
+	public onSaveZones(): void {
+		throw new NotImplementedException();
+	}
+
+	public onImportZones() {
+		throw new NotImplementedException();
+	}
+
+	public onExportZones() {
+		throw new NotImplementedException();
 	}
 
 	private popSnack(message: string): void {
@@ -48,4 +69,5 @@ export class ZoneToolBarComponent implements OnInit {
 	set currentZones(value: IZone[]) {
 		this._currentZones = value;
 	}
+
 }
