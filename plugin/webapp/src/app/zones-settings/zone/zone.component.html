@@ -35,8 +35,9 @@
 					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
-			<span *ngIf="zoneDefinition.customDisplay" fxFlex="10"></span>
-			<mat-form-field *ngIf="zoneDefinition.customDisplay" fxFlex="40"> <!-- IS NOT FIRST ZONE -->
+			<span *ngIf="zoneDefinition && zoneDefinition.customDisplay" fxFlex="10"></span>
+			<mat-form-field *ngIf="zoneDefinition && zoneDefinition.customDisplay" fxFlex="40">
+				<!-- IS NOT FIRST ZONE -->
 				<input
 					matInput
 					[disabled]="true"
@@ -77,8 +78,9 @@
 					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
-			<span *ngIf="zoneDefinition.customDisplay" fxFlex="10"></span>
-			<mat-form-field *ngIf="zoneDefinition.customDisplay" fxFlex="40"> <!-- IS NOT FIRST ZONE -->
+			<span *ngIf="zoneDefinition && zoneDefinition.customDisplay" fxFlex="10"></span>
+			<mat-form-field *ngIf="zoneDefinition && zoneDefinition.customDisplay" fxFlex="40">
+				<!-- IS NOT FIRST ZONE -->
 				<input
 					matInput
 					[disabled]="true"
