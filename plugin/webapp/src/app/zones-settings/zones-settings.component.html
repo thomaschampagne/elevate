@@ -12,7 +12,10 @@
 	</mat-form-field>
 </div>
 
-<app-zone-tool-bar></app-zone-tool-bar>
+<app-zone-tool-bar
+	*ngIf="zoneDefinitionSelected"
+	[step]="zoneDefinitionSelected.step">
+</app-zone-tool-bar>
 
 <app-zone *ngFor="let zone of currentZones; let zoneId = index;"
 		  [zone]="zone"
@@ -27,4 +30,6 @@
 		  [zoneDefinition]="zoneDefinitionSelected">
 </app-zone>
 
-<app-zone-tool-bar></app-zone-tool-bar>
+<!--<app-zone-tool-bar
+	[step]="zoneDefinitionSelected.step">
+</app-zone-tool-bar>-->

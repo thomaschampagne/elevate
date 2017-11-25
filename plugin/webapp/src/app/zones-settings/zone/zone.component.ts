@@ -70,6 +70,10 @@ export class ZoneComponent implements OnInit {
 			console.log("InstructionListener complete");
 
 		});
+
+		this.zonesService.stepUpdates.subscribe((step: number) => {
+			this.zoneDefinition.step = step;
+		});
 	}
 
 	public onZoneChange(changeType: IZoneChangeType): void {

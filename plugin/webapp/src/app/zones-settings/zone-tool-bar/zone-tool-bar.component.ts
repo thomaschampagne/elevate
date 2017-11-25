@@ -14,46 +14,50 @@ export class ZoneToolBarComponent implements OnInit {
 	@Input("currentZones")
 	private _currentZones: IZone[];
 
+	@Input("step")
+	private _step: number;
+
 	constructor(private zonesService: ZonesService,
-				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
+				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
 	}
 
+	public onStepChange(): void {
+		this.zonesService.notifyStepChange(this.step);
+	}
+
 	public onAddLastZone(): void {
 
-		this.zonesService.addLastZone()
-			.then(
-				message => this.popSnack(message),
-				error => this.popSnack(error)
-			);
+		this.zonesService.addLastZone().then(
+			message => this.popSnack(message),
+			error => this.popSnack(error)
+		);
 	}
 
 	public onRemoveLastZone(): void {
-		this.zonesService.removeLastZone()
-			.then(
-				message => this.popSnack(message),
-				error => this.popSnack(error)
-			);
+		this.zonesService.removeLastZone().then(
+			message => this.popSnack(message),
+			error => this.popSnack(error)
+		);
 	}
 
 	public onResetZonesToDefault(): void {
-		this.zonesService.resetZonesToDefault()
-			.then(() => {
-					this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-				},
-				error => this.popSnack(error)
-			);
+		this.zonesService.resetZonesToDefault().then(() => {
+
+				this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
+
+			}, error => this.popSnack(error)
+		);
 	}
 
 	public onSaveZones(): void {
 
-		this.zonesService.saveZones()
-			.then(
-				() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
-				error => this.popSnack(error)
-			);
+		this.zonesService.saveZones().then(
+			() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
+			error => this.popSnack(error)
+		);
 	}
 
 	public onImportZones() {
@@ -66,6 +70,14 @@ export class ZoneToolBarComponent implements OnInit {
 
 	private popSnack(message: string): void {
 		this.snackBar.open(message, 'Close', {duration: 2500});
+	}
+
+	get step(): number {
+		return this._step;
+	}
+
+	set step(value: number) {
+		this._step = value;
 	}
 
 	get currentZones(): IZone[] {

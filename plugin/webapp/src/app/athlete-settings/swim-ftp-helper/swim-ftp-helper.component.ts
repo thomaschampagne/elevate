@@ -40,7 +40,7 @@ export class SwimFtpHelperComponent implements OnInit {
 	private _swimFtp: number;
 
 	@Output("swimFtpChange")
-	private _swimFtpChange = new EventEmitter<number>();
+	private _swimFtpChange: EventEmitter<number> = new EventEmitter<number>();
 
 	private _calculationMethods: ISwimCalculationMethod[] = [{
 		active: false,

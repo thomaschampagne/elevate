@@ -83,21 +83,21 @@ export class ZonesSettingsComponent implements OnInit {
 	private loadZonesFromDefinition(zoneDefinition: IZoneDefinition) {
 
 		// Load current zone from zone definition provided
-		this._currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
+		this.currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
 
 		// Update current zones & zone definition managed by the zones service
-		this.zonesService.currentZones = this._currentZones;
+		this.zonesService.currentZones = this.currentZones;
 		this.zonesService.zoneDefinition = zoneDefinition;
 
 		// Update the zone definition used
-		this._zoneDefinitionSelected = zoneDefinition;
+		this.zoneDefinitionSelected = zoneDefinition;
 	}
 
 	/**
 	 *
 	 */
 	public onZoneDefinitionSelected() {
-		this.navigateToZone(this._zoneDefinitionSelected.value);
+		this.navigateToZone(this.zoneDefinitionSelected.value);
 	}
 
 	private navigateToZone(zoneValue: string) {
@@ -128,4 +128,6 @@ export class ZonesSettingsComponent implements OnInit {
 	set zoneDefinitionSelected(value: IZoneDefinition) {
 		this._zoneDefinitionSelected = value;
 	}
+
+
 }

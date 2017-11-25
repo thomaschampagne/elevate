@@ -24,13 +24,15 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
-	private _singleZoneUpdate: Subject<IZoneChangeBroadcast>;
+	private _singleZoneUpdate: Subject<IZoneChangeBroadcast>; // TODO rename ?!
 	private _zonesUpdates: Subject<IZone[]>;
+	private _stepUpdates: Subject<number>;
 	private _zoneDefinition: IZoneDefinition;
 
 	constructor(private _chromeStorageService: ChromeStorageService) {
 		this._singleZoneUpdate = new Subject<IZoneChangeBroadcast>();
 		this._zonesUpdates = new Subject<IZone[]>();
+		this._stepUpdates = new Subject<number>();
 	}
 
 	/**
@@ -131,10 +133,11 @@ export class ZonesService {
 	}
 
 	/**
-	 * Notify all <ZonesComponents> of a zone change that imply some instructions to 1 of them
+	 * Receive a <IZoneChangeWhisper> and notify all <ZonesComponents> of a zone change.
+	 * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
 	 * @param {IZoneChangeWhisper} zoneChange
 	 */
-	public notifyChange(zoneChange: IZoneChangeWhisper): void {
+	public notifyChange(zoneChange: IZoneChangeWhisper): void { // TODO rename notifyZoneChange
 
 		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
 			this._singleZoneUpdate.error("Impossible to notify both 'from' & 'to' changes at the same time");
@@ -289,6 +292,15 @@ export class ZonesService {
 	}
 
 	/**
+	 * Receive step changes from <ZoneToolBar> and broadcast step change
+	 * to <ZoneComponents> which have subscribed to stepUpdates subject
+	 * @param {number} step
+	 */
+	public notifyStepChange(step: number): void {
+		this.stepUpdates.next(step);
+	}
+
+	/**
 	 * Subscription mechanism for a <ZonesComponent>.  When a zone change occurs in zones, then all zones receive
 	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeBroadcast.destinationId>.
 	 * That <ZonesComponent> has to follow change instruction
@@ -308,6 +320,14 @@ export class ZonesService {
 
 	get zoneDefinition(): IZoneDefinition {
 		return this._zoneDefinition;
+	}
+
+	get stepUpdates(): Subject<number> {
+		return this._stepUpdates;
+	}
+
+	set stepUpdates(value: Subject<number>) {
+		this._stepUpdates = value;
 	}
 
 	set zoneDefinition(value: IZoneDefinition) {

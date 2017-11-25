@@ -10,8 +10,9 @@
 			<input
 				matInput
 				type="number"
-				placeholder="Step"
-			/>
+				(change)="onStepChange()"
+				[(ngModel)]="step"
+				placeholder="Step"/>
 
 		</mat-form-field>
 

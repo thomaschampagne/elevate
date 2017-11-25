@@ -468,7 +468,6 @@ describe('ZonesService', () => {
 		done();
 	});
 
-
 	it('should return not compliant zones with error on a "from"', (done: Function) => {
 
 		// Given
@@ -648,7 +647,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should save zone', (done: Function) => {
+	it('should save zones', (done: Function) => {
 
 		// Given
 		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(true);
@@ -673,10 +672,9 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		done();
 	});
 
-	it('Zones are not compliant', (done: Function) => {
+	it('should not save zones that are not compliant', (done: Function) => {
 
 		// Given
 		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(false);
@@ -699,6 +697,21 @@ describe('ZonesService', () => {
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
 			done();
 		});
+
+	});
+
+	it('should notify step changes', (done: Function) => {
+
+		// When
+		const step = 0.25;
+		const stepUpdatesSpy = spyOn(zoneService.stepUpdates, 'next');
+
+		// Given
+		zoneService.notifyStepChange(step);
+
+		// Then
+		expect(stepUpdatesSpy).toHaveBeenCalledTimes(1);
+		expect(stepUpdatesSpy).toHaveBeenCalledWith(step);
 
 		done();
 	});
