@@ -1,4 +1,4 @@
-import { Helper } from "../../../../common/scripts/Helper";
+import * as moment from "moment";
 
 interface IZoneCustomDisplay {
 	name: string;
@@ -37,13 +37,13 @@ export const ZONE_DEFINITIONS: IZoneDefinition[] = [
 		units: "Seconds", // s/mi?!
 		step: 1,
 		min: 0,
-		max: 9999,
+		max: 3599,
 		customDisplay: {
 			name: "Pace format mm:ss/distance",
 			zoneValue: "pace",
 			output: (seconds: number) => {
-				const paceMetric = Helper.secondsToHHMMSS(seconds, true) + "/km";
-				const paceImperial = Helper.secondsToHHMMSS(seconds / 0.621371192, true) + "/mi";
+				const paceMetric = moment().startOf('day').seconds(seconds).format('mm:ss') + "/km";
+				const paceImperial = moment().startOf('day').seconds(seconds / 0.621371192).format('mm:ss') + "/mi";
 				return paceMetric + "  | " + paceImperial;
 			}
 		}
