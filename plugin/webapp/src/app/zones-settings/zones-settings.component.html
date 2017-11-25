@@ -1,26 +1,28 @@
-<app-zone-tool-bar
-	*ngIf="zoneDefinitionSelected"
-	[zoneDefinitions]="zoneDefinitions"
-	[zoneDefinitionSelected]="zoneDefinitionSelected"
-	(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
-</app-zone-tool-bar>
+<ng-container *ngIf="zoneDefinitionSelected">
+	<app-zone-tool-bar
+		[zoneDefinitions]="zoneDefinitions"
+		[zoneDefinitionSelected]="zoneDefinitionSelected"
+		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
+	</app-zone-tool-bar>
 
-<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
-		  [zone]="zone"
-		  [zoneId]="zoneId"
-		  [zoneFrom]="currentZones[zoneId].from"
-		  [zoneTo]="currentZones[zoneId].to"
-		  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
-		  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
-		  [isFirstZone]="(zoneId == 0)"
-		  [isLastZone]="(zoneId == (currentZones.length - 1))"
-		  [currentZones]="currentZones"
-		  [zoneDefinition]="zoneDefinitionSelected">
-</app-zone>
+	<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
+			  [zone]="zone"
+			  [zoneId]="zoneId"
+			  [zoneFrom]="currentZones[zoneId].from"
+			  [zoneTo]="currentZones[zoneId].to"
+			  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
+			  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
+			  [isFirstZone]="(zoneId == 0)"
+			  [isLastZone]="(zoneId == (currentZones.length - 1))"
+			  [currentZones]="currentZones"
+			  [zoneDefinition]="zoneDefinitionSelected">
+	</app-zone>
 
-<app-zone-tool-bar
-	*ngIf="zoneDefinitionSelected"
-	[zoneDefinitions]="zoneDefinitions"
-	[zoneDefinitionSelected]="zoneDefinitionSelected"
-	(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
-</app-zone-tool-bar>
+	<app-zone-tool-bar
+		[zoneDefinitions]="zoneDefinitions"
+		[zoneDefinitionSelected]="zoneDefinitionSelected"
+		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
+	</app-zone-tool-bar>
+</ng-container>
+
+
