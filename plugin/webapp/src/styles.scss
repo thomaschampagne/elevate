@@ -22,6 +22,7 @@ mat-card {
 /**
  * Web app Custom typography // TODO Extract in file
  */
+
 $base-config: mat-typography-config(); // Create a config with the default typography levels.
 
 $web-app-config: mat-typography-config(// Define a typography config that will override the base typo

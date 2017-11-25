@@ -1,7 +1,6 @@
 <mat-toolbar>
 	<mat-toolbar-row>
-		<!--<span>Tools</span>-->
-		<mat-form-field>
+		<mat-form-field class="zone-select">
 			<mat-select
 				aria-label="Zone selection"
 				(change)="onZoneDefinitionSelected()"
@@ -12,16 +11,16 @@
 			</mat-select>
 		</mat-form-field>
 
+		<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{currentZonesLength}} zones</span>
+
 		<span class="toolbar-spacer"></span>
 
-		<mat-form-field>
+		<mat-form-field class="step">
 			<input
 				matInput
-				type="number"
 				(change)="onStepChange()"
 				[(ngModel)]="zoneDefinitionSelected.step"
-				placeholder="step"/>
-
+				matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."/>
 		</mat-form-field>
 
 		<button mat-icon-button (click)="onAddLastZone()">

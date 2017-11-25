@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import { NotImplementedException } from "../../exceptions/NotImplementedException";
@@ -12,8 +11,8 @@ import { IZoneDefinition } from "../zone-definitions";
 })
 export class ZoneToolBarComponent implements OnInit {
 
-	@Input("currentZones")
-	private _currentZones: IZone[];
+	@Input("currentZonesLength")
+	private _currentZonesLength: number;
 
 	@Input("zoneDefinitions")
 	private _zoneDefinitions: IZoneDefinition[];
@@ -84,12 +83,12 @@ export class ZoneToolBarComponent implements OnInit {
 		this.snackBar.open(message, 'Close', {duration: 2500});
 	}
 
-	get currentZones(): IZone[] {
-		return this._currentZones;
+	get currentZonesLength(): number {
+		return this._currentZonesLength;
 	}
 
-	set currentZones(value: IZone[]) {
-		this._currentZones = value;
+	set currentZonesLength(value: number) {
+		this._currentZonesLength = value;
 	}
 
 	get zoneDefinitions(): IZoneDefinition[] {

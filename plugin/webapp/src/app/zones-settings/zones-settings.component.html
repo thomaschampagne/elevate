@@ -1,5 +1,6 @@
 <ng-container *ngIf="zoneDefinitionSelected">
 	<app-zone-tool-bar
+		[currentZonesLength]="currentZones.length"
 		[zoneDefinitions]="zoneDefinitions"
 		[zoneDefinitionSelected]="zoneDefinitionSelected"
 		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
@@ -19,6 +20,7 @@
 	</app-zone>
 
 	<app-zone-tool-bar
+		[currentZonesLength]="currentZones.length"
 		[zoneDefinitions]="zoneDefinitions"
 		[zoneDefinitionSelected]="zoneDefinitionSelected"
 		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
