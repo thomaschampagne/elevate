@@ -247,10 +247,12 @@ export class ZonesService {
 
 			if (this.isZonesCompliant(this.currentZones)) {
 
-				this._chromeStorageService.updateZoneSetting(this.zoneDefinition, this.currentZones)
-					.then(status => {
-						resolve(status);
-					});
+				this._chromeStorageService.updateZoneSetting(
+					this.zoneDefinition,
+					this.currentZones
+				).then(status => {
+					resolve(status);
+				});
 
 			} else {
 				reject("Zones are not compliant");
