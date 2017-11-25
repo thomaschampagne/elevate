@@ -13,7 +13,7 @@ export interface IZoneChangeWhisper {
 	value: number;
 }
 
-export interface IZoneChangeBroadcast extends IZoneChangeWhisper {
+export interface IZoneChangeOrder extends IZoneChangeWhisper {
 	destinationId: number;
 }
 
@@ -24,13 +24,13 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
-	private _singleZoneUpdate: Subject<IZoneChangeBroadcast>; // TODO rename ?!
+	private _zoneChangeOrderUpdates: Subject<IZoneChangeOrder>; // TODO rename ?!
 	private _zonesUpdates: Subject<IZone[]>;
 	private _stepUpdates: Subject<number>;
 	private _zoneDefinition: IZoneDefinition;
 
 	constructor(private _chromeStorageService: ChromeStorageService) {
-		this._singleZoneUpdate = new Subject<IZoneChangeBroadcast>();
+		this._zoneChangeOrderUpdates = new Subject<IZoneChangeOrder>();
 		this._zonesUpdates = new Subject<IZone[]>();
 		this._stepUpdates = new Subject<number>();
 	}
@@ -81,12 +81,12 @@ export class ZonesService {
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
 
-			if (this._currentZones.length <= this.getMinZoneCount()) {
+			if (this.currentZones.length <= this.getMinZoneCount()) {
 				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
 			} else {
 
-				this._currentZones.pop(); // Delete last zone
-				resolve("Zone <" + (this._currentZones.length + 1) + "> has been removed.");
+				this.currentZones.pop(); // Delete last zone
+				resolve("Zone <" + (this.currentZones.length + 1) + "> has been removed.");
 			}
 
 		});
@@ -137,20 +137,20 @@ export class ZonesService {
 	 * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
 	 * @param {IZoneChangeWhisper} zoneChange
 	 */
-	public notifyChange(zoneChange: IZoneChangeWhisper): void { // TODO rename notifyZoneChange
+	public whisperZoneChange(zoneChange: IZoneChangeWhisper): void {
 
 		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
-			this._singleZoneUpdate.error("Impossible to notify both 'from' & 'to' changes at the same time");
+			this.zoneChangeOrderUpdates.error("Impossible to notify both 'from' & 'to' changes at the same time");
 		}
 
 		if (!_.isNumber(zoneChange.value)) {
-			this._singleZoneUpdate.error("Value provided is not a number");
+			this.zoneChangeOrderUpdates.error("Value provided is not a number");
 		}
 
 		const isFirstZoneChange = (zoneChange.sourceId == 0);
 		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
 
-		let instruction: IZoneChangeBroadcast = {
+		let instruction: IZoneChangeOrder = {
 			sourceId: zoneChange.sourceId,
 			destinationId: null,
 			to: null,
@@ -197,7 +197,7 @@ export class ZonesService {
 			}
 		}
 
-		this._singleZoneUpdate.next(instruction);
+		this.zoneChangeOrderUpdates.next(instruction);
 	}
 
 	/**
@@ -301,13 +301,13 @@ export class ZonesService {
 	}
 
 	/**
-	 * Subscription mechanism for a <ZonesComponent>.  When a zone change occurs in zones, then all zones receive
-	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeBroadcast.destinationId>.
+	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
+	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
 	 * That <ZonesComponent> has to follow change instruction
 	 * @returns {Subject<IZoneChangeWhisper>}
 	 */
-	get singleZoneUpdate(): Subject<IZoneChangeBroadcast> {
-		return this._singleZoneUpdate;
+	get zoneChangeOrderUpdates(): Subject<IZoneChangeOrder> {
+		return this._zoneChangeOrderUpdates;
 	}
 
 	/**
@@ -324,10 +324,6 @@ export class ZonesService {
 
 	get stepUpdates(): Subject<number> {
 		return this._stepUpdates;
-	}
-
-	set stepUpdates(value: Subject<number>) {
-		this._stepUpdates = value;
 	}
 
 	set zoneDefinition(value: IZoneDefinition) {

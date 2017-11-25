@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
-import { IZoneChangeBroadcast, IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
+import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 
@@ -53,12 +53,12 @@ export class ZoneComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.zonesService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		this.zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
-			const isChangeForMe = (!_.isNull(change) && (this._zoneId == change.destinationId));
+			const isChangeOrderForMe = (!_.isNull(change) && (this._zoneId == change.destinationId));
 
-			if (isChangeForMe) {
-				this.applyChangeToMe(change);
+			if (isChangeOrderForMe) {
+				this.applyChangeOrder(change);
 			}
 
 		}, error => {
@@ -77,20 +77,20 @@ export class ZoneComponent implements OnInit {
 	}
 
 	public onZoneChange(changeType: IZoneChangeType): void {
-		this.notifyChange(changeType);
+		this.whisperZoneChange(changeType);
 	}
 
 	/**
-	 *
+	 * Whisper a IZoneChangeWhisper to <ZoneService>
 	 * @param {IZoneChangeType} changeType
 	 */
-	public notifyChange(changeType: IZoneChangeType): void {
+	public whisperZoneChange(changeType: IZoneChangeType): void {
 
 		if (changeType.from && changeType.to) return; // Skip notify zone service on first component display
 
 		if (changeType.from || changeType.to) {
 
-			const zoneChangeNotification: IZoneChangeWhisper = {
+			const zoneChangeWhisper: IZoneChangeWhisper = {
 				sourceId: this.zoneId,
 				from: false,
 				to: false,
@@ -98,18 +98,18 @@ export class ZoneComponent implements OnInit {
 			};
 
 			if (changeType.from) {
-				zoneChangeNotification.from = true;
-				zoneChangeNotification.value = this.zone.from;
+				zoneChangeWhisper.from = true;
+				zoneChangeWhisper.value = this.zone.from;
 			} else if (changeType.to) {
-				zoneChangeNotification.to = true;
-				zoneChangeNotification.value = this.zone.to;
+				zoneChangeWhisper.to = true;
+				zoneChangeWhisper.value = this.zone.to;
 			}
 
-			this.zonesService.notifyChange(zoneChangeNotification);
+			this.zonesService.whisperZoneChange(zoneChangeWhisper);
 		}
 	}
 
-	private applyChangeToMe(instruction: IZoneChangeBroadcast): void {
+	private applyChangeOrder(instruction: IZoneChangeOrder): void {
 
 		if (instruction.from) {
 			this.zone.from = instruction.value

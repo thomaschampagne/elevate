@@ -13,7 +13,7 @@ export interface IZoneDefinition {
 	step: number;
 	min: number;
 	max: number;
-	customDisplay?: IZoneCustomDisplay
+	customDisplay: IZoneCustomDisplay
 }
 
 export const ZONE_DEFINITIONS: IZoneDefinition[] = [
@@ -53,55 +53,63 @@ export const ZONE_DEFINITIONS: IZoneDefinition[] = [
 		units: "BPM",
 		step: 1,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Cycling Power",
 		value: "power",
 		units: "Watts",
 		step: 1,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Running Power",
 		value: "runningPower",
 		units: "Watts",
 		step: 1,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Cycling Cadence",
 		value: "cyclingCadence",
 		units: "RPM",
 		step: 1,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Running Cadence",
 		value: "runningCadence",
 		units: "SPM",
 		step: 0.1,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Grade",
 		value: "grade",
 		units: "%",
 		step: 0.1,
 		min: -9999,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Elevation",
 		value: "elevation",
 		units: "m",
 		step: 5,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}, {
 		name: "Ascent speed",
 		value: "ascent",
 		units: "Vm/h",
 		step: 5,
 		min: 0,
-		max: 9999
+		max: 9999,
+		customDisplay: null
 	}
 ];

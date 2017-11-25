@@ -50,7 +50,7 @@ describe('ZoneComponent', () => {
 			value: zoneFrom
 		};
 
-		spyOn(zonesService, 'notifyChange').and.stub();
+		spyOn(zonesService, 'whisperZoneChange').and.stub();
 		spyOnProperty(component, 'zoneId', 'get').and.returnValue(sourceId);
 		spyOnProperty(component, 'zone', 'get').and.returnValue({
 			from: zoneFrom,
@@ -58,11 +58,11 @@ describe('ZoneComponent', () => {
 		});
 
 		// When
-		component.notifyChange(changeType);
+		component.whisperZoneChange(changeType);
 
 		// Then
-		expect(zonesService.notifyChange).toHaveBeenCalledTimes(1);
-		expect(zonesService.notifyChange).toHaveBeenCalledWith(expectedChange);
+		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
+		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
 
 	});
 
@@ -81,7 +81,7 @@ describe('ZoneComponent', () => {
 			value: zoneTo
 		};
 
-		spyOn(zonesService, 'notifyChange').and.stub();
+		spyOn(zonesService, 'whisperZoneChange').and.stub();
 		spyOnProperty(component, 'zoneId', 'get').and.returnValue(sourceId);
 		spyOnProperty(component, 'zone', 'get').and.returnValue({
 			from: zoneFrom,
@@ -89,11 +89,11 @@ describe('ZoneComponent', () => {
 		});
 
 		// When
-		component.notifyChange(changeType);
+		component.whisperZoneChange(changeType);
 
 		// Then
-		expect(zonesService.notifyChange).toHaveBeenCalledTimes(1);
-		expect(zonesService.notifyChange).toHaveBeenCalledWith(expectedChange);
+		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
+		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
 
 	});
 
@@ -101,13 +101,13 @@ describe('ZoneComponent', () => {
 
 		// Given
 		const changeType: IZoneChangeType = {from: true, to: true};
-		spyOn(zonesService, 'notifyChange').and.stub();
+		spyOn(zonesService, 'whisperZoneChange').and.stub();
 
 		// When
-		component.notifyChange(changeType);
+		component.whisperZoneChange(changeType);
 
 		// Then
-		expect(zonesService.notifyChange).toHaveBeenCalledTimes(0);
+		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(0);
 
 	});
 });

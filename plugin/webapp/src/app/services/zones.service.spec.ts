@@ -1,5 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { IZoneChangeBroadcast, IZoneChangeWhisper, ZonesService } from './zones.service';
+import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from './zones.service';
 import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import { ChromeStorageService } from "./chrome-storage.service";
@@ -258,7 +258,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -276,7 +276,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -295,7 +295,7 @@ describe('ZonesService', () => {
 
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -304,7 +304,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 	});
 
 	it('should notify the next Zone ("FROM") when his own "TO" has been changed', (done: Function) => {
@@ -321,7 +321,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -339,7 +339,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -357,7 +357,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -375,7 +375,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -393,7 +393,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -402,7 +402,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -417,7 +417,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -427,7 +427,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 	});
 
 	it('should fail when value is not a number', (done: Function) => {
@@ -441,7 +441,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.singleZoneUpdate.subscribe((change: IZoneChangeBroadcast) => {
+		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -451,7 +451,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.notifyChange(zoneChange);
+		zoneService.whisperZoneChange(zoneChange);
 	});
 
 	it('should return compliant zones', (done: Function) => {
