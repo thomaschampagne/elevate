@@ -1,8 +1,16 @@
 <mat-toolbar>
-
 	<mat-toolbar-row>
-
-		<span>Tools</span>
+		<!--<span>Tools</span>-->
+		<mat-form-field>
+			<mat-select
+				aria-label="Zone selection"
+				(change)="onZoneDefinitionSelected()"
+				[(ngModel)]="zoneDefinitionSelected">
+				<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
+					{{zoneDef.name}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
 
 		<span class="toolbar-spacer"></span>
 
@@ -11,8 +19,8 @@
 				matInput
 				type="number"
 				(change)="onStepChange()"
-				[(ngModel)]="step"
-				placeholder="Step"/>
+				[(ngModel)]="zoneDefinitionSelected.step"
+				placeholder="step"/>
 
 		</mat-form-field>
 
@@ -41,5 +49,4 @@
 		</button>
 
 	</mat-toolbar-row>
-
 </mat-toolbar>

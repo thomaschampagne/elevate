@@ -1,20 +1,8 @@
-<!--Zone selection-->
-<div class="zones-select" fxLayout="row" fxLayoutAlign="center center">
-	<mat-form-field fxFlex="50">
-		<mat-select
-			aria-label="Zone selection"
-			(change)="onZoneDefinitionSelected(zoneDef)"
-			[(ngModel)]="zoneDefinitionSelected">
-			<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
-				{{zoneDef.name}}
-			</mat-option>
-		</mat-select>
-	</mat-form-field>
-</div>
-
 <app-zone-tool-bar
 	*ngIf="zoneDefinitionSelected"
-	[step]="zoneDefinitionSelected.step">
+	[zoneDefinitions]="zoneDefinitions"
+	[zoneDefinitionSelected]="zoneDefinitionSelected"
+	(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
 </app-zone-tool-bar>
 
 <app-zone *ngFor="let zone of currentZones; let zoneId = index;"
@@ -30,6 +18,9 @@
 		  [zoneDefinition]="zoneDefinitionSelected">
 </app-zone>
 
-<!--<app-zone-tool-bar
-	[step]="zoneDefinitionSelected.step">
-</app-zone-tool-bar>-->
+<app-zone-tool-bar
+	*ngIf="zoneDefinitionSelected"
+	[zoneDefinitions]="zoneDefinitions"
+	[zoneDefinitionSelected]="zoneDefinitionSelected"
+	(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
+</app-zone-tool-bar>

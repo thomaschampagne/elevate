@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../../services/zones.service";
 import { MatSnackBar } from "@angular/material";
 import { NotImplementedException } from "../../exceptions/NotImplementedException";
+import { IZoneDefinition } from "../zone-definitions";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -14,8 +15,14 @@ export class ZoneToolBarComponent implements OnInit {
 	@Input("currentZones")
 	private _currentZones: IZone[];
 
-	@Input("step")
-	private _step: number;
+	@Input("zoneDefinitions")
+	private _zoneDefinitions: IZoneDefinition[];
+
+	@Input("zoneDefinitionSelected")
+	private _zoneDefinitionSelected: IZoneDefinition;
+
+	@Output("zoneDefinitionSelectedChange")
+	private _zoneDefinitionSelectedChange: EventEmitter<IZoneDefinition> = new EventEmitter<IZoneDefinition>();
 
 	constructor(private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
@@ -24,8 +31,13 @@ export class ZoneToolBarComponent implements OnInit {
 	public ngOnInit(): void {
 	}
 
+	public onZoneDefinitionSelected(): void {
+		// Notify parent ZonesSettings component of new zone definition selected
+		this.zoneDefinitionSelectedChange.emit(this.zoneDefinitionSelected);
+	}
+
 	public onStepChange(): void {
-		this.zonesService.notifyStepChange(this.step);
+		this.zonesService.notifyStepChange(this.zoneDefinitionSelected.step);
 	}
 
 	public onAddLastZone(): void {
@@ -72,14 +84,6 @@ export class ZoneToolBarComponent implements OnInit {
 		this.snackBar.open(message, 'Close', {duration: 2500});
 	}
 
-	get step(): number {
-		return this._step;
-	}
-
-	set step(value: number) {
-		this._step = value;
-	}
-
 	get currentZones(): IZone[] {
 		return this._currentZones;
 	}
@@ -88,4 +92,27 @@ export class ZoneToolBarComponent implements OnInit {
 		this._currentZones = value;
 	}
 
+	get zoneDefinitions(): IZoneDefinition[] {
+		return this._zoneDefinitions;
+	}
+
+	set zoneDefinitions(value: IZoneDefinition[]) {
+		this._zoneDefinitions = value;
+	}
+
+	get zoneDefinitionSelected(): IZoneDefinition {
+		return this._zoneDefinitionSelected;
+	}
+
+	set zoneDefinitionSelected(value: IZoneDefinition) {
+		this._zoneDefinitionSelected = value;
+	}
+
+	get zoneDefinitionSelectedChange(): EventEmitter<IZoneDefinition> {
+		return this._zoneDefinitionSelectedChange;
+	}
+
+	set zoneDefinitionSelectedChange(value: EventEmitter<IZoneDefinition>) {
+		this._zoneDefinitionSelectedChange = value;
+	}
 }

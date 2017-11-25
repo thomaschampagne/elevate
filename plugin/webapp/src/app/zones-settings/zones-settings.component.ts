@@ -96,8 +96,9 @@ export class ZonesSettingsComponent implements OnInit {
 	/**
 	 *
 	 */
-	public onZoneDefinitionSelected() {
-		this.navigateToZone(this.zoneDefinitionSelected.value);
+	public onZoneDefinitionSelected(zoneDefinition: IZoneDefinition) {
+		console.warn(zoneDefinition);
+		this.navigateToZone(zoneDefinition.value);
 	}
 
 	private navigateToZone(zoneValue: string) {
