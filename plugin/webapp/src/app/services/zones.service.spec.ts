@@ -244,7 +244,7 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should notify the previous Zone ("TO") when his own "FROM" has been changed', (done: Function) => {
+	it('should notify the previous Zone "TO" when his own "FROM" has been changed', (done: Function) => {
 
 		// Given, increment +1 from of third sourceZone.
 		const index = 2;
@@ -307,9 +307,9 @@ describe('ZonesService', () => {
 		zoneService.whisperZoneChange(zoneChange);
 	});
 
-	it('should notify the next Zone ("FROM") when his own "TO" has been changed', (done: Function) => {
+	it('should notify the next Zone "FROM" when his own "TO" has been changed', (done: Function) => {
 
-		// Given, decrement -1 a "to" zone.
+		// Given, decrement -1 a "TO" zone.
 		const index = 7;
 		const updatedToValue: number = zoneService.currentZones[index].to - 1; // Apply the change
 
@@ -343,7 +343,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should notify the next Zone ("FROM") when his own "TO" has been changed & zone edited is the first', (done: Function) => {
+	it('should notify the next Zone "FROM" when his own "TO" has been changed & zone edited is the first', (done: Function) => {
 
 		// Given
 		const index = 0; // First zone
@@ -406,7 +406,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should fail when "from" & "to" change are equals', (done: Function) => {
+	it('should fail when "FROM" & "TO" change are equals', (done: Function) => {
 
 		// Given
 		const zoneChange: IZoneChangeWhisper = {
@@ -468,7 +468,7 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should return not compliant zones with error on a "from"', (done: Function) => {
+	it('should return not compliant zones with error on a "FROM"', (done: Function) => {
 
 		// Given
 		const MOCKED_ZONES = [ // Set 10 fake zones
@@ -494,7 +494,7 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should return not compliant zones with error on a "to"', (done: Function) => {
+	it('should return not compliant zones with error on a "TO"', (done: Function) => {
 
 		// Given
 		const MOCKED_ZONES = [ // Set 10 fake zones
