@@ -3,7 +3,7 @@ import { ChromeStorageService } from "../services/chrome-storage.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
+import { IZoneDefinition, ZONE_DEFINITIONS, } from "./zone-definitions";
 import { ZonesService } from "../services/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { appRouteNames } from "../app-route-names";
@@ -78,6 +78,7 @@ export class ZonesSettingsComponent implements OnInit {
 	 * Load current zones from a zone definition.
 	 * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
 	 * @param {IZoneDefinition} zoneDefinition
+	 * @param {string} overrideDefinitionTrigger
 	 */
 	private loadZonesFromDefinition(zoneDefinition: IZoneDefinition) {
 
