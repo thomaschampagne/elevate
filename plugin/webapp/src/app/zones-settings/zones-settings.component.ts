@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "../services/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { appRoutes } from "../app-routes";
+import { appRouteNames } from "../app-route-names";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 
 @Component({
@@ -45,7 +45,9 @@ export class ZonesSettingsComponent implements OnInit {
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
 				if (hasZoneValueInRoute && _.has(userSettings.zones, routeParams.zoneValue)) {
+
 					zoneDefinition = this.getZoneDefinitionFromZoneValue(routeParams.zoneValue);
+
 				} else {
 					this.navigateToZone(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
 					return;
@@ -98,7 +100,7 @@ export class ZonesSettingsComponent implements OnInit {
 	}
 
 	private navigateToZone(zoneValue: string) {
-		const selectedZoneUrl = appRoutes.zonesSettings + "/" + zoneValue;
+		const selectedZoneUrl = appRouteNames.zonesSettings + "/" + zoneValue;
 		this.router.navigate([selectedZoneUrl]);
 	}
 

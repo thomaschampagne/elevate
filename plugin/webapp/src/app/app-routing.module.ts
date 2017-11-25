@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { appRoutes } from "./app-routes";
+import { appRouteNames } from "./app-route-names";
 import { AthleteSettingsComponent } from "./athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "./common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "./zones-settings/zones-settings.component";
 
-const routes: Routes = [
-	{path: appRoutes.athleteSettings, component: AthleteSettingsComponent},
-	{path: appRoutes.commonSettings, component: CommonSettingsComponent},
-	{path: appRoutes.zonesSettings, component: ZonesSettingsComponent},
-	{path: appRoutes.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
-	{path: '', redirectTo: appRoutes.commonSettings, pathMatch: 'full'},
+export const routes: Routes = [
+	{path: appRouteNames.athleteSettings, component: AthleteSettingsComponent},
+	{path: appRouteNames.commonSettings, component: CommonSettingsComponent},
+	{path: appRouteNames.zonesSettings, component: ZonesSettingsComponent},
+	{path: appRouteNames.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
+	{path: '', redirectTo: appRouteNames.commonSettings, pathMatch: 'full'},
 ];
 
 @NgModule({
