@@ -130,9 +130,14 @@ export class FitnessService {
 						atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
 						tsb = ctl - atl;
 
+						// Format date to YYYY-MM-DD
+						const formattedDate = dayStress.date.getFullYear() +
+							"-" + (dayStress.date.getMonth() + 1) +
+							"-" + (dayStress.date.getDate());
+
 						const dayFitnessTrend: IDayFitnessTrend = {
 							ids: dayStress.ids,
-							date: dayStress.date.toLocaleDateString(),
+							date: formattedDate,
 							timestamp: dayStress.timestamp,
 							activitiesName: dayStress.activitiesName,
 							type: dayStress.type,
@@ -163,6 +168,10 @@ export class FitnessService {
 					});
 
 					resolve(fitnessTrend);
+				}, error => {
+
+					reject(error);
+
 				});
 		});
 	}
