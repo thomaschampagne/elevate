@@ -3,35 +3,8 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { Injectable } from '@angular/core';
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
-
-export interface IDayStress {
-	ids: number[];
-	date: Date;
-	timestamp: number;
-	type: string[];
-	activitiesName: string[];
-	trimpScore?: number;
-	powerStressScore?: number;
-	swimStressScore?: number;
-	finalStressScore: number;
-	previewDay: boolean;
-}
-
-export interface IDayFitnessTrend {
-	ids: number[];
-	date: string;
-	timestamp: number;
-	type: string[];
-	activitiesName: string[];
-	trimpScore?: number;
-	powerStressScore?: number;
-	swimStressScore?: number;
-	finalStressScore?: number;
-	ctl: number;
-	atl: number;
-	tsb: number;
-	previewDay: boolean;
-}
+import { DayStress } from "../../models/fitness/DayStress";
+import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend";
 
 /**
  * from: Date;
@@ -45,8 +18,6 @@ export interface IPeriod {
 @Injectable()
 export class FitnessService {
 
-	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
-
 	constructor(private activityService: ActivityService) {
 	}
 
@@ -57,14 +28,14 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
-	 * @returns {Promise<IDayStress[]>}
+	 * @returns {Promise<DayStress[]>}
 	 */
 	public generateDailyStress(powerMeterEnable: boolean,
 							   cyclingFtp: number,
 							   swimEnable: boolean,
-							   swimFtp: number): Promise<IDayStress[]> {
+							   swimFtp: number): Promise<DayStress[]> {
 
-		return new Promise((resolve: (activityDays: IDayStress[]) => void,
+		return new Promise((resolve: (activityDays: DayStress[]) => void,
 							reject: (error: string) => void) => {
 
 			this.activityService.filterFitnessReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
@@ -83,13 +54,13 @@ export class FitnessService {
 					const today: Moment = this.getTodayMoment().startOf("day"); // Today end of day
 
 					// Now inject days off/resting
-					const dailyActivity: IDayStress[] = [];
+					const dailyActivity: DayStress[] = [];
 					const currentDay = moment(startDay).clone();
 
 					while (currentDay.isSameOrBefore(today)) {
 
 						// Compute athlete stress on that current day.
-						const dayStress: IDayStress = this.dayStressOnDate(currentDay, fitnessReadyActivities);
+						const dayStress: DayStress = this.dayStressOnDate(currentDay, fitnessReadyActivities);
 
 						// Then push every day... Rest or active...
 						dailyActivity.push(dayStress);
@@ -115,45 +86,32 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
-	 * @returns {Promise<IDayFitnessTrend[]>}
+	 * @returns {Promise<DayFitnessTrend[]>}
 	 */
 	public computeTrend(powerMeterEnable: boolean,
 						cyclingFtp: number,
 						swimEnable: boolean,
-						swimFtp: number): Promise<IDayFitnessTrend[]> {
+						swimFtp: number): Promise<DayFitnessTrend[]> {
 
-		return new Promise((resolve: (fitnessTrend: IDayFitnessTrend[]) => void,
+		return new Promise((resolve: (fitnessTrend: DayFitnessTrend[]) => void,
 							reject: (error: string) => void) => {
 
 			this.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
-				.then((dailyActivity: IDayStress[]) => {
+				.then((dailyActivity: DayStress[]) => {
 
 					let ctl: number = 0;
 					let atl: number = 0;
 					let tsb: number = 0;
 
-					const fitnessTrend: IDayFitnessTrend[] = [];
+					const fitnessTrend: DayFitnessTrend[] = [];
 
-					_.forEach(dailyActivity, (dayStress: IDayStress) => {
+					_.forEach(dailyActivity, (dayStress: DayStress) => {
 
 						ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
 						atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
 						tsb = ctl - atl;
 
-						// Format date to YYYY-MM-DD
-						const formattedDate = moment(dayStress.date).format(FitnessService.DATE_FORMAT);
-
-						const dayFitnessTrend: IDayFitnessTrend = {
-							ids: dayStress.ids,
-							date: formattedDate,
-							timestamp: dayStress.timestamp,
-							activitiesName: dayStress.activitiesName,
-							type: dayStress.type,
-							ctl: ctl,
-							atl: atl,
-							tsb: tsb,
-							previewDay: dayStress.previewDay,
-						};
+						const dayFitnessTrend: DayFitnessTrend = new DayFitnessTrend(dayStress, ctl, atl, tsb);
 
 						if (_.isNumber(dayStress.trimpScore) && dayStress.trimpScore > 0) {
 							dayFitnessTrend.trimpScore = dayStress.trimpScore;
@@ -187,24 +145,15 @@ export class FitnessService {
 	/**
 	 *
 	 * @param {moment.Moment} startFrom
-	 * @param {IDayStress[]} dailyActivity
+	 * @param {DayStress[]} dailyActivity
 	 */
-	private appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: IDayStress[]) {
+	private appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStress[]) {
 
 		for (let i: number = 0; i < ActivityService.FUTURE_DAYS_PREVIEW; i++) {
 
 			const futureDate: Date = startFrom.add(1, "days").startOf("day").toDate();
 
-			const dayActivity: IDayStress = {
-				ids: [],
-				date: futureDate,
-				timestamp: futureDate.getTime(),
-				type: [],
-				activitiesName: [],
-				trimpScore: 0,
-				previewDay: true,
-				finalStressScore: 0,
-			};
+			const dayActivity: DayStress = new DayStress(futureDate, true);
 
 			dailyActivity.push(dayActivity);
 		}
@@ -214,25 +163,17 @@ export class FitnessService {
 	 *
 	 * @param {moment.Moment} currentDay
 	 * @param {IFitnessReadyActivity[]} fitnessReadyActivities
-	 * @returns {IDayStress}
+	 * @returns {DayStress}
 	 */
 
-	private dayStressOnDate(currentDay: moment.Moment, fitnessReadyActivities: IFitnessReadyActivity[]): IDayStress {
+	private dayStressOnDate(currentDay: moment.Moment, fitnessReadyActivities: IFitnessReadyActivity[]): DayStress {
 
 		const foundActivitiesThatDay: IFitnessReadyActivity[] = _.filter(fitnessReadyActivities, {
 			year: currentDay.year(),
 			dayOfYear: currentDay.dayOfYear(),
 		});
 
-		const dayActivity: IDayStress = {
-			ids: [],
-			date: currentDay.toDate(),
-			timestamp: currentDay.toDate().getTime(),
-			type: [],
-			activitiesName: [],
-			previewDay: false,
-			finalStressScore: 0
-		};
+		const dayActivity: DayStress = new DayStress(currentDay.toDate(), false);
 
 		// Compute final stress scores on that day
 		if (foundActivitiesThatDay.length > 0) {
@@ -294,26 +235,25 @@ export class FitnessService {
 	/**
 	 * Return start/end indexes of fitnessTrend collection corresponding to from/to date given in a period
 	 * @param {IPeriod} period
-	 * @param {IDayFitnessTrend[]} fitnessTrend
+	 * @param {DayFitnessTrend[]} fitnessTrend
 	 * @returns {{start: number; end: number}}
 	 */
-	public indexesOf(period: IPeriod, fitnessTrend: IDayFitnessTrend[]): { start: number; end: number } {
+	public indexesOf(period: IPeriod, fitnessTrend: DayFitnessTrend[]): { start: number; end: number } {
 
 		let startIndex = 0; // Use first day as start index by default.
 		if (_.isDate(period.from)) { // Then override index if "From" is specified
 			startIndex = _.findIndex(fitnessTrend, {
-				date: moment(period.from).format(FitnessService.DATE_FORMAT)
+				dateString: moment(period.from).format(DayFitnessTrend.DATE_FORMAT)
 			});
 		}
 
 		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
 		if (_.isDate(period.to)) { // Then override index if "To" is specified
 			endIndex = _.findIndex(fitnessTrend, {
-				date: moment(period.to).format(FitnessService.DATE_FORMAT)
+				dateString: moment(period.to).format(DayFitnessTrend.DATE_FORMAT)
 			});
 		}
 
-		// if (!_.isEmpty(period.from) && !_.isEmpty(period.to) && period.from.isSameOrAfter(period.to)) {
 		if (startIndex >= endIndex) {
 			throw (new Error()).message = "FROM cannot be upper than TO date";
 		}

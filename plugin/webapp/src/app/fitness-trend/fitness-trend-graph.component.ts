@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FitnessService, IDayFitnessTrend, IPeriod } from "../services/fitness/fitness.service";
+import { FitnessService, IPeriod } from "../services/fitness/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
+import { DayFitnessTrend } from "../models/fitness/DayFitnessTrend";
 
 // DONE Filter by period until today
 // DONE Filter between dates
@@ -50,7 +51,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private _graphConfig = {
 		data: [],
 		full_width: true,
-		height: 600,
+		height: window.innerHeight * 0.60, //600, // Dynamic height?!
 		right: 40,
 		baselines: [{value: 0}],
 		animate_on_load: true,
@@ -74,9 +75,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			console.log(data, index);
 		},
 		mouseover: (data: { key: Date, values: any[] }, index: number) => {
-
-			const mouseOverDate = moment(data.key).format(FitnessService.DATE_FORMAT);
-			this.onMouseOverDate(mouseOverDate);
+			this.onMouseOverDate(data.key);
 		},
 		mouseout: (data, i) => {
 			// console.log("out", data);
@@ -87,11 +86,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 		/*
 		mouseover: (data: { key: Date, values: any[] }, index: number) => {
 
-			// const formattedDate = moment(dayStress.date).format(FitnessService.DATE_FORMAT);
+			// const formattedDate = moment(dayStress.date).format(DayFitnessTrend.DATE_FORMAT);
 			const relatedMoment = moment(data.key);
 
 			const relatedDayFitnessTrend: IDayFitnessTrend = _.find(this.fitnessTrend, {
-				date: relatedMoment.format(FitnessService.DATE_FORMAT)
+				date: relatedMoment.format(DayFitnessTrend.DATE_FORMAT)
 			});
 
 			// TODO Export dedicated function
@@ -139,10 +138,10 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private _lastPeriods: ILastPeriod[];
 
 	private _lastPeriodSelected: IPeriod;
-	private _fitnessTrend: IDayFitnessTrend[];
+	private _fitnessTrend: DayFitnessTrend[];
 	private _fitnessTrendLines: GraphPoint[][] = [];
 	private _markers: Marker[] = [];
-	private _watchedDay: IDayFitnessTrend;
+	private _watchedDay: DayFitnessTrend;
 
 	private _dateFrom: Date;
 	private _dateTo: Date;
@@ -158,7 +157,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.fitnessService.computeTrend(null,
 			null,
 			null,
-			null).then((fitnessTrend: IDayFitnessTrend[]) => {
+			null).then((fitnessTrend: DayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
 			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
@@ -182,22 +181,22 @@ export class FitnessTrendGraphComponent implements OnInit {
                         date: dayFitnessTrend.date,
                         value: 0
                     });*/
-		const today: string = moment().format(FitnessService.DATE_FORMAT);
+		const today: string = moment().format(DayFitnessTrend.DATE_FORMAT);
 
-		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend) => {
+		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
 
 			fatigueLine.push({
-				date: dayFitnessTrend.date,
+				date: dayFitnessTrend.dateString,
 				value: dayFitnessTrend.atl
 			});
 
 			fitnessLine.push({
-				date: dayFitnessTrend.date,
+				date: dayFitnessTrend.dateString,
 				value: dayFitnessTrend.ctl
 			});
 
 			formLine.push({
-				date: dayFitnessTrend.date,
+				date: dayFitnessTrend.dateString,
 				value: dayFitnessTrend.tsb
 			});
 
@@ -220,7 +219,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 					label: "🠷" // Found @ http://www.amp-what.com/
 				};
 
-			} else if (dayFitnessTrend.date == today) {
+			} else if (dayFitnessTrend.dateString == today) {
 				marker = {
 					date: new Date(),
 					label: "☀"
@@ -308,17 +307,17 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 * @param {string} date format YYYY-MM-DD
 	 */
-	private onMouseOverDate(date: string): void {
+	private onMouseOverDate(date: Date): void {
 
 		// Update watched day
 		this.watchedDay = _.find(this.fitnessTrend, {
-			date: date
+			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
 		});
 
-		const isActiveDay = this.watchedDay.activitiesName.length > 0;
+		/*const isActiveDay = this.watchedDay.activitiesName.length > 0;
 		if (isActiveDay) {
 			// TODO My stuff !
-		}
+		}*/
 	}
 
 	/**
@@ -326,7 +325,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param fitnessTrend
 	 * @returns {ILastPeriod[]}
 	 */
-	private provideLastPeriods(fitnessTrend: IDayFitnessTrend[]): ILastPeriod[] {
+	private provideLastPeriods(fitnessTrend: DayFitnessTrend[]): ILastPeriod[] {
 
 		return [{
 			from: moment().subtract(7, "days").toDate(),
@@ -410,11 +409,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return this._fitnessService;
 	}
 
-	get fitnessTrend(): IDayFitnessTrend[] {
+	get fitnessTrend(): DayFitnessTrend[] {
 		return this._fitnessTrend;
 	}
 
-	set fitnessTrend(value: IDayFitnessTrend[]) {
+	set fitnessTrend(value: DayFitnessTrend[]) {
 		this._fitnessTrend = value;
 	}
 
@@ -426,11 +425,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return this._markers;
 	}
 
-	get watchedDay(): IDayFitnessTrend {
+	get watchedDay(): DayFitnessTrend {
 		return this._watchedDay;
 	}
 
-	set watchedDay(value: IDayFitnessTrend) {
+	set watchedDay(value: DayFitnessTrend) {
 		this._watchedDay = value;
 	}
 

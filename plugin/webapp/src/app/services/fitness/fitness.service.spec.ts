@@ -1,10 +1,12 @@
 import * as moment from "moment";
 import * as _ from "lodash";
 import { TestBed } from '@angular/core/testing';
-import { FitnessService, IDayFitnessTrend, IDayStress, IPeriod } from './fitness.service';
+import { FitnessService, IPeriod } from './fitness.service';
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
+import { DayStress } from "../../models/fitness/DayStress";
+import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend";
 
 describe('FitnessService', () => {
 
@@ -68,10 +70,10 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IDayStress[]> = fitnessService.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayStress[]> = fitnessService.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((dailyActivity: IDayStress[]) => {
+		promise.then((dailyActivity: DayStress[]) => {
 
 			expect(filterFitnessReadySpy).toHaveBeenCalledTimes(1);
 			expect(dailyActivity).not.toBeNull();
@@ -79,12 +81,12 @@ describe('FitnessService', () => {
 			// Test real & preview days
 			expect(dailyActivity.length).toEqual(expectedDailyActivityLength);
 
-			const previewDailyActivity = _.filter(dailyActivity, (dayActivity: IDayStress) => {
+			const previewDailyActivity = _.filter(dailyActivity, (dayActivity: DayStress) => {
 				return dayActivity.previewDay == true;
 			});
 			expect(previewDailyActivity.length).toEqual(expectedPreviewDays);
 
-			const realDailyActivity = _.filter(dailyActivity, (dayActivity: IDayStress) => {
+			const realDailyActivity = _.filter(dailyActivity, (dayActivity: DayStress) => {
 				return dayActivity.previewDay == false;
 			});
 			expect(realDailyActivity.length).toEqual(expectedDailyActivityLength - expectedPreviewDays);
@@ -97,7 +99,7 @@ describe('FitnessService', () => {
 			expect(_.find(dailyActivity, {ids: [rideId]}).date.toString()).toEqual(expectedRideDate);
 
 			// Test stress scores
-			let activity: IDayStress;
+			let activity: DayStress;
 
 			activity = _.find(dailyActivity, {ids: [429628737]});
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
@@ -128,10 +130,10 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((fitnessTrend: IDayFitnessTrend[]) => {
+		promise.then((fitnessTrend: DayFitnessTrend[]) => {
 
 			expect(fitnessTrend).not.toBeNull();
 
@@ -139,7 +141,7 @@ describe('FitnessService', () => {
 			expect(filterFitnessReadySpy).toHaveBeenCalledTimes(1);
 
 			// Test training load
-			const lastRealDay = _.last(_.filter(fitnessTrend, (dayFitnessTrend: IDayFitnessTrend) => {
+			const lastRealDay = _.last(_.filter(fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
 				return dayFitnessTrend.previewDay == false;
 			}));
 			expect(lastRealDay.atl.toFixed(5)).toEqual("13.74548");
@@ -152,7 +154,7 @@ describe('FitnessService', () => {
 			expect(lastPreviewDay.tsb.toFixed(5)).toEqual("31.95969");
 
 			// Test stress scores
-			let activity: IDayFitnessTrend;
+			let activity: DayFitnessTrend;
 
 			activity = _.find(fitnessTrend, {ids: [429628737]});
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
@@ -187,9 +189,9 @@ describe('FitnessService', () => {
 			to: null // Indicate we use "Last period of TIME"
 		};
 
-		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
-		promise.then((fitnessTrend: IDayFitnessTrend[]) => {
+		promise.then((fitnessTrend: DayFitnessTrend[]) => {
 
 			// When
 			const indexes: { start: number; end: number } = fitnessService.indexesOf(period, fitnessTrend);
@@ -218,9 +220,9 @@ describe('FitnessService', () => {
 			to: null // Indicate we use "Last period of TIME"
 		};
 
-		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
-		promise.then((fitnessTrend: IDayFitnessTrend[]) => {
+		promise.then((fitnessTrend: DayFitnessTrend[]) => {
 
 			// When
 			const indexes: { start: number; end: number } = fitnessService.indexesOf(period, fitnessTrend);
@@ -244,13 +246,13 @@ describe('FitnessService', () => {
 		spyOn(activityService, 'filterFitnessReady').and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		const period: IPeriod = {
-			from: moment("2015-07-01", FitnessService.DATE_FORMAT).startOf("day").toDate(),
-			to: moment("2015-09-30", FitnessService.DATE_FORMAT).startOf("day").toDate(),
+			from: moment("2015-07-01", DayFitnessTrend.DATE_FORMAT).startOf("day").toDate(),
+			to: moment("2015-09-30", DayFitnessTrend.DATE_FORMAT).startOf("day").toDate(),
 		};
 
-		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
-		promise.then((fitnessTrend: IDayFitnessTrend[]) => {
+		promise.then((fitnessTrend: DayFitnessTrend[]) => {
 
 
 			// When
@@ -277,14 +279,14 @@ describe('FitnessService', () => {
 		spyOn(activityService, 'filterFitnessReady').and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		const period: IPeriod = {
-			from: moment("2015-06-01", FitnessService.DATE_FORMAT).toDate(),
-			to: moment("2015-05-01", FitnessService.DATE_FORMAT).toDate()
+			from: moment("2015-06-01", DayFitnessTrend.DATE_FORMAT).toDate(),
+			to: moment("2015-05-01", DayFitnessTrend.DATE_FORMAT).toDate()
 		};
 
-		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// When, Then
-		promise.then((fitnessTrend: IDayFitnessTrend[]) => {
+		promise.then((fitnessTrend: DayFitnessTrend[]) => {
 
 			let error = null;
 			try {
