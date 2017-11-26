@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Moment } from "moment";
-import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 import * as _ from "lodash";
-import moment = require("moment");
+import * as moment from "moment";
+import { Moment } from "moment";
+import { Injectable } from '@angular/core';
+import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 
 export interface IDayStress {
 	ids: number[];

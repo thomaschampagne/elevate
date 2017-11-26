@@ -1,12 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-
-import { FitnessService, IDayFitnessTrend, IDayStress } from './fitness.service';
+import * as moment from "moment";
 import * as _ from "lodash";
+import { TestBed } from '@angular/core/testing';
+import { FitnessService, IDayFitnessTrend, IDayStress } from './fitness.service';
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import moment = require("moment");
-
 
 describe('FitnessService', () => {
 
