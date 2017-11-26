@@ -18,7 +18,9 @@ export interface MainMenuItem {
 export class AppComponent implements OnInit {
 
 	private static updateToolBarTitle(url: string): string {
-		return _.startCase(_.upperFirst(_.last(_.split(url, '/'))));
+		const splitUrl = _.split(url, '/');
+		splitUrl.shift(); // Remove first slash
+		return _.startCase(_.upperFirst(_.first(splitUrl)));
 	}
 
 	private _title: string;
