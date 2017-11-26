@@ -27,7 +27,7 @@ export class OptionHelperDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	private html: SafeHtml;
+	private _html: SafeHtml;
 	private markDownParser: MarkDownIt.MarkdownIt;
 
 	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: IOptionHelperData,
@@ -41,11 +41,19 @@ export class OptionHelperDialog implements OnInit {
 			throw new Error("No markdown data provided. File is empty?!");
 		} else {
 			const html = this.markDownParser.render(this.dialogData.markdownData);
-			this.html = this.domSanitizer.bypassSecurityTrustHtml(html);
+			this._html = this.domSanitizer.bypassSecurityTrustHtml(html);
 		}
 	}
 
 	get dialogData(): IOptionHelperData {
 		return this._dialogData;
+	}
+
+	get html(): SafeHtml {
+		return this._html;
+	}
+
+	set html(value: SafeHtml) {
+		this._html = value;
 	}
 }
