@@ -17,6 +17,22 @@ export interface IDayStress {
 	previewDay: boolean;
 }
 
+export interface IDayFitnessTrend {
+	ids: number[];
+	date: string;
+	timestamp: number;
+	type: string[];
+	activitiesName: string[];
+	trimpScore?: number;
+	powerStressScore?: number;
+	swimStressScore?: number;
+	finalStressScore?: number;
+	ctl: number;
+	atl: number;
+	tsb: number;
+	previewDay: boolean;
+}
+
 
 @Injectable()
 export class FitnessService {
@@ -79,6 +95,74 @@ export class FitnessService {
 					this.appendPreviewDaysToDailyActivity(currentDay, dailyActivity);
 
 					resolve(dailyActivity);
+				});
+		});
+	}
+
+	/**
+	 *
+	 * @param {boolean} powerMeterEnable
+	 * @param {number} cyclingFtp
+	 * @param {boolean} swimEnable
+	 * @param {number} swimFtp
+	 * @returns {Promise<IDayFitnessTrend[]>}
+	 */
+	public computeTrend(powerMeterEnable: boolean,
+						cyclingFtp: number,
+						swimEnable: boolean,
+						swimFtp: number): Promise<IDayFitnessTrend[]> {
+
+		return new Promise((resolve: (fitnessTrend: IDayFitnessTrend[]) => void,
+							reject: (error: string) => void) => {
+
+			this.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
+				.then((dailyActivity: IDayStress[]) => {
+
+					let ctl: number = 0;
+					let atl: number = 0;
+					let tsb: number = 0;
+
+					const fitnessTrend: IDayFitnessTrend[] = [];
+
+					_.forEach(dailyActivity, (dayStress: IDayStress) => {
+
+						ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
+						atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
+						tsb = ctl - atl;
+
+						const dayFitnessTrend: IDayFitnessTrend = {
+							ids: dayStress.ids,
+							date: dayStress.date.toLocaleDateString(),
+							timestamp: dayStress.timestamp,
+							activitiesName: dayStress.activitiesName,
+							type: dayStress.type,
+							ctl: ctl,
+							atl: atl,
+							tsb: tsb,
+							previewDay: dayStress.previewDay,
+						};
+
+						if (_.isNumber(dayStress.trimpScore) && dayStress.trimpScore > 0) {
+							dayFitnessTrend.trimpScore = dayStress.trimpScore;
+						}
+
+						if (_.isNumber(dayStress.powerStressScore) && dayStress.powerStressScore > 0) {
+							dayFitnessTrend.powerStressScore = dayStress.powerStressScore;
+						}
+
+						if (_.isNumber(dayStress.swimStressScore) && dayStress.swimStressScore > 0) {
+							dayFitnessTrend.swimStressScore = dayStress.swimStressScore;
+						}
+
+						if (_.isNumber(dayStress.finalStressScore) && dayStress.finalStressScore > 0) {
+							dayFitnessTrend.finalStressScore = dayStress.finalStressScore;
+						}
+
+						fitnessTrend.push(dayFitnessTrend);
+
+					});
+
+					resolve(fitnessTrend);
 				});
 		});
 	}
