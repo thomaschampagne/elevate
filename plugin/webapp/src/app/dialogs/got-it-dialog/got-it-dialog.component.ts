@@ -14,8 +14,8 @@ export interface IGotItDialogData {
 })
 export class GotItDialog implements OnInit {
 
-	public static MAX_WIDTH: string = '80%';
-	public static MIN_WIDTH: string = '40%';
+	public static readonly MAX_WIDTH: string = '80%';
+	public static readonly MIN_WIDTH: string = '40%';
 
 	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: IGotItDialogData, private dialogRef: MatDialogRef<GotItDialog>) {
 	}

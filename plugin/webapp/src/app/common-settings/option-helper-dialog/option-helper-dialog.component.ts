@@ -24,8 +24,8 @@ export interface IOptionHelperData {
 })
 export class OptionHelperDialog implements OnInit {
 
-	public static MAX_WIDTH: string = '80%';
-	public static MIN_WIDTH: string = '40%';
+	public static readonly MAX_WIDTH: string = '80%';
+	public static readonly MIN_WIDTH: string = '40%';
 
 	private html: SafeHtml;
 	private markDownParser: MarkDownIt.MarkdownIt;

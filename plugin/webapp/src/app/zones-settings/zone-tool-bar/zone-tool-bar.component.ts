@@ -7,6 +7,7 @@ import {
 	Mode,
 	ZonesImportExportDialog
 } from "../zones-import-export-dialog/zones-import-export-dialog.component";
+import { ConfirmDialog, IConfirmDialogData } from "../../dialogs/confirm-dialog/confirm-dialog.component";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -60,10 +61,26 @@ export class ZoneToolBarComponent implements OnInit {
 	}
 
 	public onResetZonesToDefault(): void {
-		this.zonesService.resetZonesToDefault().then(() => {
-				this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-			}, error => this.popSnack(error)
-		);
+
+		const data: IConfirmDialogData = {
+			title: "Reset <" + this.zonesService.zoneDefinition.name + "> zones",
+			content: "Are you sure? Previous data will be lost."
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialog, {
+			minWidth: ConfirmDialog.MIN_WIDTH,
+			maxWidth: ConfirmDialog.MAX_WIDTH,
+			data: data
+		});
+
+		dialogRef.afterClosed().subscribe((confirm: boolean) => {
+			if (confirm) {
+				this.zonesService.resetZonesToDefault().then(() => {
+						this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
+					}, error => this.popSnack(error)
+				);
+			}
+		});
 	}
 
 	public onSaveZones(): void {
