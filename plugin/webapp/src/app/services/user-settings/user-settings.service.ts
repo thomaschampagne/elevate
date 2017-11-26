@@ -1,114 +1,81 @@
 import { Injectable } from '@angular/core';
 import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
-import { userSettings } from "../../../../../common/scripts/UserSettings";
-import * as _ from "lodash";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../../zones-settings/zone-definitions";
+import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 
 @Injectable()
 export class UserSettingsService {
 
-	constructor() {
-	}
+	public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
 
-	public fetchUserSettings(): Promise<IUserSettings> {
-		return new Promise<IUserSettings>((resolve) => {
-			chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
-				resolve(userSettingsSynced);
-			});
-		});
-	}
-
-
-	public getUserSetting(key: string): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
-				const value = userSettingsSynced[key];
-				if (!_.isUndefined(value)) {
-					resolve(value);
-				} else {
-					reject(key + " not found in user settings")
-				}
-			});
-		});
-	}
-
-	public updateUserSetting(key: string, value: any): Promise<boolean> {
-
-		const settingToBeUpdated: any = {};
-
-		settingToBeUpdated[key] = value;
-
-		return new Promise<boolean>((resolve) => {
-
-			chrome.storage.sync.set(settingToBeUpdated, () => {
-
-				resolve(true);
-
-			});
-		});
-
+	constructor(private _userSettingsDao: UserSettingsDao) {
 	}
 
 	/**
-	 * TODO Unit test and refactor
+	 *
+	 * @returns {Promise<IUserSettings>}
+	 */
+	public fetch(): Promise<IUserSettings> {
+		return this.userSettingsDao.fetch();
+	}
+
+	/**
+	 *
+	 * @param {string} key
+	 * @returns {Promise<Object>}
+	 */
+	public get(key: string): Promise<Object> {
+		return this.userSettingsDao.get(key);
+	}
+
+	/**
+	 *
+	 * @param {string} key
+	 * @param value
 	 * @returns {Promise<boolean>}
 	 */
-	public markLocalStorageClear(): Promise<boolean> {
-		return this.updateUserSetting("localStorageMustBeCleared", true);
+	public update(key: string, value: any): Promise<IUserSettings> {
+		return this.userSettingsDao.update(key, value);
 	}
 
 	/**
-	 *
-	 * TODO Move "updateZoneSetting" in proper Dao (+ test?!)
-	 TODO: some Given test data:
-	 const TO_BE_SAVED_ZONES = [ // 8 zones
-	 {from: 0, to: 50},
-	 {from: 50, to: 100},
-	 {from: 100, to: 150},
-	 {from: 150, to: 200},
-	 {from: 200, to: 250},
-	 {from: 250, to: 300},
-	 {from: 300, to: 400},
-	 {from: 400, to: 500}
-	 ];
+	 * Clear local storage on next reload
+	 * @returns {Promise<IUserSettings>}
+	 */
+	public markLocalStorageClear(): Promise<IUserSettings> {
+		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
+	}
 
-	 const EXISTING_STORED_SPEED_ZONES_MOCKED: IZone[] = [
-	 {from: 0, to: 10},
-	 {from: 10, to: 20},
-	 {from: 20, to: 30},
-	 {from: 30, to: 40},
-	 {from: 40, to: 50}
-	 ];
-
-	 const EXISTING_STORED_USER_SETTINGS_MOCKED = {
-			zones: {
-				speed: EXISTING_STORED_SPEED_ZONES_MOCKED
-			}
-		};
-	 *
-	 *
+	/**
 	 *
 	 * @param {IZoneDefinition} zoneDefinition
 	 * @param {IZone[]} zones
-	 * @returns {Promise<boolean>}
+	 * @returns {Promise<IZone[]>}
 	 */
-	public updateZoneSetting(zoneDefinition: IZoneDefinition, zones: IZone[]): Promise<boolean> {
+	public updateZones(zoneDefinition: IZoneDefinition, zones: IZone[]): Promise<IZone[]> {
 
-		return new Promise<boolean>((resolve: Function) => {
+		return new Promise<IZone[]>((resolve: Function, reject: Function) => {
 
-			this.fetchUserSettings().then((userSettings: IUserSettings) => {
+			const path = "zones." + zoneDefinition.value;
 
-				userSettings.zones[zoneDefinition.value] = zones;
+			this.userSettingsDao.updateNested(path, zones).then((userSettings: IUserSettings) => {
 
-				chrome.storage.sync.set(userSettings, () => {
+				resolve(userSettings.zones[zoneDefinition.value]);
 
-					// Clear local storage on next strava.com reload
-					this.markLocalStorageClear().then(() => {
-						resolve(true);
-					});
-				});
+			}, error => {
+
+				reject(error);
+
 			});
 		});
+	}
+
+	get userSettingsDao(): UserSettingsDao {
+		return this._userSettingsDao;
+	}
+
+	set userSettingsDao(value: UserSettingsDao) {
+		this._userSettingsDao = value;
 	}
 }

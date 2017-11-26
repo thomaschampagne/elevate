@@ -5,6 +5,7 @@ import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "../../zones-settings/zone-definitions";
 import { userSettings } from "../../../../../common/scripts/UserSettings";
+import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 
 describe('ZonesService', () => {
 
@@ -13,7 +14,7 @@ describe('ZonesService', () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [ZonesService, UserSettingsService]
+			providers: [ZonesService, UserSettingsService, UserSettingsDao]
 		});
 
 		// Retrieve injected service
@@ -655,7 +656,7 @@ describe('ZonesService', () => {
 
 		// Given
 		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(null);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZoneSetting')
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZones')
 			.and.returnValue(Promise.resolve(true));
 
 		// When
@@ -682,7 +683,7 @@ describe('ZonesService', () => {
 		// Given
 		const fakeError = "FakeError";
 		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(fakeError);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZoneSetting')
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZones')
 			.and.returnValue(Promise.resolve(true));
 
 		// When

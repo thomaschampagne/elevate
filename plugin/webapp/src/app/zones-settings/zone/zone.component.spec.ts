@@ -5,6 +5,7 @@ import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
 import { IZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
 import { UserSettingsService } from "../../services/user-settings/user-settings.service";
+import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 
 describe('ZoneComponent', () => {
 
@@ -19,7 +20,7 @@ describe('ZoneComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
 			declarations: [ZoneComponent],
-			providers: [ZonesService, UserSettingsService]
+			providers: [ZonesService, UserSettingsService, UserSettingsDao]
 		}).compileComponents();
 
 		zonesService = TestBed.get(ZonesService);

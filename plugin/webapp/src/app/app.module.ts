@@ -23,6 +23,7 @@ import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-b
 import { ZonesService } from "./services/zones/zones.service";
 import { ZonesImportExportDialog } from "./zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component";
+import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 
 @NgModule({
 	declarations: [
@@ -63,7 +64,10 @@ import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component
 		NgPipesModule
 	],
 	providers: [
+
 		UserSettingsService,
+		UserSettingsDao,
+
 		CommonSettingsService,
 		OptionHelperReaderService,
 		ZonesService

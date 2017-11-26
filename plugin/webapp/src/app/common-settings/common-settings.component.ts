@@ -40,7 +40,7 @@ export class CommonSettingsComponent implements OnInit {
 
 		this.sections = this.commonSettingsService.sections;
 
-		this.userSettingsService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettingsSynced: IUserSettings) => {
 			this.renderOptionsForEachSection(userSettingsSynced);
 		});
 
@@ -106,7 +106,7 @@ export class CommonSettingsComponent implements OnInit {
 
 		if (option.type == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
-			this.userSettingsService.updateUserSetting(option.key, option.active).then(() => {
+			this.userSettingsService.update(option.key, option.active).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
@@ -119,7 +119,7 @@ export class CommonSettingsComponent implements OnInit {
 			}
 		} else if (option.type == CommonSettingsService.TYPE_OPTION_LIST) {
 
-			this.userSettingsService.updateUserSetting(option.key, option.active.key).then(() => {
+			this.userSettingsService.update(option.key, option.active.key).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
@@ -136,7 +136,7 @@ export class CommonSettingsComponent implements OnInit {
 					this.resetOptionToDefaultValue(option);
 				}
 
-				this.userSettingsService.updateUserSetting(option.key, option.value).then(() => {
+				this.userSettingsService.update(option.key, option.value).then(() => {
 					console.log(option.key + " has been updated to " + option.value);
 				});
 			}

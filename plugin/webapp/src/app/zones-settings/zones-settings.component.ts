@@ -32,7 +32,7 @@ export class ZonesSettingsComponent implements OnInit {
 	public ngOnInit(): void {
 
 		// Load user zones config
-		this.userSettingsService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettingsSynced: IUserSettings) => {
 
 			// Load user zones data
 			this._userZones = userSettingsSynced.zones;

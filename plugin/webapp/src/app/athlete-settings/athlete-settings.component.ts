@@ -55,7 +55,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.userSettingsService.fetchUserSettings().then((userSettings: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
 			this._gender = _.find(this._GENDER_LIST, {
 				type: userSettings.userGender,
@@ -266,7 +266,7 @@ export class AthleteSettingsComponent implements OnInit {
 	 *
 	 */
 	private localStorageMustBeCleared() {
-		this.userSettingsService.updateUserSetting(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
+		this.userSettingsService.update(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
 			console.log(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE + " has been updated to " + true);
 		});
 	}
@@ -291,7 +291,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	private saveSetting(key: string, value: any): void {
-		this.userSettingsService.updateUserSetting(key, value).then(() => {
+		this.userSettingsService.update(key, value).then(() => {
 			console.log(key + " has been updated to " + value);
 			this.profileChanged();
 		});
@@ -299,7 +299,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	private getSavedSetting(key: string): Promise<any> {
-		return this.userSettingsService.getUserSetting(key);
+		return this.userSettingsService.get(key);
 	}
 
 	private popError(customMessage?: string) {
