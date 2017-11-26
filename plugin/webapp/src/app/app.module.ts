@@ -24,6 +24,8 @@ import { ZonesService } from "./services/zones/zones.service";
 import { ZonesImportExportDialog } from "./zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
+import { ActivityService } from "./services/activity/activity.service";
+import { ActivityDao } from "./dao/activity/activity.dao";
 
 @NgModule({
 	declarations: [
@@ -67,6 +69,9 @@ import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 
 		UserSettingsService,
 		UserSettingsDao,
+
+		ActivityService,
+		ActivityDao,
 
 		CommonSettingsService,
 		OptionHelperReaderService,

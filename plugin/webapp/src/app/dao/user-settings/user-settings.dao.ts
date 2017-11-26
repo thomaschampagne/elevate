@@ -109,6 +109,10 @@ export class UserSettingsDao {
 		return absoluteObject;
 	}
 
+	/**
+	 *
+	 * @returns {chrome.storage.SyncStorageArea}
+	 */
 	public chromeStorageSync(): chrome.storage.SyncStorageArea {
 		return chrome.storage.sync;
 	}
