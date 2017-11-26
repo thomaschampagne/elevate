@@ -27,6 +27,7 @@ import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { ActivityService } from "./services/activity/activity.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FitnessService } from "./services/fitness/fitness.service";
+import { FitnessTrendComponent } from './fitness-trend/fitness-trend.component';
 
 @NgModule({
 	declarations: [
@@ -40,11 +41,12 @@ import { FitnessService } from "./services/fitness/fitness.service";
 		SwimFtpHelperComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
-		ZoneToolBarComponent,
+		FitnessTrendComponent,
 
 		/**
 		 * Dialogs
 		 */
+		ZoneToolBarComponent,
 		GotItDialog,
 		ConfirmDialog,
 		OptionHelperDialog,

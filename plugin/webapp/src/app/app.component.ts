@@ -26,6 +26,12 @@ export class AppComponent implements OnInit {
 	private _title: string;
 	private _mainMenuItems: MainMenuItem[] = [
 		{
+			name: 'Fitness Trend',
+			icon: 'timeline',
+			routerLink: appRouteNames.fitnessTrend,
+			routerLinkActive: true
+		},
+		{
 			name: 'Common Settings',
 			icon: 'settings',
 			routerLink: appRouteNames.commonSettings,
