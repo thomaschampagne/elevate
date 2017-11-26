@@ -18,6 +18,7 @@
 		<mat-form-field class="step">
 			<input
 				matInput
+				type="number"
 				(change)="onStepChange()"
 				[(ngModel)]="zoneDefinitionSelected.step"
 				matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."/>
