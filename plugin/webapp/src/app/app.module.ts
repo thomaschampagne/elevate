@@ -26,6 +26,7 @@ import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { ActivityService } from "./services/activity/activity.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
+import { FitnessService } from "./services/fitness/fitness.service";
 
 @NgModule({
 	declarations: [
@@ -72,6 +73,8 @@ import { ActivityDao } from "./dao/activity/activity.dao";
 
 		ActivityService,
 		ActivityDao,
+
+		FitnessService,
 
 		CommonSettingsService,
 		OptionHelperReaderService,

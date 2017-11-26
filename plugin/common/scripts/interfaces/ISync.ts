@@ -59,6 +59,7 @@ export interface ISyncActivityComputed {
     short_unit: string;
     moving_time_raw: number;
     elapsed_time_raw: number;
+	hasPowerMeter: boolean;
     trainer: boolean;
     commute: boolean;
     elevation_unit: string;
