@@ -1,16 +1,28 @@
 <mat-card>
-	<mat-card-title>
-		First draw
-	</mat-card-title>
+	<!--<mat-card-title>-->
+
+
+	<!--<mat-card-subtitle>-->
+	<!--Today: My very long long long activity name !!! + Strong run hard :/ !!!-->
+	<!--Nov 22 2017<br/>-->
+	<!--Ride + Run<br/> &lt;!&ndash;If exists&ndash;&gt;-->
+	<!--My very long long long activity name !!!<br/>-->
+	<!--Strong run hard !!!<br/>-->
+	<!--</mat-card-subtitle>-->
+	<!--<mat-card-subtitle>sub..</mat-card-subtitle>-->
+	<!--</mat-card-title>-->
 	<mat-card-content>
+
+
 		<mat-input-container>
 			<mat-select
 				(change)="onLastPeriodSelected()"
-				[(ngModel)]="lastPeriodSelected">
+				[(ngModel)]="lastPeriodSelected"
+				placeholder="Last">
 				<mat-option
-					*ngFor="let period of periods;"
-					[value]="period">
-					{{period.label}}
+					*ngFor="let lastPeriod of lastPeriods;"
+					[value]="lastPeriod">
+					{{lastPeriod.label}}
 				</mat-option>
 			</mat-select>
 		</mat-input-container>
@@ -40,5 +52,58 @@
 		</mat-form-field>
 
 		<div id="fitnessTrendGraph"></div>
+
+		<div fxLayout="row" fxFlexAlign="start center" class="mat-headline">
+			<!--style="background-color: red;"-->
+			<div fxFlex="35">
+				<div fxFlex>
+					Fitness 105.9
+				</div>
+				<div fxFlex>
+					Fatigue 120.3
+				</div>
+				<div fxFlex>
+					Form 41.6
+				</div>
+			</div>
+			<!--style="background-color: yellow;"-->
+			<div fxFlex
+				 fxLayoutAlign="end">
+				toggles
+			</div>
+		</div>
+
+
+		<div fxLayout="column" fxFlexAlign="start center" class="watchedDay">
+			<!--<div fxFlex>-->
+			<div fxFlex="5">
+				Nov 22 2017 <!--or Today Or Preview-->
+			</div>
+			<!--<div fxFlex="5">-->
+			<!--Ride + Run-->
+			<!--</div>-->
+			<div fxFlex="30">
+				Ride: <i>My very long long long activity name</i> <strong>&nbsp;&nbsp;+&nbsp;&nbsp;</strong> Run: <i>Course
+				à pied le soir, sous la pluie et dans le noir 💜</i>
+			</div>
+			<div fxFlex="30">
+				<!--Stress score ➔ <strong>275</strong> based on an Trimp of 150 & PSS of 125 &lt;!&ndash;, 150 TRIMP, 125 PSS&ndash;&gt;-->
+				Stress score ➔ 150 <sub><i>trimp</i></sub>&nbsp;&nbsp;<strong>&</strong>&nbsp;&nbsp;125 <sub><i>pss</i></sub>
+				&nbsp;&nbsp;➔&nbsp;&nbsp;125
+			</div>
+			<!--</div>-->
+		</div>
+
+		<div>{{watchedDay | json}}</div>
+
+		<!--<div>-->
+		<!--&lt;!&ndash;Today: My very long long long activity name !!! + Strong run hard :/ !!!&ndash;&gt;-->
+		<!--Nov 22 2017<br/>-->
+		<!--Ride + Run<br/> &lt;!&ndash;If exists&ndash;&gt;-->
+		<!--My very long long long activity name !!!<br/>-->
+		<!--Strong run hard !!!<br/>-->
+		<!--</div>-->
+
+
 	</mat-card-content>
 </mat-card>

@@ -1,3 +1,28 @@
+@import '../../assets/styles/constant';
+
+.watchedDay {
+	color: $light-grey;
+	//margin-top: 20px;
+	//margin-bottom: 20px;
+}
+
+.watchedDay > div {
+	//color: $light-grey;
+	//margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+/**
+ * Pimp metrics graphic marker lines
+ */
+/deep/ .mg-markers line {
+	opacity: 0.3;
+	shape-rendering: auto;
+	stroke: $light-grey;
+	stroke-width: 1px;
+}
+
+
 /*
 /deep/ .mg-line2-color {
 	stroke: #4a4a4a;
@@ -6,5 +31,11 @@
 
 /deep/ .mg-line1-color {
 	stroke: #4a4a4a;
+}
+*/
+/*
+
+/deep/ .mg-line1-color .mg-points {
+	stroke: #000000;
 }
 */

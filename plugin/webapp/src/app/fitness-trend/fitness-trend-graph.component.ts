@@ -2,33 +2,41 @@ import { Component, OnInit } from '@angular/core';
 import { FitnessService, IDayFitnessTrend, IPeriod } from "../services/fitness/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
+import * as d3 from "d3";
 
 // DONE Filter by period until today
 // DONE Filter between dates
-// TODO Forward to strava.com activities
+
+
 // TODO Show graph point legend: CTL, ATL, TSB
 // TODO Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // TODO Show preview days as dashed line
 // TODO Filter with power swim
 // TODO Filter with power meter
 // TODO Support form zones
-
+// TODO Zoom in selection addon?!
+// TODO Forward to strava.com activities
 // TODO Show helper info
 // TODO Show info when no data. (Wrap in a parent FitnessTrendComponent (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
-/**
- * date: string; YYYY-MM-DD
- * value: number;
- */
+
 interface GraphPoint {
 	date: string;
 	value: number;
 }
 
+interface Marker {
+	date: Date;
+	label: string;
+	click?: Function;
+	mouseover?: Function;
+}
+
 /**
  * label: string;
  */
-export interface IPeriodLabeled extends IPeriod {
+export interface ILastPeriod extends IPeriod {
+	key: string;
 	label: string;
 }
 
@@ -39,77 +47,102 @@ export interface IPeriodLabeled extends IPeriod {
 })
 export class FitnessTrendGraphComponent implements OnInit {
 
-	private static readonly GRAPH_CONFIG = {
+	private _graphConfig = {
 		data: [],
 		full_width: true,
-		height: 500,
+		height: 600,
 		right: 40,
 		baselines: [{value: 0}],
+		animate_on_load: true,
 		transition_on_update: false,
 		aggregate_rollover: true,
+		interpolate: d3.curveLinear,
+		// x_extended_ticks: true,
+		// y_extended_ticks: true,
+		yax_count: 10,
 		target: '#fitnessTrendGraph',
+		legend_target: '#legend', // FIXME dirty #legend  display: none;   applied
 		x_accessor: 'date',
 		y_accessor: 'value',
 		inflator: 1.2,
-		// legend: ['Line 1','Line 2','Line 3'],
-		click: function (d, i) {
-			console.log(d, i)
-		}
+		showActivePoint: false,
+		clickableMarkerLines: true,
+		show_confidence_band: ['lower', 'upper'],
+		markers: null,
+		legend: null, //['Fatigue', 'Fitness', 'Form'],
+		click: function (data: { key: Date, values: any[] }, index: number) {
+			console.log(data, index);
+		},
+		mouseover: (data: { key: Date, values: any[] }, index: number) => {
+
+			const mouseOverDate = moment(data.key).format(FitnessService.DATE_FORMAT);
+			this.onMouseOverDate(mouseOverDate);
+		},
+		mouseout: (data, i) => {
+			// console.log("out", data);
+			this._watchedDay = null;
+			// d3.select('#details').html(""); // Clean details
+		},
 		// min_y: -50,
-		// mouseover: (d, i) => {
-		// 	console.log("mouseover", d, i)
-		// },
+		/*
+		mouseover: (data: { key: Date, values: any[] }, index: number) => {
+
+			// const formattedDate = moment(dayStress.date).format(FitnessService.DATE_FORMAT);
+			const relatedMoment = moment(data.key);
+
+			const relatedDayFitnessTrend: IDayFitnessTrend = _.find(this.fitnessTrend, {
+				date: relatedMoment.format(FitnessService.DATE_FORMAT)
+			});
+
+			// TODO Export dedicated function
+			const selection = d3.select('svg .mg-active-datapoint');
+
+			const date = relatedMoment.format("MMM Do YYYY");
+			let fatigue = data.values[0].value.toFixed(2);
+			let fitness = data.values[1].value.toFixed(2);
+			let form = data.values[2].value.toFixed(2);
+
+			// TODO Export in template a file
+			let legendTemplate = '<tspan x="0" y="0em">';
+			legendTemplate += '<tspan>' + date + '</tspan>';
+			legendTemplate += '</tspan>';
+			legendTemplate += '<tspan x="0" y="1.1em">';
+			legendTemplate += '<tspan class="mg-hover-line1-color" fill="">Fatigue</tspan>';
+			legendTemplate += '<tspan class="mg-hover-line1-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
+			legendTemplate += '<tspan>' + fatigue + '</tspan>';
+			legendTemplate += '</tspan>';
+			legendTemplate += '<tspan x="0" y="2.2em">';
+			legendTemplate += '<tspan class="mg-hover-line2-color" fill="">Fitness</tspan>';
+			legendTemplate += '<tspan class="mg-hover-line2-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
+			legendTemplate += '<tspan>' + fitness + '</tspan>';
+			legendTemplate += '</tspan>';
+			legendTemplate += '<tspan x="0" y="3.3em">';
+			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">Form</tspan>';
+			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
+			legendTemplate += '<tspan>' + form + '</tspan>';
+			legendTemplate += '</tspan>';
+			legendTemplate += '<tspan x="0" y="6em">';
+			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">Debug</tspan>';
+			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">: </tspan>';
+			legendTemplate += '<tspan>' + JSON.stringify(relatedDayFitnessTrend.activitiesName) + '</tspan>';
+			legendTemplate += '</tspan>';
+
+			selection.html(legendTemplate);
+		},
+		*/
 		// click: function (d, i) {console.log(d, i)}
 		// legend: ['Line 1', 'Line 2', 'Line 3'],
 		// legend_target: '.legend'
 	};
 
-	private static readonly PERIODS: IPeriodLabeled[] = [{
-		from: moment().subtract(7, "days").toDate(),
-		to: null,
-		label: "Last 7 days",
-	}, {
-		from: moment().subtract(14, "days").toDate(),
-		to: null,
-		label: "Last 14 days",
-	}, {
-		from: moment().subtract(1, "months").toDate(),
-		to: null,
-		label: "Last month",
-	}, {
-		from: moment().subtract(6, "weeks").toDate(),
-		to: null,
-		label: "Last 6 weeks",
-	}, {
-		from: moment().subtract(2, "months").toDate(),
-		to: null,
-		label: "Last 2 months",
-	}, {
-		from: moment().subtract(4, "months").toDate(),
-		to: null,
-		label: "Last 4 months",
-	}, {
-		from: moment().subtract(6, "months").toDate(),
-		to: null,
-		label: "Last 6 months",
-	}, {
-		from: moment().subtract(1, "years").toDate(),
-		to: null,
-		label: "Last 12 months",
-	}, {
-		from: moment().subtract(2, "years").toDate(),
-		to: null,
-		label: "Last 24 months",
-	}, {
-		from: null,
-		to: null,
-		label: "From the beginning",
-	}];
 
-	private _periods: IPeriod[];
+	private _lastPeriods: ILastPeriod[];
+
 	private _lastPeriodSelected: IPeriod;
 	private _fitnessTrend: IDayFitnessTrend[];
 	private _fitnessTrendLines: GraphPoint[][] = [];
+	private _markers: Marker[] = [];
+	private _watchedDay: IDayFitnessTrend;
 
 	private _dateFrom: Date;
 	private _dateTo: Date;
@@ -121,11 +154,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.periods = FitnessTrendGraphComponent.PERIODS;
-
-		// Set default last period to 4 months
-		this.lastPeriodSelected = FitnessTrendGraphComponent.PERIODS[6];
-
 		// Generate graph data
 		this.fitnessService.computeTrend(null,
 			null,
@@ -133,6 +161,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 			null).then((fitnessTrend: IDayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
+			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
+			this.lastPeriodSelected = _.find(this._lastPeriods, {key: "4_months"});
 
 			this.init();
 
@@ -142,11 +172,17 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	private init() {
+	private init(): void {
 
 		let fatigueLine: GraphPoint[] = [];
 		let fitnessLine: GraphPoint[] = [];
 		let formLine: GraphPoint[] = [];
+		// let activeLine: GraphPoint[] = [];
+		/*	activeLine.push({
+                        date: dayFitnessTrend.date,
+                        value: 0
+                    });*/
+		const today: string = moment().format(FitnessService.DATE_FORMAT);
 
 		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend) => {
 
@@ -164,13 +200,50 @@ export class FitnessTrendGraphComponent implements OnInit {
 				date: dayFitnessTrend.date,
 				value: dayFitnessTrend.tsb
 			});
+
+
+			let marker: Marker = null;
+
+			const isActiveDay = dayFitnessTrend.activitiesName.length > 0;
+
+			if (isActiveDay) {
+				marker = {
+					date: new Date(dayFitnessTrend.timestamp),
+					mouseover: () => {
+						// console.log(JSON.stringify(dayFitnessTrend));
+						this.onMouseOverDate(dayFitnessTrend.date);
+					},
+					click: () => {
+						alert(JSON.stringify(dayFitnessTrend.activitiesName));
+					},
+					// label: "▾" // Found @ http://www.amp-what.com/
+					label: "🠷" // Found @ http://www.amp-what.com/
+				};
+
+			} else if (dayFitnessTrend.date == today) {
+				marker = {
+					date: new Date(),
+					label: "☀"
+					// label: "☀️"
+				};
+			}
+
+			if (!_.isNull(marker)) {
+				this.markers.push(marker);
+			}
+
 		});
 
+		// Push lines
 		this.fitnessTrendLines.push(MG.convert.date(fatigueLine, 'date'));
 		this.fitnessTrendLines.push(MG.convert.date(fitnessLine, 'date'));
 		this.fitnessTrendLines.push(MG.convert.date(formLine, 'date'));
+		// this.fitnessTrendLines.push(MG.convert.date(activeLine, 'date'));
 
-		this.updateGraph(this.lastPeriodSelected);
+		// Apply markers
+		this.graphConfig.markers = this.markers;
+
+		this.updateGraph(this.lastPeriodSelected /* TODO Remove and user directly in method no?!*/);
 	}
 
 	/**
@@ -198,32 +271,19 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		const _PERFORMANCE_MARKER_START_ = performance.now();
 
-		const updatedTrendLines = this.computeTrendLines(period);
-
-		this.applyLines(updatedTrendLines, () => {
-			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.")
-		});
+		// Apply lines changes
+		this.graphConfig.data = this.computeTrendLinesRange(period);
 
 		// Update dateFrom dateTo fields
 		this.dateFrom = (_.isDate(period.from)) ? period.from : null;
 		this.dateTo = (_.isDate(period.to)) ? period.to : moment().toDate();
 		this._dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
 		this._dateMax = moment().toDate();
-	}
 
-	/**
-	 *
-	 * @param fitnessTrendLines
-	 * @param {() => void} done
-	 */
-	private applyLines(fitnessTrendLines, done: () => void): void {
-
-		const config = FitnessTrendGraphComponent.GRAPH_CONFIG;
-		config.data = fitnessTrendLines;
-
+		// Apply graph changes
 		setTimeout(() => {
-			MG.data_graphic(config);
-			done();
+			MG.data_graphic(this.graphConfig);
+			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.")
 		});
 	}
 
@@ -232,7 +292,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {Period} period
 	 * @returns {GraphPoint[][]}
 	 */
-	private computeTrendLines(period: IPeriod): GraphPoint[][] {
+	private computeTrendLinesRange(period: IPeriod): GraphPoint[][] {
 
 		const lines: GraphPoint[][] = [];
 		const indexes = this.fitnessService.indexesOf(period, this.fitnessTrend);
@@ -244,13 +304,98 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return lines;
 	}
 
+	/**
+	 *
+	 * @param {string} date format YYYY-MM-DD
+	 */
+	private onMouseOverDate(date: string): void {
 
-	get periods(): IPeriod[] {
-		return this._periods;
+		// Update watched day
+		this.watchedDay = _.find(this.fitnessTrend, {
+			date: date
+		});
+
+		const isActiveDay = this.watchedDay.activitiesName.length > 0;
+		if (isActiveDay) {
+			// TODO My stuff !
+		}
 	}
 
-	set periods(value: IPeriod[]) {
-		this._periods = value;
+	/**
+	 *
+	 * @param fitnessTrend
+	 * @returns {ILastPeriod[]}
+	 */
+	private provideLastPeriods(fitnessTrend: IDayFitnessTrend[]): ILastPeriod[] {
+
+		return [{
+			from: moment().subtract(7, "days").toDate(),
+			to: null,
+			key: "7_days",
+			label: "7 days"
+		}, {
+			from: moment().subtract(14, "days").toDate(),
+			to: null,
+			key: "14_days",
+			label: "14 days"
+		}, {
+			from: moment().subtract(1, "months").toDate(),
+			to: null,
+			key: "month",
+			label: "30 days"
+		}, {
+			from: moment().subtract(6, "weeks").toDate(),
+			to: null,
+			key: "6_weeks",
+			label: "6 weeks"
+		}, {
+			from: moment().subtract(2, "months").toDate(),
+			to: null,
+			key: "2_months",
+			label: "2 months"
+		}, {
+			from: moment().subtract(4, "months").toDate(),
+			to: null,
+			key: "4_months",
+			label: "4 months"
+		}, {
+			from: moment().subtract(6, "months").toDate(),
+			to: null,
+			key: "6_months",
+			label: "6 months"
+		}, {
+			from: moment().subtract(9, "months").toDate(),
+			to: null,
+			key: "9_months",
+			label: "9 months"
+		}, {
+			from: moment().subtract(1, "years").toDate(),
+			to: null,
+			key: "12_months",
+			label: "12 months"
+		}, {
+			from: moment().subtract(2, "years").toDate(),
+			to: null,
+			key: "24_months",
+			label: "24 months"
+		}, {
+			from: moment(_.first(fitnessTrend).timestamp).toDate(),
+			to: null,
+			key: "beginning",
+			label: "Since beginning"
+		}];
+	}
+
+	get graphConfig() {
+		return this._graphConfig;
+	}
+
+	get lastPeriods(): ILastPeriod[] {
+		return this._lastPeriods;
+	}
+
+	set lastPeriods(value: ILastPeriod[]) {
+		this._lastPeriods = value;
 	}
 
 	get lastPeriodSelected(): IPeriod {
@@ -265,10 +410,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return this._fitnessService;
 	}
 
-	set fitnessService(value: FitnessService) {
-		this._fitnessService = value;
-	}
-
 	get fitnessTrend(): IDayFitnessTrend[] {
 		return this._fitnessTrend;
 	}
@@ -281,8 +422,16 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return this._fitnessTrendLines;
 	}
 
-	set fitnessTrendLines(value: GraphPoint[][]) {
-		this._fitnessTrendLines = value;
+	get markers(): Marker[] {
+		return this._markers;
+	}
+
+	get watchedDay(): IDayFitnessTrend {
+		return this._watchedDay;
+	}
+
+	set watchedDay(value: IDayFitnessTrend) {
+		this._watchedDay = value;
 	}
 
 	get dateFrom(): Date {

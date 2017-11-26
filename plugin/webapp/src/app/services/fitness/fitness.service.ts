@@ -45,6 +45,8 @@ export interface IPeriod {
 @Injectable()
 export class FitnessService {
 
+	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
+
 	constructor(private activityService: ActivityService) {
 	}
 
@@ -139,7 +141,7 @@ export class FitnessService {
 						tsb = ctl - atl;
 
 						// Format date to YYYY-MM-DD
-						const formattedDate = moment(dayStress.date).format("YYYY-MM-DD");
+						const formattedDate = moment(dayStress.date).format(FitnessService.DATE_FORMAT);
 
 						const dayFitnessTrend: IDayFitnessTrend = {
 							ids: dayStress.ids,
@@ -300,14 +302,14 @@ export class FitnessService {
 		let startIndex = 0; // Use first day as start index by default.
 		if (_.isDate(period.from)) { // Then override index if "From" is specified
 			startIndex = _.findIndex(fitnessTrend, {
-				date: moment(period.from).format("YYYY-MM-DD")
+				date: moment(period.from).format(FitnessService.DATE_FORMAT)
 			});
 		}
 
 		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
 		if (_.isDate(period.to)) { // Then override index if "To" is specified
 			endIndex = _.findIndex(fitnessTrend, {
-				date: moment(period.to).format("YYYY-MM-DD")
+				date: moment(period.to).format(FitnessService.DATE_FORMAT)
 			});
 		}
 

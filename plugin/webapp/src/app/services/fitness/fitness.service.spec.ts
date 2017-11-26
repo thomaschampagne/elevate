@@ -244,8 +244,8 @@ describe('FitnessService', () => {
 		spyOn(activityService, 'filterFitnessReady').and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		const period: IPeriod = {
-			from: moment("2015-07-01", "YYYY-MM-DD").startOf("day").toDate(),
-			to: moment("2015-09-30", "YYYY-MM-DD").startOf("day").toDate(),
+			from: moment("2015-07-01", FitnessService.DATE_FORMAT).startOf("day").toDate(),
+			to: moment("2015-09-30", FitnessService.DATE_FORMAT).startOf("day").toDate(),
 		};
 
 		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
@@ -277,8 +277,8 @@ describe('FitnessService', () => {
 		spyOn(activityService, 'filterFitnessReady').and.returnValue(Promise.resolve(_TEST_FITNESS_READY_ACTIVITIES_));
 
 		const period: IPeriod = {
-			from: moment("2015-06-01", "YYYY-MM-DD").toDate(),
-			to: moment("2015-05-01", "YYYY-MM-DD").toDate()
+			from: moment("2015-06-01", FitnessService.DATE_FORMAT).toDate(),
+			to: moment("2015-05-01", FitnessService.DATE_FORMAT).toDate()
 		};
 
 		const promise: Promise<IDayFitnessTrend[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
