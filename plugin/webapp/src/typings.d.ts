@@ -6,8 +6,9 @@ interface NodeModule {
 }
 
 /**
- * Metrics Graphics global var declaration
+ * Metrics Graphics "plus" global var declaration
  * No types exists currently on that library
- * source: https://github.com/mozilla/metrics-graphics
+ *
+ * Source: https://github.com/thomaschampagne/metrics-graphics-plus
  */
 declare const MG: any;

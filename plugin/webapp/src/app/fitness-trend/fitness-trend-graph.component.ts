@@ -46,14 +46,20 @@ export class FitnessTrendGraphComponent implements OnInit {
 		right: 40,
 		baselines: [{value: 0}],
 		transition_on_update: false,
+		aggregate_rollover: true,
 		target: '#fitnessTrendGraph',
 		x_accessor: 'date',
 		y_accessor: 'value',
 		inflator: 1.2,
+		// legend: ['Line 1','Line 2','Line 3'],
+		click: function (d, i) {
+			console.log(d, i)
+		}
 		// min_y: -50,
-		// mouseover: (arg) => {
-		// 	console.log("mouseover", arg)
+		// mouseover: (d, i) => {
+		// 	console.log("mouseover", d, i)
 		// },
+		// click: function (d, i) {console.log(d, i)}
 		// legend: ['Line 1', 'Line 2', 'Line 3'],
 		// legend_target: '.legend'
 	};
