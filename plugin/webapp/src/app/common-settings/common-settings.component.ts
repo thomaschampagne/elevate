@@ -107,7 +107,7 @@ export class CommonSettingsComponent implements OnInit {
 		if (option.type == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
 			this.userSettingsService.updateUserSetting(option.key, option.active).then(() => {
-				console.log(option.key + " has been updated to " + option.active);
+				console.log(option.key + " has been updated to ", option.active);
 			});
 
 			// Enable/disable sub option if needed
@@ -120,7 +120,7 @@ export class CommonSettingsComponent implements OnInit {
 		} else if (option.type == CommonSettingsService.TYPE_OPTION_LIST) {
 
 			this.userSettingsService.updateUserSetting(option.key, option.active.key).then(() => {
-				console.log(option.key + " has been updated to " + option.active);
+				console.log(option.key + " has been updated to ", option.active);
 			});
 
 		} else if (option.type == CommonSettingsService.TYPE_OPTION_NUMBER) {
