@@ -5,7 +5,7 @@ import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync"
  *
  * @type {ISyncActivityComputed[]}
  */
-export const TEST_ACTIVITIES: ISyncActivityComputed[] = <ISyncActivityComputed[]> [
+export const TEST_SYNCED_ACTIVITIES: ISyncActivityComputed[] = <ISyncActivityComputed[]> [
 	{
 		"bike_id": null,
 		"calories": 202.969212372,

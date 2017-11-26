@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ActivityDao } from './activity.dao';
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
-import { TEST_ACTIVITIES } from "../../../fixtures/activities";
+import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
 import * as _ from "lodash";
 
 describe('ActivityDao', () => {
@@ -16,7 +16,7 @@ describe('ActivityDao', () => {
 			providers: [ActivityDao]
 		});
 
-		testActivities = _.cloneDeep(TEST_ACTIVITIES);
+		testActivities = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
 		// Retrieve injected service
 		activityDao = TestBed.get(ActivityDao);
@@ -33,7 +33,7 @@ describe('ActivityDao', () => {
 		// Given
 		const chromeStorageSyncLocalSpy = spyOn(activityDao, 'chromeStorageLocal').and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(TEST_ACTIVITIES);
+				callback(TEST_SYNCED_ACTIVITIES);
 			}
 		});
 
@@ -44,8 +44,8 @@ describe('ActivityDao', () => {
 		promise.then((result: ISyncActivityComputed[]) => {
 
 			expect(result).not.toBeNull();
-			expect(result).toEqual(TEST_ACTIVITIES);
-			expect(result.length).toEqual(TEST_ACTIVITIES.length);
+			expect(result).toEqual(TEST_SYNCED_ACTIVITIES);
+			expect(result.length).toEqual(TEST_SYNCED_ACTIVITIES.length);
 			expect(chromeStorageSyncLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
