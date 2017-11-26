@@ -13,8 +13,8 @@ export class ActivityDao {
 	 */
 	public fetch(): Promise<ISyncActivityComputed[]> {
 		return new Promise<ISyncActivityComputed[]>((resolve) => {
-			this.chromeStorageLocal().get("computedActivities", (activities: ISyncActivityComputed[]) => {
-				resolve(activities);
+			this.chromeStorageLocal().get("computedActivities", (result: { computedActivities: ISyncActivityComputed[] }) => {
+				resolve(result.computedActivities);
 			});
 		});
 	}

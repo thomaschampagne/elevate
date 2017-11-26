@@ -33,7 +33,7 @@ describe('ActivityDao', () => {
 		// Given
 		const chromeStorageSyncLocalSpy = spyOn(activityDao, 'chromeStorageLocal').and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(TEST_SYNCED_ACTIVITIES);
+				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
 			}
 		});
 
