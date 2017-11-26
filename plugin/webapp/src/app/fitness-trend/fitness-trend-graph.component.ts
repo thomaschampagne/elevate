@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FitnessService, IDayFitnessTrend } from "../services/fitness/fitness.service";
+import { FitnessService, IDayFitnessTrend, IPeriod } from "../services/fitness/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 
@@ -20,8 +20,7 @@ interface GraphPoint {
 	value: number
 }
 
-interface Period {
-	days: number;
+export interface IPeriodLabeled extends IPeriod {
 	label: string;
 }
 
@@ -51,44 +50,54 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// legend_target: '.legend'
 	};
 
-	private static readonly PERIODS: Period[] = [{
-		days: moment.duration(moment().diff(moment().subtract(7, "days"))).asDays(),
+	private static readonly PERIODS: IPeriodLabeled[] = [{
+		from: moment().subtract(7, "days"),
+		to: null,
 		label: "Last 7 days",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(14, "days"))).asDays(),
+		from: moment().subtract(14, "days"),
+		to: null,
 		label: "Last 14 days",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(1, "months"))).asDays(),
+		from: moment().subtract(1, "months"),
+		to: null,
 		label: "Last month",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(6, "weeks"))).asDays(),
+		from: moment().subtract(6, "weeks"),
+		to: null,
 		label: "Last 6 weeks",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(2, "months"))).asDays(),
+		from: moment().subtract(2, "months"),
+		to: null,
 		label: "Last 2 months",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(4, "months"))).asDays(),
+		from: moment().subtract(4, "months"),
+		to: null,
 		label: "Last 4 months",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(6, "months"))).asDays(),
+		from: moment().subtract(6, "months"),
+		to: null,
 		label: "Last 6 months",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(1, "years"))).asDays(),
+		from: moment().subtract(1, "years"),
+		to: null,
 		label: "Last 12 months",
 	}, {
-		days: moment.duration(moment().diff(moment().subtract(2, "years"))).asDays(),
+		from: moment().subtract(2, "years"),
+		to: null,
 		label: "Last 24 months",
 	}, {
-		days: 0,
+		from: null,
+		to: null,
 		label: "From the beginning",
 	}];
 
-	private _periods: Period[] = FitnessTrendGraphComponent.PERIODS;
-	private _periodSelected: Period = FitnessTrendGraphComponent.PERIODS[6];
+	private _periods: IPeriod[] = FitnessTrendGraphComponent.PERIODS;
+	private _periodSelected: IPeriod = FitnessTrendGraphComponent.PERIODS[6];
 	private _fitnessTrend: IDayFitnessTrend[];
 	private _fitnessTrendLines: GraphPoint[][] = [];
 
-	constructor(private fitnessService: FitnessService) {
+	constructor(private _fitnessService: FitnessService) {
 	}
 
 	public ngOnInit(): void {
@@ -100,8 +109,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 			null).then((fitnessTrend: IDayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-
 			this.initFirstDraw();
+
 		});
 	}
 
@@ -115,7 +124,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		let fitnessLine: GraphPoint[] = [];
 		let formLine: GraphPoint[] = [];
 
-		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend) => {
+		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend, index) => {
 
 			fatigueLine.push({
 				date: dayFitnessTrend.date,
@@ -151,14 +160,14 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 * @param {Period} period
 	 */
-	private updateGraph(period: Period): void {
+	private updateGraph(period: IPeriod): void {
 
-		const _performance_marker_start_ = performance.now();
+		const _PERFORMANCE_MARKER_START_ = performance.now();
 
 		const updatedTrendLines = this.computeTrendLines(period);
 
 		this.applyLines(updatedTrendLines, () => {
-			console.debug("Graph update time: " + (performance.now() - _performance_marker_start_).toFixed(0) + " ms.")
+			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.")
 		});
 	}
 
@@ -183,31 +192,41 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {Period} period
 	 * @returns {GraphPoint[][]}
 	 */
-	private computeTrendLines(period: Period): GraphPoint[][] {
+	private computeTrendLines(period: IPeriod): GraphPoint[][] {
 
 		const lines: GraphPoint[][] = [];
+		const indexes = this.fitnessService.indexesOf(period, this.fitnessTrend);
+
 		_.forEach(this.fitnessTrendLines, (line: GraphPoint[]) => {
-			// _.forEach(_.clone(this.fitnessTrendLines), (line: GraphPoint[]) => {
-			lines.push(line.slice(period.days * -1));
+			lines.push(line.slice(indexes.start, indexes.end));
 		});
 
 		return lines;
 	}
 
-	get periods(): Period[] {
+
+	get periods(): IPeriod[] {
 		return this._periods;
 	}
 
-	set periods(value: Period[]) {
+	set periods(value: IPeriod[]) {
 		this._periods = value;
 	}
 
-	get periodSelected(): Period {
+	get periodSelected(): IPeriod {
 		return this._periodSelected;
 	}
 
-	set periodSelected(value: Period) {
+	set periodSelected(value: IPeriod) {
 		this._periodSelected = value;
+	}
+
+	get fitnessService(): FitnessService {
+		return this._fitnessService;
+	}
+
+	set fitnessService(value: FitnessService) {
+		this._fitnessService = value;
 	}
 
 	get fitnessTrend(): IDayFitnessTrend[] {

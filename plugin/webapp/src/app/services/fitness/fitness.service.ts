@@ -33,6 +33,10 @@ export interface IDayFitnessTrend {
 	previewDay: boolean;
 }
 
+export interface IPeriod {
+	from: Moment;
+	to: Moment;
+}
 
 @Injectable()
 export class FitnessService {
@@ -131,9 +135,7 @@ export class FitnessService {
 						tsb = ctl - atl;
 
 						// Format date to YYYY-MM-DD
-						const formattedDate = dayStress.date.getFullYear() +
-							"-" + (dayStress.date.getMonth() + 1) +
-							"-" + (dayStress.date.getDate());
+						const formattedDate = moment(dayStress.date).format("YYYY-MM-DD");
 
 						const dayFitnessTrend: IDayFitnessTrend = {
 							ids: dayStress.ids,
@@ -281,6 +283,36 @@ export class FitnessService {
 		}
 
 		return dayActivity;
+	}
+
+	/**
+	 * Return start/end indexes of fitnessTrend collection corresponding to from/to date given in a period
+	 * @param {IPeriod} period
+	 * @param {IDayFitnessTrend[]} fitnessTrend
+	 * @returns {{start: number; end: number}}
+	 */
+	public indexesOf(period: IPeriod, fitnessTrend: IDayFitnessTrend[]): { start: number; end: number } {
+
+		let startIndex = 0; // Use first day as start index by default.
+		if (!_.isEmpty(period.from)) { // Then override index if "From" is specified
+			startIndex = _.findIndex(fitnessTrend, {
+				date: period.from.format("YYYY-MM-DD")
+			});
+		}
+
+		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
+		if (!_.isEmpty(period.to)) { // Then override index if "To" is specified
+			endIndex = _.findIndex(fitnessTrend, {
+				date: period.to.format("YYYY-MM-DD")
+			});
+		}
+
+		// if (!_.isEmpty(period.from) && !_.isEmpty(period.to) && period.from.isSameOrAfter(period.to)) {
+		if (startIndex >= endIndex) {
+			throw (new Error()).message = "FROM cannot be upper than TO date";
+		}
+
+		return {start: startIndex, end: endIndex};
 	}
 
 	public getTodayMoment(): Moment {
