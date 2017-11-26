@@ -17,7 +17,7 @@ export interface IZoneImportExportData {
 
 @Component({
 	selector: 'app-zones-import-export-dialog',
-	templateUrl: './zones-import-export-dialog.component.html', // TODO Rename ...port.dialog.html
+	templateUrl: './zones-import-export-dialog.component.html',
 	styleUrls: ['./zones-import-export-dialog.component.scss']
 })
 export class ZonesImportExportDialog implements OnInit {

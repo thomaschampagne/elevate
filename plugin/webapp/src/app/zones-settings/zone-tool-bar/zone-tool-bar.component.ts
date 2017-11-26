@@ -61,9 +61,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onResetZonesToDefault(): void {
 		this.zonesService.resetZonesToDefault().then(() => {
-
 				this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-
 			}, error => this.popSnack(error)
 		);
 	}

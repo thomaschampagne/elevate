@@ -48,7 +48,7 @@ export class ZoneComponent implements OnInit {
 	private _zoneDefinition: IZoneDefinition;
 
 	constructor(private zonesService: ZonesService,
-				private snackBar: MatSnackBar /*TODO pop Snack from parent?!*/) {
+				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
@@ -149,7 +149,6 @@ export class ZoneComponent implements OnInit {
 	}
 
 	private popSnack(message: string): void {
-		// TODO pop Snack from parent?! instead inject snackBar for each zones. low Perf ?!
 		this.snackBar.open(message, 'Close', {duration: 2500});
 	}
 

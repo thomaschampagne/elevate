@@ -24,7 +24,7 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
-	private _zoneChangeOrderUpdates: Subject<IZoneChangeOrder>; // TODO rename ?!
+	private _zoneChangeOrderUpdates: Subject<IZoneChangeOrder>;
 	private _zonesUpdates: Subject<IZone[]>;
 	private _stepUpdates: Subject<number>;
 	private _zoneDefinition: IZoneDefinition;
