@@ -202,92 +202,125 @@ export class ZonesService {
 
 	/**
 	 *
-	 * @returns {boolean}
+	 * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public isZonesCompliant(zone: IZone[]): boolean {
+	public isZonesCompliant(zone: IZone[]): string {
+
+		const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
 		if (!zone) {
-			return false;
+			return "No zones provided";
 		}
 
 		if (zone.length > this.getMaxZoneCount()) {
-			return false;
+			return "Not compliant zones provided: expected at max " + this.getMaxZoneCount() + " zones";
 		}
 
 		if (zone.length < this.getMinZoneCount()) {
-			return false;
+			return "Not compliant zones provided: expected at least " + this.getMinZoneCount() + " zones";
 		}
 
 		for (let i = 0; i < zone.length; i++) {
 
+
 			if (i === 0) { // First zone
 				if (zone[i].to != zone[i + 1].from) {
-					return false;
+					return NOT_COMPLIANT_ZONE;
 				}
 
 			} else if (i < (zone.length - 1)) { // Middle zone
 
 				if (zone[i].to != zone[i + 1].from || zone[i].from != zone[i - 1].to) {
-					return false;
+					return NOT_COMPLIANT_ZONE;
 				}
 
 			} else { // Last zone
 				if (zone[i].from != zone[i - 1].to) {
-					return false;
+					return NOT_COMPLIANT_ZONE;
 				}
 			}
 		}
-		return true;
+		return null;
 	}
 
 	/**
 	 *
+	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public saveZones(): Promise<boolean> {
+	public saveZones(): Promise<string> {
 
-		return new Promise((resolve: (ok: boolean) => void,
+		return new Promise((resolve: (pass: string) => void,
 							reject: (error: string) => void) => {
 
-			if (this.isZonesCompliant(this.currentZones)) {
+			const complianceError = this.isZonesCompliant(this.currentZones);
 
-				this._chromeStorageService.updateZoneSetting(
+			if (_.isNull(complianceError)) {
+				this.chromeStorageService.updateZoneSetting(
 					this.zoneDefinition,
 					this.currentZones
-				).then(status => {
-					resolve(status);
+				).then(() => {
+					resolve(null);
 				});
 
 			} else {
-				reject("Zones are not compliant");
+				reject(complianceError);
 			}
 		});
 	}
 
 	/**
-	 *
+	 * Reset zones to default
+	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public resetZonesToDefault(): Promise<boolean> {
+	public resetZonesToDefault(): Promise<string> {
 
-		return new Promise((resolve: (ok: boolean) => void,
+		return new Promise((resolve: (ok: string) => void,
 							reject: (error: string) => void) => {
 
 			this.currentZones = _.clone(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
 
-			this.saveZones().then((status: boolean) => {
+			this.saveZones().then(() => {
 
-				resolve(status);
+				resolve(null);
+				this.zonesUpdates.next(this.currentZones); // Notify ZonesSettingsComponent to tell him to reload his zones
 
-				// Notify ZonesSettingsComponent to tell him to reload his zones
-				this.zonesUpdates.next(this.currentZones);
-
-			}, error => {
+			}, (error: string) => {
 
 				reject(error);
-
 				this.zonesUpdates.error(error);
 
 			});
 
+		});
+	}
+
+	/**
+	 *
+	 * @param {string} jsonInput
+	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
+	 */
+	public importZones(jsonInput: string): Promise<string> {
+
+		return new Promise((resolve: (ok: string) => void,
+							reject: (error: string) => void) => {
+
+			// Try to parse JSON input
+			try {
+				this.currentZones = <IZone[]> JSON.parse(jsonInput);
+			} catch (error) {
+				reject("Provided zones do not respect expected JSON format");
+				return;
+			}
+
+			// Valid JSON Here... Save & emit zones update
+			this.saveZones().then(status => {
+
+				this.zonesUpdates.next(this.currentZones);
+				resolve(status);
+
+			}, error => {
+				reject(error);
+			});
 		});
 	}
 

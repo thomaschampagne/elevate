@@ -8,7 +8,7 @@ import { userSettings } from "../../../../common/scripts/UserSettings";
 
 describe('ZonesService', () => {
 
-	let zoneService: ZonesService;
+	let zonesService: ZonesService;
 
 	beforeEach(() => {
 
@@ -17,10 +17,10 @@ describe('ZonesService', () => {
 		});
 
 		// Retrieve injected service
-		zoneService = TestBed.get(ZonesService);
+		zonesService = TestBed.get(ZonesService);
 
 		// Set 10 fake zones
-		zoneService.currentZones = [
+		zonesService.currentZones = [
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -45,19 +45,19 @@ describe('ZonesService', () => {
 		const expectedZoneIdAdded = 11;
 
 		// When
-		const addZoneLastPromise: Promise<string> = zoneService.addLastZone();
+		const addZoneLastPromise: Promise<string> = zonesService.addLastZone();
 
 		// Then
 		addZoneLastPromise.then((result: string) => {
 
-			const lastAddedZone = _.last(zoneService.currentZones);
+			const lastAddedZone = _.last(zonesService.currentZones);
 
 			expect(result).not.toBeNull();
 
 
 			expect(result).toEqual("Zone <" + expectedZoneIdAdded + "> has been added.");
 
-			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 			expect(lastAddedZone.from).toBe(95);
 			expect(lastAddedZone.to).toBe(100);
 
@@ -70,10 +70,10 @@ describe('ZonesService', () => {
 
 		// Given
 		const MAX_ZONE_COUNT = 10;
-		spyOn(zoneService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
+		spyOn(zonesService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
 
 		// When
-		const addZoneLastPromise: Promise<string> = zoneService.addLastZone();
+		const addZoneLastPromise: Promise<string> = zonesService.addLastZone();
 
 		// Then
 		addZoneLastPromise.then((result: string) => {
@@ -85,7 +85,7 @@ describe('ZonesService', () => {
 
 			expect(error).not.toBeNull();
 			expect(error).toEqual("You can't add more than " + MAX_ZONE_COUNT + " zones...");
-			expect(zoneService.currentZones.length).toBe(MAX_ZONE_COUNT);
+			expect(zonesService.currentZones.length).toBe(MAX_ZONE_COUNT);
 
 			done();
 		});
@@ -98,16 +98,16 @@ describe('ZonesService', () => {
 		const expectedZoneIdRemoved = 10;
 
 		// When
-		const removeZoneLastPromise: Promise<string> = zoneService.removeLastZone();
+		const removeZoneLastPromise: Promise<string> = zonesService.removeLastZone();
 
 		// Then
 		removeZoneLastPromise.then((result: string) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual("Zone <" + expectedZoneIdRemoved + "> has been removed.");
-			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const lastZone = _.last(zoneService.currentZones);
+			const lastZone = _.last(zonesService.currentZones);
 			expect(lastZone.from).toBe(80);
 			expect(lastZone.to).toBe(90);
 
@@ -119,11 +119,11 @@ describe('ZonesService', () => {
 
 		// Given
 		const MIN_ZONE_COUNT = 10;
-		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
 
 
 		// When
-		const removeZoneLastPromise: Promise<string> = zoneService.removeLastZone();
+		const removeZoneLastPromise: Promise<string> = zonesService.removeLastZone();
 
 		// Then
 		removeZoneLastPromise.then((result: string) => {
@@ -135,7 +135,7 @@ describe('ZonesService', () => {
 
 			expect(error).not.toBeNull();
 			expect(error).toEqual("You can't remove more than " + MIN_ZONE_COUNT + " zones...");
-			expect(zoneService.currentZones.length).toBe(MIN_ZONE_COUNT);
+			expect(zonesService.currentZones.length).toBe(MIN_ZONE_COUNT);
 
 			done();
 		});
@@ -148,17 +148,17 @@ describe('ZonesService', () => {
 		const expectedZonesLength = 9;
 
 		// When
-		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
 
 		// Then
 		removeZoneAtIndexPromise.then((result: string) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
-			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const previousZone: IZone = zoneService.currentZones[removeIndex - 1];
-			const newNextZone: IZone = zoneService.currentZones[removeIndex]; // Is actually same index than the removed
+			const previousZone: IZone = zonesService.currentZones[removeIndex - 1];
+			const newNextZone: IZone = zonesService.currentZones[removeIndex]; // Is actually same index than the removed
 			expect(newNextZone.from).toBe(previousZone.to);
 
 			done();
@@ -170,19 +170,19 @@ describe('ZonesService', () => {
 		// Given
 		const removeIndex = 0; // First zone
 		const expectedZonesLength = 9;
-		const oldNextZone: IZone = _.clone(zoneService.currentZones[removeIndex + 1]);
+		const oldNextZone: IZone = _.clone(zonesService.currentZones[removeIndex + 1]);
 
 		// When
-		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
 
 		// Then
 		removeZoneAtIndexPromise.then((result: string) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
-			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const newFirstZone: IZone = zoneService.currentZones[removeIndex]; // Is actually the new first zone
+			const newFirstZone: IZone = zonesService.currentZones[removeIndex]; // Is actually the new first zone
 			expect(newFirstZone.from).toBe(oldNextZone.from);
 			expect(newFirstZone.to).toBe(oldNextZone.to);
 
@@ -196,19 +196,19 @@ describe('ZonesService', () => {
 		// Given
 		const removeIndex = 9; // Last zone
 		const expectedZonesLength = 9;
-		const oldPreviousZone: IZone = _.clone(zoneService.currentZones[removeIndex - 1]);
+		const oldPreviousZone: IZone = _.clone(zonesService.currentZones[removeIndex - 1]);
 
 		// When
-		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
 
 		// Then
 		removeZoneAtIndexPromise.then((result: string) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
-			expect(zoneService.currentZones.length).toBe(expectedZonesLength);
+			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const newLastZone: IZone = _.last(zoneService.currentZones); // Is actually the new last zone
+			const newLastZone: IZone = _.last(zonesService.currentZones); // Is actually the new last zone
 			expect(newLastZone.from).toBe(oldPreviousZone.from);
 			expect(newLastZone.to).toBe(oldPreviousZone.to);
 
@@ -222,11 +222,11 @@ describe('ZonesService', () => {
 		// Given
 		const MIN_ZONE_COUNT = 10;
 		const removeIndex = 6;
-		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
 
 
 		// When
-		const removeZoneAtIndexPromise: Promise<string> = zoneService.removeZoneAtIndex(removeIndex);
+		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
 
 		// Then
 		removeZoneAtIndexPromise.then((result: string) => {
@@ -238,7 +238,7 @@ describe('ZonesService', () => {
 
 			expect(error).not.toBeNull();
 			expect(error).toEqual("You can't remove more than " + MIN_ZONE_COUNT + " zones...");
-			expect(zoneService.currentZones.length).toBe(MIN_ZONE_COUNT);
+			expect(zonesService.currentZones.length).toBe(MIN_ZONE_COUNT);
 
 			done();
 		});
@@ -248,7 +248,7 @@ describe('ZonesService', () => {
 
 		// Given, increment +1 from of third sourceZone.
 		const index = 2;
-		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
+		const updatedFromValue: number = zonesService.currentZones[index].from + 1; // Apply the change
 
 		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
@@ -258,7 +258,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -276,7 +276,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -284,7 +284,7 @@ describe('ZonesService', () => {
 
 		// Given, increment +1 from of first source zone
 		const index = 0; // First zone
-		const updatedFromValue: number = zoneService.currentZones[index].from + 1; // Apply the change
+		const updatedFromValue: number = zonesService.currentZones[index].from + 1; // Apply the change
 
 		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
@@ -295,7 +295,7 @@ describe('ZonesService', () => {
 
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -304,14 +304,14 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 	});
 
 	it('should notify the next Zone "FROM" when his own "TO" has been changed', (done: Function) => {
 
 		// Given, decrement -1 a "TO" zone.
 		const index = 7;
-		const updatedToValue: number = zoneService.currentZones[index].to - 1; // Apply the change
+		const updatedToValue: number = zonesService.currentZones[index].to - 1; // Apply the change
 
 		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
@@ -321,7 +321,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -339,7 +339,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -347,7 +347,7 @@ describe('ZonesService', () => {
 
 		// Given
 		const index = 0; // First zone
-		const updatedToValue: number = zoneService.currentZones[index].to + 4; // Apply the change
+		const updatedToValue: number = zonesService.currentZones[index].to + 4; // Apply the change
 
 		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
@@ -357,7 +357,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -375,7 +375,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -383,7 +383,7 @@ describe('ZonesService', () => {
 
 		// Given, increment +1 from of last source zone
 		const index = 9; // Last zone
-		const updatedToValue: number = zoneService.currentZones[index].to + 1; // Apply the change
+		const updatedToValue: number = zonesService.currentZones[index].to + 1; // Apply the change
 
 		const zoneChange: IZoneChangeWhisper = {
 			sourceId: index,
@@ -393,7 +393,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -402,7 +402,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 
 	});
 
@@ -417,7 +417,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -427,7 +427,7 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 	});
 
 	it('should fail when value is not a number', (done: Function) => {
@@ -441,7 +441,7 @@ describe('ZonesService', () => {
 		};
 
 		// When, Then
-		zoneService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
 			expect(change).toBeNull();
 			done();
 
@@ -451,19 +451,19 @@ describe('ZonesService', () => {
 			done();
 		});
 
-		zoneService.whisperZoneChange(zoneChange);
+		zonesService.whisperZoneChange(zoneChange);
 	});
 
 	it('should return compliant zones', (done: Function) => {
 
 		// Given
-		const currentZones = zoneService.currentZones;
+		const currentZones = zonesService.currentZones;
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(currentZones);
+		const error: string = zonesService.isZonesCompliant(currentZones);
 
 		// Then
-		expect(isCompliant).toBeTruthy();
+		expect(error).toBeNull();
 
 		done();
 	});
@@ -483,13 +483,14 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
-		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
+		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
 
 		// Then
-		expect(isCompliant).toBeFalsy();
+		expect(error).not.toBeNull();
+		expect(error).toEqual("Not compliant zones provided: pattern is not respected.");
 
 		done();
 	});
@@ -509,19 +510,20 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
-		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
+		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
 
 		// Then
-		expect(isCompliant).toBeFalsy();
+		expect(error).not.toBeNull();
+		expect(error).toEqual("Not compliant zones provided: pattern is not respected.");
 
 		done();
 
 	});
 
-	it('should return not compliant zones with max zone count reached', (done: Function) => {
+	it('should return not compliant zones with MAX zone count reached', (done: Function) => {
 
 		// Given
 		const MAX_ZONE_COUNT = 10;
@@ -540,21 +542,22 @@ describe('ZonesService', () => {
 			{from: 100, to: 110}, // Add a 11th zone
 		];
 
-		spyOn(zoneService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
+		spyOn(zonesService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
 
-		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
+		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
 
 		// Then
-		expect(isCompliant).toBeFalsy();
+		expect(error).not.toBeNull();
+		expect(error).toEqual("Not compliant zones provided: expected at max " + zonesService.getMaxZoneCount() + " zones");
 
 		done();
 
 	});
 
-	it('should return not compliant zones with min zone count reached', (done: Function) => {
+	it('should return not compliant zones with MIN zone count reached', (done: Function) => {
 
 		// Given
 		const MIN_ZONE_COUNT = 5;
@@ -566,16 +569,17 @@ describe('ZonesService', () => {
 			{from: 30, to: 40}
 		];
 
-		spyOn(zoneService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
 
-		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
+		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
+		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
 
 		// Then
-		expect(isCompliant).toBeFalsy();
-		expect(zoneService.currentZones.length).toEqual(MOCKED_ZONES.length);
+		expect(error).not.toBeNull();
+		expect(zonesService.currentZones.length).toEqual(MOCKED_ZONES.length);
+		expect(error).toEqual("Not compliant zones provided: expected at least " + zonesService.getMinZoneCount() + " zones");
 
 		done();
 
@@ -584,13 +588,13 @@ describe('ZonesService', () => {
 	it('should return not compliant zones is zone empty', (done: Function) => {
 
 		// Given
-		spyOnProperty(zoneService, 'currentZones', 'get').and.returnValue(null);
+		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(null);
 
 		// When
-		const isCompliant: boolean = zoneService.isZonesCompliant(zoneService.currentZones);
+		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
 
 		// Then
-		expect(isCompliant).toBeFalsy();
+		expect(error).not.toBeNull();
 
 		done();
 
@@ -618,13 +622,13 @@ describe('ZonesService', () => {
 			}
 		);
 
-		zoneService.currentZones = FAKE_EXISTING_ZONES;
-		const zoneDefinitionSpy = spyOnProperty(zoneService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
-		const saveZonesSpy = spyOn(zoneService, 'saveZones').and.returnValue(Promise.resolve(true));
-		const zonesUpdatesSpy = spyOn(zoneService.zonesUpdates, 'next');
+		zonesService.currentZones = FAKE_EXISTING_ZONES;
+		const zoneDefinitionSpy = spyOnProperty(zonesService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
+		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
 
 		// When
-		const promiseReset: Promise<boolean> = zoneService.resetZonesToDefault();
+		const promiseReset: Promise<string> = zonesService.resetZonesToDefault();
 
 		// Then
 		promiseReset.then(() => {
@@ -633,9 +637,9 @@ describe('ZonesService', () => {
 			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
 
-			expect(zoneService.currentZones.length).toEqual(userSettings.zones.speed.length);
-			expect(zoneService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);
-			expect(zoneService.currentZones).toEqual(userSettings.zones.speed);
+			expect(zonesService.currentZones.length).toEqual(userSettings.zones.speed.length);
+			expect(zonesService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);
+			expect(zonesService.currentZones).toEqual(userSettings.zones.speed);
 
 			done();
 
@@ -650,17 +654,16 @@ describe('ZonesService', () => {
 	it('should save zones', (done: Function) => {
 
 		// Given
-		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(true);
-		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
+		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(null);
+		const updateZoneSettingSpy = spyOn(zonesService.chromeStorageService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
 		// When
-		const promiseSave: Promise<boolean> = zoneService.saveZones();
+		const promiseSave: Promise<string> = zonesService.saveZones();
 
 		// Then
-		promiseSave.then((status: boolean) => {
+		promiseSave.then(() => {
 
-			expect(status).toBeTruthy();
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
 
@@ -677,22 +680,23 @@ describe('ZonesService', () => {
 	it('should not save zones that are not compliant', (done: Function) => {
 
 		// Given
-		const zonesCompliantSpy = spyOn(zoneService, 'isZonesCompliant').and.returnValue(false);
-		const updateZoneSettingSpy = spyOn(zoneService.chromeStorageService, 'updateZoneSetting')
+		const fakeError = "FakeError";
+		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(fakeError);
+		const updateZoneSettingSpy = spyOn(zonesService.chromeStorageService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
 		// When
-		const promiseSave: Promise<boolean> = zoneService.saveZones();
+		const promiseSave: Promise<string> = zonesService.saveZones();
 
 		// Then
-		promiseSave.then((status: boolean) => {
+		promiseSave.then(() => {
 
-			expect(status).not.toBeTruthy();
+			expect(true).toBeFalsy("Test should no go there");
 			done();
 
 		}, error => {
 
-			expect(error).toBe("Zones are not compliant");
+			expect(error).toBe(fakeError);
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
 			done();
@@ -704,10 +708,10 @@ describe('ZonesService', () => {
 
 		// When
 		const step = 0.25;
-		const stepUpdatesSpy = spyOn(zoneService.stepUpdates, 'next');
+		const stepUpdatesSpy = spyOn(zonesService.stepUpdates, 'next');
 
 		// Given
-		zoneService.notifyStepChange(step);
+		zonesService.notifyStepChange(step);
 
 		// Then
 		expect(stepUpdatesSpy).toHaveBeenCalledTimes(1);
@@ -715,4 +719,93 @@ describe('ZonesService', () => {
 
 		done();
 	});
+
+	it('should import zones', (done: Function) => {
+
+		// When
+		const jsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]';
+		const zonesToImport: IZone[] = <IZone[]> JSON.parse(jsonInput);
+
+		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+
+		// Given
+		const promiseImport = zonesService.importZones(jsonInput);
+
+		// Then
+		promiseImport.then(() => {
+
+			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
+			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
+
+			expect(zonesService.currentZones).toEqual(zonesToImport);
+			expect(zonesService.currentZones.length).toEqual(zonesToImport.length);
+
+			done();
+
+		}, (error: Error) => {
+
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+
+	it('should not import zones with wrong JSON data', (done: Function) => {
+
+		// When
+		const wrongJsonInput = ('[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]')
+			.replace(',', '');
+
+		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+
+		// Given
+		const promiseImport = zonesService.importZones(wrongJsonInput);
+
+		// Then
+		promiseImport.then(() => {
+
+			expect(true).toBeFalsy("Test should no go there");
+			done();
+
+		}, (error: string) => {
+
+			expect(saveZonesSpy).toHaveBeenCalledTimes(0);
+			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(0);
+
+			expect(error).not.toBeNull();
+			expect(error).toBe("Provided zones do not respect expected JSON format");
+
+			done();
+		});
+
+	});
+
+	it('should not import zones with not compliant zones but valid JSON', (done: Function) => {
+
+		// When
+		const error = '149';
+		const jsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":' + error + ',"to":160}]';
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+
+		// Given
+		const promiseImport = zonesService.importZones(jsonInput);
+
+		// Then
+		promiseImport.then(() => {
+
+			expect(true).toBeFalsy("Test should no go there");
+			done();
+
+		}, (error: string) => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual("Not compliant zones provided: pattern is not respected.");
+			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(0);
+
+			done();
+		});
+	});
+
 });

@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ZonesService } from "../../services/zones.service";
-import { MatSnackBar } from "@angular/material";
-import { NotImplementedException } from "../../exceptions/NotImplementedException";
+import { MatDialog, MatSnackBar } from "@angular/material";
 import { IZoneDefinition } from "../zone-definitions";
+import {
+	IZoneImportExportData,
+	Mode,
+	ZonesImportExportDialogComponent
+} from "../zones-import-export-dialog/zones-import-export-dialog.component";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -24,6 +28,7 @@ export class ZoneToolBarComponent implements OnInit {
 	private _zoneDefinitionSelectedChange: EventEmitter<IZoneDefinition> = new EventEmitter<IZoneDefinition>();
 
 	constructor(private zonesService: ZonesService,
+				private dialog: MatDialog,
 				private snackBar: MatSnackBar) {
 	}
 
@@ -72,11 +77,33 @@ export class ZoneToolBarComponent implements OnInit {
 	}
 
 	public onImportZones() {
-		throw new NotImplementedException();
+
+		const importExportData: IZoneImportExportData = {
+			zoneDefinition: this.zonesService.zoneDefinition,
+			mode: Mode.IMPORT
+		};
+
+		this.dialog.open(ZonesImportExportDialogComponent, {
+			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
+			data: importExportData
+		});
 	}
 
 	public onExportZones() {
-		throw new NotImplementedException();
+
+		const importExportData: IZoneImportExportData = {
+			zoneDefinition: this.zonesService.zoneDefinition,
+			zonesData: this.zonesService.currentZones,
+			mode: Mode.EXPORT
+		};
+
+		this.dialog.open(ZonesImportExportDialogComponent, {
+			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
+			data: importExportData
+		});
+
 	}
 
 	private popSnack(message: string): void {

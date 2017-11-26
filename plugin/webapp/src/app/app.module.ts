@@ -21,6 +21,7 @@ import { ZonesSettingsComponent } from "./zones-settings/zones-settings.componen
 import { ZoneComponent } from "./zones-settings/zone/zone.component";
 import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-bar.component";
 import { ZonesService } from "./services/zones.service";
+import { ZonesImportExportDialogComponent } from "./zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 
 @NgModule({
 	declarations: [
@@ -40,11 +41,13 @@ import { ZonesService } from "./services/zones.service";
 		 * Dialogs
 		 */
 		GotItDialogComponent,
-		OptionHelperDialogComponent
+		OptionHelperDialogComponent,
+		ZonesImportExportDialogComponent
 	],
 	entryComponents: [
 		GotItDialogComponent,
-		OptionHelperDialogComponent
+		OptionHelperDialogComponent,
+		ZonesImportExportDialogComponent
 	],
 	imports: [
 		BrowserModule,
