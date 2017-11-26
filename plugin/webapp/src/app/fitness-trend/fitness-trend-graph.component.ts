@@ -4,22 +4,30 @@ import * as _ from "lodash";
 import * as moment from "moment";
 
 // DONE Filter by period until today
-// TODO Filter between dates
+// DONE Filter between dates
+// TODO Forward to strava.com activities
 // TODO Show graph point legend: CTL, ATL, TSB
 // TODO Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // TODO Show preview days as dashed line
 // TODO Filter with power swim
 // TODO Filter with power meter
 // TODO Support form zones
-// TODO Forward to strava.com activities
+
 // TODO Show helper info
 // TODO Show info when no data. (Wrap in a parent FitnessTrendComponent (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
+/**
+ * date: string; YYYY-MM-DD
+ * value: number;
+ */
 interface GraphPoint {
 	date: string;
-	value: number
+	value: number;
 }
 
+/**
+ * label: string;
+ */
 export interface IPeriodLabeled extends IPeriod {
 	label: string;
 }
@@ -46,7 +54,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// mouseover: (arg) => {
 		// 	console.log("mouseover", arg)
 		// },
-		legend: ['Line 1', 'Line 2', 'Line 3'],
+		// legend: ['Line 1', 'Line 2', 'Line 3'],
 		// legend_target: '.legend'
 	};
 
@@ -92,15 +100,25 @@ export class FitnessTrendGraphComponent implements OnInit {
 		label: "From the beginning",
 	}];
 
-	private _periods: IPeriod[] = FitnessTrendGraphComponent.PERIODS;
-	private _periodSelected: IPeriod = FitnessTrendGraphComponent.PERIODS[6];
+	private _periods: IPeriod[];
+	private _lastPeriodSelected: IPeriod;
 	private _fitnessTrend: IDayFitnessTrend[];
 	private _fitnessTrendLines: GraphPoint[][] = [];
+
+	private _dateFrom: Date;
+	private _dateTo: Date;
+	private _dateMin: Date;
+	private _dateMax: Date;
 
 	constructor(private _fitnessService: FitnessService) {
 	}
 
 	public ngOnInit(): void {
+
+		this.periods = FitnessTrendGraphComponent.PERIODS;
+
+		// Set default last period to 4 months
+		this.lastPeriodSelected = FitnessTrendGraphComponent.PERIODS[6];
 
 		// Generate graph data
 		this.fitnessService.computeTrend(null,
@@ -109,22 +127,22 @@ export class FitnessTrendGraphComponent implements OnInit {
 			null).then((fitnessTrend: IDayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.initFirstDraw();
+
+			this.init();
 
 		});
 	}
 
 	/**
 	 *
-	 * @param {IDayFitnessTrend[]} fitnessTrend
 	 */
-	private initFirstDraw() {
+	private init() {
 
 		let fatigueLine: GraphPoint[] = [];
 		let fitnessLine: GraphPoint[] = [];
 		let formLine: GraphPoint[] = [];
 
-		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend, index) => {
+		_.forEach(this.fitnessTrend, (dayFitnessTrend: IDayFitnessTrend) => {
 
 			fatigueLine.push({
 				date: dayFitnessTrend.date,
@@ -146,14 +164,24 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.fitnessTrendLines.push(MG.convert.date(fitnessLine, 'date'));
 		this.fitnessTrendLines.push(MG.convert.date(formLine, 'date'));
 
-		this.updateGraph(this.periodSelected);
+		this.updateGraph(this.lastPeriodSelected);
 	}
 
 	/**
 	 *
 	 */
-	public onPeriodSelected(): void {
-		this.updateGraph(this.periodSelected);
+	public onLastPeriodSelected(): void {
+		this.updateGraph(this.lastPeriodSelected);
+	}
+
+	public onDateToDateChange(): void {
+
+		const period: IPeriod = {
+			from: this.dateFrom,
+			to: this.dateTo
+		};
+
+		this.updateGraph(period);
 	}
 
 	/**
@@ -169,6 +197,12 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.applyLines(updatedTrendLines, () => {
 			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.")
 		});
+
+		// Update dateFrom dateTo fields
+		this.dateFrom = (_.isDate(period.from)) ? period.from : null;
+		this.dateTo = (_.isDate(period.to)) ? period.to : moment().toDate();
+		this._dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
+		this._dateMax = moment().toDate();
 	}
 
 	/**
@@ -213,12 +247,12 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this._periods = value;
 	}
 
-	get periodSelected(): IPeriod {
-		return this._periodSelected;
+	get lastPeriodSelected(): IPeriod {
+		return this._lastPeriodSelected;
 	}
 
-	set periodSelected(value: IPeriod) {
-		this._periodSelected = value;
+	set lastPeriodSelected(value: IPeriod) {
+		this._lastPeriodSelected = value;
 	}
 
 	get fitnessService(): FitnessService {
@@ -243,5 +277,37 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	set fitnessTrendLines(value: GraphPoint[][]) {
 		this._fitnessTrendLines = value;
+	}
+
+	get dateFrom(): Date {
+		return this._dateFrom;
+	}
+
+	set dateFrom(value: Date) {
+		this._dateFrom = value;
+	}
+
+	get dateTo(): Date {
+		return this._dateTo;
+	}
+
+	set dateTo(value: Date) {
+		this._dateTo = value;
+	}
+
+	get dateMin(): Date {
+		return this._dateMin;
+	}
+
+	set dateMin(value: Date) {
+		this._dateMin = value;
+	}
+
+	get dateMax(): Date {
+		return this._dateMax;
+	}
+
+	set dateMax(value: Date) {
+		this._dateMax = value;
 	}
 }

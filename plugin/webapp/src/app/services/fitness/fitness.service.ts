@@ -33,6 +33,10 @@ export interface IDayFitnessTrend {
 	previewDay: boolean;
 }
 
+/**
+ * from: Date;
+ * to: Date;
+ */
 export interface IPeriod {
 	from: Date;
 	to: Date;

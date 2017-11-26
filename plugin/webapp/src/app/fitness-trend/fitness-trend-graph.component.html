@@ -5,9 +5,8 @@
 	<mat-card-content>
 		<mat-input-container>
 			<mat-select
-				aria-label="Gender"
-				(change)="onPeriodSelected()"
-				[(ngModel)]="periodSelected">
+				(change)="onLastPeriodSelected()"
+				[(ngModel)]="lastPeriodSelected">
 				<mat-option
 					*ngFor="let period of periods;"
 					[value]="period">
@@ -17,13 +16,25 @@
 		</mat-input-container>
 
 		<mat-form-field>
-			<input matInput [matDatepicker]="datePickerFrom" placeholder="Enter date">
+			<input matInput
+				   [(ngModel)]="dateFrom"
+				   [min]="dateMin"
+				   [max]="dateTo"
+				   [matDatepicker]="datePickerFrom"
+				   (dateChange)="onDateToDateChange()"
+				   placeholder="From">
 			<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
 			<mat-datepicker #datePickerFrom></mat-datepicker>
 		</mat-form-field>
 
 		<mat-form-field>
-			<input matInput [matDatepicker]="datePickerTo" placeholder="Enter date">
+			<input matInput
+				   [(ngModel)]="dateTo"
+				   [min]="dateFrom"
+				   [max]="dateMax"
+				   [matDatepicker]="datePickerTo"
+				   (dateChange)="onDateToDateChange()"
+				   placeholder="To">
 			<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
 			<mat-datepicker #datePickerTo></mat-datepicker>
 		</mat-form-field>
