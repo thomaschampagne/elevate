@@ -34,8 +34,8 @@ export interface IDayFitnessTrend {
 }
 
 export interface IPeriod {
-	from: Moment;
-	to: Moment;
+	from: Date;
+	to: Date;
 }
 
 @Injectable()
@@ -294,16 +294,16 @@ export class FitnessService {
 	public indexesOf(period: IPeriod, fitnessTrend: IDayFitnessTrend[]): { start: number; end: number } {
 
 		let startIndex = 0; // Use first day as start index by default.
-		if (!_.isEmpty(period.from)) { // Then override index if "From" is specified
+		if (_.isDate(period.from)) { // Then override index if "From" is specified
 			startIndex = _.findIndex(fitnessTrend, {
-				date: period.from.format("YYYY-MM-DD")
+				date: moment(period.from).format("YYYY-MM-DD")
 			});
 		}
 
 		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
-		if (!_.isEmpty(period.to)) { // Then override index if "To" is specified
+		if (_.isDate(period.to)) { // Then override index if "To" is specified
 			endIndex = _.findIndex(fitnessTrend, {
-				date: period.to.format("YYYY-MM-DD")
+				date: moment(period.to).format("YYYY-MM-DD")
 			});
 		}
 

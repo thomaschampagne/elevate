@@ -3,6 +3,7 @@ import {
 	MatButtonModule,
 	MatCardModule,
 	MatCheckboxModule,
+	MatDatepickerModule,
 	MatDialogModule,
 	MatGridListModule,
 	MatIconModule,
@@ -39,7 +40,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatTableModule,
 		CdkTableModule,
 		MatGridListModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatDatepickerModule
 	],
 	exports: [
 		MatButtonModule,
@@ -59,7 +61,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatTableModule,
 		CdkTableModule,
 		MatGridListModule,
-		MatSlideToggleModule
+		MatSlideToggleModule,
+		MatDatepickerModule
 	],
 	declarations: []
 })

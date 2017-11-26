@@ -16,6 +16,18 @@
 			</mat-select>
 		</mat-input-container>
 
+		<mat-form-field>
+			<input matInput [matDatepicker]="datePickerFrom" placeholder="Enter date">
+			<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+			<mat-datepicker #datePickerFrom></mat-datepicker>
+		</mat-form-field>
+
+		<mat-form-field>
+			<input matInput [matDatepicker]="datePickerTo" placeholder="Enter date">
+			<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+			<mat-datepicker #datePickerTo></mat-datepicker>
+		</mat-form-field>
+
 		<div id="fitnessTrendGraph"></div>
 	</mat-card-content>
 </mat-card>

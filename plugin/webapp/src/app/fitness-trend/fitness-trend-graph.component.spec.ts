@@ -10,8 +10,9 @@ import { TEST_SYNCED_ACTIVITIES } from "../../fixtures/activities";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import * as moment from "moment";
 import { Moment } from "moment";
+import { MatNativeDateModule } from "@angular/material";
 
-describe('FitnessTrendComponent', () => {
+describe('FitnessTrendGraphComponent', () => {
 
 	let activityDao: ActivityDao = null;
 	let activityService: ActivityService = null;
@@ -23,7 +24,7 @@ describe('FitnessTrendComponent', () => {
 	beforeEach(async(() => {
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
+			imports: [FormsModule, MaterialModule, BrowserAnimationsModule, MatNativeDateModule],
 			declarations: [FitnessTrendGraphComponent],
 			providers: [FitnessService, ActivityService, ActivityDao]
 		}).compileComponents();

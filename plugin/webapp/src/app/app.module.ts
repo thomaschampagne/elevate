@@ -28,6 +28,7 @@ import { ActivityService } from "./services/activity/activity.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FitnessService } from "./services/fitness/fitness.service";
 import { FitnessTrendGraphComponent } from './fitness-trend/fitness-trend-graph.component';
+import { MatNativeDateModule } from "@angular/material";
 
 @NgModule({
 	declarations: [
@@ -64,6 +65,7 @@ import { FitnessTrendGraphComponent } from './fitness-trend/fitness-trend-graph.
 		HttpClientModule,
 		AppRoutingModule,
 		MaterialModule,
+		MatNativeDateModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
 		NgPipesModule

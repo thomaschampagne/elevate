@@ -51,39 +51,39 @@ export class FitnessTrendGraphComponent implements OnInit {
 	};
 
 	private static readonly PERIODS: IPeriodLabeled[] = [{
-		from: moment().subtract(7, "days"),
+		from: moment().subtract(7, "days").toDate(),
 		to: null,
 		label: "Last 7 days",
 	}, {
-		from: moment().subtract(14, "days"),
+		from: moment().subtract(14, "days").toDate(),
 		to: null,
 		label: "Last 14 days",
 	}, {
-		from: moment().subtract(1, "months"),
+		from: moment().subtract(1, "months").toDate(),
 		to: null,
 		label: "Last month",
 	}, {
-		from: moment().subtract(6, "weeks"),
+		from: moment().subtract(6, "weeks").toDate(),
 		to: null,
 		label: "Last 6 weeks",
 	}, {
-		from: moment().subtract(2, "months"),
+		from: moment().subtract(2, "months").toDate(),
 		to: null,
 		label: "Last 2 months",
 	}, {
-		from: moment().subtract(4, "months"),
+		from: moment().subtract(4, "months").toDate(),
 		to: null,
 		label: "Last 4 months",
 	}, {
-		from: moment().subtract(6, "months"),
+		from: moment().subtract(6, "months").toDate(),
 		to: null,
 		label: "Last 6 months",
 	}, {
-		from: moment().subtract(1, "years"),
+		from: moment().subtract(1, "years").toDate(),
 		to: null,
 		label: "Last 12 months",
 	}, {
-		from: moment().subtract(2, "years"),
+		from: moment().subtract(2, "years").toDate(),
 		to: null,
 		label: "Last 24 months",
 	}, {
