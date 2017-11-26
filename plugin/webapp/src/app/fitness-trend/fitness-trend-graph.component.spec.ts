@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FitnessTrendComponent } from './fitness-trend.component';
+import { FitnessTrendGraphComponent } from './fitness-trend-graph.component';
 
 xdescribe('FitnessTrendComponent', () => {
-	let component: FitnessTrendComponent;
-	let fixture: ComponentFixture<FitnessTrendComponent>;
+	let component: FitnessTrendGraphComponent;
+	let fixture: ComponentFixture<FitnessTrendGraphComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [FitnessTrendComponent]
+			declarations: [FitnessTrendGraphComponent]
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(FitnessTrendComponent);
+		fixture = TestBed.createComponent(FitnessTrendGraphComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

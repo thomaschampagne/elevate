@@ -1,0 +1,21 @@
+<mat-card>
+	<mat-card-title>
+		First draw
+	</mat-card-title>
+	<mat-card-content>
+		<mat-input-container>
+			<mat-select
+				aria-label="Gender"
+				(change)="onPeriodSelected()"
+				[(ngModel)]="periodSelected">
+				<mat-option
+					*ngFor="let period of periods;"
+					[value]="period">
+					{{period.label}}
+				</mat-option>
+			</mat-select>
+		</mat-input-container>
+
+		<div id="fitnessTrendGraph"></div>
+	</mat-card-content>
+</mat-card>
