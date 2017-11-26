@@ -22,7 +22,7 @@ export interface IOptionHelperData {
 	templateUrl: './option-helper-dialog.component.html',
 	styleUrls: ['./option-helper-dialog.component.scss']
 })
-export class OptionHelperDialogComponent implements OnInit {
+export class OptionHelperDialog implements OnInit {
 
 	public static MAX_WIDTH: string = '80%';
 	public static MIN_WIDTH: string = '40%';

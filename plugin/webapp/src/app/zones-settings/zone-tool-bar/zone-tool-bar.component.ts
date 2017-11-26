@@ -5,7 +5,7 @@ import { IZoneDefinition } from "../zone-definitions";
 import {
 	IZoneImportExportData,
 	Mode,
-	ZonesImportExportDialogComponent
+	ZonesImportExportDialog
 } from "../zones-import-export-dialog/zones-import-export-dialog.component";
 
 @Component({
@@ -83,9 +83,9 @@ export class ZoneToolBarComponent implements OnInit {
 			mode: Mode.IMPORT
 		};
 
-		this.dialog.open(ZonesImportExportDialogComponent, {
-			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
-			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
+		this.dialog.open(ZonesImportExportDialog, {
+			minWidth: ZonesImportExportDialog.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialog.MAX_WIDTH,
 			data: importExportData
 		});
 	}
@@ -98,9 +98,9 @@ export class ZoneToolBarComponent implements OnInit {
 			mode: Mode.EXPORT
 		};
 
-		this.dialog.open(ZonesImportExportDialogComponent, {
-			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
-			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
+		this.dialog.open(ZonesImportExportDialog, {
+			minWidth: ZonesImportExportDialog.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialog.MAX_WIDTH,
 			data: importExportData
 		});
 

@@ -11,9 +11,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from 'ngx-pipes';
-import { GotItDialogComponent } from "./dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialog } from "./dialogs/got-it-dialog/got-it-dialog.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { OptionHelperDialogComponent } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
+import { OptionHelperDialog } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
 import { HttpClientModule } from "@angular/common/http";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 import { SwimFtpHelperComponent } from "./athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
@@ -21,7 +21,7 @@ import { ZonesSettingsComponent } from "./zones-settings/zones-settings.componen
 import { ZoneComponent } from "./zones-settings/zone/zone.component";
 import { ZoneToolBarComponent } from "./zones-settings/zone-tool-bar/zone-tool-bar.component";
 import { ZonesService } from "./services/zones.service";
-import { ZonesImportExportDialogComponent } from "./zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
+import { ZonesImportExportDialog } from "./zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 
 @NgModule({
 	declarations: [
@@ -40,14 +40,14 @@ import { ZonesImportExportDialogComponent } from "./zones-settings/zones-import-
 		/**
 		 * Dialogs
 		 */
-		GotItDialogComponent,
-		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent
+		GotItDialog,
+		OptionHelperDialog,
+		ZonesImportExportDialog
 	],
 	entryComponents: [
-		GotItDialogComponent,
-		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent
+		GotItDialog,
+		OptionHelperDialog,
+		ZonesImportExportDialog
 	],
 	imports: [
 		BrowserModule,

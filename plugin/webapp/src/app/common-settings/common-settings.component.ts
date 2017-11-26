@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { IOptionHelperData, OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
+import { IOptionHelperData, OptionHelperDialog } from "./option-helper-dialog/option-helper-dialog.component";
 import { OptionHelperReaderService } from "../services/option-helper-reader.service";
 import { PlatformLocation } from "@angular/common";
 
@@ -206,9 +206,9 @@ export class CommonSettingsComponent implements OnInit {
 					markdownData: markdownData
 				};
 
-				this.dialog.open(OptionHelperDialogComponent, {
-					minWidth: OptionHelperDialogComponent.MIN_WIDTH,
-					maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
+				this.dialog.open(OptionHelperDialog, {
+					minWidth: OptionHelperDialog.MIN_WIDTH,
+					maxWidth: OptionHelperDialog.MAX_WIDTH,
 					data: optionHelperData
 				});
 			});

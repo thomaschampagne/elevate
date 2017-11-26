@@ -20,7 +20,7 @@ export interface IZoneImportExportData {
 	templateUrl: './zones-import-export-dialog.component.html', // TODO Rename ...port.dialog.html
 	styleUrls: ['./zones-import-export-dialog.component.scss']
 })
-export class ZonesImportExportDialogComponent implements OnInit {
+export class ZonesImportExportDialog implements OnInit {
 
 	public readonly Mode = Mode; // Inject enum as class member
 
@@ -30,7 +30,7 @@ export class ZonesImportExportDialogComponent implements OnInit {
 	private _zonesJsonData: string;
 	private _placeholder: string;
 
-	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialogComponent>,
+	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialog>,
 				@Inject(MAT_DIALOG_DATA) private _data: IZoneImportExportData,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
