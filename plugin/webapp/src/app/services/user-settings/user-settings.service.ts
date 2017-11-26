@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { userSettings } from "../../../../common/scripts/UserSettings";
+import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { userSettings } from "../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
-import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
-import { IZoneDefinition } from "../zones-settings/zone-definitions";
+import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { IZoneDefinition } from "../../zones-settings/zone-definitions";
 
 @Injectable()
 export class UserSettingsService {

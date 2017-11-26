@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
-import { UserSettingsService } from "./user-settings.service";
-import { IZoneDefinition } from "../zones-settings/zone-definitions";
-import { userSettings } from "../../../../common/scripts/UserSettings";
+import { UserSettingsService } from "../user-settings/user-settings.service";
+import { IZoneDefinition } from "../../zones-settings/zone-definitions";
+import { userSettings } from "../../../../../common/scripts/UserSettings";
 
 export interface IZoneChangeWhisper {
 	sourceId: number;

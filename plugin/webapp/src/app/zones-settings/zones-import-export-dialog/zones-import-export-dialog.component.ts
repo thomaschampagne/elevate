@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { IZoneDefinition } from "../zone-definitions";
-import { ZonesService } from "../../services/zones.service";
+import { ZonesService } from "../../services/zones/zones.service";
 
 export enum Mode {
 	IMPORT,

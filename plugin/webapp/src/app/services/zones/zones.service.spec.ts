@@ -1,10 +1,10 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from './zones.service';
 import * as _ from "lodash";
-import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
-import { UserSettingsService } from "./user-settings.service";
-import { IZoneDefinition, ZONE_DEFINITIONS } from "../zones-settings/zone-definitions";
-import { userSettings } from "../../../../common/scripts/UserSettings";
+import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { UserSettingsService } from "../user-settings/user-settings.service";
+import { IZoneDefinition, ZONE_DEFINITIONS } from "../../zones-settings/zone-definitions";
+import { userSettings } from "../../../../../common/scripts/UserSettings";
 
 describe('ZonesService', () => {
 

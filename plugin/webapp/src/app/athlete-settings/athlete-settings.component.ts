@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { UserSettingsService } from "../services/user-settings.service";
+import { UserSettingsService } from "../services/user-settings/user-settings.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";

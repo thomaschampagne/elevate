@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zone-definitions";
-import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
+import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 

@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IZoneChangeType, ZoneComponent } from './zone.component';
 import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
-import { IZoneChangeWhisper, ZonesService } from "../../services/zones.service";
-import { UserSettingsService } from "../../services/user-settings.service";
+import { IZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
+import { UserSettingsService } from "../../services/user-settings/user-settings.service";
 
 describe('ZoneComponent', () => {
 

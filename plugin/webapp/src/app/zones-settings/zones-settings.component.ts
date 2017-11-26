@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UserSettingsService } from "../services/user-settings.service";
+import { UserSettingsService } from "../services/user-settings/user-settings.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { IZoneDefinition, ZONE_DEFINITIONS, } from "./zone-definitions";
-import { ZonesService } from "../services/zones.service";
+import { ZonesService } from "../services/zones/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { appRouteNames } from "../app-route-names";
 import { userSettings } from "../../../../common/scripts/UserSettings";

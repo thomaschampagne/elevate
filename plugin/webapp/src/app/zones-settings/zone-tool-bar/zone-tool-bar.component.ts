@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ZonesService } from "../../services/zones.service";
+import { ZonesService } from "../../services/zones/zones.service";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { IZoneDefinition } from "../zone-definitions";
 import {
