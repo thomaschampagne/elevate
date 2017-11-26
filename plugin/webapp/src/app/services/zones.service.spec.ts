@@ -2,7 +2,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from './zones.service';
 import * as _ from "lodash";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
-import { ChromeStorageService } from "./chrome-storage.service";
+import { UserSettingsService } from "./user-settings.service";
 import { IZoneDefinition, ZONE_DEFINITIONS } from "../zones-settings/zone-definitions";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 
@@ -13,7 +13,7 @@ describe('ZonesService', () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [ZonesService, ChromeStorageService]
+			providers: [ZonesService, UserSettingsService]
 		});
 
 		// Retrieve injected service
@@ -655,7 +655,7 @@ describe('ZonesService', () => {
 
 		// Given
 		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(null);
-		const updateZoneSettingSpy = spyOn(zonesService.chromeStorageService, 'updateZoneSetting')
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
 		// When
@@ -682,7 +682,7 @@ describe('ZonesService', () => {
 		// Given
 		const fakeError = "FakeError";
 		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(fakeError);
-		const updateZoneSettingSpy = spyOn(zonesService.chromeStorageService, 'updateZoneSetting')
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZoneSetting')
 			.and.returnValue(Promise.resolve(true));
 
 		// When

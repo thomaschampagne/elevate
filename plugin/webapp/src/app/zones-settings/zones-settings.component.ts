@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChromeStorageService } from "../services/chrome-storage.service";
+import { UserSettingsService } from "../services/user-settings.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
@@ -23,7 +23,7 @@ export class ZonesSettingsComponent implements OnInit {
 	private _userZones: IUserZones;
 	private _currentZones: IZone[];
 
-	constructor(private chromeStorageService: ChromeStorageService,
+	constructor(private userSettingsService: UserSettingsService,
 				private route: ActivatedRoute,
 				private router: Router,
 				private zonesService: ZonesService) {
@@ -32,7 +32,7 @@ export class ZonesSettingsComponent implements OnInit {
 	public ngOnInit(): void {
 
 		// Load user zones config
-		this.chromeStorageService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
+		this.userSettingsService.fetchUserSettings().then((userSettingsSynced: IUserSettings) => {
 
 			// Load user zones data
 			this._userZones = userSettingsSynced.zones;

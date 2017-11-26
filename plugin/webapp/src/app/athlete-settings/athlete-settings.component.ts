@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { ChromeStorageService } from "../services/chrome-storage.service";
+import { UserSettingsService } from "../services/user-settings.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
@@ -49,13 +49,13 @@ export class AthleteSettingsComponent implements OnInit {
 
 	private _isSwimFtpCalculatorEnabled: boolean = false;
 
-	constructor(private chromeStorageService: ChromeStorageService,
+	constructor(private userSettingsService: UserSettingsService,
 				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
 
-		this.chromeStorageService.fetchUserSettings().then((userSettings: IUserSettings) => {
+		this.userSettingsService.fetchUserSettings().then((userSettings: IUserSettings) => {
 
 			this._gender = _.find(this._GENDER_LIST, {
 				type: userSettings.userGender,
@@ -266,7 +266,7 @@ export class AthleteSettingsComponent implements OnInit {
 	 *
 	 */
 	private localStorageMustBeCleared() {
-		this.chromeStorageService.updateUserSetting(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
+		this.userSettingsService.updateUserSetting(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
 			console.log(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE + " has been updated to " + true);
 		});
 	}
@@ -278,9 +278,9 @@ export class AthleteSettingsComponent implements OnInit {
 		// TODO.. profileChanged not yet implemented
 		console.warn("profileChanged not yet implemented")
 
-		/*chromeStorageService.getProfileConfigured().then((configured: boolean) => {
+		/*userSettingsService.getProfileConfigured().then((configured: boolean) => {
 			if (!configured) {
-				chromeStorageService.setProfileConfigured(true).then(() => {
+				userSettingsService.setProfileConfigured(true).then(() => {
 					console.log("Profile configured");
 				});
 			}
@@ -291,7 +291,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	private saveSetting(key: string, value: any): void {
-		this.chromeStorageService.updateUserSetting(key, value).then(() => {
+		this.userSettingsService.updateUserSetting(key, value).then(() => {
 			console.log(key + " has been updated to " + value);
 			this.profileChanged();
 		});
@@ -299,7 +299,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	private getSavedSetting(key: string): Promise<any> {
-		return this.chromeStorageService.getUserSetting(key);
+		return this.userSettingsService.getUserSetting(key);
 	}
 
 	private popError(customMessage?: string) {

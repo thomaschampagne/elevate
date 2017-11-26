@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from "./app-routing.module";
 import { AthleteSettingsComponent } from './athlete-settings/athlete-settings.component';
 import { CommonSettingsComponent } from './common-settings/common-settings.component';
-import { ChromeStorageService } from "./services/chrome-storage.service";
+import { UserSettingsService } from "./services/user-settings.service";
 import { CommonSettingsService } from "./services/common-settings.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
@@ -63,7 +63,7 @@ import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component
 		NgPipesModule
 	],
 	providers: [
-		ChromeStorageService,
+		UserSettingsService,
 		CommonSettingsService,
 		OptionHelperReaderService,
 		ZonesService

@@ -6,7 +6,7 @@ import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import { IZoneDefinition } from "../zones-settings/zone-definitions";
 
 @Injectable()
-export class ChromeStorageService {
+export class UserSettingsService {
 
 	constructor() {
 	}

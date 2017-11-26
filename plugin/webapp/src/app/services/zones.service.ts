@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
-import { ChromeStorageService } from "./chrome-storage.service";
+import { UserSettingsService } from "./user-settings.service";
 import { IZoneDefinition } from "../zones-settings/zone-definitions";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 
@@ -29,7 +29,7 @@ export class ZonesService {
 	private _stepUpdates: Subject<number>;
 	private _zoneDefinition: IZoneDefinition;
 
-	constructor(private _chromeStorageService: ChromeStorageService) {
+	constructor(private _userSettingsService: UserSettingsService) {
 		this._zoneChangeOrderUpdates = new Subject<IZoneChangeOrder>();
 		this._zonesUpdates = new Subject<IZone[]>();
 		this._stepUpdates = new Subject<number>();
@@ -255,7 +255,7 @@ export class ZonesService {
 			const complianceError = this.isZonesCompliant(this.currentZones);
 
 			if (_.isNull(complianceError)) {
-				this.chromeStorageService.updateZoneSetting(
+				this.userSettingsService.updateZoneSetting(
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {
@@ -383,8 +383,8 @@ export class ZonesService {
 		this._currentZones = value;
 	}
 
-	get chromeStorageService(): ChromeStorageService {
-		return this._chromeStorageService;
+	get userSettingsService(): UserSettingsService {
+		return this._userSettingsService;
 	}
 
 }
