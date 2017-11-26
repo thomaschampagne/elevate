@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from 'ngx-pipes';
-import { GotItDialogComponent } from "./dialogs/noop-dialog/got-it-dialog.component";
+import { GotItDialogComponent } from "./dialogs/got-it-dialog/got-it-dialog.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { OptionHelperDialogComponent } from "./common-settings/option-helper-dialog/option-helper-dialog.component";
 import { HttpClientModule } from "@angular/common/http";
