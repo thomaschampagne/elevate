@@ -195,7 +195,7 @@ export class YearProgressService {
 
 		_.forEach(_.map(syncedActivityModels, "start_time"), (time: string) => {
 			const year = moment(time).year();
-			if(_.indexOf(availableYears, year) === -1){
+			if (_.indexOf(availableYears, year) === -1) {
 				availableYears.push(year)
 			}
 		});

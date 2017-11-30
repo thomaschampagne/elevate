@@ -1,32 +1,34 @@
+import * as d3 from "d3";
+import * as moment from "moment";
+import * as _ from "lodash";
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { YearProgressService } from "./services/year-progress.service";
 import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 import { YearProgressModel } from "./models/year-progress.model";
-import * as _ from "lodash";
 import { YearProgressTypeModel } from "./models/year-progress-type.model";
 import { ProgressType } from "./models/progress-type.enum";
 import { GraphPointModel } from "../shared/models/graphs/graph-point.model";
 import { ProgressionModel } from "./models/progression.model";
-import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
 import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graphics-event.model";
-import * as d3 from "d3";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import { ProgressionAtDayModel } from "./models/progression-at-date.model";
 import { Subscription } from "rxjs/Subscription";
 import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
+import { Moment } from "moment";
 
 
-// TODO Legend base: Year and value displayed
-// TODO Setup nice line colors palette
 // TODO Run & Ride distance Target line display
 // TODO Table result
+// TODO Setup nice line colors palette
+// TODO Legend base: Year and value displayed
+// TODO Add Trimp progress EZ !!
 
-// TODO Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
+// TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
 
 // DONE:BUG Progression on years selected with no data on sport types
@@ -74,10 +76,12 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
-	public dateWatched: Date; // Current day watched on year progress graph mouse over
+	public momentWatched: Moment; // Current day watched on year progress graph mouse over // TODO Unify with Moment
+	public todayMoment: Moment;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
+
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService,
@@ -148,10 +152,14 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
 		// Push today marker
+		this.todayMoment = moment().startOf("day");
 		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel([{
-			date: moment().startOf("day").toDate(),
-			label: "Today"
+			date: this.todayMoment.toDate(),
+			label: this.todayMoment.format("MMM Do")
 		}]);
+
+		// By default moment watched is today
+		this.momentWatched = this.todayMoment;
 
 		this.setupGraphConfig();
 
@@ -402,9 +410,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 		// Seek date for multiple lines at first @ "mgEvent.key"
 		// If not defined, it's a single line, then get date @ "mgEvent.date"
-		this.dateWatched = mgEvent.key || mgEvent.date;
-
-		const momentWatched = moment(this.dateWatched);
+		this.momentWatched = moment(mgEvent.key || mgEvent.date);
 
 		this.progressionsAtDay = [];
 
@@ -415,13 +421,13 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			});
 
 			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
-				onDayOfYear: momentWatched.dayOfYear()
+				onDayOfYear: this.momentWatched.dayOfYear()
 			});
 
 			if (progressionModel) {
 
 				const progressAtDay: ProgressionAtDayModel = {
-					date: momentWatched.year(progressionModel.onYear).toDate(),
+					date: this.momentWatched.year(progressionModel.onYear).toDate(),
 					year: progressionModel.onYear,
 					progressType: this.selectedProgressType.type,
 					value: progressionModel.valueOf(this.selectedProgressType.type),
@@ -503,12 +509,12 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			missing_is_hidden_accessor: 'hidden',
 			xax_count: 12,
 			yax_count: 10,
-			x_extended_ticks: true,
+			// x_extended_ticks: true,
 			y_extended_ticks: true,
 			target: "#" + YearProgressComponent.GRAPH_DOM_ELEMENT_ID,
 			x_accessor: "date",
 			y_accessor: "value",
-			inflator: 1,
+			inflator: 1.1,
 			showActivePoint: false,
 			markers: [],
 			legend: null,
