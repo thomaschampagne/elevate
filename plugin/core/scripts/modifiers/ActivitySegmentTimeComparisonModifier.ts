@@ -177,7 +177,12 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
-                    if (this.showDifferenceToKOM) {
+                    if (komSeconds == "NaN") {
+
+                        deltaKomCell.html("N/A");
+
+                    } else if (this.showDifferenceToKOM) {
+
                         const sign: string = (Math.sign(komDiffTime) == 1) ? "+" : "-";
                         deltaKomCell.html("<span title=\"Time difference with current "
                             + this.crTitle()
