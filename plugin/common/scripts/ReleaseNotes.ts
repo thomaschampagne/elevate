@@ -1,4 +1,4 @@
-import {constants} from "./Constants";
+import { constants } from "./Constants";
 
 export interface IReleaseNote {
     version: string; // SemVer 'x.x.x' http://semver.org/
@@ -19,6 +19,23 @@ export interface IReleaseNote {
 }
 
 export let releaseNotes: IReleaseNote[] = [
+    {
+        version: "5.12.1",
+        message: "Some bug fixes <strong style='font-size: 16px'>+</strong> Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",
+        hotFixes: [],
+        features: [
+            "Added Running stats: Stride length & total steps.",
+            "Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
+            "[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+        ],
+        hideFeatureReleaseNote: true,
+        fixes: [
+            "Fixed 'Show Extended Statistics button' not working for some workouts",
+            "Fixed kom segment time showing NaN:NaN:NaN when strava.com do not provide sufficient info to compute it.",
+            "Fixed a wrong calculation of variability index due to incorrect average power (average power on moving was previously used).",
+            "Fixed hide virtual rides option not working since new strava UI.",
+        ],
+    },
     {
         version: "5.12.0",
         message: "Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",

@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
-import {IAppResources} from "../interfaces/IAppResources";
+import { Helper } from "../../../common/scripts/Helper";
+import { StorageManager } from "../../../common/scripts/modules/StorageManager";
+import { IAppResources } from "../interfaces/IAppResources";
 
 export class AthleteStatsModifier implements IModifier {
 
@@ -184,15 +184,15 @@ export class AthleteStatsModifier implements IModifier {
                 $table.find("tbody").append($(
                     "<tr class='" + (isCurrentYear ? "currentyear" : "") + "'>" +
                     "<td><div style='white-space: nowrap;'>" + item.year + "</div><div style='white-space: nowrap;'><small>" + (isCurrentYear ? ("0" + (currentMonth + 1)).slice(-2) + "/" + ("0" + currentDay).slice(-2) : "") + "</small></div></td>" +
-                    "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + distanceUnit + this.renderTrendArrow(distanceDifference, function(value: any) {
+                    "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.distance, 0) + " " + distanceUnit + this.renderTrendArrow(distanceDifference, function (value: any) {
                         return Helper.formatNumber(Math.abs(value), 0) + " " + distanceUnit;
-                    }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + this.renderTrendArrow(activitiesCountDifference, function(value: any) {
+                    }) + "</div><div style='white-space: nowrap;'><small>" + Helper.formatNumber(item.count, 0) + " " + (i == 0 ? "Rides" : "Runs") + this.renderTrendArrow(activitiesCountDifference, function (value: any) {
                         return Helper.formatNumber(Math.abs(value), 0) + " " + (i == 0 ? "Rides" : "Runs");
                     }) + "</small></div></td>" +
-                    "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + this.elevationUnit + this.renderTrendArrow(elevationDifference, function(value: any) {
+                    "<td><div style='white-space: nowrap;'>" + Helper.formatNumber(item.elevation, 0) + " " + this.elevationUnit + this.renderTrendArrow(elevationDifference, function (value: any) {
                         return Helper.formatNumber(Math.abs(value), 0) + " " + this.elevationUnit;
                     }.bind(this)) + "</div></td>" +
-                    "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + this.renderTrendArrow(timeDifference, function(value: any) {
+                    "<td><div style='white-space: nowrap;'>" + Helper.secondsToDHM(item.time) + this.renderTrendArrow(timeDifference, function (value: any) {
                         return Helper.secondsToDHM(Math.abs(value));
                     }) + "</div></td>" +
                     "</tr>",
@@ -230,7 +230,7 @@ export class AthleteStatsModifier implements IModifier {
 
         this.progressThisYear = $("<div class='section'><h3>My year progressions to current month/day (old version) <span id='athleteStatsLoading' class='ajax-loading-image'></span></h3><div>This panel displays your progress for each beginning of year to current month and day. Assuming today is May 25, this panel shows \"What I've accomplished by May 25 of this year compared to previous years during the same period.\"<br/><br/><input type='checkbox' id='stravistix_yearProgress_incVirtualRides'/> Include Virtual Rides <input type='checkbox' id='stravistix_yearProgress_incCommutes'/> Include Commutes</div><div><ul class='switches'><li><a class='button btn-xs' data-activity-type='0' style='display: none;'>Cycling</a></li><li><a class='button btn-xs' data-activity-type='1' style='display: none;'>Running</a></li><li class='last-child' id='athleteStatsShowChart' style='display: none;'><a class='button btn-xs' style='max-height: 24px;' title='Chart'><img style='height: 12px;' src='" + self.appResources.trendingUpIcon + "'/></a></li><li>&nbsp;&nbsp;&nbsp;<a href='#' id='athleteStatsLoadingForceRefresh' style='display: none'>Force refresh</a></li></ul></div></div>");
 
-        $(this.progressThisYear).on("click", "a[data-activity-type]", function(e) {
+        $(this.progressThisYear).on("click", "a[data-activity-type]", function (e) {
             e.preventDefault();
             const $this = $(this),
                 activityType = $this.data("activity-type");
@@ -240,7 +240,7 @@ export class AthleteStatsModifier implements IModifier {
             $this.addClass("selected");
         });
 
-        $(this.progressThisYear).on("click", "#athleteStatsShowChart a", function(e) {
+        $(this.progressThisYear).on("click", "#athleteStatsShowChart a", function (e) {
             e.preventDefault();
             const activityType: string = self.progressThisYear.find("a[data-activity-type].selected").data("activity-type");
             const size: number[] = [
@@ -248,29 +248,29 @@ export class AthleteStatsModifier implements IModifier {
                 window.innerHeight * 0.8,
             ];
 
-            const html: string = '<div style="padding-bottom: 10px; text-align: center;"><div style="height:' + size[1] + "px;width:" + size[0] + 'px; overflow: hidden;">' +
-                '<div id="athleteStatChart" style="float: left; width: ' + (size[0] - 200) + "px;height:" + (size[1] - 100) + 'px;"></div>' +
-                '<div style="float:right; width: 180px; text-align: left;" id="athleteStatChartLegend">' +
-                '<div>Chart of:</div><ul id="athleteStatChartTypes">' +
-                '<li style="margin: 8px"><input id="asrdt0" type="radio" checked name="data-type" value="1" /> <label style="display: inline" for="asrdt0">Distance</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt1" type="radio" name="data-type" value="0" /> <label style="display: inline" for="asrdt1">Activity count</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt2" type="radio" name="data-type" value="2" /> <label style="display: inline" for="asrdt2">Elevation</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt3" type="radio" name="data-type" value="3" /> <label style="display: inline" for="asrdt3">Time</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt4" type="radio" name="data-type" value="4" /> <label style="display: inline" for="asrdt4">Distance last year</label></li>' +
-                '<li style="margin: 8px"><input id="asrdt5" type="radio" name="data-type" value="5" /> <label style="display: inline" for="asrdt5">Distance last 30d</label></li>' +
-                '<li><a style="display: inline" target="_blank" href="' + self.appResources.settingsLink + '#!/commonSettings?searchText=distance%20target">Setup ' + (new Date()).getFullYear() + " targets here</a></li>" +
+            const html: string = "<div style=\"padding-bottom: 10px; text-align: center;\"><div style=\"height:" + size[1] + "px;width:" + size[0] + "px; overflow: hidden;\">" +
+                "<div id=\"athleteStatChart\" style=\"float: left; width: " + (size[0] - 200) + "px;height:" + (size[1] - 100) + "px;\"></div>" +
+                "<div style=\"float:right; width: 180px; text-align: left;\" id=\"athleteStatChartLegend\">" +
+                "<div>Chart of:</div><ul id=\"athleteStatChartTypes\">" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt0\" type=\"radio\" checked name=\"data-type\" value=\"1\" /> <label style=\"display: inline\" for=\"asrdt0\">Distance</label></li>" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt1\" type=\"radio\" name=\"data-type\" value=\"0\" /> <label style=\"display: inline\" for=\"asrdt1\">Activity count</label></li>" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt2\" type=\"radio\" name=\"data-type\" value=\"2\" /> <label style=\"display: inline\" for=\"asrdt2\">Elevation</label></li>" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt3\" type=\"radio\" name=\"data-type\" value=\"3\" /> <label style=\"display: inline\" for=\"asrdt3\">Time</label></li>" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt4\" type=\"radio\" name=\"data-type\" value=\"4\" /> <label style=\"display: inline\" for=\"asrdt4\">Distance last year</label></li>" +
+                "<li style=\"margin: 8px\"><input id=\"asrdt5\" type=\"radio\" name=\"data-type\" value=\"5\" /> <label style=\"display: inline\" for=\"asrdt5\">Distance last 30d</label></li>" +
+                "<li><a style=\"display: inline\" target=\"_blank\" href=\"" + self.appResources.settingsLink + "#!/commonSettings?searchText=distance%20target\">Setup " + (new Date()).getFullYear() + " targets here</a></li>" +
                 "</ul>" +
-                '<div style="margin-top: 20px;">Years:</div>' +
-                '<ul id="athleteStatChartYears"></ul>' +
+                "<div style=\"margin-top: 20px;\">Years:</div>" +
+                "<ul id=\"athleteStatChartYears\"></ul>" +
                 "</div></div></div>" +
-                '<style type="text/css">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>';
+                "<style type=\"text/css\">.axis line,.axis path,svg.line-graph .axis{shape-rendering:crispEdges}.axis text{font:10px sans-serif}.axis line,.axis path{fill:none;stroke:#000}path{stroke-width:2;fill:none}path.current{stroke-width:4}#athleteStatChart text.date{fill:#000;font:10px sans-serif;stroke-width:0}svg.line-graph text{cursor:default}.hover-line{stroke:#6E7B8B}.hover-line .hide,path.hide{opacity:0}svg.line-graph .x.axis line{stroke:#D3D3D3}svg.line-graph .x.axis .minor{stroke-opacity:.5}svg.line-graph .x.axis path{display:none}svg.line-graph .x.axis text{font-size:10px}.y.axis path,svg.line-graph .y.axis line{fill:none;stroke:#000}svg.line-graph .y.axis text{font-size:12px}svg.line-graph .scale-button:not(.selected):hover{text-decoration:underline;cursor:pointer!important}svg.line-graph .date-label{fill:#6E7B8B}</style>";
             $.fancybox(html, {
                 title: "Year progression chart",
                 autoScale: true,
                 transitionIn: "fade",
                 transitionOut: "fade",
             });
-            prepareChart(currentActivities.filter(function(activity: any) {
+            prepareChart(currentActivities.filter(function (activity: any) {
                 return activity.t == activityType;
             }));
         });
@@ -293,13 +293,13 @@ export class AthleteStatsModifier implements IModifier {
                 currentDate: any = new Date(),
                 currentYear: any = currentDate.getFullYear(),
                 oneDayInMiliseconds: any = 1000 * 60 * 60 * 24,
-                dayOfYear = function(date: Date): number {
+                dayOfYear = function (date: Date): number {
                     const now: any = new Date(leapYear, date.getMonth(), date.getDate(), 12);
                     const diff: any = now - firstDayDate;
                     const day: any = Math.floor(diff / oneDayInMiliseconds);
                     return day;
                 },
-                createArrayOfValues = function(length: any, value?: any) {
+                createArrayOfValues = function (length: any, value?: any) {
                     const result: any = [];
                     while (length--) {
                         result.push(value || 0);
@@ -307,7 +307,7 @@ export class AthleteStatsModifier implements IModifier {
                     return result;
                 },
                 currentDayOfYear = dayOfYear(currentDate),
-                formatValue = function(value: any) {
+                formatValue = function (value: any) {
                     switch (currentDataType) {
                         case 1:
                         case 4:
@@ -476,7 +476,7 @@ export class AthleteStatsModifier implements IModifier {
                         }
                     }
 
-                    data.sort(function(left: any, right: any) {
+                    data.sort(function (left: any, right: any) {
                         return left.year - right.year;
                     });
 
@@ -512,7 +512,7 @@ export class AthleteStatsModifier implements IModifier {
             const yAxis: d3.svg.Axis = d3.svg.axis()
                 .scale(y)
                 .orient("left")
-                .tickFormat(function(d: any) {
+                .tickFormat(function (d: any) {
                     return formatValue(d);
                 });
 
@@ -548,10 +548,10 @@ export class AthleteStatsModifier implements IModifier {
                 .attr("y", 6);
 
             const line = d3.svg.line()
-                .y(function(d: any, i: any) {
+                .y(function (d: any, i: any) {
                     return y(d) + margin.top;
                 })
-                .x(function(d: any, i: any) {
+                .x(function (d: any, i: any) {
                     const dateFrom: Date = new Date(firstDayDate.getTime());
                     if (i > 0) {
                         dateFrom.setHours(23, 59, 59);
@@ -562,10 +562,10 @@ export class AthleteStatsModifier implements IModifier {
 
             // #195 - D3 method for generation of target line
             const targetProjection = d3.svg.line()
-                .y(function(d: any, i: any) {
+                .y(function (d: any, i: any) {
                     return y(d) + margin.top;
                 })
-                .x(function(d: any, i: any) {
+                .x(function (d: any, i: any) {
                     let dateFrom: Date = new Date(firstDayDate.getTime());
                     if (i > 0) {
                         dateFrom = lastDayDate;
@@ -576,11 +576,11 @@ export class AthleteStatsModifier implements IModifier {
             const color: Function = d3.scale.category10(),
                 trendLinesGroup = svg.append("svg:g");
 
-            const generateLines = function() {
+            const generateLines = function () {
                 let i: number = 0;
                 $("#athleteStatChartYears").empty();
                 trendLinesGroup.selectAll("path.trend-line").remove();
-                data.forEach(function(yearData: any) {
+                data.forEach(function (yearData: any) {
                     const yearIdentifier: string = yearData.year > currentYear ? "Target" : yearData.year;
                     const year: number = yearData.year,
                         id: string = "ascy" + year,
@@ -626,16 +626,16 @@ export class AthleteStatsModifier implements IModifier {
             };
             generateLines();
 
-            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function() {
+            $("#athleteStatChartYears").on("click", "input[type=checkbox]", {}, function () {
                 const year: number = parseInt($(this).val().toString());
-                data.filter(function(item: any) {
+                data.filter(function (item: any) {
                     return item.year == year;
-                }).forEach(function(item: any) {
+                }).forEach(function (item: any) {
                     item.element.classed("hide", !item.element.classed("hide"));
                 });
             });
 
-            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function() {
+            $("#athleteStatChartTypes").on("change", "input[name=data-type]", {}, function () {
                 currentDataType = +$(this).val();
                 hoverLine.classed("hide", true);
                 hoverLineText.classed("hide", true);
@@ -674,7 +674,7 @@ export class AthleteStatsModifier implements IModifier {
             hoverLineText.classed("date", true);
             hoverLineText.classed("hide", true);
 
-            const handleMouseOverGraph = function(event: any) {
+            const handleMouseOverGraph = function (event: any) {
                 const mouseX: number = event.pageX - hoverLineXOffset,
                     mouseY: number = event.pageY - hoverLineYOffset;
 
@@ -685,7 +685,7 @@ export class AthleteStatsModifier implements IModifier {
                     const date: Date = x.invert(mouseX),
                         day: number = dayOfYear(date);
 
-                    data.forEach(function(item: any) {
+                    data.forEach(function (item: any) {
                         if (day < item.values.length && !item.target) {
                             item.$value.text(formatValue(item.values[day]));
                         } else {
@@ -712,7 +712,7 @@ export class AthleteStatsModifier implements IModifier {
                 }
             };
 
-            $(container).mousemove(function(event) {
+            $(container).mousemove(function (event) {
                 handleMouseOverGraph(event);
             });
         };
@@ -743,7 +743,7 @@ export class AthleteStatsModifier implements IModifier {
                     }
                     $.when.apply(self, requests).done(() => {
 
-                        _.forEach(requests, function(request: any) {
+                        _.forEach(requests, function (request: any) {
                             if (request.responseJSON.models) {
                                 currentActivities = currentActivities.concat(request.responseJSON.models);
                             }

@@ -11,7 +11,7 @@ export class ActivityScrollingModifier implements IModifier {
         const w: JQuery = $(window);
         const container: JQuery = $(".feed-container");
 
-        w.scroll(function() {
+        w.scroll(function () {
             const elem: JQuery = container.find("a.load-feed");
             if (_.isEqual(elem.length, 0)) {
                 return;

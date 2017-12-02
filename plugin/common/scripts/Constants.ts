@@ -1,4 +1,4 @@
-import {IConstants} from "./interfaces/IConstants";
+import { IConstants } from "./interfaces/IConstants";
 
 export const constants: IConstants = {
     VERSION: null,

@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
+import { Helper } from "../../../common/scripts/Helper";
 import {
     IActivityStatsMap,
     IActivityStream,
@@ -18,8 +18,8 @@ import {
     IUpFlatDownSumTotal,
     IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {RunningPowerEstimator} from "./RunningPowerEstimator";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { RunningPowerEstimator } from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 

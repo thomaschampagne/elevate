@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import {RunningPowerEstimator} from "../../plugin/core/scripts/processors/RunningPowerEstimator";
-import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
-import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
-import {Helper} from "../../plugin/common/scripts/Helper";
+import { RunningPowerEstimator } from "../../plugin/core/scripts/processors/RunningPowerEstimator";
+import { IActivityStatsMap, IActivityStream, IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
+import { Helper } from "../../plugin/common/scripts/Helper";
 
 describe("RunningPowerEstimator", () => {
 
@@ -240,7 +240,7 @@ describe("RunningPowerEstimator", () => {
         // When
         let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
             isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
-        
+
         let result: IAnalysisData = activityComputer.compute();
 
         // Then

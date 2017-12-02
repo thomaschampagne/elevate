@@ -1,13 +1,12 @@
-import {ILocationService, IScope, IWindowService} from "angular";
+import { ILocationService, IScope, IWindowService } from "angular";
 import * as _ from "lodash";
-import {AthleteSettingsController} from "../controllers/AthleteSettingsController";
-import {ChromeStorageService} from "../services/ChromeStorageService";
-
+import { AthleteSettingsController } from "../controllers/AthleteSettingsController";
+import { ChromeStorageService } from "../services/ChromeStorageService";
+import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { StorageManager } from "../../../common/scripts/modules/StorageManager";
+import { routeMap } from "../Config";
 import Tab = chrome.tabs.Tab;
-import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
-import {routeMap} from "../Config";
 
 export interface IProfileConfiguredRibbonScope extends IScope {
     checkLocalSyncedAthleteProfileEqualsRemote: () => void;

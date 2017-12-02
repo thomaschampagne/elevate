@@ -1,4 +1,4 @@
-import {IUserSettings} from "./interfaces/IUserSettings";
+import { IUserSettings } from "./interfaces/IUserSettings";
 
 export let userSettings: IUserSettings = {
     autoSyncMinutes: 60,

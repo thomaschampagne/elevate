@@ -1,5 +1,4 @@
-
-import {IReleaseNote, releaseNotes} from "../../../common/scripts/ReleaseNotes";
+import { IReleaseNote, releaseNotes } from "../../../common/scripts/ReleaseNotes";
 
 export interface IReleaseNotesService {
     data: IReleaseNote[];

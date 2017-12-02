@@ -1,10 +1,10 @@
 // This code is from Google, so let's not modify it too much, just add gaNewElem and gaElems:
 import * as _ from "lodash";
 import * as Q from "q";
-import {env} from "../config/env";
-import {IAthleteUpdate} from "./interfaces/IAthleteUpdate";
-import {ISyncResult} from "./synchronizer/ActivitiesSynchronizer";
-import {HerokuEndpoints} from "../../common/scripts/modules/HerokuEndpoint";
+import { env } from "../config/env";
+import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
+import { ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
+import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
 
 const currentDate: any = new Date();
 (function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {

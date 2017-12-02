@@ -1,7 +1,7 @@
 import * as angular from "angular";
-import {IScope, IWindowService} from "angular";
+import { IScope, IWindowService } from "angular";
 import * as _ from "lodash";
-import {ChromeStorageService} from "../services/ChromeStorageService";
+import { ChromeStorageService } from "../services/ChromeStorageService";
 
 export class RestoreHistoryController {
 
@@ -27,7 +27,7 @@ export let restoreHistory = [() => {
 
     return {
 
-        template: '<div><input type="file"/><md-button class="md-raised md-primary" ng-click="restore()">Restore</md-button></div>',
+        template: "<div><input type=\"file\"/><md-button class=\"md-raised md-primary\" ng-click=\"restore()\">Restore</md-button></div>",
 
         controller: RestoreHistoryController,
 

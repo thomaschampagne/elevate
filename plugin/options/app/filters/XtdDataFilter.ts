@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 
-import {Helper} from "../../../common/scripts/Helper";
+import { Helper } from "../../../common/scripts/Helper";
 
 export let xtdDataFilter = () => {
 

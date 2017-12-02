@@ -1,4 +1,4 @@
-import {IZone} from "./IActivityData";
+import { IZone } from "./IActivityData";
 
 export interface IUserSettings {
     autoSyncMinutes: number;

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../interfaces/IAppResources";
+import { Helper } from "../../../common/scripts/Helper";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../interfaces/IAppResources";
 
 export interface EffortInfo {
     // values obtained from the HTTP request
@@ -177,7 +177,12 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
-                    if (this.showDifferenceToKOM) {
+                    if (komSeconds == "NaN") {
+
+                        deltaKomCell.html("N/A");
+
+                    } else if (this.showDifferenceToKOM) {
+
                         const sign: string = (Math.sign(komDiffTime) == 1) ? "+" : "-";
                         deltaKomCell.html("<span title=\"Time difference with current "
                             + this.crTitle()

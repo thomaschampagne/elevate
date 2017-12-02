@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../../../common/scripts/Helper";
-import {IActivityBasicInfo} from "../../../../../common/scripts/interfaces/IActivityData";
-import {AbstractDataView} from "./AbstractDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { IActivityBasicInfo } from "../../../../../common/scripts/interfaces/IActivityData";
+import { AbstractDataView } from "./AbstractDataView";
 
 export class HeaderView extends AbstractDataView {
 
@@ -29,7 +29,7 @@ export class HeaderView extends AbstractDataView {
         this.content += "       <a href='" + this.appResources.settingsLink + "#!/?showDonation=true' target='_blank' style='font-size: 14px;'> (Do you <img style='width: 14px;' src='" + this.appResources.heartIcon + "'/> this project?)</a>";
         this.content += "   </div>";
         this.content += "</div>";
-        this.content += '<hr style="margin: 10px 0;"/>';
+        this.content += "<hr style=\"margin: 10px 0;\"/>";
     }
 
     protected insertDataIntoGrid(): void {

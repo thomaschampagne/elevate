@@ -1,12 +1,12 @@
 import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
-import {IPromise} from "angular";
+import { IPromise } from "angular";
 import * as _ from "lodash";
-import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
-import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IStorageUsage} from "../../../common/scripts/modules/StorageManager";
-import {userSettings} from "../../../common/scripts/UserSettings";
+import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
+import { userSettings } from "../../../common/scripts/UserSettings";
 
 export class ChromeStorageService {
 

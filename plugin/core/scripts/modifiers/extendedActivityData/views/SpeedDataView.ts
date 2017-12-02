@@ -1,6 +1,6 @@
-import {Helper} from "../../../../../common/scripts/Helper";
-import {ISpeedData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {AbstractDataView} from "./AbstractDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { ISpeedData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { AbstractDataView } from "./AbstractDataView";
 
 export class SpeedDataView extends AbstractDataView {
 
@@ -19,7 +19,7 @@ export class SpeedDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> SPEED <a target="_blank" href="' + this.appResources.settingsLink + '#!/zonesSettings/speed" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.tachometerIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> SPEED <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/speed\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 2); // (col, row)

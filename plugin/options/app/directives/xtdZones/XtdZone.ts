@@ -1,6 +1,5 @@
-
-import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
-import {IAvoidInputKeysService} from "../../services/AvoidInputKeysService";
+import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import { IAvoidInputKeysService } from "../../services/AvoidInputKeysService";
 
 export class XtdZone {
 

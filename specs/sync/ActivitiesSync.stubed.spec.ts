@@ -1,21 +1,20 @@
-import * as _ from "lodash"
+import * as _ from "lodash";
 import * as Q from "q";
+import { ActivitiesSynchronizer, ISyncResult } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
+import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
 import {
-    ActivitiesSynchronizer,
-    ISyncResult
-} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import {MultipleActivityProcessor} from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
-import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
-import {
-    ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify,
+    ISyncActivityComputed,
+    ISyncActivityWithStream,
+    ISyncNotify,
     ISyncRawStravaActivity
 } from "../../plugin/common/scripts/interfaces/ISync";
-import {IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
-import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
-import {IAthleteProfile} from '../../plugin/common/scripts/interfaces/IAthleteProfile';
+import { IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
+import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
+import { IAthleteProfile } from "../../plugin/common/scripts/interfaces/IAthleteProfile";
 
-describe('ActivitiesSynchronizer syncing with stubs', () => {
+describe("ActivitiesSynchronizer syncing with stubs", () => {
 
     let userSettingsMock: IUserSettings;
     let appResourcesMock: IAppResources;
@@ -73,30 +72,30 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
         CHROME_STORAGE_STUB = {}; // Reset storage
 
-        userSettingsMock = _.cloneDeep(window.__fixtures__['fixtures/userSettings/2470979']);
-        appResourcesMock = _.cloneDeep(window.__fixtures__['fixtures/appResources/appResources']);
+        userSettingsMock = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
+        appResourcesMock = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
 
         // We have 7 pages
         rawPagesOfActivities = [
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0120161213']), // Page 01 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0220161213']), // Page 02 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0320161213']), // Page 03 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0420161213']), // Page 04 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0520161213']), // Page 05 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0620161213']), // Page 06 - 20 ACT
-            _.cloneDeep(window.__fixtures__['fixtures/sync/rawPage0720161213']), // Page 07 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"]), // Page 01 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0220161213"]), // Page 02 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0320161213"]), // Page 03 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0420161213"]), // Page 04 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0520161213"]), // Page 05 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0620161213"]), // Page 06 - 20 ACT
+            _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0720161213"]), // Page 07 - 20 ACT
         ];
         activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         /**
          * Stubing http calls to strava training pages
          */
-        spyOn(activitiesSynchronizer, 'httpPageGet').and.callFake((perPage: number, page: number) => {
+        spyOn(activitiesSynchronizer, "httpPageGet").and.callFake((perPage: number, page: number) => {
             let defer = $.Deferred();
             if (rawPagesOfActivities[page - 1]) {
-                defer.resolve(rawPagesOfActivities[page - 1], 'success');
+                defer.resolve(rawPagesOfActivities[page - 1], "success");
             } else {
-                defer.resolve({models: []}, 'success'); // No models to give
+                defer.resolve({models: []}, "success"); // No models to give
             }
             return defer.promise();
         });
@@ -104,10 +103,10 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         /**
          * Stubing activity stream promised, reduce @ 50 samples
          */
-        let stream: any = _.cloneDeep(window.__fixtures__['fixtures/activities/723224273/stream']);
+        let stream: any = _.cloneDeep(window.__fixtures__["fixtures/activities/723224273/stream"]);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
-        spyOn(activitiesSynchronizer, 'fetchStreamByActivityId').and.callFake((activityId: number) => {
+        spyOn(activitiesSynchronizer, "fetchStreamByActivityId").and.callFake((activityId: number) => {
             let defer = Q.defer();
             let data: any = {};
             _.forEach(_.keys(stream), (key: string) => {
@@ -122,7 +121,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         /**
          * Stub MultipleActivityProcessor:compute. Create fake analysis results
          */
-        spyOn(activitiesSynchronizer.multipleActivityProcessor, 'compute').and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+        spyOn(activitiesSynchronizer.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
             let defer = Q.defer();
             console.log("Spy activitiesSynchronizer.multipleActivityProcessor:compute called");
             let activitiesComputed: Array<ISyncActivityComputed> = [];
@@ -155,7 +154,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
          * - clearSyncCache
          * - saveSyncedAthleteProfile
          */
-        spyOn(activitiesSynchronizer, 'saveComputedActivitiesToLocal').and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
+        spyOn(activitiesSynchronizer, "saveComputedActivitiesToLocal").and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.computedActivities = computedActivities;
             defer.resolve({
@@ -164,7 +163,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, 'getComputedActivitiesFromLocal').and.callFake(() => {
+        spyOn(activitiesSynchronizer, "getComputedActivitiesFromLocal").and.callFake(() => {
             let defer = Q.defer();
             defer.resolve({
                 data: CHROME_STORAGE_STUB.computedActivities
@@ -172,7 +171,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, 'saveLastSyncDateToLocal').and.callFake((timestamp: number) => {
+        spyOn(activitiesSynchronizer, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.lastSyncDateTime = timestamp;
             defer.resolve({
@@ -181,7 +180,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, 'getLastSyncDateFromLocal').and.callFake(() => {
+        spyOn(activitiesSynchronizer, "getLastSyncDateFromLocal").and.callFake(() => {
             let defer = Q.defer();
             defer.resolve({
                 data: (CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null
@@ -189,14 +188,14 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, 'clearSyncCache').and.callFake(() => {
+        spyOn(activitiesSynchronizer, "clearSyncCache").and.callFake(() => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB = {}; // Remove all
             defer.resolve();
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, 'saveSyncedAthleteProfile').and.callFake((syncedAthleteProfile: IAthleteProfile) => {
+        spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: IAthleteProfile) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.syncWithAthleteProfile = syncedAthleteProfile;
             defer.resolve({
@@ -206,7 +205,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()', (done: Function) => {
+    it("should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()", (done: Function) => {
 
         // Give NO last sync date or page + page to read.
         activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
@@ -257,7 +256,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should ensure ActivitiesSynchronizer:fetchWithStream()', (done: Function) => {
+    it("should ensure ActivitiesSynchronizer:fetchWithStream()", (done: Function) => {
 
         // let fromPage = 1, pagesToRead = 3; // read 1 => 3
         activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<ISyncActivityWithStream>) => {
@@ -299,7 +298,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()', (done: Function) => {
+    it("should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()", (done: Function) => {
 
         // Getting all pages (7)
         activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
@@ -334,7 +333,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages', (done: Function) => {
+    it("should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages", (done: Function) => {
 
         expect(activitiesSynchronizer).not.toBeNull();
         expect(activitiesSynchronizer).not.toBeUndefined();
@@ -367,7 +366,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
     });
 
 
-    it('should sync() when no existing stored computed activities', (done: Function) => {
+    it("should sync() when no existing stored computed activities", (done: Function) => {
 
         expect(activitiesSynchronizer.hasBeenComputedActivities).toBeNull(); // No mergedComputedActivities at the moment
 
@@ -433,7 +432,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should sync() when a new today training came up + an old one', (done: Function) => {
+    it("should sync() when a new today training came up + an old one", (done: Function) => {
 
         expect(CHROME_STORAGE_STUB.computedActivities).toBeUndefined();
         expect(CHROME_STORAGE_STUB.lastSyncDateTime).toBeUndefined();
@@ -459,9 +458,9 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 3);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 644365059})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 371317512})).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -479,16 +478,16 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length);
 
             // We should found "Running back... Hard" act anymore in storage
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 644365059})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 371317512})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 644365059})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 371317512})).toBeDefined();
 
             done();
         });
     });
 
 
-    it('should sync() when a training has been upload today to but perform 2 weeks ago, then test added first and last', (done: Function) => {
+    it("should sync() when a training has been upload today to but perform 2 weeks ago, then test added first and last", (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate 1 new added 2 weeks ago
@@ -510,7 +509,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
             // We should not found "Running back... Hard" & "Sortie avec vik" anymore in storage
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(syncResult.computedActivities.length - 1);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 657225503})).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
@@ -522,18 +521,18 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
             expect(syncResult.computedActivities.length).toEqual(140);
             expect(syncResult.globalHistoryChanges.added.length).toEqual(1);
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 657225503})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 657225503})).toBeDefined();
 
             // Now remove first activity and last...
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined();
 
             expect(addStravaActivity(799672885)).toBeTruthy();
             expect(addStravaActivity(367463594)).toBeTruthy();
 
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(138); // 140 - 2
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeUndefined();
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -546,8 +545,8 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 799672885})).toBeDefined(); // must be defined!
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // must be defined!
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 799672885})).toBeDefined(); // must be defined!
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined(); // must be defined!
             done();
         }, (err: any) => {
             console.log("!! ERROR !!", err); // Error...
@@ -558,7 +557,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
         });
     });
 
-    it('should sync() when 2 activities been edited from strava.com', (done: Function) => {
+    it("should sync() when 2 activities been edited from strava.com", (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -573,9 +572,9 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
-            expect(editStravaActivity(9999999, rawPagesOfActivities[0], 'FakeName', 'FakeType')).toBeFalsy(); // Fake one, nothing should be edited
-            expect(editStravaActivity(707356065, rawPagesOfActivities[0], 'Prends donc un velo!', 'Ride')).toBeTruthy(); // Page 1, "Je suis un gros lent !"
-            expect(editStravaActivity(427606185, rawPagesOfActivities[5], 'First Zwift', 'VirtualRide')).toBeTruthy(); // Page 6, "1st zwift ride"
+            expect(editStravaActivity(9999999, rawPagesOfActivities[0], "FakeName", "FakeType")).toBeFalsy(); // Fake one, nothing should be edited
+            expect(editStravaActivity(707356065, rawPagesOfActivities[0], "Prends donc un velo!", "Ride")).toBeTruthy(); // Page 1, "Je suis un gros lent !"
+            expect(editStravaActivity(427606185, rawPagesOfActivities[5], "First Zwift", "VirtualRide")).toBeTruthy(); // Page 6, "1st zwift ride"
 
             // Ready for a new sync
             return activitiesSynchronizer.sync();
@@ -625,7 +624,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
-    it('should sync() when 3 activities have been removed from strava.com', (done: Function) => {
+    it("should sync() when 3 activities have been removed from strava.com", (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -683,7 +682,7 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
 
     });
 
-    it('should sync() when added/edited/deleted from strava.com in the same sync', (done: Function) => {
+    it("should sync() when added/edited/deleted from strava.com in the same sync", (done: Function) => {
 
         // Get a full sync, with nothing stored...
         // On sync done simulate ...
@@ -706,23 +705,23 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
             expect(addStravaActivity(368210547)).toBeTruthy(); // "Natation"
 
             expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(137); // 140 - 3
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 723224273})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 556443499})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 368210547})).toBeUndefined();
-            expect(_.find(CHROME_STORAGE_STUB.computedActivities, {id: 367463594})).toBeDefined(); // Should exists. Not removed from CHROME_STORAGE_STUB.computedActivities
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 723224273})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 556443499})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 368210547})).toBeUndefined();
+            expect(_.find(CHROME_STORAGE_STUB.computedActivities, <any> {id: 367463594})).toBeDefined(); // Should exists. Not removed from CHROME_STORAGE_STUB.computedActivities
 
             /**
              * Edit 4 on various pages
              */
-            expect(editStravaActivity(999999999, rawPagesOfActivities[0], 'FakeName', 'FakeType')).toBeFalsy(); // Fake one, nothing should be edited
-            expect(editStravaActivity(707356065, rawPagesOfActivities[0], 'Prends donc un velo!', 'Ride')).toBeTruthy(); // Page 1, "Je suis un gros lent !"
-            expect(editStravaActivity(569640952, rawPagesOfActivities[2], 'Petit nez!', 'Ride')).toBeTruthy(); // Page 3, "Pinet"
-            expect(editStravaActivity(427606185, rawPagesOfActivities[5], 'First Zwift', 'VirtualRide')).toBeTruthy(); // Page 6, "1st zwift ride"
-            expect(editStravaActivity(372761597, rawPagesOfActivities[6], 'Rodage plaquettes new name', 'EBike')).toBeTruthy(); // Page 7, "Rodage plaquettes"
+            expect(editStravaActivity(999999999, rawPagesOfActivities[0], "FakeName", "FakeType")).toBeFalsy(); // Fake one, nothing should be edited
+            expect(editStravaActivity(707356065, rawPagesOfActivities[0], "Prends donc un velo!", "Ride")).toBeTruthy(); // Page 1, "Je suis un gros lent !"
+            expect(editStravaActivity(569640952, rawPagesOfActivities[2], "Petit nez!", "Ride")).toBeTruthy(); // Page 3, "Pinet"
+            expect(editStravaActivity(427606185, rawPagesOfActivities[5], "First Zwift", "VirtualRide")).toBeTruthy(); // Page 6, "1st zwift ride"
+            expect(editStravaActivity(372761597, rawPagesOfActivities[6], "Rodage plaquettes new name", "EBike")).toBeTruthy(); // Page 7, "Rodage plaquettes"
 
-            expect(_.find(rawPagesOfActivities[2].models, {id: 569640952}).name).toEqual('Petit nez!');
-            expect(_.find(rawPagesOfActivities[6].models, {id: 372761597}).type).toEqual('EBike');
-            expect(_.find(rawPagesOfActivities[0].models, {id: 707356065}).type).not.toEqual('EBike');
+            expect(_.find(rawPagesOfActivities[2].models, {id: 569640952}).name).toEqual("Petit nez!");
+            expect(_.find(rawPagesOfActivities[6].models, {id: 372761597}).type).toEqual("EBike");
+            expect(_.find(rawPagesOfActivities[0].models, {id: 707356065}).type).not.toEqual("EBike");
 
             /**
              * Delete 5 on various pages
@@ -798,6 +797,6 @@ describe('ActivitiesSynchronizer syncing with stubs', () => {
      */
     afterEach(() => {
         activitiesSynchronizer = null;
-    })
+    });
 
 });
