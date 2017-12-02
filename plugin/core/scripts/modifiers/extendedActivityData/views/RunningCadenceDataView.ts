@@ -52,20 +52,29 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
 
         super.insertDataIntoGrid();
 
+        const hasHasPerCadenceOccurrence = _.isNumber(this.cadenceData.averageDistancePerOccurrence) && !_.isNaN(this.cadenceData.averageDistancePerOccurrence);
+
+        // Row 0
         this.insertContentAtGridPosition(0, 0, this.cadenceData.averageCadenceMoving.toFixed(1), "Avg Cadence", this.units, "displayCadenceData");
-        this.insertContentAtGridPosition(1, 0, this.cadenceData.averageDistancePerOccurrence.toFixed(2), "Avg Stride length <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+        if (hasHasPerCadenceOccurrence) {
+            this.insertContentAtGridPosition(1, 0, this.cadenceData.averageDistancePerOccurrence.toFixed(2), "Avg Stride length <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+        }
         this.insertContentAtGridPosition(2, 0, this.cadenceData.totalOccurrences.toFixed(0), "Total steps <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "", "displayCadenceData");
 
+
+        // Row 1
         if (this.cadenceData.upFlatDownCadencePaceData) {
             this.insertContentAtGridPosition(0, 1, this.cadenceData.upFlatDownCadencePaceData.up.toFixed(0), "Climbing avg cadence", this.units, "displayCadenceData");
             this.insertContentAtGridPosition(1, 1, this.cadenceData.upFlatDownCadencePaceData.flat.toFixed(0), "Flat avg cadence", this.units, "displayCadenceData");
             this.insertContentAtGridPosition(2, 1, this.cadenceData.upFlatDownCadencePaceData.down.toFixed(0), "Downhill avg cadence", this.units, "displayCadenceData");
         }
 
+        // Row 2
         this.insertContentAtGridPosition(0, 2, this.cadenceData.lowerQuartileCadence, "25% Cadence", this.units, "displayCadenceData");
         this.insertContentAtGridPosition(1, 2, this.cadenceData.medianCadence, "50% Cadence", this.units, "displayCadenceData");
         this.insertContentAtGridPosition(2, 2, this.cadenceData.upperQuartileCadence, "75% Cadence", this.units, "displayCadenceData");
 
+        // Row 3
         this.insertContentAtGridPosition(0, 3, this.cadenceData.lowerQuartileDistancePerOccurrence.toFixed(2), "25% Stride Length <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
         this.insertContentAtGridPosition(1, 3, this.cadenceData.medianDistancePerOccurrence.toFixed(2), "50% Stride Length <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
         this.insertContentAtGridPosition(2, 3, this.cadenceData.upperQuartileDistancePerOccurrence.toFixed(2), "75% Stride Length <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
