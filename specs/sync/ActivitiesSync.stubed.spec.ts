@@ -1,18 +1,18 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {ActivitiesSynchronizer, ISyncResult} from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import {MultipleActivityProcessor} from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
-import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../../plugin/core/scripts/interfaces/IAppResources";
+import { ActivitiesSynchronizer, ISyncResult } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
+import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
 import {
     ISyncActivityComputed,
     ISyncActivityWithStream,
     ISyncNotify,
     ISyncRawStravaActivity
 } from "../../plugin/common/scripts/interfaces/ISync";
-import {IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
-import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
-import {IAthleteProfile} from "../../plugin/common/scripts/interfaces/IAthleteProfile";
+import { IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
+import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
+import { IAthleteProfile } from "../../plugin/common/scripts/interfaces/IAthleteProfile";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 

@@ -1,13 +1,13 @@
-import {Helper} from "../../../../common/scripts/Helper";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../../interfaces/IAppResources";
-import {ActivityProcessor} from "../../processors/ActivityProcessor";
-import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
-import {ElevationDataView} from "./views/ElevationDataView";
-import {PaceDataView} from "./views/PaceDataView";
-import {RunningCadenceDataView} from "./views/RunningCadenceDataView";
-import {RunningGradeDataView} from "./views/RunningGradeDataView";
-import {RunningPowerDataView} from "./views/RunningPowerDataView";
+import { Helper } from "../../../../common/scripts/Helper";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../../interfaces/IAppResources";
+import { ActivityProcessor } from "../../processors/ActivityProcessor";
+import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
+import { ElevationDataView } from "./views/ElevationDataView";
+import { PaceDataView } from "./views/PaceDataView";
+import { RunningCadenceDataView } from "./views/RunningCadenceDataView";
+import { RunningGradeDataView } from "./views/RunningGradeDataView";
+import { RunningPowerDataView } from "./views/RunningPowerDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 

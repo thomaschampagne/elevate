@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../interfaces/IAppResources";
+import { Helper } from "../../../common/scripts/Helper";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../interfaces/IAppResources";
 
 export interface EffortInfo {
     // values obtained from the HTTP request

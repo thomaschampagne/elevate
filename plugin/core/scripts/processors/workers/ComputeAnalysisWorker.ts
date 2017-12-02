@@ -1,10 +1,10 @@
-import {IAnalysisData} from "../../../../common/scripts/interfaces/IActivityData";
-import {IComputeActivityThreadMessage} from "../../interfaces/IComputeActivityThreadMessage";
-import {ActivityComputer} from "../ActivityComputer";
+import { IAnalysisData } from "../../../../common/scripts/interfaces/IActivityData";
+import { IComputeActivityThreadMessage } from "../../interfaces/IComputeActivityThreadMessage";
+import { ActivityComputer } from "../ActivityComputer";
 
 export function ComputeAnalysisWorker() {
 
-    this.onmessage = function(mainThreadEvent: MessageEvent) {
+    this.onmessage = function (mainThreadEvent: MessageEvent) {
 
         const threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
 

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {ICadenceData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
-import {AbstractCadenceDataView} from "./AbstractCadenceDataView";
+import { ICadenceData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {
 

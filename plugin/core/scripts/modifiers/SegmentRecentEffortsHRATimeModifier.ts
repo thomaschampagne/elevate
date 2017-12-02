@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {EffortInfo, LeaderBoardData} from "./ActivitySegmentTimeComparisonModifier";
+import { Helper } from "../../../common/scripts/Helper";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { EffortInfo, LeaderBoardData } from "./ActivitySegmentTimeComparisonModifier";
 
 export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
@@ -86,9 +86,12 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
             const marks = chart.find("circle").filter(".mark");
 
-            interface XY {x: number; y: number; }
+            interface XY {
+                x: number;
+                y: number;
+            }
 
-            const xyFromMark = function(m: any): XY {
+            const xyFromMark = function (m: any): XY {
                 return {x: m.cx.baseVal.value, y: m.cy.baseVal.value};
             };
 
@@ -145,7 +148,7 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
                     }
                 }
 
-                const hrValuesComputed = fetchedLeaderBoardData.map ((r: EffortInfo) => {
+                const hrValuesComputed = fetchedLeaderBoardData.map((r: EffortInfo) => {
                     if (r.avg_heart_rate != null && r.avg_heart_rate > restHR) {
                         const mValue = showWatts ? r.avg_watts : r.elapsed_time_raw;
 
@@ -264,11 +267,11 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
                         insertDOM.before(gAxis);
                     }
 
-                    const mapValueToY = function(value: number): number {
+                    const mapValueToY = function (value: number): number {
                         return (value - fastestValue) / (slowestValue - fastestValue) * (slowY - fastY) + fastY;
                     };
 
-                    const clampY = function(resY: number): number {
+                    const clampY = function (resY: number): number {
                         return Math.min(Math.max(topY, resY), bottomY);
                     };
 
@@ -348,8 +351,10 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
                         let infoY = lastHRAY;
 
-                        if (infoY + hoverH / 2 < pbTop ) {} // infobox above the PB top
-                        else if (infoY - hoverH / 2 > pbBot) {} // infobox below the PB bottom
+                        if (infoY + hoverH / 2 < pbTop) {
+                        } // infobox above the PB top
+                        else if (infoY - hoverH / 2 > pbBot) {
+                        } // infobox below the PB bottom
                         else {
                             // infobox colliding with the PB info
                             // move it up or down, whichever is closer

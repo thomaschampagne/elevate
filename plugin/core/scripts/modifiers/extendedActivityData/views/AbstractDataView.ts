@@ -1,9 +1,9 @@
 import * as Chart from "chart.js";
-import {LinearTickOptions} from "chart.js";
+import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
-import {Helper} from "../../../../../common/scripts/Helper";
-import {ISpeedUnitData, IZone} from "../../../../../common/scripts/interfaces/IActivityData";
-import {IAppResources} from "../../../interfaces/IAppResources";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { ISpeedUnitData, IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { IAppResources } from "../../../interfaces/IAppResources";
 
 export abstract class AbstractDataView {
 
@@ -84,7 +84,7 @@ export abstract class AbstractDataView {
         let htmlCanvas: string = "";
         htmlCanvas += "<div>";
         htmlCanvas += "<div>";
-        htmlCanvas += '<canvas id="' + this.canvasId + '" height="450" width="' + graphWidth + '"></canvas>';
+        htmlCanvas += "<canvas id=\"" + this.canvasId + "\" height=\"450\" width=\"" + graphWidth + "\"></canvas>";
         htmlCanvas += "</div>";
         this.graph = $(htmlCanvas);
     }
@@ -192,8 +192,8 @@ export abstract class AbstractDataView {
 
         let htmlTable: string = "";
         htmlTable += "<div>";
-        htmlTable += '<div style="height:500px; overflow:auto;">';
-        htmlTable += '<table class="distributionTable">';
+        htmlTable += "<div style=\"height:500px; overflow:auto;\">";
+        htmlTable += "<table class=\"distributionTable\">";
 
         // Generate htmlTable header
         htmlTable += "<tr>"; // Zone
@@ -227,13 +227,13 @@ export abstract class AbstractDataView {
 
         let grid: string = "";
         grid += "<div>";
-        grid += '<div class="grid">';
+        grid += "<div class=\"grid\">";
         grid += "<table>";
 
         for (let i: number = 0; i < rows; i++) {
             grid += "<tr>";
             for (let j: number = 0; j < columns; j++) {
-                grid += '<td data-column="' + j + '" data-row="' + i + '">';
+                grid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
                 grid += "</td>";
             }
             grid += "</tr>";
@@ -249,7 +249,7 @@ export abstract class AbstractDataView {
         const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.grid) {
-            const content: string = '<span class="gridDataContainer" ' + onClickHtmlBehaviour + ">" + data + ' <span class="gridUnits">' + units + '</span><br /><span class="gridTitle">' + title + "</span></span>";
+            const content: string = "<span class=\"gridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"gridUnits\">" + units + "</span><br /><span class=\"gridTitle\">" + title + "</span></span>";
             this.grid.find("[data-column=" + columnId + "][data-row=" + rowId + "]").html(content);
         } else {
             console.error("Grid is not initialized");

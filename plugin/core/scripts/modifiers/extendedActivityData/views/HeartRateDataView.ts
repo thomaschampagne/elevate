@@ -1,9 +1,9 @@
 import * as _ from "lodash";
-import {Helper} from "../../../../../common/scripts/Helper";
-import {IHeartRateData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
-import {StravistiX} from "../../../StravistiX";
-import {AbstractDataView} from "./AbstractDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { IHeartRateData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { StravistiX } from "../../../StravistiX";
+import { AbstractDataView } from "./AbstractDataView";
 
 export class HeartRateDataView extends AbstractDataView {
 

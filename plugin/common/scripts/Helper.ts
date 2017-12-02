@@ -1,6 +1,6 @@
 import * as Q from "q";
-import {ISpeedUnitData} from "./interfaces/IActivityData";
-import {IStorageUsage} from "./modules/StorageManager";
+import { ISpeedUnitData } from "./interfaces/IActivityData";
+import { IStorageUsage } from "./modules/StorageManager";
 
 export class Helper {
 

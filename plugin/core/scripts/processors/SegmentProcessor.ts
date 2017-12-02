@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
-import {VacuumProcessor} from "./VacuumProcessor";
+import { env } from "../../config/env";
+import { VacuumProcessor } from "./VacuumProcessor";
 
 export interface ISegmentInfo {
     id: number;

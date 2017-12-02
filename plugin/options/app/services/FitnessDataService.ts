@@ -1,10 +1,10 @@
-import {IPromise, IQService} from "angular";
+import { IPromise, IQService } from "angular";
 import * as _ from "lodash";
 import * as moment from "moment";
-import {Moment} from "moment";
-import {ChromeStorageService} from "./ChromeStorageService";
+import { Moment } from "moment";
+import { ChromeStorageService } from "./ChromeStorageService";
 
-import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
+import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
 
 export interface IActivitiesWithFitness {
     id: number;
@@ -151,7 +151,7 @@ export class FitnessDataService {
     /**
      * @return Fitness object of computed activities including days off (= rest day)
      */
-    protected  getFitnessObjectsWithDaysOff(): IPromise<IActivitiesWithFitnessDaysOff[]> {
+    protected getFitnessObjectsWithDaysOff(): IPromise<IActivitiesWithFitnessDaysOff[]> {
 
         const deferred = this.$q.defer<IActivitiesWithFitnessDaysOff[]>();
 

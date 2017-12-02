@@ -1,6 +1,6 @@
-import {Helper} from "../../../../../common/scripts/Helper";
-import {ICadenceData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {AbstractCadenceDataView} from "./AbstractCadenceDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { ICadenceData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 import * as _ from "lodash";
 
 export class CyclingCadenceDataView extends AbstractCadenceDataView {

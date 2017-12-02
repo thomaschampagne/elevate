@@ -1,14 +1,14 @@
 import * as _ from "lodash";
-import {Helper} from "../../../../common/scripts/Helper";
-import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {StorageManager} from "../../../../common/scripts/modules/StorageManager";
-import {IAppResources} from "../../interfaces/IAppResources";
-import {ActivityProcessor} from "../../processors/ActivityProcessor";
-import {AbstractDataView} from "./views/AbstractDataView";
-import {FeaturedDataView} from "./views/FeaturedDataView";
-import {HeaderView} from "./views/HeaderView";
-import {HeartRateDataView} from "./views/HeartRateDataView";
+import { Helper } from "../../../../common/scripts/Helper";
+import { IActivityBasicInfo, IAnalysisData, ISpeedUnitData } from "../../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
+import { IAppResources } from "../../interfaces/IAppResources";
+import { ActivityProcessor } from "../../processors/ActivityProcessor";
+import { AbstractDataView } from "./views/AbstractDataView";
+import { FeaturedDataView } from "./views/FeaturedDataView";
+import { HeaderView } from "./views/HeaderView";
+import { HeartRateDataView } from "./views/HeartRateDataView";
 
 export abstract class AbstractExtendedDataModifier {
 

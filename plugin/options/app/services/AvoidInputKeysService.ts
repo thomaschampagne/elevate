@@ -1,4 +1,3 @@
-
 export interface IAvoidInputKeysService {
     apply: (keyboardEvent: KeyboardEvent) => void;
 }

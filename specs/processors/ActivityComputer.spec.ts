@@ -1,6 +1,6 @@
-import {ActivityComputer} from "../../plugin/core/scripts/processors/ActivityComputer";
-import {IUserSettings} from "../../plugin/common/scripts/interfaces/IUserSettings";
-import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../plugin/common/scripts/interfaces/IActivityData";
+import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
+import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { IActivityStatsMap, IActivityStream, IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
 
 describe("ActivityComputer", () => {
 

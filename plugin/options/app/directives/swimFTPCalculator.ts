@@ -1,11 +1,11 @@
-import {IScope} from "angular";
+import { IScope } from "angular";
 import * as _ from "lodash";
 import * as moment from "moment";
 
 export interface ISwimCalculationMethod {
     active: boolean;
     name: string;
-    params: Array<{hint: string, value: number}>;
+    params: Array<{ hint: string, value: number }>;
     formula: Function;
 }
 
@@ -33,7 +33,7 @@ export class SwimFTPCalculator {
                 hint: "Swim as far as possible during 60 minutes and enter distance performed in meters (ex: 1800 meters)",
                 value: null,
             }],
-            formula: (params: Array<{hint: string, value: number}>) => {
+            formula: (params: Array<{ hint: string, value: number }>) => {
                 return params[0].value / 60;
             },
         }, {
@@ -43,7 +43,7 @@ export class SwimFTPCalculator {
                 hint: "Swim as far as possible during 30 minutes and enter distance performed in meters (ex: 950 meters)",
                 value: null,
             }],
-            formula: (params: Array<{hint: string, value: number}>) => {
+            formula: (params: Array<{ hint: string, value: number }>) => {
                 return (params[0].value / 30) - ((2 * params[0].value / 30 ) * 0.025); // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
             },
         }, {
@@ -56,7 +56,7 @@ export class SwimFTPCalculator {
                 hint: "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
                 value: null,
             }],
-            formula: (params: Array<{hint: string, value: number}>) => {
+            formula: (params: Array<{ hint: string, value: number }>) => {
                 return ((400 - 200) / ((params[1].value - params[0].value) / 60)); // (400m – 200m) / (400mTimeInMinutes - 200mTimeInMinutes)
             },
         }];
@@ -83,7 +83,7 @@ export class SwimFTPCalculator {
     }
 }
 
-export let swimFtpCalculator =  [() => {
+export let swimFtpCalculator = [() => {
 
     return {
         controller: SwimFTPCalculator,

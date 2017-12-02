@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 
 export class HideFeedModifier implements IModifier {
 

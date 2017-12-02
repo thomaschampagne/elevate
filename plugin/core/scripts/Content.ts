@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import {constants} from "../../common/scripts/Constants";
-import {IConstants} from "../../common/scripts/interfaces/IConstants";
-import {IUserSettings} from "../../common/scripts/interfaces/IUserSettings";
-import {userSettings} from "../../common/scripts/UserSettings";
-import {Loader} from "../modules/Loader";
-import {IAppResources} from "./interfaces/IAppResources";
+import { constants } from "../../common/scripts/Constants";
+import { IConstants } from "../../common/scripts/interfaces/IConstants";
+import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { userSettings } from "../../common/scripts/UserSettings";
+import { Loader } from "../modules/Loader";
+import { IAppResources } from "./interfaces/IAppResources";
 
 interface IStartCoreData {
     chromeSettings: any;

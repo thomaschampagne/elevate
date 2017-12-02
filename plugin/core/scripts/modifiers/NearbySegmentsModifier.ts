@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IAppResources} from "../interfaces/IAppResources";
-import {ISegmentInfo} from "../processors/SegmentProcessor";
+import { IAppResources } from "../interfaces/IAppResources";
+import { ISegmentInfo } from "../processors/SegmentProcessor";
 
 export class NearbySegmentsModifier implements IModifier {
 

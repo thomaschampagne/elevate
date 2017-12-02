@@ -1,4 +1,4 @@
-import {constants} from "./Constants";
+import { constants } from "./Constants";
 
 export interface IReleaseNote {
     version: string; // SemVer 'x.x.x' http://semver.org/

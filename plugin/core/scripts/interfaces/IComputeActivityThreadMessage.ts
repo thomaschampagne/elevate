@@ -1,6 +1,6 @@
-import {IActivityStatsMap, IActivityStream} from "../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "./IAppResources";
+import { IActivityStatsMap, IActivityStream } from "../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "./IAppResources";
 
 export interface IComputeActivityThreadMessage {
     activityType: string;

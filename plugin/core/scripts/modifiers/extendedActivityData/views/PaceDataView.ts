@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import {Helper} from "../../../../../common/scripts/Helper";
-import {IPaceData, IZone} from "../../../../../common/scripts/interfaces/IActivityData";
-import {AbstractDataView} from "./AbstractDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import { IPaceData, IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { AbstractDataView } from "./AbstractDataView";
 
 export class PaceDataView extends AbstractDataView {
 
@@ -21,7 +21,7 @@ export class PaceDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle('<img src="' + this.appResources.tachometerIcon + '" style="vertical-align: baseline; height:20px;"/> PACE <a target="_blank" href="' + this.appResources.settingsLink + '#!/zonesSettings/pace" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.tachometerIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> PACE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/pace\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 2); // (col, row)
@@ -58,8 +58,8 @@ export class PaceDataView extends AbstractDataView {
 
         let htmlTable: string = "";
         htmlTable += "<div>";
-        htmlTable += '<div style="height:500px; overflow:auto;">';
-        htmlTable += '<table class="distributionTable">';
+        htmlTable += "<div style=\"height:500px; overflow:auto;\">";
+        htmlTable += "<table class=\"distributionTable\">";
 
         // Generate table header
         htmlTable += "<tr>"; // Zone
