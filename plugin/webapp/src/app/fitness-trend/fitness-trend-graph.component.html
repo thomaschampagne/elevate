@@ -1,100 +1,165 @@
-<mat-card>
-	<!--<mat-card-title>-->
+<mat-card *ngIf="watchedDay">
+	<mat-card-title>
+		<div fxLayout="row" fxFlexAlign="start start" class="mat-headline">
+			<div fxFlex="175px">
+				Fitness {{watchedDay.printFitness()}}
+			</div>
+			<div fxFlex="175px">
+				Fatigue {{watchedDay.printFatigue()}}
+			</div>
+			<div fxFlex="175px">
+				Form {{watchedDay.printForm()}}
+			</div>
+			<button mat-icon-button fxFlex>
+				<mat-icon>info</mat-icon>
+			</button>
+		</div>
 
+		<mat-card-subtitle>
 
-	<!--<mat-card-subtitle>-->
-	<!--Today: My very long long long activity name !!! + Strong run hard :/ !!!-->
-	<!--Nov 22 2017<br/>-->
-	<!--Ride + Run<br/> &lt;!&ndash;If exists&ndash;&gt;-->
-	<!--My very long long long activity name !!!<br/>-->
-	<!--Strong run hard !!!<br/>-->
-	<!--</mat-card-subtitle>-->
-	<!--<mat-card-subtitle>sub..</mat-card-subtitle>-->
-	<!--</mat-card-title>-->
+			<div>
+				<span>{{watchedDay.printDate()}}</span>
+			</div>
+			<div>
+				<span>{{watchedDay.printActivities()}}</span>
+			</div>
+			<div>
+				<span *ngIf="!watchedDay.finalStressScore">No stress score</span>
+				<span *ngIf="watchedDay.finalStressScore">
+					<!--Stress Score ➔-->
+					Stress Score:
+					<!--Trimp-->
+					<span *ngIf="watchedDay.trimpScore">
+						{{watchedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+					</span>
+
+					<!--PSS-->
+					<span *ngIf="watchedDay.powerStressScore">
+						<span *ngIf="watchedDay.trimpScore">
+							&nbsp;/&nbsp;
+						</span>
+						{{watchedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
+					</span>
+
+					<!--SwimSS-->
+					<span *ngIf="watchedDay.swimStressScore">
+						<span *ngIf="watchedDay.trimpScore">
+							&nbsp;/&nbsp;
+						</span>
+						{{watchedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+					</span>
+					<!--Final-->
+					<span>
+						&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{watchedDay.printFinalStressScore()}}</strong>
+					</span>
+				</span>
+			</div>
+
+			<!--			<span *ngIf="watchedDay.finalStressScore">
+                            ➔
+                            <span *ngIf="watchedDay.trimpScore">
+                                {{watchedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+                            </span>
+                            <span *ngIf="watchedDay.powerStressScore">
+                                {{watchedDay.printPowerStressScore()}} <sub><i>PSS</i></sub>
+                            </span>
+                            <span *ngIf="watchedDay.swimStressScore">
+                                {{watchedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+                            </span>
+                            ➔
+                            <span *ngIf="watchedDay.finalStressScore">
+                                {{watchedDay.printFinalStressScore()}} <sub><i>Final Stress Score</i></sub>
+                            </span>
+                        </span>-->
+		</mat-card-subtitle>
+		<!--<mat-card-subtitle>sub..</mat-card-subtitle>-->
+	</mat-card-title>
 	<mat-card-content>
 
+		<!--<div fxLayout="row" fxFlexAlign="start start" class="mat-headline">-->
+		<!--style="background-color: red;"-->
 
-		<mat-input-container>
-			<mat-select
-				(change)="onLastPeriodSelected()"
-				[(ngModel)]="lastPeriodSelected"
-				placeholder="Last">
-				<mat-option
-					*ngFor="let lastPeriod of lastPeriods;"
-					[value]="lastPeriod">
-					{{lastPeriod.label}}
-				</mat-option>
-			</mat-select>
-		</mat-input-container>
 
-		<mat-form-field>
-			<input matInput
-				   [(ngModel)]="dateFrom"
-				   [min]="dateMin"
-				   [max]="dateTo"
-				   [matDatepicker]="datePickerFrom"
-				   (dateChange)="onDateToDateChange()"
-				   placeholder="From">
-			<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-			<mat-datepicker #datePickerFrom></mat-datepicker>
-		</mat-form-field>
+		<!--<div fxLayout="column" fxFlexAlign="start start" class="watchedDay mat-subheading-1">
+			&lt;!&ndash;<div fxFlex>&ndash;&gt;
+			<div fxFlex>
+				{{watchedDay.printDate()}}
+			</div>
+			&lt;!&ndash;<div fxFlex="5">&ndash;&gt;
+			&lt;!&ndash;Ride + Run&ndash;&gt;
+			&lt;!&ndash;</div>&ndash;&gt;
+			<div fxFlex>
+				{{(watchedDay.activitiesName.length > 0) ? watchedDay.activitiesName : "Rest day"}}
+				&lt;!&ndash;Ride: <i>My very long long long activity name</i> <strong>&nbsp;&nbsp;+&nbsp;&nbsp;</strong> Run:&ndash;&gt;
+				&lt;!&ndash;<i>Course&ndash;&gt;
+					&lt;!&ndash;à pied le soir, sous la pluie et dans le noir 💜</i>&ndash;&gt;
+			</div>
+			<div fxFlex>
+				&lt;!&ndash;Stress score ➔ <strong>275</strong> based on an Trimp of 150 & PSS of 125 &lt;!&ndash;, 150 TRIMP, 125 PSS&ndash;&gt;&ndash;&gt;
+				Stress score ➔ 150 <sub><i>trimp</i></sub>&nbsp;&nbsp;<strong>&</strong>&nbsp;&nbsp;125
+				<sub><i>pss</i></sub>
+				&nbsp;&nbsp;➔&nbsp;&nbsp;125
+			</div>
+			&lt;!&ndash;</div>&ndash;&gt;
+		</div>-->
+		<!--style="background-color: yellow;"-->
+		<!--<div fxFlex
+             fxLayoutAlign="end">
+            toggles
+        </div>-->
+		<!--</div>-->
 
-		<mat-form-field>
-			<input matInput
-				   [(ngModel)]="dateTo"
-				   [min]="dateFrom"
-				   [max]="dateMax"
-				   [matDatepicker]="datePickerTo"
-				   (dateChange)="onDateToDateChange()"
-				   placeholder="To">
-			<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-			<mat-datepicker #datePickerTo></mat-datepicker>
-		</mat-form-field>
+		<div fxLayout="row" fxFlexAlign="center center">
+			<mat-input-container fxFlex="15">
+				<mat-select
+					(change)="onLastPeriodSelected()"
+					[(ngModel)]="lastPeriodSelected"
+					placeholder="Last">
+					<mat-option
+						*ngFor="let lastPeriod of lastPeriods;"
+						[value]="lastPeriod">
+						{{lastPeriod.label}}
+					</mat-option>
+				</mat-select>
+			</mat-input-container>
+			<mat-form-field fxFlex="15">
+				<input matInput
+					   [(ngModel)]="dateFrom"
+					   [min]="dateMin"
+					   [max]="dateTo"
+					   [matDatepicker]="datePickerFrom"
+					   (dateChange)="onDateToDateChange()"
+					   placeholder="From">
+				<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerFrom></mat-datepicker>
+			</mat-form-field>
+			<mat-form-field fxFlex="15">
+				<input matInput
+					   [(ngModel)]="dateTo"
+					   [min]="dateFrom"
+					   [max]="dateMax"
+					   [matDatepicker]="datePickerTo"
+					   (dateChange)="onDateToDateChange()"
+					   placeholder="To">
+				<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerTo></mat-datepicker>
+			</mat-form-field>
+
+			<mat-slide-toggle fxFlex>
+				<mat-icon>power_input</mat-icon>
+			</mat-slide-toggle>
+			<mat-slide-toggle fxFlex>
+				<mat-icon>flash_on</mat-icon>
+			</mat-slide-toggle>
+
+			<mat-slide-toggle fxFlex>
+				<mat-icon>pool</mat-icon>
+			</mat-slide-toggle>
+		</div>
 
 		<div id="fitnessTrendGraph"></div>
 
-		<div fxLayout="row" fxFlexAlign="start center" class="mat-headline">
-			<!--style="background-color: red;"-->
-			<div fxFlex="35">
-				<div fxFlex>
-					Fitness 105.9
-				</div>
-				<div fxFlex>
-					Fatigue 120.3
-				</div>
-				<div fxFlex>
-					Form 41.6
-				</div>
-			</div>
-			<!--style="background-color: yellow;"-->
-			<div fxFlex
-				 fxLayoutAlign="end">
-				toggles
-			</div>
-		</div>
-
-
-		<div fxLayout="column" fxFlexAlign="start center" class="watchedDay">
-			<!--<div fxFlex>-->
-			<div fxFlex="5">
-				Nov 22 2017 <!--or Today Or Preview-->
-			</div>
-			<!--<div fxFlex="5">-->
-			<!--Ride + Run-->
-			<!--</div>-->
-			<div fxFlex="30">
-				Ride: <i>My very long long long activity name</i> <strong>&nbsp;&nbsp;+&nbsp;&nbsp;</strong> Run: <i>Course
-				à pied le soir, sous la pluie et dans le noir 💜</i>
-			</div>
-			<div fxFlex="30">
-				<!--Stress score ➔ <strong>275</strong> based on an Trimp of 150 & PSS of 125 &lt;!&ndash;, 150 TRIMP, 125 PSS&ndash;&gt;-->
-				Stress score ➔ 150 <sub><i>trimp</i></sub>&nbsp;&nbsp;<strong>&</strong>&nbsp;&nbsp;125 <sub><i>pss</i></sub>
-				&nbsp;&nbsp;➔&nbsp;&nbsp;125
-			</div>
-			<!--</div>-->
-		</div>
-
-		<div>{{watchedDay | json}}</div>
+		<!--<div>{{watchedDay | json}}</div>-->
 
 		<!--<div>-->
 		<!--&lt;!&ndash;Today: My very long long long activity name !!! + Strong run hard :/ !!!&ndash;&gt;-->

@@ -27,12 +27,45 @@ export class DayFitnessTrend extends DayStress {
 	private _atl: number;
 	private _tsb: number;
 
-	get dateString(): string {
-		return this._dateString;
+	public printFitness(): string {
+		return this._ctl.toFixed(2);
 	}
 
-	set dateString(value: string) {
-		this._dateString = value;
+	public printFatigue(): string {
+		return this._atl.toFixed(2);
+	}
+
+	public printForm(): string {
+		return this._tsb.toFixed(2);
+	}
+
+	public printDate(): string {
+
+		const todayMoment = moment().startOf("day");
+		const dayFitnessMoment = moment(this.date);
+
+		let niceDate: string = null;
+
+		if (this.previewDay) {
+			niceDate = "Preview Day";
+		} else if (todayMoment.isSame(dayFitnessMoment)) {
+			niceDate = "Today";
+		} else {
+			niceDate = dayFitnessMoment.format("MMM DD YYYY");
+		}
+		return niceDate;
+	}
+
+	public printActivities(): string {
+		let printed = "Rest day";
+		if (this.activitiesName.length > 0) {
+			printed = this.activitiesName.join("; ");
+		}
+		return printed
+	}
+
+	get dateString(): string {
+		return this._dateString;
 	}
 
 	get ctl(): number {

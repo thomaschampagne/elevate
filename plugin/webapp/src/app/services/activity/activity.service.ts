@@ -42,6 +42,7 @@ export class ActivityService {
 	 * @param {number} swimFtp
 	 * @returns {Promise<IFitnessReadyActivity[]>}
 	 */
+	// TODO Move back to fitness service? Because of below TODOs
 	public filterFitnessReady(powerMeterEnable: boolean,
 							  cyclingFtp: number,
 							  swimEnable: boolean,
@@ -92,12 +93,12 @@ export class ActivityService {
 							fitnessReadyActivity.trimpScore = activity.extendedStats.heartRateData.TRIMP;
 						}
 
-						if (isPowerMeterUsePossible) {
+						if (isPowerMeterUsePossible) { // TODO This computation should be coded/tested in fitness service
 							fitnessReadyActivity.powerStressScore = (activity.moving_time_raw * activity.extendedStats.powerData.weightedPower *
 								(activity.extendedStats.powerData.weightedPower / cyclingFtp) / (cyclingFtp * 3600) * 100);
 						}
 
-						if (hasSwimmingData) {
+						if (hasSwimmingData) { // TODO This computation should be coded/tested in fitness service
 							const normalizedSwimSpeed = activity.distance_raw / (activity.moving_time_raw / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
 							const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
 							fitnessReadyActivity.swimStressScore = Math.pow(swimIntensity, 3) * (activity.elapsed_time_raw / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100

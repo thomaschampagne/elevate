@@ -5,10 +5,12 @@ export class DayStress {
 	private _timestamp: number;
 	private _type: string[];
 	private _activitiesName: string[];
-	private _trimpScore?: number;
-	private _powerStressScore?: number;
-	private _swimStressScore?: number;
-	private _finalStressScore: number;
+
+	private _trimpScore?: number = null;
+	private _powerStressScore?: number = null;
+	private _swimStressScore?: number = null;
+	private _finalStressScore: number = null;
+
 	private _previewDay: boolean;
 
 	constructor(date: Date, previewDay: boolean) {
@@ -17,11 +19,23 @@ export class DayStress {
 		this._timestamp = date.getTime();
 		this._type = [];
 		this._activitiesName = [];
-		this._trimpScore = null;
-		this._powerStressScore = null;
-		this._swimStressScore = null;
-		this._finalStressScore = null;
 		this._previewDay = previewDay;
+	}
+
+	public printTrimpScore(): string {
+		return this._trimpScore.toFixed(0);
+	}
+
+	public printPowerStressScore(): string {
+		return this._powerStressScore.toFixed(0);
+	}
+
+	public printSwimStressScore(): string {
+		return this._swimStressScore.toFixed(0);
+	}
+
+	public printFinalStressScore(): string {
+		return this._finalStressScore.toFixed(0);
 	}
 
 	get ids(): number[] {
@@ -34,10 +48,6 @@ export class DayStress {
 
 	get date(): Date {
 		return this._date;
-	}
-
-	set date(value: Date) {
-		this._date = value;
 	}
 
 	get timestamp(): number {

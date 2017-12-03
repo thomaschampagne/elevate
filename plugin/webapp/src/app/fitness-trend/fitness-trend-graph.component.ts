@@ -62,7 +62,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// y_extended_ticks: true,
 		yax_count: 10,
 		target: '#fitnessTrendGraph',
-		legend_target: '#legend', // FIXME dirty #legend  display: none;   applied
 		x_accessor: 'date',
 		y_accessor: 'value',
 		inflator: 1.2,
@@ -70,68 +69,16 @@ export class FitnessTrendGraphComponent implements OnInit {
 		clickableMarkerLines: true,
 		show_confidence_band: ['lower', 'upper'],
 		markers: null,
-		legend: null, //['Fatigue', 'Fitness', 'Form'],
+		legend: null,
 		click: function (data: { key: Date, values: any[] }, index: number) {
 			console.log(data, index);
 		},
 		mouseover: (data: { key: Date, values: any[] }, index: number) => {
 			this.onMouseOverDate(data.key);
 		},
-		mouseout: (data, i) => {
-			// console.log("out", data);
-			this._watchedDay = null;
-			// d3.select('#details').html(""); // Clean details
+		mouseout: () => {
+			this.watchedDay = this.getTodayWatchedDay();
 		},
-		// min_y: -50,
-		/*
-		mouseover: (data: { key: Date, values: any[] }, index: number) => {
-
-			// const formattedDate = moment(dayStress.date).format(DayFitnessTrend.DATE_FORMAT);
-			const relatedMoment = moment(data.key);
-
-			const relatedDayFitnessTrend: IDayFitnessTrend = _.find(this.fitnessTrend, {
-				date: relatedMoment.format(DayFitnessTrend.DATE_FORMAT)
-			});
-
-			// TODO Export dedicated function
-			const selection = d3.select('svg .mg-active-datapoint');
-
-			const date = relatedMoment.format("MMM Do YYYY");
-			let fatigue = data.values[0].value.toFixed(2);
-			let fitness = data.values[1].value.toFixed(2);
-			let form = data.values[2].value.toFixed(2);
-
-			// TODO Export in template a file
-			let legendTemplate = '<tspan x="0" y="0em">';
-			legendTemplate += '<tspan>' + date + '</tspan>';
-			legendTemplate += '</tspan>';
-			legendTemplate += '<tspan x="0" y="1.1em">';
-			legendTemplate += '<tspan class="mg-hover-line1-color" fill="">Fatigue</tspan>';
-			legendTemplate += '<tspan class="mg-hover-line1-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
-			legendTemplate += '<tspan>' + fatigue + '</tspan>';
-			legendTemplate += '</tspan>';
-			legendTemplate += '<tspan x="0" y="2.2em">';
-			legendTemplate += '<tspan class="mg-hover-line2-color" fill="">Fitness</tspan>';
-			legendTemplate += '<tspan class="mg-hover-line2-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
-			legendTemplate += '<tspan>' + fitness + '</tspan>';
-			legendTemplate += '</tspan>';
-			legendTemplate += '<tspan x="0" y="3.3em">';
-			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">Form</tspan>';
-			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">&nbsp;&nbsp;—&nbsp;&nbsp;</tspan>';
-			legendTemplate += '<tspan>' + form + '</tspan>';
-			legendTemplate += '</tspan>';
-			legendTemplate += '<tspan x="0" y="6em">';
-			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">Debug</tspan>';
-			legendTemplate += '<tspan class="mg-hover-line3-color" fill="">: </tspan>';
-			legendTemplate += '<tspan>' + JSON.stringify(relatedDayFitnessTrend.activitiesName) + '</tspan>';
-			legendTemplate += '</tspan>';
-
-			selection.html(legendTemplate);
-		},
-		*/
-		// click: function (d, i) {console.log(d, i)}
-		// legend: ['Line 1', 'Line 2', 'Line 3'],
-		// legend_target: '.legend'
 	};
 
 
@@ -160,6 +107,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			null).then((fitnessTrend: DayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
+			this.watchedDay = this.getTodayWatchedDay();
 			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
 			this.lastPeriodSelected = _.find(this._lastPeriods, {key: "4_months"});
 
@@ -176,11 +124,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		let fatigueLine: GraphPoint[] = [];
 		let fitnessLine: GraphPoint[] = [];
 		let formLine: GraphPoint[] = [];
-		// let activeLine: GraphPoint[] = [];
-		/*	activeLine.push({
-                        date: dayFitnessTrend.date,
-                        value: 0
-                    });*/
+
 		const today: string = moment().format(DayFitnessTrend.DATE_FORMAT);
 
 		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
@@ -200,23 +144,27 @@ export class FitnessTrendGraphComponent implements OnInit {
 				value: dayFitnessTrend.tsb
 			});
 
-
 			let marker: Marker = null;
 
 			const isActiveDay = dayFitnessTrend.activitiesName.length > 0;
 
 			if (isActiveDay) {
 				marker = {
-					date: new Date(dayFitnessTrend.timestamp),
+					date: dayFitnessTrend.date,
 					mouseover: () => {
-						// console.log(JSON.stringify(dayFitnessTrend));
 						this.onMouseOverDate(dayFitnessTrend.date);
 					},
+					/*mouseout: () => {
+						TODO Update metrics graphics
+						this.onMouseOverDate(this.getTodayWatchedDay().date);
+						this.watchedDay = this.getTodayWatchedDay();
+					},*/
 					click: () => {
-						alert(JSON.stringify(dayFitnessTrend.activitiesName));
+						_.forEach(dayFitnessTrend.ids, (activityId: number) => {
+							window.open("https://www.strava.com/activities/" + activityId, "_blank");
+						});
 					},
-					// label: "▾" // Found @ http://www.amp-what.com/
-					label: "🠷" // Found @ http://www.amp-what.com/
+					label: "🠷" // or "▾" Found @ http://www.amp-what.com/
 				};
 
 			} else if (dayFitnessTrend.dateString == today) {
@@ -313,11 +261,22 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.watchedDay = _.find(this.fitnessTrend, {
 			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
 		});
+		// console.warn(this.watchedDay);
 
 		/*const isActiveDay = this.watchedDay.activitiesName.length > 0;
 		if (isActiveDay) {
 			// TODO My stuff !
 		}*/
+	}
+
+	/**
+	 *
+	 * @returns {DayFitnessTrend}
+	 */
+	private getTodayWatchedDay(): DayFitnessTrend {
+		return _.find(this.fitnessTrend, {
+			dateString: moment().format(DayFitnessTrend.DATE_FORMAT)
+		});
 	}
 
 	/**
@@ -372,6 +331,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 			to: null,
 			key: "12_months",
 			label: "12 months"
+		}, {
+			from: moment().subtract(18, "months").toDate(),
+			to: null,
+			key: "18_months",
+			label: "18 months"
 		}, {
 			from: moment().subtract(2, "years").toDate(),
 			to: null,
