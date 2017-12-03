@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 import { DayStress } from "../../models/fitness/DayStress";
 import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend";
+import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
 
 /**
  * from: Date;
@@ -21,6 +22,82 @@ export class FitnessService {
 	constructor(private activityService: ActivityService) {
 	}
 
+	/**
+	 * Return activities having required data to compute fitness trend: heart rate, power data & swim data
+	 * @param {boolean} powerMeterEnable
+	 * @param {number} cyclingFtp
+	 * @param {boolean} swimEnable
+	 * @param {number} swimFtp
+	 * @returns {Promise<IFitnessReadyActivity[]>}
+	 */
+	public getReady(powerMeterEnable: boolean,
+					cyclingFtp: number,
+					swimEnable: boolean,
+					swimFtp: number): Promise<IFitnessReadyActivity[]> {
+
+		return new Promise((resolve: (result: IFitnessReadyActivity[]) => void,
+							reject: (error: string) => void) => {
+
+			return this.activityService.fetch().then((activities: ISyncActivityComputed[]) => {
+
+				const fitnessReadyActivities: IFitnessReadyActivity[] = [];
+
+				_.forEach(activities, (activity: ISyncActivityComputed) => {
+
+					// Check if activity is eligible to fitness computing
+					const hasHeartRateData: boolean = (activity.extendedStats
+						&& !_.isEmpty(activity.extendedStats.heartRateData)
+						&& _.isNumber(activity.extendedStats.heartRateData.TRIMP));
+
+					const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
+						&& powerMeterEnable
+						&& _.isNumber(cyclingFtp)
+						&& activity.extendedStats && activity.extendedStats.powerData
+						&& activity.extendedStats.powerData.hasPowerMeter
+						&& _.isNumber(activity.extendedStats.powerData.weightedPower);
+
+					const hasSwimmingData: boolean = (swimEnable && _.isNumber(swimFtp) && swimFtp > 0
+						&& activity.type === "Swim"
+						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
+						&& activity.moving_time_raw > 0);
+
+					if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
+
+						const momentStartTime: Moment = moment(activity.start_time);
+
+						const fitnessReadyActivity: IFitnessReadyActivity = {
+							id: activity.id,
+							date: momentStartTime.toDate(),
+							timestamp: momentStartTime.toDate().getTime(),
+							dayOfYear: momentStartTime.dayOfYear(),
+							year: momentStartTime.year(),
+							type: activity.type,
+							activityName: activity.name,
+
+						};
+
+						if (hasHeartRateData) {
+							fitnessReadyActivity.trimpScore = activity.extendedStats.heartRateData.TRIMP;
+						}
+
+						if (isPowerMeterUsePossible) {
+							const movingTime = activity.moving_time_raw;
+							const weightedPower = activity.extendedStats.powerData.weightedPower;
+							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
+						}
+
+						if (hasSwimmingData) {
+							fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw, activity.moving_time_raw, activity.elapsed_time_raw, swimFtp);
+						}
+
+						fitnessReadyActivities.push(fitnessReadyActivity);
+					}
+				});
+
+				resolve(fitnessReadyActivities);
+			});
+		});
+	}
 
 	/**
 	 * Return day by day the athlete stress. Active & rest days included
@@ -38,7 +115,7 @@ export class FitnessService {
 		return new Promise((resolve: (activityDays: DayStress[]) => void,
 							reject: (error: string) => void) => {
 
-			this.activityService.filterFitnessReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
+			this.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
 				.then((fitnessReadyActivities: IFitnessReadyActivity[]) => {
 
 					if (_.isEmpty(fitnessReadyActivities)) {
@@ -78,6 +155,32 @@ export class FitnessService {
 					resolve(dailyActivity);
 				});
 		});
+	}
+
+	/**
+	 *
+	 * @param {number} movingTime
+	 * @param {number} weightedPower
+	 * @param {ISyncActivityComputed} activity
+	 * @param {number} cyclingFtp
+	 * @returns {number}
+	 */
+	private computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
+		return (movingTime * weightedPower * (weightedPower / cyclingFtp) / (cyclingFtp * 3600) * 100);
+	}
+
+	/**
+	 *
+	 * @param {number} distance
+	 * @param {number} movingTime
+	 * @param {number} elaspedTime
+	 * @param {number} swimFtp
+	 * @returns {number}
+	 */
+	private computeSwimStressScore(distance: number, movingTime: number, elaspedTime: number, swimFtp: number) {
+		const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
+		const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
+		return Math.pow(swimIntensity, 3) * ( elaspedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
 	}
 
 	/**
