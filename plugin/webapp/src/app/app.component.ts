@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { appRouteNames } from "./app-route-names";
+import { AppRoutes } from "./shared/modules/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 
@@ -28,25 +28,25 @@ export class AppComponent implements OnInit {
 		{
 			name: 'Fitness Trend',
 			icon: 'timeline',
-			routerLink: appRouteNames.fitnessTrend,
+			routerLink: AppRoutes.fitnessTrend,
 			routerLinkActive: true
 		},
 		{
 			name: 'Common Settings',
 			icon: 'settings',
-			routerLink: appRouteNames.commonSettings,
+			routerLink: AppRoutes.commonSettings,
 			routerLinkActive: true
 		},
 		{
 			name: 'Athlete Settings',
 			icon: 'accessibility',
-			routerLink: appRouteNames.athleteSettings,
+			routerLink: AppRoutes.athleteSettings,
 			routerLinkActive: true
 		},
 		{
 			name: 'Zones Settings',
 			icon: 'format_line_spacing',
-			routerLink: appRouteNames.zonesSettings,
+			routerLink: AppRoutes.zonesSettings,
 			routerLinkActive: true
 		}
 	];

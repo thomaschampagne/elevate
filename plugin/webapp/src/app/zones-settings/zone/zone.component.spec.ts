@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ZoneComponent } from './zone.component';
-import { MaterialModule } from "../../material.module";
+import { MaterialModule } from "../../shared/modules/material.module";
 import { FormsModule } from "@angular/forms";
 import { ZonesService } from "../shared/zones.service";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";

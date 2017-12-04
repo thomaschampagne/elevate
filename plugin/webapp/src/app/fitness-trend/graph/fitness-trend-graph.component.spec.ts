@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FitnessTrendGraphComponent } from './fitness-trend-graph.component';
 import { FitnessService } from "../shared/service/fitness.service";
-import { MaterialModule } from "../../material.module";
+import { MaterialModule } from "../../shared/modules/material.module";
 import { FormsModule } from "@angular/forms";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../shared/dao/activity/activity.dao";
