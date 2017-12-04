@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UserSettingsService } from "../services/user-settings/user-settings.service";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import { ZONE_DEFINITIONS, ZoneDefinition, } from "./zone-definitions";
-import { ZonesService } from "../services/zones/zones.service";
+import { ZONE_DEFINITIONS } from "./zone-definitions";
+import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { appRouteNames } from "../app-route-names";
 import { userSettings } from "../../../../common/scripts/UserSettings";
+import { ZoneDefinition } from "../shared/models/zone-definition.model";
 
 @Component({
 	selector: 'app-zones-settings',

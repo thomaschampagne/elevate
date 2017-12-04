@@ -1,19 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
-import { ZoneDefinition } from "../zone-definitions";
-import { ZonesService } from "../../services/zones/zones.service";
-
-export enum Mode {
-	IMPORT,
-	EXPORT
-}
-
-export interface ZoneImportExportData {
-	zoneDefinition: ZoneDefinition;
-	zonesData?: IZone[];
-	mode: Mode;
-}
+import { ZonesService } from "../shared/zones.service";
+import { ZoneImportExportData } from "./zone-import-export-data.model";
+import { Mode } from "./mode.enum";
 
 @Component({
 	selector: 'app-zones-import-export-dialog',

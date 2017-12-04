@@ -1,20 +1,5 @@
 import * as moment from "moment";
-
-interface ZoneCustomDisplay {
-	name: string;
-	zoneValue: string;
-	output: (input: number) => string;
-}
-
-export interface ZoneDefinition {
-	name: string;
-	value: string;
-	units: string;
-	step: number;
-	min: number;
-	max: number;
-	customDisplay: ZoneCustomDisplay
-}
+import { ZoneDefinition } from "../shared/models/zone-definition.model";
 
 export const ZONE_DEFINITIONS: ZoneDefinition[] = [
 	{

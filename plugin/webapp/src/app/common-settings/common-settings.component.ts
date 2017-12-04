@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { UserSettingsService } from '../services/user-settings/user-settings.service';
+import { UserSettingsService } from '../shared/services/user-settings/user-settings.service';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { CommonSettingsService, Option, Section } from "../services/common-settings/common-settings.service";
+import { CommonSettingsService } from "./services/common-settings.service";
 import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { IOptionHelperData, OptionHelperDialog } from "./option-helper-dialog/option-helper-dialog.component";
-import { OptionHelperReaderService } from "../services/option-helper-reader/option-helper-reader.service";
+import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 import { PlatformLocation } from "@angular/common";
+import { Section } from "./models/section.model";
+import { Option } from "./models/option.model";
 
 @Component({
 	selector: 'app-common-settings',

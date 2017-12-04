@@ -1,11 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZoneChangeType, ZoneComponent } from './zone.component';
+import { ZoneComponent } from './zone.component';
 import { MaterialModule } from "../../material.module";
 import { FormsModule } from "@angular/forms";
-import { ZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
-import { UserSettingsService } from "../../services/user-settings/user-settings.service";
-import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
+import { ZonesService } from "../shared/zones.service";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { ZoneChangeWhisper } from "../shared/zone-change-whisper.model";
+import { ZoneChangeType } from "./zone-change-type.model";
 
 describe('ZoneComponent', () => {
 

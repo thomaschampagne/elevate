@@ -1,17 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from "lodash";
-
-interface SwimCalculationMethod {
-	active: boolean;
-	name: string;
-	params: FormulaParams[];
-	formula: (params: FormulaParams[]) => number;
-}
-
-interface FormulaParams {
-	hint: string,
-	value: number
-}
+import { SwimCalculationMethod } from "./swim-calculation-method.model";
+import { FormulaParams } from "./formula-params.model";
 
 @Component({
 	selector: 'app-swim-ftp-helper',

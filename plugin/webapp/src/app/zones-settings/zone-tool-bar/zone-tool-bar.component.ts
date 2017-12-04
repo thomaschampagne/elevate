@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ZonesService } from "../../services/zones/zones.service";
+import { ZonesService } from "../shared/zones.service";
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { ZoneDefinition } from "../zone-definitions";
-import {
-	Mode,
-	ZoneImportExportData,
-	ZonesImportExportDialog
-} from "../zones-import-export-dialog/zones-import-export-dialog.component";
-import { ConfirmDialog, ConfirmDialogData } from "../../dialogs/confirm-dialog/confirm-dialog.component";
+import { ZonesImportExportDialog } from "../zones-import-export-dialog/zones-import-export-dialog.component";
+import { ConfirmDialog } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogData } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ZoneImportExportData } from "../zones-import-export-dialog/zone-import-export-data.model";
+import { Mode } from "../zones-import-export-dialog/mode.enum";
+import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 
 @Component({
 	selector: 'app-zone-tool-bar',
