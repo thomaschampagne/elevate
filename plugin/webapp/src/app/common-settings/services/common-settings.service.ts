@@ -4,11 +4,11 @@ import { Section } from "../models/section.model";
 @Injectable()
 export class CommonSettingsService {
 
-	public static TYPE_OPTION_CHECKBOX: string = "checkbox";
-	public static TYPE_OPTION_LIST: string = "list";
-	public static TYPE_OPTION_NUMBER: string = "number";
+	public static readonly TYPE_OPTION_CHECKBOX: string = "checkbox";
+	public static readonly TYPE_OPTION_LIST: string = "list";
+	public static readonly TYPE_OPTION_NUMBER: string = "number";
 
-	private _sections: Section[] = [{
+	public sections: Section[] = [{
 		title: "Units",
 		options: [{
 			key: "systemUnit",
@@ -312,7 +312,4 @@ export class CommonSettingsService {
 		}]
 	}];
 
-	get sections(): Section[] {
-		return this._sections;
-	}
 }

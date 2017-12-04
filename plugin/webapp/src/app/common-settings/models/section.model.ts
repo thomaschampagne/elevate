@@ -1,6 +1,6 @@
 import { Option } from "./option.model";
 
 export class Section {
-	title: string;
-	options: Option[];
+	public title: string;
+	public options: Option[];
 }

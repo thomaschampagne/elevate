@@ -4,11 +4,7 @@ import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
 import * as _ from "lodash";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-
-export interface IOptionHelperData {
-	title: string;
-	markdownData: string;
-}
+import { OptionHelperData } from "./option-helper-data.model";
 
 /**
  * Notes:
@@ -27,10 +23,10 @@ export class OptionHelperDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	private _html: SafeHtml;
-	private markDownParser: MarkDownIt.MarkdownIt;
+	public html: SafeHtml;
+	public markDownParser: MarkDownIt.MarkdownIt;
 
-	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: IOptionHelperData,
+	constructor(@Inject(MAT_DIALOG_DATA) private dialogData: OptionHelperData,
 				private domSanitizer: DomSanitizer) {
 		this.markDownParser = new MarkDownIt();
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});
@@ -41,19 +37,8 @@ export class OptionHelperDialog implements OnInit {
 			throw new Error("No markdown data provided. File is empty?!");
 		} else {
 			const html = this.markDownParser.render(this.dialogData.markdownData);
-			this._html = this.domSanitizer.bypassSecurityTrustHtml(html);
+			this.html = this.domSanitizer.bypassSecurityTrustHtml(html);
 		}
 	}
 
-	get dialogData(): IOptionHelperData {
-		return this._dialogData;
-	}
-
-	get html(): SafeHtml {
-		return this._html;
-	}
-
-	set html(value: SafeHtml) {
-		this._html = value;
-	}
 }

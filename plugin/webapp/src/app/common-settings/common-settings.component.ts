@@ -6,11 +6,12 @@ import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { IOptionHelperData, OptionHelperDialog } from "./option-helper-dialog/option-helper-dialog.component";
+import { OptionHelperDialog } from "./option-helper-dialog/option-helper-dialog.component";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 import { PlatformLocation } from "@angular/common";
 import { Section } from "./models/section.model";
 import { Option } from "./models/option.model";
+import { OptionHelperData } from "./option-helper-dialog/option-helper-data.model";
 
 @Component({
 	selector: 'app-common-settings',
@@ -27,8 +28,8 @@ export class CommonSettingsComponent implements OnInit {
 		return pathNames.join('/') + "/assets/option-helpers/";
 	}
 
-	private _sections: Section[];
-	private _searchText;
+	public sections: Section[];
+	public searchText = null;
 
 	constructor(private platformLocation: PlatformLocation,
 				private userSettingsService: UserSettingsService,
@@ -52,7 +53,7 @@ export class CommonSettingsComponent implements OnInit {
 
 			// Check query param: ?searchText=value and apply value to searchText data binding
 			if (!_.isEmpty(params.searchText)) {
-				this._searchText = params.searchText;
+				this.searchText = params.searchText;
 			}
 
 			if (!_.isEmpty(params.viewOptionHelperId)) {
@@ -203,7 +204,7 @@ export class CommonSettingsComponent implements OnInit {
 
 			this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
 
-				const optionHelperData: IOptionHelperData = {
+				const optionHelperData: OptionHelperData = {
 					title: option.title,
 					markdownData: markdownData
 				};
@@ -216,20 +217,4 @@ export class CommonSettingsComponent implements OnInit {
 			});
 		}
 	};
-
-	get sections(): Section[] {
-		return this._sections;
-	}
-
-	set sections(value: Section[]) {
-		this._sections = value;
-	}
-
-	get searchText(): string {
-		return this._searchText;
-	}
-
-	set searchText(value: string) {
-		this._searchText = value;
-	}
 }

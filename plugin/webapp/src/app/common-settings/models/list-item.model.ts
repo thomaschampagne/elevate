@@ -1,4 +1,4 @@
 export class ListItem {
-	key: string;
-	name: string;
+	public key: string;
+	public name: string;
 }
