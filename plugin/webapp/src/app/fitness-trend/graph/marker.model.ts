@@ -1,6 +1,6 @@
 export class Marker {
-	date: Date;
-	label: string;
-	click?: Function;
-	mouseover?: Function;
+	public date: Date;
+	public label: string;
+	public click?: Function;
+	public mouseover?: Function;
 }

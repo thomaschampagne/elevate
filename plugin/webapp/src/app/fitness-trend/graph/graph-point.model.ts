@@ -1,4 +1,4 @@
 export class GraphPoint {
-	date: string;
-	value: number;
+	public date: string;
+	public value: number;
 }

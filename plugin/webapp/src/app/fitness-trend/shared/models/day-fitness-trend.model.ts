@@ -16,27 +16,27 @@ export class DayFitnessTrend extends DayStress {
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
 
-		this._dateString = moment(this.date).format(DayFitnessTrend.DATE_FORMAT);
-		this._ctl = ctl;
-		this._atl = atl;
-		this._tsb = tsb;
+		this.dateString = moment(this.date).format(DayFitnessTrend.DATE_FORMAT);
+		this.ctl = ctl;
+		this.atl = atl;
+		this.tsb = tsb;
 	}
 
-	private _dateString: string;
-	private _ctl: number;
-	private _atl: number;
-	private _tsb: number;
+	public dateString: string;
+	public ctl: number;
+	public atl: number;
+	public tsb: number;
 
 	public printFitness(): string {
-		return this._ctl.toFixed(2);
+		return this.ctl.toFixed(2);
 	}
 
 	public printFatigue(): string {
-		return this._atl.toFixed(2);
+		return this.atl.toFixed(2);
 	}
 
 	public printForm(): string {
-		return this._tsb.toFixed(2);
+		return this.tsb.toFixed(2);
 	}
 
 	public printDate(): string {
@@ -64,31 +64,4 @@ export class DayFitnessTrend extends DayStress {
 		return printed
 	}
 
-	get dateString(): string {
-		return this._dateString;
-	}
-
-	get ctl(): number {
-		return this._ctl;
-	}
-
-	set ctl(value: number) {
-		this._ctl = value;
-	}
-
-	get atl(): number {
-		return this._atl;
-	}
-
-	set atl(value: number) {
-		this._atl = value;
-	}
-
-	get tsb(): number {
-		return this._tsb;
-	}
-
-	set tsb(value: number) {
-		this._tsb = value;
-	}
 }

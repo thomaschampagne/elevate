@@ -29,7 +29,7 @@ import { Marker } from "./marker.model";
 })
 export class FitnessTrendGraphComponent implements OnInit {
 
-	private _graphConfig = {
+	public graphConfig = {
 		data: [],
 		full_width: true,
 		height: window.innerHeight * 0.60, //600, // Dynamic height?!
@@ -63,20 +63,20 @@ export class FitnessTrendGraphComponent implements OnInit {
 	};
 
 
-	private _lastPeriods: LastPeriod[];
+	public lastPeriods: LastPeriod[];
 
-	private _lastPeriodSelected: Period;
-	private _fitnessTrend: DayFitnessTrend[];
-	private _fitnessTrendLines: GraphPoint[][] = [];
-	private _markers: Marker[] = [];
-	private _watchedDay: DayFitnessTrend;
+	public lastPeriodSelected: Period;
+	public fitnessTrend: DayFitnessTrend[];
+	public fitnessTrendLines: GraphPoint[][] = [];
+	public markers: Marker[] = [];
+	public watchedDay: DayFitnessTrend;
 
-	private _dateFrom: Date;
-	private _dateTo: Date;
-	private _dateMin: Date;
-	private _dateMax: Date;
+	public dateFrom: Date;
+	public dateTo: Date;
+	public dateMin: Date;
+	public dateMax: Date;
 
-	constructor(private _fitnessService: FitnessService) {
+	constructor(private fitnessService: FitnessService) {
 	}
 
 	public ngOnInit(): void {
@@ -90,7 +90,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.fitnessTrend = fitnessTrend;
 			this.watchedDay = this.getTodayWatchedDay();
 			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
-			this.lastPeriodSelected = _.find(this._lastPeriods, {key: "4_months"});
+			this.lastPeriodSelected = _.find(this.lastPeriods, {key: "4_months"});
 
 			this.init();
 
@@ -205,8 +205,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// Update dateFrom dateTo fields
 		this.dateFrom = (_.isDate(period.from)) ? period.from : null;
 		this.dateTo = (_.isDate(period.to)) ? period.to : moment().toDate();
-		this._dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
-		this._dateMax = moment().toDate();
+		this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
+		this.dateMax = moment().toDate();
 
 		// Apply graph changes
 		setTimeout(() => {
@@ -328,85 +328,5 @@ export class FitnessTrendGraphComponent implements OnInit {
 			key: "beginning",
 			label: "Since beginning"
 		}];
-	}
-
-	get graphConfig() {
-		return this._graphConfig;
-	}
-
-	get lastPeriods(): LastPeriod[] {
-		return this._lastPeriods;
-	}
-
-	set lastPeriods(value: LastPeriod[]) {
-		this._lastPeriods = value;
-	}
-
-	get lastPeriodSelected(): Period {
-		return this._lastPeriodSelected;
-	}
-
-	set lastPeriodSelected(value: Period) {
-		this._lastPeriodSelected = value;
-	}
-
-	get fitnessService(): FitnessService {
-		return this._fitnessService;
-	}
-
-	get fitnessTrend(): DayFitnessTrend[] {
-		return this._fitnessTrend;
-	}
-
-	set fitnessTrend(value: DayFitnessTrend[]) {
-		this._fitnessTrend = value;
-	}
-
-	get fitnessTrendLines(): GraphPoint[][] {
-		return this._fitnessTrendLines;
-	}
-
-	get markers(): Marker[] {
-		return this._markers;
-	}
-
-	get watchedDay(): DayFitnessTrend {
-		return this._watchedDay;
-	}
-
-	set watchedDay(value: DayFitnessTrend) {
-		this._watchedDay = value;
-	}
-
-	get dateFrom(): Date {
-		return this._dateFrom;
-	}
-
-	set dateFrom(value: Date) {
-		this._dateFrom = value;
-	}
-
-	get dateTo(): Date {
-		return this._dateTo;
-	}
-
-	set dateTo(value: Date) {
-		this._dateTo = value;
-	}
-
-	get dateMin(): Date {
-		return this._dateMin;
-	}
-
-	set dateMin(value: Date) {
-		this._dateMin = value;
-	}
-
-	get dateMax(): Date {
-		return this._dateMax;
-	}
-
-	set dateMax(value: Date) {
-		this._dateMax = value;
 	}
 }

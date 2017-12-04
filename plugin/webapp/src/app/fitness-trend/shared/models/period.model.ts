@@ -1,4 +1,4 @@
 export class Period {
-	from: Date;
-	to: Date;
+	public from: Date;
+	public to: Date;
 }
