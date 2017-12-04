@@ -2,19 +2,6 @@ import { Injectable } from '@angular/core';
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
 
-export interface FitnessReadyActivity { // TODO Use class?!
-	id: number;
-	date: Date;
-	timestamp: number;
-	dayOfYear: number;
-	year: number;
-	type: string;
-	activityName: string;
-	trimpScore?: number;
-	powerStressScore?: number;
-	swimStressScore?: number;
-}
-
 @Injectable()
 export class ActivityService {
 

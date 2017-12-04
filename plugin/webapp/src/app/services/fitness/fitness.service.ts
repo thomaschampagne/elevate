@@ -2,10 +2,11 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { Injectable } from '@angular/core';
-import { ActivityService, FitnessReadyActivity } from "../activity/activity.service";
+import { ActivityService } from "../activity/activity.service";
 import { DayStress } from "../../models/fitness/DayStress.model";
 import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
+import { FitnessReadyActivity } from "../../models/fitness/FitnessReadyActivity.model";
 
 /**
  * from: Date;

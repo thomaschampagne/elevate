@@ -3,11 +3,12 @@ import * as _ from "lodash";
 import { TestBed } from '@angular/core/testing';
 import { FitnessService, Period } from './fitness.service';
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
-import { ActivityService, FitnessReadyActivity } from "../activity/activity.service";
+import { ActivityService } from "../activity/activity.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { DayStress } from "../../models/fitness/DayStress.model";
 import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
+import { FitnessReadyActivity } from "../../models/fitness/FitnessReadyActivity.model";
 
 describe('FitnessService', () => {
 
