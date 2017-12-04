@@ -1,4 +1,4 @@
 export class Gender {
-	type: string;
-	display: string;
+	public type: string;
+	public display: string;
 }

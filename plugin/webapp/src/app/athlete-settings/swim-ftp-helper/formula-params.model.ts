@@ -1,4 +1,4 @@
 export class FormulaParams {
-	hint: string;
-	value: number;
+	public hint: string;
+	public value: number;
 }

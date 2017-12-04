@@ -27,12 +27,12 @@ export class SwimFtpHelperComponent implements OnInit {
 	}
 
 	@Input("swimFtp")
-	private _swimFtp: number;
+	public swimFtp: number;
 
 	@Output("swimFtpChange")
-	private _swimFtpChange: EventEmitter<number> = new EventEmitter<number>();
+	public swimFtpChange: EventEmitter<number> = new EventEmitter<number>();
 
-	private _calculationMethods: SwimCalculationMethod[] = [{
+	public calculationMethods: SwimCalculationMethod[] = [{
 		active: false,
 		name: "60 minutes swimming FTP test (recommended)",
 		params: [{
@@ -80,7 +80,7 @@ export class SwimFtpHelperComponent implements OnInit {
 		if (selectedMethod.active) {
 
 			// Make all other method inactive
-			const othersMethods = _.reject(this._calculationMethods, (method: any) => {
+			const othersMethods = _.reject(this.calculationMethods, (method: any) => {
 				return method.name === selectedMethod.name;
 			});
 
@@ -92,38 +92,13 @@ export class SwimFtpHelperComponent implements OnInit {
 
 			if (_.isFinite(swimFtp) && _.isNumber(swimFtp) && swimFtp > 0) {
 
-				this._swimFtp = (_.isNumber(swimFtp) && swimFtp >= 0) ? parseFloat(swimFtp.toFixed(3)) : null;
+				this.swimFtp = (_.isNumber(swimFtp) && swimFtp >= 0) ? parseFloat(swimFtp.toFixed(3)) : null;
 
 			} else {
-				this._swimFtp = null;
+				this.swimFtp = null;
 			}
 
-			this._swimFtpChange.emit(this._swimFtp);
+			this.swimFtpChange.emit(this.swimFtp);
 		}
-	}
-
-
-	get calculationMethods(): SwimCalculationMethod[] {
-		return this._calculationMethods;
-	}
-
-	set calculationMethods(value: SwimCalculationMethod[]) {
-		this._calculationMethods = value;
-	}
-
-	get swimFtp(): number {
-		return this._swimFtp;
-	}
-
-	set swimFtp(value: number) {
-		this._swimFtp = value;
-	}
-
-	get swimFtpChange(): EventEmitter<number> {
-		return this._swimFtpChange;
-	}
-
-	set swimFtpChange(value: EventEmitter<number>) {
-		this._swimFtpChange = value;
 	}
 }

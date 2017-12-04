@@ -13,15 +13,15 @@ import { Gender } from "./gender.model";
 })
 export class AthleteSettingsComponent implements OnInit {
 
-	public static SETTINGS_KEY_CLEAR_LOCAL_STORAGE: string = "localStorageMustBeCleared";
-	public static SETTINGS_KEY_USER_WEIGHT: any = "userWeight";
-	public static SETTINGS_KEY_USER_GENDER: string = "userGender";
-	public static SETTINGS_KEY_USER_MAX_HR: string = "userMaxHr";
-	public static SETTINGS_KEY_USER_REST_HR: string = "userRestHr";
-	public static SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
-	public static SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
+	public static readonly SETTINGS_KEY_CLEAR_LOCAL_STORAGE: string = "localStorageMustBeCleared";
+	public static readonly SETTINGS_KEY_USER_WEIGHT: any = "userWeight";
+	public static readonly SETTINGS_KEY_USER_GENDER: string = "userGender";
+	public static readonly SETTINGS_KEY_USER_MAX_HR: string = "userMaxHr";
+	public static readonly SETTINGS_KEY_USER_REST_HR: string = "userRestHr";
+	public static readonly SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
+	public static readonly SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
-	private _GENDER_LIST: Gender[] = [{
+	public readonly GENDER_LIST: Gender[] = [{
 		type: "men",
 		display: "Male",
 	}, {
@@ -29,21 +29,21 @@ export class AthleteSettingsComponent implements OnInit {
 		display: "Female",
 	}];
 
-	private _gender: string;
+	public gender: string;
 
-	private _weight: number;
+	public weight: number;
 
-	private _swimFtp: number;
+	public swimFtp: number;
 
-	private _restHr: number;
+	public restHr: number;
 
-	private _maxHr: number;
+	public maxHr: number;
 
-	private _ftp: number;
+	public ftp: number;
 
-	private _swimFtp100m: string;
+	public swimFtp100m: string;
 
-	private _isSwimFtpCalculatorEnabled: boolean = false;
+	public isSwimFtpCalculatorEnabled: boolean = false;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private snackBar: MatSnackBar) {
@@ -53,16 +53,16 @@ export class AthleteSettingsComponent implements OnInit {
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
-			this._gender = _.find(this._GENDER_LIST, {
+			this.gender = _.find(this.GENDER_LIST, {
 				type: userSettings.userGender,
 			}).type;
 
-			this._maxHr = userSettings.userMaxHr;
-			this._restHr = userSettings.userRestHr;
-			this._weight = userSettings.userWeight;
-			this._ftp = userSettings.userFTP;
-			this._swimFtp = userSettings.userSwimFTP;
-			this._swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this._swimFtp);
+			this.maxHr = userSettings.userMaxHr;
+			this.restHr = userSettings.userRestHr;
+			this.weight = userSettings.userWeight;
+			this.ftp = userSettings.userFTP;
+			this.swimFtp = userSettings.userSwimFTP;
+			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.swimFtp);
 
 		});
 
@@ -314,76 +314,7 @@ export class AthleteSettingsComponent implements OnInit {
 	private popHeartRateError() {
 		this.snackBar.open("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value",
 			'Close', {
-			duration: 2500
-		});
-	}
-
-	get GENDER_LIST(): Gender[] {
-		return this._GENDER_LIST;
-	}
-
-	get gender(): string {
-		return this._gender;
-	}
-
-	set gender(value: string) {
-		this._gender = value;
-	}
-
-	get weight(): number {
-		return this._weight;
-	}
-
-	set weight(value: number) {
-		this._weight = value;
-	}
-
-	get swimFtp(): number {
-		return this._swimFtp;
-	}
-
-	set swimFtp(value: number) {
-		this._swimFtp = value;
-	}
-
-	get restHr(): number {
-		return this._restHr;
-	}
-
-	set restHr(value: number) {
-		this._restHr = value;
-	}
-
-	get maxHr(): number {
-		return this._maxHr;
-	}
-
-	set maxHr(value: number) {
-		this._maxHr = value;
-	}
-
-	get ftp(): number {
-		return this._ftp;
-	}
-
-	set ftp(value: number) {
-		this._ftp = value;
-	}
-
-
-	get swimFtp100m(): string {
-		return this._swimFtp100m;
-	}
-
-	set swimFtp100m(value: string) {
-		this._swimFtp100m = value;
-	}
-
-	get isSwimFtpCalculatorEnabled(): boolean {
-		return this._isSwimFtpCalculatorEnabled;
-	}
-
-	set isSwimFtpCalculatorEnabled(value: boolean) {
-		this._isSwimFtpCalculatorEnabled = value;
+				duration: 2500
+			});
 	}
 }
