@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { SafeHtml } from "@angular/platform-browser";
 
-export interface IGotItDialogData {
+export interface GotItDialogData {
 	title: string;
 	html: SafeHtml;
 }
@@ -17,7 +17,7 @@ export class GotItDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: IGotItDialogData, private dialogRef: MatDialogRef<GotItDialog>) {
+	constructor(@Inject(MAT_DIALOG_DATA) private _dialogData: GotItDialogData, private dialogRef: MatDialogRef<GotItDialog>) {
 	}
 
 	public onNoClick(): void {
@@ -28,7 +28,7 @@ export class GotItDialog implements OnInit {
 	}
 
 
-	get dialogData(): IGotItDialogData {
+	get dialogData(): GotItDialogData {
 		return this._dialogData;
 	}
 }

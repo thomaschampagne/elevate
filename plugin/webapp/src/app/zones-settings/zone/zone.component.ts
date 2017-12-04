@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
-import { IZoneDefinition } from "../zone-definitions";
-import { IZoneChangeOrder, IZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
+import { ZoneDefinition } from "../zone-definitions";
+import { ZoneChangeOrder, ZoneChangeWhisper, ZonesService } from "../../services/zones/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
 
-export interface IZoneChangeType {
+export interface ZoneChangeType {
 	from: boolean;
 	to: boolean;
 }
@@ -45,7 +45,7 @@ export class ZoneComponent implements OnInit {
 	private _currentZones: IZone[];
 
 	@Input("zoneDefinition")
-	private _zoneDefinition: IZoneDefinition;
+	private _zoneDefinition: ZoneDefinition;
 
 	constructor(private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
@@ -53,7 +53,7 @@ export class ZoneComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.zonesService.zoneChangeOrderUpdates.subscribe((change: IZoneChangeOrder) => {
+		this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
 
 			const isChangeOrderForMe = (!_.isNull(change) && (this._zoneId == change.destinationId));
 
@@ -76,21 +76,21 @@ export class ZoneComponent implements OnInit {
 		});
 	}
 
-	public onZoneChange(changeType: IZoneChangeType): void {
+	public onZoneChange(changeType: ZoneChangeType): void {
 		this.whisperZoneChange(changeType);
 	}
 
 	/**
-	 * Whisper a IZoneChangeWhisper to <ZoneService>
-	 * @param {IZoneChangeType} changeType
+	 * Whisper a ZoneChangeWhisper to <ZoneService>
+	 * @param {ZoneChangeType} changeType
 	 */
-	public whisperZoneChange(changeType: IZoneChangeType): void {
+	public whisperZoneChange(changeType: ZoneChangeType): void {
 
 		if (changeType.from && changeType.to) return; // Skip notify zone service on first component display
 
 		if (changeType.from || changeType.to) {
 
-			const zoneChangeWhisper: IZoneChangeWhisper = {
+			const zoneChangeWhisper: ZoneChangeWhisper = {
 				sourceId: this.zoneId,
 				from: false,
 				to: false,
@@ -109,7 +109,7 @@ export class ZoneComponent implements OnInit {
 		}
 	}
 
-	private applyChangeOrder(instruction: IZoneChangeOrder): void {
+	private applyChangeOrder(instruction: ZoneChangeOrder): void {
 
 		if (instruction.from) {
 			this.zone.from = instruction.value
@@ -224,11 +224,11 @@ export class ZoneComponent implements OnInit {
 		this._currentZones = value;
 	}
 
-	get zoneDefinition(): IZoneDefinition {
+	get zoneDefinition(): ZoneDefinition {
 		return this._zoneDefinition;
 	}
 
-	set zoneDefinition(value: IZoneDefinition) {
+	set zoneDefinition(value: ZoneDefinition) {
 		this._zoneDefinition = value;
 	}
 }

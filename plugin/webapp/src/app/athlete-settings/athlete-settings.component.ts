@@ -5,7 +5,7 @@ import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettin
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 
-interface IGender {
+interface Gender {
 	type: string;
 	display: string;
 }
@@ -25,7 +25,7 @@ export class AthleteSettingsComponent implements OnInit {
 	public static SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
 	public static SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
-	private _GENDER_LIST: IGender[] = [{
+	private _GENDER_LIST: Gender[] = [{
 		type: "men",
 		display: "Male",
 	}, {
@@ -74,7 +74,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {IGender} gender
+	 * @param {Gender} gender
 	 */
 	public onGenderChanged() {
 		this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_GENDER, this.gender);
@@ -322,7 +322,7 @@ export class AthleteSettingsComponent implements OnInit {
 		});
 	}
 
-	get GENDER_LIST(): IGender[] {
+	get GENDER_LIST(): Gender[] {
 		return this._GENDER_LIST;
 	}
 

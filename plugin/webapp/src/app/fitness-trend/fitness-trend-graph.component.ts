@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FitnessService, IPeriod } from "../services/fitness/fitness.service";
+import { FitnessService, Period } from "../services/fitness/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
@@ -36,7 +36,7 @@ interface Marker {
 /**
  * label: string;
  */
-export interface ILastPeriod extends IPeriod {
+export interface ILastPeriod extends Period {
 	key: string;
 	label: string;
 }
@@ -84,7 +84,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	private _lastPeriods: ILastPeriod[];
 
-	private _lastPeriodSelected: IPeriod;
+	private _lastPeriodSelected: Period;
 	private _fitnessTrend: DayFitnessTrend[];
 	private _fitnessTrendLines: GraphPoint[][] = [];
 	private _markers: Marker[] = [];
@@ -202,7 +202,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public onDateToDateChange(): void {
 
-		const period: IPeriod = {
+		const period: Period = {
 			from: this.dateFrom,
 			to: this.dateTo
 		};
@@ -214,7 +214,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 * @param {Period} period
 	 */
-	private updateGraph(period: IPeriod): void {
+	private updateGraph(period: Period): void {
 
 		const _PERFORMANCE_MARKER_START_ = performance.now();
 
@@ -239,7 +239,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {Period} period
 	 * @returns {GraphPoint[][]}
 	 */
-	private computeTrendLinesRange(period: IPeriod): GraphPoint[][] {
+	private computeTrendLinesRange(period: Period): GraphPoint[][] {
 
 		const lines: GraphPoint[][] = [];
 		const indexes = this.fitnessService.indexesOf(period, this.fitnessTrend);
@@ -361,11 +361,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this._lastPeriods = value;
 	}
 
-	get lastPeriodSelected(): IPeriod {
+	get lastPeriodSelected(): Period {
 		return this._lastPeriodSelected;
 	}
 
-	set lastPeriodSelected(value: IPeriod) {
+	set lastPeriodSelected(value: Period) {
 		this._lastPeriodSelected = value;
 	}
 

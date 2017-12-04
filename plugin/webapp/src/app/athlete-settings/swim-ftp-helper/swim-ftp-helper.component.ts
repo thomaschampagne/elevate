@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from "lodash";
 
-interface ISwimCalculationMethod {
+interface SwimCalculationMethod {
 	active: boolean;
 	name: string;
-	params: IFormulaParams[];
-	formula: (params: IFormulaParams[]) => number;
+	params: FormulaParams[];
+	formula: (params: FormulaParams[]) => number;
 }
 
-interface IFormulaParams {
+interface FormulaParams {
 	hint: string,
 	value: number
 }
@@ -42,14 +42,14 @@ export class SwimFtpHelperComponent implements OnInit {
 	@Output("swimFtpChange")
 	private _swimFtpChange: EventEmitter<number> = new EventEmitter<number>();
 
-	private _calculationMethods: ISwimCalculationMethod[] = [{
+	private _calculationMethods: SwimCalculationMethod[] = [{
 		active: false,
 		name: "60 minutes swimming FTP test (recommended)",
 		params: [{
 			hint: "Swim as far as possible during 60 minutes and enter distance performed in meters (ex: 1800 meters)",
 			value: null,
 		}],
-		formula: (params: IFormulaParams[]) => {
+		formula: (params: FormulaParams[]) => {
 			return params[0].value / 60;
 		},
 	}, {
@@ -59,7 +59,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			hint: "Swim as far as possible during 30 minutes and enter distance performed in meters (ex: 950 meters)",
 			value: null,
 		}],
-		formula: (params: IFormulaParams[]) => {
+		formula: (params: FormulaParams[]) => {
 			return (params[0].value / 30) - ((2 * params[0].value / 30 ) * 0.025); // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
 		},
 	}, {
@@ -72,7 +72,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			hint: "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
 			value: null,
 		}],
-		formula: (params: IFormulaParams[]) => {
+		formula: (params: FormulaParams[]) => {
 			return ((400 - 200) / ((params[1].value - params[0].value) / 60)); // (400m – 200m) / (400mTimeInMinutes - 200mTimeInMinutes)
 		},
 	}];
@@ -85,7 +85,7 @@ export class SwimFtpHelperComponent implements OnInit {
 
 	}
 
-	public onMethodChanged(selectedMethod: ISwimCalculationMethod): void {
+	public onMethodChanged(selectedMethod: SwimCalculationMethod): void {
 
 		if (selectedMethod.active) {
 
@@ -113,11 +113,11 @@ export class SwimFtpHelperComponent implements OnInit {
 	}
 
 
-	get calculationMethods(): ISwimCalculationMethod[] {
+	get calculationMethods(): SwimCalculationMethod[] {
 		return this._calculationMethods;
 	}
 
-	set calculationMethods(value: ISwimCalculationMethod[]) {
+	set calculationMethods(value: SwimCalculationMethod[]) {
 		this._calculationMethods = value;
 	}
 

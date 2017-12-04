@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { Injectable } from '@angular/core';
-import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
+import { ActivityService, FitnessReadyActivity } from "../activity/activity.service";
 import { DayStress } from "../../models/fitness/DayStress.model";
 import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
@@ -11,7 +11,7 @@ import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/
  * from: Date;
  * to: Date;
  */
-export interface IPeriod {
+export interface Period {
 	from: Date;
 	to: Date;
 }
@@ -28,19 +28,19 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
-	 * @returns {Promise<IFitnessReadyActivity[]>}
+	 * @returns {Promise<FitnessReadyActivity[]>}
 	 */
 	public getReady(powerMeterEnable: boolean,
 					cyclingFtp: number,
 					swimEnable: boolean,
-					swimFtp: number): Promise<IFitnessReadyActivity[]> {
+					swimFtp: number): Promise<FitnessReadyActivity[]> {
 
-		return new Promise((resolve: (result: IFitnessReadyActivity[]) => void,
+		return new Promise((resolve: (result: FitnessReadyActivity[]) => void,
 							reject: (error: string) => void) => {
 
 			return this.activityService.fetch().then((activities: ISyncActivityComputed[]) => {
 
-				const fitnessReadyActivities: IFitnessReadyActivity[] = [];
+				const fitnessReadyActivities: FitnessReadyActivity[] = [];
 
 				_.forEach(activities, (activity: ISyncActivityComputed) => {
 
@@ -65,7 +65,7 @@ export class FitnessService {
 
 						const momentStartTime: Moment = moment(activity.start_time);
 
-						const fitnessReadyActivity: IFitnessReadyActivity = {
+						const fitnessReadyActivity: FitnessReadyActivity = {
 							id: activity.id,
 							date: momentStartTime.toDate(),
 							timestamp: momentStartTime.toDate().getTime(),
@@ -116,7 +116,7 @@ export class FitnessService {
 							reject: (error: string) => void) => {
 
 			this.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
-				.then((fitnessReadyActivities: IFitnessReadyActivity[]) => {
+				.then((fitnessReadyActivities: FitnessReadyActivity[]) => {
 
 					if (_.isEmpty(fitnessReadyActivities)) {
 						reject("No ready activities");
@@ -265,13 +265,13 @@ export class FitnessService {
 	/**
 	 *
 	 * @param {moment.Moment} currentDay
-	 * @param {IFitnessReadyActivity[]} fitnessReadyActivities
+	 * @param {FitnessReadyActivity[]} fitnessReadyActivities
 	 * @returns {DayStress}
 	 */
 
-	private dayStressOnDate(currentDay: moment.Moment, fitnessReadyActivities: IFitnessReadyActivity[]): DayStress {
+	private dayStressOnDate(currentDay: moment.Moment, fitnessReadyActivities: FitnessReadyActivity[]): DayStress {
 
-		const foundActivitiesThatDay: IFitnessReadyActivity[] = _.filter(fitnessReadyActivities, {
+		const foundActivitiesThatDay: FitnessReadyActivity[] = _.filter(fitnessReadyActivities, {
 			year: currentDay.year(),
 			dayOfYear: currentDay.dayOfYear(),
 		});
@@ -281,7 +281,7 @@ export class FitnessService {
 		// Compute final stress scores on that day
 		if (foundActivitiesThatDay.length > 0) {
 
-			_.forEach(foundActivitiesThatDay, (activity: IFitnessReadyActivity) => {
+			_.forEach(foundActivitiesThatDay, (activity: FitnessReadyActivity) => {
 
 				dayActivity.ids.push(activity.id);
 				dayActivity.activitiesName.push(activity.activityName);
@@ -337,11 +337,11 @@ export class FitnessService {
 
 	/**
 	 * Return start/end indexes of fitnessTrend collection corresponding to from/to date given in a period
-	 * @param {IPeriod} period
+	 * @param {Period} period
 	 * @param {DayFitnessTrend[]} fitnessTrend
 	 * @returns {{start: number; end: number}}
 	 */
-	public indexesOf(period: IPeriod, fitnessTrend: DayFitnessTrend[]): { start: number; end: number } {
+	public indexesOf(period: Period, fitnessTrend: DayFitnessTrend[]): { start: number; end: number } {
 
 		let startIndex = 0; // Use first day as start index by default.
 		if (_.isDate(period.from)) { // Then override index if "From" is specified

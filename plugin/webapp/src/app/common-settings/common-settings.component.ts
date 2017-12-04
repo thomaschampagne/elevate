@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserSettingsService } from '../services/user-settings/user-settings.service';
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { CommonSettingsService, IOption, ISection } from "../services/common-settings/common-settings.service";
+import { CommonSettingsService, Option, Section } from "../services/common-settings/common-settings.service";
 import * as _ from 'lodash';
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
@@ -25,7 +25,7 @@ export class CommonSettingsComponent implements OnInit {
 		return pathNames.join('/') + "/assets/option-helpers/";
 	}
 
-	private _sections: ISection[];
+	private _sections: Section[];
 	private _searchText;
 
 	constructor(private platformLocation: PlatformLocation,
@@ -67,9 +67,9 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	private renderOptionsForEachSection(userSettingsSynced: IUserSettings): void {
 
-		_.forEach(this.sections, (section: ISection) => {
+		_.forEach(this.sections, (section: Section) => {
 
-			_.forEach(section.options, (option: IOption) => {
+			_.forEach(section.options, (option: Option) => {
 
 				if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
@@ -100,9 +100,9 @@ export class CommonSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {IOption} option
+	 * @param {Option} option
 	 */
-	public onOptionChange(option: IOption): void {
+	public onOptionChange(option: Option): void {
 
 		if (option.type == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
@@ -147,9 +147,9 @@ export class CommonSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {IOption} option
+	 * @param {Option} option
 	 */
-	private resetOptionToDefaultValue(option: IOption): void {
+	private resetOptionToDefaultValue(option: Option): void {
 		const resetValue = _.propertyOf(userSettings)(option.key);
 		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
@@ -162,9 +162,9 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public displaySubOption(subOptionKey: string, show: boolean): void {
 
-		_.forEach(this.sections, (section: ISection) => {
+		_.forEach(this.sections, (section: Section) => {
 
-			const foundOption: IOption = _.find(section.options, {
+			const foundOption: Option = _.find(section.options, {
 				key: subOptionKey,
 			});
 
@@ -181,11 +181,11 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public showOptionHelperDialog(optionKeyParam: string): void {
 
-		let option: IOption = null;
+		let option: Option = null;
 
-		_.forEach(this.sections, (section: ISection) => {
+		_.forEach(this.sections, (section: Section) => {
 
-			const foundOption: IOption = _.find(section.options, {
+			const foundOption: Option = _.find(section.options, {
 				key: optionKeyParam,
 			});
 
@@ -215,11 +215,11 @@ export class CommonSettingsComponent implements OnInit {
 		}
 	};
 
-	get sections(): ISection[] {
+	get sections(): Section[] {
 		return this._sections;
 	}
 
-	set sections(value: ISection[]) {
+	set sections(value: Section[]) {
 		this._sections = value;
 	}
 

@@ -3,7 +3,7 @@ import { UserSettingsService } from "../services/user-settings/user-settings.ser
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import { IZoneDefinition, ZONE_DEFINITIONS, } from "./zone-definitions";
+import { ZONE_DEFINITIONS, ZoneDefinition, } from "./zone-definitions";
 import { ZonesService } from "../services/zones/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { appRouteNames } from "../app-route-names";
@@ -18,8 +18,8 @@ export class ZonesSettingsComponent implements OnInit {
 
 	public static DEFAULT_ZONE_VALUE: string = "speed";
 
-	private _zoneDefinitions: IZoneDefinition[] = ZONE_DEFINITIONS;
-	private _zoneDefinitionSelected: IZoneDefinition;
+	private _zoneDefinitions: ZoneDefinition[] = ZONE_DEFINITIONS;
+	private _zoneDefinitionSelected: ZoneDefinition;
 	private _userZones: IUserZones;
 	private _currentZones: IZone[];
 
@@ -40,7 +40,7 @@ export class ZonesSettingsComponent implements OnInit {
 			// Check zoneValue provided in URL
 			this.route.params.subscribe(routeParams => {
 
-				let zoneDefinition: IZoneDefinition = null;
+				let zoneDefinition: ZoneDefinition = null;
 
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
@@ -68,19 +68,19 @@ export class ZonesSettingsComponent implements OnInit {
 	/**
 	 *
 	 * @param {string} zoneValue
-	 * @returns {IZoneDefinition}
+	 * @returns {ZoneDefinition}
 	 */
-	private getZoneDefinitionFromZoneValue(zoneValue: string): IZoneDefinition {
+	private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinition {
 		return _.find(this.zoneDefinitions, {value: zoneValue});
 	}
 
 	/**
 	 * Load current zones from a zone definition.
 	 * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
-	 * @param {IZoneDefinition} zoneDefinition
+	 * @param {ZoneDefinition} zoneDefinition
 	 * @param {string} overrideDefinitionTrigger
 	 */
-	private loadZonesFromDefinition(zoneDefinition: IZoneDefinition) {
+	private loadZonesFromDefinition(zoneDefinition: ZoneDefinition) {
 
 		// Load current zone from zone definition provided
 		this.currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
@@ -96,7 +96,7 @@ export class ZonesSettingsComponent implements OnInit {
 	/**
 	 *
 	 */
-	public onZoneDefinitionSelected(zoneDefinition: IZoneDefinition) {
+	public onZoneDefinitionSelected(zoneDefinition: ZoneDefinition) {
 		this.navigateToZone(zoneDefinition.value);
 	}
 
@@ -113,19 +113,19 @@ export class ZonesSettingsComponent implements OnInit {
 		this._currentZones = value;
 	}
 
-	get zoneDefinitions(): IZoneDefinition[] {
+	get zoneDefinitions(): ZoneDefinition[] {
 		return this._zoneDefinitions;
 	}
 
-	set zoneDefinitions(value: IZoneDefinition[]) {
+	set zoneDefinitions(value: ZoneDefinition[]) {
 		this._zoneDefinitions = value;
 	}
 
-	get zoneDefinitionSelected(): IZoneDefinition {
+	get zoneDefinitionSelected(): ZoneDefinition {
 		return this._zoneDefinitionSelected;
 	}
 
-	set zoneDefinitionSelected(value: IZoneDefinition) {
+	set zoneDefinitionSelected(value: ZoneDefinition) {
 		this._zoneDefinitionSelected = value;
 	}
 

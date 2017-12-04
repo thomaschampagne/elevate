@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 
-export interface IConfirmDialogData {
+export interface ConfirmDialogData {
 	title: string;
 	content: string;
 }
@@ -17,7 +17,7 @@ export class ConfirmDialog implements OnInit {
 	public static readonly MIN_WIDTH: string = '40%';
 
 	constructor(private _dialogRef: MatDialogRef<ConfirmDialog>,
-				@Inject(MAT_DIALOG_DATA) private _dialogData: IConfirmDialogData) {
+				@Inject(MAT_DIALOG_DATA) private _dialogData: ConfirmDialogData) {
 	}
 
 	public ngOnInit() {
@@ -31,11 +31,11 @@ export class ConfirmDialog implements OnInit {
 		this.dialogRef.close(false);
 	}
 
-	get dialogData(): IConfirmDialogData {
+	get dialogData(): ConfirmDialogData {
 		return this._dialogData;
 	}
 
-	set dialogData(value: IConfirmDialogData) {
+	set dialogData(value: ConfirmDialogData) {
 		this._dialogData = value;
 	}
 

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
-export interface ISection {
+export interface Section {
 	title: string;
-	options: IOption[];
+	options: Option[];
 }
 
-export interface IOption {
+export interface Option {
 	key: string;
 	type: string;
 	title: string;
 	labels: string[];
-	list?: IListItem[];
+	list?: ListItem[];
 	enableSubOption?: string[];
 	active?: any;
 	hidden?: boolean;
@@ -21,7 +21,7 @@ export interface IOption {
 	disableTooltip?: boolean; // For input number type only
 }
 
-export interface IListItem {
+export interface ListItem {
 	key: string;
 	name: string;
 }
@@ -33,7 +33,7 @@ export class CommonSettingsService {
 	public static TYPE_OPTION_LIST: string = "list";
 	public static TYPE_OPTION_NUMBER: string = "number";
 
-	private _sections: ISection[] = [{
+	private _sections: Section[] = [{
 		title: "Units",
 		options: [{
 			key: "systemUnit",
@@ -337,7 +337,7 @@ export class CommonSettingsService {
 		}]
 	}];
 
-	get sections(): ISection[] {
+	get sections(): Section[] {
 		return this._sections;
 	}
 }

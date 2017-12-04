@@ -1,22 +1,22 @@
 import * as moment from "moment";
 
-interface IZoneCustomDisplay {
+interface ZoneCustomDisplay {
 	name: string;
 	zoneValue: string;
 	output: (input: number) => string;
 }
 
-export interface IZoneDefinition {
+export interface ZoneDefinition {
 	name: string;
 	value: string;
 	units: string;
 	step: number;
 	min: number;
 	max: number;
-	customDisplay: IZoneCustomDisplay
+	customDisplay: ZoneCustomDisplay
 }
 
-export const ZONE_DEFINITIONS: IZoneDefinition[] = [
+export const ZONE_DEFINITIONS: ZoneDefinition[] = [
 	{
 		name: "Cycling Speed",
 		value: "speed",

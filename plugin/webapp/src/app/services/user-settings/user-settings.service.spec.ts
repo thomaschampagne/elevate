@@ -5,7 +5,7 @@ import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
-import { IZoneDefinition } from "../../zones-settings/zone-definitions";
+import { ZoneDefinition } from "../../zones-settings/zone-definitions";
 
 describe('UserSettingsService', () => {
 
@@ -164,7 +164,7 @@ describe('UserSettingsService', () => {
 			{from: 40, to: 50}
 		];
 
-		const zoneDefinition: IZoneDefinition = {
+		const zoneDefinition: ZoneDefinition = {
 			name: "Cycling Speed",
 			value: "speed",
 			units: "KPH",

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
-import { IZoneDefinition } from "../zone-definitions";
+import { ZoneDefinition } from "../zone-definitions";
 import { ZonesService } from "../../services/zones/zones.service";
 
 export enum Mode {
@@ -9,8 +9,8 @@ export enum Mode {
 	EXPORT
 }
 
-export interface IZoneImportExportData {
-	zoneDefinition: IZoneDefinition;
+export interface ZoneImportExportData {
+	zoneDefinition: ZoneDefinition;
 	zonesData?: IZone[];
 	mode: Mode;
 }
@@ -31,7 +31,7 @@ export class ZonesImportExportDialog implements OnInit {
 	private _placeholder: string;
 
 	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialog>,
-				@Inject(MAT_DIALOG_DATA) private _data: IZoneImportExportData,
+				@Inject(MAT_DIALOG_DATA) private _data: ZoneImportExportData,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}
@@ -51,11 +51,11 @@ export class ZonesImportExportDialog implements OnInit {
 		});
 	}
 
-	get data(): IZoneImportExportData {
+	get data(): ZoneImportExportData {
 		return this._data;
 	}
 
-	set data(value: IZoneImportExportData) {
+	set data(value: ZoneImportExportData) {
 		this._data = value;
 	}
 

@@ -3,17 +3,17 @@ import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { IZoneDefinition } from "../../zones-settings/zone-definitions";
+import { ZoneDefinition } from "../../zones-settings/zone-definitions";
 import { userSettings } from "../../../../../common/scripts/UserSettings";
 
-export interface IZoneChangeWhisper {
+export interface ZoneChangeWhisper {
 	sourceId: number;
 	to: boolean;
 	from: boolean;
 	value: number;
 }
 
-export interface IZoneChangeOrder extends IZoneChangeWhisper {
+export interface ZoneChangeOrder extends ZoneChangeWhisper {
 	destinationId: number;
 }
 
@@ -24,13 +24,13 @@ export class ZonesService {
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	private _currentZones: IZone[];
-	private _zoneChangeOrderUpdates: Subject<IZoneChangeOrder>;
+	private _zoneChangeOrderUpdates: Subject<ZoneChangeOrder>;
 	private _zonesUpdates: Subject<IZone[]>;
 	private _stepUpdates: Subject<number>;
-	private _zoneDefinition: IZoneDefinition;
+	private _zoneDefinition: ZoneDefinition;
 
 	constructor(private _userSettingsService: UserSettingsService) {
-		this._zoneChangeOrderUpdates = new Subject<IZoneChangeOrder>();
+		this._zoneChangeOrderUpdates = new Subject<ZoneChangeOrder>();
 		this._zonesUpdates = new Subject<IZone[]>();
 		this._stepUpdates = new Subject<number>();
 	}
@@ -133,11 +133,11 @@ export class ZonesService {
 	}
 
 	/**
-	 * Receive a <IZoneChangeWhisper> and notify all <ZonesComponents> of a zone change.
+	 * Receive a <ZoneChangeWhisper> and notify all <ZonesComponents> of a zone change.
 	 * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
-	 * @param {IZoneChangeWhisper} zoneChange
+	 * @param {ZoneChangeWhisper} zoneChange
 	 */
-	public whisperZoneChange(zoneChange: IZoneChangeWhisper): void {
+	public whisperZoneChange(zoneChange: ZoneChangeWhisper): void {
 
 		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
 			this.zoneChangeOrderUpdates.error("Impossible to notify both 'from' & 'to' changes at the same time");
@@ -150,7 +150,7 @@ export class ZonesService {
 		const isFirstZoneChange = (zoneChange.sourceId == 0);
 		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
 
-		let instruction: IZoneChangeOrder = {
+		let instruction: ZoneChangeOrder = {
 			sourceId: zoneChange.sourceId,
 			destinationId: null,
 			to: null,
@@ -337,21 +337,21 @@ export class ZonesService {
 	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
 	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
 	 * That <ZonesComponent> has to follow change instruction
-	 * @returns {Subject<IZoneChangeWhisper>}
+	 * @returns {Subject<ZoneChangeWhisper>}
 	 */
-	get zoneChangeOrderUpdates(): Subject<IZoneChangeOrder> {
+	get zoneChangeOrderUpdates(): Subject<ZoneChangeOrder> {
 		return this._zoneChangeOrderUpdates;
 	}
 
 	/**
 	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
-	 * @returns {Subject<IZoneChangeWhisper>}
+	 * @returns {Subject<ZoneChangeWhisper>}
 	 */
 	get zonesUpdates(): Subject<IZone[]> {
 		return this._zonesUpdates;
 	}
 
-	get zoneDefinition(): IZoneDefinition {
+	get zoneDefinition(): ZoneDefinition {
 		return this._zoneDefinition;
 	}
 
@@ -359,7 +359,7 @@ export class ZonesService {
 		return this._stepUpdates;
 	}
 
-	set zoneDefinition(value: IZoneDefinition) {
+	set zoneDefinition(value: ZoneDefinition) {
 		this._zoneDefinition = value;
 	}
 

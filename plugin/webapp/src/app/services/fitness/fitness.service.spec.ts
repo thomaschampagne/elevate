@@ -1,9 +1,9 @@
 import * as moment from "moment";
 import * as _ from "lodash";
 import { TestBed } from '@angular/core/testing';
-import { FitnessService, IPeriod } from './fitness.service';
+import { FitnessService, Period } from './fitness.service';
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
-import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
+import { ActivityService, FitnessReadyActivity } from "../activity/activity.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { DayStress } from "../../models/fitness/DayStress.model";
 import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
@@ -57,11 +57,11 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IFitnessReadyActivity[]> = fitnessService
+		const promise: Promise<FitnessReadyActivity[]> = fitnessService
 			.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((result: IFitnessReadyActivity[]) => {
+		promise.then((result: FitnessReadyActivity[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result.length).toEqual(expectedFitnessReadyLength);
@@ -90,10 +90,10 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IFitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((result: IFitnessReadyActivity[]) => {
+		promise.then((result: FitnessReadyActivity[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result.length).toEqual(expectedFitnessReadyLength);
@@ -122,10 +122,10 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IFitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((result: IFitnessReadyActivity[]) => {
+		promise.then((result: FitnessReadyActivity[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result.length).toEqual(expectedFitnessReadyLength);
@@ -154,10 +154,10 @@ describe('FitnessService', () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IFitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((result: IFitnessReadyActivity[]) => {
+		promise.then((result: FitnessReadyActivity[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result.length).toEqual(expectedFitnessReadyLength);
@@ -184,13 +184,13 @@ describe('FitnessService', () => {
 		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<IFitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
 		// Then
-		promise.then((result: IFitnessReadyActivity[]) => {
+		promise.then((result: FitnessReadyActivity[]) => {
 
 			expect(result).not.toBeNull();
-			let activity: IFitnessReadyActivity;
+			let activity: FitnessReadyActivity;
 
 			activity = _.find(result, {id: 429628737});
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
@@ -343,7 +343,7 @@ describe('FitnessService', () => {
 		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
-		const period: IPeriod = {
+		const period: Period = {
 			from: moment(todayDate, momentDatePattern).subtract(7, "days").toDate(), // Nov 24 2015
 			to: null // Indicate we use "Last period of TIME"
 		};
@@ -374,7 +374,7 @@ describe('FitnessService', () => {
 		// Given
 		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
-		const period: IPeriod = {
+		const period: Period = {
 			from: moment(todayDate, momentDatePattern).subtract(6, "weeks").toDate(), // (= Oct 20 2015)
 			to: null // Indicate we use "Last period of TIME"
 		};
@@ -404,7 +404,7 @@ describe('FitnessService', () => {
 		// Given
 		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
-		const period: IPeriod = {
+		const period: Period = {
 			from: moment("2015-07-01", DayFitnessTrend.DATE_FORMAT).startOf("day").toDate(),
 			to: moment("2015-09-30", DayFitnessTrend.DATE_FORMAT).startOf("day").toDate(),
 		};
@@ -437,7 +437,7 @@ describe('FitnessService', () => {
 		// Given
 		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
-		const period: IPeriod = {
+		const period: Period = {
 			from: moment("2015-06-01", DayFitnessTrend.DATE_FORMAT).toDate(),
 			to: moment("2015-05-01", DayFitnessTrend.DATE_FORMAT).toDate()
 		};

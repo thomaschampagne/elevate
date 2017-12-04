@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
 
-export interface IFitnessReadyActivity {
+export interface FitnessReadyActivity { // TODO Use class?!
 	id: number;
 	date: Date;
 	timestamp: number;

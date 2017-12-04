@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ZonesService } from "../../services/zones/zones.service";
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { IZoneDefinition } from "../zone-definitions";
+import { ZoneDefinition } from "../zone-definitions";
 import {
-	IZoneImportExportData,
 	Mode,
+	ZoneImportExportData,
 	ZonesImportExportDialog
 } from "../zones-import-export-dialog/zones-import-export-dialog.component";
-import { ConfirmDialog, IConfirmDialogData } from "../../dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialog, ConfirmDialogData } from "../../dialogs/confirm-dialog/confirm-dialog.component";
 
 @Component({
 	selector: 'app-zone-tool-bar',
@@ -20,13 +20,13 @@ export class ZoneToolBarComponent implements OnInit {
 	private _currentZonesLength: number;
 
 	@Input("zoneDefinitions")
-	private _zoneDefinitions: IZoneDefinition[];
+	private _zoneDefinitions: ZoneDefinition[];
 
 	@Input("zoneDefinitionSelected")
-	private _zoneDefinitionSelected: IZoneDefinition;
+	private _zoneDefinitionSelected: ZoneDefinition;
 
 	@Output("zoneDefinitionSelectedChange")
-	private _zoneDefinitionSelectedChange: EventEmitter<IZoneDefinition> = new EventEmitter<IZoneDefinition>();
+	private _zoneDefinitionSelectedChange: EventEmitter<ZoneDefinition> = new EventEmitter<ZoneDefinition>();
 
 	constructor(private zonesService: ZonesService,
 				private dialog: MatDialog,
@@ -62,7 +62,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onResetZonesToDefault(): void {
 
-		const data: IConfirmDialogData = {
+		const data: ConfirmDialogData = {
 			title: "Reset <" + this.zonesService.zoneDefinition.name + "> zones",
 			content: "Are you sure? Previous data will be lost."
 		};
@@ -93,7 +93,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onImportZones() {
 
-		const importExportData: IZoneImportExportData = {
+		const importExportData: ZoneImportExportData = {
 			zoneDefinition: this.zonesService.zoneDefinition,
 			mode: Mode.IMPORT
 		};
@@ -107,7 +107,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onExportZones() {
 
-		const importExportData: IZoneImportExportData = {
+		const importExportData: ZoneImportExportData = {
 			zoneDefinition: this.zonesService.zoneDefinition,
 			zonesData: this.zonesService.currentZones,
 			mode: Mode.EXPORT
@@ -133,27 +133,27 @@ export class ZoneToolBarComponent implements OnInit {
 		this._currentZonesLength = value;
 	}
 
-	get zoneDefinitions(): IZoneDefinition[] {
+	get zoneDefinitions(): ZoneDefinition[] {
 		return this._zoneDefinitions;
 	}
 
-	set zoneDefinitions(value: IZoneDefinition[]) {
+	set zoneDefinitions(value: ZoneDefinition[]) {
 		this._zoneDefinitions = value;
 	}
 
-	get zoneDefinitionSelected(): IZoneDefinition {
+	get zoneDefinitionSelected(): ZoneDefinition {
 		return this._zoneDefinitionSelected;
 	}
 
-	set zoneDefinitionSelected(value: IZoneDefinition) {
+	set zoneDefinitionSelected(value: ZoneDefinition) {
 		this._zoneDefinitionSelected = value;
 	}
 
-	get zoneDefinitionSelectedChange(): EventEmitter<IZoneDefinition> {
+	get zoneDefinitionSelectedChange(): EventEmitter<ZoneDefinition> {
 		return this._zoneDefinitionSelectedChange;
 	}
 
-	set zoneDefinitionSelectedChange(value: EventEmitter<IZoneDefinition>) {
+	set zoneDefinitionSelectedChange(value: EventEmitter<ZoneDefinition>) {
 		this._zoneDefinitionSelectedChange = value;
 	}
 }
