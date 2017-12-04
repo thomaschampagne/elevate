@@ -3,7 +3,7 @@ import { FitnessService, IPeriod } from "../services/fitness/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
-import { DayFitnessTrend } from "../models/fitness/DayFitnessTrend";
+import { DayFitnessTrend } from "../models/fitness/DayFitnessTrend.model";
 
 // DONE Filter by period until today
 // DONE Filter between dates

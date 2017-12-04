@@ -5,8 +5,8 @@ import { FitnessService, IPeriod } from './fitness.service';
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { DayStress } from "../../models/fitness/DayStress";
-import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend";
+import { DayStress } from "../../models/fitness/DayStress.model";
+import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
 
 describe('FitnessService', () => {

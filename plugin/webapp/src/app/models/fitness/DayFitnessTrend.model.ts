@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import { DayStress } from "./DayStress";
+import { DayStress } from "./DayStress.model";
 
 export class DayFitnessTrend extends DayStress {
 

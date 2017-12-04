@@ -3,8 +3,8 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { Injectable } from '@angular/core';
 import { ActivityService, IFitnessReadyActivity } from "../activity/activity.service";
-import { DayStress } from "../../models/fitness/DayStress";
-import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend";
+import { DayStress } from "../../models/fitness/DayStress.model";
+import { DayFitnessTrend } from "../../models/fitness/DayFitnessTrend.model";
 import { ISyncActivityComputed } from "../../../../../common/scripts/interfaces/ISync";
 
 /**
