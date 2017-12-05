@@ -19,10 +19,10 @@ export class ZonesSettingsComponent implements OnInit {
 
 	public static DEFAULT_ZONE_VALUE: string = "speed";
 
-	private _zoneDefinitions: ZoneDefinition[] = ZONE_DEFINITIONS;
-	private _zoneDefinitionSelected: ZoneDefinition;
-	private _userZones: IUserZones;
-	private _currentZones: IZone[];
+	public zoneDefinitions: ZoneDefinition[] = ZONE_DEFINITIONS;
+	public zoneDefinitionSelected: ZoneDefinition;
+	public userZones: IUserZones;
+	public currentZones: IZone[];
 
 	constructor(private userSettingsService: UserSettingsService,
 				private route: ActivatedRoute,
@@ -36,7 +36,7 @@ export class ZonesSettingsComponent implements OnInit {
 		this.userSettingsService.fetch().then((userSettingsSynced: IUserSettings) => {
 
 			// Load user zones data
-			this._userZones = userSettingsSynced.zones;
+			this.userZones = userSettingsSynced.zones;
 
 			// Check zoneValue provided in URL
 			this.route.params.subscribe(routeParams => {
@@ -62,7 +62,7 @@ export class ZonesSettingsComponent implements OnInit {
 		// Listen for reload request from ZonesService
 		// This happen when ZoneService perform a resetZonesToDefault of a zones set.
 		this.zonesService.zonesUpdates.subscribe((updatedZones: IZone[]) => {
-			this._currentZones = updatedZones;
+			this.currentZones = updatedZones;
 		});
 	}
 
@@ -84,7 +84,7 @@ export class ZonesSettingsComponent implements OnInit {
 	private loadZonesFromDefinition(zoneDefinition: ZoneDefinition) {
 
 		// Load current zone from zone definition provided
-		this.currentZones = _.propertyOf(this._userZones)(zoneDefinition.value);
+		this.currentZones = _.propertyOf(this.userZones)(zoneDefinition.value);
 
 		// Update current zones & zone definition managed by the zones service
 		this.zonesService.currentZones = this.currentZones;
@@ -101,34 +101,12 @@ export class ZonesSettingsComponent implements OnInit {
 		this.navigateToZone(zoneDefinition.value);
 	}
 
+	/**
+	 *
+	 * @param {string} zoneValue
+	 */
 	private navigateToZone(zoneValue: string) {
 		const selectedZoneUrl = AppRoutes.zonesSettings + "/" + zoneValue;
 		this.router.navigate([selectedZoneUrl]);
 	}
-
-	get currentZones(): IZone[] {
-		return this._currentZones;
-	}
-
-	set currentZones(value: IZone[]) {
-		this._currentZones = value;
-	}
-
-	get zoneDefinitions(): ZoneDefinition[] {
-		return this._zoneDefinitions;
-	}
-
-	set zoneDefinitions(value: ZoneDefinition[]) {
-		this._zoneDefinitions = value;
-	}
-
-	get zoneDefinitionSelected(): ZoneDefinition {
-		return this._zoneDefinitionSelected;
-	}
-
-	set zoneDefinitionSelected(value: ZoneDefinition) {
-		this._zoneDefinitionSelected = value;
-	}
-
-
 }

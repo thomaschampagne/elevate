@@ -7,7 +7,7 @@ export class ActivityService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
 
-	constructor(private _activityDao: ActivityDao) {
+	constructor(public activityDao: ActivityDao) {
 	}
 
 	/**
@@ -16,15 +16,6 @@ export class ActivityService {
 	 */
 	public fetch(): Promise<ISyncActivityComputed[]> {
 		return this.activityDao.fetch();
-	}
-
-
-	get activityDao(): ActivityDao {
-		return this._activityDao;
-	}
-
-	set activityDao(value: ActivityDao) {
-		this._activityDao = value;
 	}
 
 }

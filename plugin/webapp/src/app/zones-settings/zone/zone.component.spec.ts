@@ -54,11 +54,11 @@ describe('ZoneComponent', () => {
 		};
 
 		spyOn(zonesService, 'whisperZoneChange').and.stub();
-		spyOnProperty(component, 'zoneId', 'get').and.returnValue(sourceId);
-		spyOnProperty(component, 'zone', 'get').and.returnValue({
+		component.zoneId = sourceId;
+		component.zone = {
 			from: zoneFrom,
 			to: zoneTo
-		});
+		};
 
 		// When
 		component.whisperZoneChange(changeType);
@@ -85,11 +85,11 @@ describe('ZoneComponent', () => {
 		};
 
 		spyOn(zonesService, 'whisperZoneChange').and.stub();
-		spyOnProperty(component, 'zoneId', 'get').and.returnValue(sourceId);
-		spyOnProperty(component, 'zone', 'get').and.returnValue({
+		component.zoneId = sourceId;
+		component.zone = {
 			from: zoneFrom,
 			to: zoneTo
-		});
+		};
 
 		// When
 		component.whisperZoneChange(changeType);

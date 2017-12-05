@@ -3,7 +3,7 @@ import { Mode } from "./mode.enum";
 import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 
 export class ZoneImportExportData {
-	zoneDefinition: ZoneDefinition;
-	zonesData?: IZone[];
-	mode: Mode;
+	public zoneDefinition: ZoneDefinition;
+	public zonesData?: IZone[];
+	public mode: Mode;
 }

@@ -475,7 +475,7 @@ describe('ZonesService', () => {
 	it('should return not compliant zones with error on a "FROM"', (done: Function) => {
 
 		// Given
-		const MOCKED_ZONES = [ // Set 10 fake zones
+		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -487,10 +487,9 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
-		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
 
 		// Then
 		expect(error).not.toBeNull();
@@ -502,7 +501,7 @@ describe('ZonesService', () => {
 	it('should return not compliant zones with error on a "TO"', (done: Function) => {
 
 		// Given
-		const MOCKED_ZONES = [ // Set 10 fake zones
+		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -514,10 +513,9 @@ describe('ZonesService', () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
-		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
 
 		// When
-		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
 
 		// Then
 		expect(error).not.toBeNull();
@@ -532,7 +530,7 @@ describe('ZonesService', () => {
 		// Given
 		const MAX_ZONE_COUNT = 10;
 
-		const MOCKED_ZONES = [ // Set 10 fake zones
+		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -548,10 +546,8 @@ describe('ZonesService', () => {
 
 		spyOn(zonesService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
 
-		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
-
 		// When
-		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
 
 		// Then
 		expect(error).not.toBeNull();
@@ -566,7 +562,7 @@ describe('ZonesService', () => {
 		// Given
 		const MIN_ZONE_COUNT = 5;
 
-		const MOCKED_ZONES = [ // Set 4 fake zones
+		const FAKE_WRONG_ZONES = [ // Set 4 fake zones
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -575,14 +571,11 @@ describe('ZonesService', () => {
 
 		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
 
-		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(MOCKED_ZONES);
-
 		// When
-		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
 
 		// Then
 		expect(error).not.toBeNull();
-		expect(zonesService.currentZones.length).toEqual(MOCKED_ZONES.length);
 		expect(error).toEqual("Not compliant zones provided: expected at least " + zonesService.getMinZoneCount() + " zones");
 
 		done();
@@ -591,11 +584,11 @@ describe('ZonesService', () => {
 
 	it('should return not compliant zones is zone empty', (done: Function) => {
 
-		// Given
-		spyOnProperty(zonesService, 'currentZones', 'get').and.returnValue(null);
-
 		// When
-		const error: string = zonesService.isZonesCompliant(zonesService.currentZones);
+		const zones = null;
+
+		// Given
+		const error: string = zonesService.isZonesCompliant(zones);
 
 		// Then
 		expect(error).not.toBeNull();
@@ -627,7 +620,8 @@ describe('ZonesService', () => {
 		);
 
 		zonesService.currentZones = FAKE_EXISTING_ZONES;
-		const zoneDefinitionSpy = spyOnProperty(zonesService, 'zoneDefinition', 'get').and.returnValue(SPEED_ZONE_DEFINITION_MOCKED);
+		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
+
 		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
 
@@ -637,7 +631,7 @@ describe('ZonesService', () => {
 		// Then
 		promiseReset.then(() => {
 
-			expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
+			// expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
 			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
 

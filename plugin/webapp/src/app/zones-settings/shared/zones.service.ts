@@ -14,16 +14,27 @@ export class ZonesService {
 	private readonly MAX_ZONES_COUNT: number = 50;
 	private readonly MIN_ZONES_COUNT: number = 3;
 
-	private _currentZones: IZone[];
-	private _zoneChangeOrderUpdates: Subject<ZoneChangeOrder>;
-	private _zonesUpdates: Subject<IZone[]>;
-	private _stepUpdates: Subject<number>;
-	private _zoneDefinition: ZoneDefinition;
+	public currentZones: IZone[];
 
-	constructor(private _userSettingsService: UserSettingsService) {
-		this._zoneChangeOrderUpdates = new Subject<ZoneChangeOrder>();
-		this._zonesUpdates = new Subject<IZone[]>();
-		this._stepUpdates = new Subject<number>();
+	/**
+	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
+	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
+	 * That <ZonesComponent> has to follow change instruction
+	 * @returns {Subject<ZoneChangeWhisper>}
+	 */
+	public zoneChangeOrderUpdates: Subject<ZoneChangeOrder>;
+
+	/**
+	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
+	 */
+	public zonesUpdates: Subject<IZone[]>;
+	public stepUpdates: Subject<number>;
+	public zoneDefinition: ZoneDefinition;
+
+	constructor(public userSettingsService: UserSettingsService) {
+		this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrder>();
+		this.zonesUpdates = new Subject<IZone[]>();
+		this.stepUpdates = new Subject<number>();
 	}
 
 	/**
@@ -35,7 +46,7 @@ export class ZonesService {
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
 
-			if (this._currentZones.length >= this.getMaxZoneCount()) {
+			if (this.currentZones.length >= this.getMaxZoneCount()) {
 
 				reject("You can't add more than " + this.getMaxZoneCount() + " zones...");
 
@@ -53,12 +64,12 @@ export class ZonesService {
 				};
 
 				// Apply middle value computed to previous last zone (to)
-				this._currentZones[this._currentZones.length - 1].to = intermediateZoneValue;
+				this.currentZones[this.currentZones.length - 1].to = intermediateZoneValue;
 
 				// Add the new last zone
-				this._currentZones.push(lastZone);
+				this.currentZones.push(lastZone);
 
-				resolve("Zone <" + this._currentZones.length + "> has been added.");
+				resolve("Zone <" + this.currentZones.length + "> has been added.");
 			}
 		});
 	}
@@ -93,28 +104,28 @@ export class ZonesService {
 		return new Promise((resolve: (message: string) => void,
 							reject: (error: string) => void) => {
 
-			if (this._currentZones.length <= this.getMinZoneCount()) {
+			if (this.currentZones.length <= this.getMinZoneCount()) {
 
 				reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
 
 			} else {
 
 				const isFirstZone = (index == 0);
-				const isLastZone = (index == (this._currentZones.length - 1));
+				const isLastZone = (index == (this.currentZones.length - 1));
 
 				if (isFirstZone || isLastZone) {
 
-					this._currentZones.splice(index, 1);
+					this.currentZones.splice(index, 1);
 
 					resolve("Zone <" + (index + 1) + "> has been removed.");
 
 				} else {
 
 					// Update next from zone with previous zone to
-					this._currentZones[index + 1].from = this._currentZones[index - 1].to;
+					this.currentZones[index + 1].from = this.currentZones[index - 1].to;
 
 					// Remove zone middle zone id here...
-					this._currentZones.splice(index, 1);
+					this.currentZones.splice(index, 1);
 
 					resolve("Zone <" + (index + 1) + "> has been removed.");
 
@@ -139,7 +150,7 @@ export class ZonesService {
 		}
 
 		const isFirstZoneChange = (zoneChange.sourceId == 0);
-		const isLastZoneChange = (zoneChange.sourceId == (this._currentZones.length - 1));
+		const isLastZoneChange = (zoneChange.sourceId == (this.currentZones.length - 1));
 
 		let instruction: ZoneChangeOrder = {
 			sourceId: zoneChange.sourceId,
@@ -195,38 +206,38 @@ export class ZonesService {
 	 *
 	 * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public isZonesCompliant(zone: IZone[]): string {
+	public isZonesCompliant(zones: IZone[]): string {
 
 		const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
-		if (!zone) {
+		if (!zones) {
 			return "No zones provided";
 		}
 
-		if (zone.length > this.getMaxZoneCount()) {
+		if (zones.length > this.getMaxZoneCount()) {
 			return "Not compliant zones provided: expected at max " + this.getMaxZoneCount() + " zones";
 		}
 
-		if (zone.length < this.getMinZoneCount()) {
+		if (zones.length < this.getMinZoneCount()) {
 			return "Not compliant zones provided: expected at least " + this.getMinZoneCount() + " zones";
 		}
 
-		for (let i = 0; i < zone.length; i++) {
+		for (let i = 0; i < zones.length; i++) {
 
 
 			if (i === 0) { // First zone
-				if (zone[i].to != zone[i + 1].from) {
+				if (zones[i].to != zones[i + 1].from) {
 					return NOT_COMPLIANT_ZONE;
 				}
 
-			} else if (i < (zone.length - 1)) { // Middle zone
+			} else if (i < (zones.length - 1)) { // Middle zone
 
-				if (zone[i].to != zone[i + 1].from || zone[i].from != zone[i - 1].to) {
+				if (zones[i].to != zones[i + 1].from || zones[i].from != zones[i - 1].to) {
 					return NOT_COMPLIANT_ZONE;
 				}
 
 			} else { // Last zone
-				if (zone[i].from != zone[i - 1].to) {
+				if (zones[i].from != zones[i - 1].to) {
 					return NOT_COMPLIANT_ZONE;
 				}
 			}
@@ -324,38 +335,8 @@ export class ZonesService {
 		this.stepUpdates.next(step);
 	}
 
-	/**
-	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
-	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
-	 * That <ZonesComponent> has to follow change instruction
-	 * @returns {Subject<ZoneChangeWhisper>}
-	 */
-	get zoneChangeOrderUpdates(): Subject<ZoneChangeOrder> {
-		return this._zoneChangeOrderUpdates;
-	}
-
-	/**
-	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
-	 * @returns {Subject<ZoneChangeWhisper>}
-	 */
-	get zonesUpdates(): Subject<IZone[]> {
-		return this._zonesUpdates;
-	}
-
-	get zoneDefinition(): ZoneDefinition {
-		return this._zoneDefinition;
-	}
-
-	get stepUpdates(): Subject<number> {
-		return this._stepUpdates;
-	}
-
-	set zoneDefinition(value: ZoneDefinition) {
-		this._zoneDefinition = value;
-	}
-
-	public getLastZone() {
-		return _.last(this._currentZones);
+	public getLastZone(): IZone {
+		return _.last(this.currentZones);
 	}
 
 	public getMaxZoneCount(): number {
@@ -364,18 +345,6 @@ export class ZonesService {
 
 	public getMinZoneCount(): number {
 		return this.MIN_ZONES_COUNT;
-	}
-
-	get currentZones(): IZone[] {
-		return this._currentZones;
-	}
-
-	set currentZones(value: IZone[]) {
-		this._currentZones = value;
-	}
-
-	get userSettingsService(): UserSettingsService {
-		return this._userSettingsService;
 	}
 
 }

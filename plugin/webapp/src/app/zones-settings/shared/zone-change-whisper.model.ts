@@ -1,6 +1,6 @@
 export class ZoneChangeWhisper {
-	sourceId: number;
-	to: boolean;
-	from: boolean;
-	value: number;
+	public sourceId: number;
+	public to: boolean;
+	public from: boolean;
+	public value: number;
 }

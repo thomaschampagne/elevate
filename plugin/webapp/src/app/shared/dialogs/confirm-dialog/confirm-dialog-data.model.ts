@@ -1,4 +1,4 @@
 export class ConfirmDialogData {
-	title: string;
-	content: string;
+	public title: string;
+	public content: string;
 }

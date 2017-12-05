@@ -1,6 +1,6 @@
 import { IUserSettings } from "./interfaces/IUserSettings";
 
-export let userSettings: IUserSettings = {
+export const userSettings: IUserSettings = {
     autoSyncMinutes: 60,
     localStorageMustBeCleared: false,
 	systemUnit: "metric",

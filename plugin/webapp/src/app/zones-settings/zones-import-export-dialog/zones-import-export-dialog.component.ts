@@ -16,18 +16,18 @@ export class ZonesImportExportDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	private _zonesJsonData: string;
-	private _placeholder: string;
+	public zonesJsonData: string;
+	public placeholder: string;
 
 	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialog>,
-				@Inject(MAT_DIALOG_DATA) private _data: ZoneImportExportData,
+				@Inject(MAT_DIALOG_DATA) private data: ZoneImportExportData,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit() {
-		this._placeholder = (this.data.mode == Mode.IMPORT) ? "Enter here something like [{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, \"to\": d }]" : null;
-		this._zonesJsonData = JSON.stringify(this.data.zonesData);
+		this.placeholder = (this.data.mode == Mode.IMPORT) ? "Enter here something like [{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, \"to\": d }]" : null;
+		this.zonesJsonData = JSON.stringify(this.data.zonesData);
 	}
 
 	public OnImport() {
@@ -40,27 +40,5 @@ export class ZonesImportExportDialog implements OnInit {
 		});
 	}
 
-	get data(): ZoneImportExportData {
-		return this._data;
-	}
 
-	set data(value: ZoneImportExportData) {
-		this._data = value;
-	}
-
-	get zonesJsonData(): string {
-		return this._zonesJsonData;
-	}
-
-	set zonesJsonData(value: string) {
-		this._zonesJsonData = value;
-	}
-
-	get placeholder(): string {
-		return this._placeholder;
-	}
-
-	set placeholder(value: string) {
-		this._placeholder = value;
-	}
 }

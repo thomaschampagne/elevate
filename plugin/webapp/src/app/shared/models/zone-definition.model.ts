@@ -1,11 +1,11 @@
 import { ZoneCustomDisplay } from "./zone-custom-display.model";
 
 export class ZoneDefinition {
-	name: string;
-	value: string;
-	units: string;
-	step: number;
-	min: number;
-	max: number;
-	customDisplay: ZoneCustomDisplay
+	public name: string;
+	public value: string;
+	public units: string;
+	public step: number;
+	public min: number;
+	public max: number;
+	public customDisplay: ZoneCustomDisplay
 }

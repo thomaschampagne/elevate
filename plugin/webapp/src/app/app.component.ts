@@ -17,14 +17,14 @@ export interface MainMenuItem {
 })
 export class AppComponent implements OnInit {
 
-	private static updateToolBarTitle(url: string): string {
+	public static updateToolBarTitle(url: string): string {
 		const splitUrl = _.split(url, '/');
 		splitUrl.shift(); // Remove first slash
 		return _.startCase(_.upperFirst(_.first(splitUrl)));
 	}
 
-	private _title: string;
-	private _mainMenuItems: MainMenuItem[] = [
+	public title: string;
+	public mainMenuItems: MainMenuItem[] = [
 		{
 			name: 'Fitness Trend',
 			icon: 'timeline',
@@ -56,29 +56,17 @@ export class AppComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this._title = AppComponent.updateToolBarTitle(this.router.url);
+		this.title = AppComponent.updateToolBarTitle(this.router.url);
 
 		this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this._title = AppComponent.updateToolBarTitle(routerEvent.url);
+				this.title = AppComponent.updateToolBarTitle(routerEvent.url);
 			}
 		});
 	}
 
 	public onMenuClicked(item: MainMenuItem): void {
 		console.log("Clicked %s", item.name);
-	}
-
-	get title(): string {
-		return this._title;
-	}
-
-	set title(value: string) {
-		this._title = value;
-	}
-
-	get mainMenuItems(): MainMenuItem[] {
-		return this._mainMenuItems;
 	}
 
 }

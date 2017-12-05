@@ -1,4 +1,4 @@
 export class ZoneChangeType {
-	from: boolean;
-	to: boolean;
+	public from: boolean;
+	public to: boolean;
 }

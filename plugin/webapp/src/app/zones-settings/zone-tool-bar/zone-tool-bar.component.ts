@@ -16,16 +16,16 @@ import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 export class ZoneToolBarComponent implements OnInit {
 
 	@Input("currentZonesLength")
-	private _currentZonesLength: number;
+	public currentZonesLength: number;
 
 	@Input("zoneDefinitions")
-	private _zoneDefinitions: ZoneDefinition[];
+	public zoneDefinitions: ZoneDefinition[];
 
 	@Input("zoneDefinitionSelected")
-	private _zoneDefinitionSelected: ZoneDefinition;
+	public zoneDefinitionSelected: ZoneDefinition;
 
 	@Output("zoneDefinitionSelectedChange")
-	private _zoneDefinitionSelectedChange: EventEmitter<ZoneDefinition> = new EventEmitter<ZoneDefinition>();
+	public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinition> = new EventEmitter<ZoneDefinition>();
 
 	constructor(private zonesService: ZonesService,
 				private dialog: MatDialog,
@@ -122,37 +122,5 @@ export class ZoneToolBarComponent implements OnInit {
 
 	private popSnack(message: string): void {
 		this.snackBar.open(message, 'Close', {duration: 2500});
-	}
-
-	get currentZonesLength(): number {
-		return this._currentZonesLength;
-	}
-
-	set currentZonesLength(value: number) {
-		this._currentZonesLength = value;
-	}
-
-	get zoneDefinitions(): ZoneDefinition[] {
-		return this._zoneDefinitions;
-	}
-
-	set zoneDefinitions(value: ZoneDefinition[]) {
-		this._zoneDefinitions = value;
-	}
-
-	get zoneDefinitionSelected(): ZoneDefinition {
-		return this._zoneDefinitionSelected;
-	}
-
-	set zoneDefinitionSelected(value: ZoneDefinition) {
-		this._zoneDefinitionSelected = value;
-	}
-
-	get zoneDefinitionSelectedChange(): EventEmitter<ZoneDefinition> {
-		return this._zoneDefinitionSelectedChange;
-	}
-
-	set zoneDefinitionSelectedChange(value: EventEmitter<ZoneDefinition>) {
-		this._zoneDefinitionSelectedChange = value;
 	}
 }

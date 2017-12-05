@@ -26,7 +26,7 @@ export class OptionHelperDialog implements OnInit {
 	public html: SafeHtml;
 	public markDownParser: MarkDownIt.MarkdownIt;
 
-	constructor(@Inject(MAT_DIALOG_DATA) private dialogData: OptionHelperData,
+	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperData,
 				private domSanitizer: DomSanitizer) {
 		this.markDownParser = new MarkDownIt();
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});

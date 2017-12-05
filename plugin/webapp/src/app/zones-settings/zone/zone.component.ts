@@ -16,34 +16,34 @@ import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 export class ZoneComponent implements OnInit {
 
 	@Input("zone")
-	private _zone: IZone;
+	public zone: IZone;
 
 	@Input("zoneId")
-	private _zoneId: number;
+	public zoneId: number;
 
 	@Input("zoneFrom")
-	private _zoneFrom: number;
+	public zoneFrom: number;
 
 	@Input("zoneTo")
-	private _zoneTo: number;
+	public zoneTo: number;
 
 	@Input("prevZoneFrom")
-	private _prevZoneFrom: number;
+	public prevZoneFrom: number;
 
 	@Input("nextZoneTo")
-	private _nextZoneTo: number;
+	public nextZoneTo: number;
 
 	@Input("isFirstZone")
-	private _isFirstZone: boolean;
+	public isFirstZone: boolean;
 
 	@Input("isLastZone")
-	private _isLastZone: boolean;
+	public isLastZone: boolean;
 
 	@Input("currentZones")
-	private _currentZones: IZone[];
+	public currentZones: IZone[];
 
 	@Input("zoneDefinition")
-	private _zoneDefinition: ZoneDefinition;
+	public zoneDefinition: ZoneDefinition;
 
 	constructor(private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
@@ -53,7 +53,7 @@ export class ZoneComponent implements OnInit {
 
 		this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
 
-			const isChangeOrderForMe = (!_.isNull(change) && (this._zoneId == change.destinationId));
+			const isChangeOrderForMe = (!_.isNull(change) && (this.zoneId == change.destinationId));
 
 			if (isChangeOrderForMe) {
 				this.applyChangeOrder(change);
@@ -148,85 +148,5 @@ export class ZoneComponent implements OnInit {
 
 	private popSnack(message: string): void {
 		this.snackBar.open(message, 'Close', {duration: 2500});
-	}
-
-	get zone(): IZone {
-		return this._zone;
-	}
-
-	set zone(value: IZone) {
-		this._zone = value;
-	}
-
-	get zoneId(): number {
-		return this._zoneId;
-	}
-
-	set zoneId(value: number) {
-		this._zoneId = value;
-	}
-
-	get zoneFrom(): number {
-		return this._zoneFrom;
-	}
-
-	set zoneFrom(value: number) {
-		this._zoneFrom = value;
-	}
-
-	get zoneTo(): number {
-		return this._zoneTo;
-	}
-
-	set zoneTo(value: number) {
-		this._zoneTo = value;
-	}
-
-	get prevZoneFrom(): number {
-		return this._prevZoneFrom;
-	}
-
-	set prevZoneFrom(value: number) {
-		this._prevZoneFrom = value;
-	}
-
-	get nextZoneTo(): number {
-		return this._nextZoneTo;
-	}
-
-	set nextZoneTo(value: number) {
-		this._nextZoneTo = value;
-	}
-
-	get isFirstZone(): boolean {
-		return this._isFirstZone;
-	}
-
-	set isFirstZone(value: boolean) {
-		this._isFirstZone = value;
-	}
-
-	get isLastZone(): boolean {
-		return this._isLastZone;
-	}
-
-	set isLastZone(value: boolean) {
-		this._isLastZone = value;
-	}
-
-	get currentZones(): IZone[] {
-		return this._currentZones;
-	}
-
-	set currentZones(value: IZone[]) {
-		this._currentZones = value;
-	}
-
-	get zoneDefinition(): ZoneDefinition {
-		return this._zoneDefinition;
-	}
-
-	set zoneDefinition(value: ZoneDefinition) {
-		this._zoneDefinition = value;
 	}
 }

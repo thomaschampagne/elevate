@@ -1,5 +1,5 @@
 export class ZoneCustomDisplay {
-	name: string;
-	zoneValue: string;
-	output: (input: number) => string;
+	public name: string;
+	public zoneValue: string;
+	public output: (input: number) => string;
 }

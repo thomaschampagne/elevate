@@ -12,8 +12,8 @@ export class ConfirmDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	constructor(private _dialogRef: MatDialogRef<ConfirmDialog>,
-				@Inject(MAT_DIALOG_DATA) private _dialogData: ConfirmDialogData) {
+	constructor(public dialogRef: MatDialogRef<ConfirmDialog>,
+				@Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogData) {
 	}
 
 	public ngOnInit() {
@@ -25,21 +25,5 @@ export class ConfirmDialog implements OnInit {
 
 	public OnCancel() {
 		this.dialogRef.close(false);
-	}
-
-	get dialogData(): ConfirmDialogData {
-		return this._dialogData;
-	}
-
-	set dialogData(value: ConfirmDialogData) {
-		this._dialogData = value;
-	}
-
-	get dialogRef(): MatDialogRef<ConfirmDialog> {
-		return this._dialogRef;
-	}
-
-	set dialogRef(value: MatDialogRef<ConfirmDialog>) {
-		this._dialogRef = value;
 	}
 }
