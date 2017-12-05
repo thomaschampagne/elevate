@@ -20,7 +20,7 @@ export class ZonesImportExportDialog implements OnInit {
 	public placeholder: string;
 
 	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialog>,
-				@Inject(MAT_DIALOG_DATA) private data: ZoneImportExportData,
+				@Inject(MAT_DIALOG_DATA) public data: ZoneImportExportData,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}

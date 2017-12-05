@@ -12,11 +12,7 @@ export class GotItDialog implements OnInit {
 	public static readonly MAX_WIDTH: string = '80%';
 	public static readonly MIN_WIDTH: string = '40%';
 
-	constructor(@Inject(MAT_DIALOG_DATA) private dialogData: GotItDialogData, private dialogRef: MatDialogRef<GotItDialog>) {
-	}
-
-	public onNoClick(): void {
-		this.dialogRef.close();
+	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: GotItDialogData, private dialogRef: MatDialogRef<GotItDialog>) {
 	}
 
 	public ngOnInit(): void {
