@@ -110,7 +110,7 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should get a user setting', (done: Function) => {
+	it('should get a userGender setting', (done: Function) => {
 
 		// Given
 		const key = "userGender";
@@ -127,6 +127,36 @@ describe('UserSettingsDao', () => {
 
 		// Then
 		promiseGet.then((result: string) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedResult);
+			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it('should get a userWeight setting', (done: Function) => {
+
+		// Given
+		const key = "userWeight";
+		const expectedSettings = _.cloneDeep(userSettings);
+		const expectedResult = expectedSettings.userWeight;
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(expectedSettings);
+			}
+		});
+
+		// When
+		const promiseGet: Promise<Object> = userSettingsDao.get(key);
+
+		// Then
+		promiseGet.then((result: number) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);

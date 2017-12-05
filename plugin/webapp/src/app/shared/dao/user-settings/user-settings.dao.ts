@@ -33,10 +33,10 @@ export class UserSettingsDao {
 			this.chromeStorageSync().get(userSettings, (userSettingsSynced: IUserSettings) => {
 
 				const value = userSettingsSynced[key];
-				if (!_.isEmpty(value)) {
-					resolve(value);
-				} else {
+				if (_.isUndefined(value)) {
 					reject(key + " not found in user settings")
+				} else {
+					resolve(value);
 				}
 			});
 		});

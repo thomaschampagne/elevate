@@ -88,7 +88,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_WEIGHT).then(
 				saved => this.weight = saved,
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
 
 			this.popError();
@@ -109,7 +109,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
 					saved => this.maxHr = saved,
-					error => this.snackBar.open("Error: " + error)
+					error => this.popError("Error: " + error)
 				);
 
 			} else {
@@ -122,7 +122,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
 				saved => this.maxHr = saved,
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
 
 			this.popError();
@@ -142,7 +142,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
 					saved => this.restHr = saved,
-					error => this.snackBar.open("Error: " + error)
+					error => this.popError("Error: " + error)
 				);
 
 			} else {
@@ -152,7 +152,7 @@ export class AthleteSettingsComponent implements OnInit {
 		} else {
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
 				saved => this.restHr = saved,
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
 			this.popError();
 		}
@@ -166,11 +166,11 @@ export class AthleteSettingsComponent implements OnInit {
 		if (_.isNumber(this.ftp) && this.ftp < 0) {
 
 			// Wrong value...
-			this.popError();
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP).then(
 				saved => this.ftp = saved,
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
+			this.popError();
 
 		} else {
 			// Ok...
@@ -189,14 +189,14 @@ export class AthleteSettingsComponent implements OnInit {
 
 		if (_.isNumber(this.swimFtp) && this.swimFtp < 0) {
 			// Wrong value...
-			this.popError();
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => {
 					this.swimFtp = saved;
 					this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved);
 				},
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
+			this.popError();
 
 		} else {
 			// Ok...
@@ -248,11 +248,11 @@ export class AthleteSettingsComponent implements OnInit {
 
 		if (hasErrors) {
 			// Wrong value...
-			this.popError();
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved),
-				error => this.snackBar.open("Error: " + error)
+				error => this.popError("Error: " + error)
 			);
+			this.popError();
 		}
 
 
@@ -267,6 +267,9 @@ export class AthleteSettingsComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
 	private profileChanged() {
 
 		this.localStorageMustBeCleared();
@@ -286,6 +289,11 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
+	/**
+	 *
+	 * @param {string} key
+	 * @param value
+	 */
 	private saveSetting(key: string, value: any): void {
 		this.userSettingsService.update(key, value).then(() => {
 			console.log(key + " has been updated to " + value);
@@ -294,10 +302,19 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
+	/**
+	 *
+	 * @param {string} key
+	 * @returns {Promise<any>}
+	 */
 	private getSavedSetting(key: string): Promise<any> {
 		return this.userSettingsService.get(key);
 	}
 
+	/**
+	 *
+	 * @param {string} customMessage
+	 */
 	private popError(customMessage?: string) {
 
 		let message: string = "Invalid value entered. Reset to previous value.";
@@ -311,10 +328,10 @@ export class AthleteSettingsComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
 	private popHeartRateError() {
-		this.snackBar.open("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value",
-			'Close', {
-				duration: 2500
-			});
+		this.popError("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value");
 	}
 }
