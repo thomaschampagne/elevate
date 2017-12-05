@@ -3979,10 +3979,14 @@ function mg_place_marker_text(gm, args) {
           d3.select(this).style('cursor', 'pointer')
             .on('click', d.click);
         }
-		  if (d.mouseover) {
-			  d3.select(this).style('cursor', 'pointer')
-				  .on('mouseover', d.mouseover);
-		  }
+        if (d.mouseover) {
+          d3.select(this).style('cursor', 'pointer')
+            .on('mouseover', d.mouseover);
+        }
+        if (d.mouseout) {
+            d3.select(this).style('cursor', 'pointer')
+                .on('mouseout', d.mouseout);
+        }
       });
 
   mg_prevent_horizontal_overlap(gm.selectAll('.mg-marker-text').nodes(), args);
@@ -6190,7 +6194,7 @@ function mg_color_point_mouseover(args, elem, d) {
     if (args.legend_target) {
 
       var div = d3.select(args.legend_target).append('div').classed('mg-bar-target-legend', true);
-
+      
       if (args.orientation == 'horizontal') labels = args.scales.Y.domain()
       else labels = args.scales.X.domain();
 
