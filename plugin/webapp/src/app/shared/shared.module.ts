@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
 import { MaterialModule } from "./modules/material.module";
-import { MatNativeDateModule } from "@angular/material";
 import { NgPipesModule } from "ngx-pipes";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { AppComponent } from "../app.component";
 import { AthleteSettingsComponent } from "../athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../zones-settings/zones-settings.component";
@@ -34,7 +29,6 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 	declarations: [
 
 		// Components
-		AppComponent,
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
 		SwimFtpHelperComponent,
@@ -71,13 +65,9 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 	],
 	imports: [
 
-		CommonModule,
-		AppRoutingModule,
-		BrowserModule,
 		FormsModule,
-		HttpClientModule,
+		AppRoutingModule,
 		MaterialModule,
-		MatNativeDateModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
 		NgPipesModule
@@ -85,13 +75,9 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 	],
 	exports: [
 
-		CommonModule,
-		AppRoutingModule,
-		BrowserModule,
 		FormsModule,
-		HttpClientModule,
+		AppRoutingModule,
 		MaterialModule,
-		MatNativeDateModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
 		NgPipesModule
