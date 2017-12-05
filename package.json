@@ -6,6 +6,7 @@
 		"package": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package",
 		"build": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js build",
 		"build:webapp": "npm run clean:webapp-dist && npm run tsc:compile && cd ./plugin/webapp/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
+		"build:webapp:prod": "npm run build:webapp -- --prod",
 		"postinstall": "cd ./plugin/ && npm install && cd ./webapp/ && npm install",
 		"package:preview": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package --preview",
 		"start": "node ./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\"",
