@@ -11,14 +11,14 @@ import { Marker } from "./marker.model";
 
 // DONE Filter by period until today
 // DONE Filter between dates
-// TODO Show graph point legend: CTL, ATL, TSB
+// DONE Show graph point legend: CTL, ATL, TSB
+// TODO Filter with power meter
+// TODO Filter with power swim
 // TODO Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // TODO Show preview days as dashed line
-// TODO Filter with power swim
-// TODO Filter with power meter
 // TODO Support form zones
-// TODO Zoom in selection addon?!
-// TODO Forward to strava.com activities
+// DONE Forward to strava.com activities
+// TODO UI Style
 // TODO Show helper info
 // TODO Show info when no data. (Wrap in a parent FitnessTrendComponent (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
@@ -28,6 +28,13 @@ import { Marker } from "./marker.model";
 	styleUrls: ['./fitness-trend-graph.component.scss']
 })
 export class FitnessTrendGraphComponent implements OnInit {
+
+	public static readonly STRAVA_ACTIVITY_ID_URL: string = "https://www.strava.com/activities/{activityId}";
+
+	private static openActivity(activityId: number) { // TODO Move to be used elsewhere?!
+		window.open(FitnessTrendGraphComponent.STRAVA_ACTIVITY_ID_URL
+			.replace("{activityId}", activityId.toString()), "_blank");
+	}
 
 	public graphConfig = {
 		data: [],
@@ -47,12 +54,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 		y_accessor: 'value',
 		inflator: 1.2,
 		showActivePoint: false,
-		clickableMarkerLines: true,
+		// clickableMarkerLines: true,
 		show_confidence_band: ['lower', 'upper'],
 		markers: null,
 		legend: null,
 		click: function (data: { key: Date, values: any[] }, index: number) {
 			console.log(data, index);
+			// this.onMouseOverDate(data.key); // TODO
 		},
 		mouseover: (data: { key: Date, values: any[] }, index: number) => {
 			this.onMouseOverDate(data.key);
@@ -142,7 +150,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 					},*/
 					click: () => {
 						_.forEach(dayFitnessTrend.ids, (activityId: number) => {
-							window.open("https://www.strava.com/activities/" + activityId, "_blank");
+							FitnessTrendGraphComponent.openActivity(activityId);
 						});
 					},
 					label: "🠷" // or "▾" Found @ http://www.amp-what.com/
