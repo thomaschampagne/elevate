@@ -1,7 +1,7 @@
 import { GraphPoint } from "./graph-point.model";
 import { Marker } from "./marker.model";
 
-export class ViewableGraphData { // TODO Extract model
+export class ViewableGraphData {
 
 	public fatigueLine: GraphPoint[] = [];
 	public fitnessLine: GraphPoint[] = [];

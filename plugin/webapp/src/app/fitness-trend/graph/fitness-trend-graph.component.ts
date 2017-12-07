@@ -368,17 +368,15 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 
 	public onTrainingZonesToggle(): void {
-
-		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
+		// Create baselines
 	}
 
 	public onPowerMeterToggle(): void {
 		this.reload();
-		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 	}
 
 	public onSwimToggle(): void {
-		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
+		this.reload();
 	}
 
 	/**
