@@ -157,7 +157,10 @@
 			</mat-slide-toggle>
 		</div>
 
-		<div id="fitnessTrendGraph"></div>
+		<div
+			[ngClass]="{'clickableMarker': watchedDay.activitiesName.length}"
+			id="fitnessTrendGraph">
+		</div>
 
 		<!--<div>{{watchedDay | json}}</div>-->
 

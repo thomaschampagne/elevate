@@ -29,13 +29,6 @@ import { Marker } from "./marker.model";
 })
 export class FitnessTrendGraphComponent implements OnInit {
 
-	public static readonly STRAVA_ACTIVITY_ID_URL: string = "https://www.strava.com/activities/{activityId}";
-
-	private static openActivity(activityId: number) { // TODO Move to be used elsewhere?!
-		window.open(FitnessTrendGraphComponent.STRAVA_ACTIVITY_ID_URL
-			.replace("{activityId}", activityId.toString()), "_blank");
-	}
-
 	public graphConfig = {
 		data: [],
 		full_width: true,
@@ -58,18 +51,17 @@ export class FitnessTrendGraphComponent implements OnInit {
 		show_confidence_band: ['lower', 'upper'],
 		markers: null,
 		legend: null,
-		click: function (data: { key: Date, values: any[] }, index: number) {
-			console.log(data, index);
-			// this.onMouseOverDate(data.key); // TODO
+		click: (data: { key: Date, values: any[] }, index: number) => {
+			const dayFitnessTrend = this.getDayFitnessTrendFromDate(data.key);
+			this.openStravaActivities(dayFitnessTrend.ids);
 		},
-		mouseover: (data: { key: Date, values: any[] }, index: number) => {
+		mouseover: (data: { key: Date, values: any[] }, index: number, c: any) => {
 			this.onMouseOverDate(data.key);
 		},
 		mouseout: () => {
-			this.watchedDay = this.getTodayWatchedDay();
-		},
+			this.setTodayAsWatchedDay();
+		}
 	};
-
 
 	public lastPeriods: LastPeriod[];
 
@@ -90,13 +82,18 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public ngOnInit(): void {
 
 		// Generate graph data
-		this.fitnessService.computeTrend(null,
-			null,
-			null,
-			null).then((fitnessTrend: DayFitnessTrend[]) => {
+		// TODO Recompute below line along power/swim changes
+		const powerMeterEnable = null;
+		const cyclingFtp = null;
+		const swimEnable = null;
+		const swimFtp = null;
+
+		this.fitnessService.computeTrend(powerMeterEnable,
+			cyclingFtp,
+			swimEnable,
+			swimFtp).then((fitnessTrend: DayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.watchedDay = this.getTodayWatchedDay();
 			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
 			this.lastPeriodSelected = _.find(this.lastPeriods, {key: "4_months"});
 
@@ -109,6 +106,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 */
 	private init(): void {
+
+		this.setTodayAsWatchedDay();
 
 		let fatigueLine: GraphPoint[] = [];
 		let fitnessLine: GraphPoint[] = [];
@@ -143,15 +142,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 					mouseover: () => {
 						this.onMouseOverDate(dayFitnessTrend.date);
 					},
-					/*mouseout: () => {
-						TODO Update metrics graphics
-						this.onMouseOverDate(this.getTodayWatchedDay().date);
-						this.watchedDay = this.getTodayWatchedDay();
-					},*/
+					mouseout: () => {
+						this.setTodayAsWatchedDay();
+					},
 					click: () => {
-						_.forEach(dayFitnessTrend.ids, (activityId: number) => {
-							FitnessTrendGraphComponent.openActivity(activityId);
-						});
+						this.openStravaActivities(dayFitnessTrend.ids);
 					},
 					label: "🠷" // or "▾" Found @ http://www.amp-what.com/
 				};
@@ -159,8 +154,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			} else if (dayFitnessTrend.dateString == today) {
 				marker = {
 					date: new Date(),
-					label: "☀"
-					// label: "☀️"
+					label: "☀" // or label: "☀️"
 				};
 			}
 
@@ -180,6 +174,22 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.graphConfig.markers = this.markers;
 
 		this.updateGraph(this.lastPeriodSelected /* TODO Remove and user directly in method no?!*/);
+	}
+
+	/**
+	 *
+	 * @param {number[]} ids
+	 */
+	private openStravaActivities(ids: number[]) {
+
+		if (ids.length > 0) {
+			const url: string = "https://www.strava.com/activities/{activityId}"; // TODO Move to be used elsewhere?! Table as instance
+			_.forEach(ids, (id: number) => {
+				window.open(url.replace("{activityId}", id.toString()), "_blank");
+			});
+		} else {
+			console.warn("No activities found");
+		}
 	}
 
 	/**
@@ -247,14 +257,20 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private onMouseOverDate(date: Date): void {
 
 		// Update watched day
-		this.watchedDay = _.find(this.fitnessTrend, {
+		this.watchedDay = this.getDayFitnessTrendFromDate(date);
+
+
+		/*this.watchedDay = _.find(this.fitnessTrend, {
 			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
 		});
-		// console.warn(this.watchedDay);
-
+*/
 		/*const isActiveDay = this.watchedDay.activitiesName.length > 0;
 		if (isActiveDay) {
-			// TODO My stuff !
+
+			// Cursor pointer to inform of click
+
+		} else {
+
 		}*/
 	}
 
@@ -263,9 +279,25 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @returns {DayFitnessTrend}
 	 */
 	private getTodayWatchedDay(): DayFitnessTrend {
+		// return _.find(this.fitnessTrend, {
+		// 	dateString: moment().format(DayFitnessTrend.DATE_FORMAT)
+		// });
+		return this.getDayFitnessTrendFromDate(new Date());
+	}
+
+	/**
+	 *
+	 * @param {Date} date
+	 * @returns {DayFitnessTrend}
+	 */
+	private getDayFitnessTrendFromDate(date: Date): DayFitnessTrend {
 		return _.find(this.fitnessTrend, {
-			dateString: moment().format(DayFitnessTrend.DATE_FORMAT)
+			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
 		});
+	}
+
+	private setTodayAsWatchedDay(): void {
+		this.watchedDay = this.getTodayWatchedDay();
 	}
 
 	/**

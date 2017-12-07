@@ -12,6 +12,11 @@
 	//margin-bottom: 10px;
 }
 
+// Class enabled via ngClass when active day on mouseover
+.clickableMarker {
+	cursor: pointer;
+}
+
 /**
  * Pimp metrics graphic marker lines
  */
