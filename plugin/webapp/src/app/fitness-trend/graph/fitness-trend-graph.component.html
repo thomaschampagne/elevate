@@ -1,14 +1,14 @@
-<mat-card *ngIf="watchedDay">
+<mat-card *ngIf="viewedDay">
 	<mat-card-title>
 		<div fxLayout="row" fxFlexAlign="start start" class="mat-headline">
 			<div fxFlex="175px">
-				Fitness {{watchedDay.printFitness()}}
+				Fitness {{viewedDay.printFitness()}}
 			</div>
 			<div fxFlex="175px">
-				Fatigue {{watchedDay.printFatigue()}}
+				Fatigue {{viewedDay.printFatigue()}}
 			</div>
 			<div fxFlex="175px">
-				Form {{watchedDay.printForm()}}
+				Form {{viewedDay.printForm()}}
 			</div>
 			<button mat-icon-button fxFlex>
 				<mat-icon>info</mat-icon>
@@ -18,57 +18,57 @@
 		<mat-card-subtitle>
 
 			<div>
-				<span>{{watchedDay.printDate()}}</span>
+				<span>{{viewedDay.printDate()}}</span>
 			</div>
 			<div>
-				<span>{{watchedDay.printActivities()}}</span>
+				<span>{{viewedDay.printActivities()}}</span>
 			</div>
 			<div>
-				<span *ngIf="!watchedDay.finalStressScore">No stress score</span>
-				<span *ngIf="watchedDay.finalStressScore">
+				<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
+				<span *ngIf="viewedDay.finalStressScore">
 					<!--Stress Score ➔-->
 					Stress Score:
 					<!--Trimp-->
-					<span *ngIf="watchedDay.trimpScore">
-						{{watchedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+					<span *ngIf="viewedDay.trimpScore">
+						{{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
 					</span>
 
 					<!--PSS-->
-					<span *ngIf="watchedDay.powerStressScore">
-						<span *ngIf="watchedDay.trimpScore">
+					<span *ngIf="viewedDay.powerStressScore">
+						<span *ngIf="viewedDay.trimpScore">
 							&nbsp;/&nbsp;
 						</span>
-						{{watchedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
+						{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
 					</span>
 
 					<!--SwimSS-->
-					<span *ngIf="watchedDay.swimStressScore">
-						<span *ngIf="watchedDay.trimpScore">
+					<span *ngIf="viewedDay.swimStressScore">
+						<span *ngIf="viewedDay.trimpScore">
 							&nbsp;/&nbsp;
 						</span>
-						{{watchedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+						{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
 					</span>
 					<!--Final-->
 					<span>
-						&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{watchedDay.printFinalStressScore()}}</strong>
+						&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>
 					</span>
 				</span>
 			</div>
 
-			<!--			<span *ngIf="watchedDay.finalStressScore">
+			<!--			<span *ngIf="viewedDay.finalStressScore">
                             ➔
-                            <span *ngIf="watchedDay.trimpScore">
-                                {{watchedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+                            <span *ngIf="viewedDay.trimpScore">
+                                {{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
                             </span>
-                            <span *ngIf="watchedDay.powerStressScore">
-                                {{watchedDay.printPowerStressScore()}} <sub><i>PSS</i></sub>
+                            <span *ngIf="viewedDay.powerStressScore">
+                                {{viewedDay.printPowerStressScore()}} <sub><i>PSS</i></sub>
                             </span>
-                            <span *ngIf="watchedDay.swimStressScore">
-                                {{watchedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+                            <span *ngIf="viewedDay.swimStressScore">
+                                {{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
                             </span>
                             ➔
-                            <span *ngIf="watchedDay.finalStressScore">
-                                {{watchedDay.printFinalStressScore()}} <sub><i>Final Stress Score</i></sub>
+                            <span *ngIf="viewedDay.finalStressScore">
+                                {{viewedDay.printFinalStressScore()}} <sub><i>Final Stress Score</i></sub>
                             </span>
                         </span>-->
 		</mat-card-subtitle>
@@ -80,16 +80,16 @@
 		<!--style="background-color: red;"-->
 
 
-		<!--<div fxLayout="column" fxFlexAlign="start start" class="watchedDay mat-subheading-1">
+		<!--<div fxLayout="column" fxFlexAlign="start start" class="viewedDay mat-subheading-1">
 			&lt;!&ndash;<div fxFlex>&ndash;&gt;
 			<div fxFlex>
-				{{watchedDay.printDate()}}
+				{{viewedDay.printDate()}}
 			</div>
 			&lt;!&ndash;<div fxFlex="5">&ndash;&gt;
 			&lt;!&ndash;Ride + Run&ndash;&gt;
 			&lt;!&ndash;</div>&ndash;&gt;
 			<div fxFlex>
-				{{(watchedDay.activitiesName.length > 0) ? watchedDay.activitiesName : "Rest day"}}
+				{{(viewedDay.activitiesName.length > 0) ? viewedDay.activitiesName : "Rest day"}}
 				&lt;!&ndash;Ride: <i>My very long long long activity name</i> <strong>&nbsp;&nbsp;+&nbsp;&nbsp;</strong> Run:&ndash;&gt;
 				&lt;!&ndash;<i>Course&ndash;&gt;
 					&lt;!&ndash;à pied le soir, sous la pluie et dans le noir 💜</i>&ndash;&gt;
@@ -109,11 +109,13 @@
         </div>-->
 		<!--</div>-->
 
+		<!--[(ngModel)]="periodViewed"-->
+
 		<div fxLayout="row" fxFlexAlign="center center">
 			<mat-input-container fxFlex="15">
 				<mat-select
+					[(ngModel)]="lastPeriodViewed"
 					(change)="onLastPeriodSelected()"
-					[(ngModel)]="lastPeriodSelected"
 					placeholder="Last">
 					<mat-option
 						*ngFor="let lastPeriod of lastPeriods;"
@@ -124,9 +126,9 @@
 			</mat-input-container>
 			<mat-form-field fxFlex="15">
 				<input matInput
-					   [(ngModel)]="dateFrom"
+					   [(ngModel)]="periodViewed.from"
 					   [min]="dateMin"
-					   [max]="dateTo"
+					   [max]="periodViewed.to"
 					   [matDatepicker]="datePickerFrom"
 					   (dateChange)="onDateToDateChange()"
 					   placeholder="From">
@@ -135,8 +137,8 @@
 			</mat-form-field>
 			<mat-form-field fxFlex="15">
 				<input matInput
-					   [(ngModel)]="dateTo"
-					   [min]="dateFrom"
+					   [(ngModel)]="periodViewed.to"
+					   [min]="periodViewed.from"
 					   [max]="dateMax"
 					   [matDatepicker]="datePickerTo"
 					   (dateChange)="onDateToDateChange()"
@@ -167,11 +169,11 @@
 		</div>
 
 		<div
-			[ngClass]="{'clickableMarker': watchedDay.activitiesName.length}"
+			[ngClass]="{'clickableMarker': viewedDay.activitiesName.length}"
 			id="fitnessTrendGraph">
 		</div>
 
-		<!--<div>{{watchedDay | json}}</div>-->
+		<!--<div>{{viewedDay | json}}</div>-->
 
 		<!--<div>-->
 		<!--&lt;!&ndash;Today: My very long long long activity name !!! + Strong run hard :/ !!!&ndash;&gt;-->
