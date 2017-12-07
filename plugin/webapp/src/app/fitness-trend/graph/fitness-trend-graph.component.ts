@@ -6,15 +6,17 @@ import * as d3 from "d3";
 import { DayFitnessTrend } from "../shared/models/day-fitness-trend.model";
 import { Period } from "../shared/models/period.model";
 import { LastPeriod } from "../shared/models/last-period.model";
-import { GraphPoint } from "./graph-point.model";
-import { Marker } from "./marker.model";
+import { GraphPoint } from "./models/graph-point.model";
+import { Marker } from "./models/marker.model";
 import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { ViewableGraphData } from "./models/viewable-graph-data.model";
+import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
 
 // DONE Filter by period until today
 // DONE Filter between dates
 // DONE Show graph point legend: CTL, ATL, TSB
-// TODO Filter with power meter
+// DONE Filter with power meter
 // TODO Filter with power swim
 // TODO Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // TODO Show preview days as dashed line
@@ -25,28 +27,6 @@ import { UserSettingsService } from "../../shared/services/user-settings/user-se
 // TODO Show helper info
 // TODO Show info when no data. (Wrap in a parent FitnessTrendComponent
 // (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
-
-
-class ViewableGraphData { // TODO Extract model
-
-	public fatigueLine: GraphPoint[] = [];
-	public fitnessLine: GraphPoint[] = [];
-	public formLine: GraphPoint[] = [];
-	public fitnessTrendLines: GraphPoint[][] = [];
-	public markers: Marker[] = [];
-
-	constructor(fatigueLine: GraphPoint[], fitnessLine: GraphPoint[], formLine: GraphPoint[], markers: Marker[]) {
-		this.fatigueLine = fatigueLine;
-		this.fitnessLine = fitnessLine;
-		this.formLine = formLine;
-		this.markers = markers;
-
-		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
-		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
-		this.fitnessTrendLines.push(MG.convert.date(this.formLine, "date"));
-	}
-}
-
 
 @Component({
 	selector: "app-fitness-trend",
@@ -80,14 +60,14 @@ export class FitnessTrendGraphComponent implements OnInit {
 		show_confidence_band: ["lower", "upper"],
 		markers: null,
 		legend: null,
-		click: (data: { key: Date, values: any[] }, index: number) => {
+		click: (data: MetricsGraphicsEvent) => {
 			const dayFitnessTrend = this.getDayFitnessTrendFromDate(data.key);
 			this.openActivities(dayFitnessTrend.ids);
 		},
-		mouseover: (data: { key: Date, values: any[] }, index: number, c: any) => {
+		mouseover: (data: MetricsGraphicsEvent) => {
 			this.onDayMouseOver(data.key);
 		},
-		mouseout: (data: { key: Date, values: any[] }) => {
+		mouseout: (data: MetricsGraphicsEvent) => {
 			this.onDayMouseOut(data.key);
 		}
 	};
@@ -97,13 +77,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public lastPeriodViewed: Period;
 
 	public fitnessTrend: DayFitnessTrend[];
-	// public markers: Marker[];
-	// public fitnessTrendLines: GraphPoint[][];
 	public viewableGraphData: ViewableGraphData;
 	public viewedDay: DayFitnessTrend;
 
-	// public dateFrom: Date;
-	// public dateTo: Date;
 	public dateMin: Date;
 	public dateMax: Date;
 
@@ -120,14 +96,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		// Generate graph data
-		// TODO Recompute below line along power/swim changes
-		/*const powerMeterEnable = false;
-		const cyclingFtp = null;
-		const swimEnable = false;
-		const swimFtp = null;*/
-		// this.init();
-
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
 			this.cyclingFtp = userSettings.userFTP;
@@ -143,7 +111,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 	}
 
 	/**
-	 * TODO Comment
+	 * Setup:
+	 * Default period viewed.
+	 * Date picker min & max date
+	 * Lines & marker viewable data
+	 * First graph draw
 	 */
 	private setup(): void {
 		this.setupTimeData();
@@ -286,12 +258,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 */
 	public onDateToDateChange(): void {
-
-		/*	this.periodViewed = {
-                from: this.dateFrom,
-                to: this.dateTo
-            };*/
-
 		this.updateGraph();
 	}
 
@@ -311,9 +277,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// Assign last period to currently viewed
 		this.periodViewed = _.clone(this.lastPeriodViewed);
 
-		// this.periodViewed.from = (_.isDate(this.periodViewed.from)) ? this.periodViewed.from : null;
-		// this.periodViewed.to = (_.isDate(this.periodViewed.to)) ? this.periodViewed.to : moment().toDate();
-
 		// Used by date pickers
 		this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
 		this.dateMax = moment().toDate();
@@ -324,17 +287,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {Date} date
 	 */
 	private onDayMouseOver(date: Date): void {
-
-		// Update watched day
 		this.viewedDay = this.getDayFitnessTrendFromDate(date);
-		/*this.viewedDay = _.find(this.fitnessTrend, {
-			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
-		});*/
-		/*const isActiveDay = this.viewedDay.activitiesName.length > 0;
-		if (isActiveDay) {
-			// Cursor pointer to inform of click
-		} else {
-		}*/
 	}
 
 	/**
