@@ -19,6 +19,7 @@ import { Marker } from "./marker.model";
 // TODO Support form zones
 // DONE Forward to strava.com activities
 // TODO UI Style
+// TODO training zones
 // TODO Show helper info
 // TODO Show info when no data. (Wrap in a parent FitnessTrendComponent
 // (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
@@ -29,6 +30,8 @@ import { Marker } from "./marker.model";
 	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
 export class FitnessTrendGraphComponent implements OnInit {
+
+	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "4_months";
 
 	public graphConfig = {
 		data: [],
@@ -54,7 +57,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		legend: null,
 		click: (data: { key: Date, values: any[] }, index: number) => {
 			const dayFitnessTrend = this.getDayFitnessTrendFromDate(data.key);
-			this.openStravaActivities(dayFitnessTrend.ids);
+			this.openActivities(dayFitnessTrend.ids);
 		},
 		mouseover: (data: { key: Date, values: any[] }, index: number, c: any) => {
 			this.onMouseOverDate(data.key);
@@ -77,6 +80,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public dateMin: Date;
 	public dateMax: Date;
 
+	public isTrainingZonesEnabled: boolean = false;
+	public isPowerMeterEnabled: boolean = true;
+	public cyclingFtp: number = null;
+	public isSwimEnabled: boolean = false;
+	public swimFtp: number = null;
+
+
 	constructor(private fitnessService: FitnessService) {
 	}
 
@@ -84,29 +94,31 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		// Generate graph data
 		// TODO Recompute below line along power/swim changes
-		const powerMeterEnable = null;
+		/*const powerMeterEnable = false;
 		const cyclingFtp = null;
-		const swimEnable = null;
-		const swimFtp = null;
-
-		this.fitnessService.computeTrend(powerMeterEnable,
-			cyclingFtp,
-			swimEnable,
-			swimFtp).then((fitnessTrend: DayFitnessTrend[]) => {
-
-			this.fitnessTrend = fitnessTrend;
-			this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
-			this.lastPeriodSelected = _.find(this.lastPeriods, {key: "4_months"});
-
-			this.init();
-
-		});
+		const swimEnable = false;
+		const swimFtp = null;*/
+		// this.init();
+		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
+			.then((fitnessTrend: DayFitnessTrend[]) => {
+				this.setup(fitnessTrend);
+			});
 	}
+
+
+	/*private init(isPowerMeterEnabled: boolean, cyclingFtp: number, isSwimEnabled: boolean, swimFtp: number) {
+
+
+	}*/
 
 	/**
 	 *
 	 */
-	private init(): void {
+	private setup(fitnessTrend: DayFitnessTrend[]): void {
+
+		this.fitnessTrend = fitnessTrend;
+		this.lastPeriods = this.provideLastPeriods(this.fitnessTrend);
+		this.lastPeriodSelected = _.find(this.lastPeriods, {key: FitnessTrendGraphComponent.DEFAULT_LAST_PERIOD_KEY});
 
 		this.setTodayAsWatchedDay();
 
@@ -138,6 +150,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			const isActiveDay = dayFitnessTrend.activitiesName.length > 0;
 
 			if (isActiveDay) {
+
 				marker = {
 					date: dayFitnessTrend.date,
 					mouseover: () => {
@@ -147,7 +160,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 						this.setTodayAsWatchedDay();
 					},
 					click: () => {
-						this.openStravaActivities(dayFitnessTrend.ids);
+						this.openActivities(dayFitnessTrend.ids);
 					},
 					label: "🠷" // or "▾" Found @ http://www.amp-what.com/
 				};
@@ -174,14 +187,26 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// Apply markers
 		this.graphConfig.markers = this.markers;
 
-		this.updateGraph(this.lastPeriodSelected /* TODO Remove and user directly in method no?!*/);
+		this.updateGraphAlongPeriod(this.lastPeriodSelected /* TODO Remove and user directly in method no?!*/);
+	}
+
+	/**
+	 * Re-compute fitness trends, and apply data to graph.
+	 */
+	private reload(): void {
+		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
+			.then((fitnessTrend: DayFitnessTrend[]) => {
+				this.fitnessTrend = fitnessTrend;
+				// TODO ............
+				console.warn("reload with", this.fitnessTrend);
+			});
 	}
 
 	/**
 	 *
 	 * @param {number[]} ids
 	 */
-	private openStravaActivities(ids: number[]) {
+	private openActivities(ids: number[]) {
 
 		if (ids.length > 0) {
 			const url = "https://www.strava.com/activities/{activityId}"; // TODO Move to be used elsewhere?! Table as instance
@@ -197,7 +222,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 */
 	public onLastPeriodSelected(): void {
-		this.updateGraph(this.lastPeriodSelected);
+		this.updateGraphAlongPeriod(this.lastPeriodSelected);
 	}
 
 	public onDateToDateChange(): void {
@@ -207,14 +232,14 @@ export class FitnessTrendGraphComponent implements OnInit {
 			to: this.dateTo
 		};
 
-		this.updateGraph(period);
+		this.updateGraphAlongPeriod(period);
 	}
 
 	/**
 	 *
 	 * @param {Period} period
 	 */
-	private updateGraph(period: Period): void {
+	private updateGraphAlongPeriod(period: Period): void {
 
 		const _PERFORMANCE_MARKER_START_ = performance.now();
 
@@ -259,19 +284,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		// Update watched day
 		this.watchedDay = this.getDayFitnessTrendFromDate(date);
-
-
 		/*this.watchedDay = _.find(this.fitnessTrend, {
 			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
-		});
-*/
+		});*/
 		/*const isActiveDay = this.watchedDay.activitiesName.length > 0;
 		if (isActiveDay) {
-
 			// Cursor pointer to inform of click
-
 		} else {
-
 		}*/
 	}
 
@@ -286,6 +305,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		return this.getDayFitnessTrendFromDate(new Date());
 	}
 
+
 	/**
 	 *
 	 * @param {Date} date
@@ -299,6 +319,21 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	private setTodayAsWatchedDay(): void {
 		this.watchedDay = this.getTodayWatchedDay();
+	}
+
+
+	public onTrainingZonesToggle(): void {
+
+		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
+	}
+
+	public onPowerMeterToggle(): void {
+		this.reload();
+		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
+	}
+
+	public onSwimToggle(): void {
+		// this.init(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 	}
 
 	/**
@@ -370,4 +405,5 @@ export class FitnessTrendGraphComponent implements OnInit {
 			label: "Since beginning"
 		}];
 	}
+
 }

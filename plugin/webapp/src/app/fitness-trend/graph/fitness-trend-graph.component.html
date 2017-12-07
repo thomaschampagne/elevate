@@ -145,14 +145,23 @@
 				<mat-datepicker #datePickerTo></mat-datepicker>
 			</mat-form-field>
 
-			<mat-slide-toggle fxFlex>
+			<mat-slide-toggle fxFlex
+							  [(ngModel)]="isTrainingZonesEnabled"
+							  (change)="onTrainingZonesToggle()"
+							  matTooltip="Display Form Zones on graph">
 				<mat-icon>power_input</mat-icon>
 			</mat-slide-toggle>
-			<mat-slide-toggle fxFlex>
+			<mat-slide-toggle fxFlex
+							  [(ngModel)]="isPowerMeterEnabled"
+							  (change)="onPowerMeterToggle()"
+							  matTooltip="Use cycling power meter when available">
 				<mat-icon>flash_on</mat-icon>
 			</mat-slide-toggle>
 
-			<mat-slide-toggle fxFlex>
+			<mat-slide-toggle fxFlex
+							  [(ngModel)]="isSwimEnabled"
+							  (change)="onSwimToggle()"
+							  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
 				<mat-icon>pool</mat-icon>
 			</mat-slide-toggle>
 		</div>

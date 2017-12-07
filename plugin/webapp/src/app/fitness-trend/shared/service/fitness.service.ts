@@ -180,21 +180,21 @@ export class FitnessService {
 
 	/**
 	 *
-	 * @param {boolean} powerMeterEnable
+	 * @param {boolean} isPowerMeterEnabled
 	 * @param {number} cyclingFtp
-	 * @param {boolean} swimEnable
+	 * @param {boolean} isSwimEnabled
 	 * @param {number} swimFtp
 	 * @returns {Promise<DayFitnessTrend[]>}
 	 */
-	public computeTrend(powerMeterEnable: boolean,
+	public computeTrend(isPowerMeterEnabled: boolean,
 						cyclingFtp: number,
-						swimEnable: boolean,
+						isSwimEnabled: boolean,
 						swimFtp: number): Promise<DayFitnessTrend[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrend[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
+			this.generateDailyStress(isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp)
 				.then((dailyActivity: DayStress[]) => {
 
 					let ctl = 0;
