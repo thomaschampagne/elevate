@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { GotItDialog } from './got-it-dialog.component';
+import { GotItDialog } from "./got-it-dialog.component";
 
-xdescribe('GotItDialogComponent', () => {
+xdescribe("GotItDialogComponent", () => {
 	let component: GotItDialog;
 	let fixture: ComponentFixture<GotItDialog>;
 
@@ -19,7 +19,7 @@ xdescribe('GotItDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

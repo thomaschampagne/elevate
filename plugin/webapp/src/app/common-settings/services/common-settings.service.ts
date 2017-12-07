@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Section } from "../models/section.model";
 
 @Injectable()

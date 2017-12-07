@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 import {
 	MatButtonModule,
 	MatCardModule,
@@ -19,7 +19,7 @@ import {
 	MatTableModule,
 	MatToolbarModule,
 	MatTooltipModule
-} from '@angular/material';
+} from "@angular/material";
 import { CdkTableModule } from "@angular/cdk/table";
 
 @NgModule({

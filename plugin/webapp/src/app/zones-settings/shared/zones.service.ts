@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";

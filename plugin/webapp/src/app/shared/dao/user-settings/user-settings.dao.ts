@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
@@ -34,7 +34,7 @@ export class UserSettingsDao {
 
 				const value = userSettingsSynced[key];
 				if (_.isUndefined(value)) {
-					reject(key + " not found in user settings")
+					reject(key + " not found in user settings");
 				} else {
 					resolve(value);
 				}

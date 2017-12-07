@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AthleteSettingsComponent } from './athlete-settings.component';
+import { AthleteSettingsComponent } from "./athlete-settings.component";
 
-xdescribe('AthleteSettingsComponent', () => {
+xdescribe("AthleteSettingsComponent", () => {
 	let component: AthleteSettingsComponent;
 	let fixture: ComponentFixture<AthleteSettingsComponent>;
 
@@ -19,7 +19,7 @@ xdescribe('AthleteSettingsComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

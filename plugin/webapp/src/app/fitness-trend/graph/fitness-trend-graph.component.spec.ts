@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FitnessTrendGraphComponent } from './fitness-trend-graph.component';
+import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/service/fitness.service";
 import { MaterialModule } from "../../shared/modules/material.module";
 import { FormsModule } from "@angular/forms";
@@ -12,7 +12,7 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { MatNativeDateModule } from "@angular/material";
 
-describe('FitnessTrendGraphComponent', () => {
+describe("FitnessTrendGraphComponent", () => {
 
 	let activityDao: ActivityDao = null;
 	let activityService: ActivityService = null;
@@ -35,7 +35,7 @@ describe('FitnessTrendGraphComponent', () => {
 		fitnessService = TestBed.get(FitnessService);
 
 		// Mocking chrome local storage
-		spyOn(activityDao, 'chromeStorageLocal').and.returnValue({
+		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
 			}
@@ -53,7 +53,7 @@ describe('FitnessTrendGraphComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 

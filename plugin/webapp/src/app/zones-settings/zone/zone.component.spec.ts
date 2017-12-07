@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ZoneComponent } from './zone.component';
+import { ZoneComponent } from "./zone.component";
 import { MaterialModule } from "../../shared/modules/material.module";
 import { FormsModule } from "@angular/forms";
 import { ZonesService } from "../shared/zones.service";
@@ -9,7 +9,7 @@ import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.da
 import { ZoneChangeWhisper } from "../shared/zone-change-whisper.model";
 import { ZoneChangeType } from "./zone-change-type.model";
 
-describe('ZoneComponent', () => {
+describe("ZoneComponent", () => {
 
 	let component: ZoneComponent;
 
@@ -34,11 +34,11 @@ describe('ZoneComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('should notify properly a "from" zone change', () => {
+	it("should notify properly a \"from\" zone change", () => {
 
 		// Given
 		const sourceId = 5;
@@ -53,7 +53,7 @@ describe('ZoneComponent', () => {
 			value: zoneFrom
 		};
 
-		spyOn(zonesService, 'whisperZoneChange').and.stub();
+		spyOn(zonesService, "whisperZoneChange").and.stub();
 		component.zoneId = sourceId;
 		component.zone = {
 			from: zoneFrom,
@@ -69,7 +69,7 @@ describe('ZoneComponent', () => {
 
 	});
 
-	it('should notify properly a "to" zone change', () => {
+	it("should notify properly a \"to\" zone change", () => {
 
 		// Given
 		const sourceId = 5;
@@ -84,7 +84,7 @@ describe('ZoneComponent', () => {
 			value: zoneTo
 		};
 
-		spyOn(zonesService, 'whisperZoneChange').and.stub();
+		spyOn(zonesService, "whisperZoneChange").and.stub();
 		component.zoneId = sourceId;
 		component.zone = {
 			from: zoneFrom,
@@ -100,11 +100,11 @@ describe('ZoneComponent', () => {
 
 	});
 
-	it('should skip notify is from + to changes (On first display)', () => {
+	it("should skip notify is from + to changes (On first display)", () => {
 
 		// Given
 		const changeType: ZoneChangeType = {from: true, to: true};
-		spyOn(zonesService, 'whisperZoneChange').and.stub();
+		spyOn(zonesService, "whisperZoneChange").and.stub();
 
 		// When
 		component.whisperZoneChange(changeType);

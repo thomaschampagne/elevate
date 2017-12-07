@@ -7,5 +7,5 @@ export class ZoneDefinition {
 	public step: number;
 	public min: number;
 	public max: number;
-	public customDisplay: ZoneCustomDisplay
+	public customDisplay: ZoneCustomDisplay;
 }

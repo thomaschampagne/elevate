@@ -1,9 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { OptionHelperDialog } from './option-helper-dialog.component';
+import { OptionHelperDialog } from "./option-helper-dialog.component";
 import { MaterialModule } from "../../shared/modules/material.module";
 
-xdescribe('OptionHelperDialogComponent', () => {
+xdescribe("OptionHelperDialogComponent", () => {
 	let component: OptionHelperDialog;
 	let fixture: ComponentFixture<OptionHelperDialog>;
 
@@ -20,7 +20,7 @@ xdescribe('OptionHelperDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

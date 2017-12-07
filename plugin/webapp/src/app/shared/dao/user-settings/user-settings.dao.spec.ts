@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { UserSettingsDao } from './user-settings.dao';
+import { UserSettingsDao } from "./user-settings.dao";
 import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
 
-describe('UserSettingsDao', () => {
+describe("UserSettingsDao", () => {
 
 	let userSettingsDao: UserSettingsDao;
 
@@ -19,15 +19,15 @@ describe('UserSettingsDao', () => {
 		userSettingsDao = TestBed.get(UserSettingsDao);
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(userSettingsDao).toBeTruthy();
 		done();
 	});
 
-	it('should create object at path', (done: Function) => {
+	it("should create object at path", (done: Function) => {
 
 		// Given
-		const path: string = "a.b.c.d";
+		const path = "a.b.c.d";
 		const object: any = {value: 10};
 
 		const expected = {
@@ -52,12 +52,12 @@ describe('UserSettingsDao', () => {
 	});
 
 
-	it('should fetch user settings', (done: Function) => {
+	it("should fetch user settings", (done: Function) => {
 
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
 
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -81,12 +81,12 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should fetch user settings', (done: Function) => {
+	it("should fetch user settings", (done: Function) => {
 
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
 
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -110,13 +110,13 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should get a userGender setting', (done: Function) => {
+	it("should get a userGender setting", (done: Function) => {
 
 		// Given
 		const key = "userGender";
 		const expectedResult = "men";
 		const expectedSettings = _.cloneDeep(userSettings);
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -140,13 +140,13 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should get a userWeight setting', (done: Function) => {
+	it("should get a userWeight setting", (done: Function) => {
 
 		// Given
 		const key = "userWeight";
 		const expectedSettings = _.cloneDeep(userSettings);
 		const expectedResult = expectedSettings.userWeight;
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -170,7 +170,7 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should update a user setting', (done: Function) => {
+	it("should update a user setting", (done: Function) => {
 
 		// Given
 		const keyMaxHr = "userMaxHr";
@@ -178,7 +178,7 @@ describe('UserSettingsDao', () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.userMaxHr = maxHrValue;
 
-		const chromeStorageSyncSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({ // TODO Put spy in beforeEach
+		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({ // TODO Put spy in beforeEach
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -209,7 +209,7 @@ describe('UserSettingsDao', () => {
 		});
 	});
 
-	it('should update nested user setting', (done: Function) => {
+	it("should update nested user setting", (done: Function) => {
 
 		// Given
 		const zones = [{from: 666, to: 999}];
@@ -218,7 +218,7 @@ describe('UserSettingsDao', () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.zones.speed = zones;
 
-		const chromeStorageSyncSpy = spyOn(userSettingsDao, 'chromeStorageSync').and.returnValue({ // TODO Put spy in beforeEach
+		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({ // TODO Put spy in beforeEach
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},

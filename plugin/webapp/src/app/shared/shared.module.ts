@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "./modules/material.module";
 import { NgPipesModule } from "ngx-pipes";

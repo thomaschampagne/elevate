@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material";
 import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
@@ -14,14 +14,14 @@ import { OptionHelperData } from "./option-helper-data.model";
  */
 
 @Component({
-	selector: 'option-helper-dialog',
-	templateUrl: './option-helper-dialog.component.html',
-	styleUrls: ['./option-helper-dialog.component.scss']
+	selector: "option-helper-dialog",
+	templateUrl: "./option-helper-dialog.component.html",
+	styleUrls: ["./option-helper-dialog.component.scss"]
 })
 export class OptionHelperDialog implements OnInit {
 
-	public static readonly MAX_WIDTH: string = '80%';
-	public static readonly MIN_WIDTH: string = '40%';
+	public static readonly MAX_WIDTH: string = "80%";
+	public static readonly MIN_WIDTH: string = "40%";
 
 	public html: SafeHtml;
 	public markDownParser: MarkDownIt.MarkdownIt;

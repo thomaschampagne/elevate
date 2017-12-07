@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { AppRoutes } from "./shared/modules/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
@@ -11,14 +11,14 @@ export interface MainMenuItem {
 }
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss']
+	selector: "app-root",
+	templateUrl: "./app.component.html",
+	styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit {
 
 	public static updateToolBarTitle(url: string): string {
-		const splitUrl = _.split(url, '/');
+		const splitUrl = _.split(url, "/");
 		splitUrl.shift(); // Remove first slash
 		return _.startCase(_.upperFirst(_.first(splitUrl)));
 	}
@@ -26,26 +26,26 @@ export class AppComponent implements OnInit {
 	public title: string;
 	public mainMenuItems: MainMenuItem[] = [
 		{
-			name: 'Fitness Trend',
-			icon: 'timeline',
+			name: "Fitness Trend",
+			icon: "timeline",
 			routerLink: AppRoutes.fitnessTrend,
 			routerLinkActive: true
 		},
 		{
-			name: 'Common Settings',
-			icon: 'settings',
+			name: "Common Settings",
+			icon: "settings",
 			routerLink: AppRoutes.commonSettings,
 			routerLinkActive: true
 		},
 		{
-			name: 'Athlete Settings',
-			icon: 'accessibility',
+			name: "Athlete Settings",
+			icon: "accessibility",
 			routerLink: AppRoutes.athleteSettings,
 			routerLinkActive: true
 		},
 		{
-			name: 'Zones Settings',
-			icon: 'format_line_spacing',
+			name: "Zones Settings",
+			icon: "format_line_spacing",
 			routerLink: AppRoutes.zonesSettings,
 			routerLinkActive: true
 		}

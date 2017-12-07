@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material";
@@ -9,9 +9,9 @@ import { ZoneChangeType } from "./zone-change-type.model";
 import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 
 @Component({
-	selector: 'app-zone',
-	templateUrl: './zone.component.html',
-	styleUrls: ['./zone.component.scss']
+	selector: "app-zone",
+	templateUrl: "./zone.component.html",
+	styleUrls: ["./zone.component.scss"]
 })
 export class ZoneComponent implements OnInit {
 
@@ -110,10 +110,10 @@ export class ZoneComponent implements OnInit {
 	private applyChangeOrder(instruction: ZoneChangeOrder): void {
 
 		if (instruction.from) {
-			this.zone.from = instruction.value
+			this.zone.from = instruction.value;
 		}
 		if (instruction.to) {
-			this.zone.to = instruction.value
+			this.zone.to = instruction.value;
 		}
 	}
 
@@ -147,6 +147,6 @@ export class ZoneComponent implements OnInit {
 	}
 
 	private popSnack(message: string): void {
-		this.snackBar.open(message, 'Close', {duration: 2500});
+		this.snackBar.open(message, "Close", {duration: 2500});
 	}
 }

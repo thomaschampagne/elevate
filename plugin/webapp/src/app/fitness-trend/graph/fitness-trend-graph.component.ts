@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -20,19 +20,20 @@ import { Marker } from "./marker.model";
 // DONE Forward to strava.com activities
 // TODO UI Style
 // TODO Show helper info
-// TODO Show info when no data. (Wrap in a parent FitnessTrendComponent (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
+// TODO Show info when no data. (Wrap in a parent FitnessTrendComponent 
+// (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
 @Component({
-	selector: 'app-fitness-trend',
-	templateUrl: './fitness-trend-graph.component.html',
-	styleUrls: ['./fitness-trend-graph.component.scss']
+	selector: "app-fitness-trend",
+	templateUrl: "./fitness-trend-graph.component.html",
+	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
 export class FitnessTrendGraphComponent implements OnInit {
 
 	public graphConfig = {
 		data: [],
 		full_width: true,
-		height: window.innerHeight * 0.60, //600, // Dynamic height?!
+		height: window.innerHeight * 0.60,
 		right: 40,
 		baselines: [{value: 0}],
 		animate_on_load: true,
@@ -42,13 +43,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// x_extended_ticks: true,
 		// y_extended_ticks: true,
 		yax_count: 10,
-		target: '#fitnessTrendGraph',
-		x_accessor: 'date',
-		y_accessor: 'value',
+		target: "#fitnessTrendGraph",
+		x_accessor: "date",
+		y_accessor: "value",
 		inflator: 1.2,
 		showActivePoint: false,
 		// clickableMarkerLines: true,
-		show_confidence_band: ['lower', 'upper'],
+		show_confidence_band: ["lower", "upper"],
 		markers: null,
 		legend: null,
 		click: (data: { key: Date, values: any[] }, index: number) => {
@@ -109,9 +110,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		this.setTodayAsWatchedDay();
 
-		let fatigueLine: GraphPoint[] = [];
-		let fitnessLine: GraphPoint[] = [];
-		let formLine: GraphPoint[] = [];
+		const fatigueLine: GraphPoint[] = [];
+		const fitnessLine: GraphPoint[] = [];
+		const formLine: GraphPoint[] = [];
 
 		const today: string = moment().format(DayFitnessTrend.DATE_FORMAT);
 
@@ -151,7 +152,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 					label: "🠷" // or "▾" Found @ http://www.amp-what.com/
 				};
 
-			} else if (dayFitnessTrend.dateString == today) {
+			} else if (dayFitnessTrend.dateString === today) {
 				marker = {
 					date: new Date(),
 					label: "☀" // or label: "☀️"
@@ -165,9 +166,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 		});
 
 		// Push lines
-		this.fitnessTrendLines.push(MG.convert.date(fatigueLine, 'date'));
-		this.fitnessTrendLines.push(MG.convert.date(fitnessLine, 'date'));
-		this.fitnessTrendLines.push(MG.convert.date(formLine, 'date'));
+		this.fitnessTrendLines.push(MG.convert.date(fatigueLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(fitnessLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(formLine, "date"));
 		// this.fitnessTrendLines.push(MG.convert.date(activeLine, 'date'));
 
 		// Apply markers
@@ -183,7 +184,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private openStravaActivities(ids: number[]) {
 
 		if (ids.length > 0) {
-			const url: string = "https://www.strava.com/activities/{activityId}"; // TODO Move to be used elsewhere?! Table as instance
+			const url = "https://www.strava.com/activities/{activityId}"; // TODO Move to be used elsewhere?! Table as instance
 			_.forEach(ids, (id: number) => {
 				window.open(url.replace("{activityId}", id.toString()), "_blank");
 			});
@@ -229,7 +230,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		// Apply graph changes
 		setTimeout(() => {
 			MG.data_graphic(this.graphConfig);
-			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.")
+			console.debug("Graph update time: " + (performance.now() - _PERFORMANCE_MARKER_START_).toFixed(0) + " ms.");
 		});
 	}
 

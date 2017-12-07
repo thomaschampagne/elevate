@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ZonesService } from "../shared/zones.service";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { ZonesImportExportDialog } from "../zones-import-export-dialog/zones-import-export-dialog.component";
@@ -9,9 +9,9 @@ import { Mode } from "../zones-import-export-dialog/mode.enum";
 import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 
 @Component({
-	selector: 'app-zone-tool-bar',
-	templateUrl: './zone-tool-bar.component.html',
-	styleUrls: ['./zone-tool-bar.component.scss']
+	selector: "app-zone-tool-bar",
+	templateUrl: "./zone-tool-bar.component.html",
+	styleUrls: ["./zone-tool-bar.component.scss"]
 })
 export class ZoneToolBarComponent implements OnInit {
 
@@ -121,6 +121,6 @@ export class ZoneToolBarComponent implements OnInit {
 	}
 
 	private popSnack(message: string): void {
-		this.snackBar.open(message, 'Close', {duration: 2500});
+		this.snackBar.open(message, "Close", {duration: 2500});
 	}
 }

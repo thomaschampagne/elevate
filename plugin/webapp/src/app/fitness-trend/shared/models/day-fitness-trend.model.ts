@@ -61,7 +61,7 @@ export class DayFitnessTrend extends DayStress {
 		if (this.activitiesName.length > 0) {
 			printed = this.activitiesName.join("; ");
 		}
-		return printed
+		return printed;
 	}
 
 }

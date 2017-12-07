@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CommonSettingsComponent } from './common-settings.component';
+import { CommonSettingsComponent } from "./common-settings.component";
 
-xdescribe('CommonSettingsComponent', () => {
+xdescribe("CommonSettingsComponent", () => {
 	let component: CommonSettingsComponent;
 	let fixture: ComponentFixture<CommonSettingsComponent>;
 
@@ -19,7 +19,7 @@ xdescribe('CommonSettingsComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

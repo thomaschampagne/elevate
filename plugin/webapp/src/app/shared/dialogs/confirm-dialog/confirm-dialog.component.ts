@@ -1,16 +1,16 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { ConfirmDialogData } from "./confirm-dialog-data.model";
 
 @Component({
-	selector: 'app-confirm-dialog',
-	templateUrl: './confirm-dialog.component.html',
-	styleUrls: ['./confirm-dialog.component.scss']
+	selector: "app-confirm-dialog",
+	templateUrl: "./confirm-dialog.component.html",
+	styleUrls: ["./confirm-dialog.component.scss"]
 })
 export class ConfirmDialog implements OnInit {
 
-	public static readonly MAX_WIDTH: string = '80%';
-	public static readonly MIN_WIDTH: string = '40%';
+	public static readonly MAX_WIDTH: string = "80%";
+	public static readonly MIN_WIDTH: string = "40%";
 
 	constructor(public dialogRef: MatDialogRef<ConfirmDialog>,
 				@Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogData) {

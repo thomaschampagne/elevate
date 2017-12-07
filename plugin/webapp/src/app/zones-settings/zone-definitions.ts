@@ -27,8 +27,8 @@ export const ZONE_DEFINITIONS: ZoneDefinition[] = [
 			name: "Pace format mm:ss/distance",
 			zoneValue: "pace",
 			output: (seconds: number) => {
-				const paceMetric = moment().startOf('day').seconds(seconds).format('mm:ss') + "/km";
-				const paceImperial = moment().startOf('day').seconds(seconds / 0.621371192).format('mm:ss') + "/mi";
+				const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
+				const paceImperial = moment().startOf("day").seconds(seconds / 0.621371192).format("mm:ss") + "/mi";
 				return paceMetric + "  | " + paceImperial;
 			}
 		}

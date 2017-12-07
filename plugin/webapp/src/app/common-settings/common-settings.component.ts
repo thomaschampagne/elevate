@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { UserSettingsService } from '../shared/services/user-settings/user-settings.service';
+import { Component, OnInit } from "@angular/core";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService } from "./services/common-settings.service";
-import * as _ from 'lodash';
+import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
@@ -14,18 +14,18 @@ import { Option } from "./models/option.model";
 import { OptionHelperData } from "./option-helper-dialog/option-helper-data.model";
 
 @Component({
-	selector: 'app-common-settings',
-	templateUrl: './common-settings.component.html',
-	styleUrls: ['./common-settings.component.scss'],
+	selector: "app-common-settings",
+	templateUrl: "./common-settings.component.html",
+	styleUrls: ["./common-settings.component.scss"],
 
 })
 export class CommonSettingsComponent implements OnInit {
 
 	public static getOptionHelperDir(platformLocation: PlatformLocation) { // TODO Unit test
 		const location: Location = <Location> (<any> platformLocation).location;
-		const pathNames = location.pathname.split('/');
+		const pathNames = location.pathname.split("/");
 		pathNames.pop();
-		return pathNames.join('/') + "/assets/option-helpers/";
+		return pathNames.join("/") + "/assets/option-helpers/";
 	}
 
 	public sections: Section[];
@@ -175,7 +175,7 @@ export class CommonSettingsComponent implements OnInit {
 				foundOption.hidden = !show;
 			}
 		});
-	};
+	}
 
 
 	/**
@@ -216,5 +216,5 @@ export class CommonSettingsComponent implements OnInit {
 				});
 			});
 		}
-	};
+	}
 }

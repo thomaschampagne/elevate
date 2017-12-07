@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { ActivityDao } from './activity.dao';
+import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
 
-describe('ActivityDao', () => {
+describe("ActivityDao", () => {
 
 	let activityDao: ActivityDao;
 
@@ -23,16 +23,16 @@ describe('ActivityDao', () => {
 		activityDao = TestBed.get(ActivityDao);
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(activityDao).toBeTruthy();
 		done();
 	});
 
 
-	it('should fetch user settings', (done: Function) => {
+	it("should fetch user settings", (done: Function) => {
 
 		// Given
-		const chromeStorageSyncLocalSpy = spyOn(activityDao, 'chromeStorageLocal').and.returnValue({
+		const chromeStorageSyncLocalSpy = spyOn(activityDao, "chromeStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
 			}

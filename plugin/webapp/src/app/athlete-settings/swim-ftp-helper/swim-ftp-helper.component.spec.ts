@@ -1,6 +1,6 @@
-import { SwimFtpHelperComponent } from './swim-ftp-helper.component';
+import { SwimFtpHelperComponent } from "./swim-ftp-helper.component";
 
-describe('SwimFtpHelperComponent', () => {
+describe("SwimFtpHelperComponent", () => {
 
 	/*	let component: SwimFtpHelperComponent;
         let fixture: ComponentFixture<SwimFtpHelperComponent>;
@@ -21,7 +21,7 @@ describe('SwimFtpHelperComponent', () => {
             expect(component).toBeTruthy();
         });*/
 
-	it('should convert swim speed to pace', () => {
+	it("should convert swim speed to pace", () => {
 		expect(SwimFtpHelperComponent.convertSwimSpeedToPace(1)).toBe("01:40:00");
 		expect(SwimFtpHelperComponent.convertSwimSpeedToPace(31)).toBe("00:03:14");
 		expect(SwimFtpHelperComponent.convertSwimSpeedToPace(500)).toBe("00:00:12");

@@ -1,7 +1,7 @@
 import * as moment from "moment";
 import * as _ from "lodash";
-import { TestBed } from '@angular/core/testing';
-import { FitnessService } from './fitness.service';
+import { TestBed } from "@angular/core/testing";
+import { FitnessService } from "./fitness.service";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
@@ -12,7 +12,7 @@ import { DayStress } from "../models/day-stress.model";
 import { Period } from "../models/period.model";
 
 
-describe('FitnessService', () => {
+describe("FitnessService", () => {
 
 	const powerMeterEnable = true;
 	const cyclingFtp = 150;
@@ -42,12 +42,12 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(fitnessService).toBeTruthy();
 		done();
 	});
 
-	it('should filter fitness ready activities w/ with PM=OFF & SWIM=OFF (Only activities with HR)', (done: Function) => {
+	it("should filter fitness ready activities w/ with PM=OFF & SWIM=OFF (Only activities with HR)", (done: Function) => {
 
 		// Given
 		const expectedFitnessReadyLength = 90;
@@ -56,7 +56,7 @@ describe('FitnessService', () => {
 		const swimEnable = false;
 		const swimFtp = null;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -80,7 +80,7 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should filter fitness ready activities w/ with PM=ON & SWIM=OFF (Activities with HR and/or with PM)', (done: Function) => {
+	it("should filter fitness ready activities w/ with PM=ON & SWIM=OFF (Activities with HR and/or with PM)", (done: Function) => {
 
 		// Given
 		const expectedFitnessReadyLength = 91;
@@ -89,7 +89,7 @@ describe('FitnessService', () => {
 		const swimEnable = false;
 		const swimFtp = null;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -112,7 +112,7 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should filter fitness ready activities w/ PM=OFF & SWIM=ON', (done: Function) => {
+	it("should filter fitness ready activities w/ PM=OFF & SWIM=ON", (done: Function) => {
 
 		// Given
 		const expectedFitnessReadyLength = 92;
@@ -121,7 +121,7 @@ describe('FitnessService', () => {
 		const swimEnable = true;
 		const swimFtp = 31;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -144,7 +144,7 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should filter fitness ready activities w/ PM=ON & SWIM=ON', (done: Function) => {
+	it("should filter fitness ready activities w/ PM=ON & SWIM=ON", (done: Function) => {
 
 		// Given
 		const expectedFitnessReadyLength = 93;
@@ -153,7 +153,7 @@ describe('FitnessService', () => {
 		const swimEnable = true;
 		const swimFtp = 31;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -176,7 +176,7 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should filter fitness ready activities with proper TRIMP, PSS and SwimSS', (done: Function) => {
+	it("should filter fitness ready activities with proper TRIMP, PSS and SwimSS", (done: Function) => {
 
 		// Given
 		const powerMeterEnable = true;
@@ -184,7 +184,7 @@ describe('FitnessService', () => {
 		const swimEnable = true;
 		const swimFtp = 31;
 
-		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
 		const promise: Promise<FitnessReadyActivity[]> = fitnessService.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
@@ -214,7 +214,7 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should provide athlete daily activity with rest and active days', (done: Function) => {
+	it("should provide athlete daily activity with rest and active days", (done: Function) => {
 
 		// Given
 		const rideId = 343080886;
@@ -226,7 +226,7 @@ describe('FitnessService', () => {
 		const expectedLastPreviewDay = moment("2015-12-15", "YYYY-MM-DD").toDate().getTime(); //"Tue Dec 15 2015 00:00:00 GMT+0100 (Romance Standard Time)";
 		const expectedRideDate = moment("2015-07-10", "YYYY-MM-DD").toDate().getTime(); //"Fri Jul 10 2015 00:00:00 GMT+0200 (Romance Daylight Time)";
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -282,12 +282,12 @@ describe('FitnessService', () => {
 		});
 	});
 
-	it('should compute fitness trend', (done: Function) => {
+	it("should compute fitness trend", (done: Function) => {
 
 		// Given
 		const expectedLength = 346;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -339,11 +339,11 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should convert -7 days date based period "from/to" to "start/end" fitness trends indexes', (done: Function) => {
+	it("should convert -7 days date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
 
 
 		// Given
-		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		const period: Period = {
 			from: moment(todayDate, momentDatePattern).subtract(7, "days").toDate(), // Nov 24 2015
@@ -371,10 +371,10 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should convert -6 weeks date based period "from/to" to "start/end" fitness trends indexes', (done: Function) => {
+	it("should convert -6 weeks date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
 
 		// Given
-		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		const period: Period = {
 			from: moment(todayDate, momentDatePattern).subtract(6, "weeks").toDate(), // (= Oct 20 2015)
@@ -401,10 +401,10 @@ describe('FitnessService', () => {
 		});
 	});
 
-	it('should convert date based period "from/to" to "start/end" fitness trends indexes', (done: Function) => {
+	it("should convert date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
 
 		// Given
-		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		const period: Period = {
 			from: moment("2015-07-01", DayFitnessTrend.DATE_FORMAT).startOf("day").toDate(),
@@ -434,10 +434,10 @@ describe('FitnessService', () => {
 
 	});
 
-	it('should failed when find indexes of "from > to" date', (done: Function) => {
+	it("should failed when find indexes of \"from > to\" date", (done: Function) => {
 
 		// Given
-		spyOn(activityService.activityDao, 'fetch').and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		const period: Period = {
 			from: moment("2015-06-01", DayFitnessTrend.DATE_FORMAT).toDate(),

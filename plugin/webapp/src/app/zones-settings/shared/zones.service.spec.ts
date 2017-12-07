@@ -1,5 +1,5 @@
-import { inject, TestBed } from '@angular/core/testing';
-import { ZonesService } from './zones.service';
+import { inject, TestBed } from "@angular/core/testing";
+import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
@@ -10,7 +10,7 @@ import { ZoneChangeWhisper } from "./zone-change-whisper.model";
 import { ZoneChangeOrder } from "./zone-change-order.model";
 import { ZoneDefinition } from "../../shared/models/zone-definition.model";
 
-describe('ZonesService', () => {
+describe("ZonesService", () => {
 
 	let zonesService: ZonesService;
 
@@ -38,11 +38,11 @@ describe('ZonesService', () => {
 		];
 	});
 
-	it('should be created', inject([ZonesService], (zoneService: ZonesService) => {
+	it("should be created", inject([ZonesService], (zoneService: ZonesService) => {
 		expect(zoneService).toBeTruthy();
 	}));
 
-	it('should add a last zone', (done: Function) => {
+	it("should add a last zone", (done: Function) => {
 
 		// Given
 		const expectedZonesLength = 11;
@@ -70,11 +70,11 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not add last zone if MAX zone count reached', (done: Function) => {
+	it("should not add last zone if MAX zone count reached", (done: Function) => {
 
 		// Given
 		const MAX_ZONE_COUNT = 10;
-		spyOn(zonesService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
+		spyOn(zonesService, "getMaxZoneCount").and.returnValue(MAX_ZONE_COUNT);
 
 		// When
 		const addZoneLastPromise: Promise<string> = zonesService.addLastZone();
@@ -95,7 +95,7 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should remove a last zone', (done: Function) => {
+	it("should remove a last zone", (done: Function) => {
 
 		// Given
 		const expectedZonesLength = 9;
@@ -119,11 +119,11 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should not remove last zone if MIN zone count reached', (done: Function) => {
+	it("should not remove last zone if MIN zone count reached", (done: Function) => {
 
 		// Given
 		const MIN_ZONE_COUNT = 10;
-		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, "getMinZoneCount").and.returnValue(MIN_ZONE_COUNT);
 
 
 		// When
@@ -145,7 +145,7 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should remove zone at index', (done: Function) => {
+	it("should remove zone at index", (done: Function) => {
 
 		// Given
 		const removeIndex = 4;
@@ -169,7 +169,7 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should remove zone at index of first zone', (done: Function) => {
+	it("should remove zone at index of first zone", (done: Function) => {
 
 		// Given
 		const removeIndex = 0; // First zone
@@ -195,7 +195,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should remove zone at index of last zone', (done: Function) => {
+	it("should remove zone at index of last zone", (done: Function) => {
 
 		// Given
 		const removeIndex = 9; // Last zone
@@ -221,12 +221,12 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not remove zone at index if MIN zone count reached', (done: Function) => {
+	it("should not remove zone at index if MIN zone count reached", (done: Function) => {
 
 		// Given
 		const MIN_ZONE_COUNT = 10;
 		const removeIndex = 6;
-		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, "getMinZoneCount").and.returnValue(MIN_ZONE_COUNT);
 
 
 		// When
@@ -248,7 +248,7 @@ describe('ZonesService', () => {
 		});
 	});
 
-	it('should notify the previous Zone "TO" when his own "FROM" has been changed', (done: Function) => {
+	it("should notify the previous Zone \"TO\" when his own \"FROM\" has been changed", (done: Function) => {
 
 		// Given, increment +1 from of third sourceZone.
 		const index = 2;
@@ -284,7 +284,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not notify the previous Zone if "FROM" has changed & zone edited is the first', (done: Function) => {
+	it("should not notify the previous Zone if \"FROM\" has changed & zone edited is the first", (done: Function) => {
 
 		// Given, increment +1 from of first source zone
 		const index = 0; // First zone
@@ -311,7 +311,7 @@ describe('ZonesService', () => {
 		zonesService.whisperZoneChange(zoneChange);
 	});
 
-	it('should notify the next Zone "FROM" when his own "TO" has been changed', (done: Function) => {
+	it("should notify the next Zone \"FROM\" when his own \"TO\" has been changed", (done: Function) => {
 
 		// Given, decrement -1 a "TO" zone.
 		const index = 7;
@@ -347,7 +347,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should notify the next Zone "FROM" when his own "TO" has been changed & zone edited is the first', (done: Function) => {
+	it("should notify the next Zone \"FROM\" when his own \"TO\" has been changed & zone edited is the first", (done: Function) => {
 
 		// Given
 		const index = 0; // First zone
@@ -383,7 +383,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not notify the next Zone if "TO" has changed & zone edited is the latest', (done: Function) => {
+	it("should not notify the next Zone if \"TO\" has changed & zone edited is the latest", (done: Function) => {
 
 		// Given, increment +1 from of last source zone
 		const index = 9; // Last zone
@@ -410,7 +410,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should fail when "FROM" & "TO" change are equals', (done: Function) => {
+	it("should fail when \"FROM\" & \"TO\" change are equals", (done: Function) => {
 
 		// Given
 		const zoneChange: ZoneChangeWhisper = {
@@ -434,7 +434,7 @@ describe('ZonesService', () => {
 		zonesService.whisperZoneChange(zoneChange);
 	});
 
-	it('should fail when value is not a number', (done: Function) => {
+	it("should fail when value is not a number", (done: Function) => {
 
 		// Given
 		const zoneChange: ZoneChangeWhisper = {
@@ -458,7 +458,7 @@ describe('ZonesService', () => {
 		zonesService.whisperZoneChange(zoneChange);
 	});
 
-	it('should return compliant zones', (done: Function) => {
+	it("should return compliant zones", (done: Function) => {
 
 		// Given
 		const currentZones = zonesService.currentZones;
@@ -472,7 +472,7 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should return not compliant zones with error on a "FROM"', (done: Function) => {
+	it("should return not compliant zones with error on a \"FROM\"", (done: Function) => {
 
 		// Given
 		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
@@ -498,7 +498,7 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should return not compliant zones with error on a "TO"', (done: Function) => {
+	it("should return not compliant zones with error on a \"TO\"", (done: Function) => {
 
 		// Given
 		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
@@ -525,7 +525,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should return not compliant zones with MAX zone count reached', (done: Function) => {
+	it("should return not compliant zones with MAX zone count reached", (done: Function) => {
 
 		// Given
 		const MAX_ZONE_COUNT = 10;
@@ -544,7 +544,7 @@ describe('ZonesService', () => {
 			{from: 100, to: 110}, // Add a 11th zone
 		];
 
-		spyOn(zonesService, 'getMaxZoneCount').and.returnValue(MAX_ZONE_COUNT);
+		spyOn(zonesService, "getMaxZoneCount").and.returnValue(MAX_ZONE_COUNT);
 
 		// When
 		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
@@ -557,7 +557,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should return not compliant zones with MIN zone count reached', (done: Function) => {
+	it("should return not compliant zones with MIN zone count reached", (done: Function) => {
 
 		// Given
 		const MIN_ZONE_COUNT = 5;
@@ -569,7 +569,7 @@ describe('ZonesService', () => {
 			{from: 30, to: 40}
 		];
 
-		spyOn(zonesService, 'getMinZoneCount').and.returnValue(MIN_ZONE_COUNT);
+		spyOn(zonesService, "getMinZoneCount").and.returnValue(MIN_ZONE_COUNT);
 
 		// When
 		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
@@ -582,7 +582,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should return not compliant zones is zone empty', (done: Function) => {
+	it("should return not compliant zones is zone empty", (done: Function) => {
 
 		// When
 		const zones = null;
@@ -597,7 +597,7 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should reset zones to default', (done: Function) => {
+	it("should reset zones to default", (done: Function) => {
 
 		// Given
 		const FAKE_EXISTING_ZONES = [ // Set 10 fake zones
@@ -622,8 +622,8 @@ describe('ZonesService', () => {
 		zonesService.currentZones = FAKE_EXISTING_ZONES;
 		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
 
-		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
-		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// When
 		const promiseReset: Promise<string> = zonesService.resetZonesToDefault();
@@ -649,11 +649,11 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should save zones', (done: Function) => {
+	it("should save zones", (done: Function) => {
 
 		// Given
-		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(null);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZones')
+		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(true));
 
 		// When
@@ -675,12 +675,12 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not save zones that are not compliant', (done: Function) => {
+	it("should not save zones that are not compliant", (done: Function) => {
 
 		// Given
 		const fakeError = "FakeError";
-		const zonesCompliantSpy = spyOn(zonesService, 'isZonesCompliant').and.returnValue(fakeError);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, 'updateZones')
+		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(fakeError);
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(true));
 
 		// When
@@ -702,11 +702,11 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should notify step changes', (done: Function) => {
+	it("should notify step changes", (done: Function) => {
 
 		// When
 		const step = 0.25;
-		const stepUpdatesSpy = spyOn(zonesService.stepUpdates, 'next');
+		const stepUpdatesSpy = spyOn(zonesService.stepUpdates, "next");
 
 		// Given
 		zonesService.notifyStepChange(step);
@@ -718,14 +718,14 @@ describe('ZonesService', () => {
 		done();
 	});
 
-	it('should import zones', (done: Function) => {
+	it("should import zones", (done: Function) => {
 
 		// When
-		const jsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]';
+		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]";
 		const zonesToImport: IZone[] = <IZone[]> JSON.parse(jsonInput);
 
-		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
-		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// Given
 		const promiseImport = zonesService.importZones(jsonInput);
@@ -749,14 +749,14 @@ describe('ZonesService', () => {
 	});
 
 
-	it('should not import zones with wrong JSON data', (done: Function) => {
+	it("should not import zones with wrong JSON data", (done: Function) => {
 
 		// When
-		const wrongJsonInput = ('[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]')
-			.replace(',', '');
+		const wrongJsonInput = ("[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]")
+			.replace(",", "");
 
-		const saveZonesSpy = spyOn(zonesService, 'saveZones').and.returnValue(Promise.resolve(true));
-		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// Given
 		const promiseImport = zonesService.importZones(wrongJsonInput);
@@ -780,12 +780,12 @@ describe('ZonesService', () => {
 
 	});
 
-	it('should not import zones with not compliant zones but valid JSON', (done: Function) => {
+	it("should not import zones with not compliant zones but valid JSON", (done: Function) => {
 
 		// When
-		const error = '149';
-		const jsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":' + error + ',"to":160}]';
-		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, 'next');
+		const error = "149";
+		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":" + error + ",\"to\":160}]";
+		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// Given
 		const promiseImport = zonesService.importZones(jsonInput);

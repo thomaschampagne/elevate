@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
-import { ActivityService } from './activity.service';
+import { TestBed } from "@angular/core/testing";
+import { ActivityService } from "./activity.service";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import * as _ from "lodash";
 
-describe('ActivityService', () => {
+describe("ActivityService", () => {
 
 	let activityService: ActivityService = null;
 
@@ -24,15 +24,15 @@ describe('ActivityService', () => {
 
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(activityService).toBeTruthy();
 		done();
 	});
 
-	it('should fetch activities', (done: Function) => {
+	it("should fetch activities", (done: Function) => {
 
 		// Given
-		const fetchDaoSpy = spyOn(activityService.activityDao, 'fetch')
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When

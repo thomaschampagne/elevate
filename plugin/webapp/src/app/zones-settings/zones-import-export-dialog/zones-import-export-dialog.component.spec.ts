@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ZonesImportExportDialog } from './zones-import-export-dialog.component';
+import { ZonesImportExportDialog } from "./zones-import-export-dialog.component";
 
-xdescribe('ZonesImportExportDialogComponent', () => {
+xdescribe("ZonesImportExportDialogComponent", () => {
 	let component: ZonesImportExportDialog;
 	let fixture: ComponentFixture<ZonesImportExportDialog>;
 
@@ -19,7 +19,7 @@ xdescribe('ZonesImportExportDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import { Component, OnInit } from '@angular/core';
+import * as _ from "lodash";
+import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { MatSnackBar } from "@angular/material";
@@ -7,9 +7,9 @@ import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.compon
 import { Gender } from "./gender.model";
 
 @Component({
-	selector: 'app-athlete-settings',
-	templateUrl: './athlete-settings.component.html',
-	styleUrls: ['./athlete-settings.component.scss']
+	selector: "app-athlete-settings",
+	templateUrl: "./athlete-settings.component.html",
+	styleUrls: ["./athlete-settings.component.scss"]
 })
 export class AthleteSettingsComponent implements OnInit {
 
@@ -43,7 +43,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public swimFtp100m: string;
 
-	public isSwimFtpCalculatorEnabled: boolean = false;
+	public isSwimFtpCalculatorEnabled = false;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private snackBar: MatSnackBar) {
@@ -210,7 +210,7 @@ export class AthleteSettingsComponent implements OnInit {
 	 */
 	public onSwimFtp100mChanged() {
 
-		let hasErrors: boolean = false;
+		let hasErrors = false;
 
 		this.swimFtp100m = this.swimFtp100m.trim();
 
@@ -275,7 +275,7 @@ export class AthleteSettingsComponent implements OnInit {
 		this.localStorageMustBeCleared();
 
 		// TODO.. profileChanged not yet implemented
-		console.warn("profileChanged not yet implemented")
+		console.warn("profileChanged not yet implemented");
 
 		/*userSettingsService.getProfileConfigured().then((configured: boolean) => {
 			if (!configured) {
@@ -317,13 +317,13 @@ export class AthleteSettingsComponent implements OnInit {
 	 */
 	private popError(customMessage?: string) {
 
-		let message: string = "Invalid value entered. Reset to previous value.";
+		let message = "Invalid value entered. Reset to previous value.";
 
 		if (customMessage) {
 			message = customMessage;
 		}
 
-		this.snackBar.open(message, 'Close', {
+		this.snackBar.open(message, "Close", {
 			duration: 2500
 		});
 	}

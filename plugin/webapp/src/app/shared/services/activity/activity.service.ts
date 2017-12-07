@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
 

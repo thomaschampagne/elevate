@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ConfirmDialog } from './confirm-dialog.component';
+import { ConfirmDialog } from "./confirm-dialog.component";
 
-xdescribe('ConfirmDialogComponent', () => {
+xdescribe("ConfirmDialogComponent", () => {
 	let component: ConfirmDialog;
 	let fixture: ComponentFixture<ConfirmDialog>;
 
@@ -19,7 +19,7 @@ xdescribe('ConfirmDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

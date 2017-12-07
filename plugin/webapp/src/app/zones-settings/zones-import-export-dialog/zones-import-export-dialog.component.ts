@@ -1,20 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { ZonesService } from "../shared/zones.service";
 import { ZoneImportExportData } from "./zone-import-export-data.model";
 import { Mode } from "./mode.enum";
 
 @Component({
-	selector: 'app-zones-import-export-dialog',
-	templateUrl: './zones-import-export-dialog.component.html',
-	styleUrls: ['./zones-import-export-dialog.component.scss']
+	selector: "app-zones-import-export-dialog",
+	templateUrl: "./zones-import-export-dialog.component.html",
+	styleUrls: ["./zones-import-export-dialog.component.scss"]
 })
 export class ZonesImportExportDialog implements OnInit {
 
 	public readonly Mode = Mode; // Inject enum as class member
 
-	public static readonly MAX_WIDTH: string = '80%';
-	public static readonly MIN_WIDTH: string = '40%';
+	public static readonly MAX_WIDTH: string = "80%";
+	public static readonly MIN_WIDTH: string = "40%";
 
 	public zonesJsonData: string;
 	public placeholder: string;
@@ -36,7 +36,7 @@ export class ZonesImportExportDialog implements OnInit {
 			// Import goes well
 			this.dialogRef.close();
 		}, (error: string) => {
-			this.snackBar.open(error, 'Close', {duration: 3500})
+			this.snackBar.open(error, "Close", {duration: 3500});
 		});
 	}
 

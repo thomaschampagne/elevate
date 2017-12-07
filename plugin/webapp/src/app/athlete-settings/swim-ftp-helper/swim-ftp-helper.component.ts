@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import * as _ from "lodash";
 import { SwimCalculationMethod } from "./swim-calculation-method.model";
 import { FormulaParams } from "./formula-params.model";
 
 @Component({
-	selector: 'app-swim-ftp-helper',
-	templateUrl: './swim-ftp-helper.component.html',
-	styleUrls: ['./swim-ftp-helper.component.scss']
+	selector: "app-swim-ftp-helper",
+	templateUrl: "./swim-ftp-helper.component.html",
+	styleUrls: ["./swim-ftp-helper.component.scss"]
 })
 export class SwimFtpHelperComponent implements OnInit {
 

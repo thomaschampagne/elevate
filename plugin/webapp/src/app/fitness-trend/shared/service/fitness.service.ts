@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { DayStress } from "../models/day-stress.model";
 import { DayFitnessTrend } from "../models/day-fitness-trend.model";
@@ -139,7 +139,7 @@ export class FitnessService {
 						if (currentDay.isSame(today)) break;
 
 						// Add a day until today is reached :)
-						currentDay.add(1, "days")
+						currentDay.add(1, "days");
 					}
 
 					// Then add PREVIEW days
@@ -195,9 +195,9 @@ export class FitnessService {
 			this.generateDailyStress(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
 				.then((dailyActivity: DayStress[]) => {
 
-					let ctl: number = 0;
-					let atl: number = 0;
-					let tsb: number = 0;
+					let ctl = 0;
+					let atl = 0;
+					let tsb = 0;
 
 					const fitnessTrend: DayFitnessTrend[] = [];
 
@@ -245,7 +245,7 @@ export class FitnessService {
 	 */
 	private appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStress[]) {
 
-		for (let i: number = 0; i < ActivityService.FUTURE_DAYS_PREVIEW; i++) {
+		for (let i = 0; i < ActivityService.FUTURE_DAYS_PREVIEW; i++) {
 
 			const futureDate: Date = startFrom.add(1, "days").startOf("day").toDate();
 

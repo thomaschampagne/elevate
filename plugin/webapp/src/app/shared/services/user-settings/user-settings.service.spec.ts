@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-import { UserSettingsService } from './user-settings.service';
+import { TestBed } from "@angular/core/testing";
+import { UserSettingsService } from "./user-settings.service";
 import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
@@ -7,7 +7,7 @@ import * as _ from "lodash";
 import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
 import { ZoneDefinition } from "../../models/zone-definition.model";
 
-describe('UserSettingsService', () => {
+describe("UserSettingsService", () => {
 
 	let userSettingsService: UserSettingsService;
 
@@ -21,16 +21,16 @@ describe('UserSettingsService', () => {
 
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(userSettingsService).toBeTruthy();
 		done();
 	});
 
-	it('should fetch user settings', (done: Function) => {
+	it("should fetch user settings", (done: Function) => {
 
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
-		const fetchDaoSpy = spyOn(userSettingsService.userSettingsDao, 'fetch')
+		const fetchDaoSpy = spyOn(userSettingsService.userSettingsDao, "fetch")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -52,12 +52,12 @@ describe('UserSettingsService', () => {
 
 	});
 
-	it('should get user settings key', (done: Function) => {
+	it("should get user settings key", (done: Function) => {
 
 		// Given
 		const key = "userGender";
 		const expectedSettings = userSettings.userGender;
-		const getDaoSpy = spyOn(userSettingsService.userSettingsDao, 'get')
+		const getDaoSpy = spyOn(userSettingsService.userSettingsDao, "get")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -80,7 +80,7 @@ describe('UserSettingsService', () => {
 
 	});
 
-	it('should update a user setting', (done: Function) => {
+	it("should update a user setting", (done: Function) => {
 
 		// Given
 		const keyMaxHr = "userMaxHr";
@@ -88,7 +88,7 @@ describe('UserSettingsService', () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.userMaxHr = maxHrValue;
 
-		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, 'update')
+		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -114,13 +114,13 @@ describe('UserSettingsService', () => {
 
 	});
 
-	it('should mark local storage to be clear', (done: Function) => {
+	it("should mark local storage to be clear", (done: Function) => {
 
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.localStorageMustBeCleared = true;
 
-		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, 'update')
+		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -142,7 +142,7 @@ describe('UserSettingsService', () => {
 
 	});
 
-	it('should update a user zone', (done: Function) => {
+	it("should update a user zone", (done: Function) => {
 
 		// Given
 		const TO_BE_SAVED_ZONES = [ // 8 zones
@@ -177,7 +177,7 @@ describe('UserSettingsService', () => {
 		const settings = _.cloneDeep(userSettings);
 		settings.zones.speed = TO_BE_SAVED_ZONES;
 
-		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, 'updateNested')
+		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
 			.and.returnValue(Promise.resolve(settings));
 
 		// When

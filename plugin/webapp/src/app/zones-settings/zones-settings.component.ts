@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
@@ -11,13 +11,13 @@ import { userSettings } from "../../../../common/scripts/UserSettings";
 import { ZoneDefinition } from "../shared/models/zone-definition.model";
 
 @Component({
-	selector: 'app-zones-settings',
-	templateUrl: './zones-settings.component.html',
-	styleUrls: ['./zones-settings.component.scss']
+	selector: "app-zones-settings",
+	templateUrl: "./zones-settings.component.html",
+	styleUrls: ["./zones-settings.component.scss"]
 })
 export class ZonesSettingsComponent implements OnInit {
 
-	public static DEFAULT_ZONE_VALUE: string = "speed";
+	public static DEFAULT_ZONE_VALUE = "speed";
 
 	public zoneDefinitions: ZoneDefinition[] = ZONE_DEFINITIONS;
 	public zoneDefinitionSelected: ZoneDefinition;

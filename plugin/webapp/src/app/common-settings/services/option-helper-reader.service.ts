@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable()
@@ -10,7 +10,7 @@ export class OptionHelperReaderService {
 	public get(markdownTemplate: string): Promise<string> {
 
 		return new Promise<string>((resolve, reject) => {
-			const subscription = this.http.get(markdownTemplate, {responseType: 'text'}).subscribe(markdownData => {
+			const subscription = this.http.get(markdownTemplate, {responseType: "text"}).subscribe(markdownData => {
 				resolve(markdownData);
 			}, error => {
 				reject(error);

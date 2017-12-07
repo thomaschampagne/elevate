@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";

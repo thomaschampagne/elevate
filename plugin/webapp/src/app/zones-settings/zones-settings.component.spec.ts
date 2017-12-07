@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ZonesSettingsComponent } from './zones-settings.component';
+import { ZonesSettingsComponent } from "./zones-settings.component";
 
-xdescribe('ZonesSettingsComponent', () => {
+xdescribe("ZonesSettingsComponent", () => {
 	let component: ZonesSettingsComponent;
 	let fixture: ComponentFixture<ZonesSettingsComponent>;
 
@@ -18,7 +18,7 @@ xdescribe('ZonesSettingsComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });
