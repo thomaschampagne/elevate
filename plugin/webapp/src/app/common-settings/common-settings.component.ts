@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { OptionHelperDialog } from "./option-helper-dialog/option-helper-dialog.component";
+import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";
 import { PlatformLocation } from "@angular/common";
 import { Section } from "./models/section.model";
@@ -21,15 +21,15 @@ import { OptionHelperData } from "./option-helper-dialog/option-helper-data.mode
 })
 export class CommonSettingsComponent implements OnInit {
 
+	public sections: Section[];
+	public searchText = null;
+
 	public static getOptionHelperDir(platformLocation: PlatformLocation) { // TODO Unit test
 		const location: Location = <Location> (<any> platformLocation).location;
 		const pathNames = location.pathname.split("/");
 		pathNames.pop();
 		return pathNames.join("/") + "/assets/option-helpers/";
 	}
-
-	public sections: Section[];
-	public searchText = null;
 
 	constructor(private platformLocation: PlatformLocation,
 				private userSettingsService: UserSettingsService,
@@ -107,7 +107,7 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public onOptionChange(option: Option): void {
 
-		if (option.type == CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+		if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
 			this.userSettingsService.update(option.key, option.active).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
@@ -120,13 +120,13 @@ export class CommonSettingsComponent implements OnInit {
 					this.displaySubOption(subKey, option.active);
 				});
 			}
-		} else if (option.type == CommonSettingsService.TYPE_OPTION_LIST) {
+		} else if (option.type === CommonSettingsService.TYPE_OPTION_LIST) {
 
 			this.userSettingsService.update(option.key, option.active.key).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
-		} else if (option.type == CommonSettingsService.TYPE_OPTION_NUMBER) {
+		} else if (option.type === CommonSettingsService.TYPE_OPTION_NUMBER) {
 
 
 			if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
@@ -209,9 +209,9 @@ export class CommonSettingsComponent implements OnInit {
 					markdownData: markdownData
 				};
 
-				this.dialog.open(OptionHelperDialog, {
-					minWidth: OptionHelperDialog.MIN_WIDTH,
-					maxWidth: OptionHelperDialog.MAX_WIDTH,
+				this.dialog.open(OptionHelperDialogComponent, {
+					minWidth: OptionHelperDialogComponent.MIN_WIDTH,
+					maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
 					data: optionHelperData
 				});
 			});

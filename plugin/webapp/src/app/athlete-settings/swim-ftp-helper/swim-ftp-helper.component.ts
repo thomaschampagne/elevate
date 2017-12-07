@@ -10,22 +10,6 @@ import { FormulaParams } from "./formula-params.model";
 })
 export class SwimFtpHelperComponent implements OnInit {
 
-	/**
-	 * Convert swimming speed to swimming pace
-	 * @param {number} swimFtp: speed in meters / min
-	 * @returns {string} Swim FTP pace hh:mm:ss / 100 meters
-	 */
-	public static convertSwimSpeedToPace(swimFtp: number): string {
-
-		let totalSeconds = 1 / (swimFtp / 60) * 100;
-		const hours = ("00" + Math.floor(totalSeconds / 3600)).slice(-2);
-		totalSeconds %= 3600;
-		const minutes = ("00" + Math.round(totalSeconds / 60)).slice(-2);
-		const seconds = ("00" + Math.round(totalSeconds % 60)).slice(-2);
-
-		return (!swimFtp || swimFtp <= 0) ? "" : hours + ":" + minutes + ":" + seconds;
-	}
-
 	@Input("swimFtp")
 	public swimFtp: number;
 
@@ -67,6 +51,21 @@ export class SwimFtpHelperComponent implements OnInit {
 		},
 	}];
 
+	/**
+	 * Convert swimming speed to swimming pace
+	 * @param {number} swimFtp: speed in meters / min
+	 * @returns {string} Swim FTP pace hh:mm:ss / 100 meters
+	 */
+	public static convertSwimSpeedToPace(swimFtp: number): string {
+
+		let totalSeconds = 1 / (swimFtp / 60) * 100;
+		const hours = ("00" + Math.floor(totalSeconds / 3600)).slice(-2);
+		totalSeconds %= 3600;
+		const minutes = ("00" + Math.round(totalSeconds / 60)).slice(-2);
+		const seconds = ("00" + Math.round(totalSeconds % 60)).slice(-2);
+
+		return (!swimFtp || swimFtp <= 0) ? "" : hours + ":" + minutes + ":" + seconds;
+	}
 
 	constructor() {
 	}

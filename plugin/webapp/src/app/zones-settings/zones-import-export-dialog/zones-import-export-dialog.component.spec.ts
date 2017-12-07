@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ZonesImportExportDialog } from "./zones-import-export-dialog.component";
+import { ZonesImportExportDialogComponent } from "./zones-import-export-dialog.component";
 
 xdescribe("ZonesImportExportDialogComponent", () => {
-	let component: ZonesImportExportDialog;
-	let fixture: ComponentFixture<ZonesImportExportDialog>;
+	let component: ZonesImportExportDialogComponent;
+	let fixture: ComponentFixture<ZonesImportExportDialogComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ZonesImportExportDialog]
+			declarations: [ZonesImportExportDialogComponent]
 		})
 			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(ZonesImportExportDialog);
+		fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

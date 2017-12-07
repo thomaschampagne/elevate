@@ -61,8 +61,8 @@ export class UserSettingsDao {
 			settingToBeUpdated[key] = value;
 
 			this.chromeStorageSync().set(settingToBeUpdated, () => {
-				this.fetch().then((userSettings: IUserSettings) => {
-					resolve(userSettings);
+				this.fetch().then((userSettingsResult: IUserSettings) => {
+					resolve(userSettingsResult);
 				});
 			});
 		});
@@ -88,8 +88,8 @@ export class UserSettingsDao {
 			const absoluteObject = this.createObjectAtPath(path, setting);
 
 			this.chromeStorageSync().set(absoluteObject, () => {
-				this.fetch().then((userSettings: IUserSettings) => {
-					resolve(userSettings);
+				this.fetch().then((userSettingsResult: IUserSettings) => {
+					resolve(userSettingsResult);
 				});
 			});
 		});

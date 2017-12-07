@@ -7,12 +7,12 @@ import { ConfirmDialogData } from "./confirm-dialog-data.model";
 	templateUrl: "./confirm-dialog.component.html",
 	styleUrls: ["./confirm-dialog.component.scss"]
 })
-export class ConfirmDialog implements OnInit {
+export class ConfirmDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "80%";
 	public static readonly MIN_WIDTH: string = "40%";
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialog>,
+	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogData) {
 	}
 

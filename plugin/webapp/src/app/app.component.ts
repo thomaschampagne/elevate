@@ -17,12 +17,6 @@ export interface MainMenuItem {
 })
 export class AppComponent implements OnInit {
 
-	public static updateToolBarTitle(url: string): string {
-		const splitUrl = _.split(url, "/");
-		splitUrl.shift(); // Remove first slash
-		return _.startCase(_.upperFirst(_.first(splitUrl)));
-	}
-
 	public title: string;
 	public mainMenuItems: MainMenuItem[] = [
 		{
@@ -50,6 +44,12 @@ export class AppComponent implements OnInit {
 			routerLinkActive: true
 		}
 	];
+
+	public static updateToolBarTitle(url: string): string {
+		const splitUrl = _.split(url, "/");
+		splitUrl.shift(); // Remove first slash
+		return _.startCase(_.upperFirst(_.first(splitUrl)));
+	}
 
 	constructor(private router: Router) {
 	}

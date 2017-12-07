@@ -14,10 +14,10 @@ import { Period } from "../models/period.model";
 
 describe("FitnessService", () => {
 
-	const powerMeterEnable = true;
-	const cyclingFtp = 150;
-	const swimEnable = true;
-	const swimFtp = 31;
+	let powerMeterEnable;
+	let cyclingFtp;
+	let swimEnable;
+	let swimFtp;
 
 	const todayDate = "2015-12-01 12:00";
 	const momentDatePattern = "YYYY-MM-DD hh:mm";
@@ -38,6 +38,12 @@ describe("FitnessService", () => {
 		fitnessService = TestBed.get(FitnessService);
 		activityService = TestBed.get(ActivityService);
 
+
+		powerMeterEnable = true;
+		cyclingFtp = 150;
+		swimEnable = true;
+		swimFtp = 31;
+
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(moment(todayDate, momentDatePattern));
 
 	});
@@ -51,10 +57,11 @@ describe("FitnessService", () => {
 
 		// Given
 		const expectedFitnessReadyLength = 90;
-		const powerMeterEnable = false;
-		const cyclingFtp = null;
-		const swimEnable = false;
-		const swimFtp = null;
+
+		powerMeterEnable = false;
+		cyclingFtp = null;
+		swimEnable = false;
+		swimFtp = null;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -84,10 +91,10 @@ describe("FitnessService", () => {
 
 		// Given
 		const expectedFitnessReadyLength = 91;
-		const powerMeterEnable = true;
-		const cyclingFtp = 150;
-		const swimEnable = false;
-		const swimFtp = null;
+		powerMeterEnable = true;
+		cyclingFtp = 150;
+		swimEnable = false;
+		swimFtp = null;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -116,10 +123,10 @@ describe("FitnessService", () => {
 
 		// Given
 		const expectedFitnessReadyLength = 92;
-		const powerMeterEnable = false;
-		const cyclingFtp = null;
-		const swimEnable = true;
-		const swimFtp = 31;
+		powerMeterEnable = false;
+		cyclingFtp = null;
+		swimEnable = true;
+		swimFtp = 31;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -148,10 +155,10 @@ describe("FitnessService", () => {
 
 		// Given
 		const expectedFitnessReadyLength = 93;
-		const powerMeterEnable = true;
-		const cyclingFtp = 150;
-		const swimEnable = true;
-		const swimFtp = 31;
+		powerMeterEnable = true;
+		cyclingFtp = 150;
+		swimEnable = true;
+		swimFtp = 31;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -179,10 +186,10 @@ describe("FitnessService", () => {
 	it("should filter fitness ready activities with proper TRIMP, PSS and SwimSS", (done: Function) => {
 
 		// Given
-		const powerMeterEnable = true;
-		const cyclingFtp = 150;
-		const swimEnable = true;
-		const swimFtp = 31;
+		powerMeterEnable = true;
+		cyclingFtp = 150;
+		swimEnable = true;
+		swimFtp = 31;
 
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
@@ -221,10 +228,10 @@ describe("FitnessService", () => {
 
 		const expectedDailyActivityLength = 346;
 		const expectedPreviewDays = 14;
-		const expectedFirstDay = moment("2015-01-04", "YYYY-MM-DD").toDate().getTime(); //"Sun Jan 04 2015 00:00:00 GMT+0100 (Romance Standard Time)";
-		const expectedLastRealDay = moment("2015-12-01", "YYYY-MM-DD").toDate().getTime(); //"Tue Dec 01 2015 00:00:00 GMT+0100 (Romance Standard Time)";
-		const expectedLastPreviewDay = moment("2015-12-15", "YYYY-MM-DD").toDate().getTime(); //"Tue Dec 15 2015 00:00:00 GMT+0100 (Romance Standard Time)";
-		const expectedRideDate = moment("2015-07-10", "YYYY-MM-DD").toDate().getTime(); //"Fri Jul 10 2015 00:00:00 GMT+0200 (Romance Daylight Time)";
+		const expectedFirstDay = moment("2015-01-04", "YYYY-MM-DD").toDate().getTime();
+		const expectedLastRealDay = moment("2015-12-01", "YYYY-MM-DD").toDate().getTime();
+		const expectedLastPreviewDay = moment("2015-12-15", "YYYY-MM-DD").toDate().getTime();
+		const expectedRideDate = moment("2015-07-10", "YYYY-MM-DD").toDate().getTime();
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -242,12 +249,12 @@ describe("FitnessService", () => {
 			expect(dailyActivity.length).toEqual(expectedDailyActivityLength);
 
 			const previewDailyActivity = _.filter(dailyActivity, (dayActivity: DayStress) => {
-				return dayActivity.previewDay == true;
+				return dayActivity.previewDay === true;
 			});
 			expect(previewDailyActivity.length).toEqual(expectedPreviewDays);
 
 			const realDailyActivity = _.filter(dailyActivity, (dayActivity: DayStress) => {
-				return dayActivity.previewDay == false;
+				return dayActivity.previewDay === false;
 			});
 			expect(realDailyActivity.length).toEqual(expectedDailyActivityLength - expectedPreviewDays);
 
@@ -303,7 +310,7 @@ describe("FitnessService", () => {
 
 			// Test training load
 			const lastRealDay = _.last(_.filter(fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
-				return dayFitnessTrend.previewDay == false;
+				return dayFitnessTrend.previewDay === false;
 			}));
 			expect(lastRealDay.atl.toFixed(5)).toEqual("13.74548");
 			expect(lastRealDay.ctl.toFixed(5)).toEqual("47.19952");

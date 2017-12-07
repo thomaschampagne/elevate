@@ -80,7 +80,10 @@ export class FitnessService {
 						}
 
 						if (hasSwimmingData) {
-							fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw, activity.moving_time_raw, activity.elapsed_time_raw, swimFtp);
+							fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
+								activity.moving_time_raw,
+								activity.elapsed_time_raw,
+								swimFtp);
 						}
 
 						fitnessReadyActivities.push(fitnessReadyActivity);
@@ -100,10 +103,7 @@ export class FitnessService {
 	 * @param {number} swimFtp
 	 * @returns {Promise<DayStress[]>}
 	 */
-	public generateDailyStress(powerMeterEnable: boolean,
-							   cyclingFtp: number,
-							   swimEnable: boolean,
-							   swimFtp: number): Promise<DayStress[]> {
+	public generateDailyStress(powerMeterEnable: boolean, cyclingFtp: number, swimEnable: boolean, swimFtp: number): Promise<DayStress[]> {
 
 		return new Promise((resolve: (activityDays: DayStress[]) => void,
 							reject: (error: string) => void) => {
@@ -136,7 +136,9 @@ export class FitnessService {
 						dailyActivity.push(dayStress);
 
 						// If current day is today. The last real day right?! Then leave the loop !
-						if (currentDay.isSame(today)) break;
+						if (currentDay.isSame(today)) {
+							break;
+						}
 
 						// Add a day until today is reached :)
 						currentDay.add(1, "days");

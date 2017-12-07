@@ -783,8 +783,8 @@ describe("ZonesService", () => {
 	it("should not import zones with not compliant zones but valid JSON", (done: Function) => {
 
 		// When
-		const error = "149";
-		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":" + error + ",\"to\":160}]";
+		const expectedError = "149";
+		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":" + expectedError + ",\"to\":160}]";
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// Given

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { ZonesService } from "../shared/zones.service";
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { ZonesImportExportDialog } from "../zones-import-export-dialog/zones-import-export-dialog.component";
-import { ConfirmDialog } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ZonesImportExportDialogComponent } from "../zones-import-export-dialog/zones-import-export-dialog.component";
+import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogData } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ZoneImportExportData } from "../zones-import-export-dialog/zone-import-export-data.model";
 import { Mode } from "../zones-import-export-dialog/mode.enum";
@@ -66,9 +66,9 @@ export class ZoneToolBarComponent implements OnInit {
 			content: "Are you sure? Previous data will be lost."
 		};
 
-		const dialogRef = this.dialog.open(ConfirmDialog, {
-			minWidth: ConfirmDialog.MIN_WIDTH,
-			maxWidth: ConfirmDialog.MAX_WIDTH,
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
 			data: data
 		});
 
@@ -97,9 +97,9 @@ export class ZoneToolBarComponent implements OnInit {
 			mode: Mode.IMPORT
 		};
 
-		this.dialog.open(ZonesImportExportDialog, {
-			minWidth: ZonesImportExportDialog.MIN_WIDTH,
-			maxWidth: ZonesImportExportDialog.MAX_WIDTH,
+		this.dialog.open(ZonesImportExportDialogComponent, {
+			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
 			data: importExportData
 		});
 	}
@@ -112,9 +112,9 @@ export class ZoneToolBarComponent implements OnInit {
 			mode: Mode.EXPORT
 		};
 
-		this.dialog.open(ZonesImportExportDialog, {
-			minWidth: ZonesImportExportDialog.MIN_WIDTH,
-			maxWidth: ZonesImportExportDialog.MAX_WIDTH,
+		this.dialog.open(ZonesImportExportDialogComponent, {
+			minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
+			maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
 			data: importExportData
 		});
 

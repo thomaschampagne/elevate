@@ -110,8 +110,8 @@ export class ZonesService {
 
 			} else {
 
-				const isFirstZone = (index == 0);
-				const isLastZone = (index == (this.currentZones.length - 1));
+				const isFirstZone = (index === 0);
+				const isLastZone = (index === (this.currentZones.length - 1));
 
 				if (isFirstZone || isLastZone) {
 
@@ -141,7 +141,7 @@ export class ZonesService {
 	 */
 	public whisperZoneChange(zoneChange: ZoneChangeWhisper): void {
 
-		if (zoneChange.to && zoneChange.from && (zoneChange.to == zoneChange.from)) {
+		if (zoneChange.to && zoneChange.from && (zoneChange.to === zoneChange.from)) {
 			this.zoneChangeOrderUpdates.error("Impossible to notify both 'from' & 'to' changes at the same time");
 		}
 
@@ -149,8 +149,8 @@ export class ZonesService {
 			this.zoneChangeOrderUpdates.error("Value provided is not a number");
 		}
 
-		const isFirstZoneChange = (zoneChange.sourceId == 0);
-		const isLastZoneChange = (zoneChange.sourceId == (this.currentZones.length - 1));
+		const isFirstZoneChange = (zoneChange.sourceId === 0);
+		const isLastZoneChange = (zoneChange.sourceId === (this.currentZones.length - 1));
 
 		let instruction: ZoneChangeOrder = {
 			sourceId: zoneChange.sourceId,
@@ -226,18 +226,18 @@ export class ZonesService {
 
 
 			if (i === 0) { // First zone
-				if (zones[i].to != zones[i + 1].from) {
+				if (zones[i].to !== zones[i + 1].from) {
 					return NOT_COMPLIANT_ZONE;
 				}
 
 			} else if (i < (zones.length - 1)) { // Middle zone
 
-				if (zones[i].to != zones[i + 1].from || zones[i].from != zones[i - 1].to) {
+				if (zones[i].to !== zones[i + 1].from || zones[i].from !== zones[i - 1].to) {
 					return NOT_COMPLIANT_ZONE;
 				}
 
 			} else { // Last zone
-				if (zones[i].from != zones[i - 1].to) {
+				if (zones[i].from !== zones[i - 1].to) {
 					return NOT_COMPLIANT_ZONE;
 				}
 			}

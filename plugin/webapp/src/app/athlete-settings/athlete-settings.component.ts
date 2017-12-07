@@ -214,7 +214,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 		this.swimFtp100m = this.swimFtp100m.trim();
 
-		if (_.isEmpty(this.swimFtp100m) || this.swimFtp100m == "00:00:00") {
+		if (_.isEmpty(this.swimFtp100m) || this.swimFtp100m === "00:00:00") {
 
 			// Ok...
 			this.swimFtp = null;
@@ -228,9 +228,9 @@ export class AthleteSettingsComponent implements OnInit {
 
 				// Ok...
 				const split = this.swimFtp100m.split(":");
-				const hours = parseInt(split[0]);
-				const minutes = parseInt(split[1]);
-				const seconds = parseInt(split[2]);
+				const hours = parseInt(split[0], 10);
+				const minutes = parseInt(split[1], 10);
+				const seconds = parseInt(split[2], 10);
 				const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
 

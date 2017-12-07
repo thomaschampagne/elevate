@@ -9,24 +9,24 @@ import { Mode } from "./mode.enum";
 	templateUrl: "./zones-import-export-dialog.component.html",
 	styleUrls: ["./zones-import-export-dialog.component.scss"]
 })
-export class ZonesImportExportDialog implements OnInit {
-
-	public readonly Mode = Mode; // Inject enum as class member
+export class ZonesImportExportDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "80%";
 	public static readonly MIN_WIDTH: string = "40%";
 
+	public readonly Mode = Mode; // Inject enum as class member
 	public zonesJsonData: string;
 	public placeholder: string;
 
-	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialog>,
+	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public data: ZoneImportExportData,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit() {
-		this.placeholder = (this.data.mode == Mode.IMPORT) ? "Enter here something like [{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, \"to\": d }]" : null;
+		const enterMessage = "Enter here something like [{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, \"to\": d }]";
+		this.placeholder = (this.data.mode === Mode.IMPORT) ? enterMessage : null;
 		this.zonesJsonData = JSON.stringify(this.data.zonesData);
 	}
 

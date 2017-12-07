@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { OptionHelperDialog } from "./option-helper-dialog.component";
+import { OptionHelperDialogComponent } from "./option-helper-dialog.component";
 import { MaterialModule } from "../../shared/modules/material.module";
 
 xdescribe("OptionHelperDialogComponent", () => {
-	let component: OptionHelperDialog;
-	let fixture: ComponentFixture<OptionHelperDialog>;
+	let component: OptionHelperDialogComponent;
+	let fixture: ComponentFixture<OptionHelperDialogComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [MaterialModule],
-			declarations: [OptionHelperDialog],
+			declarations: [OptionHelperDialogComponent],
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(OptionHelperDialog);
+		fixture = TestBed.createComponent(OptionHelperDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

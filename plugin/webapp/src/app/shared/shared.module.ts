@@ -10,11 +10,11 @@ import { ZonesSettingsComponent } from "../zones-settings/zones-settings.compone
 import { ZoneComponent } from "../zones-settings/zone/zone.component";
 import { FitnessTrendGraphComponent } from "../fitness-trend/graph/fitness-trend-graph.component";
 import { SwimFtpHelperComponent } from "../athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
-import { ZonesImportExportDialog } from "../zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
+import { ZonesImportExportDialogComponent } from "../zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 import { ZoneToolBarComponent } from "../zones-settings/zone-tool-bar/zone-tool-bar.component";
-import { GotItDialog } from "./dialogs/got-it-dialog/got-it-dialog.component";
-import { ConfirmDialog } from "./dialogs/confirm-dialog/confirm-dialog.component";
-import { OptionHelperDialog } from "../common-settings/option-helper-dialog/option-helper-dialog.component";
+import { GotItDialogComponent } from "./dialogs/got-it-dialog/got-it-dialog.component";
+import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
+import { OptionHelperDialogComponent } from "../common-settings/option-helper-dialog/option-helper-dialog.component";
 import { UserSettingsService } from "./services/user-settings/user-settings.service";
 import { CommonSettingsService } from "../common-settings/services/common-settings.service";
 import { ActivityService } from "./services/activity/activity.service";
@@ -38,17 +38,17 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 
 		// Dialogs
 		ZoneToolBarComponent,
-		GotItDialog,
-		ConfirmDialog,
-		OptionHelperDialog,
-		ZonesImportExportDialog
+		GotItDialogComponent,
+		ConfirmDialogComponent,
+		OptionHelperDialogComponent,
+		ZonesImportExportDialogComponent
 	],
 	entryComponents: [
 
-		GotItDialog,
-		ConfirmDialog,
-		OptionHelperDialog,
-		ZonesImportExportDialog
+		GotItDialogComponent,
+		ConfirmDialogComponent,
+		OptionHelperDialogComponent,
+		ZonesImportExportDialogComponent
 
 	],
 	providers: [

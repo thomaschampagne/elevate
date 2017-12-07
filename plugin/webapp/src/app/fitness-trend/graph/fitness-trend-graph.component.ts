@@ -20,7 +20,7 @@ import { Marker } from "./marker.model";
 // DONE Forward to strava.com activities
 // TODO UI Style
 // TODO Show helper info
-// TODO Show info when no data. (Wrap in a parent FitnessTrendComponent 
+// TODO Show info when no data. (Wrap in a parent FitnessTrendComponent
 // (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
 @Component({

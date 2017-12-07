@@ -1,25 +1,25 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { GotItDialog } from "./got-it-dialog.component";
+import { GotItDialogComponent } from "./got-it-dialog.component";
 
 xdescribe("GotItDialogComponent", () => {
-	let component: GotItDialog;
-	let fixture: ComponentFixture<GotItDialog>;
+	let component: GotItDialogComponent;
+	let fixture: ComponentFixture<GotItDialogComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-		declarations: [GotItDialog]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [GotItDialogComponent]
+		})
+			.compileComponents();
+	}));
 
-  beforeEach(() => {
-	  fixture = TestBed.createComponent(GotItDialog);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(GotItDialogComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it("should create", () => {
-    expect(component).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(component).toBeTruthy();
+	});
 });

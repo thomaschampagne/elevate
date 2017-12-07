@@ -53,7 +53,7 @@ export class ZoneComponent implements OnInit {
 
 		this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
 
-			const isChangeOrderForMe = (!_.isNull(change) && (this.zoneId == change.destinationId));
+			const isChangeOrderForMe = (!_.isNull(change) && (this.zoneId === change.destinationId));
 
 			if (isChangeOrderForMe) {
 				this.applyChangeOrder(change);
@@ -84,7 +84,9 @@ export class ZoneComponent implements OnInit {
 	 */
 	public whisperZoneChange(changeType: ZoneChangeType): void {
 
-		if (changeType.from && changeType.to) return; // Skip notify zone service on first component display
+		if (changeType.from && changeType.to) { // Skip notify zone service on first component display
+			return;
+		}
 
 		if (changeType.from || changeType.to) {
 
@@ -139,7 +141,7 @@ export class ZoneComponent implements OnInit {
 			16 // Shift
 		];
 
-		const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) == -1;
+		const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) === -1;
 
 		if (isKeyWhiteListed) {
 			event.preventDefault();
