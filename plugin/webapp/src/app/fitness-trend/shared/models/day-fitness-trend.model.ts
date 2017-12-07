@@ -41,18 +41,19 @@ export class DayFitnessTrend extends DayStress {
 
 	public printDate(): string {
 
-		const todayMoment = moment().startOf("day");
 		const dayFitnessMoment = moment(this.date);
+		const isToday = moment().startOf("day").isSame(dayFitnessMoment);
 
-		let niceDate: string = null;
+		let niceDate: string = dayFitnessMoment.format("dddd, MMMM Do YYYY");
+
+		if (isToday) {
+			niceDate = "Today, " + niceDate;
+		}
 
 		if (this.previewDay) {
-			niceDate = "Preview Day";
-		} else if (todayMoment.isSame(dayFitnessMoment)) {
-			niceDate = "Today";
-		} else {
-			niceDate = dayFitnessMoment.format("MMM DD YYYY");
+			niceDate = "Preview Day, " + niceDate;
 		}
+
 		return niceDate;
 	}
 

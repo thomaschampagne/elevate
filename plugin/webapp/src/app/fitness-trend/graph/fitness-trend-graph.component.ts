@@ -154,7 +154,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 			} else if (dayFitnessTrend.dateString === today) {
 				marker = {
-					date: new Date(),
+					date: moment().startOf("day").toDate(),
 					label: "☀" // or label: "☀️"
 				};
 			}
