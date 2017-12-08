@@ -23,7 +23,7 @@ import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialo
 // DONE Filter with power swim
 // DONE Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // DONE Alert on toogle click when no ftp or swmin confugured
-// TODO Show preview days as dashed line
+// DONE Show preview days as dashed line
 // DONE Support form zones
 // DONE Forward to strava.com activities
 // TODO UI Style
@@ -40,9 +40,7 @@ import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialo
 export class FitnessTrendGraphComponent implements OnInit {
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "6_months";
-
 	public static readonly SPECIAL_CHAR_SUN: string = "☀"; // OR "☀️" @amp-what.com
-
 	public static readonly SPECIAL_CHAR_FINGER: string = "🠷"; // OR "▾" @amp-what.com
 
 	public PERFORMANCE_MARKER: number;
@@ -58,6 +56,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		aggregate_rollover: true,
 		interpolate: d3.curveLinear,
 		missing_is_hidden: true,
+		// max_data_size: 6,
 		missing_is_hidden_accessor: 'hidden',
 		// x_extended_ticks: true,
 		// y_extended_ticks: true,
@@ -68,7 +67,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		inflator: 1.2,
 		showActivePoint: false,
 		// clickableMarkerLines: true,
-		show_confidence_band: ["lower", "upper"],
+		// show_confidence_band: ["lower", "upper"],
 		markers: null,
 		legend: null,
 		click: (data: MetricsGraphicsEvent) => {

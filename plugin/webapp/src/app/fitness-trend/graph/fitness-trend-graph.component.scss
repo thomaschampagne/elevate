@@ -1,25 +1,21 @@
 @import '../../../assets/styles/constant';
 
-.watchedDay {
-	color: $light-grey;
-	//margin-top: 20px;
-	//margin-bottom: 20px;
-}
-
-.watchedDay > div {
-	//color: $light-grey;
-	//margin-top: 20px;
-	//margin-bottom: 10px;
-}
+// Define fitness trend color
+$atl-color: #515151;
+$ctl-color: #e94e1b;
+$tsb-color: #adadad;
 
 // Class enabled via ngClass when active day on mouseover
-.clickableMarker {
+.openActivities {
 	cursor: pointer;
 }
 
-/**
- * Pimp metrics graphic marker lines
- */
+// Ensure viewed day details height do not flick
+mat-card-subtitle {
+	min-height: 60px;
+}
+
+// Pimp marker lines
 /deep/ .mg-markers line {
 	opacity: 0.4;
 	shape-rendering: auto;
@@ -27,46 +23,42 @@
 	stroke-width: 1px;
 }
 
+// Pimp baselines
 /deep/ .mg-baselines line {
-	opacity: 0.4;
+	opacity: 0.6;
 	stroke-dasharray: 15, 15;
-	//shape-rendering: auto;
-	//stroke: $light-grey;
-	//stroke-width: 1px;
 }
 
-mat-card-subtitle {
-	min-height: 60px;
-	//background-color: red;
+// Customize graph lines colors
+/deep/ .mg-line1-color {
+	stroke: $atl-color;
+	fill: $atl-color;
 }
 
+/deep/ .mg-line2-color {
+	stroke: $ctl-color;
+	fill: $ctl-color;
+}
+
+/deep/ .mg-line3-color {
+	stroke: $tsb-color;
+	fill: $tsb-color;
+}
 
 /deep/ .mg-line4-color {
+	stroke: $atl-color;
+	fill: $atl-color;
 	stroke-dasharray: 5, 5;
 }
 
 /deep/ .mg-line5-color {
+	stroke: $ctl-color;
+	fill: $ctl-color;
 	stroke-dasharray: 5, 5;
 }
 
 /deep/ .mg-line6-color {
-	stroke: #ff00c5;
+	stroke: $tsb-color;
+	fill: $tsb-color;
 	stroke-dasharray: 5, 5;
 }
-
-/*
-/deep/ .mg-line2-color {
-	stroke: #4a4a4a;
-	stroke-dasharray: 4, 3;
-}
-
-/deep/ .mg-line1-color {
-	stroke: #4a4a4a;
-}
-*/
-/*
-
-/deep/ .mg-line1-color .mg-points {
-	stroke: #000000;
-}
-*/
