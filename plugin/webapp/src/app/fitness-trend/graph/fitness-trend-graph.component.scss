@@ -27,6 +27,14 @@
 	stroke-width: 1px;
 }
 
+/deep/ .mg-baselines line {
+	opacity: 0.3;
+	stroke-dasharray: 15, 15;
+	//shape-rendering: auto;
+	//stroke: $light-grey;
+	//stroke-width: 1px;
+}
+
 mat-card-subtitle {
 	min-height: 60px;
 	//background-color: red;

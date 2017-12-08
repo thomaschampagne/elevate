@@ -43,7 +43,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		full_width: true,
 		height: window.innerHeight * 0.60,
 		right: 40,
-		baselines: [{value: 0}],
+		baselines: [],
 		animate_on_load: true,
 		transition_on_update: false,
 		aggregate_rollover: true,
@@ -232,6 +232,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	}
 
+	/**
+	 *
+	 */
 	private updateViewableData(): void {
 
 		const lines: GraphPoint[][] = [];
@@ -243,6 +246,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		this.graphConfig.data = lines;
 		this.graphConfig.markers = this.viewableGraphData.markers;
+		this.graphConfig.baselines = this.viewableGraphData.getBaseLines(this.isTrainingZonesEnabled);
 	}
 
 
@@ -366,9 +370,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.viewedDay = this.getTodayViewedDay();
 	}
 
-
 	public onTrainingZonesToggle(): void {
-		// Create baselines
+		this.updateGraph()
 	}
 
 	public onPowerMeterToggle(): void {
