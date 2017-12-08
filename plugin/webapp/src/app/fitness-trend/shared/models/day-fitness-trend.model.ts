@@ -50,17 +50,20 @@ export class DayFitnessTrend extends DayStress {
 			niceDate = "Today, " + niceDate;
 		}
 
-		if (this.previewDay) {
+		/*if (this.previewDay) {
 			niceDate = "Preview Day, " + niceDate;
-		}
+		}*/
 
 		return niceDate;
 	}
 
 	public printActivities(): string {
+
 		let printed = "Rest day";
 		if (this.activitiesName.length > 0) {
 			printed = this.activitiesName.join("; ");
+		} else if (this.previewDay) {
+			printed = "-";
 		}
 		return printed;
 	}

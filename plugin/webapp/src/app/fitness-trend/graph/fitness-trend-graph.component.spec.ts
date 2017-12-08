@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { MatNativeDateModule } from "@angular/material";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -26,7 +28,7 @@ describe("FitnessTrendGraphComponent", () => {
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule, BrowserAnimationsModule, MatNativeDateModule],
 			declarations: [FitnessTrendGraphComponent],
-			providers: [FitnessService, ActivityService, ActivityDao]
+			providers: [FitnessService, UserSettingsService, UserSettingsDao, ActivityService, ActivityDao]
 		}).compileComponents();
 
 		// Retrieve injected service

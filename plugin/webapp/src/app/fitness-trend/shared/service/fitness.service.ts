@@ -12,6 +12,8 @@ import { Period } from "../models/period.model";
 @Injectable()
 export class FitnessService {
 
+	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
+
 	constructor(private activityService: ActivityService) {
 	}
 
@@ -247,7 +249,7 @@ export class FitnessService {
 	 */
 	private appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStress[]) {
 
-		for (let i = 0; i < ActivityService.FUTURE_DAYS_PREVIEW; i++) {
+		for (let i = 0; i < FitnessService.FUTURE_DAYS_PREVIEW; i++) {
 
 			const futureDate: Date = startFrom.add(1, "days").startOf("day").toDate();
 
@@ -331,7 +333,7 @@ export class FitnessService {
 	}
 
 	/**
-	 * Return start/end indexes of fitnessTrend collection corresponding to from/to date given in a period
+	 * Return start/end indexes of fullFitnessTrend collection corresponding to from/to date given in a period
 	 * @param {Period} period
 	 * @param {DayFitnessTrend[]} fitnessTrend
 	 * @returns {{start: number; end: number}}

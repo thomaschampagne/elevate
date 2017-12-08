@@ -21,14 +21,14 @@
  * Pimp metrics graphic marker lines
  */
 /deep/ .mg-markers line {
-	opacity: 0.3;
+	opacity: 0.4;
 	shape-rendering: auto;
 	stroke: $light-grey;
 	stroke-width: 1px;
 }
 
 /deep/ .mg-baselines line {
-	opacity: 0.3;
+	opacity: 0.4;
 	stroke-dasharray: 15, 15;
 	//shape-rendering: auto;
 	//stroke: $light-grey;
@@ -39,6 +39,21 @@ mat-card-subtitle {
 	min-height: 60px;
 	//background-color: red;
 }
+
+
+/deep/ .mg-line4-color {
+	stroke-dasharray: 5, 5;
+}
+
+/deep/ .mg-line5-color {
+	stroke-dasharray: 5, 5;
+}
+
+/deep/ .mg-line6-color {
+	stroke: #ff00c5;
+	stroke-dasharray: 5, 5;
+}
+
 /*
 /deep/ .mg-line2-color {
 	stroke: #4a4a4a;

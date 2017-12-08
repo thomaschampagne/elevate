@@ -13,7 +13,7 @@ export class ViewableGraphData {
 			{value: -30, label: "Over training"}
 		];
 
-	public readonly zeroBaseLine: BaseLine = {value: 0, label: "Zero"};
+	public readonly zeroBaseLine: BaseLine = {value: 0, label: null};
 
 	public fatigueLine: GraphPoint[] = [];
 	public fitnessLine: GraphPoint[] = [];
@@ -21,20 +21,33 @@ export class ViewableGraphData {
 	public fitnessTrendLines: GraphPoint[][] = [];
 	public markers: Marker[] = [];
 
+	public previewFatigueLine: GraphPoint[] = [];
+	public previewFitnessLine: GraphPoint[] = [];
+	public previewFormLine: GraphPoint[] = [];
 
-	constructor(fatigueLine: GraphPoint[],
+	constructor(markers: Marker[],
+				fatigueLine: GraphPoint[],
 				fitnessLine: GraphPoint[],
 				formLine: GraphPoint[],
-				markers: Marker[]) {
+				previewFatigueLine: GraphPoint[],
+				previewFitnessLine: GraphPoint[],
+				previewFormLine: GraphPoint[]) {
+
+		this.markers = markers;
 
 		this.fatigueLine = fatigueLine;
 		this.fitnessLine = fitnessLine;
 		this.formLine = formLine;
-		this.markers = markers;
+		this.previewFatigueLine = previewFatigueLine;
+		this.previewFitnessLine = previewFitnessLine;
+		this.previewFormLine = previewFormLine;
 
 		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.formLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.previewFatigueLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.previewFitnessLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.previewFormLine, "date"));
 	}
 
 	public getBaseLines(isTrainingZonesEnabled: boolean): BaseLine[] {

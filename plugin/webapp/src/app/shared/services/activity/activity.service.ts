@@ -5,8 +5,6 @@ import { ISyncActivityComputed } from "../../../../../../common/scripts/interfac
 @Injectable()
 export class ActivityService {
 
-	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
-
 	constructor(public activityDao: ActivityDao) {
 	}
 
