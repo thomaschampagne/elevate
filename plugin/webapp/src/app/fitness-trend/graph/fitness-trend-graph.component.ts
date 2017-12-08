@@ -17,15 +17,15 @@ import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
 // DONE Filter between dates
 // DONE Show graph point legend: CTL, ATL, TSB
 // DONE Filter with power meter
-// TODO Filter with power swim
-// TODO Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
+// DONE Filter with power swim
+// DONE Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
 // TODO Show preview days as dashed line
-// TODO Support form zones
+// DONE Support form zones
 // DONE Forward to strava.com activities
 // TODO UI Style
-// TODO training zones
+// DONE training zones
 // TODO Show helper info
-// TODO Show info when no data. (Wrap in a parent FitnessTrendComponent
+// TODO Show info sync when no data. (Wrap in a parent FitnessTrendComponent
 // (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
 
 @Component({
@@ -96,6 +96,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public ngOnInit(): void {
 
+		this.setupToggles();
+
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
 			this.cyclingFtp = userSettings.userFTP;
@@ -106,18 +108,18 @@ export class FitnessTrendGraphComponent implements OnInit {
 		}).then((fitnessTrend: DayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.setup();
+			this.setupGraph();
 		});
 	}
 
 	/**
-	 * Setup:
+	 * Setup graph:
 	 * Default period viewed.
 	 * Date picker min & max date
 	 * Lines & marker viewable data
 	 * First graph draw
 	 */
-	private setup(): void {
+	private setupGraph(): void {
 		this.setupTimeData();
 		this.setupViewableGraphData();
 		this.updateGraph();
@@ -269,6 +271,15 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
+	private setupToggles() {
+		this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem("trainingZonesEnabled"));
+		this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem("powerMeterEnabled"));
+		this.isSwimEnabled = !_.isEmpty(localStorage.getItem("swimEnabled"));
+	}
+
+	/**
+	 *
+	 */
 	private setupTimeData() {
 
 		this.setTodayAsViewedDay();
@@ -371,15 +382,36 @@ export class FitnessTrendGraphComponent implements OnInit {
 	}
 
 	public onTrainingZonesToggle(): void {
-		this.updateGraph()
+
+		this.updateGraph();
+
+		if (this.isTrainingZonesEnabled) {
+			localStorage.setItem("trainingZonesEnabled", "true");
+		} else {
+			localStorage.removeItem("trainingZonesEnabled");
+		}
 	}
 
 	public onPowerMeterToggle(): void {
+
 		this.reload();
+
+		if (this.isPowerMeterEnabled) {
+			localStorage.setItem("powerMeterEnabled", "true");
+		} else {
+			localStorage.removeItem("powerMeterEnabled");
+		}
 	}
 
 	public onSwimToggle(): void {
+
 		this.reload();
+
+		if (this.isSwimEnabled) {
+			localStorage.setItem("swimEnabled", "true");
+		} else {
+			localStorage.removeItem("swimEnabled");
+		}
 	}
 
 	/**
