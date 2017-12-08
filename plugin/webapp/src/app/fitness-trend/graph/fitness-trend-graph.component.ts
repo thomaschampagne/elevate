@@ -12,6 +12,9 @@ import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSet
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { ViewableGraphData } from "./models/viewable-graph-data.model";
 import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
+import { MatDialog } from "@angular/material";
+import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 // DONE Filter by period until today
 // DONE Filter between dates
@@ -19,6 +22,7 @@ import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
 // DONE Filter with power meter
 // DONE Filter with power swim
 // DONE Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
+// TODO Alert on toogle click when no ftp or swmin confugured
 // TODO Show preview days as dashed line
 // DONE Support form zones
 // DONE Forward to strava.com activities
@@ -36,7 +40,8 @@ import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
 export class FitnessTrendGraphComponent implements OnInit {
 
 
-	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "4_months";
+	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "12_months";
+	// public static readonly DEFAULT_LAST_PERIOD_KEY: string = "4_months";
 
 	public graphConfig = { // TODO Refactor with clean callbacks
 		data: [],
@@ -91,35 +96,39 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 
 	constructor(private userSettingsService: UserSettingsService,
-				private fitnessService: FitnessService) {
+				private fitnessService: FitnessService,
+				private dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
 
-		this.setupToggles();
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;
 
+			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem("trainingZonesEnabled"));
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem("powerMeterEnabled")) && _.isNumber(this.cyclingFtp);
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem("swimEnabled")) && _.isNumber(this.swimFtp);
+
 			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 
 		}).then((fitnessTrend: DayFitnessTrend[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.setupGraph();
+			this.setup();
 		});
 	}
 
 	/**
-	 * Setup graph:
+	 * Setup:
 	 * Default period viewed.
 	 * Date picker min & max date
 	 * Lines & marker viewable data
 	 * First graph draw
 	 */
-	private setupGraph(): void {
+	private setup(): void {
 		this.setupTimeData();
 		this.setupViewableGraphData();
 		this.updateGraph();
@@ -129,7 +138,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 * Re-compute fitness trends, and apply data to graph.
 	 */
-	private reload(): void {
+	private reloadGraph(): void {
 
 		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
 			.then((fitnessTrend: DayFitnessTrend[]) => {
@@ -267,16 +276,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.updateGraph();
 	}
 
-
-	/**
-	 *
-	 */
-	private setupToggles() {
-		this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem("trainingZonesEnabled"));
-		this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem("powerMeterEnabled"));
-		this.isSwimEnabled = !_.isEmpty(localStorage.getItem("swimEnabled"));
-	}
-
 	/**
 	 *
 	 */
@@ -381,6 +380,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.viewedDay = this.getTodayViewedDay();
 	}
 
+	/**
+	 *
+	 */
 	public onTrainingZonesToggle(): void {
 
 		this.updateGraph();
@@ -392,31 +394,79 @@ export class FitnessTrendGraphComponent implements OnInit {
 		}
 	}
 
+	/**
+	 *
+	 */
 	public onPowerMeterToggle(): void {
 
-		this.reload();
+		if (!_.isNumber(this.cyclingFtp)) {
 
-		if (this.isPowerMeterEnabled) {
-			localStorage.setItem("powerMeterEnabled", "true");
+			const data: GotItDialogData = {
+				title: "Cycling Functional Threshold Power Empty",
+				content: "You cycling functional threshold power (FTP) is not defined. Please set it in athlete settings and go back to this page."
+			};
+
+			this.dialog.open(GotItDialogComponent, {
+				minWidth: GotItDialogComponent.MIN_WIDTH,
+				maxWidth: GotItDialogComponent.MAX_WIDTH,
+				data: data
+			});
+
+			// Reset toggle to false
+			setTimeout(() => {
+				this.isPowerMeterEnabled = false;
+			});
+
 		} else {
-			localStorage.removeItem("powerMeterEnabled");
+
+			this.reloadGraph();
+
+			if (this.isPowerMeterEnabled) {
+				localStorage.setItem("powerMeterEnabled", "true");
+			} else {
+				localStorage.removeItem("powerMeterEnabled");
+			}
 		}
+
 	}
 
+	/**
+	 *
+	 */
 	public onSwimToggle(): void {
 
-		this.reload();
+		if (!_.isNumber(this.swimFtp)) {
 
-		if (this.isSwimEnabled) {
-			localStorage.setItem("swimEnabled", "true");
+			const data: GotItDialogData = {
+				title: "Swimming Functional Threshold Pace Empty",
+				content: "Your swimming functional threshold pace is not defined. Please set it in athlete settings and go back to this page."
+			};
+
+			this.dialog.open(GotItDialogComponent, {
+				minWidth: GotItDialogComponent.MIN_WIDTH,
+				maxWidth: GotItDialogComponent.MAX_WIDTH,
+				data: data
+			});
+
+			// Reset toggle to false
+			setTimeout(() => {
+				this.isSwimEnabled = false;
+			});
+
 		} else {
-			localStorage.removeItem("swimEnabled");
+
+			this.reloadGraph();
+
+			if (this.isSwimEnabled) {
+				localStorage.setItem("swimEnabled", "true");
+			} else {
+				localStorage.removeItem("swimEnabled");
+			}
 		}
 	}
 
 	/**
 	 *
-	 * @param fitnessTrend
 	 * @returns {LastPeriod[]}
 	 */
 	private provideLastPeriods(): LastPeriod[] {
