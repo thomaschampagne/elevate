@@ -5,15 +5,32 @@ $atl-color: #515151;
 $ctl-color: #e94e1b;
 $tsb-color: #adadad;
 
+.fitnessTrendGraphHeader {
+	//margin-bottom: 15px;
+	min-height: 175px;
+}
+
+/*
+.trendValues {
+	margin: 0;
+	//font-size: 20px;
+	//margin-bottom: 15px;
+}*/
+
+/*
+.dayDetails {
+	//margin-bottom: 15px;
+}*/
+
 // Class enabled via ngClass when active day on mouseover
 .openActivities {
 	cursor: pointer;
 }
 
 // Ensure viewed day details height do not flick
-mat-card-subtitle {
+/*mat-card-subtitle {
 	min-height: 60px;
-}
+}*/
 
 // Pimp marker lines
 /deep/ .mg-markers line {

@@ -1,188 +1,212 @@
 <mat-card *ngIf="viewedDay">
-	<mat-card-title>
-		<div fxLayout="row" fxFlexAlign="start start" class="mat-headline">
-			<div fxFlex="175px">
-				Fitness {{viewedDay.printFitness()}}
-			</div>
-			<div fxFlex="175px">
-				Fatigue {{viewedDay.printFatigue()}}
-			</div>
-			<div fxFlex="175px">
-				Form {{viewedDay.printForm()}}
-			</div>
-			<button mat-icon-button fxFlex>
-				<mat-icon>info</mat-icon>
-			</button>
-		</div>
-
-		<mat-card-subtitle>
-
-			<div>
-				<span>{{viewedDay.printDate()}}</span>
-			</div>
-			<div>
-				<span>{{viewedDay.printActivities()}}</span>
-			</div>
-			<div>
-				<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
-				<span *ngIf="viewedDay.finalStressScore">
-					<!--Stress Score ➔-->
-					Stress Score:
-					<!--Trimp-->
-					<span *ngIf="viewedDay.trimpScore">
-						{{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
-					</span>
-
-					<!--PSS-->
-					<span *ngIf="viewedDay.powerStressScore">
-						<span *ngIf="viewedDay.trimpScore">
-							&nbsp;/&nbsp;
-						</span>
-						{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
-					</span>
-
-					<!--SwimSS-->
-					<span *ngIf="viewedDay.swimStressScore">
-						<span *ngIf="viewedDay.trimpScore">
-							&nbsp;/&nbsp;
-						</span>
-						{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
-					</span>
-					<!--Final-->
-					<span>
-						&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>
-					</span>
-				</span>
-			</div>
-
-			<!--			<span *ngIf="viewedDay.finalStressScore">
-                            ➔
-                            <span *ngIf="viewedDay.trimpScore">
-                                {{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
-                            </span>
-                            <span *ngIf="viewedDay.powerStressScore">
-                                {{viewedDay.printPowerStressScore()}} <sub><i>PSS</i></sub>
-                            </span>
-                            <span *ngIf="viewedDay.swimStressScore">
-                                {{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
-                            </span>
-                            ➔
-                            <span *ngIf="viewedDay.finalStressScore">
-                                {{viewedDay.printFinalStressScore()}} <sub><i>Final Stress Score</i></sub>
-                            </span>
-                        </span>-->
-		</mat-card-subtitle>
-		<!--<mat-card-subtitle>sub..</mat-card-subtitle>-->
-	</mat-card-title>
 	<mat-card-content>
+		<!--HEADER-->
+		<div
+			class="fitnessTrendGraphHeader"
+			fxLayout="row"
+			fxLayoutAlign="center start"
+			style=" background-color: #ececec;">
 
-		<!--<div fxLayout="row" fxFlexAlign="start start" class="mat-headline">-->
-		<!--style="background-color: red;"-->
+			<!--Fitness, Fatigue, Form values-->
+			<div fxFlex="15"
+				 fxFlexAlign="stretch"
+				 fxLayout="column" fxLayoutAlign="space-between start"
+				 class="mat-headline"
+				 style="margin: 0; border: 1px solid darkturquoise">
 
+				<div fxFlex
+					 fxFill
+					 fxLayout="row"
+					 style="border: 1px dashed black;">
+						<span fxFlexAlign="start">
+							Fitness {{viewedDay.printFitness()}}
+						</span>
+				</div>
 
-		<!--<div fxLayout="column" fxFlexAlign="start start" class="viewedDay mat-subheading-1">
-			&lt;!&ndash;<div fxFlex>&ndash;&gt;
-			<div fxFlex>
-				{{viewedDay.printDate()}}
+				<div fxFlex
+					 fxFill
+					 fxLayout="row"
+					 style="border: 1px dashed black;">
+						<span fxFlexAlign="center">
+							Fatigue {{viewedDay.printFatigue()}}
+						</span>
+				</div>
+
+				<div fxFlex
+					 fxFill
+					 fxLayout="row"
+					 style="border: 1px dashed black;">
+						<span fxFlexAlign="end">
+							Form {{viewedDay.printForm()}}
+						</span>
+				</div>
+
 			</div>
-			&lt;!&ndash;<div fxFlex="5">&ndash;&gt;
-			&lt;!&ndash;Ride + Run&ndash;&gt;
-			&lt;!&ndash;</div>&ndash;&gt;
-			<div fxFlex>
-				{{(viewedDay.activitiesName.length > 0) ? viewedDay.activitiesName : "Rest day"}}
-				&lt;!&ndash;Ride: <i>My very long long long activity name</i> <strong>&nbsp;&nbsp;+&nbsp;&nbsp;</strong> Run:&ndash;&gt;
-				&lt;!&ndash;<i>Course&ndash;&gt;
-					&lt;!&ndash;à pied le soir, sous la pluie et dans le noir 💜</i>&ndash;&gt;
+
+			<!--INPUTS & DETAILS-->
+			<div fxFlex
+				 fxFlexAlign="stretch"
+				 fxLayout="column" fxLayoutAlign="space-between center"
+				 style="border: 1px solid deeppink">
+
+				<!--INPUTS-->
+				<div fxFlex="40"
+					 fxFill
+					 fxLayout="row" fxLayoutAlign="space-between center"
+					 style="border: 1px solid blue">
+
+					<!--PERIODS-->
+					<div fxFlex
+						 fxFlexAlign="start"
+						 fxLayout="row" fxLayoutAlign="center start"
+						 style="border: 1px solid yellow">
+
+						<mat-input-container fxFlex>
+							<mat-select
+								[(ngModel)]="lastPeriodViewed"
+								(change)="onLastPeriodSelected()"
+								placeholder="Last">
+								<mat-option
+									*ngFor="let lastPeriod of lastPeriods;"
+									[value]="lastPeriod">
+									{{lastPeriod.label}}
+								</mat-option>
+							</mat-select>
+						</mat-input-container>
+
+						<span fxFlex="2"></span>
+
+						<mat-form-field fxFlex>
+							<input matInput
+								   [(ngModel)]="periodViewed.from"
+								   [min]="dateMin"
+								   [max]="periodViewed.to"
+								   [matDatepicker]="datePickerFrom"
+								   (dateChange)="onDateToDateChange()"
+								   placeholder="From">
+							<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+							<mat-datepicker #datePickerFrom></mat-datepicker>
+						</mat-form-field>
+
+						<span fxFlex="2"></span>
+
+						<mat-form-field fxFlex>
+							<input matInput
+								   [(ngModel)]="periodViewed.to"
+								   [min]="periodViewed.from"
+								   [max]="dateMax"
+								   [matDatepicker]="datePickerTo"
+								   (dateChange)="onDateToDateChange()"
+								   placeholder="To">
+							<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+							<mat-datepicker #datePickerTo></mat-datepicker>
+						</mat-form-field>
+
+					</div>
+
+					<span fxFlex="5"></span>
+
+					<!--TOGGLES-->
+					<div fxFlex="30"
+						 fxFlexAlign="start"
+						 fxLayout="row" fxLayoutAlign="end center"
+						 style="border: 1px solid black">
+
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isTrainingZonesEnabled"
+										  (change)="onTrainingZonesToggle()"
+										  matTooltip="Display Form Zones on graph">
+							<mat-icon>power_input</mat-icon>
+						</mat-slide-toggle>
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isPowerMeterEnabled"
+										  (change)="onPowerMeterToggle()"
+										  matTooltip="Use cycling power meter when available">
+							<mat-icon>flash_on</mat-icon>
+						</mat-slide-toggle>
+
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isSwimEnabled"
+										  (change)="onSwimToggle()"
+										  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+							<mat-icon>pool</mat-icon>
+						</mat-slide-toggle>
+
+						<button mat-icon-button>
+							<mat-icon>info</mat-icon>
+						</button>
+
+					</div>
+
+				</div>
+
+				<!--DETAILS-->
+				<div fxFlex="60"
+					 fxFill
+					 class="mat-subheading-2"
+					 fxLayout="column" fxLayoutAlign="space-between start"
+					 style="margin: 0; border: 1px solid blue">
+
+					<div fxFlex
+						 fxFill
+						 fxLayout="row"
+						 style="border: 1px dashed black;">
+						<span fxFlexAlign="start">
+							{{viewedDay.printDate()}}
+						</span>
+					</div>
+
+					<div fxFlex
+						 fxFill
+						 fxLayout="row"
+						 style="border: 1px dashed black;">
+						<span fxFlexAlign="center">
+							{{viewedDay.printActivities()}}
+						</span>
+					</div>
+
+					<div fxFlex
+						 fxFill
+						 fxLayout="row"
+						 style="border: 1px dashed black;">
+
+						<span fxFlexAlign="end">
+							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
+							<span *ngIf="viewedDay.finalStressScore">
+								Stress Score:
+								<!-- Trimp -->
+								<span *ngIf="viewedDay.trimpScore">
+									{{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+								</span>
+
+								<!--PSS-->
+								<span *ngIf="viewedDay.powerStressScore">
+									<span *ngIf="viewedDay.trimpScore">
+										&nbsp;/&nbsp;
+									</span>
+									{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
+								</span>
+
+								<!--SwimSS-->
+								<span *ngIf="viewedDay.swimStressScore">
+									<span *ngIf="viewedDay.trimpScore">
+										&nbsp;/&nbsp;
+									</span>
+									{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+								</span>
+								<!--Final-->
+								<span>
+									&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>
+								</span>
+							</span>
+						</span>
+					</div>
+				</div>
 			</div>
-			<div fxFlex>
-				&lt;!&ndash;Stress score ➔ <strong>275</strong> based on an Trimp of 150 & PSS of 125 &lt;!&ndash;, 150 TRIMP, 125 PSS&ndash;&gt;&ndash;&gt;
-				Stress score ➔ 150 <sub><i>trimp</i></sub>&nbsp;&nbsp;<strong>&</strong>&nbsp;&nbsp;125
-				<sub><i>pss</i></sub>
-				&nbsp;&nbsp;➔&nbsp;&nbsp;125
-			</div>
-			&lt;!&ndash;</div>&ndash;&gt;
-		</div>-->
-		<!--style="background-color: yellow;"-->
-		<!--<div fxFlex
-             fxLayoutAlign="end">
-            toggles
-        </div>-->
-		<!--</div>-->
-
-		<!--[(ngModel)]="periodViewed"-->
-
-		<div fxLayout="row" fxFlexAlign="center center">
-			<mat-input-container fxFlex="15">
-				<mat-select
-					[(ngModel)]="lastPeriodViewed"
-					(change)="onLastPeriodSelected()"
-					placeholder="Last">
-					<mat-option
-						*ngFor="let lastPeriod of lastPeriods;"
-						[value]="lastPeriod">
-						{{lastPeriod.label}}
-					</mat-option>
-				</mat-select>
-			</mat-input-container>
-			<mat-form-field fxFlex="15">
-				<input matInput
-					   [(ngModel)]="periodViewed.from"
-					   [min]="dateMin"
-					   [max]="periodViewed.to"
-					   [matDatepicker]="datePickerFrom"
-					   (dateChange)="onDateToDateChange()"
-					   placeholder="From">
-				<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-				<mat-datepicker #datePickerFrom></mat-datepicker>
-			</mat-form-field>
-			<mat-form-field fxFlex="15">
-				<input matInput
-					   [(ngModel)]="periodViewed.to"
-					   [min]="periodViewed.from"
-					   [max]="dateMax"
-					   [matDatepicker]="datePickerTo"
-					   (dateChange)="onDateToDateChange()"
-					   placeholder="To">
-				<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-				<mat-datepicker #datePickerTo></mat-datepicker>
-			</mat-form-field>
-
-			<mat-slide-toggle fxFlex
-							  [(ngModel)]="isTrainingZonesEnabled"
-							  (change)="onTrainingZonesToggle()"
-							  matTooltip="Display Form Zones on graph">
-				<mat-icon>power_input</mat-icon>
-			</mat-slide-toggle>
-			<mat-slide-toggle fxFlex
-							  [(ngModel)]="isPowerMeterEnabled"
-							  (change)="onPowerMeterToggle()"
-							  matTooltip="Use cycling power meter when available">
-				<mat-icon>flash_on</mat-icon>
-			</mat-slide-toggle>
-
-			<mat-slide-toggle fxFlex
-							  [(ngModel)]="isSwimEnabled"
-							  (change)="onSwimToggle()"
-							  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
-				<mat-icon>pool</mat-icon>
-			</mat-slide-toggle>
 		</div>
-
 		<div
 			[ngClass]='{"openActivities": viewedDay.activitiesName.length}'
 			id="fitnessTrendGraph">
 		</div>
-
-		<!--<div>{{viewedDay | json}}</div>-->
-
-		<!--<div>-->
-		<!--&lt;!&ndash;Today: My very long long long activity name !!! + Strong run hard :/ !!!&ndash;&gt;-->
-		<!--Nov 22 2017<br/>-->
-		<!--Ride + Run<br/> &lt;!&ndash;If exists&ndash;&gt;-->
-		<!--My very long long long activity name !!!<br/>-->
-		<!--Strong run hard !!!<br/>-->
-		<!--</div>-->
-
-
 	</mat-card-content>
 </mat-card>

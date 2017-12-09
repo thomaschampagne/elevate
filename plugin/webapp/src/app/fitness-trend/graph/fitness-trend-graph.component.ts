@@ -62,7 +62,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		aggregate_rollover: true,
 		interpolate: d3.curveLinear,
 		missing_is_hidden: true,
-		// max_data_size: 6,
+		max_data_size: 6, // TODO ?!
 		missing_is_hidden_accessor: 'hidden',
 		// x_extended_ticks: true,
 		// y_extended_ticks: true,
