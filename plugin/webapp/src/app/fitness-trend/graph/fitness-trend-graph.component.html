@@ -10,30 +10,50 @@
 			<div fxFlex="20"
 				 fxFlexAlign="stretch"
 				 fxLayout="column" fxLayoutAlign="space-between start"
-				 class="mat-display-1"
+				 class="mat-headline"
 				 style="margin: 0;"> <!--Remove mat-display-1 margin-->
 
+				<!--Fitness-->
 				<div fxFlex
 					 fxFill
 					 fxLayout="row">
-					<span fxFlexAlign="start">
-						Fitness {{viewedDay.printFitness()}}
+
+					<span fxFill
+						  fxFlexAlign="center"
+						  fxLayout="row" fxLayoutAlign="space-between center">
+
+						<span flex>Fitness</span>
+						<span flex>{{viewedDay.printFitness()}}</span>
+
 					</span>
 				</div>
 
+				<!--Fatigue-->
 				<div fxFlex
 					 fxFill
 					 fxLayout="row">
-					<span fxFlexAlign="center">
-						Fatigue {{viewedDay.printFatigue()}}
+
+					<span fxFill
+						  fxFlexAlign="center"
+						  fxLayout="row" fxLayoutAlign="space-between center">
+
+						<span flex>Fatigue</span>
+						<span flex>{{viewedDay.printFatigue()}}</span>
+
 					</span>
 				</div>
 
+				<!--Form-->
 				<div fxFlex
 					 fxFill
 					 fxLayout="row">
-					<span fxFlexAlign="end">
-						Form {{viewedDay.printForm()}}
+
+					<span fxFill
+						  fxFlexAlign="end"
+						  fxLayout="row" fxLayoutAlign="space-between end">
+						<span flex>Form</span>
+						<span flex>{{viewedDay.printForm()}}</span>
+
 					</span>
 				</div>
 
@@ -42,19 +62,21 @@
 			<!--INPUTS & DETAILS-->
 			<div fxFlex
 				 fxFlexAlign="stretch"
-				 fxLayout="column" fxLayoutAlign="space-between center">
+				 fxLayout="column" fxLayoutAlign="space-between center"
+				 style="background-color: yellow;">
 
 				<!--INPUTS-->
-				<div fxFlex="40"
+				<div fxFlex
 					 fxFill
 					 fxLayout="row" fxLayoutAlign="space-between center">
 
 					<!--PERIODS-->
 					<div fxFlex
 						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="center start">
+						 fxLayout="row" fxLayoutAlign="start start"
+						 style="background-color: #ff4f51;">
 
-						<mat-input-container fxFlex>
+						<mat-input-container fxFlex="25">
 							<mat-select
 								[(ngModel)]="lastPeriodViewed"
 								(change)="onLastPeriodSelected()"
@@ -69,7 +91,7 @@
 
 						<span fxFlex="2"></span>
 
-						<mat-form-field fxFlex>
+						<mat-form-field fxFlex="20">
 							<input matInput
 								   [(ngModel)]="periodViewed.from"
 								   [min]="dateMin"
@@ -83,7 +105,7 @@
 
 						<span fxFlex="2"></span>
 
-						<mat-form-field fxFlex>
+						<mat-form-field fxFlex="20">
 							<input matInput
 								   [(ngModel)]="periodViewed.to"
 								   [min]="periodViewed.from"
@@ -102,7 +124,8 @@
 					<!--TOGGLES-->
 					<div fxFlex="30"
 						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="end center">
+						 fxLayout="row" fxLayoutAlign="end center"
+						 style="background-color: orange;">
 
 						<mat-slide-toggle fxFlex
 										  [(ngModel)]="isTrainingZonesEnabled"
@@ -137,7 +160,7 @@
 					 fxFill
 					 class="mat-title"
 					 fxLayout="column" fxLayoutAlign="space-between start"
-					 style="margin: 0;"> <!--Remove mat-title margin-->
+					 style="margin: 0; background-color: cyan;"> <!--Remove mat-title margin-->
 
 					<div fxFlex
 						 fxFill
@@ -165,7 +188,7 @@
 								Stress Score:
 								<!-- Trimp -->
 								<span *ngIf="viewedDay.trimpScore">
-									{{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+									{{viewedDay.printTrimpScore()}} <sup><i>Trimp</i></sup>
 								</span>
 
 								<!--PSS-->
@@ -173,7 +196,7 @@
 									<span *ngIf="viewedDay.trimpScore">
 										&nbsp;/&nbsp;
 									</span>
-									{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
+									{{viewedDay.printPowerStressScore()}} <sup><i>PowerSS</i></sup>
 								</span>
 
 								<!--SwimSS-->
@@ -181,7 +204,7 @@
 									<span *ngIf="viewedDay.trimpScore">
 										&nbsp;/&nbsp;
 									</span>
-									{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+									{{viewedDay.printSwimStressScore()}} <sup><i>SwimSS</i></sup>
 								</span>
 								<!--Final-->
 								<span>
