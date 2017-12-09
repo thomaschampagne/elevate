@@ -4,41 +4,37 @@
 		<div
 			class="fitnessTrendGraphHeader"
 			fxLayout="row"
-			fxLayoutAlign="center start"
-			style=" background-color: #ececec;">
+			fxLayoutAlign="center start">
 
 			<!--Fitness, Fatigue, Form values-->
-			<div fxFlex="15"
+			<div fxFlex="20"
 				 fxFlexAlign="stretch"
 				 fxLayout="column" fxLayoutAlign="space-between start"
-				 class="mat-headline"
-				 style="margin: 0; border: 1px solid darkturquoise">
+				 class="mat-display-1"
+				 style="margin: 0;"> <!--Remove mat-display-1 margin-->
 
 				<div fxFlex
 					 fxFill
-					 fxLayout="row"
-					 style="border: 1px dashed black;">
-						<span fxFlexAlign="start">
-							Fitness {{viewedDay.printFitness()}}
-						</span>
+					 fxLayout="row">
+					<span fxFlexAlign="start">
+						Fitness {{viewedDay.printFitness()}}
+					</span>
 				</div>
 
 				<div fxFlex
 					 fxFill
-					 fxLayout="row"
-					 style="border: 1px dashed black;">
-						<span fxFlexAlign="center">
-							Fatigue {{viewedDay.printFatigue()}}
-						</span>
+					 fxLayout="row">
+					<span fxFlexAlign="center">
+						Fatigue {{viewedDay.printFatigue()}}
+					</span>
 				</div>
 
 				<div fxFlex
 					 fxFill
-					 fxLayout="row"
-					 style="border: 1px dashed black;">
-						<span fxFlexAlign="end">
-							Form {{viewedDay.printForm()}}
-						</span>
+					 fxLayout="row">
+					<span fxFlexAlign="end">
+						Form {{viewedDay.printForm()}}
+					</span>
 				</div>
 
 			</div>
@@ -46,20 +42,17 @@
 			<!--INPUTS & DETAILS-->
 			<div fxFlex
 				 fxFlexAlign="stretch"
-				 fxLayout="column" fxLayoutAlign="space-between center"
-				 style="border: 1px solid deeppink">
+				 fxLayout="column" fxLayoutAlign="space-between center">
 
 				<!--INPUTS-->
 				<div fxFlex="40"
 					 fxFill
-					 fxLayout="row" fxLayoutAlign="space-between center"
-					 style="border: 1px solid blue">
+					 fxLayout="row" fxLayoutAlign="space-between center">
 
 					<!--PERIODS-->
 					<div fxFlex
 						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="center start"
-						 style="border: 1px solid yellow">
+						 fxLayout="row" fxLayoutAlign="center start">
 
 						<mat-input-container fxFlex>
 							<mat-select
@@ -109,8 +102,7 @@
 					<!--TOGGLES-->
 					<div fxFlex="30"
 						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="end center"
-						 style="border: 1px solid black">
+						 fxLayout="row" fxLayoutAlign="end center">
 
 						<mat-slide-toggle fxFlex
 										  [(ngModel)]="isTrainingZonesEnabled"
@@ -143,14 +135,13 @@
 				<!--DETAILS-->
 				<div fxFlex="60"
 					 fxFill
-					 class="mat-subheading-2"
+					 class="mat-title"
 					 fxLayout="column" fxLayoutAlign="space-between start"
-					 style="margin: 0; border: 1px solid blue">
+					 style="margin: 0;"> <!--Remove mat-title margin-->
 
 					<div fxFlex
 						 fxFill
-						 fxLayout="row"
-						 style="border: 1px dashed black;">
+						 fxLayout="row">
 						<span fxFlexAlign="start">
 							{{viewedDay.printDate()}}
 						</span>
@@ -158,8 +149,7 @@
 
 					<div fxFlex
 						 fxFill
-						 fxLayout="row"
-						 style="border: 1px dashed black;">
+						 fxLayout="row">
 						<span fxFlexAlign="center">
 							{{viewedDay.printActivities()}}
 						</span>
@@ -167,8 +157,7 @@
 
 					<div fxFlex
 						 fxFill
-						 fxLayout="row"
-						 style="border: 1px dashed black;">
+						 fxLayout="row">
 
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
