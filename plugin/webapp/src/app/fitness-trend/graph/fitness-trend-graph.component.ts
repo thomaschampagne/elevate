@@ -40,8 +40,14 @@ import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialo
 export class FitnessTrendGraphComponent implements OnInit {
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "6_months";
+
 	public static readonly SPECIAL_CHAR_SUN: string = "☀"; // OR "☀️" @amp-what.com
 	public static readonly SPECIAL_CHAR_FINGER: string = "🠷"; // OR "▾" @amp-what.com
+
+	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "lastPeriodViewed";
+	public static readonly LS_POWER_METER_ENABLED_KEY: string = "powerMeterEnabled";
+	public static readonly LS_SWIM_ENABLED_KEY: string = "swimEnabled";
+	public static readonly LC_TRAINING_ZONES_ENABLED_KEY: string = "trainingZonesEnabled";
 
 	public PERFORMANCE_MARKER: number;
 
@@ -84,7 +90,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public lastPeriods: LastPeriod[];
 	public periodViewed: Period;
-	public lastPeriodViewed: Period;
+	public lastPeriodViewed: LastPeriod;
 
 	public fullFitnessTrend: DayFitnessTrend[]; // TODO rename fitnessTrend
 	public viewableGraphData: ViewableGraphData;
@@ -114,9 +120,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;
 
-			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem("trainingZonesEnabled"));
-			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem("powerMeterEnabled")) && _.isNumber(this.cyclingFtp);
-			this.isSwimEnabled = !_.isEmpty(localStorage.getItem("swimEnabled")) && _.isNumber(this.swimFtp);
+			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY));
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.swimFtp);
 
 			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 
@@ -299,6 +305,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public onLastPeriodSelected(): void {
 		this.PERFORMANCE_MARKER = performance.now();
 		this.periodViewed = _.clone(this.lastPeriodViewed);
+		localStorage.setItem(FitnessTrendGraphComponent.LS_LAST_PERIOD_VIEWED_KEY, this.lastPeriodViewed.key);
 		this.updateGraph();
 	}
 
@@ -320,7 +327,10 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.lastPeriods = this.provideLastPeriods();
 
 		// Apply default last period
-		this.lastPeriodViewed = _.find(this.lastPeriods, {key: FitnessTrendGraphComponent.DEFAULT_LAST_PERIOD_KEY});
+		const lastPeriodViewedSaved = localStorage.getItem(FitnessTrendGraphComponent.LS_LAST_PERIOD_VIEWED_KEY);
+		this.lastPeriodViewed = _.find(this.lastPeriods, {
+			key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendGraphComponent.DEFAULT_LAST_PERIOD_KEY)
+		});
 
 		// Assign last period to currently viewed
 		this.periodViewed = _.clone(this.lastPeriodViewed);
@@ -424,9 +434,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.updateGraph();
 
 		if (this.isTrainingZonesEnabled) {
-			localStorage.setItem("trainingZonesEnabled", "true");
+			localStorage.setItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY, "true");
 		} else {
-			localStorage.removeItem("trainingZonesEnabled");
+			localStorage.removeItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY);
 		}
 	}
 
@@ -460,9 +470,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.reloadGraph();
 
 			if (this.isPowerMeterEnabled) {
-				localStorage.setItem("powerMeterEnabled", "true");
+				localStorage.setItem(FitnessTrendGraphComponent.LS_POWER_METER_ENABLED_KEY, "true");
 			} else {
-				localStorage.removeItem("powerMeterEnabled");
+				localStorage.removeItem(FitnessTrendGraphComponent.LS_POWER_METER_ENABLED_KEY);
 			}
 		}
 
@@ -498,9 +508,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.reloadGraph();
 
 			if (this.isSwimEnabled) {
-				localStorage.setItem("swimEnabled", "true");
+				localStorage.setItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY, "true");
 			} else {
-				localStorage.removeItem("swimEnabled");
+				localStorage.removeItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY);
 			}
 		}
 	}
