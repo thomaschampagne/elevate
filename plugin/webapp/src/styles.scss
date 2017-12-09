@@ -34,6 +34,10 @@ $web-app-config: mat-typography-config(// Define a typography config that will o
 			mat-font-size($base-config, title),
 			mat-line-height($base-config, title),
 			300),
+	$subheading-2: mat-typography-level(
+			mat-font-size($base-config, subheading-2),
+			mat-line-height($base-config, subheading-2),
+			300),
 	$button: mat-typography-level(
 			mat-font-size($base-config, button),
 			mat-line-height($base-config, button),
