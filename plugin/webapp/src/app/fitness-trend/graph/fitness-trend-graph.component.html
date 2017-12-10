@@ -1,93 +1,15 @@
 <mat-card *ngIf="viewedDay">
 	<mat-card-content>
 
-		<!--HEADER-->
-		<div class="fitnessTrendGraphHeader"
-			 fxLayout.lt-lg="column"
-			 fxLayout="row" fxLayoutAlign="center start">
+		<div class="header" fxLayout="column" fxLayoutAlign="start start">
+			<!--INPUTS-->
+			<div fxFlex fxFill>
 
-			<!--Fitness, Fatigue, Form values-->
-			<!-- For smaller screen width (< 1279px)-->
-			<div fxHide.lg
-				 fxFill fxFlexOrder="2"
-				 style="background-color: #71ff1c"
-				 fxLayout="row" fxLayoutAlign="start center"
-				 class="mat-headline" style="margin: 0;">
-
-				<div fxFlex="160px" style="background-color: #71ff1c">
-					Fitness {{viewedDay.printFitness()}}
-				</div>
-				<div fxFlex="160px" style="background-color: #ff4f51">
-					Fatigue {{viewedDay.printFatigue()}}
-				</div>
-				<div fxFlex="160px" style="background-color: #ff4f51">
-					Form {{viewedDay.printForm()}}
-				</div>
-
-			</div>
-
-			<!--Fitness, Fatigue, Form values-->
-			<!--WIDESCREEN-->
-			<div fxFlex="160px"
-				 fxHide.lt-lg
-				 fxFlexAlign="stretch"
-				 fxLayout="column" fxLayoutAlign="space-between start"
-				 class="mat-headline"
-				 style="margin: 0;"> <!--Remove mat-display-1 margin-->
-
-				<!--Fitness-->
-				<div fxFlex fxFill fxLayout="row" fxLayoutAlign="space-between center">
-					<div flex style="background-color: #ff4f51">
-						Fitness
-					</div>
-					<div flex style="background-color: #ff4f51">
-						{{viewedDay.printFitness()}}
-					</div>
-				</div>
-
-				<!--Fatigue-->
-				<div fxFlex fxFill fxLayout="row" fxLayoutAlign="space-between center">
-					<div flex style="background-color: #ff4f51">
-						Fatigue
-					</div>
-					<div flex style="background-color: #ff4f51">
-						{{viewedDay.printFatigue()}}
-					</div>
-				</div>
-
-				<!--Form-->
-				<div fxFlex fxFill fxLayout="row" fxLayoutAlign="space-between end">
-					<div flex style="background-color: #ff4f51">
-						Form
-					</div>
-					<div flex style="background-color: #ff4f51">
-						{{viewedDay.printForm()}}
-					</div>
-				</div>
-			</div>
-
-			<span fxFlex="15px" fxHide.lt-lg></span> <!-- --------- -->
-
-			<!--INPUTS & DETAILS-->
-			<div fxFlex
-				 fxFlexOrder="1"
-				 fxFlexAlign="stretch"
-				 fxLayout="column" fxLayoutAlign="space-between center"
-				 style="background-color: yellow;">
-
-				<!--INPUTS-->
-				<div fxFlex
-					 fxFill
-					 fxLayout="row" fxLayoutAlign="space-between center">
-
+				<div fxLayout="row" fxLayoutAlign="space-between start">
 					<!--PERIODS-->
-					<div fxFlex
-						 fxFill
-						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="start start"
-						 style="background-color: #ff4f51;">
-
-						<mat-input-container fxFlex="150px">
+					<div fxFlex="70"
+						 fxLayout="row" fxLayoutAlign="start start">
+						<mat-input-container fxFlex="155px">
 							<mat-select
 								[(ngModel)]="lastPeriodViewed"
 								(change)="onLastPeriodSelected()"
@@ -100,9 +22,9 @@
 							</mat-select>
 						</mat-input-container>
 
-						<span fxFlex="2"></span> <!-- --------- -->
+						<span fxFlex="1"></span> <!-- --------- -->
 
-						<mat-form-field fxFlex="150px">
+						<mat-form-field fxFlex="155px">
 							<input matInput
 								   [(ngModel)]="periodViewed.from"
 								   [min]="dateMin"
@@ -114,9 +36,9 @@
 							<mat-datepicker #datePickerFrom></mat-datepicker>
 						</mat-form-field>
 
-						<span fxFlex="2"></span> <!-- --------- -->
+						<span fxFlex="1"></span> <!-- --------- -->
 
-						<mat-form-field fxFlex="150px">
+						<mat-form-field fxFlex="155px">
 							<input matInput
 								   [(ngModel)]="periodViewed.to"
 								   [min]="periodViewed.from"
@@ -129,13 +51,10 @@
 						</mat-form-field>
 					</div>
 
-					<span fxFlex="5"></span>
-
 					<!--TOGGLES-->
-					<div fxFlex="300px"
+					<div fxFlex
 						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="end center"
-						 style="background-color: orange;">
+						 fxLayout="row" fxLayoutAlign="end center">
 
 						<mat-slide-toggle fxFlex
 										  [(ngModel)]="isTrainingZonesEnabled"
@@ -160,39 +79,29 @@
 						<button mat-icon-button>
 							<mat-icon>info</mat-icon>
 						</button>
-
 					</div>
-
 				</div>
+			</div>
 
-				<!--DETAILS-->
-				<div fxFlex="60"
-					 fxFill
-					 [ngClass.md]="['mat-subheading-2']"
-					 [ngClass.lg]="['mat-title']"
-					 fxLayout="column" fxLayoutAlign="space-between start"
-					 style="margin: 0; background-color: cyan;"> <!--Remove mat-title margin-->
+			<!--DETAILS-->
+			<div fxFlex fxFill
+				 class="mat-subheading-2">
 
-					<div fxFlex
-						 fxFill
-						 fxLayout="row">
+				<div fxLayout="column" fxLayoutAlign="space-between start">
+
+					<div fxFlex>
 						<span fxFlexAlign="start">
 							{{viewedDay.printDate()}}
 						</span>
 					</div>
 
-					<div fxFlex
-						 fxFill
-						 fxLayout="row">
+					<div fxFlex>
 						<span fxFlexAlign="center">
 							{{viewedDay.printActivities()}}
 						</span>
 					</div>
 
-					<div fxFlex
-						 fxFill
-						 fxLayout="row">
-
+					<div fxFlex>
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
 							<span *ngIf="viewedDay.finalStressScore">
@@ -226,10 +135,28 @@
 					</div>
 				</div>
 			</div>
+
+			<!--Fitness, Fatigue, Form values-->
+			<div fxFill
+				 fxLayout="row" fxLayoutAlign="start center"
+				 class="mat-headline">
+				<div fxFlex="180px" class="fitness">
+					Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
+				</div>
+				<div fxFlex="180px" class="fatigue">
+					Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
+				</div>
+				<div fxFlex="180px" class="form">
+					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
+				</div>
+
+			</div>
 		</div>
-		<div
-			[ngClass]='{"openActivities": viewedDay.activitiesName.length}'
-			id="fitnessTrendGraph">
+
+		<!--GRAPH-->
+		<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+			 id="fitnessTrendGraph">
 		</div>
+
 	</mat-card-content>
 </mat-card>

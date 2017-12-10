@@ -28,15 +28,15 @@ export class DayFitnessTrend extends DayStress {
 	public tsb: number;
 
 	public printFitness(): string {
-		return this.ctl.toFixed(2);
+		return this.ctl.toFixed(1);
 	}
 
 	public printFatigue(): string {
-		return this.atl.toFixed(2);
+		return this.atl.toFixed(1);
 	}
 
 	public printForm(): string {
-		return this.tsb.toFixed(2);
+		return this.tsb.toFixed(1);
 	}
 
 	public printDate(): string {

@@ -5,8 +5,21 @@ $atl-color: #515151;
 $ctl-color: #e94e1b;
 $tsb-color: #adadad;
 
-.fitnessTrendGraphHeader {
-	min-height: 155px;
+.header {
+	margin: 0; // Remove mat-title margin
+	min-height: 180px;
+}
+
+.fitness {
+	color: $ctl-color;
+}
+
+.fatigue {
+	color: $atl-color;
+}
+
+.form {
+	color: $tsb-color;
 }
 
 // Class enabled via ngClass when active day on mouseover
