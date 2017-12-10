@@ -1,15 +1,15 @@
 import * as moment from "moment";
 import * as _ from "lodash";
-import {TestBed} from "@angular/core/testing";
-import {FitnessService} from "./fitness.service";
-import {ISyncActivityComputed} from "../../../../../../common/scripts/interfaces/ISync";
-import {ActivityService} from "../../../shared/services/activity/activity.service";
-import {ActivityDao} from "../../../shared/dao/activity/activity.dao";
-import {TEST_SYNCED_ACTIVITIES} from "../../../../fixtures/activities";
-import {FitnessReadyActivityModel} from "../models/fitness-ready-activity.model";
-import {DayFitnessTrendModel} from "../models/day-fitness-trend.model";
-import {DayStressModel} from "../models/day-stress.model";
-import {PeriodModel} from "../models/period.model";
+import { TestBed } from "@angular/core/testing";
+import { FitnessService } from "./fitness.service";
+import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { ActivityService } from "../../../shared/services/activity/activity.service";
+import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
+import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
+import { FitnessReadyActivityModel } from "../models/fitness-ready-activity.model";
+import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
+import { DayStressModel } from "../models/day-stress.model";
+import { PeriodModel } from "../models/period.model";
 
 
 describe("FitnessService", () => {

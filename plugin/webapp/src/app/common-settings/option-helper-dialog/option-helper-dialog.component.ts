@@ -1,10 +1,10 @@
-import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA} from "@angular/material";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material";
 import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
 import * as _ from "lodash";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
-import {OptionHelperDataModel} from "./option-helper-data.model";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { OptionHelperDataModel } from "./option-helper-data.model";
 
 /**
  * Notes:

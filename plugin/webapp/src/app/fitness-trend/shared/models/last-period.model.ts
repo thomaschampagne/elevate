@@ -1,4 +1,4 @@
-import {PeriodModel} from "./period.model";
+import { PeriodModel } from "./period.model";
 
 export class LastPeriodModel extends PeriodModel {
 	public key: string;

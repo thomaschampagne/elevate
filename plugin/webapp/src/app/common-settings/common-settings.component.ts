@@ -1,17 +1,17 @@
-import {Component, OnInit} from "@angular/core";
-import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {CommonSettingsService} from "./services/common-settings.service";
+import { Component, OnInit } from "@angular/core";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { CommonSettingsService } from "./services/common-settings.service";
 import * as _ from "lodash";
-import {userSettings} from "../../../../common/scripts/UserSettings";
-import {MatDialog} from "@angular/material";
-import {ActivatedRoute} from "@angular/router";
-import {OptionHelperDialogComponent} from "./option-helper-dialog/option-helper-dialog.component";
-import {OptionHelperReaderService} from "./services/option-helper-reader.service";
-import {PlatformLocation} from "@angular/common";
-import {SectionModel} from "./models/section.model";
-import {OptionModel} from "./models/option.model";
-import {OptionHelperDataModel} from "./option-helper-dialog/option-helper-data.model";
+import { userSettings } from "../../../../common/scripts/UserSettings";
+import { MatDialog } from "@angular/material";
+import { ActivatedRoute } from "@angular/router";
+import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
+import { OptionHelperReaderService } from "./services/option-helper-reader.service";
+import { PlatformLocation } from "@angular/common";
+import { SectionModel } from "./models/section.model";
+import { OptionModel } from "./models/option.model";
+import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data.model";
 
 @Component({
 	selector: "app-common-settings",

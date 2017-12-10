@@ -1,4 +1,4 @@
-import {ZoneCustomDisplayModel} from "./zone-custom-display.model";
+import { ZoneCustomDisplayModel } from "./zone-custom-display.model";
 
 export class ZoneDefinitionModel {
 	public name: string;

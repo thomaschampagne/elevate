@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from "@angular/core";
-import {IZone} from "../../../../../common/scripts/interfaces/IActivityData";
-import {ZonesService} from "../shared/zones.service";
-import {MatSnackBar} from "@angular/material";
+import { Component, Input, OnInit } from "@angular/core";
+import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ZonesService } from "../shared/zones.service";
+import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
-import {ZoneChangeOrderModel} from "../shared/zone-change-order.model";
-import {ZoneChangeWhisperModel} from "../shared/zone-change-whisper.model";
-import {ZoneChangeTypeModel} from "./zone-change-type.model";
-import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
+import { ZoneChangeOrderModel } from "../shared/zone-change-order.model";
+import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
+import { ZoneChangeTypeModel } from "./zone-change-type.model";
+import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 
 @Component({
 	selector: "app-zone",

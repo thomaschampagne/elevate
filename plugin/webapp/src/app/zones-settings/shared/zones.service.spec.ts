@@ -1,14 +1,14 @@
-import {inject, TestBed} from "@angular/core/testing";
-import {ZonesService} from "./zones.service";
+import { inject, TestBed } from "@angular/core/testing";
+import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
-import {IZone} from "../../../../../common/scripts/interfaces/IActivityData";
-import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
-import {ZONE_DEFINITIONS} from "../zone-definitions";
-import {userSettings} from "../../../../../common/scripts/UserSettings";
-import {UserSettingsDao} from "../../shared/dao/user-settings/user-settings.dao";
-import {ZoneChangeWhisperModel} from "./zone-change-whisper.model";
-import {ZoneChangeOrderModel} from "./zone-change-order.model";
-import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
+import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { ZONE_DEFINITIONS } from "../zone-definitions";
+import { userSettings } from "../../../../../common/scripts/UserSettings";
+import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
+import { ZoneChangeOrderModel } from "./zone-change-order.model";
+import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 
 describe("ZonesService", () => {
 

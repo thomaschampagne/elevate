@@ -1,6 +1,6 @@
-import {Component, OnInit} from "@angular/core";
-import {AppRoutesModel} from "./shared/models/app-routes.model";
-import {NavigationEnd, Router, RouterEvent} from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { AppRoutesModel } from "./shared/models/app-routes.model";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 
 export interface MainMenuItem {

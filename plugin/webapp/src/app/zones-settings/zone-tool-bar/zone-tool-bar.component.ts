@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {ZonesService} from "../shared/zones.service";
-import {MatDialog, MatSnackBar} from "@angular/material";
-import {ZonesImportExportDialogComponent} from "../zones-import-export-dialog/zones-import-export-dialog.component";
-import {ConfirmDialogComponent} from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import {ConfirmDialogDataModel} from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
-import {ZoneImportExportDataModel} from "../zones-import-export-dialog/zone-import-export-data.model";
-import {Mode} from "../zones-import-export-dialog/mode.enum";
-import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ZonesService } from "../shared/zones.service";
+import { MatDialog, MatSnackBar } from "@angular/material";
+import { ZonesImportExportDialogComponent } from "../zones-import-export-dialog/zones-import-export-dialog.component";
+import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ZoneImportExportDataModel } from "../zones-import-export-dialog/zone-import-export-data.model";
+import { Mode } from "../zones-import-export-dialog/mode.enum";
+import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 
 @Component({
 	selector: "app-zone-tool-bar",

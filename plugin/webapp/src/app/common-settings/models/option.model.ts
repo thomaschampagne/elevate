@@ -1,4 +1,4 @@
-import {ListItemModel} from "./list-item.model";
+import { ListItemModel } from "./list-item.model";
 
 export class OptionModel {
 	public key: string;

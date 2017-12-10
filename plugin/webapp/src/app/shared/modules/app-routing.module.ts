@@ -1,10 +1,10 @@
-import {NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
-import {AppRoutesModel} from "../models/app-routes.model";
-import {AthleteSettingsComponent} from "../../athlete-settings/athlete-settings.component";
-import {CommonSettingsComponent} from "../../common-settings/common-settings.component";
-import {ZonesSettingsComponent} from "../../zones-settings/zones-settings.component";
-import {FitnessTrendGraphComponent} from "../../fitness-trend/graph/fitness-trend-graph.component";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { AppRoutesModel } from "../models/app-routes.model";
+import { AthleteSettingsComponent } from "../../athlete-settings/athlete-settings.component";
+import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
+import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
+import { FitnessTrendGraphComponent } from "../../fitness-trend/graph/fitness-trend-graph.component";
 
 export const routes: Routes = [
 	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendGraphComponent},

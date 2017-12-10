@@ -1,4 +1,4 @@
-import {OptionModel} from "./option.model";
+import { OptionModel } from "./option.model";
 
 export class SectionModel {
 	public title: string;

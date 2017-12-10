@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {SectionModel} from "../models/section.model";
+import { Injectable } from "@angular/core";
+import { SectionModel } from "../models/section.model";
 
 @Injectable()
 export class CommonSettingsService {

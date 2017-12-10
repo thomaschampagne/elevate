@@ -1,21 +1,21 @@
-import {Component, OnInit} from "@angular/core";
-import {FitnessService} from "../shared/service/fitness.service";
+import { Component, OnInit } from "@angular/core";
+import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
-import {DayFitnessTrendModel} from "../shared/models/day-fitness-trend.model";
-import {PeriodModel} from "../shared/models/period.model";
-import {LastPeriodModel} from "../shared/models/last-period.model";
-import {GraphPointModel} from "./models/graph-point.model";
-import {MarkerModel} from "./models/marker.model";
-import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
-import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
-import {ViewableGraphDataModel} from "./models/viewable-graph-data.model";
-import {MetricsGraphicsEventModel} from "./models/metrics-graphics-event.model";
-import {MatDialog} from "@angular/material";
-import {GotItDialogComponent} from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
-import {GotItDialogDataModel} from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import {FitnessInfoDialogComponent} from "./fitness-info-dialog/fitness-info-dialog.component";
+import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
+import { PeriodModel } from "../shared/models/period.model";
+import { LastPeriodModel } from "../shared/models/last-period.model";
+import { GraphPointModel } from "./models/graph-point.model";
+import { MarkerModel } from "./models/marker.model";
+import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { ViewableGraphDataModel } from "./models/viewable-graph-data.model";
+import { MetricsGraphicsEventModel } from "./models/metrics-graphics-event.model";
+import { MatDialog } from "@angular/material";
+import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend",

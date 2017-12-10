@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA} from "@angular/material";
-import {GotItDialogDataModel} from "./got-it-dialog-data.model";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material";
+import { GotItDialogDataModel } from "./got-it-dialog-data.model";
 
 @Component({
 	selector: "app-got-it-dialog",

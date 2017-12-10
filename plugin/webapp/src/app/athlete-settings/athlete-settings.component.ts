@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import {Component, OnInit} from "@angular/core";
-import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {MatSnackBar} from "@angular/material";
-import {SwimFtpHelperComponent} from "./swim-ftp-helper/swim-ftp-helper.component";
-import {GenderModel} from "./gender.model";
+import { Component, OnInit } from "@angular/core";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { MatSnackBar } from "@angular/material";
+import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
+import { GenderModel } from "./gender.model";
 
 @Component({
 	selector: "app-athlete-settings",

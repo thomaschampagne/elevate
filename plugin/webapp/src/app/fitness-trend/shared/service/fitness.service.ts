@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import * as moment from "moment";
-import {Moment} from "moment";
-import {Injectable} from "@angular/core";
-import {ActivityService} from "../../../shared/services/activity/activity.service";
-import {DayStressModel} from "../models/day-stress.model";
-import {DayFitnessTrendModel} from "../models/day-fitness-trend.model";
-import {ISyncActivityComputed} from "../../../../../../common/scripts/interfaces/ISync";
-import {FitnessReadyActivityModel} from "../models/fitness-ready-activity.model";
-import {PeriodModel} from "../models/period.model";
+import { Moment } from "moment";
+import { Injectable } from "@angular/core";
+import { ActivityService } from "../../../shared/services/activity/activity.service";
+import { DayStressModel } from "../models/day-stress.model";
+import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
+import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { FitnessReadyActivityModel } from "../models/fitness-ready-activity.model";
+import { PeriodModel } from "../models/period.model";
 
 @Injectable()
 export class FitnessService {
@@ -177,7 +177,7 @@ export class FitnessService {
 	private computeSwimStressScore(distance: number, movingTime: number, elaspedTime: number, swimFtp: number) {
 		const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
 		const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
-		return Math.pow(swimIntensity, 3) * ( elaspedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+		return Math.pow(swimIntensity, 3) * (elaspedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
 	}
 
 	/**

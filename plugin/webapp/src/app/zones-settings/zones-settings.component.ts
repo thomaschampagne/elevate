@@ -1,14 +1,14 @@
-import {Component, OnInit} from "@angular/core";
-import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
-import {IUserSettings, IUserZones} from "../../../../common/scripts/interfaces/IUserSettings";
-import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
+import { Component, OnInit } from "@angular/core";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
+import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import {ZONE_DEFINITIONS} from "./zone-definitions";
-import {ZonesService} from "./shared/zones.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {AppRoutesModel} from "../shared/models/app-routes.model";
-import {userSettings} from "../../../../common/scripts/UserSettings";
-import {ZoneDefinitionModel} from "../shared/models/zone-definition.model";
+import { ZONE_DEFINITIONS } from "./zone-definitions";
+import { ZonesService } from "./shared/zones.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { userSettings } from "../../../../common/scripts/UserSettings";
+import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 
 @Component({
 	selector: "app-zones-settings",
