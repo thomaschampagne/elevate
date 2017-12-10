@@ -36,48 +36,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public PERFORMANCE_MARKER: number;
 
-	public graphConfig = { // TODO Refactor with clean callbacks
-		data: [],
-		full_width: true,
-		height: window.innerHeight * 0.60,
-		right: 40,
-		baselines: [],
-		animate_on_load: false,
-		transition_on_update: false,
-		aggregate_rollover: true,
-		interpolate: d3.curveLinear,
-		missing_is_hidden: true,
-		max_data_size: 6, // TODO ?!
-		missing_is_hidden_accessor: 'hidden',
-		// x_extended_ticks: true,
-		// y_extended_ticks: true,
-		yax_count: 10,
-		target: "#fitnessTrendGraph",
-		x_accessor: "date",
-		y_accessor: "value",
-		inflator: 1.2,
-		showActivePoint: false,
-		// clickableMarkerLines: true,
-		// show_confidence_band: ["lower", "upper"],
-		markers: null,
-		legend: null,
-		click: (data: MetricsGraphicsEvent) => {
-			const dayFitnessTrend = this.getDayFitnessTrendFromDate(data.key);
-			this.openActivities(dayFitnessTrend.ids);
-		},
-		mouseover: (data: MetricsGraphicsEvent) => {
-			this.onDayMouseOver(data.key);
-		},
-		mouseout: (data: MetricsGraphicsEvent) => {
-			this.onDayMouseOut(data.key);
-		}
-	};
+	public graphConfig: any;
 
 	public lastPeriods: LastPeriod[];
 	public periodViewed: Period;
 	public lastPeriodViewed: LastPeriod;
 
-	public fullFitnessTrend: DayFitnessTrend[]; // TODO rename fitnessTrend
+	public fitnessTrend: DayFitnessTrend[];
 	public viewableGraphData: ViewableGraphData;
 	public viewedDay: DayFitnessTrend;
 
@@ -89,7 +54,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public cyclingFtp: number = null;
 	public isSwimEnabled: boolean = false;
 	public swimFtp: number = null;
-
 
 	constructor(private userSettingsService: UserSettingsService,
 				private fitnessService: FitnessService,
@@ -113,12 +77,12 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		}).then((fullFitnessTrend: DayFitnessTrend[]) => {
 
-			this.fullFitnessTrend = fullFitnessTrend;
+			this.fitnessTrend = fullFitnessTrend;
 			this.setup();
 
 		}, error => {
 
-			this.fullFitnessTrend = [];
+			this.fitnessTrend = [];
 			console.error(error);
 
 		});
@@ -132,11 +96,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * First graph draw
 	 */
 	private setup(): void {
+
+		this.setupGraphConfig();
 		this.setupTimeData();
 		this.setupViewableGraphData();
 		this.updateGraph();
-	}
 
+	}
 
 	/**
 	 * Re-compute fitness trends, and apply data to graph.
@@ -148,7 +114,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
 			.then((fullFitnessTrend: DayFitnessTrend[]) => {
 
-				this.fullFitnessTrend = fullFitnessTrend;
+				this.fitnessTrend = fullFitnessTrend;
 				this.setupViewableGraphData();
 				this.updateGraph();
 
@@ -172,7 +138,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		const previewFitnessLine: GraphPoint[] = [];
 		const previewFormLine: GraphPoint[] = [];
 
-		_.forEach(this.fullFitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
+		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
 
 			// Real past fitness day
 			fatigueLine.push({
@@ -279,7 +245,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private updateViewableData(): void {
 
 		const lines: GraphPoint[][] = [];
-		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fullFitnessTrend);
+		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
 
 		_.forEach(this.viewableGraphData.fitnessTrendLines, (line: GraphPoint[]) => {
 			lines.push(line.slice(indexes.start, indexes.end));
@@ -327,15 +293,24 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.periodViewed = _.clone(this.lastPeriodViewed);
 
 		// Used by date pickers
-		this.dateMin = moment(_.first(this.fullFitnessTrend).date).startOf("day").toDate();
-		this.dateMax = moment(_.last(this.fullFitnessTrend).date).startOf("day").toDate();
+		this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
+		this.dateMax = moment(_.last(this.fitnessTrend).date).startOf("day").toDate();
+	}
+
+	/**
+	 *
+	 * @param {MetricsGraphicsEvent} metricsGraphicsEvent
+	 */
+	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEvent): void {
+		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
+		this.openActivities(dayFitnessTrend.ids);
 	}
 
 	/**
 	 *
 	 * @param {Date} date
 	 */
-	private onDayMouseOver(date: Date): void {
+	private onGraphMouseOver(date: Date): void {
 		this.viewedDay = this.getDayFitnessTrendFromDate(date);
 	}
 
@@ -343,7 +318,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 * @param {Date} date
 	 */
-	private onDayMouseOut(date: Date): void {
+	private onGraphMouseOut(date: Date): void {
 		this.setTodayAsViewedDay();
 	}
 
@@ -353,7 +328,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {DayFitnessTrend} dayFitnessTrend
 	 */
 	private onMarkerMouseOver(dayFitnessTrend: DayFitnessTrend): void {
-		this.onDayMouseOver(dayFitnessTrend.date);
+		this.onGraphMouseOver(dayFitnessTrend.date);
 	}
 
 	/**
@@ -403,7 +378,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @returns {DayFitnessTrend}
 	 */
 	private getDayFitnessTrendFromDate(date: Date): DayFitnessTrend {
-		return _.find(this.fullFitnessTrend, {
+		return _.find(this.fitnessTrend, {
 			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
 		});
 	}
@@ -518,6 +493,44 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	/**
 	 *
+	 */
+	private setupGraphConfig(): void {
+
+		this.graphConfig = {
+			data: [],
+			full_width: true,
+			height: window.innerHeight * 0.60,
+			right: 40,
+			baselines: [],
+			animate_on_load: false,
+			transition_on_update: false,
+			aggregate_rollover: true,
+			interpolate: d3.curveLinear,
+			missing_is_hidden: true,
+			max_data_size: 6, // FIXME Really usefull?!
+			missing_is_hidden_accessor: 'hidden',
+			yax_count: 10,
+			target: "#fitnessTrendGraph",
+			x_accessor: "date",
+			y_accessor: "value",
+			inflator: 1.2,
+			showActivePoint: false,
+			markers: null,
+			legend: null,
+			click: (metricsGraphicsEvent: MetricsGraphicsEvent) => {
+				this.onGraphClick(metricsGraphicsEvent);
+			},
+			mouseover: (data: MetricsGraphicsEvent) => {
+				this.onGraphMouseOver(data.key);
+			},
+			mouseout: (data: MetricsGraphicsEvent) => {
+				this.onGraphMouseOut(data.key);
+			}
+		};
+	}
+
+	/**
+	 *
 	 * @returns {LastPeriod[]}
 	 */
 	private provideLastPeriods(): LastPeriod[] {
@@ -580,12 +593,10 @@ export class FitnessTrendGraphComponent implements OnInit {
 			key: "24_months",
 			label: "24 months"
 		}, {
-			from: moment(_.first(this.fullFitnessTrend).timestamp).toDate(),
+			from: moment(_.first(this.fitnessTrend).timestamp).toDate(),
 			to: toDate,
 			key: "beginning",
 			label: "Since beginning"
 		}];
 	}
-
-
 }
