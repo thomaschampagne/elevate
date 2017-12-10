@@ -26,11 +26,10 @@ import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialo
 // DONE Show preview days as dashed line
 // DONE Support form zones
 // DONE Forward to strava.com activities
-// TODO UI Style
+// DONE UI Style
 // DONE training zones
 // TODO Show helper info
-// TODO Show info sync when no data. (Wrap in a parent FitnessTrendComponent
-// (w/ child => FitnessTrendGraphComponent & FitnessTrendTableComponent)
+// DONE Show info sync when no data.
 
 @Component({
 	selector: "app-fitness-trend",
@@ -130,6 +129,11 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 			this.fullFitnessTrend = fullFitnessTrend;
 			this.setup();
+
+		}, error => {
+
+			console.error(error);
+
 		});
 	}
 

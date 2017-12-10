@@ -74,3 +74,14 @@ $tsb-color: #adadad;
 	fill: $tsb-color;
 	stroke-dasharray: 5, 5;
 }
+
+// No data card
+.noData div {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.noData mat-divider {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
