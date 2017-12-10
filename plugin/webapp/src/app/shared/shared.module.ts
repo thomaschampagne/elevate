@@ -24,6 +24,7 @@ import { FitnessService } from "../fitness-trend/shared/service/fitness.service"
 import { OptionHelperReaderService } from "../common-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
+import { FitnessInfoDialogComponent } from "../fitness-trend/graph/fitness-info-dialog/fitness-info-dialog.component";
 
 @NgModule({
 	declarations: [
@@ -41,14 +42,17 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 		GotItDialogComponent,
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent
+		ZonesImportExportDialogComponent,
+		FitnessInfoDialogComponent // TODO Move in a below m
+
 	],
 	entryComponents: [
 
 		GotItDialogComponent,
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent
+		ZonesImportExportDialogComponent,
+		FitnessInfoDialogComponent
 
 	],
 	providers: [

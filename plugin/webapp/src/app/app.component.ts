@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AppRoutes } from "./shared/modules/app-routes.model";
+import { AppRoutes } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AppRoutes } from "./app-routes.model";
+import { AppRoutes } from "../models/app-routes.model";
 import { AthleteSettingsComponent } from "../../athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";

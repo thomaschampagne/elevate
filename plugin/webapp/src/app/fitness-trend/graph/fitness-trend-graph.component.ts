@@ -15,21 +15,7 @@ import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
 import { MatDialog } from "@angular/material";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-
-// DONE Filter by period until today
-// DONE Filter between dates
-// DONE Show graph point legend: CTL, ATL, TSB
-// DONE Filter with power meter
-// DONE Filter with power swim
-// DONE Show graph point attributes: Act name, type, date | Trimp, PSS, SwimSS |
-// DONE Alert on toogle click when no ftp or swmin confugured
-// DONE Show preview days as dashed line
-// DONE Support form zones
-// DONE Forward to strava.com activities
-// DONE UI Style
-// DONE training zones
-// TODO Show helper info
-// DONE Show info sync when no data.
+import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -130,11 +116,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.fullFitnessTrend = fullFitnessTrend;
 			this.setup();
 
-		}, error => {
-
-			console.error(error);
-
-		});
+		}, error => console.error(error));
 	}
 
 	/**
@@ -517,6 +499,16 @@ export class FitnessTrendGraphComponent implements OnInit {
 				localStorage.removeItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY);
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	public onShowInfo(): void {
+		this.dialog.open(FitnessInfoDialogComponent, {
+			minWidth: FitnessInfoDialogComponent.MIN_WIDTH,
+			maxWidth: FitnessInfoDialogComponent.MAX_WIDTH,
+		});
 	}
 
 	/**

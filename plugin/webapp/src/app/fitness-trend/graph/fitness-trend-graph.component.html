@@ -76,7 +76,7 @@
 							<mat-icon>pool</mat-icon>
 						</mat-slide-toggle>
 
-						<button mat-icon-button>
+						<button mat-icon-button (click)="onShowInfo()">
 							<mat-icon>info</mat-icon>
 						</button>
 					</div>
@@ -161,7 +161,7 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="!viewedDay" class="noData">
+<mat-card *ngIf="!viewedDay" class="noData mat-body-1">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>

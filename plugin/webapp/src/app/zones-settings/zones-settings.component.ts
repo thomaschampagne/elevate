@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AppRoutes } from "../shared/modules/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes.model";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { ZoneDefinition } from "../shared/models/zone-definition.model";
 
