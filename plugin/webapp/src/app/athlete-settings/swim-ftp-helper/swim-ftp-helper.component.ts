@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import * as _ from "lodash";
-import {SwimCalculationMethod} from "./swim-calculation-method.model";
-import {FormulaParamsModel} from "./formula-params.model";
+import { SwimCalculationMethod } from "./swim-calculation-method.model";
+import { FormulaParamsModel } from "./formula-params.model";
 
 @Component({
 	selector: "app-swim-ftp-helper",
@@ -34,7 +34,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			value: null,
 		}],
 		formula: (params: FormulaParamsModel[]) => {
-			return (params[0].value / 30) - ((2 * params[0].value / 30 ) * 0.025); // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
+			return (params[0].value / 30) - ((2 * params[0].value / 30) * 0.025); // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
 		},
 	}, {
 		active: false,
