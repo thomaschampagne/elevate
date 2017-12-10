@@ -1,4 +1,4 @@
-export class Marker { // TODO Rename MarkerModel do it for all classes
+export class MarkerModel {
 	public date: Date;
 	public label: string;
 	public click?: Function;

@@ -1,11 +1,11 @@
 import * as moment from "moment";
-import { DayStress } from "./day-stress.model";
+import {DayStressModel} from "./day-stress.model";
 
-export class DayFitnessTrend extends DayStress {
+export class DayFitnessTrendModel extends DayStressModel {
 
 	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
-	constructor(dayStress: DayStress, ctl: number, atl: number, tsb: number) {
+	constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number) {
 		super(dayStress.date, dayStress.previewDay);
 
 		this.ids = dayStress.ids;
@@ -16,7 +16,7 @@ export class DayFitnessTrend extends DayStress {
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
 
-		this.dateString = moment(this.date).format(DayFitnessTrend.DATE_FORMAT);
+		this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
 		this.ctl = ctl;
 		this.atl = atl;
 		this.tsb = tsb;

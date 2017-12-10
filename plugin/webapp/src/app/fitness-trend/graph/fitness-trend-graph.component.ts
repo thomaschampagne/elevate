@@ -1,21 +1,21 @@
-import { Component, OnInit } from "@angular/core";
-import { FitnessService } from "../shared/service/fitness.service";
+import {Component, OnInit} from "@angular/core";
+import {FitnessService} from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
-import { DayFitnessTrend } from "../shared/models/day-fitness-trend.model";
-import { Period } from "../shared/models/period.model";
-import { LastPeriod } from "../shared/models/last-period.model";
-import { GraphPoint } from "./models/graph-point.model";
-import { Marker } from "./models/marker.model";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { ViewableGraphData } from "./models/viewable-graph-data.model";
-import { MetricsGraphicsEvent } from "./models/metrics-graphics-event.model";
-import { MatDialog } from "@angular/material";
-import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
-import { GotItDialogData } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
+import {DayFitnessTrendModel} from "../shared/models/day-fitness-trend.model";
+import {PeriodModel} from "../shared/models/period.model";
+import {LastPeriodModel} from "../shared/models/last-period.model";
+import {GraphPointModel} from "./models/graph-point.model";
+import {MarkerModel} from "./models/marker.model";
+import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
+import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
+import {ViewableGraphDataModel} from "./models/viewable-graph-data.model";
+import {MetricsGraphicsEventModel} from "./models/metrics-graphics-event.model";
+import {MatDialog} from "@angular/material";
+import {GotItDialogComponent} from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import {GotItDialogDataModel} from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import {FitnessInfoDialogComponent} from "./fitness-info-dialog/fitness-info-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -38,13 +38,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	public graphConfig: any;
 
-	public lastPeriods: LastPeriod[];
-	public periodViewed: Period;
-	public lastPeriodViewed: LastPeriod;
+	public lastPeriods: LastPeriodModel[];
+	public periodViewed: PeriodModel;
+	public lastPeriodViewed: LastPeriodModel;
 
-	public fitnessTrend: DayFitnessTrend[];
-	public viewableGraphData: ViewableGraphData;
-	public viewedDay: DayFitnessTrend;
+	public fitnessTrend: DayFitnessTrendModel[];
+	public viewableGraphData: ViewableGraphDataModel;
+	public viewedDay: DayFitnessTrendModel;
 
 	public dateMin: Date;
 	public dateMax: Date;
@@ -75,7 +75,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 
-		}).then((fullFitnessTrend: DayFitnessTrend[]) => {
+		}).then((fullFitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fullFitnessTrend;
 			this.setup();
@@ -112,7 +112,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.PERFORMANCE_MARKER = performance.now();
 
 		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
-			.then((fullFitnessTrend: DayFitnessTrend[]) => {
+			.then((fullFitnessTrend: DayFitnessTrendModel[]) => {
 
 				this.fitnessTrend = fullFitnessTrend;
 				this.setupViewableGraphData();
@@ -127,18 +127,18 @@ export class FitnessTrendGraphComponent implements OnInit {
 	private setupViewableGraphData(): void {
 
 		// Prepare viewable lines
-		const today: string = moment().format(DayFitnessTrend.DATE_FORMAT);
+		const today: string = moment().format(DayFitnessTrendModel.DATE_FORMAT);
 
-		const markers: Marker[] = [];
+		const markers: MarkerModel[] = [];
 
-		const fatigueLine: GraphPoint[] = [];
-		const fitnessLine: GraphPoint[] = [];
-		const formLine: GraphPoint[] = [];
-		const previewFatigueLine: GraphPoint[] = [];
-		const previewFitnessLine: GraphPoint[] = [];
-		const previewFormLine: GraphPoint[] = [];
+		const fatigueLine: GraphPointModel[] = [];
+		const fitnessLine: GraphPointModel[] = [];
+		const formLine: GraphPointModel[] = [];
+		const previewFatigueLine: GraphPointModel[] = [];
+		const previewFitnessLine: GraphPointModel[] = [];
+		const previewFormLine: GraphPointModel[] = [];
 
-		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrend) => {
+		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
 
 			// Real past fitness day
 			fatigueLine.push({
@@ -180,7 +180,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 				hidden: isHiddenGraphPoint
 			});
 
-			let marker: Marker = null;
+			let marker: MarkerModel = null;
 
 			const isActiveDay = dayFitnessTrend.activitiesName.length > 0;
 
@@ -206,7 +206,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		});
 
-		this.viewableGraphData = new ViewableGraphData(
+		this.viewableGraphData = new ViewableGraphDataModel(
 			markers,
 			fatigueLine,
 			fitnessLine,
@@ -244,10 +244,10 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 */
 	private updateViewableData(): void {
 
-		const lines: GraphPoint[][] = [];
+		const lines: GraphPointModel[][] = [];
 		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
 
-		_.forEach(this.viewableGraphData.fitnessTrendLines, (line: GraphPoint[]) => {
+		_.forEach(this.viewableGraphData.fitnessTrendLines, (line: GraphPointModel[]) => {
 			lines.push(line.slice(indexes.start, indexes.end));
 		});
 
@@ -299,9 +299,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {MetricsGraphicsEvent} metricsGraphicsEvent
+	 * @param {MetricsGraphicsEventModel} metricsGraphicsEvent
 	 */
-	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEvent): void {
+	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
 		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
 		this.openActivities(dayFitnessTrend.ids);
 	}
@@ -325,25 +325,25 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {DayFitnessTrend} dayFitnessTrend
+	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerMouseOver(dayFitnessTrend: DayFitnessTrend): void {
+	private onMarkerMouseOver(dayFitnessTrend: DayFitnessTrendModel): void {
 		this.onGraphMouseOver(dayFitnessTrend.date);
 	}
 
 	/**
 	 *
-	 * @param {DayFitnessTrend} dayFitnessTrend
+	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerMouseOut(dayFitnessTrend?: DayFitnessTrend): void {
+	private onMarkerMouseOut(dayFitnessTrend?: DayFitnessTrendModel): void {
 		this.setTodayAsViewedDay();
 	}
 
 	/**
 	 *
-	 * @param {DayFitnessTrend} dayFitnessTrend
+	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerClick(dayFitnessTrend: DayFitnessTrend): void {
+	private onMarkerClick(dayFitnessTrend: DayFitnessTrendModel): void {
 		this.openActivities(dayFitnessTrend.ids)
 	}
 
@@ -365,21 +365,21 @@ export class FitnessTrendGraphComponent implements OnInit {
 	}
 
 	/**
-	 * Provide today DayFitnessTrend
-	 * @returns {DayFitnessTrend}
+	 * Provide today DayFitnessTrendModel
+	 * @returns {DayFitnessTrendModel}
 	 */
-	private getTodayViewedDay(): DayFitnessTrend {
+	private getTodayViewedDay(): DayFitnessTrendModel {
 		return this.getDayFitnessTrendFromDate(new Date());
 	}
 
 	/**
 	 *
 	 * @param {Date} date
-	 * @returns {DayFitnessTrend}
+	 * @returns {DayFitnessTrendModel}
 	 */
-	private getDayFitnessTrendFromDate(date: Date): DayFitnessTrend {
+	private getDayFitnessTrendFromDate(date: Date): DayFitnessTrendModel {
 		return _.find(this.fitnessTrend, {
-			dateString: moment(date).format(DayFitnessTrend.DATE_FORMAT)
+			dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT)
 		});
 	}
 
@@ -415,7 +415,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		if (!_.isNumber(this.cyclingFtp)) {
 
-			const data: GotItDialogData = {
+			const data: GotItDialogDataModel = {
 				title: "Cycling Functional Threshold Power Empty",
 				content: "You cycling functional threshold power (FTP) is not defined. Please set it in athlete settings and go back to this page."
 			};
@@ -453,7 +453,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		if (!_.isNumber(this.swimFtp)) {
 
-			const data: GotItDialogData = {
+			const data: GotItDialogDataModel = {
 				title: "Swimming Functional Threshold Pace Empty",
 				content: "Your swimming functional threshold pace is not defined. Please set it in athlete settings and go back to this page."
 			};
@@ -517,13 +517,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 			showActivePoint: false,
 			markers: null,
 			legend: null,
-			click: (metricsGraphicsEvent: MetricsGraphicsEvent) => {
+			click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 				this.onGraphClick(metricsGraphicsEvent);
 			},
-			mouseover: (data: MetricsGraphicsEvent) => {
+			mouseover: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOver(data.key);
 			},
-			mouseout: (data: MetricsGraphicsEvent) => {
+			mouseout: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOut(data.key);
 			}
 		};
@@ -531,9 +531,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	/**
 	 *
-	 * @returns {LastPeriod[]}
+	 * @returns {LastPeriodModel[]}
 	 */
-	private provideLastPeriods(): LastPeriod[] {
+	private provideLastPeriods(): LastPeriodModel[] {
 
 		const toDate = moment().add(FitnessService.FUTURE_DAYS_PREVIEW, "days").startOf("day").toDate();
 

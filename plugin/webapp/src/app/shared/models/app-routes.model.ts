@@ -1,4 +1,4 @@
-export class AppRoutes {
+export class AppRoutesModel {
 	public static readonly fitnessTrend: string = "fitnessTrend";
 	public static readonly commonSettings: string = "commonSettings";
 	public static readonly athleteSettings: string = "athleteSettings";

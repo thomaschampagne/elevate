@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material";
+import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA} from "@angular/material";
 import * as MarkDownIt from "markdown-it";
 import * as Katex from "markdown-it-katex";
 import * as _ from "lodash";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { OptionHelperData } from "./option-helper-data.model";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {OptionHelperDataModel} from "./option-helper-data.model";
 
 /**
  * Notes:
@@ -26,7 +26,7 @@ export class OptionHelperDialogComponent implements OnInit {
 	public html: SafeHtml;
 	public markDownParser: MarkDownIt.MarkdownIt;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperData,
+	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel,
 				private domSanitizer: DomSanitizer) {
 		this.markDownParser = new MarkDownIt();
 		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});

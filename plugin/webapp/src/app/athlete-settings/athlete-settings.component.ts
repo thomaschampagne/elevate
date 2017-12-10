@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import { Component, OnInit } from "@angular/core";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { MatSnackBar } from "@angular/material";
-import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
-import { Gender } from "./gender.model";
+import {Component, OnInit} from "@angular/core";
+import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
+import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
+import {MatSnackBar} from "@angular/material";
+import {SwimFtpHelperComponent} from "./swim-ftp-helper/swim-ftp-helper.component";
+import {GenderModel} from "./gender.model";
 
 @Component({
 	selector: "app-athlete-settings",
@@ -21,7 +21,7 @@ export class AthleteSettingsComponent implements OnInit {
 	public static readonly SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
 	public static readonly SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
-	public readonly GENDER_LIST: Gender[] = [{
+	public readonly GENDER_LIST: GenderModel[] = [{
 		type: "men",
 		display: "Male",
 	}, {
@@ -70,7 +70,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {Gender} gender
+	 * @param {GenderModel} gender
 	 */
 	public onGenderChanged() {
 		this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_GENDER, this.gender);

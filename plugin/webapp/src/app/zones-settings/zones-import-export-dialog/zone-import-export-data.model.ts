@@ -1,9 +1,9 @@
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
-import { Mode } from "./mode.enum";
-import { ZoneDefinition } from "../../shared/models/zone-definition.model";
+import {IZone} from "../../../../../common/scripts/interfaces/IActivityData";
+import {Mode} from "./mode.enum";
+import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
 
-export class ZoneImportExportData {
-	public zoneDefinition: ZoneDefinition;
+export class ZoneImportExportDataModel {
+	public zoneDefinition: ZoneDefinitionModel;
 	public zonesData?: IZone[];
 	public mode: Mode;
 }

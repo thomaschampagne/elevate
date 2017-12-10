@@ -1,4 +1,4 @@
-export class BaseLine {
+export class BaseLineModel {
 	value: number;
 	label?: string;
 }

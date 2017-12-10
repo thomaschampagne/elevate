@@ -1,11 +1,11 @@
-import { TestBed } from "@angular/core/testing";
-import { UserSettingsService } from "./user-settings.service";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
-import { userSettings } from "../../../../../../common/scripts/UserSettings";
-import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
+import {TestBed} from "@angular/core/testing";
+import {UserSettingsService} from "./user-settings.service";
+import {IUserSettings} from "../../../../../../common/scripts/interfaces/IUserSettings";
+import {userSettings} from "../../../../../../common/scripts/UserSettings";
+import {UserSettingsDao} from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
-import { ZoneDefinition } from "../../models/zone-definition.model";
+import {IZone} from "../../../../../../common/scripts/interfaces/IActivityData";
+import {ZoneDefinitionModel} from "../../models/zone-definition.model";
 
 describe("UserSettingsService", () => {
 
@@ -164,7 +164,7 @@ describe("UserSettingsService", () => {
 			{from: 40, to: 50}
 		];
 
-		const zoneDefinition: ZoneDefinition = {
+		const zoneDefinition: ZoneDefinitionModel = {
 			name: "Cycling Speed",
 			value: "speed",
 			units: "KPH",

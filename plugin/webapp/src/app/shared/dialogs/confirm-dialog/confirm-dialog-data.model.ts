@@ -1,4 +1,4 @@
-export class ConfirmDialogData {
+export class ConfirmDialogDataModel {
 	public title: string;
 	public content: string;
 }

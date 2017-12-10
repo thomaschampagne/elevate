@@ -1,4 +1,4 @@
-export class DayStress {
+export class DayStressModel {
 
 	public ids: number[];
 	public date: Date;

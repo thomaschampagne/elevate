@@ -1,11 +1,11 @@
-import { GraphPoint } from "./graph-point.model";
-import { Marker } from "./marker.model";
-import { BaseLine } from "./base-line.model";
+import {GraphPointModel} from "./graph-point.model";
+import {MarkerModel} from "./marker.model";
+import {BaseLineModel} from "./base-line.model";
 import * as _ from "lodash";
 
-export class ViewableGraphData {
+export class ViewableGraphDataModel {
 
-	public readonly trainingZonesBaseLines: BaseLine[] =
+	public readonly trainingZonesBaseLines: BaseLineModel[] =
 		[
 			{value: 25, label: "Freshness"},
 			{value: 5, label: "Neutral"},
@@ -13,25 +13,25 @@ export class ViewableGraphData {
 			{value: -30, label: "Over training"}
 		];
 
-	public readonly zeroBaseLine: BaseLine = {value: 0, label: null};
+	public readonly zeroBaseLine: BaseLineModel = {value: 0, label: null};
 
-	public fatigueLine: GraphPoint[] = [];
-	public fitnessLine: GraphPoint[] = [];
-	public formLine: GraphPoint[] = [];
-	public fitnessTrendLines: GraphPoint[][] = [];
-	public markers: Marker[] = [];
+	public fatigueLine: GraphPointModel[] = [];
+	public fitnessLine: GraphPointModel[] = [];
+	public formLine: GraphPointModel[] = [];
+	public fitnessTrendLines: GraphPointModel[][] = [];
+	public markers: MarkerModel[] = [];
 
-	public previewFatigueLine: GraphPoint[] = [];
-	public previewFitnessLine: GraphPoint[] = [];
-	public previewFormLine: GraphPoint[] = [];
+	public previewFatigueLine: GraphPointModel[] = [];
+	public previewFitnessLine: GraphPointModel[] = [];
+	public previewFormLine: GraphPointModel[] = [];
 
-	constructor(markers: Marker[],
-				fatigueLine: GraphPoint[],
-				fitnessLine: GraphPoint[],
-				formLine: GraphPoint[],
-				previewFatigueLine: GraphPoint[],
-				previewFitnessLine: GraphPoint[],
-				previewFormLine: GraphPoint[]) {
+	constructor(markers: MarkerModel[],
+				fatigueLine: GraphPointModel[],
+				fitnessLine: GraphPointModel[],
+				formLine: GraphPointModel[],
+				previewFatigueLine: GraphPointModel[],
+				previewFitnessLine: GraphPointModel[],
+				previewFormLine: GraphPointModel[]) {
 
 		this.markers = markers;
 
@@ -50,7 +50,7 @@ export class ViewableGraphData {
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFormLine, "date"));
 	}
 
-	public getBaseLines(isTrainingZonesEnabled: boolean): BaseLine[] {
+	public getBaseLines(isTrainingZonesEnabled: boolean): BaseLineModel[] {
 
 		let baseLines = [];
 

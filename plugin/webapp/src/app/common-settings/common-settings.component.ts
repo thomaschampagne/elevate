@@ -1,17 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
-import { CommonSettingsService } from "./services/common-settings.service";
+import {Component, OnInit} from "@angular/core";
+import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
+import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
+import {CommonSettingsService} from "./services/common-settings.service";
 import * as _ from "lodash";
-import { userSettings } from "../../../../common/scripts/UserSettings";
-import { MatDialog } from "@angular/material";
-import { ActivatedRoute } from "@angular/router";
-import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
-import { OptionHelperReaderService } from "./services/option-helper-reader.service";
-import { PlatformLocation } from "@angular/common";
-import { Section } from "./models/section.model";
-import { Option } from "./models/option.model";
-import { OptionHelperData } from "./option-helper-dialog/option-helper-data.model";
+import {userSettings} from "../../../../common/scripts/UserSettings";
+import {MatDialog} from "@angular/material";
+import {ActivatedRoute} from "@angular/router";
+import {OptionHelperDialogComponent} from "./option-helper-dialog/option-helper-dialog.component";
+import {OptionHelperReaderService} from "./services/option-helper-reader.service";
+import {PlatformLocation} from "@angular/common";
+import {SectionModel} from "./models/section.model";
+import {OptionModel} from "./models/option.model";
+import {OptionHelperDataModel} from "./option-helper-dialog/option-helper-data.model";
 
 @Component({
 	selector: "app-common-settings",
@@ -21,7 +21,7 @@ import { OptionHelperData } from "./option-helper-dialog/option-helper-data.mode
 })
 export class CommonSettingsComponent implements OnInit {
 
-	public sections: Section[];
+	public sections: SectionModel[];
 	public searchText = null;
 
 	public static getOptionHelperDir(platformLocation: PlatformLocation) { // TODO Unit test
@@ -70,9 +70,9 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	private renderOptionsForEachSection(userSettingsSynced: IUserSettings): void {
 
-		_.forEach(this.sections, (section: Section) => {
+		_.forEach(this.sections, (section: SectionModel) => {
 
-			_.forEach(section.options, (option: Option) => {
+			_.forEach(section.options, (option: OptionModel) => {
 
 				if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
@@ -103,9 +103,9 @@ export class CommonSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {Option} option
+	 * @param {OptionModel} option
 	 */
-	public onOptionChange(option: Option): void {
+	public onOptionChange(option: OptionModel): void {
 
 		if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
 
@@ -150,9 +150,9 @@ export class CommonSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {Option} option
+	 * @param {OptionModel} option
 	 */
-	private resetOptionToDefaultValue(option: Option): void {
+	private resetOptionToDefaultValue(option: OptionModel): void {
 		const resetValue = _.propertyOf(userSettings)(option.key);
 		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
@@ -165,9 +165,9 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public displaySubOption(subOptionKey: string, show: boolean): void {
 
-		_.forEach(this.sections, (section: Section) => {
+		_.forEach(this.sections, (section: SectionModel) => {
 
-			const foundOption: Option = _.find(section.options, {
+			const foundOption: OptionModel = _.find(section.options, {
 				key: subOptionKey,
 			});
 
@@ -184,11 +184,11 @@ export class CommonSettingsComponent implements OnInit {
 	 */
 	public showOptionHelperDialog(optionKeyParam: string): void {
 
-		let option: Option = null;
+		let option: OptionModel = null;
 
-		_.forEach(this.sections, (section: Section) => {
+		_.forEach(this.sections, (section: SectionModel) => {
 
-			const foundOption: Option = _.find(section.options, {
+			const foundOption: OptionModel = _.find(section.options, {
 				key: optionKeyParam,
 			});
 
@@ -204,7 +204,7 @@ export class CommonSettingsComponent implements OnInit {
 
 			this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
 
-				const optionHelperData: OptionHelperData = {
+				const optionHelperData: OptionHelperDataModel = {
 					title: option.title,
 					markdownData: markdownData
 				};

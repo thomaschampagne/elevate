@@ -1,8 +1,8 @@
-import { FormulaParams } from "./formula-params.model";
+import {FormulaParamsModel} from "./formula-params.model";
 
 export class SwimCalculationMethod {
 	public active: boolean;
 	public name: string;
-	public params: FormulaParams[];
-	public formula: (params: FormulaParams[]) => number;
+	public params: FormulaParamsModel[];
+	public formula: (params: FormulaParamsModel[]) => number;
 }

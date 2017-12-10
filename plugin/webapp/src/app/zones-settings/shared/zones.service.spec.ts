@@ -1,14 +1,14 @@
-import { inject, TestBed } from "@angular/core/testing";
-import { ZonesService } from "./zones.service";
+import {inject, TestBed} from "@angular/core/testing";
+import {ZonesService} from "./zones.service";
 import * as _ from "lodash";
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { ZONE_DEFINITIONS } from "../zone-definitions";
-import { userSettings } from "../../../../../common/scripts/UserSettings";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
-import { ZoneChangeWhisper } from "./zone-change-whisper.model";
-import { ZoneChangeOrder } from "./zone-change-order.model";
-import { ZoneDefinition } from "../../shared/models/zone-definition.model";
+import {IZone} from "../../../../../common/scripts/interfaces/IActivityData";
+import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
+import {ZONE_DEFINITIONS} from "../zone-definitions";
+import {userSettings} from "../../../../../common/scripts/UserSettings";
+import {UserSettingsDao} from "../../shared/dao/user-settings/user-settings.dao";
+import {ZoneChangeWhisperModel} from "./zone-change-whisper.model";
+import {ZoneChangeOrderModel} from "./zone-change-order.model";
+import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
 
 describe("ZonesService", () => {
 
@@ -254,7 +254,7 @@ describe("ZonesService", () => {
 		const index = 2;
 		const updatedFromValue: number = zonesService.currentZones[index].from + 1; // Apply the change
 
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: index,
 			from: true,
 			to: false,
@@ -262,7 +262,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -290,7 +290,7 @@ describe("ZonesService", () => {
 		const index = 0; // First zone
 		const updatedFromValue: number = zonesService.currentZones[index].from + 1; // Apply the change
 
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: index,
 			from: true,
 			to: false,
@@ -299,7 +299,7 @@ describe("ZonesService", () => {
 
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 			expect(change).toBeNull();
 			done();
 
@@ -317,7 +317,7 @@ describe("ZonesService", () => {
 		const index = 7;
 		const updatedToValue: number = zonesService.currentZones[index].to - 1; // Apply the change
 
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -325,7 +325,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -353,7 +353,7 @@ describe("ZonesService", () => {
 		const index = 0; // First zone
 		const updatedToValue: number = zonesService.currentZones[index].to + 4; // Apply the change
 
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -361,7 +361,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 
 			expect(_.isEmpty(change)).toBeFalsy();
 			expect(change.sourceId).toEqual(index);
@@ -389,7 +389,7 @@ describe("ZonesService", () => {
 		const index = 9; // Last zone
 		const updatedToValue: number = zonesService.currentZones[index].to + 1; // Apply the change
 
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: index,
 			from: false,
 			to: true,
@@ -397,7 +397,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 			expect(change).toBeNull();
 			done();
 
@@ -413,7 +413,7 @@ describe("ZonesService", () => {
 	it("should fail when \"FROM\" & \"TO\" change are equals", (done: Function) => {
 
 		// Given
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: 5,
 			from: true,
 			to: true,
@@ -421,7 +421,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 			expect(change).toBeNull();
 			done();
 
@@ -437,7 +437,7 @@ describe("ZonesService", () => {
 	it("should fail when value is not a number", (done: Function) => {
 
 		// Given
-		const zoneChange: ZoneChangeWhisper = {
+		const zoneChange: ZoneChangeWhisperModel = {
 			sourceId: 3,
 			from: true,
 			to: false,
@@ -445,7 +445,7 @@ describe("ZonesService", () => {
 		};
 
 		// When, Then
-		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrder) => {
+		zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 			expect(change).toBeNull();
 			done();
 
@@ -613,7 +613,7 @@ describe("ZonesService", () => {
 			{from: 910, to: 1100},
 		];
 
-		const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinition = _.find(ZONE_DEFINITIONS,
+		const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
 			{
 				value: "speed"
 			}

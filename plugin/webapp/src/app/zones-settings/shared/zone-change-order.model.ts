@@ -1,5 +1,5 @@
-import { ZoneChangeWhisper } from "./zone-change-whisper.model";
+import {ZoneChangeWhisperModel} from "./zone-change-whisper.model";
 
-export class ZoneChangeOrder extends ZoneChangeWhisper {
+export class ZoneChangeOrderModel extends ZoneChangeWhisperModel {
 	public destinationId: number;
 }

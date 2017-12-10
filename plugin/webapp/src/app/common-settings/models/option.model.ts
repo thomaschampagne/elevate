@@ -1,11 +1,11 @@
-import { ListItem } from "./list-item.model";
+import {ListItemModel} from "./list-item.model";
 
-export class Option {
+export class OptionModel {
 	public key: string;
 	public type: string;
 	public title: string;
 	public labels: string[];
-	public list?: ListItem[];
+	public list?: ListItemModel[];
 	public enableSubOption?: string[];
 	public active?: any;
 	public hidden?: boolean;

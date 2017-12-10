@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import {Injectable} from "@angular/core";
+import {IZone} from "../../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import { Subject } from "rxjs/Subject";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { userSettings } from "../../../../../common/scripts/UserSettings";
-import { ZoneChangeWhisper } from "./zone-change-whisper.model";
-import { ZoneChangeOrder } from "./zone-change-order.model";
-import { ZoneDefinition } from "../../shared/models/zone-definition.model";
+import {Subject} from "rxjs/Subject";
+import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
+import {userSettings} from "../../../../../common/scripts/UserSettings";
+import {ZoneChangeWhisperModel} from "./zone-change-whisper.model";
+import {ZoneChangeOrderModel} from "./zone-change-order.model";
+import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
 
 @Injectable()
 export class ZonesService {
@@ -20,19 +20,19 @@ export class ZonesService {
 	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
 	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
 	 * That <ZonesComponent> has to follow change instruction
-	 * @returns {Subject<ZoneChangeWhisper>}
+	 * @returns {Subject<ZoneChangeWhisperModel>}
 	 */
-	public zoneChangeOrderUpdates: Subject<ZoneChangeOrder>;
+	public zoneChangeOrderUpdates: Subject<ZoneChangeOrderModel>;
 
 	/**
 	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
 	 */
 	public zonesUpdates: Subject<IZone[]>;
 	public stepUpdates: Subject<number>;
-	public zoneDefinition: ZoneDefinition;
+	public zoneDefinition: ZoneDefinitionModel;
 
 	constructor(public userSettingsService: UserSettingsService) {
-		this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrder>();
+		this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrderModel>();
 		this.zonesUpdates = new Subject<IZone[]>();
 		this.stepUpdates = new Subject<number>();
 	}
@@ -135,11 +135,11 @@ export class ZonesService {
 	}
 
 	/**
-	 * Receive a <ZoneChangeWhisper> and notify all <ZonesComponents> of a zone change.
+	 * Receive a <ZoneChangeWhisperModel> and notify all <ZonesComponents> of a zone change.
 	 * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
-	 * @param {ZoneChangeWhisper} zoneChange
+	 * @param {ZoneChangeWhisperModel} zoneChange
 	 */
-	public whisperZoneChange(zoneChange: ZoneChangeWhisper): void {
+	public whisperZoneChange(zoneChange: ZoneChangeWhisperModel): void {
 
 		if (zoneChange.to && zoneChange.from && (zoneChange.to === zoneChange.from)) {
 			this.zoneChangeOrderUpdates.error("Impossible to notify both 'from' & 'to' changes at the same time");
@@ -152,7 +152,7 @@ export class ZonesService {
 		const isFirstZoneChange = (zoneChange.sourceId === 0);
 		const isLastZoneChange = (zoneChange.sourceId === (this.currentZones.length - 1));
 
-		let instruction: ZoneChangeOrder = {
+		let instruction: ZoneChangeOrderModel = {
 			sourceId: zoneChange.sourceId,
 			destinationId: null,
 			to: null,

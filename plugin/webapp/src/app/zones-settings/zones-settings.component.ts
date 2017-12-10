@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
-import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import {Component, OnInit} from "@angular/core";
+import {UserSettingsService} from "../shared/services/user-settings/user-settings.service";
+import {IUserSettings, IUserZones} from "../../../../common/scripts/interfaces/IUserSettings";
+import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
 import * as _ from "lodash";
-import { ZONE_DEFINITIONS } from "./zone-definitions";
-import { ZonesService } from "./shared/zones.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AppRoutes } from "../shared/models/app-routes.model";
-import { userSettings } from "../../../../common/scripts/UserSettings";
-import { ZoneDefinition } from "../shared/models/zone-definition.model";
+import {ZONE_DEFINITIONS} from "./zone-definitions";
+import {ZonesService} from "./shared/zones.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AppRoutesModel} from "../shared/models/app-routes.model";
+import {userSettings} from "../../../../common/scripts/UserSettings";
+import {ZoneDefinitionModel} from "../shared/models/zone-definition.model";
 
 @Component({
 	selector: "app-zones-settings",
@@ -19,8 +19,8 @@ export class ZonesSettingsComponent implements OnInit {
 
 	public static DEFAULT_ZONE_VALUE = "speed";
 
-	public zoneDefinitions: ZoneDefinition[] = ZONE_DEFINITIONS;
-	public zoneDefinitionSelected: ZoneDefinition;
+	public zoneDefinitions: ZoneDefinitionModel[] = ZONE_DEFINITIONS;
+	public zoneDefinitionSelected: ZoneDefinitionModel;
 	public userZones: IUserZones;
 	public currentZones: IZone[];
 
@@ -41,7 +41,7 @@ export class ZonesSettingsComponent implements OnInit {
 			// Check zoneValue provided in URL
 			this.route.params.subscribe(routeParams => {
 
-				let zoneDefinition: ZoneDefinition = null;
+				let zoneDefinition: ZoneDefinitionModel = null;
 
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
@@ -69,19 +69,19 @@ export class ZonesSettingsComponent implements OnInit {
 	/**
 	 *
 	 * @param {string} zoneValue
-	 * @returns {ZoneDefinition}
+	 * @returns {ZoneDefinitionModel}
 	 */
-	private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinition {
+	private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinitionModel {
 		return _.find(this.zoneDefinitions, {value: zoneValue});
 	}
 
 	/**
 	 * Load current zones from a zone definition.
 	 * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
-	 * @param {ZoneDefinition} zoneDefinition
+	 * @param {ZoneDefinitionModel} zoneDefinition
 	 * @param {string} overrideDefinitionTrigger
 	 */
-	private loadZonesFromDefinition(zoneDefinition: ZoneDefinition) {
+	private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
 
 		// Load current zone from zone definition provided
 		this.currentZones = _.propertyOf(this.userZones)(zoneDefinition.value);
@@ -97,7 +97,7 @@ export class ZonesSettingsComponent implements OnInit {
 	/**
 	 *
 	 */
-	public onZoneDefinitionSelected(zoneDefinition: ZoneDefinition) {
+	public onZoneDefinitionSelected(zoneDefinition: ZoneDefinitionModel) {
 		this.navigateToZone(zoneDefinition.value);
 	}
 
@@ -106,7 +106,7 @@ export class ZonesSettingsComponent implements OnInit {
 	 * @param {string} zoneValue
 	 */
 	private navigateToZone(zoneValue: string) {
-		const selectedZoneUrl = AppRoutes.zonesSettings + "/" + zoneValue;
+		const selectedZoneUrl = AppRoutesModel.zonesSettings + "/" + zoneValue;
 		this.router.navigate([selectedZoneUrl]);
 	}
 }

@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import * as _ from "lodash";
-import { SwimCalculationMethod } from "./swim-calculation-method.model";
-import { FormulaParams } from "./formula-params.model";
+import {SwimCalculationMethod} from "./swim-calculation-method.model";
+import {FormulaParamsModel} from "./formula-params.model";
 
 @Component({
 	selector: "app-swim-ftp-helper",
@@ -23,7 +23,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			hint: "Swim as far as possible during 60 minutes and enter distance performed in meters (ex: 1800 meters)",
 			value: null,
 		}],
-		formula: (params: FormulaParams[]) => {
+		formula: (params: FormulaParamsModel[]) => {
 			return params[0].value / 60;
 		},
 	}, {
@@ -33,7 +33,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			hint: "Swim as far as possible during 30 minutes and enter distance performed in meters (ex: 950 meters)",
 			value: null,
 		}],
-		formula: (params: FormulaParams[]) => {
+		formula: (params: FormulaParamsModel[]) => {
 			return (params[0].value / 30) - ((2 * params[0].value / 30 ) * 0.025); // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
 		},
 	}, {
@@ -46,7 +46,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			hint: "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
 			value: null,
 		}],
-		formula: (params: FormulaParams[]) => {
+		formula: (params: FormulaParamsModel[]) => {
 			return ((400 - 200) / ((params[1].value - params[0].value) / 60)); // (400m – 200m) / (400mTimeInMinutes - 200mTimeInMinutes)
 		},
 	}];

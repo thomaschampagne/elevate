@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
-import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
-import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
-import { ZoneDefinition } from "../../models/zone-definition.model";
+import {Injectable} from "@angular/core";
+import {IUserSettings} from "../../../../../../common/scripts/interfaces/IUserSettings";
+import {IZone} from "../../../../../../common/scripts/interfaces/IActivityData";
+import {UserSettingsDao} from "../../dao/user-settings/user-settings.dao";
+import {ZoneDefinitionModel} from "../../models/zone-definition.model";
 
 @Injectable()
 export class UserSettingsService {
@@ -49,11 +49,11 @@ export class UserSettingsService {
 
 	/**
 	 *
-	 * @param {ZoneDefinition} zoneDefinition
+	 * @param {ZoneDefinitionModel} zoneDefinition
 	 * @param {IZone[]} zones
 	 * @returns {Promise<IZone[]>}
 	 */
-	public updateZones(zoneDefinition: ZoneDefinition, zones: IZone[]): Promise<IZone[]> {
+	public updateZones(zoneDefinition: ZoneDefinitionModel, zones: IZone[]): Promise<IZone[]> {
 
 		return new Promise<IZone[]>((resolve: Function, reject: Function) => {
 

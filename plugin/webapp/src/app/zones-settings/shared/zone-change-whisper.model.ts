@@ -1,4 +1,4 @@
-export class ZoneChangeWhisper {
+export class ZoneChangeWhisperModel {
 	public sourceId: number;
 	public to: boolean;
 	public from: boolean;

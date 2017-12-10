@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import { ZoneComponent } from "./zone.component";
-import { MaterialModule } from "../../shared/modules/material.module";
-import { FormsModule } from "@angular/forms";
-import { ZonesService } from "../shared/zones.service";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
-import { ZoneChangeWhisper } from "../shared/zone-change-whisper.model";
-import { ZoneChangeType } from "./zone-change-type.model";
+import {ZoneComponent} from "./zone.component";
+import {MaterialModule} from "../../shared/modules/material.module";
+import {FormsModule} from "@angular/forms";
+import {ZonesService} from "../shared/zones.service";
+import {UserSettingsService} from "../../shared/services/user-settings/user-settings.service";
+import {UserSettingsDao} from "../../shared/dao/user-settings/user-settings.dao";
+import {ZoneChangeWhisperModel} from "../shared/zone-change-whisper.model";
+import {ZoneChangeTypeModel} from "./zone-change-type.model";
 
 describe("ZoneComponent", () => {
 
@@ -44,9 +44,9 @@ describe("ZoneComponent", () => {
 		const sourceId = 5;
 		const zoneFrom = 50;
 		const zoneTo = 75;
-		const changeType: ZoneChangeType = {from: true, to: false};
+		const changeType: ZoneChangeTypeModel = {from: true, to: false};
 
-		const expectedChange: ZoneChangeWhisper = {
+		const expectedChange: ZoneChangeWhisperModel = {
 			sourceId: sourceId,
 			from: true,
 			to: false,
@@ -75,9 +75,9 @@ describe("ZoneComponent", () => {
 		const sourceId = 5;
 		const zoneFrom = 50;
 		const zoneTo = 75;
-		const changeType: ZoneChangeType = {from: false, to: true};
+		const changeType: ZoneChangeTypeModel = {from: false, to: true};
 
-		const expectedChange: ZoneChangeWhisper = {
+		const expectedChange: ZoneChangeWhisperModel = {
 			sourceId: sourceId,
 			from: false,
 			to: true,
@@ -103,7 +103,7 @@ describe("ZoneComponent", () => {
 	it("should skip notify is from + to changes (On first display)", () => {
 
 		// Given
-		const changeType: ZoneChangeType = {from: true, to: true};
+		const changeType: ZoneChangeTypeModel = {from: true, to: true};
 		spyOn(zonesService, "whisperZoneChange").and.stub();
 
 		// When

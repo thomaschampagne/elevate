@@ -1,7 +1,7 @@
 import * as moment from "moment";
-import { ZoneDefinition } from "../shared/models/zone-definition.model";
+import {ZoneDefinitionModel} from "../shared/models/zone-definition.model";
 
-export const ZONE_DEFINITIONS: ZoneDefinition[] = [
+export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 	{
 		name: "Cycling Speed",
 		value: "speed",

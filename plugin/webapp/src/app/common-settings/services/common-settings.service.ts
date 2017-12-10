@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { Section } from "../models/section.model";
+import {Injectable} from "@angular/core";
+import {SectionModel} from "../models/section.model";
 
 @Injectable()
 export class CommonSettingsService {
@@ -8,7 +8,7 @@ export class CommonSettingsService {
 	public static readonly TYPE_OPTION_LIST: string = "list";
 	public static readonly TYPE_OPTION_NUMBER: string = "number";
 
-	public sections: Section[] = [{
+	public sections: SectionModel[] = [{
 		title: "Units",
 		options: [{
 			key: "systemUnit",

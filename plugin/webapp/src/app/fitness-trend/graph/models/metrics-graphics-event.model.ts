@@ -1,4 +1,4 @@
-export class MetricsGraphicsEvent {
+export class MetricsGraphicsEventModel {
 	key: Date;
 	values: {
 		date: Date;

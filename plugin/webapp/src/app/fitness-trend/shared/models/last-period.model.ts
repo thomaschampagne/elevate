@@ -1,6 +1,6 @@
-import { Period } from "./period.model";
+import {PeriodModel} from "./period.model";
 
-export class LastPeriod extends Period {
+export class LastPeriodModel extends PeriodModel {
 	public key: string;
 	public label: string;
 }

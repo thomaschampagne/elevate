@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
-import { ZonesService } from "../shared/zones.service";
-import { ZoneImportExportData } from "./zone-import-export-data.model";
-import { Mode } from "./mode.enum";
+import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from "@angular/material";
+import {ZonesService} from "../shared/zones.service";
+import {ZoneImportExportDataModel} from "./zone-import-export-data.model";
+import {Mode} from "./mode.enum";
 
 @Component({
 	selector: "app-zones-import-export-dialog",
@@ -19,7 +19,7 @@ export class ZonesImportExportDialogComponent implements OnInit {
 	public placeholder: string;
 
 	constructor(private dialogRef: MatDialogRef<ZonesImportExportDialogComponent>,
-				@Inject(MAT_DIALOG_DATA) public data: ZoneImportExportData,
+				@Inject(MAT_DIALOG_DATA) public data: ZoneImportExportDataModel,
 				private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}

@@ -1,6 +1,6 @@
-import { Option } from "./option.model";
+import {OptionModel} from "./option.model";
 
-export class Section {
+export class SectionModel {
 	public title: string;
-	public options: Option[];
+	public options: OptionModel[];
 }

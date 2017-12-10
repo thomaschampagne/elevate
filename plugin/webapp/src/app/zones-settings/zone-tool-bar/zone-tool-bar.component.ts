@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { ZonesService } from "../shared/zones.service";
-import { MatDialog, MatSnackBar } from "@angular/material";
-import { ZonesImportExportDialogComponent } from "../zones-import-export-dialog/zones-import-export-dialog.component";
-import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { ConfirmDialogData } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
-import { ZoneImportExportData } from "../zones-import-export-dialog/zone-import-export-data.model";
-import { Mode } from "../zones-import-export-dialog/mode.enum";
-import { ZoneDefinition } from "../../shared/models/zone-definition.model";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {ZonesService} from "../shared/zones.service";
+import {MatDialog, MatSnackBar} from "@angular/material";
+import {ZonesImportExportDialogComponent} from "../zones-import-export-dialog/zones-import-export-dialog.component";
+import {ConfirmDialogComponent} from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import {ConfirmDialogDataModel} from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import {ZoneImportExportDataModel} from "../zones-import-export-dialog/zone-import-export-data.model";
+import {Mode} from "../zones-import-export-dialog/mode.enum";
+import {ZoneDefinitionModel} from "../../shared/models/zone-definition.model";
 
 @Component({
 	selector: "app-zone-tool-bar",
@@ -19,13 +19,13 @@ export class ZoneToolBarComponent implements OnInit {
 	public currentZonesLength: number;
 
 	@Input("zoneDefinitions")
-	public zoneDefinitions: ZoneDefinition[];
+	public zoneDefinitions: ZoneDefinitionModel[];
 
 	@Input("zoneDefinitionSelected")
-	public zoneDefinitionSelected: ZoneDefinition;
+	public zoneDefinitionSelected: ZoneDefinitionModel;
 
 	@Output("zoneDefinitionSelectedChange")
-	public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinition> = new EventEmitter<ZoneDefinition>();
+	public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinitionModel> = new EventEmitter<ZoneDefinitionModel>();
 
 	constructor(private zonesService: ZonesService,
 				private dialog: MatDialog,
@@ -61,7 +61,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onResetZonesToDefault(): void {
 
-		const data: ConfirmDialogData = {
+		const data: ConfirmDialogDataModel = {
 			title: "Reset <" + this.zonesService.zoneDefinition.name + "> zones",
 			content: "Are you sure? Previous data will be lost."
 		};
@@ -92,7 +92,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onImportZones() {
 
-		const importExportData: ZoneImportExportData = {
+		const importExportData: ZoneImportExportDataModel = {
 			zoneDefinition: this.zonesService.zoneDefinition,
 			mode: Mode.IMPORT
 		};
@@ -106,7 +106,7 @@ export class ZoneToolBarComponent implements OnInit {
 
 	public onExportZones() {
 
-		const importExportData: ZoneImportExportData = {
+		const importExportData: ZoneImportExportDataModel = {
 			zoneDefinition: this.zonesService.zoneDefinition,
 			zonesData: this.zonesService.currentZones,
 			mode: Mode.EXPORT

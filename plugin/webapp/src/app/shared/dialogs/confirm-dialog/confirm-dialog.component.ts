@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { ConfirmDialogData } from "./confirm-dialog-data.model";
+import {Component, Inject, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {ConfirmDialogDataModel} from "./confirm-dialog-data.model";
 
 @Component({
 	selector: "app-confirm-dialog",
@@ -13,7 +13,7 @@ export class ConfirmDialogComponent implements OnInit {
 	public static readonly MIN_WIDTH: string = "40%";
 
 	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-				@Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogData) {
+				@Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogDataModel) {
 	}
 
 	public ngOnInit() {
