@@ -1,6 +1,5 @@
-<mat-card *ngIf="viewedDay">
+<mat-card *ngIf="(fullFitnessTrend && fullFitnessTrend.length > 0)">
 	<mat-card-content>
-
 		<div class="header" fxLayout="column" fxLayoutAlign="start start">
 			<!--INPUTS-->
 			<div fxFlex fxFill>
@@ -161,7 +160,7 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="!viewedDay" class="noData mat-body-1">
+<mat-card *ngIf="(fullFitnessTrend && fullFitnessTrend.length === 0)" class="noData mat-body-1">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>

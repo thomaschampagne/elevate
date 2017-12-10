@@ -116,7 +116,12 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.fullFitnessTrend = fullFitnessTrend;
 			this.setup();
 
-		}, error => console.error(error));
+		}, error => {
+
+			this.fullFitnessTrend = [];
+			console.error(error);
+
+		});
 	}
 
 	/**
