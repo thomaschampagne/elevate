@@ -1,25 +1,25 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
+import { Helper } from "../../../common/scripts/Helper";
 import {
-    IActivityStatsMap,
-    IActivityStream,
-    IAnalysisData,
-    IAscentSpeedData,
-    ICadenceData,
-    IElevationData,
-    IGradeData,
-    IHeartRateData,
-    IMoveData,
-    IPaceData,
-    IPowerData,
-    ISpeedData,
-    IUpFlatDown,
-    IUpFlatDownSumCounter,
-    IUpFlatDownSumTotal,
-    IZone,
+	IActivityStatsMap,
+	IActivityStream,
+	IAnalysisData,
+	IAscentSpeedData,
+	ICadenceData,
+	IElevationData,
+	IGradeData,
+	IHeartRateData,
+	IMoveData,
+	IPaceData,
+	IPowerData,
+	ISpeedData,
+	IUpFlatDown,
+	IUpFlatDownSumCounter,
+	IUpFlatDownSumTotal,
+	IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {RunningPowerEstimator} from "./RunningPowerEstimator";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { RunningPowerEstimator } from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 

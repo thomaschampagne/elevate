@@ -1,4 +1,4 @@
-import {userSettings} from "../UserSettings";
+import { userSettings } from "../UserSettings";
 
 export interface IStorageUsage {
     bytesInUse: number;
@@ -46,7 +46,7 @@ export class StorageManager {
 
         if (storageType === "sync") {
 
-            chrome.storage.sync.get(userSettings, function(userSettingsResponseData) {
+			chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
                 console.log(userSettingsResponseData);
                 let result: any = userSettingsResponseData[key];
                 result = (typeof result === "undefined") ? null : result;
@@ -56,7 +56,7 @@ export class StorageManager {
 
         } else if (storageType === "local") {
 
-            chrome.storage.local.get([key], function(result) {
+			chrome.storage.local.get([key], function (result) {
                 result = result[key];
                 console.debug(accessMethod + " " + key + " @ chrome.storage.local = ", result);
                 result = (typeof result === "undefined") ? null : result;
@@ -77,13 +77,13 @@ export class StorageManager {
 
         if (storageType === "sync") {
 
-            chrome.storage.sync.get(userSettings, function(userSettingsResponseData) {
+			chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
 
                 userSettingsResponseData[key] = value; // Set value to key
 
-                chrome.storage.sync.set(userSettingsResponseData, function() {
+				chrome.storage.sync.set(userSettingsResponseData, function () {
                     // Reload and callback sync get values
-                    chrome.storage.sync.get(userSettings, function(userSettingsResponseData) {
+					chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
 
                         console.debug("HAS BEEN SET: " + key + " has now value of: ", userSettingsResponseData[key]);
 
@@ -95,7 +95,7 @@ export class StorageManager {
 
         } else if (storageType === "local") {
 
-            chrome.storage.local.get(null, function(allData) {
+			chrome.storage.local.get(null, function (allData) {
                 allData[key] = value;
                 chrome.storage.local.set(allData);
                 callback(allData);
@@ -160,12 +160,12 @@ export class StorageManager {
 
     public printStorage(storageType: string): void {
         if (storageType === "sync") {
-            chrome.storage.sync.get(null, function(data) {
+			chrome.storage.sync.get(null, function (data) {
                 console.log(data);
             });
 
         } else if (storageType === "local") {
-            chrome.storage.local.get(null, function(data) {
+			chrome.storage.local.get(null, function (data) {
                 console.log(data);
             });
 

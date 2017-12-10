@@ -1,17 +1,22 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {Helper} from "../../../common/scripts/Helper";
-import {IAthleteProfile} from "../../../common/scripts/interfaces/IAthleteProfile";
-import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify, ISyncRawStravaActivity} from "../../../common/scripts/interfaces/ISync";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {StorageManager} from "../../../common/scripts/modules/StorageManager";
-import {IAppResources} from "../interfaces/IAppResources";
-import {MultipleActivityProcessor} from "../processors/MultipleActivityProcessor";
+import { Helper } from "../../../common/scripts/Helper";
+import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import {
+	ISyncActivityComputed,
+	ISyncActivityWithStream,
+	ISyncNotify,
+	ISyncRawStravaActivity
+} from "../../../common/scripts/interfaces/ISync";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { StorageManager } from "../../../common/scripts/modules/StorageManager";
+import { IAppResources } from "../interfaces/IAppResources";
+import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
 
 export interface IHistoryChanges {
     added: number[];
     deleted: number[];
-    edited: Array<{id: number, name: string, type: string, display_type: string}>;
+	edited: Array<{ id: number, name: string, type: string, display_type: string }>;
 }
 
 export interface ISyncResult {
@@ -67,7 +72,7 @@ export class ActivitiesSynchronizer {
 
         const added: number[] = [];
         const deleted: number[] = [];
-        const edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
+		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
 
         if (_.isNull(computedActivities) || _.isUndefined(computedActivities) || !computedActivities) {
             computedActivities = [];
@@ -120,7 +125,7 @@ export class ActivitiesSynchronizer {
 
         const added: number[] = [];
         const deleted: number[] = [];
-        const edited: Array<{id: number, name: string, type: string, display_type: string}> = [];
+		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
 
         _.forEach(computedActivities, (computedActivity: ISyncActivityComputed) => {
             // Seek for activity in just interrogated pages

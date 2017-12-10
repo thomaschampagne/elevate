@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
+import { Helper } from "../../../common/scripts/Helper";
 
 export class ActivitiesSummaryModifier implements IModifier {
 
@@ -31,7 +31,7 @@ export class ActivitiesSummaryModifier implements IModifier {
 
         const waitForTotalActivitiesCountRemove = () => {
             if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function() {
+				setTimeout(function () {
                     waitForTotalActivitiesCountRemove();
                 }, 1000);
                 return;

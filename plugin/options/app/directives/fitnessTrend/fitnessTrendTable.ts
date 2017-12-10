@@ -1,7 +1,7 @@
-import {IWindowService} from "angular";
+import { IWindowService } from "angular";
 import * as _ from "lodash";
-import {FitnessTrendController} from "../../controllers/FitnessTrendController";
-import {IFitnessActivity, IFitnessActivityTable} from "../../services/FitnessDataService";
+import { FitnessTrendController } from "../../controllers/FitnessTrendController";
+import { IFitnessActivity, IFitnessActivityTable } from "../../services/FitnessDataService";
 
 export class FitnessTrendTable {
 

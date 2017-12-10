@@ -31,7 +31,7 @@ export class ReliveCCModifier implements IModifier {
                     closeEffect: "none",
                     scrolling: "no",
                     type: "iframe",
-                    content: '<iframe src="' + url + '" width="' + windowWidth + '" height="' + windowHeight + '" frameborder="0"></iframe>',
+					content: "<iframe src=\"" + url + "\" width=\"" + windowWidth + "\" height=\"" + windowHeight + "\" frameborder=\"0\"></iframe>",
                 });
             });
         });

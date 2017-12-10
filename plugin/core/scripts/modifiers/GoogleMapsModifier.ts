@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../interfaces/IAppResources";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../interfaces/IAppResources";
 
 export class GoogleMapsModifier implements IModifier {
 
@@ -46,7 +46,7 @@ export class GoogleMapsModifier implements IModifier {
 
         // Handle case when user overview button
         // If user click left overview button then reload gmap buttons placement
-        $('[data-menu="overview"]').click(() => {
+		$("[data-menu=\"overview\"]").click(() => {
 
             // Execute at the end with set timeout
             setTimeout(() => {
@@ -58,7 +58,7 @@ export class GoogleMapsModifier implements IModifier {
         });
 
         // If user click left segment button (running ie) then reload gmap buttons placement
-        $('[data-menu="segments"]').click(() => {
+		$("[data-menu=\"segments\"]").click(() => {
 
             // Execute at the end with set timeout
             setTimeout(() => {
@@ -71,7 +71,7 @@ export class GoogleMapsModifier implements IModifier {
     }
 
     protected showWaitLoadingMessage(): void {
-        $.fancybox('<div style="text-align: center; padding-top: 15px;"><img src="' + this.appResources.loadingIcon + '"/></div>', {
+		$.fancybox("<div style=\"text-align: center; padding-top: 15px;\"><img src=\"" + this.appResources.loadingIcon + "\"/></div>", {
             autoScale: true,
             closeBtn: false,
         });
@@ -93,7 +93,7 @@ export class GoogleMapsModifier implements IModifier {
             return;
         }
 
-        $("#map-canvas").before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>').each(() => {
+		$("#map-canvas").before("<a class=\"button btn-block btn-primary\" id=\"showInGoogleMap\">View in Google Maps</a>").each(() => {
 
             $("#showInGoogleMap").on("click", () => {
 
@@ -133,7 +133,7 @@ export class GoogleMapsModifier implements IModifier {
 
         const that = this;
 
-        view.prototype.render = function() {
+		view.prototype.render = function () {
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
@@ -156,7 +156,7 @@ export class GoogleMapsModifier implements IModifier {
                 console.error("No anchor found to attach segment google map button");
             }
 
-            anchor.before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>').each(() => {
+			anchor.before("<a class=\"button btn-block btn-primary\" id=\"showSegInGoogleMap\">View in Google Maps</a>").each(() => {
 
                 $("#showSegInGoogleMap").on("click", () => {
 
@@ -245,7 +245,7 @@ export class GoogleMapsModifier implements IModifier {
             window.innerHeight * 0.875,
         ];
 
-        const html: string = '<div style="padding-bottom:10px; text-align:center;"><div style="height:' + mapSize[1] + "px;width:" + mapSize[0] + 'px;" id="gmaps_canvas"></div><a target="_blank" href="' + this.appResources.settingsLink + '#!/commonSettings?searchText=Google%20Maps">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>';
+		const html: string = "<div style=\"padding-bottom:10px; text-align:center;\"><div style=\"height:" + mapSize[1] + "px;width:" + mapSize[0] + "px;\" id=\"gmaps_canvas\"></div><a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/commonSettings?searchText=Google%20Maps\">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>";
 
         $.fancybox(html, {
             autoScale: true,

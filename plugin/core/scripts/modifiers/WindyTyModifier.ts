@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 import { IAppResources } from "../interfaces/IAppResources";
-import { Helper } from "../../../common/scripts/Helper";
 import { ISpeedUnitData } from "../../../common/scripts/interfaces/IActivityData";
+import { Helper } from "../../../common/scripts/Helper";
 
 export class WindyTyModifier implements IModifier {
 	protected activityId: number;
@@ -149,7 +149,7 @@ export class WindyTyModifier implements IModifier {
 			transitionIn: "fade",
 			transitionOut: "fade",
 			type: "iframe",
-			content: '<iframe src="' + url + '" width="' + window.innerWidth * 0.950 + '" height="' + window.innerHeight * 0.875 + '" frameborder="0"></iframe>',
+			content: "<iframe src=\"" + url + "\" width=\"" + window.innerWidth * 0.950 + "\" height=\"" + window.innerHeight * 0.875 + "\" frameborder=\"0\"></iframe>",
 		});
 	}
 

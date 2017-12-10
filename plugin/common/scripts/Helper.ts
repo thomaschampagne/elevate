@@ -1,6 +1,6 @@
 import * as Q from "q";
-import {ISpeedUnitData} from "./interfaces/IActivityData";
-import {IStorageUsage} from "./modules/StorageManager";
+import { ISpeedUnitData } from "./interfaces/IActivityData";
+import { IStorageUsage } from "./modules/StorageManager";
 
 export class Helper {
 
@@ -310,8 +310,8 @@ export class Helper {
             }
 
             if (v1parts[i] == v2parts[i]) {
-                continue;
-            } else if (v1parts[i] > v2parts[i]) {
+
+			} else if (v1parts[i] > v2parts[i]) {
                 return 1;
             } else {
                 return -1;

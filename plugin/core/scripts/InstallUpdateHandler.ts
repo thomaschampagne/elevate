@@ -108,8 +108,8 @@ InstallUpdateHandler.listen();
 /**
  * Migration from previous version under 5.11.0
  */
-let migration_from_previous_version_under_5_11_0 = function(Helper: any) {
-    const removeDeprecatedHrrZonesKey = function(callback: Function): void {
+let migration_from_previous_version_under_5_11_0 = function (Helper: any) {
+	const removeDeprecatedHrrZonesKey = function (callback: Function): void {
         chrome.storage.sync.remove(["userHrrZones"], () => {
             callback();
         });

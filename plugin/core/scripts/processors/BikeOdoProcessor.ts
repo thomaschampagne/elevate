@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import {env} from "../../config/env";
-import {VacuumProcessor} from "./VacuumProcessor";
+import { env } from "../../config/env";
+import { VacuumProcessor } from "./VacuumProcessor";
 
 export class BikeOdoProcessor {
 
@@ -51,7 +51,7 @@ export class BikeOdoProcessor {
         });
     }
 
-    public  getCacheKey(): string {
+	public getCacheKey(): string {
         return this.cacheKey;
     }
 }

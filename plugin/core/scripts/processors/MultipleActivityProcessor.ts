@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {IActivityStatsMap, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
-import {ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify} from "../../../common/scripts/interfaces/ISync";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../interfaces/IAppResources";
-import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+import { IActivityStatsMap, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
+import { ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify } from "../../../common/scripts/interfaces/ISync";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../interfaces/IAppResources";
+import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
+import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
 
 export class MultipleActivityProcessor {
 

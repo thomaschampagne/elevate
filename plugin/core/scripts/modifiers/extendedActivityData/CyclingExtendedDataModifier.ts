@@ -1,14 +1,14 @@
-import {Helper} from "../../../../common/scripts/Helper";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {IAppResources} from "../../interfaces/IAppResources";
-import {ActivityProcessor} from "../../processors/ActivityProcessor";
-import {AbstractExtendedDataModifier} from "./AbstractExtendedDataModifier";
-import {AscentSpeedDataView} from "./views/AscentSpeedDataView";
-import {CyclingCadenceDataView} from "./views/CyclingCadenceDataView";
-import {CyclingGradeDataView} from "./views/CyclingGradeDataView";
-import {CyclingPowerDataView} from "./views/CyclingPowerDataView";
-import {ElevationDataView} from "./views/ElevationDataView";
-import {SpeedDataView} from "./views/SpeedDataView";
+import { Helper } from "../../../../common/scripts/Helper";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { IAppResources } from "../../interfaces/IAppResources";
+import { ActivityProcessor } from "../../processors/ActivityProcessor";
+import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
+import { AscentSpeedDataView } from "./views/AscentSpeedDataView";
+import { CyclingCadenceDataView } from "./views/CyclingCadenceDataView";
+import { CyclingGradeDataView } from "./views/CyclingGradeDataView";
+import { CyclingPowerDataView } from "./views/CyclingPowerDataView";
+import { ElevationDataView } from "./views/ElevationDataView";
+import { SpeedDataView } from "./views/SpeedDataView";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -24,7 +24,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
         let q3Move: string = "-";
         if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
             q3Move = (this.analysisData.speedData.upperQuartileSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1);
-            this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Speed", this.speedUnitsData.speedUnitPerHour + ' <span class="summarySubGridTitle">(&sigma; :' + (this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1) + " )</span>", "displayAdvancedSpeedData");
+			this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Speed", this.speedUnitsData.speedUnitPerHour + " <span class=\"summarySubGridTitle\">(&sigma; :" + (this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1) + " )</span>", "displayAdvancedSpeedData");
         }
 
         // ...
@@ -41,7 +41,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
             medianCadence = this.analysisData.cadenceData.medianCadence.toString();
             standardDeviationCadence = this.analysisData.cadenceData.standardDeviationCadence.toString();
         }
-        this.insertContentAtGridPosition(0, 3, medianCadence, "Median Cadence", (standardDeviationCadence !== "-") ? ' rpm <span class="summarySubGridTitle">(&sigma; :' + standardDeviationCadence + " )</span>" : "", "displayCadenceData");
+		this.insertContentAtGridPosition(0, 3, medianCadence, "Median Cadence", (standardDeviationCadence !== "-") ? " rpm <span class=\"summarySubGridTitle\">(&sigma; :" + standardDeviationCadence + " )</span>" : "", "displayCadenceData");
 
         let cadenceTimeMoving: string = "-";
         let cadencePercentageMoving: string = "-";
@@ -49,7 +49,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
             cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData.cadenceData.cadenceTimeMoving);
             cadencePercentageMoving = this.analysisData.cadenceData.cadencePercentageMoving.toFixed(0);
         }
-        this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? ' <span class="summarySubGridTitle">(' + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
+		this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? " <span class=\"summarySubGridTitle\">(" + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
 
         let weightedPower: string = "-";
         if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
@@ -59,7 +59,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
                 weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
                 labelWeightedPower = "Estimated " + labelWeightedPower;
             }
-            this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, ' w <span class="summarySubGridTitle" style="font-size: 11px;">(Dr. A. Coggan formula)</span>', "displayAdvancedPowerData");
+			this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, " w <span class=\"summarySubGridTitle\" style=\"font-size: 11px;\">(Dr. A. Coggan formula)</span>", "displayAdvancedPowerData");
         }
 
         let avgWattsPerKg: string = "-";
@@ -78,7 +78,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
             let labelPSS: string = "Power Stress Score";
             if (this.analysisData.powerData.powerStressScore) {
-                powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + ' <span class="summarySubGridTitle">(' + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
+				powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
                 labelPSS = "Power Stress Score";
                 /* Uncomment this for power stress score estimation
                 if (!this.analysisData.powerData.hasPowerMeter) {
@@ -103,7 +103,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
         let htmlButton: string = "<section>";
-        htmlButton += '<a class="btn-block btn-xs button raceshape-btn btn-primary" data-xtd-seg-effort-stats id="' + this.segmentEffortButtonId + '">';
+		htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
         htmlButton += "Show extended statistics of effort";
         htmlButton += "</a>";
         htmlButton += "</section>";

@@ -1,10 +1,10 @@
 import * as angular from "angular";
-import {IAnchorScrollService, ILocationService} from "angular";
+import { IAnchorScrollService, ILocationService } from "angular";
 import * as _ from "lodash";
-import {IZone} from "../../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../common/scripts/interfaces/IUserSettings";
-import {userSettings} from "../../../../common/scripts/UserSettings";
-import {ChromeStorageService} from "../../services/ChromeStorageService";
+import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { userSettings } from "../../../../common/scripts/UserSettings";
+import { ChromeStorageService } from "../../services/ChromeStorageService";
 
 export class XtdZones {
 
@@ -132,7 +132,7 @@ export class XtdZones {
                             $mdDialog.alert()
                                 .clickOutsideToClose(true)
                                 .title("Saved !")
-                                .textContent("Your " + $scope.xtdZones.length + ' "' + $scope.xtdDataSelected.name + ' zones" have been saved.')
+                                .textContent("Your " + $scope.xtdZones.length + " \"" + $scope.xtdDataSelected.name + " zones\" have been saved.")
                                 .ok("Got it!")
                                 .targetEvent($event),
                         );
@@ -198,7 +198,7 @@ export class XtdZones {
                 .textContent("Paste exported zones in input field.")
                 .ariaLabel("Paste exported zones in input field.")
                 .initialValue("")
-                .placeholder('Enter here something like [{ "from": a, "to": b }, { "from": b, "to": c }, { "from": c, "to": d }]')
+                .placeholder("Enter here something like [{ \"from\": a, \"to\": b }, { \"from\": b, \"to\": c }, { \"from\": c, \"to\": d }]")
                 .targetEvent($event)
                 .ok("Import");
 

@@ -1,11 +1,11 @@
 import * as _ from "lodash";
-import {IActivityStatsMap, IActivityStream, IAnalysisData} from "../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
-import {env} from "../../config/env";
-import {IAppResources} from "../interfaces/IAppResources";
-import {IComputeActivityThreadMessage} from "../interfaces/IComputeActivityThreadMessage";
-import {VacuumProcessor} from "./VacuumProcessor";
-import {ComputeAnalysisWorker} from "./workers/ComputeAnalysisWorker";
+import { IActivityStatsMap, IActivityStream, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { env } from "../../config/env";
+import { IAppResources } from "../interfaces/IAppResources";
+import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
+import { VacuumProcessor } from "./VacuumProcessor";
+import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
 
 export class ActivityProcessor {
 

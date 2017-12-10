@@ -22,7 +22,7 @@ export class DefaultLeaderBoardFilterModifier implements IModifier {
 
         const that: any = this;
 
-        view.prototype.render = function() {
+		view.prototype.render = function () {
             const r = functionRender.apply(this, Array.prototype.slice.call(arguments));
             $(this.el).not(".once-only").addClass("once-only").find(".clickable[data-filter=" + that.defaultLeaderBoardFilter + "]").click();
             return r;

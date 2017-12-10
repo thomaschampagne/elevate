@@ -10,7 +10,8 @@ interface Window {
     currentAthlete: any;
     pageView: any; // Allow access of window.pageView where page wiew
     googleMapsApiLoaded: () => void;
-    unescape(str: string): string; // Allow access of window.pageView where page wiew
+
+	unescape(str: string): string; // Allow access of window.pageView where page wiew
     __stravistix_bridge__: any; // Used to pass data through the window object with a king of "bridge"
     __fixtures__: any;
 }

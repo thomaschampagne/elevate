@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {InconsistentParameters} from "../../../common/scripts/exceptions/InconsistentParameters";
+import { InconsistentParameters } from "../../../common/scripts/exceptions/InconsistentParameters";
 
 export class RunningPowerEstimator {
     /**
@@ -58,7 +58,7 @@ export class RunningPowerEstimator {
         const minPerKmPace = minutes / km; // Units: min/km
         const RelativeVO2 = runningEcoVolumeO2PerKm / minPerKmPace; // (ml/kg/km) / (min/km), Units: (ml/kg/min) equals to a "V02"
         const AbsoluteVO2 = RelativeVO2 * weightKg; // Units: ml/min
-        const horizontalWatts = cyclingEcoWattsPerVolumeO2  * AbsoluteVO2 / 1000 /* divide per 1000 to get ml?!  */; // Units: W / min
+		const horizontalWatts = cyclingEcoWattsPerVolumeO2 * AbsoluteVO2 / 1000 /* divide per 1000 to get ml?!  */; // Units: W / min
         const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds; // Units kg/
         return Math.round(horizontalWatts + verticalWatts);
     }

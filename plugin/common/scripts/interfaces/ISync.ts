@@ -1,4 +1,4 @@
-import {IAnalysisData} from "./IActivityData";
+import { IAnalysisData } from "./IActivityData";
 
 export interface ISyncRawStravaActivity {
 

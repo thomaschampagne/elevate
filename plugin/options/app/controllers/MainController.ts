@@ -1,12 +1,12 @@
 import * as angular from "angular";
-import {IIntervalService, ILocationService, IWindowService} from "angular";
-import {saveAs} from "file-saver";
+import { IIntervalService, ILocationService, IWindowService } from "angular";
+import { saveAs } from "file-saver";
 import * as _ from "lodash";
 import * as moment from "moment";
-import {IStorageUsage} from "../../../common/scripts/modules/StorageManager";
-import {properties, routeMap} from "../Config";
-import {ChromeStorageService} from "../services/ChromeStorageService";
-import {IReleaseNotesService} from "../services/ReleaseNotesService";
+import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
+import { properties, routeMap } from "../Config";
+import { ChromeStorageService } from "../services/ChromeStorageService";
+import { IReleaseNotesService } from "../services/ReleaseNotesService";
 
 export class MainController {
 

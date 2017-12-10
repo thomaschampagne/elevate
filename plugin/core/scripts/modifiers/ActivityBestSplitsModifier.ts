@@ -5,8 +5,8 @@
 declare let d3: any; // Injected by strava.com
 
 import * as _ from "lodash";
-import {Helper} from "../../../common/scripts/Helper";
-import {IUserSettings} from "../../../common/scripts/interfaces/IUserSettings";
+import { Helper } from "../../../common/scripts/Helper";
+import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 
 declare let L: any; // Injected by strava.com
 
@@ -435,7 +435,7 @@ export class ActivityBestSplitsModifier implements IModifier {
         this.activityJson = activityJson;
         this.hasPowerMeter = hasPowerMeter;
         this.splitsConfiguration = splitsConfiguration;
-        this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function() {
+		this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function () {
         };
         this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
         this.cacheKeyPrefix = "stravistix_bestsplit_" + this.activityId + "_";
@@ -519,7 +519,7 @@ export class ActivityBestSplitsModifier implements IModifier {
         $("#segments").addClass("best-splits-processed");
 
         let segments: JQuery = $("#segments"),
-            bestSplitsHeader = $('<h3 class="button bestsplits-header-title" style="width: 45%; padding-right:50px; padding-left:50px; margin-left:20px;">Best splits</h3>')
+			bestSplitsHeader = $("<h3 class=\"button bestsplits-header-title\" style=\"width: 45%; padding-right:50px; padding-left:50px; margin-left:20px;\">Best splits</h3>")
                 .css("display", "inline")
                 .css("margin-right", "5px"),
 

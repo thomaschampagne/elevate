@@ -1,5 +1,6 @@
-import {IElevationData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {AbstractDataView} from "./AbstractDataView";
+import { IElevationData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { AbstractDataView } from "./AbstractDataView";
+
 export class ElevationDataView extends AbstractDataView {
     protected elevationData: IElevationData;
 
@@ -15,7 +16,7 @@ export class ElevationDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle('<img src="' + this.appResources.logArrowUpIcon + '" style="vertical-align: baseline; height:20px;"/> ELEVATION <a target="_blank" href="' + this.appResources.settingsLink + '#!/zonesSettings/elevation" style="float: right;margin-right: 10px;"><img src="' + this.appResources.cogIcon + '" style="vertical-align: baseline; height:20px;"/></a>');
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.logArrowUpIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> ELEVATION <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/elevation\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 2); // (col, row)

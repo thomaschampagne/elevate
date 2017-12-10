@@ -64,7 +64,7 @@ export class GoalsModifier implements IModifier {
                 },
             );
         });
-    }
+	};
 
     /**
      * Add a progress bar for weekly progress.
@@ -109,7 +109,7 @@ export class GoalsModifier implements IModifier {
             $view, scaledGoal, actual, weekProgress);
         this.labelProgressBar(bar, "this week");
         $view.append(bar);
-    }
+	};
 
     /**
      * Determine the current week number.
@@ -132,7 +132,7 @@ export class GoalsModifier implements IModifier {
             counter.setDate(counter.getDate() + 7);
         }
         return week;
-    }
+	};
 
     /**
      * Determine the number of weeks in the current year.
@@ -150,7 +150,7 @@ export class GoalsModifier implements IModifier {
             counter.setDate(counter.getDate() + 7);
         }
         return week;
-    }
+	};
 
     /**
      * Add a progress bar for monthly progress.
@@ -211,7 +211,7 @@ export class GoalsModifier implements IModifier {
             ][now.getMonth()],
         );
         $view.append(bar);
-    }
+	};
 
     /**
      * Get activities since the start of the current month.
@@ -238,7 +238,7 @@ export class GoalsModifier implements IModifier {
                     dataType: "json",
                     success: (response: ActivityCollectionPage) => {
                         let monthStartReached = false;
-                        activities.push(... response.models);
+						activities.push(...response.models);
                         for (const activity of response.models) {
                             // activity.start_date_local_raw is in seconds, monthStart is in ms
                             if (activity.start_date_local_raw * 1000 < +monthStart) {
@@ -261,7 +261,7 @@ export class GoalsModifier implements IModifier {
             };
             request(1);
         });
-    }
+	};
 
     /**
      * Calculate the athletes actual activity.
@@ -299,7 +299,7 @@ export class GoalsModifier implements IModifier {
             }
         }
         return actual;
-    }
+	};
 
     /**
      * Find current goal by inspecting a .js-edit element.
@@ -344,17 +344,17 @@ export class GoalsModifier implements IModifier {
             value: goalNumeric,
             units: goalUnits,
         };
-    }
+	};
 
     /**
      * Find the firts progress bar in a .js-view element.
      */
     private findProgressBar = ($view: JQuery): JQuery => {
         return $view
-            .find('[id$="-yearly-progress-container"]')
+			.find("[id$=\"-yearly-progress-container\"]")
             .first()
             ;
-    }
+	};
 
     /**
      * Create a new goal tracing progres bar.
@@ -395,7 +395,7 @@ export class GoalsModifier implements IModifier {
         $container
             .find(".primary-stats")
             .contents()
-            .filter(function() {
+			.filter(function () {
                 return this.nodeType === 3;
             })
             .last()
@@ -421,7 +421,7 @@ export class GoalsModifier implements IModifier {
         );
         this.updateProgressBarSVG($svg, goal, actual, progress);
         return $container;
-    }
+	};
 
     /**
      * Update the <svg> element of a progress bar.
@@ -445,7 +445,7 @@ export class GoalsModifier implements IModifier {
         const $marker = $svg.find("line.progress-marker");
         const $markerText = $svg.find("text");
         let width = parseInt($container.attr("width"), 10);
-        if ( actual > goal.value ) {
+		if (actual > goal.value) {
             $container.attr("width", width * goal.value / actual);
             width = parseInt($container.attr("width"));
         }
@@ -476,7 +476,7 @@ export class GoalsModifier implements IModifier {
             .attr("x", markerX)
             .attr("text-anchor", markerTextAnchor)
         ;
-    }
+	};
 
     /*
      * Add a label to a progress bar.
@@ -493,7 +493,7 @@ export class GoalsModifier implements IModifier {
             .css("font-size", "0.6em")
         ;
         $bar.find(".primary-stats").append($label);
-    }
+	};
 
     /**
      * Format a goal, including units.
@@ -528,7 +528,7 @@ export class GoalsModifier implements IModifier {
             formattedUnits = "";
         }
         return `${formattedValue}${formattedUnits}`;
-    }
+	};
 }
 
 /**

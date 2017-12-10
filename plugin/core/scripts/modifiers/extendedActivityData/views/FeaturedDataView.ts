@@ -1,8 +1,12 @@
 import * as _ from "lodash";
-import {Helper} from "../../../../../common/scripts/Helper";
-import {IActivityBasicInfo, IAnalysisData, ISpeedUnitData} from "../../../../../common/scripts/interfaces/IActivityData";
-import {IUserSettings} from "../../../../../common/scripts/interfaces/IUserSettings";
-import {AbstractDataView} from "./AbstractDataView";
+import { Helper } from "../../../../../common/scripts/Helper";
+import {
+	IActivityBasicInfo,
+	IAnalysisData,
+	ISpeedUnitData
+} from "../../../../../common/scripts/interfaces/IActivityData";
+import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { AbstractDataView } from "./AbstractDataView";
 
 export class FeaturedDataView extends AbstractDataView {
 
@@ -41,7 +45,7 @@ export class FeaturedDataView extends AbstractDataView {
 
             this.insertDataIntoGrid();
 
-            this.content += '<div class="featuredData">' + this.grid.html() + "</div>";
+			this.content += "<div class=\"featuredData\">" + this.grid.html() + "</div>";
         }
     }
 

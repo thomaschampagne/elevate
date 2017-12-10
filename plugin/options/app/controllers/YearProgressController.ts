@@ -2,10 +2,10 @@ import * as angular from "angular";
 import * as d3 from "d3";
 import * as _ from "lodash";
 import * as moment from "moment";
-import {Moment} from "moment";
-import {ChromeStorageService} from "../services/ChromeStorageService";
+import { Moment } from "moment";
+import { ChromeStorageService } from "../services/ChromeStorageService";
 
-import {ISyncActivityComputed} from "../../../common/scripts/interfaces/ISync";
+import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
 
 export interface IYearProgress {
     year: number;

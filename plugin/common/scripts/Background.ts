@@ -1,5 +1,5 @@
-import {Helper} from "./Helper";
-import {IStorageUsage, StorageManager} from "./modules/StorageManager";
+import { Helper } from "./Helper";
+import { IStorageUsage, StorageManager } from "./modules/StorageManager";
 
 class Background {
 
@@ -25,7 +25,7 @@ class Background {
                     break;
 
                 case Helper.getFromStorageMethod:
-                    this.storageManager.getFromStorage(request.params.storage, request.params.key, function(returnedValue: any) {
+					this.storageManager.getFromStorage(request.params.storage, request.params.key, function (returnedValue: any) {
                         sendResponse({
                             data: returnedValue,
                         });
@@ -33,7 +33,7 @@ class Background {
                     break;
 
                 case Helper.setToStorageMethod:
-                    this.storageManager.setToStorage(request.params.storage, request.params.key, request.params.value, function(returnAllData: any) {
+					this.storageManager.setToStorage(request.params.storage, request.params.key, request.params.value, function (returnAllData: any) {
                         sendResponse({
                             data: returnAllData,
                         });
@@ -41,7 +41,7 @@ class Background {
                     break;
 
                 case Helper.removeFromStorageMethod:
-                    this.storageManager.removeFromStorage(request.params.storage, request.params.key, function(returnAllData: any) {
+					this.storageManager.removeFromStorage(request.params.storage, request.params.key, function (returnAllData: any) {
                         sendResponse({
                             data: returnAllData,
                         });
@@ -49,7 +49,7 @@ class Background {
                     break;
 
                 case Helper.getStorageUsageMethod:
-                    this.storageManager.getStorageUsage(request.params.storage, function(response: IStorageUsage) {
+					this.storageManager.getStorageUsage(request.params.storage, function (response: IStorageUsage) {
                         sendResponse({
                             data: response,
                         });
