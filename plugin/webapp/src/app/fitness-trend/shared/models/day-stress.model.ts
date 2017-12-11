@@ -23,19 +23,19 @@ export class DayStressModel {
 	}
 
 	public printTrimpScore(): string {
-		return this.trimpScore.toFixed(0);
+		return (this.trimpScore) ? this.trimpScore.toFixed(0) : "-";
 	}
 
 	public printPowerStressScore(): string {
-		return this.powerStressScore.toFixed(0);
+		return (this.powerStressScore) ? this.powerStressScore.toFixed(0) : "-";
 	}
 
 	public printSwimStressScore(): string {
-		return this.swimStressScore.toFixed(0);
+		return (this.swimStressScore) ? this.swimStressScore.toFixed(0) : "-";
 	}
 
 	public printFinalStressScore(): string {
-		return this.finalStressScore.toFixed(0);
+		return (this.finalStressScore) ? this.finalStressScore.toFixed(0) : "-";
 	}
 
 }

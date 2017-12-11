@@ -57,15 +57,19 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return niceDate;
 	}
 
-	public printActivities(): string {
+	public printActivities(restValue?: string): string {
 
-		let printed = "Rest day";
+		let printed = (restValue) ? restValue : "Rest day";
 		if (this.activitiesName.length > 0) {
 			printed = this.activitiesName.join("; ");
 		} else if (this.previewDay) {
 			printed = "-";
 		}
 		return printed;
+	}
+
+	public printTypes(): string {
+		return this.type.join("; ");
 	}
 
 }

@@ -4,6 +4,7 @@ import { FitnessService } from "../shared/service/fitness.service";
 import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
+import * as _ from "lodash";
 
 @Component({
 	selector: 'app-fitness-trend-table',
@@ -34,7 +35,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
 
-		this.displayedColumns = ['date', 'type', 'trimpScore', 'powerStressScore'];
+		this.displayedColumns = ['date', 'type', 'activities', 'trimpScore', 'powerStressScore'];
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
@@ -45,8 +46,15 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 		}).then((fitnessTrendModels: DayFitnessTrendModel[]) => {
 
-			// this.fitnessTrend = fitnessTrendModels;
-			// this.dataSource = new MatTableDataSource<DayFitnessTrendModel>(fitnessTrendModels);
+			// Remove preview days
+			fitnessTrendModels = _.filter(fitnessTrendModels, {
+				previewDay: false,
+			});
+
+			/*_.forEach(fitnessTrendModels, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+
+			});*/
+
 			this.dataSource.data = fitnessTrendModels;
 
 		}, error => {
