@@ -2,7 +2,7 @@
 	<mat-table #table [dataSource]="dataSource" matSort>
 
 		<ng-container matColumnDef="date">
-			<mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.date | date: 'MMM dd, yyyy'}}</mat-cell>
 		</ng-container>
 
@@ -21,7 +21,7 @@
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.printActivities("-")}}</mat-cell>
 		</ng-container>
 
-		<ng-container matColumnDef="trimpScore" mat-sort-header>
+		<ng-container matColumnDef="trimpScore">
 			<mat-header-cell *matHeaderCellDef>Trimp</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.printTrimpScore()}}</mat-cell>
 		</ng-container>

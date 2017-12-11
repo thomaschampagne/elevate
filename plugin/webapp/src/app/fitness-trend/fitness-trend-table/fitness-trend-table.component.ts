@@ -39,7 +39,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
 		// this.dataSource.sortingDataAccessor
 
-		this.dataSource.sortingDataAccessor = (data: DayFitnessTrendModel, sortHeaderId: string) => {
+		/*this.dataSource.sortingDataAccessor = (data: DayFitnessTrendModel, sortHeaderId: string) => {
 			switch (sortHeaderId) {
 				case 'date':
 					return data.timestamp;
@@ -53,7 +53,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 				default:
 					return '';
 			}
-		};
+		};*/
 
 		this.displayedColumns = ['date', 'timestamp', 'type', 'activities', 'trimpScore', 'powerStressScore'];
 
