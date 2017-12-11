@@ -8,7 +8,7 @@ import { AthleteSettingsComponent } from "../athlete-settings/athlete-settings.c
 import { CommonSettingsComponent } from "../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../zones-settings/zones-settings.component";
 import { ZoneComponent } from "../zones-settings/zone/zone.component";
-import { FitnessTrendGraphComponent } from "../fitness-trend/graph/fitness-trend-graph.component";
+import { FitnessTrendGraphComponent } from "../fitness-trend/fitness-trend-graph/fitness-trend-graph.component";
 import { SwimFtpHelperComponent } from "../athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
 import { ZonesImportExportDialogComponent } from "../zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 import { ZoneToolBarComponent } from "../zones-settings/zone-tool-bar/zone-tool-bar.component";
@@ -24,7 +24,9 @@ import { FitnessService } from "../fitness-trend/shared/service/fitness.service"
 import { OptionHelperReaderService } from "../common-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
-import { FitnessInfoDialogComponent } from "../fitness-trend/graph/fitness-info-dialog/fitness-info-dialog.component";
+import { FitnessInfoDialogComponent } from "../fitness-trend/fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
+import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table/fitness-trend-table.component";
+import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
 
 @NgModule({
 	declarations: [
@@ -35,7 +37,9 @@ import { FitnessInfoDialogComponent } from "../fitness-trend/graph/fitness-info-
 		SwimFtpHelperComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
+		FitnessTrendComponent,
 		FitnessTrendGraphComponent,
+		FitnessTrendTableComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,
@@ -43,7 +47,7 @@ import { FitnessInfoDialogComponent } from "../fitness-trend/graph/fitness-info-
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		FitnessInfoDialogComponent // TODO Move in a below m
+		FitnessInfoDialogComponent // TODO Move in a below module?!
 
 	],
 	entryComponents: [
