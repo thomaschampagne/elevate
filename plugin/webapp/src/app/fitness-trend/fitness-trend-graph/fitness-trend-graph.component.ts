@@ -499,7 +499,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: window.innerHeight * 0.60,
+			height: window.innerHeight * 0.55,
 			right: 40,
 			baselines: [],
 			animate_on_load: false,

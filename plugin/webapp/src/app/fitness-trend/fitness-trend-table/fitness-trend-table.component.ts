@@ -1,22 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { FitnessService } from "../shared/service/fitness.service";
 import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
+import { MatPaginator, MatTableDataSource } from "@angular/material";
 
 @Component({
 	selector: 'app-fitness-trend-table',
 	templateUrl: './fitness-trend-table.component.html',
 	styleUrls: ['./fitness-trend-table.component.scss']
 })
-export class FitnessTrendTableComponent implements OnInit {
+export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 	public readonly isSwimEnabled: boolean = true;
 	public readonly isPowerMeterEnabled: boolean = true;
 
-	public fitnessTrend: DayFitnessTrendModel[];
+	@ViewChild(MatPaginator)
+	public paginator: MatPaginator;
+
+	// public fitnessTrend: DayFitnessTrendModel[];
 	public cyclingFtp: number = null;
 	public swimFtp: number = null;
+	public displayedColumns: string[];
+	public dataSource: MatTableDataSource<DayFitnessTrendModel>;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private fitnessService: FitnessService) {
@@ -25,10 +31,10 @@ export class FitnessTrendTableComponent implements OnInit {
 	public ngOnInit(): void {
 
 		console.warn("Run FitnessTrendTable Component ngOnInit");
-		this.setup();
-	}
 
-	private setup(): void {
+		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
+
+		this.displayedColumns = ['date', 'type', 'trimpScore', 'powerStressScore'];
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
@@ -37,15 +43,23 @@ export class FitnessTrendTableComponent implements OnInit {
 
 			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 
-		}).then((fullFitnessTrend: DayFitnessTrendModel[]) => {
+		}).then((fitnessTrendModels: DayFitnessTrendModel[]) => {
 
-			this.fitnessTrend = fullFitnessTrend;
+			// this.fitnessTrend = fitnessTrendModels;
+			// this.dataSource = new MatTableDataSource<DayFitnessTrendModel>(fitnessTrendModels);
+			this.dataSource.data = fitnessTrendModels;
 
 		}, error => {
 
-			this.fitnessTrend = [];
+			// this.fitnessTrend = [];
 			console.error(error);
 
 		});
 	}
+
+
+	public ngAfterViewInit(): void {
+		this.dataSource.paginator = this.paginator;
+	}
+
 }

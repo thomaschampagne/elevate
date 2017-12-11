@@ -1,5 +1,38 @@
-<mat-card *ngIf="(fitnessTrend && fitnessTrend.length > 0)">
-<pre>
-	fitnessTrend: {{fitnessTrend.length}}
-</pre>
+<mat-card *ngIf="(dataSource)">
+	<mat-table #table [dataSource]="dataSource">
+
+		<!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+		<!-- Position Column -->
+		<ng-container matColumnDef="date">
+			<mat-header-cell *matHeaderCellDef> Date</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.date}}</mat-cell>
+		</ng-container>
+
+		<!-- Name Column -->
+		<ng-container matColumnDef="type">
+			<mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.type}}</mat-cell>
+		</ng-container>
+
+		<!-- Weight Column -->
+		<ng-container matColumnDef="trimpScore">
+			<mat-header-cell *matHeaderCellDef> Trimp</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.trimpScore}}</mat-cell>
+		</ng-container>
+
+		<!-- Symbol Column -->
+		<ng-container matColumnDef="powerStressScore">
+			<mat-header-cell *matHeaderCellDef> Pss</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.powerStressScore}}</mat-cell>
+		</ng-container>
+
+		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+	</mat-table>
+	<mat-paginator #paginator
+				   [pageSize]="10"
+				   [pageSizeOptions]="[5, 10, 20]">
+	</mat-paginator>
 </mat-card>
