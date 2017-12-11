@@ -1,9 +1,14 @@
-<mat-card *ngIf="(dataSource)">
-	<mat-table #table [dataSource]="dataSource">
+<mat-card>
+	<mat-table #table [dataSource]="dataSource" matSort>
 
 		<ng-container matColumnDef="date">
-			<mat-header-cell *matHeaderCellDef> Date</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.date | date: 'MMM dd, yyyy'}}</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="timestamp">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>timestamp</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.timestamp}}</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="type">
@@ -12,17 +17,17 @@
 		</ng-container>
 
 		<ng-container matColumnDef="activities">
-			<mat-header-cell *matHeaderCellDef> Type</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Activities</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.printActivities("-")}}</mat-cell>
 		</ng-container>
 
-		<ng-container matColumnDef="trimpScore">
-			<mat-header-cell *matHeaderCellDef> Trimp</mat-header-cell>
+		<ng-container matColumnDef="trimpScore" mat-sort-header>
+			<mat-header-cell *matHeaderCellDef>Trimp</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.printTrimpScore()}}</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="powerStressScore">
-			<mat-header-cell *matHeaderCellDef> Pss</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Pss</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend"> {{dayFitnessTrend.printPowerStressScore()}}</mat-cell>
 		</ng-container>
 

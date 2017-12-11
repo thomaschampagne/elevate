@@ -3,7 +3,7 @@ import { UserSettingsService } from "../../shared/services/user-settings/user-se
 import { FitnessService } from "../shared/service/fitness.service";
 import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
 
 @Component({
@@ -18,6 +18,9 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
+
+	@ViewChild(MatSort)
+	public sort: MatSort;
 
 	// public fitnessTrend: DayFitnessTrendModel[];
 	public cyclingFtp: number = null;
@@ -34,8 +37,25 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		console.warn("Run FitnessTrendTable Component ngOnInit");
 
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
+		// this.dataSource.sortingDataAccessor
 
-		this.displayedColumns = ['date', 'type', 'activities', 'trimpScore', 'powerStressScore'];
+		this.dataSource.sortingDataAccessor = (data: DayFitnessTrendModel, sortHeaderId: string) => {
+			switch (sortHeaderId) {
+				case 'date':
+					return data.timestamp;
+				case 'Date':
+					return data.timestamp;
+				// case 'trimpScore':
+				// 	return data.trimpScore;
+				// case 'userName': return data.name;
+				// case 'progress': return +data.progress;
+				// case 'color': return data.color;
+				default:
+					return '';
+			}
+		};
+
+		this.displayedColumns = ['date', 'timestamp', 'type', 'activities', 'trimpScore', 'powerStressScore'];
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
@@ -68,6 +88,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 	public ngAfterViewInit(): void {
 		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
 	}
 
 }
