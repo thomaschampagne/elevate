@@ -4,7 +4,7 @@ import { MaterialModule } from "../../shared/modules/material.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 
-xdescribe("SwimFtpHelperComponent", () => {
+describe("SwimFtpHelperComponent", () => {
 
 	let component: SwimFtpHelperComponent;
 	let fixture: ComponentFixture<SwimFtpHelperComponent>;
@@ -27,27 +27,38 @@ xdescribe("SwimFtpHelperComponent", () => {
 	});
 
 	it("should convert swim speed to pace (1)", () => {
+
 		// Given
 		const swimFtp = 1;
 
 		// When
-		expect(SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp)).toBe("01:40:00");
+		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
+
+		// Then
+		expect(actual).toBe("01:40:00");
 	});
 
 	it("should convert swim speed to pace (2)", () => {
+
 		// Given
 		const swimFtp = 31;
 
 		// When
-		expect(SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp)).toBe("00:03:14");
+		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
+
+		// Then
+		expect(actual).toBe("00:03:14");
 	});
 
 	it("should convert swim speed to pace (3)", () => {
+
 		// Given
 		const swimFtp = 500;
 
 		// When
 		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
+
+		// Then
 		expect(actual).toBe("00:00:12");
 	});
 });

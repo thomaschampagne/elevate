@@ -45,7 +45,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public isSwimFtpCalculatorEnabled = false;
 
-	constructor(private userSettingsService: UserSettingsService,
+	constructor(public userSettingsService: UserSettingsService,
 				private snackBar: MatSnackBar) {
 	}
 
