@@ -4,10 +4,10 @@ import { AppRoutesModel } from "../models/app-routes.model";
 import { AthleteSettingsComponent } from "../../athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
-import { FitnessTrendGraphComponent } from "../../fitness-trend/fitness-trend-graph/fitness-trend-graph.component";
+import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
 
 export const routes: Routes = [
-	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendGraphComponent},
+	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendComponent},
 	{path: AppRoutesModel.commonSettings, component: CommonSettingsComponent},
 	{path: AppRoutesModel.athleteSettings, component: AthleteSettingsComponent},
 	{path: AppRoutesModel.zonesSettings, component: ZonesSettingsComponent},

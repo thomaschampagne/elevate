@@ -17,6 +17,7 @@ import {
 	MatSlideToggleModule,
 	MatSnackBarModule,
 	MatTableModule,
+	MatTabsModule,
 	MatToolbarModule,
 	MatTooltipModule
 } from "@angular/material";
@@ -43,7 +44,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatGridListModule,
 		MatSlideToggleModule,
 		MatDatepickerModule,
-		MatNativeDateModule
+		MatNativeDateModule,
+		MatTabsModule
 	],
 	exports: [
 		MatButtonModule,
@@ -65,7 +67,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatGridListModule,
 		MatSlideToggleModule,
 		MatDatepickerModule,
-		MatNativeDateModule
+		MatNativeDateModule,
+		MatTabsModule
 	],
 	declarations: []
 })

@@ -1,3 +1,12 @@
-<p>
-	fitness-trend works!
-</p>
+<mat-tab-group
+	(focusChange)="onFocusChange($event)"
+	(selectedTabChange)="onSelectedTabChange($event)"
+	(selectChange)="onSelectChange($event)"
+	(selectedIndexChange)="onSelectedIndexChange($event)">
+	<mat-tab label="Chart">
+		<app-fitness-trend-graph></app-fitness-trend-graph>
+	</mat-tab>
+	<mat-tab label="Table">
+		<app-fitness-trend-table *ngIf="fitnessTableActive"></app-fitness-trend-table>
+	</mat-tab>
+</mat-tab-group>

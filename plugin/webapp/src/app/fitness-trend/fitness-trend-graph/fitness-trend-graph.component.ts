@@ -18,7 +18,7 @@ import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 
 @Component({
-	selector: "app-fitness-trend",
+	selector: "app-fitness-trend-graph",
 	templateUrl: "./fitness-trend-graph.component.html",
 	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
@@ -75,9 +75,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
 
-		}).then((fullFitnessTrend: DayFitnessTrendModel[]) => {
+		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
-			this.fitnessTrend = fullFitnessTrend;
+			this.fitnessTrend = fitnessTrend;
 			this.setup();
 
 		}, error => {
@@ -112,9 +112,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.PERFORMANCE_MARKER = performance.now();
 
 		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
-			.then((fullFitnessTrend: DayFitnessTrendModel[]) => {
+			.then((fitnessTrend: DayFitnessTrendModel[]) => {
 
-				this.fitnessTrend = fullFitnessTrend;
+				this.fitnessTrend = fitnessTrend;
 				this.setupViewableGraphData();
 				this.updateGraph();
 
