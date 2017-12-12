@@ -85,7 +85,7 @@ export class UserSettingsDao {
 				return;
 			}
 
-			const absoluteObject = this.createObjectAtPath(path, setting);
+			const absoluteObject = this.createNestedObject(path, setting);
 
 			this.chromeStorageSync().set(absoluteObject, () => {
 				this.fetch().then((userSettingsResult: IUserSettings) => {
@@ -97,14 +97,14 @@ export class UserSettingsDao {
 
 	/**
 	 *
-	 * @param {string} path
-	 * @param {Object} obj
+	 * @param {string} nestedPath
+	 * @param {Object} objectToInsert
 	 * @returns {Object}
 	 */
-	public createObjectAtPath(path: string, obj: Object): Object {
+	public createNestedObject(nestedPath: string, objectToInsert: Object): Object {
 		const absoluteObject: Object = {};
-		if (!_.has(absoluteObject, path)) {
-			_.set(absoluteObject, path, obj);
+		if (!_.has(absoluteObject, nestedPath)) {
+			_.set(absoluteObject, nestedPath, objectToInsert);
 		}
 		return absoluteObject;
 	}
