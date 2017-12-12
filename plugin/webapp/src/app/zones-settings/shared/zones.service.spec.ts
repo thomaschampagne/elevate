@@ -584,10 +584,10 @@ describe("ZonesService", () => {
 
 	it("should return not compliant zones is zone empty", (done: Function) => {
 
-		// When
+		// Given
 		const zones = null;
 
-		// Given
+		// When
 		const error: string = zonesService.isZonesCompliant(zones);
 
 		// Then
@@ -704,11 +704,11 @@ describe("ZonesService", () => {
 
 	it("should notify step changes", (done: Function) => {
 
-		// When
+		// Given
 		const step = 0.25;
 		const stepUpdatesSpy = spyOn(zonesService.stepUpdates, "next");
 
-		// Given
+		// When
 		zonesService.notifyStepChange(step);
 
 		// Then
@@ -720,14 +720,14 @@ describe("ZonesService", () => {
 
 	it("should import zones", (done: Function) => {
 
-		// When
+		// Given
 		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]";
 		const zonesToImport: IZone[] = <IZone[]> JSON.parse(jsonInput);
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
-		// Given
+		// When
 		const promiseImport = zonesService.importZones(jsonInput);
 
 		// Then
@@ -751,14 +751,14 @@ describe("ZonesService", () => {
 
 	it("should not import zones with wrong JSON data", (done: Function) => {
 
-		// When
+		// Given
 		const wrongJsonInput = ("[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]")
 			.replace(",", "");
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
-		// Given
+		// When
 		const promiseImport = zonesService.importZones(wrongJsonInput);
 
 		// Then
@@ -782,12 +782,12 @@ describe("ZonesService", () => {
 
 	it("should not import zones with not compliant zones but valid JSON", (done: Function) => {
 
-		// When
+		// Given
 		const expectedError = "149";
 		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":" + expectedError + ",\"to\":160}]";
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
-		// Given
+		// When
 		const promiseImport = zonesService.importZones(jsonInput);
 
 		// Then

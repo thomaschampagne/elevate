@@ -1,16 +1,31 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { OptionHelperDialogComponent } from "./option-helper-dialog.component";
-import { MaterialModule } from "../../shared/modules/material.module";
+import { CoreModule } from "../../core/core.module";
+import { SharedModule } from "../../shared/shared.module";
+import { OptionHelperDataModel } from "./option-helper-data.model";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 
-xdescribe("OptionHelperDialogComponent", () => {
+
+describe("OptionHelperDialogComponent", () => {
 	let component: OptionHelperDialogComponent;
 	let fixture: ComponentFixture<OptionHelperDialogComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [MaterialModule],
-			declarations: [OptionHelperDialogComponent],
+			imports: [
+				CoreModule,
+				SharedModule,
+			],
+			declarations: [],
+			providers: [
+				{
+					provide: MAT_DIALOG_DATA, useValue: new OptionHelperDataModel("title", "data"),
+				},
+				{
+					provide: MatDialogRef, useValue: {},
+				},
+			]
 		}).compileComponents();
 	}));
 
