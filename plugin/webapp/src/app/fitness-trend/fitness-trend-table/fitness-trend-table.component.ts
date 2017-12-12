@@ -85,6 +85,11 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	public applyFilter(filterValue: string): void {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.dataSource.filter = filterValue;
+	}
 
 	public ngAfterViewInit(): void {
 		this.dataSource.paginator = this.paginator;
