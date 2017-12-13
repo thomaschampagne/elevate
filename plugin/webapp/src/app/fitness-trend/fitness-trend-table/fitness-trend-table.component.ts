@@ -5,6 +5,7 @@ import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSet
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
+import { FitnessTrendComponent } from "../fitness-trend.component";
 
 @Component({
 	selector: 'app-fitness-trend-table',
@@ -109,6 +110,10 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public ngAfterViewInit(): void {
 		this.dataSource.paginator = this.matPaginator;
 		this.dataSource.sort = this.matSort;
+	}
+
+	public onOpenActivities(ids: number[]): void {
+		FitnessTrendComponent.openActivities(ids);
 	}
 
 }

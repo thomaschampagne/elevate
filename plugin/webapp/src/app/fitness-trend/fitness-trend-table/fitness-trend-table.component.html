@@ -51,7 +51,12 @@
 
 		<ng-container matColumnDef="tsb">
 			<mat-header-cell *matHeaderCellDef mat-sort-header>Form</mat-header-cell>
-			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printForm()}}</mat-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend">
+				<button *ngIf="dayFitnessTrend.ids.length" mat-icon-button
+						(click)="onOpenActivities(dayFitnessTrend.ids)">
+					<mat-icon>open_in_new</mat-icon>
+				</button>
+			</mat-cell>
 		</ng-container>
 
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

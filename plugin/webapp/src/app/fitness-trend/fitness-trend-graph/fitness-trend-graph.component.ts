@@ -16,6 +16,7 @@ import { MatDialog } from "@angular/material";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
+import { FitnessTrendComponent } from "../fitness-trend.component";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -303,7 +304,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 */
 	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
 		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
-		this.openActivities(dayFitnessTrend.ids);
+		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
 	}
 
 	/**
@@ -344,24 +345,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
 	private onMarkerClick(dayFitnessTrend: DayFitnessTrendModel): void {
-		this.openActivities(dayFitnessTrend.ids)
-	}
-
-
-	/**
-	 *
-	 * @param {number[]} ids
-	 */
-	private openActivities(ids: number[]) {
-
-		if (ids.length > 0) {
-			const url = "https://www.strava.com/activities/{activityId}"; // TODO Move to be used elsewhere?! Table as instance
-			_.forEach(ids, (id: number) => {
-				window.open(url.replace("{activityId}", id.toString()), "_blank");
-			});
-		} else {
-			console.warn("No activities found");
-		}
+		FitnessTrendComponent.openActivities(dayFitnessTrend.ids)
 	}
 
 	/**
