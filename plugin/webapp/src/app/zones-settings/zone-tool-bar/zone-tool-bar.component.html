@@ -3,6 +3,7 @@
 		<mat-form-field class="zone-select">
 			<mat-select
 				aria-label="Zone selection"
+				id="zoneDefinitionSelection"
 				(change)="onZoneDefinitionSelected()"
 				[(ngModel)]="zoneDefinitionSelected">
 				<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
@@ -24,27 +25,27 @@
 				matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."/>
 		</mat-form-field>
 
-		<button mat-icon-button (click)="onAddLastZone()">
+		<button mat-icon-button id="addLastZone" (click)="onAddLastZone()">
 			<mat-icon class="info">add</mat-icon>
 		</button>
 
-		<button mat-icon-button (click)="onRemoveLastZone()">
+		<button mat-icon-button id="removeLastZone" (click)="onRemoveLastZone()">
 			<mat-icon class="info">delete</mat-icon>
 		</button>
 
-		<button mat-icon-button (click)="onSaveZones()">
+		<button mat-icon-button id="saveZones" (click)="onSaveZones()">
 			<mat-icon class="info">save</mat-icon>
 		</button>
 
-		<button mat-icon-button (click)="onResetZonesToDefault()">
+		<button mat-icon-button id="resetZonesToDefault" (click)="onResetZonesToDefault()">
 			<mat-icon class="info">refresh</mat-icon>
 		</button>
 
-		<button mat-icon-button (click)="onImportZones()">
+		<button mat-icon-button id="importZones" (click)="onImportZones()">
 			<mat-icon class="info">vertical_align_bottom</mat-icon>
 		</button>
 
-		<button mat-icon-button (click)="onExportZones()">
+		<button mat-icon-button id="exportZones" (click)="onExportZones()">
 			<mat-icon class="info">vertical_align_top</mat-icon>
 		</button>
 
