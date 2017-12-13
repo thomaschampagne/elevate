@@ -24,9 +24,13 @@ export class CommonSettingsComponent implements OnInit {
 	public sections: SectionModel[];
 	public searchText = null;
 
-	public static getOptionHelperDir(platformLocation: PlatformLocation) { // TODO Unit test
-		const location: Location = <Location> (<any> platformLocation).location;
-		const pathNames = location.pathname.split("/");
+	public static getOptionHelperDir(pathname: string): string {
+
+		if (_.isEmpty(pathname)) {
+			return null;
+		}
+
+		const pathNames = pathname.split("/");
 		pathNames.pop();
 		return pathNames.join("/") + "/assets/option-helpers/";
 	}
@@ -200,7 +204,8 @@ export class CommonSettingsComponent implements OnInit {
 		if (option) {
 
 			// Construct markdown template URI from asset option helper dir & option key
-			const markdownTemplateUri = CommonSettingsComponent.getOptionHelperDir(this.platformLocation) + option.key + ".md";
+			const pathName: string = this.platformLocation["location"].pathname;
+			const markdownTemplateUri = CommonSettingsComponent.getOptionHelperDir(pathName) + option.key + ".md";
 
 			this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
 

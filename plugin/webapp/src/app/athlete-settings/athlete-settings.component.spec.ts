@@ -18,9 +18,19 @@ describe("AthleteSettingsComponent", () => {
 	beforeEach(async(() => {
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
-			declarations: [AthleteSettingsComponent, SwimFtpHelperComponent],
-			providers: [UserSettingsService, UserSettingsDao]
+			imports: [
+				FormsModule,
+				MaterialModule,
+				BrowserAnimationsModule
+			],
+			declarations: [
+				AthleteSettingsComponent,
+				SwimFtpHelperComponent
+			],
+			providers: [
+				UserSettingsService,
+				UserSettingsDao
+			]
 		}).compileComponents();
 
 		userSettingsDao = TestBed.get(UserSettingsDao);

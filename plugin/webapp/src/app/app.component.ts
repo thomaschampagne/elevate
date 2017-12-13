@@ -45,10 +45,16 @@ export class AppComponent implements OnInit {
 		}
 	];
 
-	public static updateToolBarTitle(url: string): string {
-		const splitUrl = _.split(url, "/");
-		splitUrl.shift(); // Remove first slash
-		return _.startCase(_.upperFirst(_.first(splitUrl)));
+	public static updateToolBarTitle(routerUrl: string): string {
+
+		if (_.isEmpty(routerUrl)) {
+			return null;
+		}
+
+		const splitRouterUrl = _.split(routerUrl, "/");
+		splitRouterUrl.shift(); // Remove first slash
+		return _.startCase(_.upperFirst(_.first(splitRouterUrl)));
+
 	}
 
 	constructor(private router: Router) {

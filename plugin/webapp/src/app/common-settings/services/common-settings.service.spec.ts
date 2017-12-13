@@ -1,5 +1,4 @@
 import { inject, TestBed } from "@angular/core/testing";
-
 import { CommonSettingsService } from "./common-settings.service";
 
 describe("CommonSettingsService", () => {

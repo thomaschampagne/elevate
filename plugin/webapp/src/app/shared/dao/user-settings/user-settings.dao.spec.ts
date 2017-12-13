@@ -27,8 +27,8 @@ describe("UserSettingsDao", () => {
 	it("should create object at path", (done: Function) => {
 
 		// Given
-		const path = "a.b.c.d";
-		const object: any = {value: 10};
+		const nestedPath = "a.b.c.d";
+		const objectToInsert: any = {value: 10};
 
 		const expected = {
 			a: {
@@ -43,7 +43,7 @@ describe("UserSettingsDao", () => {
 		};
 
 		// When
-		const absoluteObject = userSettingsDao.createObjectAtPath(path, object);
+		const absoluteObject = userSettingsDao.createNestedObject(nestedPath, objectToInsert);
 
 		// Then
 		expect(absoluteObject).toEqual(expected);

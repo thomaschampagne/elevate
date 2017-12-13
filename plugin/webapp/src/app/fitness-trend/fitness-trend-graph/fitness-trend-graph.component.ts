@@ -95,7 +95,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 * Lines & marker viewable data
 	 * First graph draw
 	 */
-	private setup(): void {
+	public setup(): void {
 
 		this.setupGraphConfig();
 		this.setupTimeData();
@@ -220,7 +220,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	private updateGraph(): void {
+	public updateGraph(): void {
 
 		try {
 
@@ -242,7 +242,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	private updateViewableData(): void {
+	public updateViewableData(): void {
 
 		const lines: GraphPointModel[][] = [];
 		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
@@ -494,7 +494,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	private setupGraphConfig(): void {
+	public setupGraphConfig(): void {
 
 		this.graphConfig = {
 			data: [],
