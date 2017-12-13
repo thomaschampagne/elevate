@@ -17,12 +17,11 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public readonly isPowerMeterEnabled: boolean = true;
 
 	@ViewChild(MatPaginator)
-	public paginator: MatPaginator;
+	public matPaginator: MatPaginator;
 
 	@ViewChild(MatSort)
-	public sort: MatSort;
+	public matSort: MatSort;
 
-	// public fitnessTrend: DayFitnessTrendModel[];
 	public cyclingFtp: number = null;
 	public swimFtp: number = null;
 	public displayedColumns: string[];
@@ -34,28 +33,44 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 	public ngOnInit(): void {
 
-		console.warn("Run FitnessTrendTable Component ngOnInit");
-
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
-		// this.dataSource.sortingDataAccessor
 
-		/*this.dataSource.sortingDataAccessor = (data: DayFitnessTrendModel, sortHeaderId: string) => {
+		this.dataSource.sortingDataAccessor = (dayFitnessTrendModel: DayFitnessTrendModel, sortHeaderId: string) => {
 			switch (sortHeaderId) {
 				case 'date':
-					return data.timestamp;
-				case 'Date':
-					return data.timestamp;
-				// case 'trimpScore':
-				// 	return data.trimpScore;
-				// case 'userName': return data.name;
-				// case 'progress': return +data.progress;
-				// case 'color': return data.color;
+					return dayFitnessTrendModel.timestamp;
+
+				case 'type':
+					return dayFitnessTrendModel.type.join(","); // TODO (this fix solve order problem) Check with  DayFitnessTrendModel.printTypes how to rework
+
+				case 'activities':
+					return dayFitnessTrendModel.activitiesName.join(","); // TODO (this fix solve order problem) Check with  DayFitnessTrendModel.printActivities how to rework
+
+				case 'trimpScore':
+					return dayFitnessTrendModel.trimpScore;
+
+				case 'swimStressScore':
+					return dayFitnessTrendModel.swimStressScore;
+
+				case 'finalStressScore':
+					return dayFitnessTrendModel.finalStressScore;
+
+				case 'ctl':
+					return dayFitnessTrendModel.ctl;
+
+				case 'atl':
+					return dayFitnessTrendModel.atl;
+
+				case 'tsb':
+					return dayFitnessTrendModel.tsb;
+
 				default:
 					return '';
 			}
-		};*/
+		};
 
-		this.displayedColumns = ['date', 'timestamp', 'type', 'activities', 'trimpScore', 'powerStressScore'];
+		// TODO Add "link" column
+		this.displayedColumns = ['date', 'type', 'activities', 'trimpScore', 'powerStressScore', 'swimStressScore', 'finalStressScore', 'ctl', 'atl', 'tsb'];
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 
@@ -71,15 +86,15 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 				previewDay: false,
 			});
 
-			/*_.forEach(fitnessTrendModels, (dayFitnessTrendModel: DayFitnessTrendModel) => {
-
-			});*/
+			// Sort by
+			fitnessTrendModels = _.sortBy(fitnessTrendModels, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+				return dayFitnessTrendModel.timestamp * -1;
+			});
 
 			this.dataSource.data = fitnessTrendModels;
 
 		}, error => {
 
-			// this.fitnessTrend = [];
 			console.error(error);
 
 		});
@@ -92,8 +107,8 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	}
 
 	public ngAfterViewInit(): void {
-		this.dataSource.paginator = this.paginator;
-		this.dataSource.sort = this.sort;
+		this.dataSource.paginator = this.matPaginator;
+		this.dataSource.sort = this.matSort;
 	}
 
 }

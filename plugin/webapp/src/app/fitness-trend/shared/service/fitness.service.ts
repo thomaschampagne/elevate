@@ -281,7 +281,7 @@ export class FitnessService {
 			_.forEach(foundActivitiesThatDay, (activity: FitnessReadyActivityModel) => {
 
 				dayActivity.ids.push(activity.id);
-				dayActivity.activitiesName.push(activity.activityName);
+				dayActivity.addActivity(activity.activityName);
 				dayActivity.type.push(activity.type);
 
 				// Apply scores for that day
