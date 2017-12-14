@@ -3,7 +3,7 @@ export class DayStressModel {
 	public ids: number[];
 	public date: Date;
 	public timestamp: number;
-	public type: string[];
+	public types: string[];
 	public activitiesName: string[];
 
 	public trainingImpulseScore?: number = null;
@@ -17,7 +17,7 @@ export class DayStressModel {
 		this.ids = [];
 		this.date = date;
 		this.timestamp = date.getTime();
-		this.type = [];
+		this.types = [];
 		this.activitiesName = [];
 		this.previewDay = previewDay;
 	}

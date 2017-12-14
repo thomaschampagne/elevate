@@ -16,8 +16,8 @@
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.date | date: 'EEE, MMM dd, yyyy'}}</mat-cell>
 		</ng-container>
 
-		<ng-container matColumnDef="type">
-			<mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+		<ng-container matColumnDef="types">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Types</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printTypes("-")}}</mat-cell>
 		</ng-container>
 

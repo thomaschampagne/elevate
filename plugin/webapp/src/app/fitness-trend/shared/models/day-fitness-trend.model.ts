@@ -9,7 +9,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		super(dayStress.date, dayStress.previewDay);
 
 		this.ids = dayStress.ids;
-		this.type = dayStress.type;
+		this.types = dayStress.types;
 		this.activitiesName = dayStress.activitiesName;
 		this.trainingImpulseScore = dayStress.trainingImpulseScore;
 		this.powerStressScore = dayStress.powerStressScore;
@@ -63,10 +63,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public printTypes(defaultEmptyValue?: string): string {
 
-		if (this.type.length === 0) {
+		if (this.types.length === 0) {
 			return (defaultEmptyValue) ? defaultEmptyValue : "";
 		}
-		return this.type.join("; ");
+		return this.types.join("; ");
 
 	}
 

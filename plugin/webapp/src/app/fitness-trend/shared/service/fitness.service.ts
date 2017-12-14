@@ -282,7 +282,7 @@ export class FitnessService {
 
 				dayActivity.ids.push(activity.id);
 				dayActivity.activitiesName.push(activity.activityName);
-				dayActivity.type.push(activity.type);
+				dayActivity.types.push(activity.type);
 
 				// Apply scores for that day
 				// PSS

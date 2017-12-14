@@ -18,7 +18,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly CYCLING_POWER_STRESS_SCORE_ENABLED: boolean = true;
 
 	public static COLUMN_DATE: string = "date";
-	public static COLUMN_TYPE: string = "type";
+	public static COLUMN_TYPES: string = "types";
 	public static COLUMN_ACTIVITIES: string = "activities";
 	public static COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
 	public static COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
@@ -29,16 +29,16 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static COLUMN_TSB: string = "tsb";
 
 	public readonly displayedColumns: string[] = [
-		"date",
-		"type",
-		"activities",
-		"trainingImpulseScore",
-		"powerStressScore",
-		"swimStressScore",
-		"finalStressScore",
-		"ctl",
-		"atl",
-		"tsb"
+		FitnessTrendTableComponent.COLUMN_DATE,
+		FitnessTrendTableComponent.COLUMN_TYPES,
+		FitnessTrendTableComponent.COLUMN_ACTIVITIES,
+		FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
+		FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
+		FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
+		FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
+		FitnessTrendTableComponent.COLUMN_CTL,
+		FitnessTrendTableComponent.COLUMN_ATL,
+		FitnessTrendTableComponent.COLUMN_TSB
 	];
 
 	@ViewChild(MatPaginator)
@@ -104,7 +104,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 				case FitnessTrendTableComponent.COLUMN_DATE:
 					return dayFitnessTrendModel.timestamp;
 
-				case FitnessTrendTableComponent.COLUMN_TYPE:
+				case FitnessTrendTableComponent.COLUMN_TYPES:
 					return dayFitnessTrendModel.printTypes();
 
 				case FitnessTrendTableComponent.COLUMN_ACTIVITIES:
