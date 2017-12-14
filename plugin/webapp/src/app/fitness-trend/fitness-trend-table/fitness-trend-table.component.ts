@@ -27,6 +27,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static COLUMN_CTL: string = "ctl";
 	public static COLUMN_ATL: string = "atl";
 	public static COLUMN_TSB: string = "tsb";
+	public static COLUMN_LINKS: string = "links";
 
 	public readonly displayedColumns: string[] = [
 		FitnessTrendTableComponent.COLUMN_DATE,
@@ -38,7 +39,8 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
 		FitnessTrendTableComponent.COLUMN_CTL,
 		FitnessTrendTableComponent.COLUMN_ATL,
-		FitnessTrendTableComponent.COLUMN_TSB
+		FitnessTrendTableComponent.COLUMN_TSB,
+		FitnessTrendTableComponent.COLUMN_LINKS
 	];
 
 	@ViewChild(MatPaginator)
