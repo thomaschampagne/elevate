@@ -6,7 +6,7 @@ export class DayStressModel {
 	public type: string[];
 	public activitiesName: string[];
 
-	public trimpScore?: number = null; // TODO Refactor as trainingImpulseScore ==> Try & test :)
+	public trainingImpulseScore?: number = null;
 	public powerStressScore?: number = null;
 	public swimStressScore?: number = null;
 
@@ -22,8 +22,8 @@ export class DayStressModel {
 		this.previewDay = previewDay;
 	}
 
-	public printTrimpScore(): string {
-		return (this.trimpScore) ? this.trimpScore.toFixed(0) : "-";
+	public printTrainingImpulseScore(): string {
+		return (this.trainingImpulseScore) ? this.trainingImpulseScore.toFixed(0) : "-";
 	}
 
 	public printPowerStressScore(): string {

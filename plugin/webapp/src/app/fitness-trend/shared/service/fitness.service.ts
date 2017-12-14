@@ -72,7 +72,7 @@ export class FitnessService {
 						};
 
 						if (hasHeartRateData) {
-							fitnessReadyActivity.trimpScore = activity.extendedStats.heartRateData.TRIMP;
+							fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
 						}
 
 						if (isPowerMeterUsePossible) {
@@ -213,8 +213,8 @@ export class FitnessService {
 
 						const dayFitnessTrend: DayFitnessTrendModel = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
 
-						if (_.isNumber(dayStress.trimpScore) && dayStress.trimpScore > 0) {
-							dayFitnessTrend.trimpScore = dayStress.trimpScore;
+						if (_.isNumber(dayStress.trainingImpulseScore) && dayStress.trainingImpulseScore > 0) {
+							dayFitnessTrend.trainingImpulseScore = dayStress.trainingImpulseScore;
 						}
 
 						if (_.isNumber(dayStress.powerStressScore) && dayStress.powerStressScore > 0) {
@@ -296,11 +296,11 @@ export class FitnessService {
 				}
 
 				// TRIMP
-				if (activity.trimpScore) { // Check for TRIMP score if available
-					if (!dayActivity.trimpScore) { // Initialize value if not exists
-						dayActivity.trimpScore = 0;
+				if (activity.trainingImpulseScore) { // Check for TRIMP score if available
+					if (!dayActivity.trainingImpulseScore) { // Initialize value if not exists
+						dayActivity.trainingImpulseScore = 0;
 					}
-					dayActivity.trimpScore += activity.trimpScore;
+					dayActivity.trainingImpulseScore += activity.trainingImpulseScore;
 				}
 
 				// SwimSS
@@ -316,9 +316,9 @@ export class FitnessService {
 
 					dayActivity.finalStressScore += activity.powerStressScore;
 
-				} else if (activity.trimpScore) {
+				} else if (activity.trainingImpulseScore) {
 
-					dayActivity.finalStressScore += activity.trimpScore;
+					dayActivity.finalStressScore += activity.trainingImpulseScore;
 
 				} else if (activity.swimStressScore) {
 

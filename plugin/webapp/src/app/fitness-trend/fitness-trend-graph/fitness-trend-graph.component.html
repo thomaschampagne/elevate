@@ -106,13 +106,13 @@
 							<span *ngIf="viewedDay.finalStressScore">
 								Stress Score:
 								<!-- Trimp -->
-								<span *ngIf="viewedDay.trimpScore">
-									{{viewedDay.printTrimpScore()}} <sub><i>Trimp</i></sub>
+								<span *ngIf="viewedDay.trainingImpulseScore">
+									{{viewedDay.printTrainingImpulseScore()}} <sub><i>Trimp</i></sub>
 								</span>
 
 								<!--PSS-->
 								<span *ngIf="viewedDay.powerStressScore">
-									<span *ngIf="viewedDay.trimpScore">
+									<span *ngIf="viewedDay.trainingImpulseScore">
 										&nbsp;/&nbsp;
 									</span>
 									{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
@@ -120,7 +120,7 @@
 
 								<!--SwimSS-->
 								<span *ngIf="viewedDay.swimStressScore">
-									<span *ngIf="viewedDay.trimpScore">
+									<span *ngIf="viewedDay.trainingImpulseScore">
 										&nbsp;/&nbsp;
 									</span>
 									{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>

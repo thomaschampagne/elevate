@@ -206,7 +206,7 @@ describe("FitnessService", () => {
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
 
 			activity = _.find(result, {id: 332833796});
-			expect(activity.trimpScore.toFixed(3)).toEqual("191.715");
+			expect(activity.trainingImpulseScore.toFixed(3)).toEqual("191.715");
 
 			activity = _.find(result, {id: 873446053});
 			expect(activity.swimStressScore.toFixed(3)).toEqual("242.818");
@@ -272,7 +272,7 @@ describe("FitnessService", () => {
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
 
 			activity = _.find(dailyActivity, {ids: [332833796]});
-			expect(activity.trimpScore.toFixed(3)).toEqual("191.715");
+			expect(activity.trainingImpulseScore.toFixed(3)).toEqual("191.715");
 
 			activity = _.find(dailyActivity, {ids: [873446053]});
 			expect(activity.swimStressScore.toFixed(3)).toEqual("242.818");
@@ -328,7 +328,7 @@ describe("FitnessService", () => {
 			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
 
 			activity = _.find(fitnessTrend, {ids: [332833796]});
-			expect(activity.trimpScore.toFixed(3)).toEqual("191.715");
+			expect(activity.trainingImpulseScore.toFixed(3)).toEqual("191.715");
 
 			activity = _.find(fitnessTrend, {ids: [873446053]});
 			expect(activity.swimStressScore.toFixed(3)).toEqual("242.818");
