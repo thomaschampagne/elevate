@@ -42,10 +42,10 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 					return dayFitnessTrendModel.timestamp;
 
 				case 'type':
-					return dayFitnessTrendModel.type.join(","); // TODO (this fix solve order problem) Check with  DayFitnessTrendModel.printTypes how to rework
+					return dayFitnessTrendModel.printTypes();
 
 				case 'activities':
-					return dayFitnessTrendModel.activitiesName.join(","); // TODO (this fix solve order problem) Check with  DayFitnessTrendModel.printActivities how to rework
+					return dayFitnessTrendModel.printActivities();
 
 				case 'trimpScore':
 					return dayFitnessTrendModel.trimpScore;
@@ -66,11 +66,10 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 					return dayFitnessTrendModel.tsb;
 
 				default:
-					return '';
+					throw new Error("sortHeaderId '" + sortHeaderId + "' is not listed");
 			}
 		};
 
-		// TODO Add "link" column
 		this.displayedColumns = ['date', 'type', 'activities', 'trimpScore', 'powerStressScore', 'swimStressScore', 'finalStressScore', 'ctl', 'atl', 'tsb'];
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {

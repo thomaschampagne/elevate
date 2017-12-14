@@ -5,7 +5,6 @@ export class DayStressModel {
 	public timestamp: number;
 	public type: string[];
 	public activitiesName: string[];
-	public concatenatedActivities: string;
 
 	public trimpScore?: number = null; // TODO Refactor as trainingImpulseScore ==> Try & test :)
 	public powerStressScore?: number = null;
@@ -21,15 +20,6 @@ export class DayStressModel {
 		this.type = [];
 		this.activitiesName = [];
 		this.previewDay = previewDay;
-	}
-
-	public addActivity(name: string): void {
-
-		this.activitiesName.push(name);
-
-		if (name) {
-			this.concatenatedActivities = this.activitiesName.join("; ");
-		}
 	}
 
 	public printTrimpScore(): string {

@@ -11,7 +11,6 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.ids = dayStress.ids;
 		this.type = dayStress.type;
 		this.activitiesName = dayStress.activitiesName;
-		this.concatenatedActivities = dayStress.concatenatedActivities;
 		this.trimpScore = dayStress.trimpScore;
 		this.powerStressScore = dayStress.powerStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
@@ -54,31 +53,21 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return niceDate;
 	}
 
-	// TODO rework this like printTypes below!
-	// FIXME column order not working well
 	public printActivities(defaultEmptyValue?: string): string {
 
-		let printed = (defaultEmptyValue) ? defaultEmptyValue : "Rest day";
-		if (this.activitiesName.length > 0) {
-			printed = this.concatenatedActivities;
-		} else if (this.previewDay) {
-			printed = "-";
+		if (this.activitiesName.length === 0) {
+			return (defaultEmptyValue) ? defaultEmptyValue : "";
 		}
-		return printed;
+		return this.activitiesName.join("; ");
 	}
 
-	// FIXME column order not working well
 	public printTypes(defaultEmptyValue?: string): string {
 
 		if (this.type.length === 0) {
-
-			if (defaultEmptyValue) {
-				return defaultEmptyValue;
-			}
-			return null;
+			return (defaultEmptyValue) ? defaultEmptyValue : "";
 		}
-
 		return this.type.join("; ");
+
 	}
 
 }

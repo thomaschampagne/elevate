@@ -32,13 +32,10 @@ export class FitnessTrendComponent implements OnInit {
 	public ngOnInit(): void {
 	}
 
-
 	public onFocusChange(event: MatTabChangeEvent): void {
-		console.log("onFocusChange", event);
 	}
 
 	public onSelectedIndexChange(index: number): void {
-		console.log("onSelectedIndexChange", index);
 
 		if (index === FitnessTrendComponent.TABLE_TAB_INDEX) {
 			this.fitnessTableActive = true;
@@ -46,11 +43,9 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public onSelectedTabChange(event: MatTabChangeEvent): void {
-		console.log("onSelectedTabChange", event);
 	}
 
 	public onSelectChange(): void {
-		console.log("onSelectChange");
 	}
 
 }
