@@ -50,6 +50,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public cyclingFtp: number = null;
 	public swimFtp: number = null;
 	public dataSource: MatTableDataSource<DayFitnessTrendModel>;
+	public searchText: string;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private fitnessService: FitnessService) {
@@ -57,13 +58,13 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 	public ngOnInit(): void {
 		this.setup();
-		this.init();
+		this.start();
 	}
 
 	/**
 	 *
 	 */
-	private init() {
+	private start() {
 
 		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
 

@@ -1,7 +1,21 @@
 <mat-card>
-	<mat-form-field>
-		<input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter by type & activities name">
-	</mat-form-field>
+	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
+		<div fxFlex>
+		</div>
+		<mat-form-field fxFlex="50">
+			<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
+				   placeholder="Filter by type or activities name">
+			<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+					(click)="searchText=''">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+		<div fxFlex fxLayout="row" fxLayoutAlign="end center">
+			<button mat-icon-button>
+				<mat-icon>info</mat-icon>
+			</button>
+		</div>
+	</div>
 	<mat-table #table [dataSource]="dataSource" matSort>
 
 		<ng-container matColumnDef="date">
