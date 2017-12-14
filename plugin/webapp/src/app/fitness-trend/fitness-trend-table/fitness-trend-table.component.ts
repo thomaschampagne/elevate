@@ -50,6 +50,9 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 				case 'trimpScore':
 					return dayFitnessTrendModel.trimpScore;
 
+				case 'powerStressScore':
+					return dayFitnessTrendModel.powerStressScore;
+
 				case 'swimStressScore':
 					return dayFitnessTrendModel.swimStressScore;
 
