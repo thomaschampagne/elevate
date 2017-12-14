@@ -1,13 +1,10 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormsModule } from "@angular/forms";
 import { AthleteSettingsComponent } from "./athlete-settings.component";
-import { MaterialModule } from "../shared/modules/material.module";
-import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
+import { CoreModule } from "../core/core.module";
+import { SharedModule } from "../shared/shared.module";
 
 describe("AthleteSettingsComponent", () => {
 
@@ -19,17 +16,8 @@ describe("AthleteSettingsComponent", () => {
 
 		TestBed.configureTestingModule({
 			imports: [
-				FormsModule,
-				MaterialModule,
-				BrowserAnimationsModule
-			],
-			declarations: [
-				AthleteSettingsComponent,
-				SwimFtpHelperComponent
-			],
-			providers: [
-				UserSettingsService,
-				UserSettingsDao
+				CoreModule,
+				SharedModule,
 			]
 		}).compileComponents();
 

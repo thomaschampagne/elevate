@@ -27,7 +27,7 @@ export class ZoneToolBarComponent implements OnInit {
 	@Output("zoneDefinitionSelectedChange")
 	public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinitionModel> = new EventEmitter<ZoneDefinitionModel>();
 
-	constructor(private zonesService: ZonesService,
+	constructor(public zonesService: ZonesService,
 				private dialog: MatDialog,
 				private snackBar: MatSnackBar) {
 	}
