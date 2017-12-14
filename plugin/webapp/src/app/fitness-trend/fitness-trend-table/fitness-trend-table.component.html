@@ -1,7 +1,5 @@
 <mat-card>
 	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
-		<div fxFlex>
-		</div>
 		<mat-form-field fxFlex="50">
 			<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
 				   placeholder="Filter by type or activities name">
@@ -10,11 +8,6 @@
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
-		<div fxFlex fxLayout="row" fxLayoutAlign="end center">
-			<button mat-icon-button>
-				<mat-icon>info</mat-icon>
-			</button>
-		</div>
 	</div>
 	<mat-table #table [dataSource]="dataSource" matSort>
 
@@ -34,17 +27,17 @@
 		</ng-container>
 
 		<ng-container matColumnDef="trainingImpulseScore">
-			<mat-header-cell *matHeaderCellDef mat-sort-header>Trimp</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="Training Impulse">TRIMP</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printTrainingImpulseScore()}}</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="powerStressScore">
-			<mat-header-cell *matHeaderCellDef mat-sort-header>Pss</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="Power Stress Score">PSS</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printPowerStressScore()}}</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="swimStressScore">
-			<mat-header-cell *matHeaderCellDef mat-sort-header>SwimSS</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="Swim Stress Score">SwimSS</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printSwimStressScore()}}</mat-cell>
 		</ng-container>
 
@@ -80,4 +73,8 @@
 				   [pageSize]="10"
 				   [pageSizeOptions]="[5, 10, 20]">
 	</mat-paginator>
+
+	<i>I can't see "PSS" and/or "SwimSS" in this table. Why? Simply set your "cycling functional threshold power" and/or
+		"swimming functional threshold pace" in athlete settings and go back to this page.</i>
+
 </mat-card>
