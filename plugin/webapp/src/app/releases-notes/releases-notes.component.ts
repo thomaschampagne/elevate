@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { ReleasesNotesService } from "./releases-notes.service";
 import { IReleaseNote } from "../../../../common/scripts/ReleaseNotes";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
 	selector: 'app-releases-notes',
 	templateUrl: './releases-notes.component.html',
-	styleUrls: ['./releases-notes.component.scss'],
-	providers: [ReleasesNotesService]
+	styleUrls: ['./releases-notes.component.scss']
 })
 export class ReleasesNotesComponent implements OnInit {
 
 	public releasesNotes: IReleaseNote[];
 
-	constructor(public releasesNotesService: ReleasesNotesService) {
+	constructor(private route: ActivatedRoute) {
 	}
 
 	public ngOnInit() {
-		// TODO Fetch releasesNotes with a Content Resolver !!
-		this.releasesNotes = this.releasesNotesService.get();
+		this.route.data.subscribe((data: { releasesNotes: IReleaseNote[] }) => {
+			this.releasesNotes = data.releasesNotes;
+		});
 	}
-
 }

@@ -30,6 +30,7 @@ import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component"
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { DonateComponent } from "../donate/donate.component";
 import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
+import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 
 @NgModule({
 	declarations: [
@@ -75,7 +76,8 @@ import { ReleasesNotesComponent } from "../releases-notes/releases-notes.compone
 		FitnessService,
 		CommonSettingsService,
 		OptionHelperReaderService,
-		ZonesService
+		ZonesService,
+		ReleasesNotesResolverService
 
 	],
 	imports: [

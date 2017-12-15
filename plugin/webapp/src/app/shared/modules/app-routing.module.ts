@@ -7,16 +7,43 @@ import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.comp
 import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
 import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
+import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 
 export const routes: Routes = [
-	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendComponent},
-	{path: AppRoutesModel.commonSettings, component: CommonSettingsComponent},
-	{path: AppRoutesModel.athleteSettings, component: AthleteSettingsComponent},
-	{path: AppRoutesModel.zonesSettings, component: ZonesSettingsComponent},
-	{path: AppRoutesModel.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
-	{path: "", redirectTo: AppRoutesModel.commonSettings, pathMatch: "full"},
-	{path: AppRoutesModel.donate, component: DonateComponent},
-	{path: AppRoutesModel.releasesNotes, component: ReleasesNotesComponent},
+	{
+		path: AppRoutesModel.fitnessTrend,
+		component: FitnessTrendComponent
+	},
+	{
+		path: AppRoutesModel.commonSettings,
+		component: CommonSettingsComponent
+	},
+	{
+		path: AppRoutesModel.athleteSettings,
+		component: AthleteSettingsComponent
+	},
+	{
+		path: AppRoutesModel.zonesSettings,
+		component: ZonesSettingsComponent
+	},
+	{
+		path: AppRoutesModel.zonesSettings + "/:zoneValue",
+		component: ZonesSettingsComponent
+	},
+	{
+		path: "", redirectTo: AppRoutesModel.commonSettings, pathMatch: "full"
+	},
+	{
+		path: AppRoutesModel.donate,
+		component: DonateComponent
+	},
+	{
+		path: AppRoutesModel.releasesNotes,
+		component: ReleasesNotesComponent,
+		resolve: {
+			releasesNotes: ReleasesNotesResolverService
+		}
+	},
 ];
 
 @NgModule({
