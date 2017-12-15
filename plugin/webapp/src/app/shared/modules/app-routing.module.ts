@@ -5,6 +5,7 @@ import { AthleteSettingsComponent } from "../../athlete-settings/athlete-setting
 import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
 import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
+import { YearProgressComponent } from "../../year-progress/year-progress.component";
 
 export const routes: Routes = [
 	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendComponent},
@@ -12,6 +13,7 @@ export const routes: Routes = [
 	{path: AppRoutesModel.athleteSettings, component: AthleteSettingsComponent},
 	{path: AppRoutesModel.zonesSettings, component: ZonesSettingsComponent},
 	{path: AppRoutesModel.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
+	{path: AppRoutesModel.yearProgress, component: YearProgressComponent},
 	{path: "", redirectTo: AppRoutesModel.commonSettings, pathMatch: "full"},
 ];
 

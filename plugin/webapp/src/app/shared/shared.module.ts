@@ -27,6 +27,7 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 import { FitnessInfoDialogComponent } from "../fitness-trend/fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table/fitness-trend-table.component";
 import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
+import { YearProgressComponent } from "../year-progress/year-progress.component";
 
 @NgModule({
 	declarations: [
@@ -40,6 +41,7 @@ import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component"
 		FitnessTrendComponent,
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
+		YearProgressComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,

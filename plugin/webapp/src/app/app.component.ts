@@ -24,20 +24,22 @@ export class AppComponent implements OnInit {
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
 			routerLinkActive: true
-		},
-		{
+		}, {
+			name: "Year Progression",
+			icon: "date_range",
+			routerLink: AppRoutesModel.yearProgress,
+			routerLinkActive: true
+		}, {
 			name: "Common Settings",
 			icon: "settings",
 			routerLink: AppRoutesModel.commonSettings,
 			routerLinkActive: true
-		},
-		{
+		}, {
 			name: "Athlete Settings",
 			icon: "accessibility",
 			routerLink: AppRoutesModel.athleteSettings,
 			routerLinkActive: true
-		},
-		{
+		}, {
 			name: "Zones Settings",
 			icon: "format_line_spacing",
 			routerLink: AppRoutesModel.zonesSettings,
