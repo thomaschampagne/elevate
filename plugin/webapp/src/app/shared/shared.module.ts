@@ -27,6 +27,7 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 import { FitnessInfoDialogComponent } from "../fitness-trend/fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table/fitness-trend-table.component";
 import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
+import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 
 @NgModule({
 	declarations: [
@@ -47,7 +48,8 @@ import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component"
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		FitnessInfoDialogComponent // TODO Move in a below module?!
+		FitnessInfoDialogComponent, // TODO Move in a below module?!
+		AboutDialogComponent
 
 	],
 	entryComponents: [
@@ -56,7 +58,8 @@ import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component"
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		FitnessInfoDialogComponent
+		FitnessInfoDialogComponent,
+		AboutDialogComponent
 
 	],
 	providers: [

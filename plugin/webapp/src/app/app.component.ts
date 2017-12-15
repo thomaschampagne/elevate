@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
+import { MatDialog } from "@angular/material";
+import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 
 class MenuItemModel {
 	name: string;
@@ -57,7 +59,8 @@ export class AppComponent implements OnInit {
 
 	}
 
-	constructor(private router: Router) {
+	constructor(private router: Router,
+				private dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
@@ -76,7 +79,10 @@ export class AppComponent implements OnInit {
 	}
 
 	public onShowAbout(): void {
-		// TODO ..
+		this.dialog.open(AboutDialogComponent, {
+			minWidth: AboutDialogComponent.MIN_WIDTH,
+			maxWidth: AboutDialogComponent.MAX_WIDTH,
+		});
 	}
 
 
