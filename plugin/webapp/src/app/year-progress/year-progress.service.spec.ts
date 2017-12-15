@@ -5,7 +5,7 @@ import { TEST_YEAR_PROGRESS_ACTIVITIES } from "./year-progress-activities.fixtur
 import * as _ from "lodash";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 
-describe('YearProgressService', () => {
+xdescribe('YearProgressService', () => {
 
 	let _TEST_YEAR_PROGRESS_ACTIVITIES_: SyncedActivityModel[] = null;
 
