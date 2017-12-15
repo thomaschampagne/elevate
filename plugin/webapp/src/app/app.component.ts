@@ -2,8 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
+import { MatDialog } from "@angular/material";
+import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 
-export interface MainMenuItem {
+class MenuItemModel {
 	name: string;
 	icon: string;
 	routerLink: string;
@@ -18,7 +20,7 @@ export interface MainMenuItem {
 export class AppComponent implements OnInit {
 
 	public title: string;
-	public mainMenuItems: MainMenuItem[] = [
+	public mainMenuItems: MenuItemModel[] = [
 		{
 			name: "Fitness Trend",
 			icon: "timeline",
@@ -44,6 +46,12 @@ export class AppComponent implements OnInit {
 			icon: "format_line_spacing",
 			routerLink: AppRoutesModel.zonesSettings,
 			routerLinkActive: true
+		},
+		{
+			name: "Donate",
+			icon: "favorite",
+			routerLink: AppRoutesModel.donate,
+			routerLinkActive: true
 		}
 	];
 
@@ -59,7 +67,8 @@ export class AppComponent implements OnInit {
 
 	}
 
-	constructor(private router: Router) {
+	constructor(private router: Router,
+				private dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
@@ -73,8 +82,26 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	public onMenuClicked(item: MainMenuItem): void {
-		console.log("Clicked %s", item.name);
+	public onShowShare(): void {
+		// TODO ..
 	}
+
+	public onShowAbout(): void {
+		this.dialog.open(AboutDialogComponent, {
+			minWidth: AboutDialogComponent.MIN_WIDTH,
+			maxWidth: AboutDialogComponent.MAX_WIDTH,
+		});
+	}
+
+
+	public onOpenLink(url: string): void {
+		window.open(url, "_blank")
+	}
+
+	/*
+        public onMenuClicked(item: MenuItemModel): void {
+            console.log("Clicked %s", item.name);
+        }
+    */
 
 }

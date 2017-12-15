@@ -27,7 +27,11 @@ import { AppRoutingModule } from "./modules/app-routing.module";
 import { FitnessInfoDialogComponent } from "../fitness-trend/fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table/fitness-trend-table.component";
 import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
+import { DonateComponent } from "../donate/donate.component";
+import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
 import { YearProgressComponent } from "../year-progress/year-progress.component";
+import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
+import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 
 @NgModule({
 	declarations: [
@@ -42,6 +46,8 @@ import { YearProgressComponent } from "../year-progress/year-progress.component"
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
 		YearProgressComponent,
+		DonateComponent,
+		ReleasesNotesComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,
@@ -49,7 +55,8 @@ import { YearProgressComponent } from "../year-progress/year-progress.component"
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		FitnessInfoDialogComponent // TODO Move in a below module?!
+		FitnessInfoDialogComponent, // TODO Move in a below module?!
+		AboutDialogComponent
 
 	],
 	entryComponents: [
@@ -58,7 +65,8 @@ import { YearProgressComponent } from "../year-progress/year-progress.component"
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		FitnessInfoDialogComponent
+		FitnessInfoDialogComponent,
+		AboutDialogComponent
 
 	],
 	providers: [
@@ -70,7 +78,8 @@ import { YearProgressComponent } from "../year-progress/year-progress.component"
 		FitnessService,
 		CommonSettingsService,
 		OptionHelperReaderService,
-		ZonesService
+		ZonesService,
+		ReleasesNotesResolverService
 
 	],
 	imports: [

@@ -5,6 +5,7 @@
 						   routerLinkActive="{{item.routerLinkActive}}">
 				<button mat-icon-button>
 					<mat-icon>{{item.icon}}</mat-icon>
+					&nbsp;&nbsp;&nbsp;&nbsp;
 					{{item.name}}
 				</button>
 			</mat-list-item>
@@ -20,13 +21,60 @@
 
 		<span class="toolbar-spacer"></span>
 
-		<button mat-icon-button [matMenuTriggerFor]="menu">
+		<button mat-icon-button [matMenuTriggerFor]="syncMenu">
+			<mat-icon>history</mat-icon>
+		</button>
+
+		<mat-menu #syncMenu="matMenu">
+			<button mat-menu-item>
+				<mat-icon>sync</mat-icon>
+				Sync
+			</button>
+		</mat-menu>
+
+		<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 			<mat-icon>more_vert</mat-icon>
 		</button>
 
-		<mat-menu #menu="matMenu">
-			<button mat-menu-item>Fake</button>
-			<button mat-menu-item>Fake</button>
+		<mat-menu #moreMenu="matMenu">
+
+			<button mat-menu-item routerLink="/releasesNotes" routerLinkActive="true">
+				<mat-icon>system_update</mat-icon>
+				Release notes
+			</button>
+
+			<button mat-menu-item
+					(click)="onOpenLink('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions')">
+				<mat-icon>help</mat-icon>
+				FAQ
+			</button>
+
+			<!--TODO use github ISSUE_TEMPLATE.md @see https://github.com/blog/2111-issue-and-pull-request-templates-->
+			<button mat-menu-item (click)="onOpenLink('https://github.com/thomaschampagne/stravistix/issues/new')">
+				<mat-icon>bug_report</mat-icon>
+				Report a bug
+			</button>
+
+			<button mat-menu-item (click)="onOpenLink('http://thomaschampagne.github.io/stravistix/')">
+				<mat-icon>public</mat-icon>
+				Plugin page
+			</button>
+
+			<button mat-menu-item (click)="onOpenLink('https://www.strava.com/clubs/stravistix')">
+				<mat-icon>group</mat-icon>
+				Strava Club
+			</button>
+
+			<button mat-menu-item (click)="onShowShare()">
+				<mat-icon>share</mat-icon>
+				Share plugin
+			</button>
+
+			<button mat-menu-item (click)="onShowAbout()">
+				<mat-icon>info</mat-icon>
+				About
+			</button>
+
 		</mat-menu>
 
 	</mat-toolbar>
