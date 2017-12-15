@@ -4,4 +4,5 @@ export class AppRoutesModel {
 	public static readonly athleteSettings: string = "athleteSettings";
 	public static readonly zonesSettings: string = "zonesSettings";
 	public static readonly donate: string = "donate";
+	public static readonly releasesNotes: string = "releasesNotes";
 }

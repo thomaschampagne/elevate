@@ -29,6 +29,7 @@ import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table
 import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { DonateComponent } from "../donate/donate.component";
+import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
 
 @NgModule({
 	declarations: [
@@ -43,6 +44,7 @@ import { DonateComponent } from "../donate/donate.component";
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
 		DonateComponent,
+		ReleasesNotesComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,

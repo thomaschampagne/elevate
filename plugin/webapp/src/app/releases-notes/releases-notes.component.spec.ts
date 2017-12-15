@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DonateComponent } from './donate.component';
+import { ReleasesNotesComponent } from './releases-notes.component';
 
-describe('DonateComponent', () => {
-	let component: DonateComponent;
-	let fixture: ComponentFixture<DonateComponent>;
+describe('ReleasesNotesComponent', () => {
+	let component: ReleasesNotesComponent;
+	let fixture: ComponentFixture<ReleasesNotesComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DonateComponent]
+			declarations: [ReleasesNotesComponent]
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(DonateComponent);
+		fixture = TestBed.createComponent(ReleasesNotesComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

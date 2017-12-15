@@ -1,0 +1,23 @@
+<mat-card *ngFor="let note of releasesNotes;">
+	<mat-card-title>
+		Version {{note.version}}
+	</mat-card-title>
+	<mat-card-content>
+
+		<mat-list *ngIf="(note.hotFixes && note.hotFixes.length)">
+			<h3 class="mat-subheading-2">Hot fixes</h3>
+			<mat-list-item *ngFor="let hotfix of note.hotFixes;">▹&nbsp;&nbsp;&nbsp;{{hotfix}}</mat-list-item>
+		</mat-list>
+
+		<mat-list *ngIf="(note.features && note.features.length && !note.hideFeatureReleaseNote)">
+			<h3 class="mat-subheading-2">Features</h3>
+			<mat-list-item *ngFor="let feature of note.features;">▹&nbsp;&nbsp;&nbsp;{{feature}}</mat-list-item>
+		</mat-list>
+
+		<mat-list *ngIf="(note.fixes && note.fixes.length)">
+			<h3 class="mat-subheading-2">Fixes</h3>
+			<mat-list-item *ngFor="let fix of note.fixes;">▹&nbsp;&nbsp;&nbsp;{{fix}}</mat-list-item>
+		</mat-list>
+
+	</mat-card-content>
+</mat-card>

@@ -6,6 +6,7 @@ import { CommonSettingsComponent } from "../../common-settings/common-settings.c
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
 import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
 import { DonateComponent } from "../../donate/donate.component";
+import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 
 export const routes: Routes = [
 	{path: AppRoutesModel.fitnessTrend, component: FitnessTrendComponent},
@@ -15,6 +16,7 @@ export const routes: Routes = [
 	{path: AppRoutesModel.zonesSettings + "/:zoneValue", component: ZonesSettingsComponent},
 	{path: "", redirectTo: AppRoutesModel.commonSettings, pathMatch: "full"},
 	{path: AppRoutesModel.donate, component: DonateComponent},
+	{path: AppRoutesModel.releasesNotes, component: ReleasesNotesComponent},
 ];
 
 @NgModule({
