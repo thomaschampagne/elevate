@@ -6,7 +6,7 @@ import { MaterialModule } from "../../shared/modules/material.module";
 import { FormsModule } from "@angular/forms";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../shared/dao/activity/activity.dao";
-import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
+import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import * as moment from "moment";
 import { Moment } from "moment";

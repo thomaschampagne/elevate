@@ -4,7 +4,7 @@ import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
+import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 
 describe("ActivityDao", () => {
 

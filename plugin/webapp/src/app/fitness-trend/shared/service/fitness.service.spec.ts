@@ -5,7 +5,7 @@ import { FitnessService } from "./fitness.service";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
+import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { FitnessReadyActivityModel } from "../models/fitness-ready-activity.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";

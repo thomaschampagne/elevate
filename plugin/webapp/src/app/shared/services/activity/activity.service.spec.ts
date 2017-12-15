@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../fixtures/activities";
+import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import * as _ from "lodash";
 
