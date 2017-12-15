@@ -3,7 +3,7 @@ import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 
-export interface MainMenuItem {
+class MenuItemModel {
 	name: string;
 	icon: string;
 	routerLink: string;
@@ -18,7 +18,7 @@ export interface MainMenuItem {
 export class AppComponent implements OnInit {
 
 	public title: string;
-	public mainMenuItems: MainMenuItem[] = [
+	public mainMenuItems: MenuItemModel[] = [
 		{
 			name: "Fitness Trend",
 			icon: "timeline",
@@ -71,8 +71,23 @@ export class AppComponent implements OnInit {
 		});
 	}
 
-	public onMenuClicked(item: MainMenuItem): void {
-		console.log("Clicked %s", item.name);
+	public onShowShare(): void {
+		// TODO ..
 	}
+
+	public onShowAbout(): void {
+		// TODO ..
+	}
+
+
+	public onOpenLink(url: string): void {
+		window.open(url, "_blank")
+	}
+
+	/*
+        public onMenuClicked(item: MenuItemModel): void {
+            console.log("Clicked %s", item.name);
+        }
+    */
 
 }
