@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
-import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
+import { UserSettingsModel, UserZonesModel } from "../../../../common/scripts/models/UserSettings";
+import { ZoneModel } from "../../../../common/scripts/models/ActivityData";
 import * as _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
@@ -21,8 +21,8 @@ export class ZonesSettingsComponent implements OnInit {
 
 	public zoneDefinitions: ZoneDefinitionModel[] = ZONE_DEFINITIONS;
 	public zoneDefinitionSelected: ZoneDefinitionModel;
-	public userZones: IUserZones;
-	public currentZones: IZone[];
+	public userZones: UserZonesModel;
+	public currentZones: ZoneModel[];
 
 	constructor(private userSettingsService: UserSettingsService,
 				private route: ActivatedRoute,
@@ -33,7 +33,7 @@ export class ZonesSettingsComponent implements OnInit {
 	public ngOnInit(): void {
 
 		// Load user zones config
-		this.userSettingsService.fetch().then((userSettingsSynced: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 
 			// Load user zones data
 			this.userZones = userSettingsSynced.zones;
@@ -61,7 +61,7 @@ export class ZonesSettingsComponent implements OnInit {
 
 		// Listen for reload request from ZonesService
 		// This happen when ZoneService perform a resetZonesToDefault of a zones set.
-		this.zonesService.zonesUpdates.subscribe((updatedZones: IZone[]) => {
+		this.zonesService.zonesUpdates.subscribe((updatedZones: ZoneModel[]) => {
 			this.currentZones = updatedZones;
 		});
 	}

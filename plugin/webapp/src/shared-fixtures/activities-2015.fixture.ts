@@ -1,11 +1,11 @@
-import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
 
 /**
  * 2015-01-01 => 2015-11-15 fake data
  *
- * @type {ISyncActivityComputed[]}
+ * @type {SyncedActivityModel[]}
  */
-export const TEST_SYNCED_ACTIVITIES: ISyncActivityComputed[] = <ISyncActivityComputed[]> [
+export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityModel[]> [
 	{
 		"bike_id": null,
 		"calories": 202.969212372,

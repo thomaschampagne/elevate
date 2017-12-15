@@ -1,11 +1,11 @@
 import { Helper } from "../../../../../common/scripts/Helper";
-import { ICadenceData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { CadenceDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 import * as _ from "lodash";
 
 export class CyclingCadenceDataView extends AbstractCadenceDataView {
 
-    constructor(cadenceData: ICadenceData, units: string) {
+	constructor(cadenceData: CadenceDataModel, units: string) {
         super(cadenceData, units);
     }
 

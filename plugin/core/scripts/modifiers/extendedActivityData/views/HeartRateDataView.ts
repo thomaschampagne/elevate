@@ -1,17 +1,17 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IHeartRateData } from "../../../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { HeartRateDataModel } from "../../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { StravistiX } from "../../../StravistiX";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class HeartRateDataView extends AbstractDataView {
 
-    protected heartRateData: IHeartRateData;
+	protected heartRateData: HeartRateDataModel;
 
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(heartRateData: IHeartRateData, units: string, userSettings: IUserSettings) {
+	constructor(heartRateData: HeartRateDataModel, units: string, userSettings: UserSettingsModel) {
         super(units);
         this.mainColor = [255, 43, 66];
         this.heartRateData = heartRateData;

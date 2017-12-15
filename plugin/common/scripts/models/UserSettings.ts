@@ -1,19 +1,19 @@
-import { IZone } from "./IActivityData";
+import { ZoneModel } from "./ActivityData";
 
-export interface IUserZones {
-	speed: IZone[];
-	pace: IZone[];
-	heartRate: IZone[];
-	power: IZone[];
-	runningPower: IZone[];
-	cyclingCadence: IZone[];
-	runningCadence: IZone[];
-	grade: IZone[];
-	elevation: IZone[];
-	ascent: IZone[];
+export interface UserZonesModel {
+	speed: ZoneModel[];
+	pace: ZoneModel[];
+	heartRate: ZoneModel[];
+	power: ZoneModel[];
+	runningPower: ZoneModel[];
+	cyclingCadence: ZoneModel[];
+	runningCadence: ZoneModel[];
+	grade: ZoneModel[];
+	elevation: ZoneModel[];
+	ascent: ZoneModel[];
 }
 
-export interface IUserSettings {
+export interface UserSettingsModel {
 	autoSyncMinutes: number;
 	localStorageMustBeCleared: boolean;
 	systemUnit: string;
@@ -23,7 +23,7 @@ export interface IUserSettings {
 	userFTP: number;
 	userSwimFTP: number;
 	userWeight: number;
-	zones: IUserZones;
+	zones: UserZonesModel;
 	targetsYearRide: number;
 	targetsYearRun: number;
 	remoteLinks: boolean;

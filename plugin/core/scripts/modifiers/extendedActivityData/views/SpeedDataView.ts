@@ -1,12 +1,12 @@
 import { Helper } from "../../../../../common/scripts/Helper";
-import { ISpeedData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { SpeedDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class SpeedDataView extends AbstractDataView {
 
-    protected speedData: ISpeedData;
+	protected speedData: SpeedDataModel;
 
-    constructor(speedData: ISpeedData, units: string) {
+	constructor(speedData: SpeedDataModel, units: string) {
         super(units);
         this.mainColor = [9, 123, 219];
         this.setGraphTitleFromUnits();

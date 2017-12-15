@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IActivityBasicInfo } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ActivityBasicInfoModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class HeaderView extends AbstractDataView {
 
-    protected basicInfo: IActivityBasicInfo;
+	protected basicInfo: ActivityBasicInfoModel;
 
     constructor(basicInfo: any) {
         super(null);

@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { GenderModel } from "./gender.model";
@@ -51,7 +51,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 			this.gender = _.find(this.GENDER_LIST, {
 				type: userSettings.userGender,

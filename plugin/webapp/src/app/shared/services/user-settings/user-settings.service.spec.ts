@@ -1,10 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
+import { ZoneModel } from "../../../../../../common/scripts/models/ActivityData";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 
 describe("UserSettingsService", () => {
@@ -34,10 +34,10 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseFetch: Promise<IUserSettings> = userSettingsService.fetch();
+		const promiseFetch: Promise<UserSettingsModel> = userSettingsService.fetch();
 
 		// Then
-		promiseFetch.then((result: IUserSettings) => {
+		promiseFetch.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedSettings);
@@ -92,10 +92,10 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<IUserSettings> = userSettingsService.update(keyMaxHr, maxHrValue);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.update(keyMaxHr, maxHrValue);
 
 		// Then
-		promiseUpdate.then((result: IUserSettings) => {
+		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result.userMaxHr).toEqual(maxHrValue);
@@ -124,10 +124,10 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseClearLS: Promise<IUserSettings> = userSettingsService.markLocalStorageClear();
+		const promiseClearLS: Promise<UserSettingsModel> = userSettingsService.markLocalStorageClear();
 
 		// Then
-		promiseClearLS.then((result: IUserSettings) => {
+		promiseClearLS.then((result: UserSettingsModel) => {
 
 			expect(result.localStorageMustBeCleared).toEqual(true);
 			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe("UserSettingsService", () => {
 			{from: 400, to: 500}
 		];
 
-		const EXISTING_STORED_SPEED_ZONES_MOCKED: IZone[] = [
+		const EXISTING_STORED_SPEED_ZONES_MOCKED: ZoneModel[] = [
 			{from: 0, to: 10},
 			{from: 10, to: 20},
 			{from: 20, to: 30},
@@ -181,10 +181,10 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(settings));
 
 		// When
-		const promiseUpdateZones: Promise<IZone[]> = userSettingsService.updateZones(zoneDefinition, TO_BE_SAVED_ZONES);
+		const promiseUpdateZones: Promise<ZoneModel[]> = userSettingsService.updateZones(zoneDefinition, TO_BE_SAVED_ZONES);
 
 		// Then
-		promiseUpdateZones.then((savedZones: IZone[]) => {
+		promiseUpdateZones.then((savedZones: ZoneModel[]) => {
 
 			expect(savedZones).not.toBeNull();
 			expect(savedZones).toEqual(TO_BE_SAVED_ZONES);

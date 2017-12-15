@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { constants } from "../../common/scripts/Constants";
-import { IConstants } from "../../common/scripts/interfaces/IConstants";
-import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { ConstantsModel } from "../../common/scripts/models/Constants";
+import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { userSettings } from "../../common/scripts/UserSettings";
 import { Loader } from "../modules/Loader";
 import { IAppResources } from "./interfaces/IAppResources";
@@ -19,9 +19,9 @@ export class Content {
     public static startCoreEvent: string = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
 
     protected appResources: IAppResources;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(userSettings: IUserSettings, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
         this.userSettings = userSettings;
         this.appResources = appResources;
     }
@@ -63,7 +63,7 @@ export class Content {
             return;
         }
 
-        chrome.storage.sync.get(this.userSettings, (chromeSettings: IUserSettings) => {
+		chrome.storage.sync.get(this.userSettings, (chromeSettings: UserSettingsModel) => {
 
             if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
                 chromeSettings = this.userSettings;
@@ -99,7 +99,7 @@ export class Content {
 
     }
 
-    protected assignConstantsValues(constants: IConstants) {
+	protected assignConstantsValues(constants: ConstantsModel) {
         constants.VERSION = chrome.runtime.getManifest().version;
         constants.EXTENSION_ID = chrome.runtime.id;
         constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/options/app/index.html";

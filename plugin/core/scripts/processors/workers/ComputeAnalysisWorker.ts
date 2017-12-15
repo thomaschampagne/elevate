@@ -1,4 +1,4 @@
-import { IAnalysisData } from "../../../../common/scripts/interfaces/IActivityData";
+import { AnalysisDataModel } from "../../../../common/scripts/models/ActivityData";
 import { IComputeActivityThreadMessage } from "../../interfaces/IComputeActivityThreadMessage";
 import { ActivityComputer } from "../ActivityComputer";
 
@@ -30,7 +30,7 @@ export function ComputeAnalysisWorker() {
                 threadMessage.activityStream,
                 threadMessage.bounds,
                 threadMessage.returnZones);
-            const result: IAnalysisData = analysisComputer.compute();
+			const result: AnalysisDataModel = analysisComputer.compute();
             this.postMessage(result);
         });
 

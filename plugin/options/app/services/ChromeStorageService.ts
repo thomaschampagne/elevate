@@ -2,9 +2,9 @@ import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
 import { IPromise } from "angular";
 import * as _ from "lodash";
-import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
-import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
+import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
 import { userSettings } from "../../../common/scripts/UserSettings";
 
@@ -76,7 +76,7 @@ export class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getLocalSyncedAthleteProfile(): IPromise<IAthleteProfile> {
+	public getLocalSyncedAthleteProfile(): IPromise<AthleteProfileModel> {
         return this.getFromLocalStorage("syncWithAthleteProfile");
     }
 
@@ -94,9 +94,9 @@ export class ChromeStorageService {
         return deferred.promise;
     }
 
-    public fetchUserSettings(callback?: (userSettingsSynced: IUserSettings) => void): IPromise<IUserSettings> {
-        const deferred: IDeferred<IUserSettings> = this.$q.defer();
-        chrome.storage.sync.get(userSettings, (userSettingsSynced: IUserSettings) => {
+	public fetchUserSettings(callback?: (userSettingsSynced: UserSettingsModel) => void): IPromise<UserSettingsModel> {
+		const deferred: IDeferred<UserSettingsModel> = this.$q.defer();
+		chrome.storage.sync.get(userSettings, (userSettingsSynced: UserSettingsModel) => {
             if (callback) callback(userSettingsSynced);
             deferred.resolve(userSettingsSynced);
         });
@@ -114,8 +114,8 @@ export class ChromeStorageService {
         return deferred.promise;
     }
 
-    public fetchComputedActivities(): IPromise<ISyncActivityComputed[]> {
-        return this.getFromLocalStorage("computedActivities") as IPromise<ISyncActivityComputed[]>;
+	public fetchComputedActivities(): IPromise<SyncedActivityModel[]> {
+		return this.getFromLocalStorage("computedActivities") as IPromise<SyncedActivityModel[]>;
     }
 
     public getLocalStorageUsage(): IPromise<IStorageUsage> {

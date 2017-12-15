@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessReadyActivityModel } from "../models/fitness-ready-activity.model";
 import { PeriodModel } from "../models/period.model";
 
@@ -33,11 +33,11 @@ export class FitnessService {
 		return new Promise((resolve: (result: FitnessReadyActivityModel[]) => void,
 							reject: (error: string) => void) => {
 
-			return this.activityService.fetch().then((activities: ISyncActivityComputed[]) => {
+			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
 				const fitnessReadyActivities: FitnessReadyActivityModel[] = [];
 
-				_.forEach(activities, (activity: ISyncActivityComputed) => {
+				_.forEach(activities, (activity: SyncedActivityModel) => {
 
 					// Check if activity is eligible to fitness computing
 					const hasHeartRateData: boolean = (activity.extendedStats
@@ -158,7 +158,7 @@ export class FitnessService {
 	 *
 	 * @param {number} movingTime
 	 * @param {number} weightedPower
-	 * @param {ISyncActivityComputed} activity
+	 * @param {SyncedActivityModel} activity
 	 * @param {number} cyclingFtp
 	 * @returns {number}
 	 */

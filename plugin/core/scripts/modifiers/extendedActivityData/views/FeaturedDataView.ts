@@ -1,20 +1,20 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
 import {
-	IActivityBasicInfo,
-	IAnalysisData,
-	ISpeedUnitData
-} from "../../../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+	ActivityBasicInfoModel,
+	AnalysisDataModel,
+	SpeedUnitDataModel
+} from "../../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class FeaturedDataView extends AbstractDataView {
 
-    protected analysisData: IAnalysisData;
-    protected basicInfo: IActivityBasicInfo;
-    protected userSettings: IUserSettings;
+	protected analysisData: AnalysisDataModel;
+	protected basicInfo: ActivityBasicInfoModel;
+	protected userSettings: UserSettingsModel;
 
-    constructor(analysisData: IAnalysisData, userSettings: IUserSettings, basicInfo: any) {
+	constructor(analysisData: AnalysisDataModel, userSettings: UserSettingsModel, basicInfo: any) {
 
         super(null);
         this.hasGraph = false;
@@ -51,7 +51,7 @@ export class FeaturedDataView extends AbstractDataView {
 
     protected insertDataIntoGrid(): void {
 
-        const speedUnitsData: ISpeedUnitData = Helper.getSpeedUnitData();
+		const speedUnitsData: SpeedUnitDataModel = Helper.getSpeedUnitData();
 
         if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfo.segmentEffort)) {
             this.insertContentAtGridPosition(0, 0, this.analysisData.moveRatio.toFixed(2), "Move Ratio", "", "displayActivityRatio"); // Move ratio

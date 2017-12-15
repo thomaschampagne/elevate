@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 
 export class HideFeedModifier implements IModifier {
 
@@ -7,9 +7,9 @@ export class HideFeedModifier implements IModifier {
     private static RIDE: string = "ride";
     private static RUN: string = "run";
 
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(userSettings: IUserSettings) {
+	constructor(userSettings: UserSettingsModel) {
         this.userSettings = userSettings;
     }
 

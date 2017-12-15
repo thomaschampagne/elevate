@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { UserSettingsDao } from "./user-settings.dao";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
 
@@ -64,10 +64,10 @@ describe("UserSettingsDao", () => {
 		});
 
 		// When
-		const promiseFetch: Promise<IUserSettings> = userSettingsDao.fetch();
+		const promiseFetch: Promise<UserSettingsModel> = userSettingsDao.fetch();
 
 		// Then
-		promiseFetch.then((result: IUserSettings) => {
+		promiseFetch.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedSettings);
@@ -93,10 +93,10 @@ describe("UserSettingsDao", () => {
 		});
 
 		// When
-		const promiseFetch: Promise<IUserSettings> = userSettingsDao.fetch();
+		const promiseFetch: Promise<UserSettingsModel> = userSettingsDao.fetch();
 
 		// Then
-		promiseFetch.then((result: IUserSettings) => {
+		promiseFetch.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedSettings);
@@ -188,10 +188,10 @@ describe("UserSettingsDao", () => {
 		});
 
 		// When
-		const promiseUpdate: Promise<IUserSettings> = userSettingsDao.update(keyMaxHr, maxHrValue);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keyMaxHr, maxHrValue);
 
 		// Then
-		promiseUpdate.then((result: IUserSettings) => {
+		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result.userMaxHr).toEqual(maxHrValue);
@@ -228,10 +228,10 @@ describe("UserSettingsDao", () => {
 		});
 
 		// When
-		const promiseUpdate: Promise<IUserSettings> = userSettingsDao.updateNested(path, zones);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.updateNested(path, zones);
 
 		// Then
-		promiseUpdate.then((result: IUserSettings) => {
+		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result.zones.speed).toEqual(zones);

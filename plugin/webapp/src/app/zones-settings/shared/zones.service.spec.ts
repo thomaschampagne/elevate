@@ -1,7 +1,7 @@
 import { inject, TestBed } from "@angular/core/testing";
 import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
 import { userSettings } from "../../../../../common/scripts/UserSettings";
@@ -161,8 +161,8 @@ describe("ZonesService", () => {
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
 			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const previousZone: IZone = zonesService.currentZones[removeIndex - 1];
-			const newNextZone: IZone = zonesService.currentZones[removeIndex]; // Is actually same index than the removed
+			const previousZone: ZoneModel = zonesService.currentZones[removeIndex - 1];
+			const newNextZone: ZoneModel = zonesService.currentZones[removeIndex]; // Is actually same index than the removed
 			expect(newNextZone.from).toBe(previousZone.to);
 
 			done();
@@ -174,7 +174,7 @@ describe("ZonesService", () => {
 		// Given
 		const removeIndex = 0; // First zone
 		const expectedZonesLength = 9;
-		const oldNextZone: IZone = _.clone(zonesService.currentZones[removeIndex + 1]);
+		const oldNextZone: ZoneModel = _.clone(zonesService.currentZones[removeIndex + 1]);
 
 		// When
 		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
@@ -186,7 +186,7 @@ describe("ZonesService", () => {
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
 			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const newFirstZone: IZone = zonesService.currentZones[removeIndex]; // Is actually the new first zone
+			const newFirstZone: ZoneModel = zonesService.currentZones[removeIndex]; // Is actually the new first zone
 			expect(newFirstZone.from).toBe(oldNextZone.from);
 			expect(newFirstZone.to).toBe(oldNextZone.to);
 
@@ -200,7 +200,7 @@ describe("ZonesService", () => {
 		// Given
 		const removeIndex = 9; // Last zone
 		const expectedZonesLength = 9;
-		const oldPreviousZone: IZone = _.clone(zonesService.currentZones[removeIndex - 1]);
+		const oldPreviousZone: ZoneModel = _.clone(zonesService.currentZones[removeIndex - 1]);
 
 		// When
 		const removeZoneAtIndexPromise: Promise<string> = zonesService.removeZoneAtIndex(removeIndex);
@@ -212,7 +212,7 @@ describe("ZonesService", () => {
 			expect(result).toEqual("Zone <" + (removeIndex + 1) + "> has been removed.");
 			expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
-			const newLastZone: IZone = _.last(zonesService.currentZones); // Is actually the new last zone
+			const newLastZone: ZoneModel = _.last(zonesService.currentZones); // Is actually the new last zone
 			expect(newLastZone.from).toBe(oldPreviousZone.from);
 			expect(newLastZone.to).toBe(oldPreviousZone.to);
 
@@ -722,7 +722,7 @@ describe("ZonesService", () => {
 
 		// Given
 		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]";
-		const zonesToImport: IZone[] = <IZone[]> JSON.parse(jsonInput);
+		const zonesToImport: ZoneModel[] = <ZoneModel[]> JSON.parse(jsonInput);
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");

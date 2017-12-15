@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
@@ -14,7 +14,7 @@ export class ZonesService {
 	private readonly MAX_ZONES_COUNT: number = 50;
 	private readonly MIN_ZONES_COUNT: number = 3;
 
-	public currentZones: IZone[];
+	public currentZones: ZoneModel[];
 
 	/**
 	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
@@ -27,13 +27,13 @@ export class ZonesService {
 	/**
 	 * Subscription mechanism that notify changes made by <ZonesService> via a zones update.
 	 */
-	public zonesUpdates: Subject<IZone[]>;
+	public zonesUpdates: Subject<ZoneModel[]>;
 	public stepUpdates: Subject<number>;
 	public zoneDefinition: ZoneDefinitionModel;
 
 	constructor(public userSettingsService: UserSettingsService) {
 		this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrderModel>();
-		this.zonesUpdates = new Subject<IZone[]>();
+		this.zonesUpdates = new Subject<ZoneModel[]>();
 		this.stepUpdates = new Subject<number>();
 	}
 
@@ -52,13 +52,13 @@ export class ZonesService {
 
 			} else {
 
-				const oldLastZone: IZone = this.getLastZone();
+				const oldLastZone: ZoneModel = this.getLastZone();
 
 				// Computed middle value between oldLastZone.from and oldLastZone.to
 				const intermediateZoneValue: number = Math.floor((oldLastZone.from + oldLastZone.to) / 2);
 
 				// Creating new Zone
-				const lastZone: IZone = {
+				const lastZone: ZoneModel = {
 					from: intermediateZoneValue,
 					to: oldLastZone.to,
 				};
@@ -206,7 +206,7 @@ export class ZonesService {
 	 *
 	 * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public isZonesCompliant(zones: IZone[]): string {
+	public isZonesCompliant(zones: ZoneModel[]): string {
 
 		const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
@@ -308,7 +308,7 @@ export class ZonesService {
 
 			// Try to parse JSON input
 			try {
-				this.currentZones = <IZone[]> JSON.parse(jsonInput);
+				this.currentZones = <ZoneModel[]> JSON.parse(jsonInput);
 			} catch (error) {
 				reject("Provided zones do not respect expected JSON format");
 				return;
@@ -335,7 +335,7 @@ export class ZonesService {
 		this.stepUpdates.next(step);
 	}
 
-	public getLastZone(): IZone {
+	public getLastZone(): ZoneModel {
 		return _.last(this.currentZones);
 	}
 

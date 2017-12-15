@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
 
@@ -11,11 +11,11 @@ export class UserSettingsDao {
 
 	/**
 	 *
-	 * @returns {Promise<IUserSettings>}
+	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public fetch(): Promise<IUserSettings> {
-		return new Promise<IUserSettings>((resolve) => {
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: IUserSettings) => {
+	public fetch(): Promise<UserSettingsModel> {
+		return new Promise<UserSettingsModel>((resolve) => {
+			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 				resolve(userSettingsSynced);
 			});
 		});
@@ -30,7 +30,7 @@ export class UserSettingsDao {
 
 		return new Promise<Object>((resolve, reject) => {
 
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: IUserSettings) => {
+			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
 				const value = userSettingsSynced[key];
 				if (_.isUndefined(value)) {
@@ -46,11 +46,11 @@ export class UserSettingsDao {
 	 *
 	 * @param {string} key
 	 * @param value
-	 * @returns {Promise<IUserSettings>}
+	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public update(key: string, value: any): Promise<IUserSettings> {
+	public update(key: string, value: any): Promise<UserSettingsModel> {
 
-		return new Promise<IUserSettings>((resolve, reject) => {
+		return new Promise<UserSettingsModel>((resolve, reject) => {
 
 			if (!_.has(userSettings, key)) {
 				reject("key <" + key + "> does not exists in user settings");
@@ -61,7 +61,7 @@ export class UserSettingsDao {
 			settingToBeUpdated[key] = value;
 
 			this.chromeStorageSync().set(settingToBeUpdated, () => {
-				this.fetch().then((userSettingsResult: IUserSettings) => {
+				this.fetch().then((userSettingsResult: UserSettingsModel) => {
 					resolve(userSettingsResult);
 				});
 			});
@@ -72,11 +72,11 @@ export class UserSettingsDao {
 	 *
 	 * @param {string} path
 	 * @param setting
-	 * @returns {Promise<IUserSettings>}
+	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public updateNested(path: string, setting: any): Promise<IUserSettings> {
+	public updateNested(path: string, setting: any): Promise<UserSettingsModel> {
 
-		return new Promise<IUserSettings>((resolve, reject) => {
+		return new Promise<UserSettingsModel>((resolve, reject) => {
 
 			const doesPathExistsInSettings = _.has(userSettings, path);
 
@@ -88,7 +88,7 @@ export class UserSettingsDao {
 			const absoluteObject = this.createNestedObject(path, setting);
 
 			this.chromeStorageSync().set(absoluteObject, () => {
-				this.fetch().then((userSettingsResult: IUserSettings) => {
+				this.fetch().then((userSettingsResult: UserSettingsModel) => {
 					resolve(userSettingsResult);
 				});
 			});

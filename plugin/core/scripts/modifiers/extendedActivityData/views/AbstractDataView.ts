@@ -2,7 +2,7 @@ import * as Chart from "chart.js";
 import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { ISpeedUnitData, IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { SpeedUnitDataModel, ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { IAppResources } from "../../../interfaces/IAppResources";
 
 export abstract class AbstractDataView {
@@ -23,7 +23,7 @@ export abstract class AbstractDataView {
     protected isAuthorOfViewedActivity: boolean;
     protected isSegmentEffortView: boolean;
     protected activityType: string;
-    protected speedUnitsData: ISpeedUnitData;
+	protected speedUnitsData: SpeedUnitDataModel;
 
     constructor(units?: string) {
         this.content = "";
@@ -89,7 +89,7 @@ export abstract class AbstractDataView {
         this.graph = $(htmlCanvas);
     }
 
-    protected setupDistributionGraph(zones: IZone[], ratio?: number): void {
+	protected setupDistributionGraph(zones: ZoneModel[], ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -179,7 +179,7 @@ export abstract class AbstractDataView {
         tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
     }
 
-    protected setupDistributionTable(zones: IZone[], ratio?: number): void {
+	protected setupDistributionTable(zones: ZoneModel[], ratio?: number): void {
 
         if (!ratio) {
             ratio = 1;

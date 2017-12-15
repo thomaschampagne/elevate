@@ -2,7 +2,7 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
@@ -22,7 +22,7 @@ describe("FitnessService", () => {
 	const todayDate = "2015-12-01 12:00";
 	const momentDatePattern = "YYYY-MM-DD hh:mm";
 
-	let _TEST_SYNCED_ACTIVITIES_: ISyncActivityComputed[] = null;
+	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 	let fitnessService: FitnessService = null;
 	let activityService: ActivityService = null;
 

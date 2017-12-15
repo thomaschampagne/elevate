@@ -6,7 +6,7 @@ declare let d3: any; // Injected by strava.com
 
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 
 declare let L: any; // Injected by strava.com
 
@@ -421,7 +421,7 @@ export class ActivityBestSplitsModifier implements IModifier {
     };
 
     private activityId: number;
-    private userSettings: IUserSettings;
+	private userSettings: UserSettingsModel;
     private activityJson: any;
     private hasPowerMeter: boolean;
     private splitsConfiguration: any;
@@ -429,7 +429,7 @@ export class ActivityBestSplitsModifier implements IModifier {
     private distanceUnit: number;
     private cacheKeyPrefix: string;
 
-    constructor(activityId: number, userSettings: IUserSettings, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
+	constructor(activityId: number, userSettings: UserSettingsModel, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
         this.activityId = activityId;
         this.userSettings = userSettings;
         this.activityJson = activityJson;

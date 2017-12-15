@@ -1,4 +1,4 @@
-export interface IActivityStatsMap {
+export class ActivityStatsMapModel {
     // maxHeartRate: number;
     // averageHeartRate: number;
     distance: number;
@@ -7,7 +7,7 @@ export interface IActivityStatsMap {
     elevation: number;
 }
 
-export interface IActivityStream {
+export class StreamsModel {
     time: number[];
     latlng: number[][];
     heartrate: number[];
@@ -22,26 +22,26 @@ export interface IActivityStream {
     grade_adjusted_distance: Array<number>;
 }
 
-export interface IAnalysisData {
+export class AnalysisDataModel {
     moveRatio: number;
     toughnessScore: number;
-    speedData: ISpeedData;
-    paceData: IPaceData;
-    powerData: IPowerData;
-    heartRateData: IHeartRateData;
-    cadenceData: ICadenceData;
-    gradeData: IGradeData;
-    elevationData: IElevationData;
+	speedData: SpeedDataModel;
+	paceData: PaceDataModel;
+	powerData: PowerDataModel;
+	heartRateData: HeartRateDataModel;
+	cadenceData: CadenceDataModel;
+	gradeData: GradeDataModel;
+	elevationData: ElevationDataModel;
 }
 
-export interface IMoveData {
+export class MoveDataModel {
     movingTime: number;
     elapsedTime: number;
-    speed: ISpeedData;
-    pace: IPaceData;
+	speed: SpeedDataModel;
+	pace: PaceDataModel;
 }
 
-export interface ISpeedData {
+export class SpeedDataModel {
     genuineAvgSpeed: number;
     totalAvgSpeed: number;
     avgPace: number;
@@ -50,20 +50,20 @@ export interface ISpeedData {
     upperQuartileSpeed: number;
     varianceSpeed: number;
     standardDeviationSpeed: number;
-    speedZones: IZone[];
+	speedZones: ZoneModel[];
 }
 
-export interface IPaceData {
+export class PaceDataModel {
     avgPace: number;
     lowerQuartilePace: number;
     medianPace: number;
     upperQuartilePace: number;
     variancePace: number;
-    paceZones: IZone[];
+	paceZones: ZoneModel[];
 
 }
 
-export interface IPowerData {
+export class PowerDataModel {
     hasPowerMeter: boolean;
     avgWatts: number;
     avgWattsPerKg: number;
@@ -76,11 +76,11 @@ export interface IPowerData {
     lowerQuartileWatts: number;
     medianWatts: number;
     upperQuartileWatts: number;
-    powerZones: IZone[];
+	powerZones: ZoneModel[];
     isEstimatedRunningPower?: boolean;
 }
 
-export interface IHeartRateData {
+export class HeartRateDataModel {
     TRIMP: number;
     TRIMPPerHour: number;
     lowerQuartileHeartRate: number;
@@ -90,10 +90,10 @@ export interface IHeartRateData {
     maxHeartRate: number;
     activityHeartRateReserve: number;
     activityHeartRateReserveMax: number;
-    heartRateZones: IZone[];
+	heartRateZones: ZoneModel[];
 }
 
-export interface ICadenceData {
+export class CadenceDataModel {
     cadencePercentageMoving: number;
     cadenceTimeMoving: number;
     averageCadenceMoving: number;
@@ -102,78 +102,78 @@ export interface ICadenceData {
     lowerQuartileCadence: number;
     medianCadence: number;
     upperQuartileCadence: number;
-    upFlatDownCadencePaceData?: IUpFlatDown;
+	upFlatDownCadencePaceData?: UpFlatDownModel;
     averageDistancePerOccurrence: number;
     lowerQuartileDistancePerOccurrence: number;
     medianDistancePerOccurrence: number;
     upperQuartileDistancePerOccurrence: number;
-    cadenceZones: IZone[];
+	cadenceZones: ZoneModel[];
 }
 
-export interface IGradeData {
+export class GradeDataModel {
     avgGrade: number;
     avgMaxGrade: number;
     avgMinGrade: number;
     lowerQuartileGrade: number;
     medianGrade: number;
     upperQuartileGrade: number;
-    upFlatDownInSeconds: IUpFlatDownSumTotal;
-    upFlatDownMoveData: IUpFlatDown;
-    upFlatDownDistanceData: IUpFlatDown;
-    upFlatDownCadencePaceData: IUpFlatDown | null;
+	upFlatDownInSeconds: UpFlatDownSumTotalModel;
+	upFlatDownMoveData: UpFlatDownModel;
+	upFlatDownDistanceData: UpFlatDownModel;
+	upFlatDownCadencePaceData: UpFlatDownModel | null;
     gradeProfile: string;
-    gradeZones: IZone[];
+	gradeZones: ZoneModel[];
 }
 
-export interface IElevationData {
+export class ElevationDataModel {
     avgElevation: number;
     accumulatedElevationAscent: number;
     accumulatedElevationDescent: number;
     lowerQuartileElevation: number;
     medianElevation: number;
     upperQuartileElevation: number;
-    elevationZones: IZone[];
-    ascentSpeedZones: IZone[];
-    ascentSpeed: IAscentSpeedData;
+	elevationZones: ZoneModel[];
+	ascentSpeedZones: ZoneModel[];
+	ascentSpeed: AscentSpeedDataModel;
 }
 
-export interface IAscentSpeedData {
+export class AscentSpeedDataModel {
     avg: number;
     lowerQuartile: number;
     median: number;
     upperQuartile: number;
 }
 
-export interface IUpFlatDown {
+export class UpFlatDownModel {
     up: number;
     flat: number;
     down: number;
 }
 
-export interface IUpFlatDownSumTotal extends IUpFlatDown {
+export class UpFlatDownSumTotalModel extends UpFlatDownModel {
     total: number;
 }
 
-export interface IUpFlatDownSumCounter extends IUpFlatDown {
+export class UpFlatDownSumCounterModel extends UpFlatDownModel {
     countUp: number;
     countFlat: number;
     countDown: number;
 }
 
-export interface IZone {
+export class ZoneModel {
     from: number;
     to: number;
     s?: number;
     percentDistrib?: number;
 }
 
-export interface ISpeedUnitData {
+export class SpeedUnitDataModel {
     units: string;
     speedUnitPerHour: string;
     speedUnitFactor: number;
 }
 
-export interface IActivityBasicInfo {
+export class ActivityBasicInfoModel {
     activityName: string;
     activityTime: string;
     segmentEffort?: {

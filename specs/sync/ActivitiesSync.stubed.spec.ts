@@ -2,24 +2,24 @@ import * as _ from "lodash";
 import * as Q from "q";
 import { ActivitiesSynchronizer, ISyncResult } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
-import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
 import {
-	ISyncActivityComputed,
-	ISyncActivityWithStream,
-	ISyncNotify,
-	ISyncRawStravaActivity
-} from "../../plugin/common/scripts/interfaces/ISync";
-import { IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
+	StravaActivityModel,
+	StreamActivityModel,
+	SyncedActivityModel,
+	SyncNotifyModel
+} from "../../plugin/common/scripts/models/Sync";
+import { AnalysisDataModel } from "../../plugin/common/scripts/models/ActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { IAthleteProfile } from "../../plugin/common/scripts/interfaces/IAthleteProfile";
+import { AthleteProfileModel } from "../../plugin/common/scripts/models/AthleteProfile";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 
-    let userSettingsMock: IUserSettings;
+	let userSettingsMock: UserSettingsModel;
     let appResourcesMock: IAppResources;
     let activitiesSynchronizer: ActivitiesSynchronizer;
-    let rawPagesOfActivities: Array<{ models: Array<ISyncRawStravaActivity> }>;
+	let rawPagesOfActivities: Array<{ models: Array<StravaActivityModel> }>;
     let CHROME_STORAGE_STUB: any; // Fake stubed storage to simulate chrome local storage
 
     /**
@@ -121,11 +121,11 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         /**
          * Stub MultipleActivityProcessor:compute. Create fake analysis results
          */
-        spyOn(activitiesSynchronizer.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+		spyOn(activitiesSynchronizer.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<StreamActivityModel>) => {
             let defer = Q.defer();
             console.log("Spy activitiesSynchronizer.multipleActivityProcessor:compute called");
-            let activitiesComputed: Array<ISyncActivityComputed> = [];
-            let fakeAnalysisData: IAnalysisData = {
+			let activitiesComputed: Array<SyncedActivityModel> = [];
+			let fakeAnalysisData: AnalysisDataModel = {
                 moveRatio: null,
                 toughnessScore: null,
                 speedData: null,
@@ -136,8 +136,8 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
                 gradeData: null,
                 elevationData: null,
             };
-            _.forEach(activitiesWithStream, (awStream: ISyncActivityWithStream) => {
-                let activityComputed: ISyncActivityComputed = <ISyncActivityComputed> _.pick(awStream, MultipleActivityProcessor.outputFields);
+			_.forEach(activitiesWithStream, (awStream: StreamActivityModel) => {
+				let activityComputed: SyncedActivityModel = <SyncedActivityModel> _.pick(awStream, MultipleActivityProcessor.outputFields);
                 activityComputed.extendedStats = fakeAnalysisData;
                 activitiesComputed.push(activityComputed);
             });
@@ -154,7 +154,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
          * - clearSyncCache
          * - saveSyncedAthleteProfile
          */
-        spyOn(activitiesSynchronizer, "saveComputedActivitiesToLocal").and.callFake((computedActivities: Array<ISyncActivityComputed>) => {
+		spyOn(activitiesSynchronizer, "saveComputedActivitiesToLocal").and.callFake((computedActivities: Array<SyncedActivityModel>) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.computedActivities = computedActivities;
             defer.resolve({
@@ -195,7 +195,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: IAthleteProfile) => {
+		spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: AthleteProfileModel) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.syncWithAthleteProfile = syncedAthleteProfile;
             defer.resolve({
@@ -208,42 +208,42 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
     it("should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()", (done: Function) => {
 
         // Give NO last sync date or page + page to read.
-        activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+		activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<StravaActivityModel>) => {
 
             expect(activitiesSynchronizer.httpPageGet).toHaveBeenCalled(); // Ensure spy call
 
             expect(rawStravaActivities).not.toBeNull();
             expect(rawStravaActivities.length).toEqual(20 * 7); // 140 > 7 pages
 
-            let jeannieRide: ISyncRawStravaActivity = _.find(rawStravaActivities, {id: 718908064}); // Find in page 1
+			let jeannieRide: StravaActivityModel = _.find(rawStravaActivities, {id: 718908064}); // Find in page 1
             expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
             expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
             expect(jeannieRide.moving_time_raw).toEqual(8557);
 
-            let relaxRide: ISyncRawStravaActivity = _.find(rawStravaActivities, {id: 642780978}); // Find in page 1
+			let relaxRide: StravaActivityModel = _.find(rawStravaActivities, {id: 642780978}); // Find in page 1
             expect(relaxRide.name).toEqual("Relax");
             expect(relaxRide.moving_time_raw).toEqual(4888);
 
-            let burnedRide: ISyncRawStravaActivity = _.find(rawStravaActivities, {id: 377239233}); // Find in page 1
+			let burnedRide: StravaActivityModel = _.find(rawStravaActivities, {id: 377239233}); // Find in page 1
             expect(burnedRide.name).toEqual("Cramé !!");
             expect(burnedRide.type).toEqual("Ride");
             expect(burnedRide.moving_time_raw).toEqual(4315);
 
-            let fakeRide: ISyncRawStravaActivity = _.find(rawStravaActivities, {id: 9999999999}); // Find in page 1
+			let fakeRide: StravaActivityModel = _.find(rawStravaActivities, {id: 9999999999}); // Find in page 1
             expect(fakeRide).toBeUndefined();
             return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 1, 3);
 
-        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
             // expect(activitiesSynchronizer.endReached).toBeFalsy();
             expect(rawStravaActivities.length).toEqual(20 * 3);
             return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 3); // Can only read page 6 + 7
 
-        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
             // expect(activitiesSynchronizer.endReached).toBeTruthy();
             expect(rawStravaActivities.length).toEqual(40); // Page 6 + 7
             return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 1);
 
-        }).then((rawStravaActivities: Array<ISyncRawStravaActivity>) => {
+		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
             // expect(activitiesSynchronizer.endReached).toBeFalsy();
             expect(rawStravaActivities.length).toEqual(20);
             done();
@@ -251,7 +251,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         }, (err: any) => {
             expect(err).toBeNull();
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
             console.log(progress);
         });
     });
@@ -259,31 +259,31 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
     it("should ensure ActivitiesSynchronizer:fetchWithStream()", (done: Function) => {
 
         // let fromPage = 1, pagesToRead = 3; // read 1 => 3
-        activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+		activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<StreamActivityModel>) => {
 
             expect(activitiesSynchronizer.fetchStreamByActivityId).toHaveBeenCalled(); // Ensure spy call
 
             expect(activitiesWithStream).not.toBeNull();
             expect(activitiesWithStream.length).toEqual(140);
 
-            let jeannieRide: ISyncActivityWithStream = _.find(activitiesWithStream, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
+			let jeannieRide: StreamActivityModel = _.find(activitiesWithStream, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
             expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
             expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
             expect(jeannieRide.moving_time_raw).toEqual(8557);
             expect(jeannieRide.stream).not.toBeNull();
 
-            let fakeRide: ISyncActivityWithStream = _.find(activitiesWithStream, {id: 9999999999}); // Find fake
+			let fakeRide: StreamActivityModel = _.find(activitiesWithStream, {id: 9999999999}); // Find fake
             expect(fakeRide).toBeUndefined();
 
             // Now fetch in pages 4 to 6
             return activitiesSynchronizer.fetchWithStream(null, 4, 3);
 
-        }).then((activitiesWithStream: Array<ISyncActivityWithStream>) => {
+		}).then((activitiesWithStream: Array<StreamActivityModel>) => {
 
             // Testing activitiesSynchronizer.fetchWithStream(null, 4, 3); => pages 4 to 6
             expect(activitiesWithStream).not.toBeNull();
             expect(activitiesWithStream.length).toEqual(60);
-            let jeannieRide: ISyncActivityWithStream = _.find(activitiesWithStream, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+			let jeannieRide: StreamActivityModel = _.find(activitiesWithStream, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
             expect(jeannieRide).toBeUndefined(); // Must not exists in pages 4 to 6
 
             done(); // Finish it !
@@ -291,7 +291,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         }, (err: any) => {
             expect(err).toBeNull();
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
             console.log(progress);
         });
 
@@ -301,7 +301,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
     it("should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()", (done: Function) => {
 
         // Getting all pages (7)
-        activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<ISyncActivityComputed>) => {
+		activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<SyncedActivityModel>) => {
 
             expect(activitiesSynchronizer.multipleActivityProcessor.compute).toHaveBeenCalled(); // Ensure spy call
             expect(activitiesComputed).not.toBeNull();
@@ -314,18 +314,18 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             // Now fetch in pages 7 to 10 (only 7 exists...)
             return activitiesSynchronizer.fetchAndComputeGroupOfPages(null, 7, 3);
 
-        }).then((activitiesComputed: Array<ISyncActivityComputed>) => {
+		}).then((activitiesComputed: Array<SyncedActivityModel>) => {
 
             // result of pages 7 to 10 (only 7 exists...)
             expect(activitiesComputed.length).toEqual(20); // Only 20 results... not 60 !
 
-            let ride: ISyncActivityComputed = _.find(activitiesComputed, {id: 406217194}); // Find "Afternoon Ride"
+			let ride: SyncedActivityModel = _.find(activitiesComputed, {id: 406217194}); // Find "Afternoon Ride"
             expect(ride.extendedStats).toBeDefined();
             expect(ride.extendedStats.heartRateData).toBeNull();
             expect(ride.extendedStats.speedData).toBeNull();
             expect(ride.moving_time_raw).toEqual(5901);
 
-            let jeannieRide: ISyncActivityComputed = _.find(activitiesComputed, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
+			let jeannieRide: SyncedActivityModel = _.find(activitiesComputed, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
             expect(jeannieRide).toBeUndefined(); // Must not exists in page 7
 
             done();
@@ -340,7 +340,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         expect(activitiesSynchronizer.computeActivitiesByGroupsOfPages).not.toBeUndefined();
 
         // Getting all pages here:
-        activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedComputedActivities: Array<ISyncActivityComputed>) => {
+		activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedComputedActivities: Array<SyncedActivityModel>) => {
 
             expect(activitiesSynchronizer.getComputedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
             expect(activitiesSynchronizer.saveComputedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
@@ -348,7 +348,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(mergedComputedActivities).not.toBeNull();
             expect(mergedComputedActivities.length).toEqual(140);
 
-            let jeannieRide: ISyncActivityComputed = _.find(mergedComputedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
+			let jeannieRide: SyncedActivityModel = _.find(mergedComputedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
             expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
             expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
             expect(jeannieRide.moving_time_raw).toEqual(8557);
@@ -356,7 +356,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(jeannieRide.extendedStats.heartRateData).toBeNull();
             expect(jeannieRide.extendedStats.speedData).toBeNull();
 
-            let fakeRide: ISyncActivityComputed = _.find(mergedComputedActivities, {id: 9999999999}); // Find fake
+			let fakeRide: SyncedActivityModel = _.find(mergedComputedActivities, {id: 9999999999}); // Find fake
             expect(fakeRide).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
@@ -390,7 +390,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(syncResult.computedActivities).not.toBeNull();
             expect(syncResult.computedActivities.length).toEqual(140);
 
-            let jeannieRide: ISyncActivityComputed = _.find(syncResult.computedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
+			let jeannieRide: SyncedActivityModel = _.find(syncResult.computedActivities, {id: 718908064}); // Find "Pédalage avec Madame Jeannie Longo"
             expect(jeannieRide.name).toEqual("Pédalage avec Madame Jeannie Longo");
             expect(jeannieRide.start_time).toEqual("2016-09-20T13:44:54+0000");
             expect(jeannieRide.moving_time_raw).toEqual(8557);
@@ -398,7 +398,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(jeannieRide.extendedStats.heartRateData).toBeNull();
             expect(jeannieRide.extendedStats.speedData).toBeNull();
 
-            let fakeRide: ISyncActivityComputed = _.find(syncResult.computedActivities, {id: 9999999999}); // Find fake
+			let fakeRide: SyncedActivityModel = _.find(syncResult.computedActivities, {id: 9999999999}); // Find fake
             expect(fakeRide).toBeUndefined();
 
             expect(activitiesSynchronizer.hasBeenComputedActivities).not.toBeNull(); // Keep tracking of merged activities instance
@@ -427,7 +427,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
             expect(err).toBeNull();
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
 
         });
     });
@@ -551,7 +551,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         }, (err: any) => {
             console.log("!! ERROR !!", err); // Error...
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
             // computeProgress...
             // deferred.notify(progress);
         });
@@ -592,23 +592,23 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(2);
 
             // Check return
-            let ride: ISyncActivityComputed = _.find(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
+			let ride: SyncedActivityModel = _.find(syncResult.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
             expect(ride.name).toEqual("Prends donc un velo!");
             expect(ride.type).toEqual("Ride");
             expect(ride.display_type).toEqual("Ride");
 
-            let virtualRide: ISyncActivityComputed = _.find(syncResult.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+			let virtualRide: SyncedActivityModel = _.find(syncResult.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
             expect(virtualRide.name).toEqual("First Zwift");
             expect(virtualRide.type).toEqual("VirtualRide");
             expect(virtualRide.display_type).toEqual("VirtualRide");
 
             // Check in stub
-            ride = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
+			ride = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
             expect(ride.name).toEqual("Prends donc un velo!");
             expect(ride.type).toEqual("Ride");
             expect(ride.display_type).toEqual("Ride");
 
-            virtualRide = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+			virtualRide = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
             expect(virtualRide.name).toEqual("First Zwift");
             expect(virtualRide.type).toEqual("VirtualRide");
             expect(virtualRide.display_type).toEqual("VirtualRide");
@@ -617,7 +617,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         }, (err: any) => {
             console.log("!! ERROR !!", err); // Error...
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
             // computeProgress...
             // deferred.notify(progress);
         });
@@ -661,13 +661,13 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
 
             // Check returns
-            let ride: ISyncActivityComputed = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
+			let ride: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
             expect(ride).toBeUndefined();
 
-            let virtualRide: ISyncActivityComputed = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
+			let virtualRide: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 427606185}); // Page 1, "First Zwift", old "1st zwift ride"
             expect(virtualRide).toBeUndefined();
 
-            let anotherRide: ISyncActivityComputed = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 424565561}); // Should still exists
+			let anotherRide: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 424565561}); // Should still exists
             expect(anotherRide).toBeDefined();
 
             done();
@@ -675,7 +675,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
         }, (err: any) => {
             console.log("!! ERROR !!", err); // Error...
             done();
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
             // computeProgress...
             // deferred.notify(progress);
         });
@@ -755,30 +755,30 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             expect(syncResult.globalHistoryChanges.edited.length).toEqual(4);
 
             // Check some edited
-            let activity: ISyncActivityComputed = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065});
+			let activity: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 707356065});
             expect(activity.name).toEqual("Prends donc un velo!");
             expect(activity.type).toEqual("Ride");
             expect(activity.display_type).toEqual("Ride");
 
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 372761597});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 372761597});
             expect(activity.name).toEqual("Rodage plaquettes new name");
             expect(activity.type).toEqual("EBike");
             expect(activity.display_type).toEqual("EBike");
 
             // Check some added
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 723224273});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 723224273});
             expect(activity.name).toEqual("Bon rythme ! 33 KPH !!");
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 556443499});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 556443499});
             expect(activity.name).toEqual("75k @ 31.5 KPH // 181 BPM");
 
             // Check some deleted
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 566288762});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 566288762});
             expect(activity).toBeUndefined();
 
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 473894759});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 473894759});
             expect(activity).toBeUndefined();
 
-            activity = <ISyncActivityComputed> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 424565561});
+			activity = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.computedActivities, {id: 424565561});
             expect(activity).toBeDefined(); // Should still exists
 
             done();

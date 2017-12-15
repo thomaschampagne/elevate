@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { CommonSettingsService } from "./services/common-settings.service";
 import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
@@ -47,7 +47,7 @@ export class CommonSettingsComponent implements OnInit {
 
 		this.sections = this.commonSettingsService.sections;
 
-		this.userSettingsService.fetch().then((userSettingsSynced: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 			this.renderOptionsForEachSection(userSettingsSynced);
 		});
 
@@ -70,9 +70,9 @@ export class CommonSettingsComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {IUserSettings} userSettingsSynced
+	 * @param {UserSettingsModel} userSettingsSynced
 	 */
-	private renderOptionsForEachSection(userSettingsSynced: IUserSettings): void {
+	private renderOptionsForEachSection(userSettingsSynced: UserSettingsModel): void {
 
 		_.forEach(this.sections, (section: SectionModel) => {
 

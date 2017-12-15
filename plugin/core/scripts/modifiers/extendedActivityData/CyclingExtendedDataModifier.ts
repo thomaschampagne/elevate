@@ -1,5 +1,5 @@
 import { Helper } from "../../../../common/scripts/Helper";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { IAppResources } from "../../interfaces/IAppResources";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
@@ -13,7 +13,7 @@ import { SpeedDataView } from "./views/SpeedDataView";
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
     constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
-                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
+				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
         super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
     }
 

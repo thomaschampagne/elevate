@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { FitnessService } from "../shared/service/fitness.service";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
@@ -68,7 +68,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	 */
 	private start() {
 
-		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;

@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import * as _ from "lodash";
@@ -9,7 +9,7 @@ describe("ActivityService", () => {
 
 	let activityService: ActivityService = null;
 
-	let _TEST_SYNCED_ACTIVITIES_: ISyncActivityComputed[] = null;
+	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 
 	beforeEach(() => {
 
@@ -36,10 +36,10 @@ describe("ActivityService", () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<ISyncActivityComputed[]> = activityService.fetch();
+		const promise: Promise<SyncedActivityModel[]> = activityService.fetch();
 
 		// Then
-		promise.then((result: ISyncActivityComputed[]) => {
+		promise.then((result: SyncedActivityModel[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);

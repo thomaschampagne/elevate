@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
-import { IActivityBasicInfo } from "../../common/scripts/interfaces/IActivityData";
-import { ISyncNotify } from "../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
+import { SyncNotifyModel } from "../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
 import { env } from "../config/env";
@@ -60,11 +60,11 @@ export class StravistiX {
     protected isActivityAuthor: boolean;
     protected extensionId: string;
     protected appResources: IAppResources;
-    protected _userSettings: IUserSettings;
+	protected _userSettings: UserSettingsModel;
     protected vacuumProcessor: VacuumProcessor;
     protected activitiesSynchronizer: ActivitiesSynchronizer;
 
-    constructor(userSettings: IUserSettings, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
 
         this._userSettings = userSettings;
         this.appResources = appResources;
@@ -684,7 +684,7 @@ export class StravistiX {
 
         if (env.debugMode) console.log("Execute handleExtendedData_()");
 
-        const basicInfo: IActivityBasicInfo = {
+		const basicInfo: ActivityBasicInfoModel = {
             activityName: this.vacuumProcessor.getActivityName(),
             activityTime: this.vacuumProcessor.getActivityTime(),
         };
@@ -767,7 +767,7 @@ export class StravistiX {
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            const basicInfo: IActivityBasicInfo = {
+			const basicInfo: ActivityBasicInfoModel = {
                 activityName: that.vacuumProcessor.getActivityName(),
                 activityTime: that.vacuumProcessor.getActivityTime(),
             };
@@ -1147,7 +1147,7 @@ export class StravistiX {
         }
     }
 
-    public get userSettings(): IUserSettings {
+	public get userSettings(): UserSettingsModel {
         return this._userSettings;
     }
 
@@ -1224,7 +1224,7 @@ export class StravistiX {
                                 },
                             });
 
-                        }, (progress: ISyncNotify) => {
+						}, (progress: SyncNotifyModel) => {
                             // console.log(progress);
                         });
 

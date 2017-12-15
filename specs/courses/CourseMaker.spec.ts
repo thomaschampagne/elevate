@@ -1,12 +1,12 @@
 import * as _ from "lodash";
-import { IActivityStream } from "../../plugin/common/scripts/interfaces/IActivityData";
+import { StreamsModel } from "../../plugin/common/scripts/models/ActivityData";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../plugin/common/scripts/CourseMarker";
 
 describe("CourseMaker", () => {
 
     let courseMaker: CourseMaker = new CourseMaker();
     let xmlParser: DOMParser = new DOMParser();
-    let activityStream: IActivityStream;
+	let activityStream: StreamsModel;
 
     beforeEach(() => {
         activityStream = _.cloneDeep(window.__fixtures__["fixtures/activities/829770999/stream"]);
@@ -65,7 +65,7 @@ describe("CourseMaker", () => {
 
         // Given
         let courseName: string = "MyCourse";
-        activityStream = <IActivityStream> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
+		activityStream = <StreamsModel> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
         let errorCatched = null;
 
         // When
@@ -133,7 +133,7 @@ describe("CourseMaker", () => {
 
         // Given
         let courseName: string = "MyCourse";
-        activityStream = <IActivityStream> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
+		activityStream = <StreamsModel> _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]);
         let errorCatched = null;
 
         // When

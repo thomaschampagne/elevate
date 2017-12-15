@@ -1,10 +1,10 @@
-import { IElevationData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ElevationDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class ElevationDataView extends AbstractDataView {
-    protected elevationData: IElevationData;
+	protected elevationData: ElevationDataModel;
 
-    constructor(elevationData: IElevationData, units: string) {
+	constructor(elevationData: ElevationDataModel, units: string) {
         super(units);
         this.mainColor = [216, 212, 38];
         this.elevationData = elevationData;

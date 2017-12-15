@@ -1,16 +1,16 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { EffortInfo, LeaderBoardData } from "./ActivitySegmentTimeComparisonModifier";
 
 export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
     protected athleteId: number;
     protected segmentId: number;
     protected hraTimeLoop: number;
 
-    constructor(userSettings: IUserSettings, athleteId: number, segmentId: number) {
+	constructor(userSettings: UserSettingsModel, athleteId: number, segmentId: number) {
         this.userSettings = userSettings;
         this.athleteId = athleteId;
         this.segmentId = segmentId;

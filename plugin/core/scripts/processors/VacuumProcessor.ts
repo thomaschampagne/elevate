@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { IActivityStatsMap, IActivityStream } from "../../../common/scripts/interfaces/IActivityData";
+import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
 import { env } from "../../config/env";
 
 export class VacuumProcessor {
@@ -125,7 +125,7 @@ export class VacuumProcessor {
     /**
      * @returns Common activity stats given by Strava throught right panel
      */
-    protected getActivityStatsMap(): IActivityStatsMap {
+	protected getActivityStatsMap(): ActivityStatsMapModel {
 
         const actStatsContainer: JQuery = $(".activity-summary-container");
 
@@ -205,7 +205,7 @@ export class VacuumProcessor {
             false, false, false, false);
 
         // Create activityData Map
-        const activityCommonStats: IActivityStatsMap = {
+		const activityCommonStats: ActivityStatsMapModel = {
             distance,
             // movingTime: movingTime,
             elevation,
@@ -268,7 +268,7 @@ export class VacuumProcessor {
     /**
      * @returns activity stream in callback
      */
-    public getActivityStream(callback: (activityCommonStats: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => void): void {
+	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean) => void): void {
 
         let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
 
@@ -280,7 +280,7 @@ export class VacuumProcessor {
 
         const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_distance";
 
-        $.ajax(url).done((activityStream: IActivityStream) => {
+		$.ajax(url).done((activityStream: StreamsModel) => {
 
             let hasPowerMeter: boolean = true;
 

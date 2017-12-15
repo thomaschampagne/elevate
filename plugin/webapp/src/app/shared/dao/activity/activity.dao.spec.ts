@@ -3,14 +3,14 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 
 describe("ActivityDao", () => {
 
 	let activityDao: ActivityDao;
 
-	let testActivities: ISyncActivityComputed[] = null;
+	let testActivities: SyncedActivityModel[] = null;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -39,10 +39,10 @@ describe("ActivityDao", () => {
 		});
 
 		// When
-		const promise: Promise<ISyncActivityComputed[]> = activityDao.fetch();
+		const promise: Promise<SyncedActivityModel[]> = activityDao.fetch();
 
 		// Then
-		promise.then((result: ISyncActivityComputed[]) => {
+		promise.then((result: SyncedActivityModel[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(TEST_SYNCED_ACTIVITIES);

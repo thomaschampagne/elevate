@@ -1,12 +1,12 @@
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IGradeData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { GradeDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export abstract class AbstractGradeDataView extends AbstractDataView {
 
-    protected gradeData: IGradeData;
+	protected gradeData: GradeDataModel;
 
-    constructor(gradeData: IGradeData, units: string) {
+	constructor(gradeData: GradeDataModel, units: string) {
         super(units);
         this.mainColor = [0, 128, 0];
         this.setGraphTitleFromUnits();

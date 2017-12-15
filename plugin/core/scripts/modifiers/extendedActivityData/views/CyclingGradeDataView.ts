@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import { IGradeData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { GradeDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractGradeDataView } from "./AbstractGradeDataView";
 
 export class CyclingGradeDataView extends AbstractGradeDataView {
 
-    constructor(gradeData: IGradeData, units: string) {
+	constructor(gradeData: GradeDataModel, units: string) {
         super(gradeData, units);
     }
 

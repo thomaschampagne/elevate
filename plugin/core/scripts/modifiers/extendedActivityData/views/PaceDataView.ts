@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IPaceData, IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { PaceDataModel, ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class PaceDataView extends AbstractDataView {
 
-    protected paceData: IPaceData;
+	protected paceData: PaceDataModel;
 
-    constructor(paceData: IPaceData, units: string) {
+	constructor(paceData: PaceDataModel, units: string) {
         super(units);
         this.mainColor = [9, 123, 219];
         this.setGraphTitleFromUnits();
@@ -45,7 +45,7 @@ export class PaceDataView extends AbstractDataView {
         }
     }
 
-    protected setupDistributionTable(zones: IZone[], ratio: number): void {
+	protected setupDistributionTable(zones: ZoneModel[], ratio: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -70,7 +70,7 @@ export class PaceDataView extends AbstractDataView {
         htmlTable += "<td>% ZONE</td>"; // % in zone
         htmlTable += "</tr>";
 
-        _.forEach(zones, (zone: IZone, index: number) => {
+		_.forEach(zones, (zone: ZoneModel, index: number) => {
             const from: string = (zone.from === 0) ? "&infin;" : Helper.secondsToHHMMSS(zone.from * ratio);
             htmlTable += "<tr>"; // Zone
             htmlTable += "<td>Z" + (index + 1) + "</td>"; // Zone
@@ -87,7 +87,7 @@ export class PaceDataView extends AbstractDataView {
         this.table = $(htmlTable);
     }
 
-    protected setupDistributionGraph(zones: IZone[], ratio: number): void {
+	protected setupDistributionGraph(zones: ZoneModel[], ratio: number): void {
 
         if (!ratio) {
             ratio = 1;
@@ -96,7 +96,7 @@ export class PaceDataView extends AbstractDataView {
         const labelsData: string[] = [];
         const distributionArray: string[] = [];
 
-        _.forEach(zones, (zone: IZone, index: number) => {
+		_.forEach(zones, (zone: ZoneModel, index: number) => {
             const from: string = (zone.from === 0) ? "Infinite" : Helper.secondsToHHMMSS(zone.from * ratio);
             const label: string = "Z" + (index + 1) + ": " + from + " - " + Helper.secondsToHHMMSS(zone.to * ratio) + " " + this.units;
             labelsData.push(label);

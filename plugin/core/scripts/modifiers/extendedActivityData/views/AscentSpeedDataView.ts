@@ -1,11 +1,11 @@
-import { IElevationData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ElevationDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class AscentSpeedDataView extends AbstractDataView {
 
-    protected elevationData: IElevationData;
+	protected elevationData: ElevationDataModel;
 
-    constructor(elevationData: IElevationData, units: string) {
+	constructor(elevationData: ElevationDataModel, units: string) {
         super(units);
         this.mainColor = [44, 0, 204];
         this.setGraphTitleFromUnits();

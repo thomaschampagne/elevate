@@ -1,7 +1,11 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
-import { IActivityBasicInfo, IAnalysisData, ISpeedUnitData } from "../../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
+import {
+	ActivityBasicInfoModel,
+	AnalysisDataModel,
+	SpeedUnitDataModel
+} from "../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../../interfaces/IAppResources";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
@@ -19,19 +23,19 @@ export abstract class AbstractExtendedDataModifier {
     protected activityId: number;
     protected activityType: string;
     protected appResources: IAppResources;
-    protected userSettings: IUserSettings;
-    protected basicInfo: IActivityBasicInfo;
+	protected userSettings: UserSettingsModel;
+	protected basicInfo: ActivityBasicInfoModel;
     protected isAuthorOfViewedActivity: boolean;
-    protected speedUnitsData: ISpeedUnitData;
+	protected speedUnitsData: SpeedUnitDataModel;
     protected type: number;
-    protected analysisData: IAnalysisData;
+	protected analysisData: AnalysisDataModel;
     protected summaryGrid: JQuery;
     protected segmentEffortButtonId: number;
     protected content: string;
     protected dataViews: AbstractDataView[] = [];
 
     constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
-                userSettings: IUserSettings, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
+				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
 
         this.activityProcessor = activityProcessor;
         this.activityId = activityId;
@@ -53,7 +57,7 @@ export abstract class AbstractExtendedDataModifier {
         this.activityProcessor.getAnalysisData(
             this.activityId,
             null, // No bounds given, full activity requested
-            (analysisData: IAnalysisData) => { // Callback when analysis data has been computed
+			(analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
                 this.analysisData = analysisData;
 

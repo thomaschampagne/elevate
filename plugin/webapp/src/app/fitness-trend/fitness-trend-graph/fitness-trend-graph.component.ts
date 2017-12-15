@@ -8,7 +8,7 @@ import { PeriodModel } from "../shared/models/period.model";
 import { LastPeriodModel } from "../shared/models/last-period.model";
 import { GraphPointModel } from "./models/graph-point.model";
 import { MarkerModel } from "./models/marker.model";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { ViewableGraphDataModel } from "./models/viewable-graph-data.model";
 import { MetricsGraphicsEventModel } from "./models/metrics-graphics-event.model";
@@ -65,7 +65,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		this.PERFORMANCE_MARKER = performance.now();
 
-		this.userSettingsService.fetch().then((userSettings: IUserSettings) => {
+		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;

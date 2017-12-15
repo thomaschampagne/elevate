@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { ISyncNotify } from "../../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { SyncNotifyModel } from "../../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage, StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { env } from "../../config/env";
 import { IAppResources } from "../interfaces/IAppResources";
@@ -14,12 +14,12 @@ export class ActivitiesSyncModifier implements IModifier {
     protected extensionId: string;
     protected sourceTabId: number;
     protected forceSync: boolean;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
     protected appResources: IAppResources;
 
     public closeWindowIntervalId: number = -1;
 
-    constructor(appResources: IAppResources, userSettings: IUserSettings, forceSync: boolean, sourceTabId?: number) {
+	constructor(appResources: IAppResources, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
         this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
         this.userSettings = userSettings;
         this.appResources = appResources;
@@ -156,7 +156,7 @@ export class ActivitiesSyncModifier implements IModifier {
                 $("#syncStatusErrorContent").append("<div>" + JSON.stringify(err) + "</div>");
             }
 
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
 
             // Global progress
             $("#syncProgressBar").val(progress.browsedActivitiesCount / progress.totalActivities * 100);

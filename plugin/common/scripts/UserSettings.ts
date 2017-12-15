@@ -1,6 +1,6 @@
-import { IUserSettings } from "./interfaces/IUserSettings";
+import { UserSettingsModel } from "./models/UserSettings";
 
-export const userSettings: IUserSettings = {
+export const userSettings: UserSettingsModel = {
     autoSyncMinutes: 60,
     localStorageMustBeCleared: false,
 	systemUnit: "metric",

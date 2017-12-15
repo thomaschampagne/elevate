@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { IUserSettings } from "../../../../../../common/scripts/interfaces/IUserSettings";
-import { IZone } from "../../../../../../common/scripts/interfaces/IActivityData";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { ZoneModel } from "../../../../../../common/scripts/models/ActivityData";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 
@@ -14,9 +14,9 @@ export class UserSettingsService {
 
 	/**
 	 *
-	 * @returns {Promise<IUserSettings>}
+	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public fetch(): Promise<IUserSettings> {
+	public fetch(): Promise<UserSettingsModel> {
 		return this.userSettingsDao.fetch();
 	}
 
@@ -35,31 +35,31 @@ export class UserSettingsService {
 	 * @param value
 	 * @returns {Promise<boolean>}
 	 */
-	public update(key: string, value: any): Promise<IUserSettings> {
+	public update(key: string, value: any): Promise<UserSettingsModel> {
 		return this.userSettingsDao.update(key, value);
 	}
 
 	/**
 	 * Clear local storage on next reload
-	 * @returns {Promise<IUserSettings>}
+	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public markLocalStorageClear(): Promise<IUserSettings> {
+	public markLocalStorageClear(): Promise<UserSettingsModel> {
 		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
 	}
 
 	/**
 	 *
 	 * @param {ZoneDefinitionModel} zoneDefinition
-	 * @param {IZone[]} zones
-	 * @returns {Promise<IZone[]>}
+	 * @param {ZoneModel[]} zones
+	 * @returns {Promise<ZoneModel[]>}
 	 */
-	public updateZones(zoneDefinition: ZoneDefinitionModel, zones: IZone[]): Promise<IZone[]> {
+	public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
 
-		return new Promise<IZone[]>((resolve: Function, reject: Function) => {
+		return new Promise<ZoneModel[]>((resolve: Function, reject: Function) => {
 
 			const path = "zones." + zoneDefinition.value;
 
-			this.userSettingsDao.updateNested(path, zones).then((userSettings: IUserSettings) => {
+			this.userSettingsDao.updateNested(path, zones).then((userSettings: UserSettingsModel) => {
 
 				resolve(userSettings.zones[zoneDefinition.value]);
 

@@ -32,7 +32,7 @@ module.exports = function (config) {
             'plugin/common/scripts/Background.js',
             'plugin/core/scripts/SystemJS.*.js',
             'plugin/core/scripts/InstallUpdateHandler.js',
-            'plugin/core/scripts/interfaces/*.js',
+			'plugin/core/scripts/models/*.js',
             'plugin/core/scripts/Content.js',
             'plugin/core/modules/jquery.appear.js'
         ],

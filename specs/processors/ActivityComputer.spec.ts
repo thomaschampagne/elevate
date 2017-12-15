@@ -1,10 +1,10 @@
 import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
-import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import {
-	IActivityStatsMap,
-	IActivityStream,
-	IAnalysisData
-} from "../../plugin/common/scripts/interfaces/IActivityData";
+	ActivityStatsMapModel,
+	AnalysisDataModel,
+	StreamsModel
+} from "../../plugin/common/scripts/models/ActivityData";
 
 describe("ActivityComputer", () => {
 
@@ -13,9 +13,9 @@ describe("ActivityComputer", () => {
 
         const powerMeter: boolean = false;
 
-        let userSettingsMock: IUserSettings = window.__fixtures__["fixtures/userSettings/2470979"];
-        let stream: IActivityStream = window.__fixtures__["fixtures/activities/723224273/stream"];
-        let statsMap: IActivityStatsMap = window.__fixtures__["fixtures/activities/723224273/statsMap"];
+		let userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"];
+		let stream: StreamsModel = window.__fixtures__["fixtures/activities/723224273/stream"];
+		let statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
@@ -23,7 +23,7 @@ describe("ActivityComputer", () => {
         let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
             isActivityAuthor, powerMeter, statsMap, stream, null, true);
 
-        let result: IAnalysisData = activityComputer.compute();
+		let result: AnalysisDataModel = activityComputer.compute();
 
         expect(result).not.toBeNull();
         expect(result.speedData).not.toBeNull();

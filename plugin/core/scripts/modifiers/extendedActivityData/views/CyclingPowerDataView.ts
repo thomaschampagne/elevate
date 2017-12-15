@@ -1,12 +1,12 @@
 import * as _ from "lodash";
-import { IPowerData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { PowerDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class CyclingPowerDataView extends AbstractDataView {
 
-    protected powerData: IPowerData;
+	protected powerData: PowerDataModel;
 
-    constructor(powerData: IPowerData, units: string) {
+	constructor(powerData: PowerDataModel, units: string) {
         super(units);
         this.mainColor = [96, 96, 96];
         this.setGraphTitleFromUnits();

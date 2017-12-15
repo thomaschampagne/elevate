@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 
 @Injectable()
 export class ActivityService {
@@ -10,9 +10,9 @@ export class ActivityService {
 
 	/**
 	 *
-	 * @returns {Promise<ISyncActivityComputed[]>}
+	 * @returns {Promise<SyncedActivityModel[]>}
 	 */
-	public fetch(): Promise<ISyncActivityComputed[]> {
+	public fetch(): Promise<SyncedActivityModel[]> {
 		return this.activityDao.fetch();
 	}
 

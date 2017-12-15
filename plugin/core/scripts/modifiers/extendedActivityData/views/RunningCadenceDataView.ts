@@ -1,18 +1,18 @@
 import * as _ from "lodash";
-import { ICadenceData } from "../../../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { CadenceDataModel } from "../../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {
 
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(cadenceData: ICadenceData, units: string, userSettings: IUserSettings) {
+	constructor(cadenceData: CadenceDataModel, units: string, userSettings: UserSettingsModel) {
 
         if (userSettings.enableBothLegsCadence) {
 
             // Create a deep clone in memory to avoid values doubled on each reload
-            const cadenceDataClone: ICadenceData = _.cloneDeep(cadenceData);
+			const cadenceDataClone: CadenceDataModel = _.cloneDeep(cadenceData);
 
             // Then multiply cadence per 2
             cadenceDataClone.averageCadenceMoving *= 2;

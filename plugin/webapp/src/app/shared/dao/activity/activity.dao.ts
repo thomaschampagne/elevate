@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ISyncActivityComputed } from "../../../../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 
 @Injectable()
 export class ActivityDao {
@@ -9,11 +9,11 @@ export class ActivityDao {
 
 	/**
 	 *
-	 * @returns {Promise<ISyncActivityComputed[]>}
+	 * @returns {Promise<SyncedActivityModel[]>}
 	 */
-	public fetch(): Promise<ISyncActivityComputed[]> {
-		return new Promise<ISyncActivityComputed[]>((resolve) => {
-			this.chromeStorageLocal().get("computedActivities", (result: { computedActivities: ISyncActivityComputed[] }) => {
+	public fetch(): Promise<SyncedActivityModel[]> {
+		return new Promise<SyncedActivityModel[]>((resolve) => {
+			this.chromeStorageLocal().get("computedActivities", (result: { computedActivities: SyncedActivityModel[] }) => {
 				resolve(result.computedActivities);
 			});
 		});

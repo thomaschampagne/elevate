@@ -1,5 +1,5 @@
 import * as Q from "q";
-import { ISpeedUnitData } from "./interfaces/IActivityData";
+import { SpeedUnitDataModel } from "./models/ActivityData";
 import { IStorageUsage } from "./modules/StorageManager";
 
 export class Helper {
@@ -11,13 +11,13 @@ export class Helper {
     public static reloadBrowserTabMethod: string = "reloadBrowserTab";
     public static getStorageUsageMethod: string = "getStorageUsage";
 
-    public static getSpeedUnitData(): ISpeedUnitData {
+	public static getSpeedUnitData(): SpeedUnitDataModel {
         const measurementPreference: string = window.currentAthlete.get("measurement_preference");
         const units: string = (measurementPreference == "meters") ? "km" : "mi";
         const speedUnitPerHour: string = (measurementPreference == "meters") ? "km/h" : "mi/h";
         const speedUnitFactor: number = (speedUnitPerHour == "km/h") ? 1 : Helper.KPH_TO_MPH_RATIO;
 
-        const speedUnitData: ISpeedUnitData = {
+		const speedUnitData: SpeedUnitDataModel = {
             speedUnitPerHour,
             speedUnitFactor,
             units,

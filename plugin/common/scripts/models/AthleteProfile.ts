@@ -1,4 +1,4 @@
-export interface IAthleteProfile {
+export class AthleteProfileModel {
     userGender: string;
     userMaxHr: number;
     userRestHr: number;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
@@ -16,7 +16,7 @@ import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 export class ZoneComponent implements OnInit {
 
 	@Input("zone")
-	public zone: IZone;
+	public zone: ZoneModel;
 
 	@Input("zoneId")
 	public zoneId: number;
@@ -40,7 +40,7 @@ export class ZoneComponent implements OnInit {
 	public isLastZone: boolean;
 
 	@Input("currentZones")
-	public currentZones: IZone[];
+	public currentZones: ZoneModel[];
 
 	@Input("zoneDefinition")
 	public zoneDefinition: ZoneDefinitionModel;
