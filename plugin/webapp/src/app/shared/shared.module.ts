@@ -28,6 +28,7 @@ import { FitnessInfoDialogComponent } from "../fitness-trend/fitness-trend-graph
 import { FitnessTrendTableComponent } from "../fitness-trend/fitness-trend-table/fitness-trend-table.component";
 import { FitnessTrendComponent } from "../fitness-trend/fitness-trend.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
+import { DonateComponent } from "../donate/donate.component";
 
 @NgModule({
 	declarations: [
@@ -41,6 +42,7 @@ import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 		FitnessTrendComponent,
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
+		DonateComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,

@@ -44,6 +44,12 @@ export class AppComponent implements OnInit {
 			icon: "format_line_spacing",
 			routerLink: AppRoutesModel.zonesSettings,
 			routerLinkActive: true
+		},
+		{
+			name: "Donate",
+			icon: "favorite",
+			routerLink: AppRoutesModel.donate,
+			routerLinkActive: true
 		}
 	];
 
