@@ -36,9 +36,10 @@ describe('YearProgressService', () => {
 		// Given
 		const expectedLength = 3;
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		// When
-		const progression = service.progression(_TEST_YEAR_PROGRESS_ACTIVITIES_, typesFilters);
+		const progression = service.progression(syncedActivityModels, typesFilters);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -58,9 +59,9 @@ describe('YearProgressService', () => {
 
 	it("should compute progression with proper totals metrics", (done: Function) => {
 
-
 		// Given
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		const expectedFirstDay2015 = {
 			onTimestamp: 1420066800000,
@@ -123,7 +124,7 @@ describe('YearProgressService', () => {
 		};
 
 		// When
-		const progression = service.progression(_TEST_YEAR_PROGRESS_ACTIVITIES_, typesFilters);
+		const progression = service.progression(syncedActivityModels, typesFilters);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -142,6 +143,51 @@ describe('YearProgressService', () => {
 		const lastDay2017 = _.last(progression[2].progressions);
 		expect(firstDay2017).toEqual(expectedFirstDay2017);
 		expect(lastDay2017).toEqual(expectedLastDay2017);
+
+		done();
+	});
+
+	it("should not compute progression with empty activities", (done: Function) => {
+
+		// Given
+		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const syncedActivityModels = [];
+
+		// When
+		const progression = service.progression(syncedActivityModels, typesFilters);
+
+		// Then
+		expect(progression).toBeNull();
+
+		done();
+	});
+
+	it("should not compute progression with empty types filters", (done: Function) => {
+
+		// Given
+		const typesFilters: string[] = [];
+		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
+
+		// When
+		const progression = service.progression(syncedActivityModels, typesFilters);
+
+		// Then
+		expect(progression).toBeNull();
+
+		done();
+	});
+
+	it("should not compute progression with not existing types", (done: Function) => {
+
+		// Given
+		const typesFilters: string[] = ["FakeType"];
+		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
+
+		// When
+		const progression = service.progression(syncedActivityModels, typesFilters);
+
+		// Then
+		expect(progression).toBeNull();
 
 		done();
 	});

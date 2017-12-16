@@ -1,6 +1,5 @@
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import * as moment from "moment";
-import * as _ from "lodash";
 
 export class YearProgressActivitiesFixture {
 
@@ -91,6 +90,6 @@ export class YearProgressActivitiesFixture {
 			currentMoment.add(1, "days");
 		}
 
-		return _.cloneDeep(models);
+		return models;
 	}
 }

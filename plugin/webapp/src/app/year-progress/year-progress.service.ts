@@ -15,9 +15,17 @@ export class YearProgressService {
 
 	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[]): YearProgressModel[] {
 
+		if (_.isEmpty(syncedActivityModels) || _.isEmpty(typesFilter)) {
+			return null;
+		}
+
 		const yearProgressModels: YearProgressModel[] = [];
 
-		let yearProgressActivityModels = this.filterSyncedActivityModel(syncedActivityModels, typesFilter);
+		let yearProgressActivityModels = this.filterSyncedActivityModelAlongTypes(syncedActivityModels, typesFilter);
+
+		if (_.isEmpty(yearProgressActivityModels)) {
+			return null;
+		}
 
 		// Sort yearProgressActivities along start_time
 		yearProgressActivityModels = _.sortBy(yearProgressActivityModels, (activity: YearProgressActivityModel) => {
@@ -107,7 +115,7 @@ export class YearProgressService {
 	 * @param {string[]} typesFilter
 	 * @returns {YearProgressActivityModel[]}
 	 */
-	private filterSyncedActivityModel(activities: SyncedActivityModel[], typesFilter: string[]): YearProgressActivityModel[] {
+	private filterSyncedActivityModelAlongTypes(activities: SyncedActivityModel[], typesFilter: string[]): YearProgressActivityModel[] {
 
 		activities = _.filter(activities, (activity: YearProgressActivityModel) => {
 
