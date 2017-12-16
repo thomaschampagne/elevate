@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { YearProgressService } from './year-progress.service';
+import { ActivitiesCountByType, YearProgressService } from './year-progress.service';
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import * as _ from "lodash";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
@@ -234,6 +234,67 @@ describe('YearProgressService', () => {
 			expect(error).toEqual(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
 			done();
 		});
+	});
+
+	it("should provide activities count by types", (done: Function) => {
+
+		// Given
+		const expectedResult: ActivitiesCountByType[] = [
+			{type: "Run", count: 178},
+			{type: "VirtualRide", count: 177},
+			{type: "Ride", count: 352}
+		];
+
+		// When
+		const promise: Promise<ActivitiesCountByType[]> = service.countActivitiesByType();
+
+		// Then
+		promise.then((result: ActivitiesCountByType[]) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedResult);
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		});
+
+	});
+
+	it("should not re-call activity dao fetch method when SyncedActivityModels exists", (done: Function) => {
+
+		// Given
+		const expectedActivityDaoFetchCalls = 1;
+		const firstCallTypesFilters: string[] = ["Ride"];
+		const secondCallTypesFilters: string[] = ["Run"];
+
+		// When
+		service.countActivitiesByType().then(() => {
+
+			return service.progression(firstCallTypesFilters);
+
+		}).then(() => {
+
+			return service.progression(secondCallTypesFilters);
+
+		}).then(() => {
+
+			// Then
+			expect(spyActivityDaoFetch).toHaveBeenCalledTimes(expectedActivityDaoFetchCalls);
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		});
+
 	});
 
 });

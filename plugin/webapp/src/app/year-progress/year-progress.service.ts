@@ -8,6 +8,11 @@ import { YearProgressActivityModel } from "./models/year-progress-activity.model
 import { ProgressionModel } from "./models/progression.model";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 
+export class ActivitiesCountByType { // TODO put in file
+	type: string;
+	count: number;
+}
+
 @Injectable()
 export class YearProgressService {
 
@@ -15,14 +20,17 @@ export class YearProgressService {
 	public static readonly ERROR_NO_TYPES_FILTER: string = "Empty types filter";
 	public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels";
 
+	public syncedActivityModels: SyncedActivityModel[] = null;
+
 	constructor(public activityDao: ActivityDao) {
 	}
 
 	public progression(typesFilter: string[]): Promise<YearProgressModel[]> {
 
-		return new Promise<YearProgressModel[]>((resolve, reject) => {
+		return new Promise<YearProgressModel[]>((resolve: (result: YearProgressModel[]) => void,
+												 reject: (error: string) => void) => {
 
-			this.activityDao.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
+			this.provideSyncedActivityModels().then((syncedActivityModels: SyncedActivityModel[]) => {
 
 				if (_.isEmpty(syncedActivityModels)) {
 					reject(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -129,6 +137,52 @@ export class YearProgressService {
 
 	}
 
+	/**
+	 *
+	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 * @returns {ActivitiesCountByType[]}
+	 */
+	public countActivitiesByType(): Promise<ActivitiesCountByType[]> {
+
+		return new Promise<ActivitiesCountByType[]>((resolve: (result: ActivitiesCountByType[]) => void) => {
+
+			this.provideSyncedActivityModels().then((syncedActivityModels: SyncedActivityModel[]) => {
+
+				const activitiesCountByTypes: ActivitiesCountByType[] = [];
+
+				_.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: string) => {
+					activitiesCountByTypes.push({
+						type: type,
+						count: count
+					});
+				});
+
+				return resolve(activitiesCountByTypes);
+			});
+		});
+	}
+
+	private provideSyncedActivityModels(): Promise<SyncedActivityModel[]> {
+
+		let promise;
+
+		if (_.isNull(this.syncedActivityModels)) {
+
+			promise = new Promise<SyncedActivityModel[]>((resolve: (result: SyncedActivityModel[]) => void) => {
+
+				this.activityDao.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
+					this.syncedActivityModels = syncedActivityModels;
+					resolve(this.syncedActivityModels);
+				});
+			});
+
+		} else {
+			promise = Promise.resolve(this.syncedActivityModels);
+		}
+
+		return promise;
+	}
+
 
 	/**
 	 *
@@ -163,4 +217,6 @@ export class YearProgressService {
 	public getTodayMoment(): Moment {
 		return moment().endOf("day");
 	}
+
 }
+
