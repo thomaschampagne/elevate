@@ -1,85 +1,92 @@
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import * as moment from "moment";
+import { Moment } from "moment";
 
-const STATES_COUNT = 5;
+export class YearProgressActivitiesFixture {
 
-const TYPE_RIDE: number = 0;
-const TYPE_RUN: number = 1;
-const TYPE_VIRTUAL_RIDE: number = 2;
-const TYPE_COMMUTE: number = 3;
-const TYPE_REST: number = 4;
+	public static readonly STATES_COUNT = 5;
+	public static readonly TYPE_RIDE: number = 0;
+	public static readonly TYPE_RUN: number = 1;
+	public static readonly TYPE_VIRTUAL_RIDE: number = 2;
+	public static readonly TYPE_COMMUTE: number = 3;
+	public static readonly TYPE_REST: number = 4;
+	public static readonly START_MOMENT: Moment = moment("2015-01-01", "YYYY-MM-DD").startOf("day");
+	public static readonly END_MOMENT: Moment = moment("2017-06-01", "YYYY-MM-DD").startOf("day");
 
-const models = [];
-const currentMoment = moment("2015-01-01", "YYYY-MM-DD").startOf("day");
-const endMoment = moment("2017-06-01", "YYYY-MM-DD").startOf("day");
+	public static provide(): SyncedActivityModel[] {
 
-while (currentMoment.isSameOrBefore(endMoment)) {
+		const models = [];
+		const currentMoment = YearProgressActivitiesFixture.START_MOMENT;
+		const endMoment = YearProgressActivitiesFixture.END_MOMENT;
 
-	const dayType = currentMoment.dayOfYear() % STATES_COUNT;
+		while (currentMoment.isSameOrBefore(endMoment)) {
 
-	let type = null;
-	let distanceRaw = null;
-	let time = null;
-	let elevationGainRaw = 0;
-	let commute = false;
-	let restDay = false;
+			const dayType = currentMoment.dayOfYear() % YearProgressActivitiesFixture.STATES_COUNT;
 
-	switch (dayType) {
+			let type = null;
+			let distanceRaw = null;
+			let time = null;
+			let elevationGainRaw = 0;
+			let commute = false;
+			let restDay = false;
 
-		case TYPE_RIDE:
-			type = "Ride";
-			time = 3600;
-			distanceRaw = 40000; // 40 km
-			elevationGainRaw = 500; // 500 meters
-			break;
+			switch (dayType) {
 
-		case TYPE_RUN:
-			type = "Run";
-			time = 3600;
-			distanceRaw = 10000; // 10 km
-			elevationGainRaw = 50;
-			break;
+				case YearProgressActivitiesFixture.TYPE_RIDE:
+					type = "Ride";
+					time = 3600;
+					distanceRaw = 40000; // 40 km
+					elevationGainRaw = 500; // 500 meters
+					break;
 
-		case TYPE_VIRTUAL_RIDE:
-			type = "VirtualRide";
-			time = 1800;
-			distanceRaw = 20000; // 20 km
-			elevationGainRaw = 400;
-			break;
+				case YearProgressActivitiesFixture.TYPE_RUN:
+					type = "Run";
+					time = 3600;
+					distanceRaw = 10000; // 10 km
+					elevationGainRaw = 50;
+					break;
 
-		case TYPE_COMMUTE:
-			type = "Ride";
-			time = 1800;
-			commute = true;
-			distanceRaw = 15000; // 15 km
-			elevationGainRaw = 10;
-			break;
+				case YearProgressActivitiesFixture.TYPE_VIRTUAL_RIDE:
+					type = "VirtualRide";
+					time = 1800;
+					distanceRaw = 20000; // 20 km
+					elevationGainRaw = 400;
+					break;
 
-		case TYPE_REST:
-			restDay = true;
-			break;
+				case YearProgressActivitiesFixture.TYPE_COMMUTE:
+					type = "Ride";
+					time = 1800;
+					commute = true;
+					distanceRaw = 15000; // 15 km
+					elevationGainRaw = 10;
+					break;
 
+				case YearProgressActivitiesFixture.TYPE_REST:
+					restDay = true;
+					break;
+
+			}
+
+			if (!restDay) {
+
+				const syncedActivityModel = new SyncedActivityModel();
+				syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear());
+				syncedActivityModel.name = type + " activity" + ((commute) ? " (commute)" : "");
+				syncedActivityModel.type = type;
+				syncedActivityModel.display_type = type;
+				syncedActivityModel.start_time = currentMoment.toISOString();
+				syncedActivityModel.distance_raw = distanceRaw;
+				syncedActivityModel.moving_time_raw = time;
+				syncedActivityModel.elapsed_time_raw = time;
+				syncedActivityModel.commute = commute;
+				syncedActivityModel.elevation_gain_raw = elevationGainRaw;
+
+				models.push(syncedActivityModel);
+			}
+
+			currentMoment.add(1, "days");
+		}
+
+		return models;
 	}
-
-	if (!restDay) {
-
-		const syncedActivityModel = new SyncedActivityModel();
-		syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear());
-		syncedActivityModel.name = type + " activity" + ((commute) ? " (commute)" : "");
-		syncedActivityModel.type = type;
-		syncedActivityModel.display_type = type;
-		syncedActivityModel.start_time = currentMoment.toISOString();
-		syncedActivityModel.distance_raw = distanceRaw;
-		syncedActivityModel.moving_time_raw = time;
-		syncedActivityModel.elapsed_time_raw = time;
-		syncedActivityModel.commute = commute;
-		syncedActivityModel.elevation_gain_raw = elevationGainRaw;
-
-		models.push(syncedActivityModel);
-	}
-
-	currentMoment.add(1, "days");
-
 }
-
-export const TEST_YEAR_PROGRESS_ACTIVITIES: SyncedActivityModel[] = models;
