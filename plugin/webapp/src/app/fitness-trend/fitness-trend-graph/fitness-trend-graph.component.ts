@@ -17,6 +17,8 @@ import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendComponent } from "../fitness-trend.component";
+import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
+import { SideNavStatus } from "../../shared/services/side-nav/side-nav-status.enum";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -58,6 +60,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 	constructor(private userSettingsService: UserSettingsService,
 				private fitnessService: FitnessService,
+				private sideNavService: SideNavService,
 				private dialog: MatDialog) {
 	}
 
@@ -102,7 +105,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.setupTimeData();
 		this.setupViewableGraphData();
 		this.updateGraph();
-
+		this.setupDrawOnSideNavChanges();
 	}
 
 	/**
@@ -229,15 +232,31 @@ export class FitnessTrendGraphComponent implements OnInit {
 			this.updateViewableData();
 
 			// Apply graph changes
-			setTimeout(() => {
-				MG.data_graphic(this.graphConfig);
-				console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
-			});
+			this.draw();
 
 		} catch (error) {
 			console.warn(error);
 		}
 
+	}
+
+	/**
+	 *
+	 */
+	public draw(): void {
+		setTimeout(() => {
+			MG.data_graphic(this.graphConfig);
+			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+		});
+	}
+
+	/**
+	 *
+	 */
+	public setupDrawOnSideNavChanges(): void {
+		this.sideNavService.changes.subscribe((status: SideNavStatus) => {
+			this.onSideNavChanged();
+		});
 	}
 
 	/**
@@ -463,6 +482,14 @@ export class FitnessTrendGraphComponent implements OnInit {
 				localStorage.removeItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY);
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	public onSideNavChanged(): void {
+		this.PERFORMANCE_MARKER = performance.now();
+		this.draw();
 	}
 
 	/**

@@ -2,18 +2,17 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/service/fitness.service";
-import { MaterialModule } from "../../shared/modules/material.module";
-import { FormsModule } from "@angular/forms";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { MatNativeDateModule } from "@angular/material";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../../common/scripts/UserSettings";
+import { AppComponent } from "../../app.component";
+import { CoreModule } from "../../core/core.module";
+import { SharedModule } from "../../shared/shared.module";
+import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -28,9 +27,12 @@ describe("FitnessTrendGraphComponent", () => {
 	beforeEach(async(() => {
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, MaterialModule, BrowserAnimationsModule, MatNativeDateModule],
-			declarations: [FitnessTrendGraphComponent],
-			providers: [FitnessService, UserSettingsService, UserSettingsDao, ActivityService, ActivityDao]
+			declarations: [AppComponent],
+			imports: [
+				CoreModule,
+				SharedModule,
+			],
+			providers: [SideNavService]
 		}).compileComponents();
 
 		// Retrieve injected service

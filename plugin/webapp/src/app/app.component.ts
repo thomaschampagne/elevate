@@ -4,6 +4,8 @@ import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 import { MatDialog } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
+import { SideNavService } from "./shared/services/side-nav/side-nav.service";
+import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 
 class MenuItemModel {
 	name: string;
@@ -15,11 +17,17 @@ class MenuItemModel {
 @Component({
 	selector: "app-root",
 	templateUrl: "./app.component.html",
-	styleUrls: ["./app.component.scss"]
+	styleUrls: ["./app.component.scss"],
+	providers: [SideNavService]
 })
 export class AppComponent implements OnInit {
 
+	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
+	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
+
 	public title: string;
+	public sideNavOpened: boolean;
+	public sideNavMode: string;
 	public mainMenuItems: MenuItemModel[] = [
 		{
 			name: "Fitness Trend",
@@ -65,11 +73,15 @@ export class AppComponent implements OnInit {
 
 	}
 
-	constructor(private router: Router,
-				private dialog: MatDialog) {
+	constructor(public router: Router,
+				public sideNavService: SideNavService,
+				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
+
+		this.sideNavOpened = (AppComponent.DEFAULT_SIDE_NAV_STATUS === SideNavStatus.OPENED);
+		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 
 		this.title = AppComponent.updateToolBarTitle(this.router.url);
 
@@ -91,15 +103,15 @@ export class AppComponent implements OnInit {
 		});
 	}
 
+	public onSideNavClosed(): void {
+		this.sideNavService.onChanged(SideNavStatus.CLOSED);
+	}
+
+	public onSideNavOpened(): void {
+		this.sideNavService.onChanged(SideNavStatus.OPENED);
+	}
 
 	public onOpenLink(url: string): void {
 		window.open(url, "_blank")
 	}
-
-	/*
-        public onMenuClicked(item: MenuItemModel): void {
-            console.log("Clicked %s", item.name);
-        }
-    */
-
 }
