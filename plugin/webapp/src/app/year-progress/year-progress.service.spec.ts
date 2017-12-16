@@ -11,32 +11,34 @@ describe('YearProgressService', () => {
 
 	let service: YearProgressService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
-		_TEST_YEAR_PROGRESS_ACTIVITIES_ = _.clone(YearProgressActivitiesFixture.provide());
+		_TEST_YEAR_PROGRESS_ACTIVITIES_ = YearProgressActivitiesFixture.provide();
 
 		TestBed.configureTestingModule({
 			providers: [YearProgressService]
 		});
 
 		service = TestBed.get(YearProgressService);
-
+		done();
 	});
 
 	it("should be created", (done: Function) => {
+
 		expect(service).toBeTruthy();
 		done();
 	});
 
 
-	it("should compute progression on 2.5 years", (done: Function) => {
+	it("should compute progression on ~2.5 years", (done: Function) => {
+
 
 		// Given
 		const expectedLength = 3;
-		const perTypes: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
 
 		// When
-		const progression = service.progression(_TEST_YEAR_PROGRESS_ACTIVITIES_, perTypes);
+		const progression = service.progression(_TEST_YEAR_PROGRESS_ACTIVITIES_, typesFilters);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -52,31 +54,96 @@ describe('YearProgressService', () => {
 
 		done();
 	});
-	/*
-
-        it("should _method_name_ return _describe_data_", (done: Function) => {
-
-            // Given
-
-            // When
-
-            // Then
-
-            done();
-        });
 
 
-        it("should _method_name_ return _describe_data_", (done: Function) => {
+	it("should compute progression with proper totals metrics", (done: Function) => {
 
-            // Given
 
-            // When
+		// Given
+		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
 
-            // Then
+		const expectedFirstDay2015 = {
+			onTimestamp: 1420066800000,
+			onYear: 2015,
+			onDayOfYear: 1,
+			totalDistance: 10000,
+			totalTime: 3600,
+			totalElevation: 50,
+			count: 1
+		};
 
-            done();
-        });
-    */
+		const expectedLastDay2015 = {
+			onTimestamp: 1451516400000,
+			onYear: 2015,
+			onDayOfYear: 365,
+			totalDistance: 6205000,
+			totalTime: 788400,
+			totalElevation: 70080,
+			count: 292
+		};
 
+		const expectedFirstDay2016 = {
+			onTimestamp: 1451602800000,
+			onYear: 2016,
+			onDayOfYear: 1,
+			totalDistance: 10000,
+			totalTime: 3600,
+			totalElevation: 50,
+			count: 1
+		};
+
+		const expectedLastDay2016 = {
+			onTimestamp: 1483138800000,
+			onYear: 2016,
+			onDayOfYear: 366,
+			totalDistance: 6215000,
+			totalTime: 792000,
+			totalElevation: 70130,
+			count: 293
+		};
+
+		const expectedFirstDay2017 = {
+			onTimestamp: 1483225200000,
+			onYear: 2017,
+			onDayOfYear: 1,
+			totalDistance: 10000,
+			totalTime: 3600,
+			totalElevation: 50,
+			count: 1
+		};
+
+		const expectedLastDay2017 = {
+			onTimestamp: 1496268000000,
+			onYear: 2017,
+			onDayOfYear: 152,
+			totalDistance: 2580000,
+			totalTime: 329400,
+			totalElevation: 29250,
+			count: 122
+		};
+
+		// When
+		const progression = service.progression(_TEST_YEAR_PROGRESS_ACTIVITIES_, typesFilters);
+
+		// Then
+		expect(progression).not.toBeNull();
+
+		const firstDay2015 = _.first(progression[0].progressions);
+		const lastDay2015 = _.last(progression[0].progressions);
+		expect(firstDay2015).toEqual(expectedFirstDay2015);
+		expect(lastDay2015).toEqual(expectedLastDay2015);
+
+		const firstDay2016 = _.first(progression[1].progressions);
+		const lastDay2016 = _.last(progression[1].progressions);
+		expect(firstDay2016).toEqual(expectedFirstDay2016);
+		expect(lastDay2016).toEqual(expectedLastDay2016);
+
+		const firstDay2017 = _.first(progression[2].progressions);
+		const lastDay2017 = _.last(progression[2].progressions);
+		expect(firstDay2017).toEqual(expectedFirstDay2017);
+		expect(lastDay2017).toEqual(expectedLastDay2017);
+
+		done();
+	});
 
 });

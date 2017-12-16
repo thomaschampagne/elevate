@@ -1,6 +1,6 @@
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import * as moment from "moment";
-import { Moment } from "moment";
+import * as _ from "lodash";
 
 export class YearProgressActivitiesFixture {
 
@@ -10,14 +10,18 @@ export class YearProgressActivitiesFixture {
 	public static readonly TYPE_VIRTUAL_RIDE: number = 2;
 	public static readonly TYPE_COMMUTE: number = 3;
 	public static readonly TYPE_REST: number = 4;
-	public static readonly START_MOMENT: Moment = moment("2015-01-01", "YYYY-MM-DD").startOf("day");
-	public static readonly END_MOMENT: Moment = moment("2017-06-01", "YYYY-MM-DD").startOf("day");
+	public static readonly START_DATE: string = "2015-01-01";
+	public static readonly END_DATE: string = "2017-06-01";
+	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
 	public static provide(): SyncedActivityModel[] {
 
-		const models = [];
-		const currentMoment = YearProgressActivitiesFixture.START_MOMENT;
-		const endMoment = YearProgressActivitiesFixture.END_MOMENT;
+		const models: SyncedActivityModel[] = [];
+
+		const currentMoment = moment(YearProgressActivitiesFixture.START_DATE,
+			YearProgressActivitiesFixture.DATE_FORMAT).startOf("day");
+		const endMoment = moment(YearProgressActivitiesFixture.END_DATE,
+			YearProgressActivitiesFixture.DATE_FORMAT).startOf("day");
 
 		while (currentMoment.isSameOrBefore(endMoment)) {
 
@@ -87,6 +91,6 @@ export class YearProgressActivitiesFixture {
 			currentMoment.add(1, "days");
 		}
 
-		return models;
+		return _.cloneDeep(models);
 	}
 }

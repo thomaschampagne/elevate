@@ -17,7 +17,7 @@
 		"tsc:watch": "npm run tsc:version && node ./node_modules/typescript/bin/tsc --watch",
 		"test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
 		"test:webapp": "cd ./plugin/webapp/ && node ./node_modules/@angular/cli/bin/ng test",
-		"test:webapp:headless": "npm run test:webapp -- --single-run --browsers ChromeHeadless",
+		"test:webapp:headless": "npm run test:webapp -- --browsers ChromeHeadless",
 		"test:core": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --no-single-run --browsers Chrome --browserConsoleLogOptions.terminal",
 		"test:core:phantom": "npm run tsc:compile && node ./node_modules/karma/bin/karma start karma.conf.js --single-run --browserConsoleLogOptions.terminal",
 		"pretest": "npm run clean:jsmap && npm run tsc:compile",
