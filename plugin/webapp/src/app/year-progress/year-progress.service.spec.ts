@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ActivitiesCountByType, YearProgressService } from './year-progress.service';
+import { YearProgressService } from './year-progress.service';
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import * as _ from "lodash";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { YearProgressModel } from "./models/year-progress.model";
+import { ActivitiesCountByTypeModel } from "./models/activities-count-by-type.model";
 
 describe('YearProgressService', () => {
 
@@ -239,17 +240,17 @@ describe('YearProgressService', () => {
 	it("should provide activities count by types", (done: Function) => {
 
 		// Given
-		const expectedResult: ActivitiesCountByType[] = [
+		const expectedResult: ActivitiesCountByTypeModel[] = [
 			{type: "Run", count: 178},
 			{type: "VirtualRide", count: 177},
 			{type: "Ride", count: 352}
 		];
 
 		// When
-		const promise: Promise<ActivitiesCountByType[]> = service.countActivitiesByType();
+		const promise: Promise<ActivitiesCountByTypeModel[]> = service.countActivitiesByType();
 
 		// Then
-		promise.then((result: ActivitiesCountByType[]) => {
+		promise.then((result: ActivitiesCountByTypeModel[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
