@@ -45,7 +45,7 @@ export class FitnessTrendComponent implements OnInit {
 	public onSelectedTabChange(event: MatTabChangeEvent): void {
 	}
 
-	public onSelectChange(): void {
+	public onSelectChange(event: MatTabChangeEvent): void {
 	}
 
 }
