@@ -3,23 +3,24 @@ import { TestBed } from '@angular/core/testing';
 import { YearProgressService } from './year-progress.service';
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
+import { ActivityDao } from "../shared/dao/activity/activity.dao";
+import { YearProgressModel } from "./models/year-progress.model";
 
 describe('YearProgressService', () => {
 
-	let _TEST_YEAR_PROGRESS_ACTIVITIES_: SyncedActivityModel[] = null;
-
 	let service: YearProgressService;
+	let spyActivityDaoFetch: jasmine.Spy;
 
 	beforeEach((done: Function) => {
 
-		_TEST_YEAR_PROGRESS_ACTIVITIES_ = YearProgressActivitiesFixture.provide();
-
 		TestBed.configureTestingModule({
-			providers: [YearProgressService]
+			providers: [YearProgressService, ActivityDao]
 		});
 
 		service = TestBed.get(YearProgressService);
+
+		spyActivityDaoFetch = spyOn(service.activityDao, "fetch").and.returnValue(Promise.resolve(YearProgressActivitiesFixture.provide()));
+
 		done();
 	});
 
@@ -32,28 +33,35 @@ describe('YearProgressService', () => {
 
 	it("should compute progression on ~2.5 years", (done: Function) => {
 
-
 		// Given
 		const expectedLength = 3;
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
-		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		// When
-		const progression = service.progression(syncedActivityModels, typesFilters);
-
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters);
 		// Then
-		expect(progression).not.toBeNull();
-		expect(progression.length).toEqual(expectedLength);
+		promise.then((progression: YearProgressModel[]) => {
 
-		expect(progression[0].year).toEqual(2015);
-		expect(progression[1].year).toEqual(2016);
-		expect(progression[2].year).toEqual(2017);
+			expect(progression).not.toBeNull();
+			expect(progression.length).toEqual(expectedLength);
 
-		expect(progression[0].progressions.length).toEqual(365);
-		expect(progression[1].progressions.length).toEqual(366);
-		expect(progression[2].progressions.length).toEqual(152);
+			expect(progression[0].year).toEqual(2015);
+			expect(progression[1].year).toEqual(2016);
+			expect(progression[2].year).toEqual(2017);
 
-		done();
+			expect(progression[0].progressions.length).toEqual(365);
+			expect(progression[1].progressions.length).toEqual(366);
+			expect(progression[2].progressions.length).toEqual(152);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
 	});
 
 
@@ -61,7 +69,6 @@ describe('YearProgressService', () => {
 
 		// Given
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
-		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		const expectedFirstDay2015 = {
 			onTimestamp: 1420066800000,
@@ -124,27 +131,36 @@ describe('YearProgressService', () => {
 		};
 
 		// When
-		const progression = service.progression(syncedActivityModels, typesFilters);
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters);
 
 		// Then
-		expect(progression).not.toBeNull();
+		promise.then((progression: YearProgressModel[]) => {
+			expect(progression).not.toBeNull();
 
-		const firstDay2015 = _.first(progression[0].progressions);
-		const lastDay2015 = _.last(progression[0].progressions);
-		expect(firstDay2015).toEqual(expectedFirstDay2015);
-		expect(lastDay2015).toEqual(expectedLastDay2015);
+			const firstDay2015 = _.first(progression[0].progressions);
+			const lastDay2015 = _.last(progression[0].progressions);
+			expect(firstDay2015).toEqual(expectedFirstDay2015);
+			expect(lastDay2015).toEqual(expectedLastDay2015);
 
-		const firstDay2016 = _.first(progression[1].progressions);
-		const lastDay2016 = _.last(progression[1].progressions);
-		expect(firstDay2016).toEqual(expectedFirstDay2016);
-		expect(lastDay2016).toEqual(expectedLastDay2016);
+			const firstDay2016 = _.first(progression[1].progressions);
+			const lastDay2016 = _.last(progression[1].progressions);
+			expect(firstDay2016).toEqual(expectedFirstDay2016);
+			expect(lastDay2016).toEqual(expectedLastDay2016);
 
-		const firstDay2017 = _.first(progression[2].progressions);
-		const lastDay2017 = _.last(progression[2].progressions);
-		expect(firstDay2017).toEqual(expectedFirstDay2017);
-		expect(lastDay2017).toEqual(expectedLastDay2017);
+			const firstDay2017 = _.first(progression[2].progressions);
+			const lastDay2017 = _.last(progression[2].progressions);
+			expect(firstDay2017).toEqual(expectedFirstDay2017);
+			expect(lastDay2017).toEqual(expectedLastDay2017);
 
-		done();
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
 	});
 
 	it("should not compute progression with empty activities", (done: Function) => {
@@ -152,44 +168,72 @@ describe('YearProgressService', () => {
 		// Given
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
 		const syncedActivityModels = [];
+		spyActivityDaoFetch.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const progression = service.progression(syncedActivityModels, typesFilters);
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters);
 
 		// Then
-		expect(progression).toBeNull();
+		promise.then((progression: YearProgressModel[]) => {
 
-		done();
+			expect(progression).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
+			done();
+		});
+
 	});
 
 	it("should not compute progression with empty types filters", (done: Function) => {
 
 		// Given
 		const typesFilters: string[] = [];
-		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		// When
-		const progression = service.progression(syncedActivityModels, typesFilters);
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters);
 
 		// Then
-		expect(progression).toBeNull();
+		promise.then((progression: YearProgressModel[]) => {
 
-		done();
+			expect(progression).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual(YearProgressService.ERROR_NO_TYPES_FILTER);
+			done();
+		});
+
 	});
 
-	it("should not compute progression with not existing types", (done: Function) => {
+	it("should not compute progression with not existing type", (done: Function) => {
 
 		// Given
 		const typesFilters: string[] = ["FakeType"];
-		const syncedActivityModels = _TEST_YEAR_PROGRESS_ACTIVITIES_;
 
 		// When
-		const progression = service.progression(syncedActivityModels, typesFilters);
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters);
 
 		// Then
-		expect(progression).toBeNull();
+		promise.then((progression: YearProgressModel[]) => {
 
-		done();
+			expect(progression).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+
+			expect(error).not.toBeNull();
+			expect(error).toEqual(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
+			done();
+		});
 	});
 
 });
