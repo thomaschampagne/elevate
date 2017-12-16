@@ -206,13 +206,5 @@ export class YearProgressService {
 		return activities as YearProgressActivityModel[];
 	}
 
-	/**
-	 *
-	 * @returns {moment.Moment}
-	 */
-	public getTodayMoment(): Moment {
-		return moment().endOf("day");
-	}
-
 }
 
