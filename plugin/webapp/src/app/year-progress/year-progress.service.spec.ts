@@ -5,7 +5,7 @@ import { YearProgressActivitiesFixture } from "./year-progress-activities.fixtur
 import * as _ from "lodash";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { YearProgressModel } from "./models/year-progress.model";
-import { ActivitiesCountByTypeModel } from "./models/activities-count-by-type.model";
+import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 
 describe('YearProgressService', () => {
 
@@ -240,17 +240,17 @@ describe('YearProgressService', () => {
 	it("should provide activities count by types", (done: Function) => {
 
 		// Given
-		const expectedResult: ActivitiesCountByTypeModel[] = [
+		const expectedResult: ActivityCountByTypeModel[] = [
 			{type: "Run", count: 178},
 			{type: "VirtualRide", count: 177},
 			{type: "Ride", count: 352}
 		];
 
 		// When
-		const promise: Promise<ActivitiesCountByTypeModel[]> = service.countActivitiesByType();
+		const promise: Promise<ActivityCountByTypeModel[]> = service.countActivitiesByType();
 
 		// Then
-		promise.then((result: ActivitiesCountByTypeModel[]) => {
+		promise.then((result: ActivityCountByTypeModel[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);

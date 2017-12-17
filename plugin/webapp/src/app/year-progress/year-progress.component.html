@@ -1,18 +1,26 @@
 <mat-card>
 	<mat-card-content>
-		<!--<mat-form-field>
-			<mat-select placeholder="Toppings" [formControl]="toppings" multiple>
-				<mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+
+		<mat-form-field>
+			<mat-select placeholder="Activity Types" [(ngModel)]="selectedActivityTypes" multiple>
+				<!--[formControl]="toppings" TODO ?!-->
+				<mat-option *ngFor="let type of availableActivityTypes" [value]="type">{{type}}</mat-option>
 			</mat-select>
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-select placeholder="Favorite food">
-				<mat-option *ngFor="let food of foods" [value]="food.value">
-					{{ food.viewValue }}
+			<mat-select placeholder="Progress Type" [(ngModel)]="selectedProgressType">
+				<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+					{{progressType.label}}
 				</mat-option>
 			</mat-select>
-		</mat-form-field>-->
-
+		</mat-form-field>
 	</mat-card-content>
 </mat-card>
+
+<br/><br/>
+selectedActivityTypes: {{selectedActivityTypes | json}}
+<br/><br/>
+availableActivityTypes: {{availableActivityTypes | json}}
+<br/><br/>
+progressTypes: {{progressTypes | json}}

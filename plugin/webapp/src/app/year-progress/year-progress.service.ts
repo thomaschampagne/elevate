@@ -7,7 +7,7 @@ import { Moment } from "moment";
 import { YearProgressActivityModel } from "./models/year-progress-activity.model";
 import { ProgressionModel } from "./models/progression.model";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
-import { ActivitiesCountByTypeModel } from "./models/activities-count-by-type.model";
+import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 
 @Injectable()
 export class YearProgressService {
@@ -136,15 +136,15 @@ export class YearProgressService {
 	/**
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
-	 * @returns {ActivitiesCountByTypeModel[]}
+	 * @returns {ActivityCountByTypeModel[]}
 	 */
-	public countActivitiesByType(): Promise<ActivitiesCountByTypeModel[]> {
+	public countActivitiesByType(): Promise<ActivityCountByTypeModel[]> {
 
-		return new Promise<ActivitiesCountByTypeModel[]>((resolve: (result: ActivitiesCountByTypeModel[]) => void) => {
+		return new Promise<ActivityCountByTypeModel[]>((resolve: (result: ActivityCountByTypeModel[]) => void) => {
 
 			this.provideSyncedActivityModels().then((syncedActivityModels: SyncedActivityModel[]) => {
 
-				const activitiesCountByTypes: ActivitiesCountByTypeModel[] = [];
+				const activitiesCountByTypes: ActivityCountByTypeModel[] = [];
 
 				_.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: string) => {
 					activitiesCountByTypes.push({
