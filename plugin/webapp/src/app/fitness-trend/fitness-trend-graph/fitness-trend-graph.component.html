@@ -1,106 +1,113 @@
-<mat-card *ngIf="(fitnessTrend && fitnessTrend.length > 0)">
+<mat-card>
 	<mat-card-content>
-		<div class="header" fxLayout="column" fxLayoutAlign="start start">
-			<!--INPUTS-->
-			<div fxFlex fxFill>
 
-				<div fxLayout="row" fxLayoutAlign="space-between start">
-					<!--PERIODS-->
-					<div fxFlex="70"
-						 fxLayout="row" fxLayoutAlign="start start">
-						<mat-input-container fxFlex="155px">
-							<mat-select
-								[(ngModel)]="lastPeriodViewed"
-								(change)="onLastPeriodSelected()"
-								placeholder="Last">
-								<mat-option
-									*ngFor="let lastPeriod of lastPeriods;"
-									[value]="lastPeriod">
-									{{lastPeriod.label}}
-								</mat-option>
-							</mat-select>
-						</mat-input-container>
+		<div *ngIf="!isGraphDataReady">
+			<mat-progress-bar mode="buffer"></mat-progress-bar>
+		</div>
 
-						<span fxFlex="1"></span> <!-- --------- -->
+		<div *ngIf="(fitnessTrend && fitnessTrend.length > 0)">
 
-						<mat-form-field fxFlex="155px">
-							<input matInput
-								   [(ngModel)]="periodViewed.from"
-								   [min]="dateMin"
-								   [max]="periodViewed.to"
-								   [matDatepicker]="datePickerFrom"
-								   (dateChange)="onDateToDateChange()"
-								   placeholder="From">
-							<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-							<mat-datepicker #datePickerFrom></mat-datepicker>
-						</mat-form-field>
+			<div *ngIf="isGraphDataReady" class="header" fxLayout="column" fxLayoutAlign="start start">
 
-						<span fxFlex="1"></span> <!-- --------- -->
+				<!--INPUTS-->
+				<div fxFlex fxFill>
+					<div fxLayout="row" fxLayoutAlign="space-between start">
+						<!--PERIODS-->
+						<div fxFlex="70"
+							 fxLayout="row" fxLayoutAlign="start start">
+							<mat-input-container fxFlex="155px">
+								<mat-select
+									[(ngModel)]="lastPeriodViewed"
+									(change)="onLastPeriodSelected()"
+									placeholder="Last">
+									<mat-option
+										*ngFor="let lastPeriod of lastPeriods;"
+										[value]="lastPeriod">
+										{{lastPeriod.label}}
+									</mat-option>
+								</mat-select>
+							</mat-input-container>
 
-						<mat-form-field fxFlex="155px">
-							<input matInput
-								   [(ngModel)]="periodViewed.to"
-								   [min]="periodViewed.from"
-								   [max]="dateMax"
-								   [matDatepicker]="datePickerTo"
-								   (dateChange)="onDateToDateChange()"
-								   placeholder="To">
-							<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-							<mat-datepicker #datePickerTo></mat-datepicker>
-						</mat-form-field>
-					</div>
+							<span fxFlex="1"></span> <!-- --------- -->
 
-					<!--TOGGLES-->
-					<div fxFlex
-						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="end center">
+							<mat-form-field fxFlex="155px">
+								<input matInput
+									   [(ngModel)]="periodViewed.from"
+									   [min]="dateMin"
+									   [max]="periodViewed.to"
+									   [matDatepicker]="datePickerFrom"
+									   (dateChange)="onDateToDateChange()"
+									   placeholder="From">
+								<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+								<mat-datepicker #datePickerFrom></mat-datepicker>
+							</mat-form-field>
 
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isTrainingZonesEnabled"
-										  (change)="onTrainingZonesToggle()"
-										  matTooltip="Display Form Zones on graph">
-							<mat-icon>power_input</mat-icon>
-						</mat-slide-toggle>
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isPowerMeterEnabled"
-										  (change)="onPowerMeterToggle()"
-										  matTooltip="Use cycling power meter when available">
-							<mat-icon>flash_on</mat-icon>
-						</mat-slide-toggle>
+							<span fxFlex="1"></span> <!-- --------- -->
 
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isSwimEnabled"
-										  (change)="onSwimToggle()"
-										  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
-							<mat-icon>pool</mat-icon>
-						</mat-slide-toggle>
+							<mat-form-field fxFlex="155px">
+								<input matInput
+									   [(ngModel)]="periodViewed.to"
+									   [min]="periodViewed.from"
+									   [max]="dateMax"
+									   [matDatepicker]="datePickerTo"
+									   (dateChange)="onDateToDateChange()"
+									   placeholder="To">
+								<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+								<mat-datepicker #datePickerTo></mat-datepicker>
+							</mat-form-field>
+						</div>
 
-						<button mat-icon-button (click)="onShowInfo()">
-							<mat-icon>info</mat-icon>
-						</button>
+						<!--TOGGLES-->
+						<div fxFlex
+							 fxFlexAlign="start"
+							 fxLayout="row" fxLayoutAlign="end center">
+
+							<mat-slide-toggle fxFlex
+											  [(ngModel)]="isTrainingZonesEnabled"
+											  (change)="onTrainingZonesToggle()"
+											  matTooltip="Display Form Zones on graph">
+								<mat-icon>power_input</mat-icon>
+							</mat-slide-toggle>
+							<mat-slide-toggle fxFlex
+											  [(ngModel)]="isPowerMeterEnabled"
+											  (change)="onPowerMeterToggle()"
+											  matTooltip="Use cycling power meter when available">
+								<mat-icon>flash_on</mat-icon>
+							</mat-slide-toggle>
+
+							<mat-slide-toggle fxFlex
+											  [(ngModel)]="isSwimEnabled"
+											  (change)="onSwimToggle()"
+											  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+								<mat-icon>pool</mat-icon>
+							</mat-slide-toggle>
+
+							<button mat-icon-button (click)="onShowInfo()">
+								<mat-icon>info</mat-icon>
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<!--DETAILS-->
-			<div fxFlex fxFill
-				 class="mat-subheading-2">
+				<!--DETAILS-->
+				<div fxFlex fxFill
+					 class="mat-subheading-2">
 
-				<div fxLayout="column" fxLayoutAlign="space-between start">
+					<div fxLayout="column" fxLayoutAlign="space-between start">
 
-					<div fxFlex>
+						<div fxFlex>
 						<span fxFlexAlign="start">
 							{{viewedDay.printDate()}}
 						</span>
-					</div>
+						</div>
 
-					<div fxFlex>
+						<div fxFlex>
 						<span fxFlexAlign="center">
 							{{viewedDay.printActivities("Rest day")}}
 						</span>
-					</div>
+						</div>
 
-					<div fxFlex>
+						<div fxFlex>
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
 							<span *ngIf="viewedDay.finalStressScore">
@@ -131,32 +138,32 @@
 								</span>
 							</span>
 						</span>
+						</div>
 					</div>
 				</div>
+
+				<!--Fitness, Fatigue, Form values-->
+				<div fxFill
+					 fxLayout="row" fxLayoutAlign="start center"
+					 class="mat-headline">
+					<div fxFlex="180px" class="fitness">
+						Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
+					</div>
+					<div fxFlex="180px" class="fatigue">
+						Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
+					</div>
+					<div fxFlex="180px" class="form">
+						Form &nbsp;&nbsp;{{viewedDay.printForm()}}
+					</div>
+
+				</div>
 			</div>
 
-			<!--Fitness, Fatigue, Form values-->
-			<div fxFill
-				 fxLayout="row" fxLayoutAlign="start center"
-				 class="mat-headline">
-				<div fxFlex="180px" class="fitness">
-					Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
-				</div>
-				<div fxFlex="180px" class="fatigue">
-					Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
-				</div>
-				<div fxFlex="180px" class="form">
-					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
-				</div>
-
+			<!--GRAPH-->
+			<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+				 id="fitnessTrendGraph">
 			</div>
 		</div>
-
-		<!--GRAPH-->
-		<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
-			 id="fitnessTrendGraph">
-		</div>
-
 	</mat-card-content>
 </mat-card>
 

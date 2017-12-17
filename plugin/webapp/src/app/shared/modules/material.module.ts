@@ -13,6 +13,7 @@ import {
 	MatNativeDateModule,
 	MatOptionModule,
 	MatPaginatorModule,
+	MatProgressBarModule,
 	MatSelectModule,
 	MatSidenavModule,
 	MatSlideToggleModule,
@@ -49,7 +50,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatSlideToggleModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
-		MatTabsModule
+		MatTabsModule,
+		MatProgressBarModule
 	],
 	exports: [
 		MatButtonModule,
@@ -74,7 +76,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatSlideToggleModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
-		MatTabsModule
+		MatTabsModule,
+		MatProgressBarModule
 	],
 	declarations: []
 })
