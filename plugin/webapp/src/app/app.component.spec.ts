@@ -1,9 +1,14 @@
-import { async, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
+import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 
 describe("AppComponent", () => {
+
+	let component: AppComponent = null;
+	let fixture: ComponentFixture<AppComponent> = null;
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [
@@ -13,18 +18,23 @@ describe("AppComponent", () => {
 				CoreModule,
 				SharedModule
 			],
-			providers: []
+			providers: [SideNavService]
 		}).compileComponents();
 	}));
 
+	beforeEach(() => {
+		fixture = TestBed.createComponent(AppComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
 	it("should create the app", async(() => {
-		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
 		expect(app).toBeTruthy();
 	}));
 
+
 	it("should have main menu items", async(() => {
-		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
 		expect(app.mainMenuItems.length).toEqual(6);
 
@@ -36,10 +46,10 @@ describe("AppComponent", () => {
 		const expected = "Common Settings";
 		const routerUrl = "/commonSettings";
 
-		// Then
+		// When
 		const actual = AppComponent.updateToolBarTitle(routerUrl);
 
-		// When
+		// Then
 		expect(actual).toBe(expected);
 		done();
 
@@ -51,10 +61,10 @@ describe("AppComponent", () => {
 		const expected = "Say Hello To World";
 		const routerUrl = "/sayHelloToWorld/ohMyGod";
 
-		// Then
+		// When
 		const actual = AppComponent.updateToolBarTitle(routerUrl);
 
-		// When
+		// Then
 		expect(actual).toBe(expected);
 		done();
 
@@ -66,19 +76,13 @@ describe("AppComponent", () => {
 		const expected = null;
 		const routerUrl = null;
 
-		// Then
+		// When
 		const actual = AppComponent.updateToolBarTitle(routerUrl);
 
-		// When
+		// Then
 		expect(actual).toBeNull(expected);
 		done();
 
 	});
 
-	/*	it("should render title in a h1 tag", async(() => {
-            const fixture = TestBed.createComponent(AppComponent);
-            fixture.detectChanges();
-            const compiled = fixture.debugElement.nativeElement;
-            expect(compiled.querySelector("h1").textContent).toContain("Welcome to app!");
-        }));*/
 });

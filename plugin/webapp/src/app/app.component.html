@@ -1,5 +1,9 @@
 <mat-sidenav-container>
-	<mat-sidenav #sidenav mode="side" opened="true">
+	<mat-sidenav #sidenav
+				 [mode]="sideNavMode"
+				 [opened]="sideNavOpened"
+				 (open)="onSideNavOpened()"
+				 (close)="onSideNavClosed()">
 		<mat-nav-list>
 			<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
 						   routerLinkActive="{{item.routerLinkActive}}">
@@ -13,7 +17,7 @@
 	</mat-sidenav>
 	<mat-toolbar>
 
-		<button mat-icon-button (click)="sidenav.toggle()">
+		<button mat-icon-button id="toolBarMenu" (click)="sidenav.toggle()">
 			<mat-icon>menu</mat-icon>
 		</button>
 
