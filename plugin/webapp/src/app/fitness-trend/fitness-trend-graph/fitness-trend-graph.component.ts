@@ -18,7 +18,6 @@ import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
-import { SideNavStatus } from "../../shared/services/side-nav/side-nav-status.enum";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -105,7 +104,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		this.setupTimeData();
 		this.setupViewableGraphData();
 		this.updateGraph();
-		this.setupDrawOnSideNavChanges();
+		this.setupComponentSizeChangeHandlers();
 	}
 
 	/**
@@ -253,10 +252,15 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	public setupDrawOnSideNavChanges(): void {
-		this.sideNavService.changes.subscribe((status: SideNavStatus) => {
-			this.onSideNavChanged();
-		});
+	public setupComponentSizeChangeHandlers(): void {
+
+		// If user resize the window
+		window.onresize = (event) => {
+			this.onComponentSizeChanged();
+		};
+
+		// Or user toggles the side nav (open/close states)
+		this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
 	}
 
 	/**
@@ -487,7 +491,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	/**
 	 *
 	 */
-	public onSideNavChanged(): void {
+	public onComponentSizeChanged(): void {
 		this.PERFORMANCE_MARKER = performance.now();
 		this.draw();
 	}
