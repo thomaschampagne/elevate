@@ -39,6 +39,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public PERFORMANCE_MARKER: number;
 
 	public graphConfig: any;
+	public isGraphDataReady: boolean = false;
 
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
@@ -116,11 +117,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
 			.then((fitnessTrend: DayFitnessTrendModel[]) => {
-
 				this.fitnessTrend = fitnessTrend;
 				this.setupViewableGraphData();
 				this.updateGraph();
-
 			});
 	}
 
@@ -226,7 +225,6 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public updateGraph(): void {
 
 		try {
-
 			// Apply changes
 			this.updateViewableData();
 
@@ -243,7 +241,10 @@ export class FitnessTrendGraphComponent implements OnInit {
 	 *
 	 */
 	public draw(): void {
+
 		setTimeout(() => {
+
+			this.isGraphDataReady = true;
 			MG.data_graphic(this.graphConfig);
 			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
 		});

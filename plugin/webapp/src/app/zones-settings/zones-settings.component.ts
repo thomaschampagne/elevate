@@ -17,7 +17,7 @@ import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 })
 export class ZonesSettingsComponent implements OnInit {
 
-	public static DEFAULT_ZONE_VALUE = "speed";
+	public static DEFAULT_ZONE_VALUE = "heartRate";
 
 	public zoneDefinitions: ZoneDefinitionModel[] = ZONE_DEFINITIONS;
 	public zoneDefinitionSelected: ZoneDefinitionModel;
