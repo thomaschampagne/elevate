@@ -44,6 +44,8 @@ export class AboutDialogComponent implements OnInit {
 
 	public getAppLocalStorageUsage(): Promise<AppLocalStorageUsage> {
 
+		// TODO Creates & Use AppDataDao + AppDataService layers
+
 		return new Promise<AppLocalStorageUsage>((resolve: (appLocalStorageUsage: AppLocalStorageUsage) => void) => {
 
 			this.chromeStorageLocal().getBytesInUse((bytesInUse: number) => {
