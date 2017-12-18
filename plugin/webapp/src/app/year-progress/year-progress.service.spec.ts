@@ -164,6 +164,68 @@ describe('YearProgressService', () => {
 
 	});
 
+	it("should compute progression without commute rides and with proper totals metrics", (done: Function) => {
+
+		// Given
+		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const excludeCommuteRides = true;
+
+		const expectedLastDay2015 = {
+			onTimestamp: 1451516400000,
+			onYear: 2015,
+			onDayOfYear: 365,
+			totalDistance: 5110000,
+			totalTime: 657000,
+			totalElevation: 69350,
+			count: 219
+		};
+
+		const expectedLastDay2016 = {
+			onTimestamp: 1483138800000,
+			onYear: 2016,
+			onDayOfYear: 366,
+			totalDistance: 5120000,
+			totalTime: 660600,
+			totalElevation: 69400,
+			count: 220
+		};
+		const expectedLastDay2017 = {
+			onTimestamp: 1496268000000,
+			onYear: 2017,
+			onDayOfYear: 152,
+			totalDistance: 2130000,
+			totalTime: 275400,
+			totalElevation: 28950,
+			count: 92
+		};
+
+		// When
+		const promise: Promise<YearProgressModel[]> = service.progression(typesFilters, excludeCommuteRides);
+
+		// Then
+		promise.then((progression: YearProgressModel[]) => {
+			expect(progression).not.toBeNull();
+
+			const lastDay2015 = _.last(progression[0].progressions);
+			expect(lastDay2015).toEqual(expectedLastDay2015);
+
+			const lastDay2016 = _.last(progression[1].progressions);
+			expect(lastDay2016).toEqual(expectedLastDay2016);
+
+			const lastDay2017 = _.last(progression[2].progressions);
+			expect(lastDay2017).toEqual(expectedLastDay2017);
+
+			done();
+
+		}, error => {
+
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
 	it("should not compute progression with empty activities", (done: Function) => {
 
 		// Given

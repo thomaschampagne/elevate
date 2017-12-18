@@ -21,7 +21,13 @@ export class YearProgressService {
 	constructor(public activityDao: ActivityDao) {
 	}
 
-	public progression(typesFilter: string[]): Promise<YearProgressModel[]> {
+	/**
+	 *
+	 * @param {string[]} typesFilter
+	 * @param {boolean} excludeCommuteRides
+	 * @returns {Promise<YearProgressModel[]>}
+	 */
+	public progression(typesFilter: string[], excludeCommuteRides?: boolean): Promise<YearProgressModel[]> {
 
 		return new Promise<YearProgressModel[]>((resolve: (result: YearProgressModel[]) => void,
 												 reject: (error: string) => void) => {
@@ -104,18 +110,24 @@ export class YearProgressService {
 					}
 
 					// Find matching yearProgressActivityModels
-					const foundOnToday: SyncedActivityModel[] = _.filter(yearProgressActivityModels, {
+					const filterQuery: Partial<YearProgressActivityModel> = {
 						year: currentDayMoment.year(),
 						dayOfYear: currentDayMoment.dayOfYear(),
-					});
+					};
 
-					if (foundOnToday.length > 0) {
+					if (excludeCommuteRides) {
+						filterQuery.commute = false;
+					}
 
-						for (let i: number = 0; i < foundOnToday.length; i++) {
+					const activitiesFound: YearProgressActivityModel[] = _.filter(yearProgressActivityModels, filterQuery);
+
+					if (activitiesFound.length > 0) {
+
+						for (let i: number = 0; i < activitiesFound.length; i++) {
 							// Then apply totals...
-							progression.totalDistance += foundOnToday[i].distance_raw;
-							progression.totalTime += foundOnToday[i].moving_time_raw;
-							progression.totalElevation += foundOnToday[i].elevation_gain_raw;
+							progression.totalDistance += activitiesFound[i].distance_raw;
+							progression.totalTime += activitiesFound[i].moving_time_raw;
+							progression.totalElevation += activitiesFound[i].elevation_gain_raw;
 							progression.count++;
 						}
 					}
