@@ -18,14 +18,14 @@
 	<mat-divider></mat-divider>
 
 	<div *ngIf="appUsageDetails">
-		Synced history size: {{appUsageDetails.megaBytesInUse}} MB
+		Synced history size: {{appUsageDetails.megaBytesInUse.toFixed(2)}} MB
 	</div>
 
 	<mat-divider></mat-divider>
 
 	<div>
 		<div>
-			App version: {{appVersion}}
+			Plugin version: {{appVersion}}
 		</div>
 		<div>
 			Angular version: {{angularVersion}}
