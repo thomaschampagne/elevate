@@ -1,17 +1,14 @@
 import { Component, OnInit, VERSION } from '@angular/core';
 import * as d3 from "d3";
-
-class AppLocalStorageUsage {
-	bytesInUse: number;
-	megaBytesInUse: number;
-	quotaBytes: number;
-	percentUsage: number;
-}
+import { AppUsageService } from "../shared/services/app-usage/app-usage.service";
+import { AppUsageDetails } from "../shared/models/app-usage-details.model";
+import { AppUsageDao } from "../shared/dao/app-usage/app-usage.dao";
 
 @Component({
 	selector: 'app-about-dialog',
 	templateUrl: './about-dialog.component.html',
-	styleUrls: ['./about-dialog.component.scss']
+	styleUrls: ['./about-dialog.component.scss'],
+	providers: [AppUsageService, AppUsageDao]
 })
 export class AboutDialogComponent implements OnInit {
 
@@ -21,16 +18,15 @@ export class AboutDialogComponent implements OnInit {
 	public angularVersion: string;
 	public d3Version: string;
 	public appVersion: string;
-	public appLocalStorageUsage: AppLocalStorageUsage;
+	public appUsageDetails: AppUsageDetails;
 
-	constructor() {
-
+	constructor(public appUsageService: AppUsageService) {
 	}
 
 	public ngOnInit() {
 
-		this.getAppLocalStorageUsage().then((appLocalStorageUsage: AppLocalStorageUsage) => {
-			this.appLocalStorageUsage = appLocalStorageUsage;
+		this.appUsageService.get().then((appUsageDetails: AppUsageDetails) => {
+			this.appUsageDetails = appUsageDetails;
 		});
 
 		this.appVersion = this.getAppVersion();
@@ -42,31 +38,4 @@ export class AboutDialogComponent implements OnInit {
 		return chrome.runtime.getManifest().version;
 	}
 
-	public getAppLocalStorageUsage(): Promise<AppLocalStorageUsage> {
-
-		return new Promise<AppLocalStorageUsage>((resolve: (appLocalStorageUsage: AppLocalStorageUsage) => void) => {
-
-			this.chromeStorageLocal().getBytesInUse((bytesInUse: number) => {
-
-				const quotaBytes = this.chromeStorageLocal().QUOTA_BYTES;
-
-				const usage: AppLocalStorageUsage = {
-					bytesInUse: bytesInUse,
-					megaBytesInUse: parseFloat((bytesInUse / (1024 * 1024)).toFixed(2)),
-					quotaBytes: quotaBytes,
-					percentUsage: bytesInUse / quotaBytes * 100,
-				};
-
-				resolve(usage);
-			});
-		});
-	}
-
-	/**
-	 *
-	 * @returns {chrome.storage.SyncStorageArea}
-	 */
-	public chromeStorageLocal(): chrome.storage.LocalStorageArea {
-		return chrome.storage.local;
-	}
 }

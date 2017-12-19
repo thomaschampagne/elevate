@@ -1,15 +1,47 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FitnessTrendTableComponent } from './fitness-trend-table.component';
+import { SharedModule } from "../../shared/shared.module";
+import { CoreModule } from "../../core/core.module";
+import { userSettings } from "../../../../../common/scripts/UserSettings";
+import { ActivityDao } from "../../shared/dao/activity/activity.dao";
+import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { TEST_SYNCED_ACTIVITIES } from "../../../fixtures/activities";
 
-xdescribe('FitnessTrendTableComponent', () => {
+describe('FitnessTrendTableComponent', () => {
+
+	let activityDao: ActivityDao = null;
+	let userSettingsDao: UserSettingsDao = null;
+
 	let component: FitnessTrendTableComponent;
 	let fixture: ComponentFixture<FitnessTrendTableComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [FitnessTrendTableComponent]
+			imports: [
+				CoreModule,
+				SharedModule,
+			],
 		}).compileComponents();
+
+		activityDao = TestBed.get(ActivityDao);
+		userSettingsDao = TestBed.get(UserSettingsDao);
+
+		// Mocking chrome storage
+		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
+			}
+		});
+
+		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(userSettings);
+			},
+			set: (keys: any, callback: () => {}) => {
+				callback();
+			}
+		});
 	}));
 
 	beforeEach(() => {

@@ -1,14 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DonateComponent } from './donate.component';
+import { SharedModule } from "../shared/shared.module";
+import { CoreModule } from "../core/core.module";
 
-xdescribe('DonateComponent', () => {
+describe('DonateComponent', () => {
 	let component: DonateComponent;
 	let fixture: ComponentFixture<DonateComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [DonateComponent]
+			imports: [
+				CoreModule,
+				SharedModule,
+			]
 		}).compileComponents();
 	}));
 
