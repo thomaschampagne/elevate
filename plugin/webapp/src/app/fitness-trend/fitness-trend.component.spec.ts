@@ -6,8 +6,8 @@ import { CoreModule } from "../core/core.module";
 import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { TEST_SYNCED_ACTIVITIES } from "../../fixtures/activities";
 import { userSettings } from "../../../../common/scripts/UserSettings";
+import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 
 describe('FitnessTrendComponent', () => {
 

@@ -146,11 +146,11 @@ export class YearProgressService {
 	}
 
 	/**
-	 *
+	 *    Return activity count for each type of sport. Order by count desc
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @returns {ActivityCountByTypeModel[]}
 	 */
-	public countActivitiesByType(): Promise<ActivityCountByTypeModel[]> {
+	public activitiesByTypes(): Promise<ActivityCountByTypeModel[]> {
 
 		return new Promise<ActivityCountByTypeModel[]>((resolve: (result: ActivityCountByTypeModel[]) => void) => {
 
@@ -165,7 +165,11 @@ export class YearProgressService {
 					});
 				});
 
-				return resolve(activitiesCountByTypes);
+				const result = _.orderBy(activitiesCountByTypes, (activityCountByTypeModel: ActivityCountByTypeModel) => {
+					return activityCountByTypeModel.count * -1;
+				});
+
+				return resolve(result);
 			});
 		});
 	}

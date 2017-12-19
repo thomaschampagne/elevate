@@ -303,19 +303,25 @@ describe('YearProgressService', () => {
 
 		// Given
 		const expectedResult: ActivityCountByTypeModel[] = [
+			{type: "Ride", count: 352},
 			{type: "Run", count: 178},
-			{type: "VirtualRide", count: 177},
-			{type: "Ride", count: 352}
+			{type: "VirtualRide", count: 177}
 		];
 
 		// When
-		const promise: Promise<ActivityCountByTypeModel[]> = service.countActivitiesByType();
+		const promise: Promise<ActivityCountByTypeModel[]> = service.activitiesByTypes();
 
 		// Then
 		promise.then((result: ActivityCountByTypeModel[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
+
+			// Check order
+			expect(_.first(result).type).toEqual("Ride");
+			expect(result[1].type).toEqual("Run");
+			expect(_.last(result).type).toEqual("VirtualRide");
+
 			done();
 
 		}, error => {
@@ -336,7 +342,7 @@ describe('YearProgressService', () => {
 		const secondCallTypesFilters: string[] = ["Run"];
 
 		// When
-		service.countActivitiesByType().then(() => {
+		service.activitiesByTypes().then(() => {
 
 			return service.progression(firstCallTypesFilters);
 

@@ -35,7 +35,7 @@ export class YearProgressComponent implements OnInit {
 	public ngOnInit() {
 
 
-		this.yearProgressService.countActivitiesByType().then((activityCountByTypes: ActivityCountByTypeModel[]) => {
+		this.yearProgressService.activitiesByTypes().then((activityCountByTypes: ActivityCountByTypeModel[]) => {
 
 			// Default selectedProgressType
 			this.selectedProgressType = _.find(this.progressTypes, {type: ProgressType.DISTANCE});
