@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 
 @Injectable()
 export class CommonSettingsService {
@@ -15,10 +16,10 @@ export class CommonSettingsService {
 			type: "list",
 			labels: ["All"],
 			list: [{
-				key: "metric",
+				key: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 				name: "Metric",
 			}, {
-				key: "imperial",
+				key: UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY,
 				name: "Imperial",
 			}],
 			title: "App system units",

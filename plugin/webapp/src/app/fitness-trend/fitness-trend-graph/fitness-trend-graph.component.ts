@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { PeriodModel } from "../shared/models/period.model";
 import { LastPeriodModel } from "../shared/models/last-period.model";
-import { GraphPointModel } from "./models/graph-point.model";
+import { GraphPointModel } from "../../shared/models/graph-point.model";
 import { MarkerModel } from "./models/marker.model";
 import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";

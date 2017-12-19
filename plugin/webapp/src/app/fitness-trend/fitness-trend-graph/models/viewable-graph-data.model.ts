@@ -1,4 +1,4 @@
-import { GraphPointModel } from "./graph-point.model";
+import { GraphPointModel } from "../../../shared/models/graph-point.model";
 import { MarkerModel } from "./marker.model";
 import { BaseLineModel } from "./base-line.model";
 import * as _ from "lodash";
