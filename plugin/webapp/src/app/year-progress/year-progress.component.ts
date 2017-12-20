@@ -249,7 +249,7 @@ export class YearProgressComponent implements OnInit {
 			aggregate_rollover: true,
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
-			max_data_size: 6,
+			// max_data_size: 6, // TODO !! how many?!
 			missing_is_hidden_accessor: 'hidden',
 			yax_count: 10,
 			target: "#yearProgressGraph",
