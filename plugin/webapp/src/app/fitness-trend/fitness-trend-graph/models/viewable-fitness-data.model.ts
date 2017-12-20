@@ -3,7 +3,7 @@ import { MarkerModel } from "./marker.model";
 import { BaseLineModel } from "./base-line.model";
 import * as _ from "lodash";
 
-export class ViewableGraphDataModel {
+export class ViewableFitnessDataModel {
 
 	public readonly trainingZonesBaseLines: BaseLineModel[] =
 		[

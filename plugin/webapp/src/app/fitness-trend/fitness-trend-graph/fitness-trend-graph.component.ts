@@ -10,7 +10,6 @@ import { GraphPointModel } from "../../shared/models/graph-point.model";
 import { MarkerModel } from "./models/marker.model";
 import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { ViewableGraphDataModel } from "./models/viewable-graph-data.model";
 import { MetricsGraphicsEventModel } from "./models/metrics-graphics-event.model";
 import { MatDialog } from "@angular/material";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -18,6 +17,7 @@ import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
+import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -46,7 +46,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public lastPeriodViewed: LastPeriodModel;
 
 	public fitnessTrend: DayFitnessTrendModel[];
-	public viewableGraphData: ViewableGraphDataModel;
+	public viewableFitnessDataModel: ViewableFitnessDataModel;
 	public viewedDay: DayFitnessTrendModel;
 
 	public dateMin: Date;
@@ -208,7 +208,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		});
 
-		this.viewableGraphData = new ViewableGraphDataModel(
+		this.viewableFitnessDataModel = new ViewableFitnessDataModel(
 			markers,
 			fatigueLine,
 			fitnessLine,
@@ -272,13 +272,13 @@ export class FitnessTrendGraphComponent implements OnInit {
 		const lines: GraphPointModel[][] = [];
 		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
 
-		_.forEach(this.viewableGraphData.fitnessTrendLines, (line: GraphPointModel[]) => {
+		_.forEach(this.viewableFitnessDataModel.fitnessTrendLines, (line: GraphPointModel[]) => {
 			lines.push(line.slice(indexes.start, indexes.end));
 		});
 
 		this.graphConfig.data = lines;
-		this.graphConfig.markers = this.viewableGraphData.markers;
-		this.graphConfig.baselines = this.viewableGraphData.getBaseLines(this.isTrainingZonesEnabled);
+		this.graphConfig.markers = this.viewableFitnessDataModel.markers;
+		this.graphConfig.baselines = this.viewableFitnessDataModel.getBaseLines(this.isTrainingZonesEnabled);
 	}
 
 	/**

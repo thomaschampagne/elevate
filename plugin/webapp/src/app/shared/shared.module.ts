@@ -32,6 +32,7 @@ import { ReleasesNotesComponent } from "../releases-notes/releases-notes.compone
 import { YearProgressComponent } from "../year-progress/year-progress.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
+import { YearProgressResolverService } from "../year-progress/services/year-progress-resolver.service";
 
 @NgModule({
 	declarations: [
@@ -79,7 +80,8 @@ import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-r
 		CommonSettingsService,
 		OptionHelperReaderService,
 		ZonesService,
-		ReleasesNotesResolverService
+		ReleasesNotesResolverService,
+		YearProgressResolverService,
 
 	],
 	imports: [

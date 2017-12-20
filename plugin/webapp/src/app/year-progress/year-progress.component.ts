@@ -1,16 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { YearProgressService } from "./year-progress.service";
+import { YearProgressService } from "./services/year-progress.service";
 import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 import { YearProgressModel } from "./models/year-progress.model";
 import * as _ from "lodash";
 import { YearProgressTypeModel } from "./models/year-progress-type.model";
 import { ProgressType } from "./models/progress-type.enum";
-import * as d3 from "d3";
 import { GraphPointModel } from "../shared/models/graph-point.model";
 import { ProgressionModel } from "./models/progression.model";
 import * as moment from "moment";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { ActivatedRoute } from "@angular/router";
+import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
+import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
+
+export class ViewableYearProgressDataModel { // TODO Export
+
+	public yearLines: GraphPointModel[][] = [];
+
+	constructor(yearLines: GraphPointModel[][]) {
+		_.forEach(yearLines, (yearLine: GraphPointModel[]) => {
+			this.yearLines.push(MG.convert.date(yearLine, "date"));
+		});
+	}
+}
 
 @Component({
 	selector: 'app-year-progress',
@@ -27,31 +38,37 @@ export class YearProgressComponent implements OnInit {
 	public availableActivityTypes: string[] = [];
 	public selectedActivityTypes: string[] = [];
 	public selectedProgressType: YearProgressTypeModel;
-
-	public graphConfig: any;
 	public isMetric: boolean;
 
-	public yearProgressModels: YearProgressModel[];
+	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 
-	constructor(public userSettingsService: UserSettingsService,
+	public graphConfig: any;
+
+	// public yearProgressModels: YearProgressModel[]; // TODO remove ?!
+	public syncedActivityModels: SyncedActivityModel[];
+
+	public static uniqueTypes(activitiesCountByTypes: ActivityCountByTypeModel[]): string[] {
+		return _.map(activitiesCountByTypes, "type");
+	}
+
+	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
+		return _.maxBy(activitiesCountByTypeModels, "count").type;
+	}
+
+	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService) {
 	}
 
 	public ngOnInit() {
 
+		this.route.data.subscribe((data: {
 
-		Promise.all([
+			requiredYearProgressDataModel: RequiredYearProgressDataModel
 
-			this.userSettingsService.fetch(),
-			this.yearProgressService.activitiesByTypes(),
+		}) => {
 
-		]).then((results: Object[]) => {
-
-			const userSettingsModel = _.first(results) as UserSettingsModel;
-			const activityCountByTypeModels = _.last(results) as ActivityCountByTypeModel[];
-
-			// Set the unit system of the user.
-			this.isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+			this.isMetric = data.requiredYearProgressDataModel.isMetric;
+			this.syncedActivityModels = data.requiredYearProgressDataModel.syncedActivityModels;
 
 			// Set possible progress type to see: distance, time, ...
 			this.progressTypes = [
@@ -64,55 +81,51 @@ export class YearProgressComponent implements OnInit {
 			// .. and set distance as the default on page load
 			this.selectedProgressType = _.find(this.progressTypes, {type: ProgressType.DISTANCE});
 
-			// Compute unique types
-			this.availableActivityTypes = this.uniqueTypes(activityCountByTypeModels);
+			const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
+
+			// Compute unique sport types
+			this.availableActivityTypes = YearProgressComponent.uniqueTypes(activityCountByTypeModels);
 
 			// Select default checked sport type from the most performed one by the athlete
-			this.selectedActivityTypes.push(this.findMostPerformedActivityType(activityCountByTypeModels));
+			this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
-			return this.yearProgressService.progression(this.availableActivityTypes);
+			const yearProgressModels: YearProgressModel[] = this.progression(this.syncedActivityModels, this.availableActivityTypes);
 
-		}).then((yearProgressModels: YearProgressModel[]) => {
+			this.setupGraphConfig();
 
-			this.setup(yearProgressModels);
+			this.setupViewableGraphData(yearProgressModels);
 
-		}, error => {
+			this.updateGraph();
 
-			console.error(error);
-
+			this.setupComponentSizeChangeHandlers();
 		});
+	}
 
+	/**
+	 *
+	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 * @param {string[]} typesFilter
+	 * @returns {YearProgressModel[]}
+	 */
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[]): YearProgressModel[] {
+		return this.yearProgressService.progression(syncedActivityModels, typesFilter);
 	}
 
 	/**
 	 *
 	 */
-	public setup(yearProgressModels: YearProgressModel[]): void { // TODO Rename setup seems to be in ngOnInit
-
-		this.yearProgressModels = yearProgressModels;
-
-		this.setupGraphConfig();
-		// this.setupTimeData();
-		this.setupViewableGraphData();
-		// this.updateGraph(); // TODO
-		// this.setupComponentSizeChangeHandlers(); // TODO
-	}
-
-	/**
-	 *
-	 */
-	private setupViewableGraphData(): void {
+	private setupViewableGraphData(yearProgressModels: YearProgressModel[]): void {
 
 		const yearLines: GraphPointModel[][] = [];
 
-		_.forEach(this.yearProgressModels, (yearProgressModel: YearProgressModel, index: number, yearProgressModels: YearProgressModel[]) => {
+		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel) => {
 
-			const line: GraphPointModel[] = [];
+			const yearLine: GraphPointModel[] = [];
 
 			_.forEach(yearProgressModel.progressions, (progressionModel: ProgressionModel) => {
 
 				const graphPoint: Partial<GraphPointModel> = {
-					date: moment().dayOfYear(progressionModel.onDayOfYear).format("0000-MM-DD"),
+					date: moment().dayOfYear(progressionModel.onDayOfYear).format("YYYY-MM-DD"),
 					hidden: false
 				};
 
@@ -138,21 +151,61 @@ export class YearProgressComponent implements OnInit {
 
 				}
 
-				line.push(graphPoint as GraphPointModel);
+				yearLine.push(graphPoint as GraphPointModel);
 			});
 
-			yearLines.push(line);
+			yearLines.push(yearLine);
+
 		});
 
-		console.log(yearLines);
+		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel(yearLines);
+
 	}
 
-	public uniqueTypes(activitiesCountByTypes: ActivityCountByTypeModel[]) {
-		return _.map(activitiesCountByTypes, "type");
+	public updateGraph(): void {
+		try {
+			// Apply changes
+			this.updateViewableData();
+
+			// Apply graph changes
+			this.draw();
+
+		} catch (error) {
+			console.warn(error);
+		}
 	}
 
-	public findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
-		return _.maxBy(activitiesCountByTypeModels, "count").type;
+
+	/**
+	 *
+	 */
+	public updateViewableData(): void {
+
+		/*		const lines: GraphPointModel[][] = [];
+                const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
+
+                _.forEach(this.viewableYearProgressDataModel.fitnessTrendLines, (line: GraphPointModel[]) => {
+                    lines.push(line.slice(indexes.start, indexes.end));
+                });*/
+		console.log(this.viewableYearProgressDataModel.yearLines);
+
+		this.graphConfig.data = this.viewableYearProgressDataModel.yearLines;
+		// this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
+		// this.graphConfig.baselines = this.viewableYearProgressDataModel.getBaseLines(this.isTrainingZonesEnabled);
+	}
+
+	public draw(): void {
+
+		setTimeout(() => {
+
+			// this.isGraphDataReady = true;
+			MG.data_graphic(this.graphConfig);
+			// console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+		});
+	}
+
+	public setupComponentSizeChangeHandlers(): void {
+		// TODO
 	}
 
 	public setupGraphConfig(): void {
@@ -166,7 +219,7 @@ export class YearProgressComponent implements OnInit {
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
-			interpolate: d3.curveLinear,
+			// interpolate: d3.curveLinear,
 			missing_is_hidden: true,
 			max_data_size: 6,
 			missing_is_hidden_accessor: 'hidden',
@@ -175,7 +228,7 @@ export class YearProgressComponent implements OnInit {
 			x_accessor: "date",
 			y_accessor: "value",
 			inflator: 1.2,
-			showActivePoint: false,
+			showActivePoint: true,
 			markers: null,
 			legend: null,
 			/*click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
@@ -189,4 +242,6 @@ export class YearProgressComponent implements OnInit {
 			}*/
 		};
 	}
+
+
 }
