@@ -5,12 +5,14 @@ import { YearProgressModel } from "./models/year-progress.model";
 import * as _ from "lodash";
 import { YearProgressTypeModel } from "./models/year-progress-type.model";
 import { ProgressType } from "./models/progress-type.enum";
-import { GraphPointModel } from "../shared/models/graph-point.model";
+import { GraphPointModel } from "../shared/models/graphs/graph-point.model";
 import { ProgressionModel } from "./models/progression.model";
 import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
+import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graphics-event.model";
+import * as d3 from "d3";
 
 export class ViewableYearProgressDataModel { // TODO Export
 
@@ -21,6 +23,11 @@ export class ViewableYearProgressDataModel { // TODO Export
 			this.yearLines.push(MG.convert.date(yearLine, "date"));
 		});
 	}
+}
+
+class ProgressionAtDateModel {// TODO Export
+	date: Date;
+	progressions: ProgressionModel[];
 }
 
 @Component({
@@ -44,8 +51,9 @@ export class YearProgressComponent implements OnInit {
 
 	public graphConfig: any;
 
-	// public yearProgressModels: YearProgressModel[]; // TODO remove ?!
+	public yearProgressModels: YearProgressModel[]; // TODO remove ?!
 	public syncedActivityModels: SyncedActivityModel[];
+	public progressionAtDateModel: ProgressionAtDateModel;
 
 	public static uniqueTypes(activitiesCountByTypes: ActivityCountByTypeModel[]): string[] {
 		return _.map(activitiesCountByTypes, "type");
@@ -89,11 +97,11 @@ export class YearProgressComponent implements OnInit {
 			// Select default checked sport type from the most performed one by the athlete
 			this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
-			const yearProgressModels: YearProgressModel[] = this.progression(this.syncedActivityModels, this.availableActivityTypes);
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.availableActivityTypes);
 
 			this.setupGraphConfig();
 
-			this.setupViewableGraphData(yearProgressModels);
+			this.setupViewableGraphData();
 
 			this.updateGraph();
 
@@ -114,11 +122,11 @@ export class YearProgressComponent implements OnInit {
 	/**
 	 *
 	 */
-	private setupViewableGraphData(yearProgressModels: YearProgressModel[]): void {
+	private setupViewableGraphData(): void {
 
 		const yearLines: GraphPointModel[][] = [];
 
-		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel) => {
+		_.forEach(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
 
 			const yearLine: GraphPointModel[] = [];
 
@@ -204,8 +212,28 @@ export class YearProgressComponent implements OnInit {
 		});
 	}
 
-	public setupComponentSizeChangeHandlers(): void {
+	private setupComponentSizeChangeHandlers(): void {
 		// TODO
+	}
+
+	private onGraphMouseOver(event: MetricsGraphicsEventModel): void {
+
+		this.progressionAtDateModel = {
+			date: event.key,
+			progressions: []
+		};
+
+		_.forEach(event.values, (value, index) => {
+			const progressionModel: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
+				onDayOfYear: moment(value.date).dayOfYear()
+			});
+			this.progressionAtDateModel.progressions.push(progressionModel);
+		});
+	}
+
+
+	private onGraphMouseOut(event: MetricsGraphicsEventModel): void {
+		// this.setTodayAsViewedDay();
 	}
 
 	public setupGraphConfig(): void {
@@ -219,7 +247,7 @@ export class YearProgressComponent implements OnInit {
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
-			// interpolate: d3.curveLinear,
+			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
 			max_data_size: 6,
 			missing_is_hidden_accessor: 'hidden',
@@ -231,15 +259,15 @@ export class YearProgressComponent implements OnInit {
 			showActivePoint: true,
 			markers: null,
 			legend: null,
-			/*click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
-				this.onGraphClick(metricsGraphicsEvent);
-			},
+			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
+			// 	this.onGraphClick(metricsGraphicsEvent);
+			// },
 			mouseover: (data: MetricsGraphicsEventModel) => {
-				this.onGraphMouseOver(data.key);
+				this.onGraphMouseOver(data);
 			},
 			mouseout: (data: MetricsGraphicsEventModel) => {
-				this.onGraphMouseOut(data.key);
-			}*/
+				this.onGraphMouseOut(data);
+			}
 		};
 	}
 

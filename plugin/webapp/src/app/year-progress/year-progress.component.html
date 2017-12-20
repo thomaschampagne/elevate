@@ -18,8 +18,13 @@
 
 		<mat-slide-toggle>Commute rides</mat-slide-toggle>
 
+		<div fxLayout="row" fxLayoutAlign="space-between start">
+			<div fxFlex="80" id="yearProgressGraph">
+			</div>
+			<div>
+				<pre style="font-size: 10px;">{{progressionAtDateModel | json}}</pre>
+			</div>
 
-		<div id="yearProgressGraph">
 		</div>
 
 	</mat-card-content>
