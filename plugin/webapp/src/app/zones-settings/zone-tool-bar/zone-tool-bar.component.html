@@ -25,27 +25,28 @@
 				matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."/>
 		</mat-form-field>
 
-		<button mat-icon-button id="addLastZone" (click)="onAddLastZone()">
+		<button mat-icon-button id="addLastZone" (click)="onAddLastZone()" matTooltip="Add a last zone">
 			<mat-icon class="info">add</mat-icon>
 		</button>
 
-		<button mat-icon-button id="removeLastZone" (click)="onRemoveLastZone()">
+		<button mat-icon-button id="removeLastZone" (click)="onRemoveLastZone()" matTooltip="Remove the last zone">
 			<mat-icon class="info">delete</mat-icon>
 		</button>
 
-		<button mat-icon-button id="saveZones" (click)="onSaveZones()">
+		<button mat-icon-button id="saveZones" (click)="onSaveZones()" matTooltip="Save zones">
 			<mat-icon class="info">save</mat-icon>
 		</button>
 
-		<button mat-icon-button id="resetZonesToDefault" (click)="onResetZonesToDefault()">
+		<button mat-icon-button id="resetZonesToDefault" (click)="onResetZonesToDefault()"
+				matTooltip="Reset zones to default">
 			<mat-icon class="info">refresh</mat-icon>
 		</button>
 
-		<button mat-icon-button id="importZones" (click)="onImportZones()">
+		<button mat-icon-button id="importZones" (click)="onImportZones()" matTooltip="Import zones from a backup">
 			<mat-icon class="info">vertical_align_bottom</mat-icon>
 		</button>
 
-		<button mat-icon-button id="exportZones" (click)="onExportZones()">
+		<button mat-icon-button id="exportZones" (click)="onExportZones()" matTooltip="Export for backup/sharing">
 			<mat-icon class="info">vertical_align_top</mat-icon>
 		</button>
 
