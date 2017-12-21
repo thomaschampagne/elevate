@@ -27,6 +27,8 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 	public routeParamsSubscription: Subscription;
 	public zonesUpdatesSubscription: Subscription;
 
+	public areZonesLoaded: boolean = false;
+
 	constructor(private userSettingsService: UserSettingsService,
 				private route: ActivatedRoute,
 				private router: Router,
@@ -95,12 +97,18 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 		// Update the zone definition used
 		this.zoneDefinitionSelected = zoneDefinition;
+
+		setTimeout(() => { // Postpone display of zone at the end of all executions
+			this.areZonesLoaded = true;
+		});
+
 	}
 
 	/**
 	 *
 	 */
 	public onZoneDefinitionSelected(zoneDefinition: ZoneDefinitionModel) {
+		this.areZonesLoaded = false;
 		this.navigateToZone(zoneDefinition.value);
 	}
 
