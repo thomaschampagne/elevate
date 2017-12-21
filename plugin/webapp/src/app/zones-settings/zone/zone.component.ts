@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { IZone } from "../../../../../common/scripts/interfaces/IActivityData";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material";
@@ -7,13 +7,14 @@ import { ZoneChangeOrderModel } from "../shared/zone-change-order.model";
 import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
 	selector: "app-zone",
 	templateUrl: "./zone.component.html",
 	styleUrls: ["./zone.component.scss"]
 })
-export class ZoneComponent implements OnInit {
+export class ZoneComponent implements OnInit, OnDestroy {
 
 	@Input("zone")
 	public zone: IZone;
@@ -45,13 +46,17 @@ export class ZoneComponent implements OnInit {
 	@Input("zoneDefinition")
 	public zoneDefinition: ZoneDefinitionModel;
 
+	public zoneChangeOrderSubscription: Subscription;
+
+	public stepUpdatesSubscription: Subscription;
+
 	constructor(private zonesService: ZonesService,
 				private snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
 
-		this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
+		this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
 
 			const isChangeOrderForMe = (!_.isNull(change) && (this.zoneId === change.destinationId));
 
@@ -69,7 +74,7 @@ export class ZoneComponent implements OnInit {
 
 		});
 
-		this.zonesService.stepUpdates.subscribe((step: number) => {
+		this.stepUpdatesSubscription = this.zonesService.stepUpdates.subscribe((step: number) => {
 			this.zoneDefinition.step = step;
 		});
 	}
@@ -150,5 +155,10 @@ export class ZoneComponent implements OnInit {
 
 	private popSnack(message: string): void {
 		this.snackBar.open(message, "Close", {duration: 2500});
+	}
+
+	public ngOnDestroy(): void {
+		this.zoneChangeOrderSubscription.unsubscribe();
+		this.stepUpdatesSubscription.unsubscribe();
 	}
 }

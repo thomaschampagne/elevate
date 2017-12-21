@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
@@ -6,6 +6,7 @@ import { MatDialog } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
+import { Subscription } from "rxjs/Subscription";
 
 class MenuItemModel {
 	name: string;
@@ -20,11 +21,12 @@ class MenuItemModel {
 	styleUrls: ["./app.component.scss"],
 	providers: [SideNavService]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
 
+	public routerEventsSubscription: Subscription;
 	public title: string;
 	public sideNavOpened: boolean;
 	public sideNavMode: string;
@@ -85,7 +87,7 @@ export class AppComponent implements OnInit {
 
 		this.title = AppComponent.updateToolBarTitle(this.router.url);
 
-		this.router.events.subscribe((routerEvent: RouterEvent) => {
+		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
 				this.title = AppComponent.updateToolBarTitle(routerEvent.url);
 			}
@@ -114,4 +116,9 @@ export class AppComponent implements OnInit {
 	public onOpenLink(url: string): void {
 		window.open(url, "_blank")
 	}
+
+	public ngOnDestroy(): void {
+		this.routerEventsSubscription.unsubscribe();
+	}
+
 }

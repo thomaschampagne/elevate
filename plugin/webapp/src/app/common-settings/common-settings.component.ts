@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings } from "../../../../common/scripts/interfaces/IUserSettings";
 import { CommonSettingsService } from "./services/common-settings.service";
@@ -12,6 +12,7 @@ import { PlatformLocation } from "@angular/common";
 import { SectionModel } from "./models/section.model";
 import { OptionModel } from "./models/option.model";
 import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data.model";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
 	selector: "app-common-settings",
@@ -19,10 +20,12 @@ import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data
 	styleUrls: ["./common-settings.component.scss"],
 
 })
-export class CommonSettingsComponent implements OnInit {
+export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 	public sections: SectionModel[];
 	public searchText = null;
+
+	public routeQueryParamsSubscription: Subscription;
 
 	public static getOptionHelperDir(pathname: string): string {
 
@@ -53,7 +56,7 @@ export class CommonSettingsComponent implements OnInit {
 
 		// Watch query params to filter options from URL
 		// OR open option dialog from external
-		this.route.queryParams.subscribe(params => {
+		this.routeQueryParamsSubscription = this.route.queryParams.subscribe(params => {
 
 			// Check query param: ?searchText=value and apply value to searchText data binding
 			if (!_.isEmpty(params.searchText)) {
@@ -221,5 +224,9 @@ export class CommonSettingsComponent implements OnInit {
 				});
 			});
 		}
+	}
+
+	public ngOnDestroy(): void {
+		this.routeQueryParamsSubscription.unsubscribe();
 	}
 }

@@ -72,13 +72,14 @@ export class ZoneToolBarComponent implements OnInit {
 			data: data
 		});
 
-		dialogRef.afterClosed().subscribe((confirm: boolean) => {
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
 				this.zonesService.resetZonesToDefault().then(() => {
 						this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
 					}, error => this.popSnack(error)
 				);
 			}
+			afterClosedSubscription.unsubscribe();
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { IUserSettings, IUserZones } from "../../../../common/scripts/interfaces/IUserSettings";
 import { IZone } from "../../../../common/scripts/interfaces/IActivityData";
@@ -9,13 +9,14 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
 	selector: "app-zones-settings",
 	templateUrl: "./zones-settings.component.html",
 	styleUrls: ["./zones-settings.component.scss"]
 })
-export class ZonesSettingsComponent implements OnInit {
+export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 	public static DEFAULT_ZONE_VALUE = "heartRate";
 
@@ -23,6 +24,8 @@ export class ZonesSettingsComponent implements OnInit {
 	public zoneDefinitionSelected: ZoneDefinitionModel;
 	public userZones: IUserZones;
 	public currentZones: IZone[];
+	public routeParamsSubscription: Subscription;
+	public zonesUpdatesSubscription: Subscription;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private route: ActivatedRoute,
@@ -39,7 +42,7 @@ export class ZonesSettingsComponent implements OnInit {
 			this.userZones = userSettingsSynced.zones;
 
 			// Check zoneValue provided in URL
-			this.route.params.subscribe(routeParams => {
+			this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
 
 				let zoneDefinition: ZoneDefinitionModel = null;
 
@@ -61,7 +64,7 @@ export class ZonesSettingsComponent implements OnInit {
 
 		// Listen for reload request from ZonesService
 		// This happen when ZoneService perform a resetZonesToDefault of a zones set.
-		this.zonesService.zonesUpdates.subscribe((updatedZones: IZone[]) => {
+		this.zonesUpdatesSubscription = this.zonesService.zonesUpdates.subscribe((updatedZones: IZone[]) => {
 			this.currentZones = updatedZones;
 		});
 	}
@@ -108,5 +111,13 @@ export class ZonesSettingsComponent implements OnInit {
 	private navigateToZone(zoneValue: string) {
 		const selectedZoneUrl = AppRoutesModel.zonesSettings + "/" + zoneValue;
 		this.router.navigate([selectedZoneUrl]);
+	}
+
+	/**
+	 *
+	 */
+	public ngOnDestroy(): void {
+		this.routeParamsSubscription.unsubscribe();
+		this.zonesUpdatesSubscription.unsubscribe();
 	}
 }
