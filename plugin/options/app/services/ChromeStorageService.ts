@@ -2,7 +2,7 @@ import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
 import { IPromise } from "angular";
 import * as _ from "lodash";
-import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import { AthleteProfileModel } from "../../../common/scripts/interfaces/IAthleteProfile";
 import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
 import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
@@ -76,7 +76,7 @@ export class ChromeStorageService {
         return deferred.promise;
     }
 
-    public getLocalSyncedAthleteProfile(): IPromise<IAthleteProfile> {
+	public getLocalSyncedAthleteProfile(): IPromise<AthleteProfileModel> {
         return this.getFromLocalStorage("syncWithAthleteProfile");
     }
 

@@ -12,7 +12,7 @@ import {
 } from "../../plugin/common/scripts/interfaces/ISync";
 import { IAnalysisData } from "../../plugin/common/scripts/interfaces/IActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { IAthleteProfile } from "../../plugin/common/scripts/interfaces/IAthleteProfile";
+import { AthleteProfileModel } from "../../plugin/common/scripts/interfaces/IAthleteProfile";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 
@@ -195,7 +195,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
             return defer.promise;
         });
 
-        spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: IAthleteProfile) => {
+		spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: AthleteProfileModel) => {
             let defer = Q.defer();
             CHROME_STORAGE_STUB.syncWithAthleteProfile = syncedAthleteProfile;
             defer.resolve({

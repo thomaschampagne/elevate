@@ -3,10 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { AppUsageService } from './app-usage.service';
 import { AppUsageDao } from "../../dao/app-usage/app-usage.dao";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
+import { AppUsage } from "../../models/app-usage.model";
 
 describe('AppUsageService', () => {
 
 	let appUsageService: AppUsageService = null;
+
+	let appUsageDao: AppUsageDao = null;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -14,6 +17,7 @@ describe('AppUsageService', () => {
 		});
 		// Retrieve injected service
 		appUsageService = TestBed.get(AppUsageService);
+		appUsageDao = TestBed.get(AppUsageDao);
 	});
 
 	it("should be created", (done: Function) => {
@@ -26,14 +30,12 @@ describe('AppUsageService', () => {
 		// Given
 		const quotaBytes = 1024;
 		const bytesInUse = 512;
-		const appUsage: AppUsageDetails = {
-			bytesInUse: bytesInUse,
-			quotaBytes: quotaBytes,
-			percentUsage: (bytesInUse / quotaBytes * 100),
-			megaBytesInUse: (quotaBytes / (1024 * 1024))
-		};
+		const appUsage = new AppUsage(bytesInUse, quotaBytes);
+		spyOn(appUsageDao, "get").and.returnValue(Promise.resolve(appUsage));
 
-		spyOn(appUsageService, "get").and.returnValue(Promise.resolve(appUsage));
+		const expectedAppUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage,
+			bytesInUse / (1024 * 1024),
+			bytesInUse / quotaBytes * 100);
 
 		// When
 		const promise: Promise<AppUsageDetails> = appUsageService.get();
@@ -42,7 +44,7 @@ describe('AppUsageService', () => {
 		promise.then((result: AppUsageDetails) => {
 
 			expect(result).not.toBeNull();
-			expect(result).toEqual(appUsage);
+			expect(result).toEqual(expectedAppUsageDetails);
 			done();
 
 		}, error => {

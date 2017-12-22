@@ -2,7 +2,7 @@ import { ILocationService, IScope, IWindowService } from "angular";
 import * as _ from "lodash";
 import { AthleteSettingsController } from "../controllers/AthleteSettingsController";
 import { ChromeStorageService } from "../services/ChromeStorageService";
-import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import { AthleteProfileModel } from "../../../common/scripts/interfaces/IAthleteProfile";
 import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 import { StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { routeMap } from "../Config";
@@ -26,7 +26,7 @@ export class ProfileConfiguredRibbon {
      * @param localAthleteProfile
      * @return {boolean}
      */
-    public static remoteAthleteProfileEqualsLocal(remoteAthleteProfile: IAthleteProfile, localAthleteProfile: IAthleteProfile) { // TODO move outside ?!
+	public static remoteAthleteProfileEqualsLocal(remoteAthleteProfile: AthleteProfileModel, localAthleteProfile: AthleteProfileModel) { // TODO move outside ?!
         let remoteEqualsLocal: boolean = true;
         if (remoteAthleteProfile.userGender !== localAthleteProfile.userGender ||
             remoteAthleteProfile.userMaxHr !== localAthleteProfile.userMaxHr ||
@@ -62,7 +62,7 @@ export class ProfileConfiguredRibbon {
                     return null;
                 }
 
-                const remoteAthleteProfile: IAthleteProfile = {
+				const remoteAthleteProfile: AthleteProfileModel = {
                     userGender: userSettings.userGender,
                     userMaxHr: userSettings.userMaxHr,
                     userRestHr: userSettings.userRestHr,
@@ -71,7 +71,7 @@ export class ProfileConfiguredRibbon {
                     userWeight: userSettings.userWeight,
                 };
 
-                chromeStorageService.getLocalSyncedAthleteProfile().then((localSyncedAthleteProfile: IAthleteProfile) => {
+				chromeStorageService.getLocalSyncedAthleteProfile().then((localSyncedAthleteProfile: AthleteProfileModel) => {
                     // A previous sync has be done with theses athlete settings...
                     if (!_.isEmpty(localSyncedAthleteProfile)) {
                         const remoteEqualsLocal: boolean = ProfileConfiguredRibbon.remoteAthleteProfileEqualsLocal(remoteAthleteProfile, localSyncedAthleteProfile);

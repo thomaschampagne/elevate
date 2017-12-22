@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../../../common/scripts/Helper";
-import { IAthleteProfile } from "../../../common/scripts/interfaces/IAthleteProfile";
+import { AthleteProfileModel } from "../../../common/scripts/interfaces/IAthleteProfile";
 import {
 	ISyncActivityComputed,
 	ISyncActivityWithStream,
@@ -23,7 +23,7 @@ export interface ISyncResult {
     globalHistoryChanges: IHistoryChanges;
     computedActivities: ISyncActivityComputed[];
     lastSyncDateTime: number;
-    syncWithAthleteProfile: IAthleteProfile;
+	syncWithAthleteProfile: AthleteProfileModel;
 }
 
 export class ActivitiesSynchronizer {
@@ -661,7 +661,7 @@ export class ActivitiesSynchronizer {
 
             console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
-            const syncedAthleteProfile: IAthleteProfile = {
+			const syncedAthleteProfile: AthleteProfileModel = {
                 userGender: this.userSettings.userGender,
                 userMaxHr: this.userSettings.userMaxHr,
                 userRestHr: this.userSettings.userRestHr,
@@ -720,7 +720,7 @@ export class ActivitiesSynchronizer {
         this.totalRawActivityIds = [];
     }
 
-    public saveSyncedAthleteProfile(syncedAthleteProfile: IAthleteProfile) {
+	public saveSyncedAthleteProfile(syncedAthleteProfile: AthleteProfileModel) {
         return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
     }
 

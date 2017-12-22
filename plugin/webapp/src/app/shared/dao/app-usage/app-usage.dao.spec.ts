@@ -27,10 +27,6 @@ describe('AppUsageDao', () => {
 		// Given
 		const quotaBytes = 1024;
 		const bytesInUse = 512;
-		const appUsage: AppUsage = {
-			bytesInUse: bytesInUse,
-			quotaBytes: quotaBytes,
-		};
 
 		spyOn(appUsageDao, "chromeStorageLocal").and.returnValue({
 			QUOTA_BYTES: quotaBytes,
@@ -39,6 +35,8 @@ describe('AppUsageDao', () => {
 			}
 		});
 
+		const expectedAppUsage: AppUsage = new AppUsage(bytesInUse, quotaBytes);
+
 		// When
 		const promise: Promise<AppUsage> = appUsageDao.get();
 
@@ -46,7 +44,7 @@ describe('AppUsageDao', () => {
 		promise.then((result: AppUsage) => {
 
 			expect(result).not.toBeNull();
-			expect(result).toEqual(appUsage);
+			expect(result).toEqual(expectedAppUsage);
 			done();
 
 		}, error => {
