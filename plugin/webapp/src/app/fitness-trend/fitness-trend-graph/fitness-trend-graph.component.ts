@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -18,13 +18,14 @@ import { FitnessInfoDialogComponent } from "./fitness-info-dialog/fitness-info-d
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
 	selector: "app-fitness-trend-graph",
 	templateUrl: "./fitness-trend-graph.component.html",
 	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
-export class FitnessTrendGraphComponent implements OnInit {
+export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "6_months";
 
@@ -57,6 +58,8 @@ export class FitnessTrendGraphComponent implements OnInit {
 	public cyclingFtp: number = null;
 	public isSwimEnabled: boolean = false;
 	public swimFtp: number = null;
+
+	public sideNavServiceSubscription: Subscription;
 
 	constructor(private userSettingsService: UserSettingsService,
 				private fitnessService: FitnessService,
@@ -244,9 +247,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 
 		setTimeout(() => {
 
-			this.isGraphDataReady = true;
 			MG.data_graphic(this.graphConfig);
 			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			this.isGraphDataReady = true;
 		});
 	}
 
@@ -261,7 +264,7 @@ export class FitnessTrendGraphComponent implements OnInit {
 		};
 
 		// Or user toggles the side nav (open/close states)
-		this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+		this.sideNavServiceSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
 	}
 
 	/**
@@ -614,5 +617,9 @@ export class FitnessTrendGraphComponent implements OnInit {
 			key: "beginning",
 			label: "Since beginning"
 		}];
+	}
+
+	public ngOnDestroy(): void {
+		this.sideNavServiceSubscription.unsubscribe();
 	}
 }

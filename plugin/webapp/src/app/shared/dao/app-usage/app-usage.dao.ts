@@ -20,12 +20,7 @@ export class AppUsageDao {
 		return new Promise<AppUsage>((resolve) => {
 
 			this.chromeStorageLocal().getBytesInUse((bytesInUse: number) => {
-
-				const usage: AppUsage = {
-					bytesInUse: bytesInUse,
-					quotaBytes: this.chromeStorageLocal().QUOTA_BYTES,
-				};
-				resolve(usage);
+				resolve(new AppUsage(bytesInUse, this.chromeStorageLocal().QUOTA_BYTES));
 			});
 		});
 	}

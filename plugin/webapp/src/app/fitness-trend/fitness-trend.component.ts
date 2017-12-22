@@ -12,8 +12,6 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly GRAPH_TAB_INDEX: number = 0;
 	public static readonly TABLE_TAB_INDEX: number = 1;
 
-	public fitnessTableActive: boolean = false;
-
 	public static openActivities(ids: number[]) {
 
 		if (ids.length > 0) {
@@ -36,10 +34,6 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public onSelectedIndexChange(index: number): void {
-
-		if (index === FitnessTrendComponent.TABLE_TAB_INDEX) {
-			this.fitnessTableActive = true;
-		}
 	}
 
 	public onSelectedTabChange(event: MatTabChangeEvent): void {
