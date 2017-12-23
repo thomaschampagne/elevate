@@ -13,42 +13,27 @@ import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
 import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graphics-event.model";
 import * as d3 from "d3";
+import { MarkerModel } from "../fitness-trend/fitness-trend-graph/models/marker.model";
+import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
+import { ProgressionAtDateModel } from "./models/progression-at-date.model";
+import { YearLineStyleModel } from "./models/year-line-style.model";
 
 
-// TODO Line colors (try: https://www.npmjs.com/package/color-scheme)
+// DONE Line colors (try: https://www.npmjs.com/package/color-scheme)
 
 // TODO Persist + Load: "Activity types" checked
 // TODO Persist + Load: "Years" checked
 // TODO Persist + Load: "Commute rides" checked
 // TODO Persist + Load: "Progress type" selected
+
+// TODO Setup nice line colors palette
+
 // TODO Progress last year in graph
 
 // TODO Run & Ride distance Target line display
 // TODO Imperial/metrics conversion
-
 // TODO Table result
-
-
-
-export class YearLineStyleModel {  // TODO Export
-	public stroke: string;
-}
-
-export class ViewableYearProgressDataModel { // TODO Export
-
-	public yearLines: GraphPointModel[][] = [];
-
-	constructor(yearLines: GraphPointModel[][]) {
-		_.forEach(yearLines, (yearLine: GraphPointModel[]) => {
-			this.yearLines.push(MG.convert.date(yearLine, "date"));
-		});
-	}
-}
-
-class ProgressionAtDateModel {// TODO Export
-	date: Date;
-	progressions: ProgressionModel[];
-}
+// TODO setupComponentSizeChangeHandlers
 
 @Component({
 	selector: 'app-year-progress',
@@ -89,46 +74,59 @@ export class YearProgressComponent implements OnInit {
 				public yearProgressService: YearProgressService) {
 	}
 
-	public ngOnInit() {
+	/**
+	 *
+	 */
+	public ngOnInit(): void {
 
-		this.route.data.subscribe((data: {
+		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 
-			requiredYearProgressDataModel: RequiredYearProgressDataModel
-
-		}) => {
-
-			this.isMetric = data.requiredYearProgressDataModel.isMetric;
-			this.syncedActivityModels = data.requiredYearProgressDataModel.syncedActivityModels;
-
-			// Set possible progress type to see: distance, time, ...
-			this.progressTypes = [
-				new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "km" : "mi"),
-				new YearProgressTypeModel(ProgressType.TIME, "Time", "h"),
-				new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "m" : "feet"),
-				new YearProgressTypeModel(ProgressType.COUNT, "Count")
-			];
-
-			// .. and set distance as the default on page load
-			this.selectedProgressType = _.find(this.progressTypes, {type: ProgressType.DISTANCE});
-
-			const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
-
-			// Compute unique sport types
-			this.availableActivityTypes = YearProgressComponent.uniqueTypes(activityCountByTypeModels);
-
-			// Select default checked sport type from the most performed one by the athlete
-			this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
-
-			this.yearProgressModels = this.progression(this.syncedActivityModels, this.availableActivityTypes);
-
-			this.setupGraphConfig();
-
-			this.setupViewableGraphData();
-
-			this.updateGraph();
-
-			this.setupComponentSizeChangeHandlers();
+			this.setup(
+				data.requiredYearProgressDataModel.isMetric,
+				data.requiredYearProgressDataModel.syncedActivityModels
+			);
 		});
+	}
+
+	/**
+	 *
+	 * @param {boolean} isMetric
+	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 */
+	public setup(isMetric: boolean, syncedActivityModels: SyncedActivityModel[]): void {
+
+		this.isMetric = isMetric;
+
+		this.syncedActivityModels = syncedActivityModels;
+
+		// Set possible progress type to see: distance, time, ...
+		this.progressTypes = [
+			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "km" : "mi"),
+			new YearProgressTypeModel(ProgressType.TIME, "Time", "h"),
+			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "m" : "feet"),
+			new YearProgressTypeModel(ProgressType.COUNT, "Count")
+		];
+
+		// .. and set distance as the default on page load
+		this.selectedProgressType = _.find(this.progressTypes, {type: ProgressType.DISTANCE});
+
+		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
+
+		// Compute unique sport types
+		this.availableActivityTypes = YearProgressComponent.uniqueTypes(activityCountByTypeModels);
+
+		// Select default checked sport type from the most performed one by the athlete
+		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
+
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.availableActivityTypes);
+
+		this.setupGraphConfig();
+
+		this.setupViewableGraphData();
+
+		this.updateGraph();
+
+		this.setupComponentSizeChangeHandlers();
 	}
 
 	/**
@@ -145,6 +143,11 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	private setupViewableGraphData(): void {
+
+		const todayMarker: MarkerModel = {
+			date: moment().startOf("day").toDate(),
+			label: "Today"
+		};
 
 		const yearLines: GraphPointModel[][] = [];
 
@@ -188,10 +191,15 @@ export class YearProgressComponent implements OnInit {
 
 		});
 
-		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel(yearLines);
+		const linesStyles = this.getLineStylesFromColorPalette(this.yearProgressModels, YearProgressComponent.COLOR_PALETTE);
+
+		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel(yearLines, [todayMarker], linesStyles);
 
 	}
 
+	/**
+	 *
+	 */
 	public updateGraph(): void {
 		try {
 			// Apply changes
@@ -210,24 +218,15 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public updateViewableData(): void {
-
-		/*		const lines: GraphPointModel[][] = [];
-                const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
-
-                _.forEach(this.viewableYearProgressDataModel.fitnessTrendLines, (line: GraphPointModel[]) => {
-                    lines.push(line.slice(indexes.start, indexes.end));
-                });*/
-		console.log(this.viewableYearProgressDataModel.yearLines);
-
 		this.graphConfig.data = this.viewableYearProgressDataModel.yearLines;
-		// this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
-		// this.graphConfig.baselines = this.viewableYearProgressDataModel.getBaseLines(this.isTrainingZonesEnabled);
+		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
+		this.graphConfig.custom_style.lines = this.viewableYearProgressDataModel.yearLineStyleModels;
+		this.graphConfig.custom_style.circle_colors = this.viewableYearProgressDataModel.circleColors;
 	}
 
 	public draw(): void {
 
 		setTimeout(() => {
-
 			// this.isGraphDataReady = true;
 			MG.data_graphic(this.graphConfig);
 			// console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
@@ -260,15 +259,12 @@ export class YearProgressComponent implements OnInit {
 
 	public setupGraphConfig(): void {
 
-		const lineStyles = this.getLineStylesFromColorPalette(this.yearProgressModels, YearProgressComponent.COLOR_PALETTE);
-		const circleStyles = _.map(lineStyles, "stroke");
-
 		this.graphConfig = {
 			data: [],
 			full_width: true,
 			height: window.innerHeight * 0.55,
 			right: 40,
-			baselines: [{value: 1000, label: null}], // TODO remove
+			baselines: [],
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
@@ -282,11 +278,11 @@ export class YearProgressComponent implements OnInit {
 			y_accessor: "value",
 			inflator: 1,
 			showActivePoint: false,
-			markers: [{date: new Date(), label: "pouet"}], // TODO today start
+			markers: [],
 			legend: null,
 			custom_style: {
-				lines: lineStyles,
-				circle_colors: circleStyles
+				lines: [],
+				circle_colors: []
 			},
 			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 			// 	this.onGraphClick(metricsGraphicsEvent);

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { YearLineStyleModel, YearProgressComponent } from './year-progress.component';
+import { YearProgressComponent } from './year-progress.component';
 import { SharedModule } from "../shared/shared.module";
 import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 import { CoreModule } from "../core/core.module";
@@ -9,6 +9,7 @@ import { RequiredYearProgressDataModel } from "./models/required-year-progress-d
 import { Observable } from "rxjs/Observable";
 import { YearProgressActivitiesFixture } from "./services/year-progress-activities.fixture";
 import { YearProgressModel } from "./models/year-progress.model";
+import { YearLineStyleModel } from "./models/year-line-style.model";
 
 describe('YearProgressComponent', () => {
 
