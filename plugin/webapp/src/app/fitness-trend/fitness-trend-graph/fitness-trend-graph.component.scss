@@ -27,54 +27,6 @@ $tsb-color: #adadad;
 	cursor: pointer;
 }
 
-// Pimp marker lines
-::ng-deep .mg-markers line {
-	opacity: 0.4;
-	shape-rendering: auto;
-	stroke: $light-grey;
-	stroke-width: 1px;
-}
-
-// Pimp baselines
-::ng-deep .mg-baselines line {
-	opacity: 0.6;
-	stroke-dasharray: 15, 15;
-}
-
-// Customize graph lines colors
-::ng-deep .mg-line1-color {
-	stroke: $atl-color;
-	fill: $atl-color;
-}
-
-::ng-deep .mg-line2-color {
-	stroke: $ctl-color;
-	fill: $ctl-color;
-}
-
-::ng-deep .mg-line3-color {
-	stroke: $tsb-color;
-	fill: $tsb-color;
-}
-
-::ng-deep .mg-line4-color {
-	stroke: $atl-color;
-	fill: $atl-color;
-	stroke-dasharray: 5, 5;
-}
-
-::ng-deep .mg-line5-color {
-	stroke: $ctl-color;
-	fill: $ctl-color;
-	stroke-dasharray: 5, 5;
-}
-
-::ng-deep .mg-line6-color {
-	stroke: $tsb-color;
-	fill: $tsb-color;
-	stroke-dasharray: 5, 5;
-}
-
 // No data card
 .noData div {
 	padding-top: 10px;

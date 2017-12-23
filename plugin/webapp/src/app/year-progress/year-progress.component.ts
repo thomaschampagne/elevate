@@ -14,6 +14,33 @@ import { RequiredYearProgressDataModel } from "./models/required-year-progress-d
 import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graphics-event.model";
 import * as d3 from "d3";
 
+
+// TODO Persist + Load: "Activity types" checked
+// TODO Persist + Load: "Years" checked
+// TODO Persist + Load: "Commute rides" checked
+// TODO Persist + Load: "Progress type" selected
+
+// TODO Line colors (try: https://www.npmjs.com/package/color-scheme)
+// TODO Run & Ride distance Target line display
+// TODO Progress last year
+/*
+TODO Fix:
+Reproduce with: (yearProgress -> fitnessTrend -> yearProgress)
+core.js:1427 ERROR TypeError: Cannot read property 'style' of null
+    at styleValue (d3.js:1446)
+    at Selection.selection_style [as style] (d3.js:1442)
+    at get_pixel_dimension (metricsgraphics.js:377)
+    at get_width (metricsgraphics.js:381)
+    at mg_init_compute_width (metricsgraphics.js:3669)
+    at init (metricsgraphics.js:3882)
+    at lineChart.init (metricsgraphics.js:5346)
+    at new lineChart (metricsgraphics.js:5511)
+    at Object.MG.data_graphic (metricsgraphics.js:842)
+    at fitness-trend-graph.component.ts:250
+
+ */
+
+
 export class ViewableYearProgressDataModel { // TODO Export
 
 	public yearLines: GraphPointModel[][] = [];
@@ -243,7 +270,7 @@ export class YearProgressComponent implements OnInit {
 			full_width: true,
 			height: window.innerHeight * 0.55,
 			right: 40,
-			baselines: [],
+			baselines: [{value: 1000, label: null}], // TODO remove
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
@@ -257,8 +284,35 @@ export class YearProgressComponent implements OnInit {
 			y_accessor: "value",
 			inflator: 1.2,
 			showActivePoint: true,
-			markers: null,
+			markers: [{date: new Date(), label: "pouet"}], // TODO remove or keep for today?
 			legend: null,
+			custom_style: {
+				lines: [
+					{
+						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "black" // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "red", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "green", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					}
+
+				],
+				circleColors: ["black", "black", "black", "black", "black", "red", "green"] // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+			},
 			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 			// 	this.onGraphClick(metricsGraphicsEvent);
 			// },

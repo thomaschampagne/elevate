@@ -4,6 +4,24 @@
 @import '~@angular/material/theming';
 
 /**
+ * Metrics graphics overrides // TODO Extract in file
+ */
+
+// Pimp marker lines
+.mg-markers line {
+	opacity: 0.4 !important;
+	shape-rendering: auto;
+	stroke: $light-grey;
+	stroke-width: 1px;
+}
+
+// Pimp baselines
+.mg-baselines line {
+	opacity: 0.4 !important;
+	stroke-dasharray: 15, 15;
+}
+
+/**
  * Element style overriding
  */
 html, body, mat-sidenav-container {

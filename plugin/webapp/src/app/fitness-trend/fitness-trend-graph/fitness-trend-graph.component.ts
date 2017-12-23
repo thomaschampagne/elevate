@@ -536,6 +536,32 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			showActivePoint: false,
 			markers: null,
 			legend: null,
+			custom_style: {
+				lines: [
+					{
+						"stroke": "#515151", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "#e94e1b", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "#adadad" // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+					},
+					{
+						"stroke": "#515151", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke-dasharray": "5, 5"
+					},
+					{
+						"stroke": "#e94e1b", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke-dasharray": "5, 5"
+					},
+					{
+						"stroke": "#adadad", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke-dasharray": "5, 5"
+					}
+				],
+				circleColors: ["#515151", "#e94e1b", "#adadad", "#515151", "#e94e1b", "#adadad"] // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+			},
 			click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 				this.onGraphClick(metricsGraphicsEvent);
 			},
