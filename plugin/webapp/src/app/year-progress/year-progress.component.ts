@@ -15,30 +15,18 @@ import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graph
 import * as d3 from "d3";
 
 
+// TODO Line colors (try: https://www.npmjs.com/package/color-scheme)
+
 // TODO Persist + Load: "Activity types" checked
 // TODO Persist + Load: "Years" checked
 // TODO Persist + Load: "Commute rides" checked
 // TODO Persist + Load: "Progress type" selected
+// TODO Progress last year in graph
 
-// TODO Line colors (try: https://www.npmjs.com/package/color-scheme)
 // TODO Run & Ride distance Target line display
-// TODO Progress last year
-/*
-TODO Fix:
-Reproduce with: (yearProgress -> fitnessTrend -> yearProgress)
-core.js:1427 ERROR TypeError: Cannot read property 'style' of null
-    at styleValue (d3.js:1446)
-    at Selection.selection_style [as style] (d3.js:1442)
-    at get_pixel_dimension (metricsgraphics.js:377)
-    at get_width (metricsgraphics.js:381)
-    at mg_init_compute_width (metricsgraphics.js:3669)
-    at init (metricsgraphics.js:3882)
-    at lineChart.init (metricsgraphics.js:5346)
-    at new lineChart (metricsgraphics.js:5511)
-    at Object.MG.data_graphic (metricsgraphics.js:842)
-    at fitness-trend-graph.component.ts:250
+// TODO Imperial/metrics conversion
 
- */
+// TODO Table result
 
 
 export class ViewableYearProgressDataModel { // TODO Export
@@ -56,6 +44,8 @@ class ProgressionAtDateModel {// TODO Export
 	date: Date;
 	progressions: ProgressionModel[];
 }
+
+
 
 @Component({
 	selector: 'app-year-progress',
