@@ -1,15 +1,19 @@
 @import '../../assets/styles/constant';
 
+mat-icon {
+	color: $light-grey;
+}
+
+mat-card {
+	margin-bottom: 0;
+}
+
 .gender-card {
 	margin-right: 0;
 }
 
 .gender-card-test {
 	margin-right: 0;
-}
-
-mat-icon {
-	color: $light-grey;
 }
 
 .swim-ftp-calculator-toggle, mat-divider {
