@@ -146,13 +146,13 @@
 				<div fxFill
 					 fxLayout="row" fxLayoutAlign="start center"
 					 class="mat-headline">
-					<div fxFlex="180px" class="fitness">
+					<div fxFlex="180px" [style.color]="ctlColor">
 						Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
 					</div>
-					<div fxFlex="180px" class="fatigue">
+					<div fxFlex="180px" [style.color]="atlColor">
 						Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
 					</div>
-					<div fxFlex="180px" class="form">
+					<div fxFlex="180px" [style.color]="tsbColor">
 						Form &nbsp;&nbsp;{{viewedDay.printForm()}}
 					</div>
 

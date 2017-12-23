@@ -38,6 +38,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "swimEnabled";
 	public static readonly LC_TRAINING_ZONES_ENABLED_KEY: string = "trainingZonesEnabled";
 
+	public readonly atlColor: string = "#515151";
+	public readonly ctlColor: string = "#e94e1b";
+	public readonly tsbColor: string = "#adadad";
+
 	public PERFORMANCE_MARKER: number;
 
 	public graphConfig: any;
@@ -539,28 +543,28 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			custom_style: {
 				lines: [
 					{
-						"stroke": "#515151", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.atlColor, // Fatigue real
 					},
 					{
-						"stroke": "#e94e1b", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.ctlColor, // Fitness real
 					},
 					{
-						"stroke": "#adadad" // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.tsbColor // Form real
 					},
 					{
-						"stroke": "#515151", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.atlColor, // Fatigue preview days
 						"stroke-dasharray": "5, 5"
 					},
 					{
-						"stroke": "#e94e1b", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.ctlColor, // Fitness preview days
 						"stroke-dasharray": "5, 5"
 					},
 					{
-						"stroke": "#adadad", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+						"stroke": this.tsbColor, // Form preview days
 						"stroke-dasharray": "5, 5"
 					}
 				],
-				circleColors: ["#515151", "#e94e1b", "#adadad", "#515151", "#e94e1b", "#adadad"] // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+				circle_colors: [this.atlColor, this.ctlColor, this.tsbColor, this.atlColor, this.ctlColor, this.tsbColor]
 			},
 			click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 				this.onGraphClick(metricsGraphicsEvent);
