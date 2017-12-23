@@ -29,6 +29,11 @@ import * as d3 from "d3";
 // TODO Table result
 
 
+
+export class YearLineStyleModel {  // TODO Export
+	public stroke: string;
+}
+
 export class ViewableYearProgressDataModel { // TODO Export
 
 	public yearLines: GraphPointModel[][] = [];
@@ -45,8 +50,6 @@ class ProgressionAtDateModel {// TODO Export
 	progressions: ProgressionModel[];
 }
 
-
-
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
@@ -54,6 +57,8 @@ class ProgressionAtDateModel {// TODO Export
 	providers: [YearProgressService]
 })
 export class YearProgressComponent implements OnInit {
+
+	public static readonly COLOR_PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 
 	public readonly ProgressType = ProgressType; // Inject enum as class member
 
@@ -255,6 +260,9 @@ export class YearProgressComponent implements OnInit {
 
 	public setupGraphConfig(): void {
 
+		const lineStyles = this.getLineStylesFromColorPalette(this.yearProgressModels, YearProgressComponent.COLOR_PALETTE);
+		const circleStyles = _.map(lineStyles, "stroke");
+
 		this.graphConfig = {
 			data: [],
 			full_width: true,
@@ -266,42 +274,19 @@ export class YearProgressComponent implements OnInit {
 			aggregate_rollover: true,
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
-			// max_data_size: 6, // TODO !! how many?!
+			max_data_size: this.yearProgressModels.length,
 			missing_is_hidden_accessor: 'hidden',
 			yax_count: 10,
 			target: "#yearProgressGraph",
 			x_accessor: "date",
 			y_accessor: "value",
-			inflator: 1.2,
-			showActivePoint: true,
-			markers: [{date: new Date(), label: "pouet"}], // TODO remove or keep for today?
+			inflator: 1,
+			showActivePoint: false,
+			markers: [{date: new Date(), label: "pouet"}], // TODO today start
 			legend: null,
 			custom_style: {
-				lines: [
-					{
-						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "black" // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "black", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "red", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					},
-					{
-						"stroke": "green", // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
-					}
-
-				],
-				circleColors: ["black", "black", "black", "black", "black", "red", "green"] // TODO Extract color. Unify with SASS file ($atl-color: #515151;)
+				lines: lineStyles,
+				circle_colors: circleStyles
 			},
 			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 			// 	this.onGraphClick(metricsGraphicsEvent);
@@ -315,5 +300,19 @@ export class YearProgressComponent implements OnInit {
 		};
 	}
 
-
+	/**
+	 *
+	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {string[]} colorPalette
+	 * @returns {YearLineStyleModel[]}
+	 */
+	public getLineStylesFromColorPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearLineStyleModel[] {
+		let lineStyles: YearLineStyleModel[] = [];
+		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
+			lineStyles.push({
+				stroke: colorPalette[index % colorPalette.length]
+			});
+		});
+		return lineStyles.reverse();
+	}
 }
