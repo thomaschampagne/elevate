@@ -19,6 +19,7 @@ import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
 import { Subscription } from "rxjs/Subscription";
+import { WindowService } from "../../shared/services/window/window.service";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -59,12 +60,14 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public isSwimEnabled: boolean = false;
 	public swimFtp: number = null;
 
-	public sideNavServiceSubscription: Subscription;
+	public sideNavChangesSubscription: Subscription;
+	public windowResizingSubscription: Subscription;
 
-	constructor(private userSettingsService: UserSettingsService,
-				private fitnessService: FitnessService,
-				private sideNavService: SideNavService,
-				private dialog: MatDialog) {
+	constructor(public userSettingsService: UserSettingsService,
+				public fitnessService: FitnessService,
+				public sideNavService: SideNavService,
+				public windowService: WindowService,
+				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
@@ -258,13 +261,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public setupComponentSizeChangeHandlers(): void {
 
-		// If user resize the window
-		window.onresize = (event) => {
-			this.onComponentSizeChanged();
-		};
+		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
 
 		// Or user toggles the side nav (open/close states)
-		this.sideNavServiceSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
 	}
 
 	/**
@@ -646,6 +646,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnDestroy(): void {
-		this.sideNavServiceSubscription.unsubscribe();
+		this.windowResizingSubscription.unsubscribe();
+		this.sideNavChangesSubscription.unsubscribe();
 	}
 }

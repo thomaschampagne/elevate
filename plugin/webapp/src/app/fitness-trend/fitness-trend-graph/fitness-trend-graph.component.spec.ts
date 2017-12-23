@@ -12,7 +12,6 @@ import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { AppComponent } from "../../app.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -31,8 +30,7 @@ describe("FitnessTrendGraphComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
-			],
-			providers: [SideNavService]
+			]
 		}).compileComponents();
 
 		// Retrieve injected service

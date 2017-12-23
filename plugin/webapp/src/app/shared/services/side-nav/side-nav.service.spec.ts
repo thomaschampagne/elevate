@@ -26,7 +26,7 @@ describe('SideNavService', () => {
 		const spy = spyOn(service.changes, "next");
 
 		// When
-		service.onChanged(SideNavStatus.CLOSED);
+		service.onChange(SideNavStatus.CLOSED);
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
@@ -41,7 +41,7 @@ describe('SideNavService', () => {
 		const spy = spyOn(service.changes, "next");
 
 		// When
-		service.onChanged(SideNavStatus.OPENED);
+		service.onChange(SideNavStatus.OPENED);
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(expectedCallCount);

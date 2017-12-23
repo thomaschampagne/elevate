@@ -33,6 +33,8 @@ import { YearProgressComponent } from "../year-progress/year-progress.component"
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 import { YearProgressResolverService } from "../year-progress/services/year-progress-resolver.service";
+import { WindowService } from "./services/window/window.service";
+import { SideNavService } from "./services/side-nav/side-nav.service";
 
 @NgModule({
 	declarations: [
@@ -82,6 +84,8 @@ import { YearProgressResolverService } from "../year-progress/services/year-prog
 		ZonesService,
 		ReleasesNotesResolverService,
 		YearProgressResolverService,
+		SideNavService,
+		WindowService
 
 	],
 	imports: [

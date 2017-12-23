@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FitnessTrendComponent } from './fitness-trend.component';
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
-import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";
@@ -21,8 +20,7 @@ describe('FitnessTrendComponent', () => {
 			imports: [
 				CoreModule,
 				SharedModule,
-			],
-			providers: [SideNavService]
+			]
 		}).compileComponents();
 
 		// Retrieve injected service

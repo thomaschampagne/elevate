@@ -11,7 +11,7 @@ export class SideNavService {
 		this.changes = new Subject<SideNavStatus>();
 	}
 
-	public onChanged(status: SideNavStatus): void {
+	public onChange(status: SideNavStatus): void {
 		this.changes.next(status);
 	}
 

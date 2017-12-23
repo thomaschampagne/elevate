@@ -7,6 +7,7 @@ import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
+import { WindowService } from "./shared/services/window/window.service";
 
 class MenuItemModel {
 	name: string;
@@ -18,8 +19,7 @@ class MenuItemModel {
 @Component({
 	selector: "app-root",
 	templateUrl: "./app.component.html",
-	styleUrls: ["./app.component.scss"],
-	providers: [SideNavService]
+	styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public title: string;
 	public sideNavOpened: boolean;
 	public sideNavMode: string;
-	public mainMenuItems: MenuItemModel[] = [
+	public readonly mainMenuItems: MenuItemModel[] = [
 		{
 			name: "Fitness Trend",
 			icon: "timeline",
@@ -79,6 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(public router: Router,
 				public sideNavService: SideNavService,
+				public windowService: WindowService,
 				public dialog: MatDialog) {
 	}
 
@@ -94,6 +95,15 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.title = AppComponent.updateToolBarTitle(routerEvent.url);
 			}
 		});
+
+
+		this.setupWindowResizeBroadcast();
+	}
+
+	public setupWindowResizeBroadcast(): void {
+		window.onresize = (event: Event) => {
+			this.windowService.onResize(event); // When user resize the window. Tell it to subscribers
+		};
 	}
 
 	public onShowShare(): void {
@@ -108,11 +118,11 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onSideNavClosed(): void {
-		this.sideNavService.onChanged(SideNavStatus.CLOSED);
+		this.sideNavService.onChange(SideNavStatus.CLOSED);
 	}
 
 	public onSideNavOpened(): void {
-		this.sideNavService.onChanged(SideNavStatus.OPENED);
+		this.sideNavService.onChange(SideNavStatus.OPENED);
 	}
 
 	public onOpenLink(url: string): void {

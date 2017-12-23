@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
-import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 
 describe("AppComponent", () => {
 
@@ -17,8 +16,7 @@ describe("AppComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule
-			],
-			providers: [SideNavService]
+			]
 		}).compileComponents();
 	}));
 
