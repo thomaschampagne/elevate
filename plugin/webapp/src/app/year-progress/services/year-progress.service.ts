@@ -22,10 +22,10 @@ export class YearProgressService {
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
-	 * @param {boolean} excludeCommuteRides
+	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], excludeCommuteRides?: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], includeCommuteRide?: boolean): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -105,7 +105,7 @@ export class YearProgressService {
 				dayOfYear: currentDayMoment.dayOfYear(),
 			};
 
-			if (excludeCommuteRides) {
+			if (!_.isUndefined(includeCommuteRide) && !includeCommuteRide) {
 				filterQuery.commute = false;
 			}
 

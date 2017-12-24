@@ -29,16 +29,20 @@
 			</mat-select>
 		</mat-form-field>
 
-		<mat-slide-toggle>Commute rides</mat-slide-toggle>
+		<mat-slide-toggle
+			[(ngModel)]="includeCommuteRide"
+			(change)="onIncludeCommuteRideToggle()">
+			Commute rides
+		</mat-slide-toggle>
 
-		<div *ngIf="(this.selectedActivityTypes.length === 0)">
+		<div *ngIf="(selectedActivityTypes.length === 0)">
 
 			No progression to display. Please select at list 1 type.
 
 		</div>
 
 		<!-- Graph and Legend -->
-		<div [hidden]="(this.selectedActivityTypes.length === 0)">
+		<div [hidden]="(selectedActivityTypes.length === 0)">
 
 			<div fxLayout="row" fxLayoutAlign="space-between start">
 

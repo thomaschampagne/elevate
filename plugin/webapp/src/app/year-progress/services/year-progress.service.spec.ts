@@ -153,7 +153,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
-		const excludeCommuteRides = true;
+		const includeCommuteRide = false;
 
 		const expectedLastDay2015 = new ProgressionModel(
 			1451516400000,
@@ -185,7 +185,7 @@ describe('YearProgressService', () => {
 		);
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels, typesFilters, excludeCommuteRides);
+		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels, typesFilters, includeCommuteRide);
 
 		// Then
 		expect(progression).not.toBeNull();

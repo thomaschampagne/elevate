@@ -61,6 +61,8 @@ export class YearProgressComponent implements OnInit {
 
 	public selectedProgressType: YearProgressTypeModel;
 
+	public includeCommuteRide: boolean;
+
 	public isMetric: boolean;
 
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
@@ -108,6 +110,9 @@ export class YearProgressComponent implements OnInit {
 
 		this.syncedActivityModels = syncedActivityModels;
 
+		// Keep commute rides in stats by default
+		this.includeCommuteRide = true;
+
 		// Set possible progress type to see: distance, time, ...
 		this.progressTypes = [
 			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles"),
@@ -128,7 +133,7 @@ export class YearProgressComponent implements OnInit {
 		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
 		// Compute first progression
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.includeCommuteRide);
 
 		// List years
 		this.availableYears = _.map(this.yearProgressModels, "year").reverse();
@@ -151,8 +156,8 @@ export class YearProgressComponent implements OnInit {
 	 * @param {string[]} typesFilter
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[]): YearProgressModel[] {
-		return this.yearProgressService.progression(syncedActivityModels, typesFilter);
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], includeCommuteRide: boolean): YearProgressModel[] {
+		return this.yearProgressService.progression(syncedActivityModels, typesFilter, includeCommuteRide);
 	}
 
 	/**
@@ -261,8 +266,7 @@ export class YearProgressComponent implements OnInit {
 	public onSelectedActivityTypesChange(): void {
 
 		if (this.selectedActivityTypes.length > 0) {
-			const reComputeProgression = true;
-			this.reloadGraph(reComputeProgression);
+			this.reloadGraph(true);
 		}
 
 	}
@@ -271,18 +275,24 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public onSelectedProgressTypeChange(): void {
-
-		const reComputeProgression = false;
-		this.reloadGraph(reComputeProgression);
-
+		this.reloadGraph(false);
 	}
 
 	/**
 	 *
 	 */
 	public onSelectedYearsChange(): void {
-
 		console.log(this.selectedYears);
+		this.reloadGraph(true);
+	}
+
+	/**
+	 *
+	 */
+	public onIncludeCommuteRideToggle(): void {
+
+		console.log(this.includeCommuteRide);
+		this.reloadGraph(true);
 
 	}
 
@@ -293,7 +303,7 @@ export class YearProgressComponent implements OnInit {
 	public reloadGraph(reComputeProgression: boolean): void {
 		// Re-compute progression with new activity types selected
 		if (reComputeProgression) {
-			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.includeCommuteRide);
 		}
 		this.setupViewableGraphData();
 		this.updateGraph();
