@@ -110,9 +110,9 @@ export class YearProgressComponent implements OnInit {
 
 		// Set possible progress type to see: distance, time, ...
 		this.progressTypes = [
-			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "km" : "mi"),
-			new YearProgressTypeModel(ProgressType.TIME, "Time", "h"),
-			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "m" : "feet"),
+			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles"),
+			new YearProgressTypeModel(ProgressType.TIME, "Time", "hours"),
+			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "meters" : "feet"),
 			new YearProgressTypeModel(ProgressType.COUNT, "Count")
 		];
 
@@ -250,14 +250,24 @@ export class YearProgressComponent implements OnInit {
 	public onSelectedActivityTypesChange(): void {
 
 		if (this.selectedActivityTypes.length > 0) {
-			this.reloadGraph();
+			const reComputeProgression = true;
+			this.reloadGraph(reComputeProgression);
 		}
 
 	}
 
-	public reloadGraph(): void {
+	public onSelectedProgressTypeChange(): void {
+
+		const reComputeProgression = false;
+		this.reloadGraph(reComputeProgression);
+
+	}
+
+	public reloadGraph(reComputeProgression: boolean): void {
 		// Re-compute progression with new activity types selected
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+		if (reComputeProgression) {
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+		}
 		this.setupViewableGraphData();
 		this.updateGraph();
 	}
@@ -272,24 +282,25 @@ export class YearProgressComponent implements OnInit {
 
 			const momentAtDay = moment(value.date);
 
-			const progress: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
+			const progressionModel: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
 				onDayOfYear: momentAtDay.dayOfYear()
 			});
 
 			const progressAtDay: ProgressionAtDayModel = {
-				date: momentAtDay.year(progress.onYear).toDate(),
-				year: progress.onYear,
-				progression: progress,
-				color: this.viewableYearProgressDataModel.getYearColor(progress.onYear)
+				date: momentAtDay.year(progressionModel.onYear).toDate(),
+				year: progressionModel.onYear,
+				progressType: this.selectedProgressType.type,
+				value: progressionModel.valueOf(this.selectedProgressType.type),
+				color: this.viewableYearProgressDataModel.getYearColor(progressionModel.onYear)
 			};
 			this.progressionsAtDay.push(progressAtDay);
 		});
 	}
 
 
-	public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
-		// this.setTodayAsViewedDay();
-	}
+	// public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
+	// 	// this.setTodayAsViewedDay();
+	// }
 
 	public setupGraphConfig(): void {
 
@@ -324,9 +335,9 @@ export class YearProgressComponent implements OnInit {
 			mouseover: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOver(data);
 			},
-			mouseout: (data: MetricsGraphicsEventModel) => {
-				this.onGraphMouseOut(data);
-			}
+			// mouseout: (data: MetricsGraphicsEventModel) => {
+			// 	this.onGraphMouseOut(data);
+			// }
 		};
 	}
 

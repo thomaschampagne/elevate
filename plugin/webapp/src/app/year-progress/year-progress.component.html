@@ -6,15 +6,16 @@
 						(change)="onSelectedActivityTypesChange()"
 						[(ngModel)]="selectedActivityTypes"
 						multiple>
-				<!--[formControl]="toppings" TODO ?!-->
 				<mat-option *ngFor="let type of availableActivityTypes" [value]="type">{{type}}</mat-option>
 			</mat-select>
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-select placeholder="Progress Type" [(ngModel)]="selectedProgressType">
+			<mat-select placeholder="Progress Type"
+						(change)="onSelectedProgressTypeChange()"
+						[(ngModel)]="selectedProgressType">
 				<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
-					{{progressType.label}}
+					{{progressType.label}} {{(progressType.unit) ? "(" + progressType.unit + ")" : ""}}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
@@ -36,8 +37,8 @@
 				</div>
 				<div fxFlex="20">
 					{{dateWatched | date: 'MMM d'}}
-					<div *ngFor="let dayProgress of progressionsAtDay | orderBy: '-year'">
-						<span [style.color]="dayProgress.color">{{dayProgress.year}}: {{dayProgress.progression.totalDistance.toLocaleString()}}</span>
+					<div *ngFor="let progressAtDay of progressionsAtDay | orderBy: '-year'">
+						<span [style.color]="progressAtDay.color">{{progressAtDay.year}}: {{progressAtDay.value.toLocaleString()}}</span>
 					</div>
 				</div>
 				<div>

@@ -6,6 +6,7 @@ import { YearProgressModel } from "../models/year-progress.model";
 import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
+import { ProgressionModel } from "../models/progression.model";
 
 describe('YearProgressService', () => {
 
@@ -63,65 +64,65 @@ describe('YearProgressService', () => {
 		// Given
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
 
-		const expectedFirstDay2015 = {
-			onTimestamp: 1420066800000,
-			onYear: 2015,
-			onDayOfYear: 1,
-			totalDistance: 10000,
-			totalTime: 3600,
-			totalElevation: 50,
-			count: 1
-		};
+		const expectedFirstDay2015 = new ProgressionModel(
+			1420066800000,
+			2015,
+			1,
+			10000,
+			3600,
+			50,
+			1
+		);
 
-		const expectedLastDay2015 = {
-			onTimestamp: 1451516400000,
-			onYear: 2015,
-			onDayOfYear: 365,
-			totalDistance: 6205000,
-			totalTime: 788400,
-			totalElevation: 70080,
-			count: 292
-		};
+		const expectedLastDay2015 = new ProgressionModel(
+			1451516400000,
+			2015,
+			365,
+			6205000,
+			788400,
+			70080,
+			292
+		);
 
-		const expectedFirstDay2016 = {
-			onTimestamp: 1451602800000,
-			onYear: 2016,
-			onDayOfYear: 1,
-			totalDistance: 10000,
-			totalTime: 3600,
-			totalElevation: 50,
-			count: 1
-		};
+		const expectedFirstDay2016 = new ProgressionModel(
+			1451602800000,
+			2016,
+			1,
+			10000,
+			3600,
+			50,
+			1
+		);
 
-		const expectedLastDay2016 = {
-			onTimestamp: 1483138800000,
-			onYear: 2016,
-			onDayOfYear: 366,
-			totalDistance: 6215000,
-			totalTime: 792000,
-			totalElevation: 70130,
-			count: 293
-		};
+		const expectedLastDay2016 = new ProgressionModel(
+			1483138800000,
+			2016,
+			366,
+			6215000,
+			792000,
+			70130,
+			293
+		);
 
-		const expectedFirstDay2017 = {
-			onTimestamp: 1483225200000,
-			onYear: 2017,
-			onDayOfYear: 1,
-			totalDistance: 10000,
-			totalTime: 3600,
-			totalElevation: 50,
-			count: 1
-		};
+		const expectedFirstDay2017 = new ProgressionModel(
+			1483225200000,
+			2017,
+			1,
+			10000,
+			3600,
+			50,
+			1
+		);
 
-		const expectedLastDay2017 = {
-			onTimestamp: 1496268000000,
-			onYear: 2017,
-			onDayOfYear: 152,
-			totalDistance: 2580000,
-			totalTime: 329400,
-			totalElevation: 29250,
-			count: 122
-		};
+		const expectedLastDay2017 = new ProgressionModel(
+			1496268000000,
+			2017,
+			152,
+			2580000,
+			329400,
+			29250,
+			122
+		);
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels, typesFilters);
@@ -154,34 +155,34 @@ describe('YearProgressService', () => {
 		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
 		const excludeCommuteRides = true;
 
-		const expectedLastDay2015 = {
-			onTimestamp: 1451516400000,
-			onYear: 2015,
-			onDayOfYear: 365,
-			totalDistance: 5110000,
-			totalTime: 657000,
-			totalElevation: 69350,
-			count: 219
-		};
+		const expectedLastDay2015 = new ProgressionModel(
+			1451516400000,
+			2015,
+			365,
+			5110000,
+			657000,
+			69350,
+			219
+		);
 
-		const expectedLastDay2016 = {
-			onTimestamp: 1483138800000,
-			onYear: 2016,
-			onDayOfYear: 366,
-			totalDistance: 5120000,
-			totalTime: 660600,
-			totalElevation: 69400,
-			count: 220
-		};
-		const expectedLastDay2017 = {
-			onTimestamp: 1496268000000,
-			onYear: 2017,
-			onDayOfYear: 152,
-			totalDistance: 2130000,
-			totalTime: 275400,
-			totalElevation: 28950,
-			count: 92
-		};
+		const expectedLastDay2016 = new ProgressionModel(
+			1483138800000,
+			2016,
+			366,
+			5120000,
+			660600,
+			69400,
+			220
+		);
+		const expectedLastDay2017 = new ProgressionModel(
+			1496268000000,
+			2017,
+			152,
+			2130000,
+			275400,
+			28950,
+			92
+		);
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels, typesFilters, excludeCommuteRides);

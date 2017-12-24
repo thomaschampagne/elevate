@@ -73,30 +73,30 @@ export class YearProgressService {
 				};
 
 				// Start totals from 0
-				progression = {
-					onTimestamp: currentDayMoment.toDate().getTime(),
-					onYear: currentDayMoment.year(),
-					onDayOfYear: currentDayMoment.dayOfYear(),
-					totalDistance: 0,
-					totalTime: 0,
-					totalElevation: 0,
-					count: 0,
-				};
+				progression = new ProgressionModel(
+					currentDayMoment.toDate().getTime(),
+					currentDayMoment.year(),
+					currentDayMoment.dayOfYear(),
+					0,
+					0,
+					0,
+					0
+				);
 
 				yearProgressModels.push(currentYearProgress); // register inside yearProgressModels
 
 			} else {
 
 				// Year exists
-				progression = {
-					onTimestamp: currentDayMoment.toDate().getTime(),
-					onYear: currentDayMoment.year(),
-					onDayOfYear: currentDayMoment.dayOfYear(),
-					totalDistance: lastProgression.totalDistance,
-					totalTime: lastProgression.totalTime,
-					totalElevation: lastProgression.totalElevation,
-					count: lastProgression.count,
-				};
+				progression = new ProgressionModel(
+					currentDayMoment.toDate().getTime(),
+					currentDayMoment.year(),
+					currentDayMoment.dayOfYear(),
+					lastProgression.totalDistance,
+					lastProgression.totalTime,
+					lastProgression.totalElevation,
+					lastProgression.count
+				);
 			}
 
 			// Find matching yearProgressActivityModels
