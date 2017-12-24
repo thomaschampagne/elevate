@@ -47,7 +47,7 @@ export class YearProgressComponent implements OnInit {
 
 	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 
-	public readonly ProgressType = ProgressType; // Inject enum as class member
+	// public readonly ProgressType = ProgressType; // Inject enum as class member
 
 	public progressTypes: YearProgressTypeModel[];
 
@@ -243,10 +243,14 @@ export class YearProgressComponent implements OnInit {
 		});
 	}
 
+
 	public setupComponentSizeChangeHandlers(): void {
 		// TODO
 	}
 
+	/**
+	 *
+	 */
 	public onSelectedActivityTypesChange(): void {
 
 		if (this.selectedActivityTypes.length > 0) {
@@ -256,6 +260,9 @@ export class YearProgressComponent implements OnInit {
 
 	}
 
+	/**
+	 *
+	 */
 	public onSelectedProgressTypeChange(): void {
 
 		const reComputeProgression = false;
@@ -263,6 +270,10 @@ export class YearProgressComponent implements OnInit {
 
 	}
 
+	/**
+	 *
+	 * @param {boolean} reComputeProgression
+	 */
 	public reloadGraph(reComputeProgression: boolean): void {
 		// Re-compute progression with new activity types selected
 		if (reComputeProgression) {
@@ -272,6 +283,10 @@ export class YearProgressComponent implements OnInit {
 		this.updateGraph();
 	}
 
+	/**
+	 *
+	 * @param {MetricsGraphicsEventModel} mgEvent
+	 */
 	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
 
 		this.dateWatched = mgEvent.key;
