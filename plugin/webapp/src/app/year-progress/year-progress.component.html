@@ -20,6 +20,15 @@
 			</mat-select>
 		</mat-form-field>
 
+		<mat-form-field>
+			<mat-select placeholder="Years"
+						[(ngModel)]="selectedYears"
+						(change)="onSelectedYearsChange()"
+						multiple>
+				<mat-option *ngFor="let year of availableYears" [value]="year">{{year}}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
 		<mat-slide-toggle>Commute rides</mat-slide-toggle>
 
 		<div *ngIf="(this.selectedActivityTypes.length === 0)">

@@ -55,6 +55,10 @@ export class YearProgressComponent implements OnInit {
 
 	public selectedActivityTypes: string[] = [];
 
+	public availableYears: number[] = [];
+
+	public selectedYears: number[] = [];
+
 	public selectedProgressType: YearProgressTypeModel;
 
 	public isMetric: boolean;
@@ -70,10 +74,6 @@ export class YearProgressComponent implements OnInit {
 	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
 
 	public dateWatched: Date;
-
-	public static uniqueTypes(activitiesCountByTypes: ActivityCountByTypeModel[]): string[] {
-		return _.map(activitiesCountByTypes, "type");
-	}
 
 	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
@@ -122,12 +122,19 @@ export class YearProgressComponent implements OnInit {
 		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
 
 		// Compute unique sport types
-		this.availableActivityTypes = YearProgressComponent.uniqueTypes(activityCountByTypeModels);
+		this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
 
 		// Select default checked sport type from the most performed one by the athlete
 		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
+		// Compute first progression
 		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+
+		// List years
+		this.availableYears = _.map(this.yearProgressModels, "year").reverse();
+
+		// Default selected years
+		this.selectedYears = this.availableYears;
 
 		this.setupGraphConfig();
 
@@ -267,6 +274,15 @@ export class YearProgressComponent implements OnInit {
 
 		const reComputeProgression = false;
 		this.reloadGraph(reComputeProgression);
+
+	}
+
+	/**
+	 *
+	 */
+	public onSelectedYearsChange(): void {
+
+		console.log(this.selectedYears);
 
 	}
 

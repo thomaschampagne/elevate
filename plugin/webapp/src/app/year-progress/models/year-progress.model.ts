@@ -9,4 +9,5 @@ export class YearProgressModel {
 		this.year = year;
 		this.progressions = progressions;
 	}
+
 }
