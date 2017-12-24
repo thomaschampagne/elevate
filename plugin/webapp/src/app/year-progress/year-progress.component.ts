@@ -157,6 +157,7 @@ export class YearProgressComponent implements OnInit {
 	 * @returns {YearProgressModel[]}
 	 */
 	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], includeCommuteRide: boolean): YearProgressModel[] {
+		console.log("Compute progression with", typesFilter, includeCommuteRide);
 		return this.yearProgressService.progression(syncedActivityModels, typesFilter, includeCommuteRide);
 	}
 
@@ -282,8 +283,21 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public onSelectedYearsChange(): void {
+
+		// TODO Years not selected  should not be displayed or even not computed at all in the service?
+		/*
+
 		console.log(this.selectedYears);
-		this.reloadGraph(true);
+		this.yearProgressModels = _.filter(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
+			return (_.indexOf(this.selectedYears, yearProgressModel.year) !== -1);
+		});
+		console.log(this.yearProgressModels);
+
+		*/
+
+		this.reloadGraph(false);
+
+
 	}
 
 	/**
