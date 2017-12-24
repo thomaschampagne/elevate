@@ -1,9 +1,4 @@
 export class MetricsGraphicsEventModel {
 	key: Date;
-	values: {
-		date: Date;
-		value: number;
-		index: number;
-		line_id: number
-	}[];
+	values: Array<{ date: Date; value: number; index: number; line_id: number }>;
 }

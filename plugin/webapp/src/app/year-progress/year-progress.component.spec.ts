@@ -10,6 +10,7 @@ import { Observable } from "rxjs/Observable";
 import { YearProgressActivitiesFixture } from "./services/year-progress-activities.fixture";
 import { YearProgressModel } from "./models/year-progress.model";
 import { YearLineStyleModel } from "./models/year-line-style.model";
+import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 describe('YearProgressComponent', () => {
 
@@ -74,8 +75,9 @@ describe('YearProgressComponent', () => {
 	it("should give proper color to year lines", () => {
 
 		// Given
+		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
+
 		const yearProgressModels: YearProgressModel[] = [
-			new YearProgressModel(2010, []),
 			new YearProgressModel(2011, []),
 			new YearProgressModel(2012, []),
 			new YearProgressModel(2013, []),
@@ -85,10 +87,7 @@ describe('YearProgressComponent', () => {
 			new YearProgressModel(2017, []),
 		];
 
-		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
-
 		const expectedYearLineStyleModels: YearLineStyleModel[] = [
-			{stroke: "green"},
 			{stroke: "blue"},
 			{stroke: "red"},
 			{stroke: "orange"},
@@ -98,13 +97,23 @@ describe('YearProgressComponent', () => {
 			{stroke: "red"}
 		];
 
+		const expectedCircleColors = ["blue", "red", "orange", "purple", "green", "blue", "red"];
+
 		// When
-		const result = component.getLineStylesFromColorPalette(yearProgressModels, colorPalette);
+		const result: YearProgressStyleModel = component.getYearProgressStyleFromPalette(yearProgressModels, colorPalette);
 
 		// Then
-		expect(result).toEqual(expectedYearLineStyleModels);
+		expect(result.colorMap.get(2011)).toEqual("blue");
+		expect(result.colorMap.get(2012)).toEqual("red");
+		expect(result.colorMap.get(2013)).toEqual("orange");
+		expect(result.colorMap.get(2014)).toEqual("purple");
+		expect(result.colorMap.get(2015)).toEqual("green");
+		expect(result.colorMap.get(2016)).toEqual("blue");
+		expect(result.colorMap.get(2017)).toEqual("red");
+
+		expect(result.lineStyles).toEqual(expectedYearLineStyleModels);
+		expect(result.circleColors).toEqual(expectedCircleColors);
 
 	});
-
 
 });

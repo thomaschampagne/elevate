@@ -19,10 +19,17 @@
 		<mat-slide-toggle>Commute rides</mat-slide-toggle>
 
 		<div fxLayout="row" fxLayoutAlign="space-between start">
-			<div fxFlex="80" id="yearProgressGraph">
+			<div fxFlex="60" id="yearProgressGraph">
+			</div>
+			<div fxFlex="20">
+				{{dateWatched | date: 'MMM d'}}
+				<div *ngFor="let dayProgress of progressionsAtDay | orderBy: '-year'">
+					<span [style.color]="dayProgress.color">{{dayProgress.year}}</span>
+				</div>
+
 			</div>
 			<div>
-				<pre style="font-size: 10px;">{{progressionAtDateModel | json}}</pre>
+				<pre style="font-size: 9px;">{{progressionsAtDay | json}}</pre>
 			</div>
 
 		</div>

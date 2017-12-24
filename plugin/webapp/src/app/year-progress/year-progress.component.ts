@@ -15,12 +15,13 @@ import { MetricsGraphicsEventModel } from "../shared/models/graphs/metrics-graph
 import * as d3 from "d3";
 import { MarkerModel } from "../fitness-trend/fitness-trend-graph/models/marker.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
-import { ProgressionAtDateModel } from "./models/progression-at-date.model";
+import { ProgressionAtDayModel } from "./models/progression-at-date.model";
 import { YearLineStyleModel } from "./models/year-line-style.model";
-
+import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 // DONE Line colors (try: https://www.npmjs.com/package/color-scheme)
 
+// TODO Legend base: Year and value displayed
 // TODO Persist + Load: "Activity types" checked
 // TODO Persist + Load: "Years" checked
 // TODO Persist + Load: "Commute rides" checked
@@ -35,6 +36,7 @@ import { YearLineStyleModel } from "./models/year-line-style.model";
 // TODO Table result
 // TODO setupComponentSizeChangeHandlers
 
+
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
@@ -43,24 +45,31 @@ import { YearLineStyleModel } from "./models/year-line-style.model";
 })
 export class YearProgressComponent implements OnInit {
 
-	public static readonly COLOR_PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
+	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 
 	public readonly ProgressType = ProgressType; // Inject enum as class member
 
 	public progressTypes: YearProgressTypeModel[];
 
 	public availableActivityTypes: string[] = [];
+
 	public selectedActivityTypes: string[] = [];
+
 	public selectedProgressType: YearProgressTypeModel;
+
 	public isMetric: boolean;
 
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 
 	public graphConfig: any;
 
-	public yearProgressModels: YearProgressModel[]; // TODO remove ?!
-	public syncedActivityModels: SyncedActivityModel[];
-	public progressionAtDateModel: ProgressionAtDateModel;
+	public yearProgressModels: YearProgressModel[]; // Progress for each year
+
+	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
+
+	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
+
+	public dateWatched: Date;
 
 	public static uniqueTypes(activitiesCountByTypes: ActivityCountByTypeModel[]): string[] {
 		return _.map(activitiesCountByTypes, "type");
@@ -191,9 +200,10 @@ export class YearProgressComponent implements OnInit {
 
 		});
 
-		const linesStyles = this.getLineStylesFromColorPalette(this.yearProgressModels, YearProgressComponent.COLOR_PALETTE);
+		const style: YearProgressStyleModel = this.getYearProgressStyleFromPalette(this.yearProgressModels,
+			YearProgressComponent.PALETTE);
 
-		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel(yearLines, [todayMarker], linesStyles);
+		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel(yearLines, [todayMarker], style);
 
 	}
 
@@ -220,8 +230,8 @@ export class YearProgressComponent implements OnInit {
 	public updateViewableData(): void {
 		this.graphConfig.data = this.viewableYearProgressDataModel.yearLines;
 		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
-		this.graphConfig.custom_style.lines = this.viewableYearProgressDataModel.yearLineStyleModels;
-		this.graphConfig.custom_style.circle_colors = this.viewableYearProgressDataModel.circleColors;
+		this.graphConfig.custom_style.lines = this.viewableYearProgressDataModel.style.lineStyles;
+		this.graphConfig.custom_style.circle_colors = this.viewableYearProgressDataModel.style.circleColors;
 	}
 
 	public draw(): void {
@@ -237,18 +247,27 @@ export class YearProgressComponent implements OnInit {
 		// TODO
 	}
 
-	private onGraphMouseOver(event: MetricsGraphicsEventModel): void {
+	private onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
 
-		this.progressionAtDateModel = {
-			date: event.key,
-			progressions: []
-		};
+		this.dateWatched = mgEvent.key;
 
-		_.forEach(event.values, (value, index) => {
-			const progressionModel: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
-				onDayOfYear: moment(value.date).dayOfYear()
+		this.progressionsAtDay = [];
+
+		_.forEach(mgEvent.values, (value, index) => {
+
+			const momentAtDay = moment(value.date);
+
+			const progress: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
+				onDayOfYear: momentAtDay.dayOfYear()
 			});
-			this.progressionAtDateModel.progressions.push(progressionModel);
+
+			const progressAtDay: ProgressionAtDayModel = {
+				date: momentAtDay.year(progress.onYear).toDate(),
+				year: progress.onYear,
+				progression: progress,
+				color: this.viewableYearProgressDataModel.getYearColor(progress.onYear)
+			};
+			this.progressionsAtDay.push(progressAtDay);
 		});
 	}
 
@@ -302,13 +321,26 @@ export class YearProgressComponent implements OnInit {
 	 * @param {string[]} colorPalette
 	 * @returns {YearLineStyleModel[]}
 	 */
-	public getLineStylesFromColorPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearLineStyleModel[] {
-		let lineStyles: YearLineStyleModel[] = [];
+	public getYearProgressStyleFromPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
+
+		const lineStyles: YearLineStyleModel[] = [];
+		const colorMap: Map<number, string> = new Map<number, string>();
+		const circleColors: string[] = [];
+
 		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
+
+			const reverseIndex = (yearProgressModels.length - 1) - index;
+			const color = colorPalette[reverseIndex % colorPalette.length];
+
+			colorMap.set(yearProgressModel.year, color);
+
 			lineStyles.push({
-				stroke: colorPalette[index % colorPalette.length]
+				stroke: color
 			});
+
+			circleColors.push(color);
 		});
-		return lineStyles.reverse();
+
+		return new YearProgressStyleModel(lineStyles, colorMap, circleColors);
 	}
 }
