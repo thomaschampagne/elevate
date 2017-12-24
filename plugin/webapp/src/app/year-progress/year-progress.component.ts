@@ -127,7 +127,7 @@ export class YearProgressComponent implements OnInit {
 		// Select default checked sport type from the most performed one by the athlete
 		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.availableActivityTypes);
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
 
 		this.setupGraphConfig();
 
@@ -243,11 +243,26 @@ export class YearProgressComponent implements OnInit {
 		});
 	}
 
-	private setupComponentSizeChangeHandlers(): void {
+	public setupComponentSizeChangeHandlers(): void {
 		// TODO
 	}
 
-	private onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
+	public onSelectedActivityTypesChange(): void {
+
+		if (this.selectedActivityTypes.length > 0) {
+			this.reloadGraph();
+		}
+
+	}
+
+	public reloadGraph(): void {
+		// Re-compute progression with new activity types selected
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes);
+		this.setupViewableGraphData();
+		this.updateGraph();
+	}
+
+	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
 
 		this.dateWatched = mgEvent.key;
 
@@ -272,7 +287,7 @@ export class YearProgressComponent implements OnInit {
 	}
 
 
-	private onGraphMouseOut(event: MetricsGraphicsEventModel): void {
+	public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
 		// this.setTodayAsViewedDay();
 	}
 
