@@ -19,8 +19,6 @@ import { ProgressionAtDayModel } from "./models/progression-at-date.model";
 import { YearLineStyleModel } from "./models/year-line-style.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-// DONE Line colors (try: https://www.npmjs.com/package/color-scheme)
-
 // TODO Legend base: Year and value displayed
 // TODO Persist + Load: "Activity types" checked
 // TODO Persist + Load: "Years" checked
@@ -29,12 +27,15 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 // TODO Setup nice line colors palette
 
-// TODO Progress last year in graph
-
 // TODO Run & Ride distance Target line display
-// TODO Imperial/metrics conversion
 // TODO Table result
 // TODO setupComponentSizeChangeHandlers
+
+// Service:
+// DONE Return KM instead of meter distance
+// DONE Handle metric / imperial here  (distance + elevation)!
+// TODO Return current year progress until today or end of the year
+// TODO Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
 
 @Component({
@@ -75,7 +76,7 @@ export class YearProgressComponent implements OnInit {
 
 	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
 
-	public dateWatched: Date;
+	public dateWatched: Date; // Current day watched on year progress graph mouse over
 
 	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
@@ -133,7 +134,8 @@ export class YearProgressComponent implements OnInit {
 		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
 		// Compute first progression
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.includeCommuteRide);
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
+			this.isMetric, this.includeCommuteRide);
 
 		// List years
 		this.availableYears = _.map(this.yearProgressModels, "year").reverse();
@@ -154,11 +156,13 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
+	 * @param {boolean} isMetric
+	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], includeCommuteRide: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
 		console.log("Compute progression with", typesFilter, includeCommuteRide);
-		return this.yearProgressService.progression(syncedActivityModels, typesFilter, includeCommuteRide);
+		return this.yearProgressService.progression(syncedActivityModels, typesFilter, isMetric, includeCommuteRide);
 	}
 
 	/**
@@ -186,11 +190,11 @@ export class YearProgressComponent implements OnInit {
 
 				switch (this.selectedProgressType.type) {
 					case ProgressType.DISTANCE:
-						graphPoint.value = progressionModel.totalDistance / 1000; // km
+						graphPoint.value = progressionModel.totalDistance;
 						break;
 
 					case ProgressType.TIME:
-						graphPoint.value = progressionModel.totalTime / 3600; // hours
+						graphPoint.value = progressionModel.totalTime;
 						break;
 
 					case ProgressType.ELEVATION:
@@ -198,7 +202,7 @@ export class YearProgressComponent implements OnInit {
 						break;
 
 					case ProgressType.COUNT:
-						graphPoint.value = progressionModel.count; // meters
+						graphPoint.value = progressionModel.count;
 						break;
 
 					default:
@@ -317,7 +321,8 @@ export class YearProgressComponent implements OnInit {
 	public reloadGraph(reComputeProgression: boolean): void {
 		// Re-compute progression with new activity types selected
 		if (reComputeProgression) {
-			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.includeCommuteRide);
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
+				this.isMetric, this.includeCommuteRide);
 		}
 		this.setupViewableGraphData();
 		this.updateGraph();
@@ -351,7 +356,6 @@ export class YearProgressComponent implements OnInit {
 			this.progressionsAtDay.push(progressAtDay);
 		});
 	}
-
 
 	// public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
 	// 	// this.setTodayAsViewedDay();

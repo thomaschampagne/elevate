@@ -4,7 +4,7 @@ import { IStorageUsage } from "./modules/StorageManager";
 
 export class Helper {
 
-    public static KPH_TO_MPH_RATIO: number = 0.621371;
+	public static KPH_TO_MPH_RATIO: number = 0.621371; // TODO Unify with other public static var having value... 0.6213
     public static getFromStorageMethod: string = "getFromStorage";
     public static setToStorageMethod: string = "setToStorage";
     public static removeFromStorageMethod: string = "removeFromStorage";

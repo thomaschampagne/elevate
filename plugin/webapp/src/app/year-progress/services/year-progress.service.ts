@@ -11,6 +11,9 @@ import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model
 @Injectable()
 export class YearProgressService {
 
+	public static readonly KM_TO_MILE_FACTOR: number = 0.621371;
+	public static readonly METER_TO_FEET_FACTOR: number = 3.28084;
+
 	public static readonly ERROR_NO_SYNCED_ACTIVITY_MODELS: string = "Empty SyncedActivityModels";
 	public static readonly ERROR_NO_TYPES_FILTER: string = "Empty types filter";
 	public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels from given activity types";
@@ -22,10 +25,11 @@ export class YearProgressService {
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
+	 * @param {boolean} isMetric
 	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], includeCommuteRide?: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -105,7 +109,7 @@ export class YearProgressService {
 				dayOfYear: currentDayMoment.dayOfYear(),
 			};
 
-			if (!_.isUndefined(includeCommuteRide) && !includeCommuteRide) {
+			if (!includeCommuteRide) {
 				filterQuery.commute = false;
 			}
 
@@ -114,7 +118,7 @@ export class YearProgressService {
 			if (activitiesFound.length > 0) {
 
 				for (let i: number = 0; i < activitiesFound.length; i++) {
-					// Then apply totals...
+
 					progression.totalDistance += activitiesFound[i].distance_raw;
 					progression.totalTime += activitiesFound[i].moving_time_raw;
 					progression.totalElevation += activitiesFound[i].elevation_gain_raw;
@@ -122,7 +126,23 @@ export class YearProgressService {
 				}
 			}
 
-			lastProgression = progression; // Keep tracking for tomorrow day.
+			lastProgression = _.clone(progression); // Keep tracking for tomorrow day.
+
+			// Distance conversion
+			let totalDistance = progression.totalDistance / 1000; // KM
+
+			if (!isMetric) {
+				totalDistance *= YearProgressService.KM_TO_MILE_FACTOR; // Imperial (Miles)
+			}
+			progression.totalDistance = Math.round(totalDistance);
+
+			// Elevation conversion
+			let totalElevation = progression.totalElevation; // Meters
+			if (!isMetric) {
+				totalElevation *= YearProgressService.METER_TO_FEET_FACTOR; // Imperial (feet)
+			}
+			progression.totalElevation = Math.round(totalElevation);
+
 			currentYearProgress.progressions.push(progression);
 			currentDayMoment.add(1, "days"); // Add a day until todayMoment
 		}
