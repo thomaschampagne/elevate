@@ -143,6 +143,9 @@ export class YearProgressService {
 			}
 			progression.totalElevation = Math.round(totalElevation);
 
+			// Convert time in seconds to hours
+			progression.totalTime = progression.totalTime / 3600;
+
 			currentYearProgress.progressions.push(progression);
 			currentDayMoment.add(1, "days"); // Add a day until todayMoment
 		}
