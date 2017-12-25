@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { YearProgressService } from "./services/year-progress.service";
 import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
 import { YearProgressModel } from "./models/year-progress.model";
@@ -18,6 +18,9 @@ import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-d
 import { ProgressionAtDayModel } from "./models/progression-at-date.model";
 import { YearLineStyleModel } from "./models/year-line-style.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
+import { Subscription } from "rxjs/Subscription";
+import { SideNavService } from "../shared/services/side-nav/side-nav.service";
+import { WindowService } from "../shared/services/window/window.service";
 
 // TODO Legend base: Year and value displayed
 // TODO Persist + Load: "Activity types" checked
@@ -44,11 +47,11 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 	styleUrls: ['./year-progress.component.scss'],
 	providers: [YearProgressService]
 })
-export class YearProgressComponent implements OnInit {
+export class YearProgressComponent implements OnInit, OnDestroy {
 
 	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 
-	// public readonly ProgressType = ProgressType; // Inject enum as class member
+	// public readonly ProgressType = ProgressType; // Inject enum as class member.
 
 	public progressTypes: YearProgressTypeModel[];
 
@@ -78,12 +81,17 @@ export class YearProgressComponent implements OnInit {
 
 	public dateWatched: Date; // Current day watched on year progress graph mouse over
 
+	public sideNavChangesSubscription: Subscription;
+	public windowResizingSubscription: Subscription;
+
 	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 
 	constructor(public route: ActivatedRoute,
-				public yearProgressService: YearProgressService) {
+				public yearProgressService: YearProgressService,
+				public sideNavService: SideNavService,
+				public windowService: WindowService) {
 	}
 
 	/**
@@ -270,7 +278,12 @@ export class YearProgressComponent implements OnInit {
 
 
 	public setupComponentSizeChangeHandlers(): void {
-		// TODO
+
+		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
+
+		// Or user toggles the side nav (open/close states)
+		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+
 	}
 
 	/**
@@ -365,6 +378,13 @@ export class YearProgressComponent implements OnInit {
 		});
 	}
 
+	/**
+	 *
+	 */
+	public onComponentSizeChanged(): void {
+		this.draw();
+	}
+
 	// public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
 	// 	// this.setTodayAsViewedDay();
 	// }
@@ -435,5 +455,10 @@ export class YearProgressComponent implements OnInit {
 		});
 
 		return new YearProgressStyleModel(lineStyles, colorMap, circleColors);
+	}
+
+	public ngOnDestroy(): void {
+		this.windowResizingSubscription.unsubscribe();
+		this.sideNavChangesSubscription.unsubscribe();
 	}
 }
