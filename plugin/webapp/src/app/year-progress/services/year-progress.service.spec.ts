@@ -37,13 +37,15 @@ describe('YearProgressService', () => {
 
 		// Given
 		const expectedLength = 3;
-		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -67,7 +69,8 @@ describe('YearProgressService', () => {
 	it("should compute progression with proper totals metrics", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
 
@@ -75,7 +78,7 @@ describe('YearProgressService', () => {
 			2015,
 			1,
 			10,
-			3600 / 3600,
+			3600 / 3600, // = Hours
 			50,
 			1
 		);
@@ -84,7 +87,7 @@ describe('YearProgressService', () => {
 			2015,
 			365,
 			6205,
-			788400 / 3600,
+			788400 / 3600, // = Hours
 			70080,
 			292
 		);
@@ -93,7 +96,7 @@ describe('YearProgressService', () => {
 			2016,
 			1,
 			10,
-			3600 / 3600,
+			3600 / 3600, // = Hours
 			50,
 			1
 		);
@@ -102,7 +105,7 @@ describe('YearProgressService', () => {
 			2016,
 			366,
 			6215,
-			792000 / 3600,
+			792000 / 3600, // = Hours
 			70130,
 			293
 		);
@@ -111,7 +114,7 @@ describe('YearProgressService', () => {
 			2017,
 			1,
 			10,
-			3600 / 3600,
+			3600 / 3600, // = Hours
 			50,
 			1
 		);
@@ -120,14 +123,15 @@ describe('YearProgressService', () => {
 			2017,
 			152,
 			2580,
-			329400 / 3600,
+			329400 / 3600, // = Hours
 			29250,
 			122
 		);
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -156,7 +160,8 @@ describe('YearProgressService', () => {
 	it("should compute progression without commute rides and with proper totals metrics", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = false;
 
@@ -164,7 +169,7 @@ describe('YearProgressService', () => {
 			2015,
 			365,
 			5110,
-			657000 / 3600,
+			657000 / 3600, // = Hours
 			69350,
 			219
 		);
@@ -173,7 +178,7 @@ describe('YearProgressService', () => {
 			2016,
 			366,
 			5120,
-			660600 / 3600,
+			660600 / 3600, // = Hours
 			69400,
 			220
 		);
@@ -181,14 +186,15 @@ describe('YearProgressService', () => {
 			2017,
 			152,
 			2130,
-			275400 / 3600,
+			275400 / 3600, // = Hours
 			28950,
 			92
 		);
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -211,7 +217,8 @@ describe('YearProgressService', () => {
 	it("should compute progression with imperial system unit", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
 		const isMetric = false;
 		const includeCommuteRide = true;
 
@@ -219,7 +226,7 @@ describe('YearProgressService', () => {
 			2015,
 			365,
 			3856, // Miles
-			788400 / 3600,
+			788400 / 3600, // = Hours
 			229921, // Feet
 			292
 		);
@@ -228,7 +235,7 @@ describe('YearProgressService', () => {
 			2016,
 			366,
 			3862, // Miles
-			792000 / 3600,
+			792000 / 3600, // = Hours
 			230085, // Feet
 			293
 		);
@@ -237,14 +244,15 @@ describe('YearProgressService', () => {
 			2017,
 			152,
 			1603, // Miles
-			329400 / 3600,
+			329400 / 3600, // = Hours
 			95965, // Feet
 			122
 		);
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -264,16 +272,64 @@ describe('YearProgressService', () => {
 
 	});
 
+	it("should compute progression with only provided years", (done: Function) => {
+
+		// Given
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = [2015, 2017]; // Skip 2016
+		const isMetric = true;
+		const includeCommuteRide = false;
+
+		const expectedLastDay2015 = new ProgressionModel(1451516400000,
+			2015,
+			365,
+			5110,
+			657000 / 3600, // = Hours
+			69350,
+			219
+		);
+
+		const expectedLastDay2017 = new ProgressionModel(1496268000000,
+			2017,
+			152,
+			2130,
+			275400 / 3600, // = Hours
+			28950,
+			92
+		);
+
+		// When
+		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+			typesFilter,
+			yearsFilter,
+			isMetric,
+			includeCommuteRide);
+
+		// Then
+		expect(progression).not.toBeNull();
+
+		const lastDay2015 = _.last(progression[0].progressions);
+		expect(lastDay2015).toEqual(expectedLastDay2015);
+
+		const lastDay2017 = _.last(progression[1].progressions);
+		expect(lastDay2017).toEqual(expectedLastDay2017);
+
+		done();
+
+	});
+
 	it("should not compute progression with empty activities", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = ["Ride", "VirtualRide", "Run"];
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
 		const syncedActivityModels = [];
 		const isMetric = true;
 		const includeCommuteRide = true;
 
 		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -288,11 +344,13 @@ describe('YearProgressService', () => {
 	it("should not compute progression with empty types filters", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = [];
+		const typesFilter: string[] = [];
+		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
 		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 
@@ -306,11 +364,13 @@ describe('YearProgressService', () => {
 	it("should not compute progression with not existing type", (done: Function) => {
 
 		// Given
-		const typesFilters: string[] = ["FakeType"];
+		const typesFilter: string[] = ["FakeType"];
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const yearsFilter: number[] = []; // All
 		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
-			typesFilters,
+			typesFilter,
+			yearsFilter,
 			isMetric,
 			includeCommuteRide);
 

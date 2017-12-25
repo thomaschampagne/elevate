@@ -25,11 +25,13 @@ export class YearProgressService {
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
+	 * @param {number[]} yearsFilter
 	 * @param {boolean} isMetric
 	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
+					   isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -66,8 +68,28 @@ export class YearProgressService {
 			const currentYear = currentDayMoment.year();
 			let progression: ProgressionModel = null;
 
+
+			if (!_.isEmpty(yearsFilter)) { // Is there a filter on years?
+
+				// ... Yes
+				// Does exists current year in filter from the user?
+				const currentYearNotFoundInFilter = _.indexOf(yearsFilter, currentYear) === -1;
+				if (currentYearNotFoundInFilter) {
+					// console.log(currentYear);
+
+					console.log(currentDayMoment.toDate());
+					currentDayMoment.add(1, "years");
+					console.warn(currentDayMoment.toDate());
+
+					continue;
+				}
+
+			}
+
 			// Create new year progress if current year do not exists
-			if (!_.find(yearProgressModels, {year: currentYear})) {
+			const yearProgressAlreadyExistsForCurrentYear = _.find(yearProgressModels, {year: currentYear});
+
+			if (!yearProgressAlreadyExistsForCurrentYear) {
 
 				lastProgression = null; // New year then remove
 

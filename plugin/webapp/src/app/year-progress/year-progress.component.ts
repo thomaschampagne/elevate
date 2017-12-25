@@ -58,7 +58,7 @@ export class YearProgressComponent implements OnInit {
 
 	public availableYears: number[] = [];
 
-	public selectedYears: number[] = [];
+	public selectedYears: number[] = []; // All year by default
 
 	public selectedProgressType: YearProgressTypeModel;
 
@@ -134,7 +134,7 @@ export class YearProgressComponent implements OnInit {
 		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
 
 		// Compute first progression
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.selectedYears,
 			this.isMetric, this.includeCommuteRide);
 
 		// List years
@@ -156,13 +156,21 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
+	 * @param {number[]} yearsFilter
 	 * @param {boolean} isMetric
 	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
+					   isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
+
 		console.log("Compute progression with", typesFilter, includeCommuteRide);
-		return this.yearProgressService.progression(syncedActivityModels, typesFilter, isMetric, includeCommuteRide);
+
+		const progression = this.yearProgressService.progression(syncedActivityModels, typesFilter, yearsFilter, isMetric, includeCommuteRide);
+
+		console.log("progression: ", progression);
+
+		return progression;
 	}
 
 	/**
@@ -288,10 +296,9 @@ export class YearProgressComponent implements OnInit {
 	 */
 	public onSelectedYearsChange(): void {
 
-		// TODO Years not selected  should not be displayed or even not computed at all in the service?
 		/*
 
-		console.log(this.selectedYears);
+
 		this.yearProgressModels = _.filter(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
 			return (_.indexOf(this.selectedYears, yearProgressModel.year) !== -1);
 		});
@@ -299,8 +306,9 @@ export class YearProgressComponent implements OnInit {
 
 		*/
 
-		this.reloadGraph(false);
-
+		// TODO Keep mapping color between
+		console.log(this.selectedYears);
+		this.reloadGraph(true);
 
 	}
 
@@ -321,7 +329,7 @@ export class YearProgressComponent implements OnInit {
 	public reloadGraph(reComputeProgression: boolean): void {
 		// Re-compute progression with new activity types selected
 		if (reComputeProgression) {
-			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.selectedYears,
 				this.isMetric, this.includeCommuteRide);
 		}
 		this.setupViewableGraphData();
