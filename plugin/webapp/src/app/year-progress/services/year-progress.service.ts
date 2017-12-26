@@ -68,22 +68,15 @@ export class YearProgressService {
 			const currentYear = currentDayMoment.year();
 			let progression: ProgressionModel = null;
 
-
 			if (!_.isEmpty(yearsFilter)) { // Is there a filter on years?
 
 				// ... Yes
 				// Does exists current year in filter from the user?
 				const currentYearNotFoundInFilter = _.indexOf(yearsFilter, currentYear) === -1;
 				if (currentYearNotFoundInFilter) {
-					// console.log(currentYear);
-
-					console.log(currentDayMoment.toDate());
 					currentDayMoment.add(1, "years");
-					console.warn(currentDayMoment.toDate());
-
 					continue;
 				}
-
 			}
 
 			// Create new year progress if current year do not exists
