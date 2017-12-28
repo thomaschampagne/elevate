@@ -1,14 +1,10 @@
-import { YearLineStyleModel } from "./year-line-style.model";
-
 export class YearProgressStyleModel {
 
-	public lineStyles: YearLineStyleModel[] = [];
-	public colorMap: Map<number, string>;
-	public circleColors: string[] = [];
+	public yearsColorsMap: Map<number, string>;
+	public colors: string[] = [];
 
-	constructor(lineStyles: YearLineStyleModel[], colorMap: Map<number, string>, circleColors: string[]) {
-		this.lineStyles = lineStyles;
-		this.colorMap = colorMap;
-		this.circleColors = circleColors;
+	constructor(yearsColorsMap: Map<number, string>, colors: string[]) {
+		this.yearsColorsMap = yearsColorsMap;
+		this.colors = colors;
 	}
 }

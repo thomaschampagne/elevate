@@ -9,7 +9,6 @@ import { RequiredYearProgressDataModel } from "./models/required-year-progress-d
 import { Observable } from "rxjs/Observable";
 import { YearProgressActivitiesFixture } from "./services/year-progress-activities.fixture";
 import { YearProgressModel } from "./models/year-progress.model";
-import { YearLineStyleModel } from "./models/year-line-style.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 describe('YearProgressComponent', () => {
@@ -72,10 +71,11 @@ describe('YearProgressComponent', () => {
 
 	});
 
-	it("should give proper color to year lines", () => {
+	it("should give proper colors to all year lines from a color palette", () => {
 
 		// Given
 		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
+		const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
 		const yearProgressModels: YearProgressModel[] = [
 			new YearProgressModel(2011, []),
@@ -87,32 +87,51 @@ describe('YearProgressComponent', () => {
 			new YearProgressModel(2017, []),
 		];
 
-		const expectedYearLineStyleModels: YearLineStyleModel[] = [
-			{stroke: "blue"},
-			{stroke: "red"},
-			{stroke: "orange"},
-			{stroke: "purple"},
-			{stroke: "green"},
-			{stroke: "blue"},
-			{stroke: "red"}
-		];
-
-		const expectedCircleColors = ["blue", "red", "orange", "purple", "green", "blue", "red"];
-
 		// When
-		const result: YearProgressStyleModel = component.getYearProgressStyleFromPalette(yearProgressModels, colorPalette);
+		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
 
 		// Then
-		expect(result.colorMap.get(2011)).toEqual("blue");
-		expect(result.colorMap.get(2012)).toEqual("red");
-		expect(result.colorMap.get(2013)).toEqual("orange");
-		expect(result.colorMap.get(2014)).toEqual("purple");
-		expect(result.colorMap.get(2015)).toEqual("green");
-		expect(result.colorMap.get(2016)).toEqual("blue");
-		expect(result.colorMap.get(2017)).toEqual("red");
+		expect(style.colors).toEqual(expectedGlobalColors);
 
-		expect(result.lineStyles).toEqual(expectedYearLineStyleModels);
-		expect(result.circleColors).toEqual(expectedCircleColors);
+		expect(style.yearsColorsMap.get(2011)).toEqual("red");
+		expect(style.yearsColorsMap.get(2012)).toEqual("blue");
+		expect(style.yearsColorsMap.get(2013)).toEqual("green");
+		expect(style.yearsColorsMap.get(2014)).toEqual("purple");
+		expect(style.yearsColorsMap.get(2015)).toEqual("orange");
+		expect(style.yearsColorsMap.get(2016)).toEqual("red");
+		expect(style.yearsColorsMap.get(2017)).toEqual("blue");
+
+	});
+
+	it("should give proper restricted colors from a year selection", () => {
+
+		// Given
+		const colors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+
+		const yearsColorsMap = new Map<number, string>();
+		yearsColorsMap.set(2011, "red");
+		yearsColorsMap.set(2012, "blue");
+		yearsColorsMap.set(2013, "green");
+		yearsColorsMap.set(2014, "purple");
+		yearsColorsMap.set(2015, "orange");
+		yearsColorsMap.set(2016, "red");
+		yearsColorsMap.set(2017, "blue");
+
+		const yearSelection: number[] = [2013, 2016, 2017];
+
+		const expectedYearSelectedColors: string[] = [
+			yearsColorsMap.get(2013),
+			yearsColorsMap.get(2016),
+			yearsColorsMap.get(2017)
+		];
+
+		component.yearProgressStyleModel = new YearProgressStyleModel(yearsColorsMap, colors);
+
+		// When
+		const yearSelectedColors: string [] = component.colorsOfSelectedYears(yearSelection);
+
+		// Then
+		expect(yearSelectedColors).toEqual(expectedYearSelectedColors);
 
 	});
 
