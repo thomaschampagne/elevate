@@ -354,7 +354,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	 */
 	public onSelectedYearsChange(): void {
 		YearProgressComponent.clearSvgGraphContent(); // Clear SVG content inside element
-		this.reloadGraph();
+		this.reloadGraph(true);
 		localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
 	}
 
