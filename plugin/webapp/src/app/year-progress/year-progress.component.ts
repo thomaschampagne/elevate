@@ -47,6 +47,8 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 })
 export class YearProgressComponent implements OnInit, OnDestroy {
 
+	private static readonly LS_SELECTED_YEARS_KEY: string = "yearProgress_selectedYears";
+
 	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
@@ -109,38 +111,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		});
 	}
 
-
-	/**
-	 *
-	 * @param {YearProgressModel[]} yearProgressModels
-	 * @param {string[]} colorPalette
-	 * @returns {YearProgressStyleModel}
-	 */
-	public styleFromPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
-
-		const yearsColorsMap = new Map<number, string>();
-		const colors: string[] = [];
-
-		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
-			const color = colorPalette[index % colorPalette.length];
-			yearsColorsMap.set(yearProgressModel.year, color);
-			colors.push(color);
-		});
-
-		return new YearProgressStyleModel(yearsColorsMap, colors);
-	}
-
-	public colorsOfSelectedYears(yearSelection: number[]): string[] {
-
-		const colors = [];
-
-		_.forEach(yearSelection, (year: number) => {
-			colors.push(this.yearProgressStyleModel.yearsColorsMap.get(year));
-		});
-
-		return colors;
-	}
-
 	/**
 	 *
 	 * @param {boolean} isMetric
@@ -155,6 +125,14 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		// Keep commute rides in stats by default
 		this.includeCommuteRide = true;
 
+		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
+
+		// Compute unique sport types
+		this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
+
+		// Select default checked sport type from the most performed one by the athlete
+		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
+
 		// Set possible progress type to see: distance, time, ...
 		this.progressTypes = [
 			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles"),
@@ -166,30 +144,21 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		// .. and set distance as the default on page load
 		this.selectedProgressType = _.find(this.progressTypes, {type: ProgressType.DISTANCE});
 
-		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
+		// List years
+		this.availableYears = this.yearProgressService.availableYears(this.syncedActivityModels);//_.map(this.yearProgressModels, "year"); // TODO Use service
 
-		// Compute unique sport types
-		this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
-
-		// Select default checked sport type from the most performed one by the athlete
-		this.selectedActivityTypes.push(YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels));
+		// Seek for selected years saved by the user
+		const existingSelectedYears = this.findExistingSelectedYears();
+		this.selectedYears = (existingSelectedYears) ? existingSelectedYears : this.availableYears;
 
 		// Compute first progression
-		this.yearProgressModels = this.progression(this.syncedActivityModels,
-			this.selectedActivityTypes,
-			null, // Progression on all years on init
-			this.isMetric,
-			this.includeCommuteRide);
+		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
+			this.isMetric, this.includeCommuteRide);
 
 		// Get color style for years
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
-		// List years
-		this.availableYears = _.map(this.yearProgressModels, "year");
-
-		// Default selected years equals to all available years
-		this.selectedYears = this.availableYears;
-
+		// Push today marker
 		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel([{
 			date: moment().startOf("day").toDate(),
 			label: "Today"
@@ -206,6 +175,19 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 	/**
 	 *
+	 * @returns {number[]}
+	 */
+	public findExistingSelectedYears(): number[] {
+
+		const existingSelectedYears = localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY);
+		if (!_.isEmpty(existingSelectedYears)) {
+			return JSON.parse(existingSelectedYears);
+		}
+		return null;
+	}
+
+	/**
+	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @param {string[]} typesFilter
 	 * @param {number[]} yearsFilter
@@ -213,12 +195,14 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	 * @param {boolean} includeCommuteRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
-					   isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
+	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean,
+					   includeCommuteRide: boolean): YearProgressModel[] {
 
 		console.log("Compute progression with", typesFilter, includeCommuteRide);
 
-		const progression = this.yearProgressService.progression(syncedActivityModels, typesFilter, yearsFilter, isMetric, includeCommuteRide);
+		const progression = this.yearProgressService.progression(syncedActivityModels, typesFilter,
+			null, // For all years
+			isMetric, includeCommuteRide);
 
 		console.log("progression: ", progression);
 
@@ -234,41 +218,46 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 		_.forEach(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
 
-			const yearLine: GraphPointModel[] = [];
+			const isYearSelected = (_.indexOf(this.selectedYears, yearProgressModel.year) !== -1);
 
-			_.forEach(yearProgressModel.progressions, (progressionModel: ProgressionModel) => {
+			if (isYearSelected) {
 
-				const graphPoint: Partial<GraphPointModel> = {
-					date: moment().dayOfYear(progressionModel.onDayOfYear).format("YYYY-MM-DD"),
-					hidden: false
-				};
+				const yearLine: GraphPointModel[] = [];
 
-				switch (this.selectedProgressType.type) {
-					case ProgressType.DISTANCE:
-						graphPoint.value = progressionModel.totalDistance;
-						break;
+				_.forEach(yearProgressModel.progressions, (progressionModel: ProgressionModel) => {
 
-					case ProgressType.TIME:
-						graphPoint.value = progressionModel.totalTime;
-						break;
+					const graphPoint: Partial<GraphPointModel> = {
+						date: moment().dayOfYear(progressionModel.onDayOfYear).format("YYYY-MM-DD"),
+						hidden: false
+					};
 
-					case ProgressType.ELEVATION:
-						graphPoint.value = progressionModel.totalElevation; // meters
-						break;
+					switch (this.selectedProgressType.type) {
+						case ProgressType.DISTANCE:
+							graphPoint.value = progressionModel.totalDistance;
+							break;
 
-					case ProgressType.COUNT:
-						graphPoint.value = progressionModel.count;
-						break;
+						case ProgressType.TIME:
+							graphPoint.value = progressionModel.totalTime;
+							break;
 
-					default:
-						throw new Error("Unknown progress type: " + this.selectedProgressType.type);
+						case ProgressType.ELEVATION:
+							graphPoint.value = progressionModel.totalElevation; // meters
+							break;
 
-				}
+						case ProgressType.COUNT:
+							graphPoint.value = progressionModel.count;
+							break;
 
-				yearLine.push(graphPoint as GraphPointModel);
-			});
+						default:
+							throw new Error("Unknown progress type: " + this.selectedProgressType.type);
 
-			yearLines.push(yearLine);
+					}
+
+					yearLine.push(graphPoint as GraphPointModel);
+				});
+
+				yearLines.push(yearLine);
+			}
 
 		});
 
@@ -291,7 +280,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		}
 	}
 
-
 	/**
 	 *
 	 */
@@ -301,6 +289,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.graphConfig.max_data_size = this.graphConfig.data.length;
 		this.graphConfig.colors = this.colorsOfSelectedYears(this.selectedYears);
 		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
+
 	}
 
 	public draw(): void {
@@ -312,6 +301,41 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	/**
+	 *
+	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {string[]} colorPalette
+	 * @returns {YearProgressStyleModel}
+	 */
+	public styleFromPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
+
+		const yearsColorsMap = new Map<number, string>();
+		const colors: string[] = [];
+
+		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
+			const color = colorPalette[index % colorPalette.length];
+			yearsColorsMap.set(yearProgressModel.year, color);
+			colors.push(color);
+		});
+
+		return new YearProgressStyleModel(yearsColorsMap, colors);
+	}
+
+	/**
+	 *
+	 * @param {number[]} yearSelection
+	 * @returns {string[]}
+	 */
+	public colorsOfSelectedYears(yearSelection: number[]): string[] {
+
+		const colors = [];
+
+		_.forEach(yearSelection, (year: number) => {
+			colors.push(this.yearProgressStyleModel.yearsColorsMap.get(year));
+		});
+
+		return colors;
+	}
 
 	public setupComponentSizeChangeHandlers(): void {
 
@@ -346,10 +370,10 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	public onSelectedYearsChange(): void {
 
 		YearProgressComponent.clearSvgGraphContent(); // Clear SVG content inside element
-		// this.updateGraph();
 		this.reloadGraph();
-	}
 
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
+	}
 
 	/**
 	 *
@@ -375,9 +399,8 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	public reloadGraph(skipProgressionCalculation?: boolean): void {
 
 		// Re-compute progression with new activity types selected
-		if (skipProgressionCalculation === true) {
-			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.selectedYears,
-				this.isMetric, this.includeCommuteRide);
+		if (!skipProgressionCalculation) {
+			this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.isMetric, this.includeCommuteRide);
 		}
 
 		this.setupViewableGraphData();
@@ -422,9 +445,9 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.draw();
 	}
 
-	// public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
-	// 	// this.setTodayAsViewedDay();
-	// }
+	public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
+		// this.setTodayAsViewedDay();
+	}
 
 	public setupGraphConfig(): void {
 
@@ -456,9 +479,9 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			mouseover: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOver(data);
 			},
-			// mouseout: (data: MetricsGraphicsEventModel) => {
-			// 	this.onGraphMouseOut(data);
-			// }
+			mouseout: (data: MetricsGraphicsEventModel) => {
+				this.onGraphMouseOut(data);
+			}
 		};
 	}
 

@@ -33,10 +33,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public static readonly SPECIAL_CHAR_SUN: string = "☀"; // OR "☀️" @amp-what.com
 	public static readonly SPECIAL_CHAR_FINGER: string = "🠷"; // OR "▾" @amp-what.com
 
-	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "lastPeriodViewed";
-	public static readonly LS_POWER_METER_ENABLED_KEY: string = "powerMeterEnabled";
-	public static readonly LS_SWIM_ENABLED_KEY: string = "swimEnabled";
-	public static readonly LC_TRAINING_ZONES_ENABLED_KEY: string = "trainingZonesEnabled";
+	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
+	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
+	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
+	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 
 	public readonly atlColor: string = "#515151";
 	public readonly ctlColor: string = "#e94e1b";
@@ -83,7 +83,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;
 
-			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY));
+			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_TRAINING_ZONES_ENABLED_KEY));
 			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
 			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.swimFtp);
 
@@ -415,9 +415,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.updateGraph();
 
 		if (this.isTrainingZonesEnabled) {
-			localStorage.setItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY, "true");
+			localStorage.setItem(FitnessTrendGraphComponent.LS_TRAINING_ZONES_ENABLED_KEY, "true");
 		} else {
-			localStorage.removeItem(FitnessTrendGraphComponent.LC_TRAINING_ZONES_ENABLED_KEY);
+			localStorage.removeItem(FitnessTrendGraphComponent.LS_TRAINING_ZONES_ENABLED_KEY);
 		}
 	}
 

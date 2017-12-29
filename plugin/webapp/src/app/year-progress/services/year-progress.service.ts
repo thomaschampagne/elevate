@@ -189,6 +189,20 @@ export class YearProgressService {
 		});
 	}
 
+	public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
+
+		const availableYears = [];
+
+		_.forEach(_.map(syncedActivityModels, "start_time"), (time: string) => {
+			const year = moment(time).year();
+			if(_.indexOf(availableYears, year) === -1){
+				availableYears.push(year)
+			}
+		});
+
+		return availableYears;
+	}
+
 	/**
 	 *
 	 * @param {SyncedActivityModel[]} activities
@@ -214,6 +228,5 @@ export class YearProgressService {
 
 		return activities as YearProgressActivityModel[];
 	}
-
 }
 
