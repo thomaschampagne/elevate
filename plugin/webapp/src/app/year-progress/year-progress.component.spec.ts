@@ -64,7 +64,7 @@ describe('YearProgressComponent', () => {
 		];
 
 		// When
-		const mostPerformedType = YearProgressComponent.findMostPerformedActivityType(activitiesCountByTypeModels);
+		const mostPerformedType = component.findMostPerformedActivityType(activitiesCountByTypeModels);
 
 		// Then
 		expect(mostPerformedType).toEqual(expected);
