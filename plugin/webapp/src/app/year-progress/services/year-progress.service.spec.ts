@@ -33,7 +33,7 @@ describe('YearProgressService', () => {
 	});
 
 
-	it("should compute progression on ~2.5 years", (done: Function) => {
+	it("should compute progression on 3 years", (done: Function) => {
 
 		// Given
 		const expectedLength = 3;
@@ -59,10 +59,9 @@ describe('YearProgressService', () => {
 
 		expect(progression[0].progressions.length).toEqual(365);
 		expect(progression[1].progressions.length).toEqual(366);
-		expect(progression[2].progressions.length).toEqual(152);
+		expect(progression[2].progressions.length).toEqual(365);
 
 		done();
-
 
 	});
 
@@ -119,9 +118,9 @@ describe('YearProgressService', () => {
 			1
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1496268000000,
+		const expectedLastDay2017 = new ProgressionModel(1514674800000,
 			2017,
-			152,
+			365,
 			2580,
 			329400 / 3600, // = Hours
 			29250,
@@ -182,9 +181,9 @@ describe('YearProgressService', () => {
 			69400,
 			220
 		);
-		const expectedLastDay2017 = new ProgressionModel(1496268000000,
+		const expectedLastDay2017 = new ProgressionModel(1514674800000,
 			2017,
-			152,
+			365,
 			2130,
 			275400 / 3600, // = Hours
 			28950,
@@ -240,9 +239,9 @@ describe('YearProgressService', () => {
 			293
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1496268000000,
+		const expectedLastDay2017 = new ProgressionModel(1514674800000,
 			2017,
-			152,
+			365,
 			1603, // Miles
 			329400 / 3600, // = Hours
 			95965, // Feet
@@ -289,9 +288,9 @@ describe('YearProgressService', () => {
 			219
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1496268000000,
+		const expectedLastDay2017 = new ProgressionModel(1514674800000,
 			2017,
-			152,
+			365,
 			2130,
 			275400 / 3600, // = Hours
 			28950,

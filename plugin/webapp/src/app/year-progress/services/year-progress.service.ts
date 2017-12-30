@@ -56,14 +56,14 @@ export class YearProgressService {
 
 		// Find along types date from & to / From: 1st january of first year / To: Today
 		const fromMoment: Moment = moment(_.first(yearProgressActivityModels).start_time).startOf("year"); // 1st january of first year
-		const todayMoment: Moment = moment(_.last(yearProgressActivityModels).start_time).startOf("day");
+		const toMoment: Moment = moment().endOf("year").endOf("day");
 
 		// From 'fromMoment' to 'todayMoment' loop on days...
 		const currentDayMoment = moment(fromMoment);
 		let currentYearProgress: YearProgressModel = null;
 		let lastProgression: ProgressionModel = null;
 
-		while (currentDayMoment.isSameOrBefore(todayMoment)) {
+		while (currentDayMoment.isSameOrBefore(toMoment)) {
 
 			const currentYear = currentDayMoment.year();
 			let progression: ProgressionModel = null;
