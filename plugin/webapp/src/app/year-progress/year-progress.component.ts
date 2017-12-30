@@ -20,23 +20,22 @@ import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
+// TODO:BUG Progression on years selected with no data on sport types
 // TODO Legend base: Year and value displayed
-// TODO Persist + Load: "Activity types" checked
-// TODO Persist + Load: "Years" checked
-// TODO Persist + Load: "Commute rides" checked
-// TODO Persist + Load: "Progress type" selected
-
 // TODO Setup nice line colors palette
-
 // TODO Run & Ride distance Target line display
 // TODO Table result
-// TODO setupComponentSizeChangeHandlers
+// TODO Return current year progress until today or end of the year
+// TODO Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
+// DONE Persist + Load: "Activity types" checked
+// DONE Persist + Load: "Years" checked
+// DONE Persist + Load: "Commute rides" checked
+// DONE Persist + Load: "Progress type" selected
 // Service:
 // DONE Return KM instead of meter distance
 // DONE Handle metric / imperial here  (distance + elevation)!
-// TODO Return current year progress until today or end of the year
-// TODO Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
+// DONE setupComponentSizeChangeHandlers
 
 
 @Component({
@@ -397,18 +396,22 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 		this.dateWatched = mgEvent.key;
 
+		const momentWatched = moment(this.dateWatched);
+
 		this.progressionsAtDay = [];
 
-		_.forEach(mgEvent.values, (value, index) => {
+		_.forEach(this.selectedYears, (selectedYear: number) => {
 
-			const momentAtDay = moment(value.date);
+			const yearProgressModel: YearProgressModel = _.find(this.yearProgressModels, {
+				year: selectedYear
+			});
 
-			const progressionModel: ProgressionModel = _.find(this.yearProgressModels[index].progressions, {
-				onDayOfYear: momentAtDay.dayOfYear()
+			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
+				onDayOfYear: momentWatched.dayOfYear()
 			});
 
 			const progressAtDay: ProgressionAtDayModel = {
-				date: momentAtDay.year(progressionModel.onYear).toDate(),
+				date: momentWatched.year(progressionModel.onYear).toDate(),
 				year: progressionModel.onYear,
 				progressType: this.selectedProgressType.type,
 				value: progressionModel.valueOf(this.selectedProgressType.type),
@@ -417,6 +420,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 			this.progressionsAtDay.push(progressAtDay);
 		});
+
 	}
 
 	/**
