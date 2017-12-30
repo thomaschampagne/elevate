@@ -21,6 +21,7 @@ import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 // TODO:BUG Progression on years selected with no data on sport types
+
 // TODO Legend base: Year and value displayed
 // TODO Setup nice line colors palette
 // TODO Run & Ride distance Target line display
@@ -482,7 +483,8 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			data: [],
 			full_width: true,
 			height: window.innerHeight * 0.55,
-			right: 40,
+			right: 30,
+			left: 70,
 			baselines: [],
 			animate_on_load: false,
 			transition_on_update: false,
@@ -490,7 +492,10 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
 			missing_is_hidden_accessor: 'hidden',
+			xax_count: 12,
 			yax_count: 10,
+			x_extended_ticks: true,
+			y_extended_ticks: true,
 			target: "#" + YearProgressComponent.GRAPH_DOM_ELEMENT_ID,
 			x_accessor: "date",
 			y_accessor: "value",
@@ -499,6 +504,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			markers: [],
 			legend: null,
 			colors: [],
+			yax_format: d3.format(""),
 			max_data_size: 0,
 			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 			// 	this.onGraphClick(metricsGraphicsEvent);
