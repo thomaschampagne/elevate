@@ -20,20 +20,24 @@ import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-// DONE:BUG Progression on years selected with no data on sport types
-// DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
 
 // TODO Legend base: Year and value displayed
 // TODO Setup nice line colors palette
 // TODO Run & Ride distance Target line display
 // TODO Table result
-// DONE Return current year progress until today or end of the year
+
 // TODO Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
+
+// DONE:BUG Progression on years selected with no data on sport types
+// DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
+// DONE:BUG Select 1 sport (Run)& select 1 year (2016) => 2017 (last year ?!) is displayed in legend... fail !
+// DONE:BUG If 2017 (last year ?!) is not selected, then the legends is not displayed after page reload.
 // DONE Persist + Load: "Activity types" checked
 // DONE Persist + Load: "Years" checked
 // DONE Persist + Load: "Commute rides" checked
 // DONE Persist + Load: "Progress type" selected
+// DONE Return current year progress until today or end of the year
 // Service:
 // DONE Return KM instead of meter distance
 // DONE Handle metric / imperial here  (distance + elevation)!
@@ -400,11 +404,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		// If not defined, it's a single line, then get date @ "mgEvent.date"
 		this.dateWatched = mgEvent.key || mgEvent.date;
 
-		const isWatchedYearSelected = (_.indexOf(this.selectedYears, this.dateWatched.getFullYear()) !== -1);
-		if (!isWatchedYearSelected) {
-			return;
-		}
-
 		const momentWatched = moment(this.dateWatched);
 
 		this.progressionsAtDay = [];
@@ -421,13 +420,13 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 			if (progressionModel) {
 
-				const date = momentWatched.year(progressionModel.onYear).toDate();
-				const onYear = progressionModel.onYear;
-				const progressType = this.selectedProgressType.type;
-				const displayedValue = progressionModel.valueOf(this.selectedProgressType.type);
-				const color = this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.onYear);
-
-				const progressAtDay: ProgressionAtDayModel = new ProgressionAtDayModel(date, onYear, progressType, displayedValue, color);
+				const progressAtDay: ProgressionAtDayModel = {
+					date: momentWatched.year(progressionModel.onYear).toDate(),
+					year: progressionModel.onYear,
+					progressType: this.selectedProgressType.type,
+					value: progressionModel.valueOf(this.selectedProgressType.type),
+					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.onYear)
+				};
 
 				this.progressionsAtDay.push(progressAtDay);
 			}
