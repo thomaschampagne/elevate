@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import * as moment from "moment";
+import { Moment } from "moment";
 import * as _ from "lodash";
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { YearProgressService } from "./services/year-progress.service";
@@ -19,8 +20,9 @@ import { Subscription } from "rxjs/Subscription";
 import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
-import { Moment } from "moment";
 
+
+// TODO:BUG AlpineSki (only sport) activity count do not match with legacy feature if "commute rides" is disabled
 
 // TODO Run & Ride distance Target line display
 // TODO Table result
@@ -158,9 +160,13 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			label: this.todayMoment.format("MMM Do")
 		}]);
 
+		// By default progression shown in legend is today
+		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.todayMoment);
+
 		// By default moment watched is today
 		this.momentWatched = this.todayMoment;
 
+		// Now setup graph aspects
 		this.setupGraphConfig();
 
 		this.setupViewableGraphData();
@@ -404,43 +410,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 	/**
 	 *
-	 * @param {MetricsGraphicsEventModel} mgEvent
-	 */
-	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
-
-		// Seek date for multiple lines at first @ "mgEvent.key"
-		// If not defined, it's a single line, then get date @ "mgEvent.date"
-		this.momentWatched = moment(mgEvent.key || mgEvent.date);
-
-		this.progressionsAtDay = [];
-
-		_.forEach(this.selectedYears, (selectedYear: number) => {
-
-			const yearProgressModel: YearProgressModel = _.find(this.yearProgressModels, {
-				year: selectedYear
-			});
-
-			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
-				onDayOfYear: this.momentWatched.dayOfYear()
-			});
-
-			if (progressionModel) {
-
-				const progressAtDay: ProgressionAtDayModel = {
-					date: this.momentWatched.year(progressionModel.onYear).toDate(),
-					year: progressionModel.onYear,
-					progressType: this.selectedProgressType.type,
-					value: progressionModel.valueOf(this.selectedProgressType.type),
-					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.onYear)
-				};
-
-				this.progressionsAtDay.push(progressAtDay);
-			}
-		});
-	}
-
-	/**
-	 *
 	 * @returns {number[]}
 	 */
 	public findExistingSelectedYears(): number[] {
@@ -486,10 +455,60 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
 	/**
 	 *
+	 * @param {MetricsGraphicsEventModel} mgEvent
+	 */
+	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
+
+		// Seek date for multiple lines at first @ "mgEvent.key"
+		// If not defined, it's a single line, then get date @ "mgEvent.date"
+		this.momentWatched = moment(mgEvent.key || mgEvent.date);
+		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.momentWatched);
+	}
+
+	/**
+	 *
 	 * @param {MetricsGraphicsEventModel} event
 	 */
 	public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
-		// this.setTodayAsViewedDay();
+		this.momentWatched = this.todayMoment;
+		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.todayMoment);
+	}
+
+	/**
+	 *
+	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {moment.Moment} dayMoment
+	 * @returns {ProgressionAtDayModel[]}
+	 */
+	public findProgressionsAtDay(yearProgressModels: YearProgressModel[], dayMoment: Moment): ProgressionAtDayModel[] {
+
+		const progressionsAtDay = [];
+
+		_.forEach(this.selectedYears, (selectedYear: number) => {
+
+			const yearProgressModel: YearProgressModel = _.find(yearProgressModels, {
+				year: selectedYear
+			});
+
+			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
+				onDayOfYear: dayMoment.dayOfYear()
+			});
+
+			if (progressionModel) {
+
+				const progressAtDay: ProgressionAtDayModel = {
+					date: dayMoment.year(progressionModel.onYear).toDate(),
+					year: progressionModel.onYear,
+					progressType: this.selectedProgressType.type,
+					value: progressionModel.valueOf(this.selectedProgressType.type),
+					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.onYear)
+				};
+
+				progressionsAtDay.push(progressAtDay);
+			}
+		});
+
+		return progressionsAtDay;
 	}
 
 	public setupGraphConfig(): void {
