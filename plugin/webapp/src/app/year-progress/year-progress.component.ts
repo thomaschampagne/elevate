@@ -21,7 +21,7 @@ import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 // DONE:BUG Progression on years selected with no data on sport types
-// TODO:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
+// DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
 
 // TODO Legend base: Year and value displayed
 // TODO Setup nice line colors palette
@@ -396,7 +396,9 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	 */
 	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
 
-		this.dateWatched = mgEvent.key;
+		// Seek date for multiple lines at first @ "mgEvent.key"
+		// If not defined, it's a single line, then get date @ "mgEvent.date"
+		this.dateWatched = mgEvent.key || mgEvent.date;
 
 		const isWatchedYearSelected = (_.indexOf(this.selectedYears, this.dateWatched.getFullYear()) !== -1);
 		if (!isWatchedYearSelected) {
