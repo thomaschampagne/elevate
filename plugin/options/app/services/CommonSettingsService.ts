@@ -303,6 +303,12 @@ export let commonSettingsService = () => {
                 optionLabels: ["All"],
                 optionHtml: "This will hide all routes created in the dashboard feed.",
             }, {
+                optionKey: "feedHidePosts",
+                optionType: "checkbox",
+                optionTitle: "Hide posts",
+                optionLabels: ["All"],
+                optionHtml: "This will hide posts from the dashboard feed",
+            }, {
                 optionKey: "feedHideSuggestedAthletes",
                 optionType: "checkbox",
                 optionTitle: "Hide suggested athletes",

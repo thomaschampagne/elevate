@@ -45,6 +45,7 @@ export interface IUserSettings {
     enableBothLegsCadence: boolean;
     feedHideChallenges: boolean;
     feedHideCreatedRoutes: boolean;
+    feedHidePosts: boolean;
     feedHideSuggestedAthletes: boolean;
     feedHideVirtualRides: boolean;
     feedHideRideActivitiesUnderDistance: number;
