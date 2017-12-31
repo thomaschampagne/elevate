@@ -124,15 +124,15 @@ export class YearProgressService {
 				dayOfYear: currentDayMoment.dayOfYear(),
 			};
 
-			if (!includeCommuteRide) {
-				filterQuery.commute = false;
-			}
-
 			const activitiesFound: YearProgressActivityModel[] = _.filter(yearProgressActivityModels, filterQuery);
 
 			if (activitiesFound.length > 0) {
 
 				for (let i: number = 0; i < activitiesFound.length; i++) {
+
+					if (!includeCommuteRide && activitiesFound[i].commute) {
+						continue;
+					}
 
 					progression.totalDistance += activitiesFound[i].distance_raw;
 					progression.totalTime += activitiesFound[i].moving_time_raw;

@@ -30,7 +30,7 @@ export class YearProgressActivitiesFixture {
 			let distanceRaw = null;
 			let time = null;
 			let elevationGainRaw = 0;
-			let commute = false;
+			let commute = (currentMoment.dayOfYear() % 2 > 0) ? false : null; // Allow "not commute activities" to receive false or null values
 			let restDay = false;
 
 			switch (dayType) {

@@ -21,8 +21,8 @@ import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-
-// TODO:BUG AlpineSki (only sport) activity count do not match with legacy feature if "commute rides" is disabled
+// TODO:BUG Select Walk (only sport) +store,  All Year (store nothing). Reload the page.... Hmm Only 4 years are returned by the progression. Should be more right?
+// TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO Run & Ride distance Target line display
 // TODO Table result
@@ -33,6 +33,7 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 // TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
 
+// DONE:BUG AlpineSki | Walk (only sport) activity count do not match with legacy feature if "commute rides" is disabled
 // DONE:BUG Progression on years selected with no data on sport types
 // DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
 // DONE:BUG Select 1 sport (Run)& select 1 year (2016) => 2017 (last year ?!) is displayed in legend... fail !
