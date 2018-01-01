@@ -55,8 +55,8 @@ export class YearProgressService {
 		});
 
 		// Find along types date from & to / From: 1st january of first year / To: Today
-		const fromMoment: Moment = moment(_.first(yearProgressActivityModels).start_time).startOf("year"); // 1st january of first year
-		const toMoment: Moment = moment().endOf("year").endOf("day");
+		const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
+		const toMoment: Moment = this.getTodayMoment().endOf("year").endOf("day");
 
 		// From 'fromMoment' to 'todayMoment' loop on days...
 		const currentDayMoment = moment(fromMoment);
@@ -227,6 +227,10 @@ export class YearProgressService {
 		});
 
 		return activities as YearProgressActivityModel[];
+	}
+
+	public getTodayMoment(): Moment {
+		return moment();
 	}
 }
 

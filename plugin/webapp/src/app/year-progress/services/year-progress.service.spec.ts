@@ -7,11 +7,15 @@ import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionModel } from "../models/progression.model";
+import * as moment from "moment";
 
 describe('YearProgressService', () => {
 
 	let yearProgressService: YearProgressService;
 	let syncedActivityModels: SyncedActivityModel[];
+
+	const todayDate = "2018-03-01 12:00";
+	const momentDatePattern = "YYYY-MM-DD hh:mm";
 
 	beforeEach((done: Function) => {
 
@@ -23,6 +27,8 @@ describe('YearProgressService', () => {
 
 		syncedActivityModels = YearProgressActivitiesFixture.provide();
 
+		spyOn(yearProgressService, "getTodayMoment").and.returnValue(moment(todayDate, momentDatePattern));
+
 		done();
 	});
 
@@ -33,10 +39,10 @@ describe('YearProgressService', () => {
 	});
 
 
-	it("should compute progression on 3 years", (done: Function) => {
+	it("should compute progression on 4 years", (done: Function) => {
 
 		// Given
-		const expectedLength = 3;
+		const expectedLength = 4;
 		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
@@ -52,14 +58,66 @@ describe('YearProgressService', () => {
 		// Then
 		expect(progression).not.toBeNull();
 		expect(progression.length).toEqual(expectedLength);
+		expect(_.last(progression).year).toEqual(2018);
 
 		expect(progression[0].year).toEqual(2015);
 		expect(progression[1].year).toEqual(2016);
 		expect(progression[2].year).toEqual(2017);
+		expect(progression[3].year).toEqual(2018);
 
 		expect(progression[0].progressions.length).toEqual(365);
 		expect(progression[1].progressions.length).toEqual(366);
 		expect(progression[2].progressions.length).toEqual(365);
+		expect(progression[3].progressions.length).toEqual(365);
+
+		done();
+
+	});
+
+
+	it("should compute progression on 4 years even with a walk done the 2016-06-06", (done: Function) => {
+
+		// Given
+		const expectedLength = 4;
+		const typesFilter: string[] = ["Walk"];
+		const yearsFilter: number[] = []; // All
+		const isMetric = true;
+		const includeCommuteRide = true;
+
+		const fakeWalkActivity = new SyncedActivityModel();
+		fakeWalkActivity.id = 99;
+		fakeWalkActivity.name = "Walking";
+		fakeWalkActivity.type = "Walk";
+		fakeWalkActivity.display_type = "Walk";
+		fakeWalkActivity.start_time = moment("2016-06-06", "YYYY-MM-DD").toISOString();
+		fakeWalkActivity.distance_raw = 3000;
+		fakeWalkActivity.moving_time_raw = 3600;
+		fakeWalkActivity.elapsed_time_raw = 3600;
+		fakeWalkActivity.elevation_gain_raw = 0;
+
+		syncedActivityModels.push(fakeWalkActivity);
+
+
+		// When
+		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+			typesFilter,
+			yearsFilter,
+			isMetric,
+			includeCommuteRide);
+
+		// Then
+		expect(progression).not.toBeNull();
+		expect(progression.length).toEqual(expectedLength);
+
+		expect(progression[0].year).toEqual(2015);
+		expect(progression[1].year).toEqual(2016);
+		expect(progression[2].year).toEqual(2017);
+		expect(progression[3].year).toEqual(2018);
+
+		expect(progression[0].progressions.length).toEqual(365);
+		expect(progression[1].progressions.length).toEqual(366);
+		expect(progression[2].progressions.length).toEqual(365);
+		expect(progression[3].progressions.length).toEqual(365);
 
 		done();
 
