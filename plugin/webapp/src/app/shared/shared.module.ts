@@ -35,6 +35,7 @@ import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-r
 import { YearProgressResolverService } from "../year-progress/services/year-progress-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
+import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";
 
 @NgModule({
 	declarations: [
@@ -49,6 +50,7 @@ import { SideNavService } from "./services/side-nav/side-nav.service";
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
 		YearProgressComponent,
+		YearProgressGraphComponent,
 		DonateComponent,
 		ReleasesNotesComponent,
 

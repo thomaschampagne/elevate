@@ -35,36 +35,18 @@
 			Commute rides
 		</mat-slide-toggle>
 
-		<div *ngIf="(selectedActivityTypes.length === 0)">
-
-			No progression to display. Please select at list 1 type.
-
-		</div>
-
 		<!-- Graph and Legend -->
-		<div [hidden]="(selectedActivityTypes.length === 0)">
-
-			<div fxLayout="row" fxLayoutAlign="space-between start">
-
-				<div fxFlex="80" id="yearProgressGraph">
-				</div>
-				<div fxFlex="20">
-					{{momentWatched.format("MMM Do")}}
-					<div *ngFor="let progressAtDay of progressionsAtDay | orderBy: '-year'">
-						<span [style.color]="progressAtDay.color">{{progressAtDay.year}}: {{progressAtDay.value.toLocaleString()}}</span>
-					</div>
-				</div>
-				<div>
-					<!--<pre style="font-size: 9px;">{{progressionsAtDay | json}}</pre>-->
-				</div>
-
-			</div>
-		</div>
-
+		<app-year-progress-graph
+			[selectedYears]="selectedYears"
+			[selectedProgressType]="selectedProgressType"
+			[yearProgressModels]="yearProgressModels"
+			[todayMoment]="todayMoment">
+		</app-year-progress-graph>
 
 	</mat-card-content>
 </mat-card>
 
+<hr/>
 <br/><br/>
 selectedActivityTypes: {{selectedActivityTypes | json}}
 <br/><br/>

@@ -8,8 +8,6 @@ import { ActivatedRoute } from "@angular/router";
 import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
 import { Observable } from "rxjs/Observable";
 import { YearProgressActivitiesFixture } from "./services/year-progress-activities.fixture";
-import { YearProgressModel } from "./models/year-progress.model";
-import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 describe('YearProgressComponent', () => {
 
@@ -73,65 +71,70 @@ describe('YearProgressComponent', () => {
 
 	it("should give proper colors to all year lines from a color palette", () => {
 
-		// Given
-		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
-		const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+		// TODO Move that test in YearProgressGraphComponent Specs
+		expect(false).toEqual(true);
 
-		const yearProgressModels: YearProgressModel[] = [
-			new YearProgressModel(2011, []),
-			new YearProgressModel(2012, []),
-			new YearProgressModel(2013, []),
-			new YearProgressModel(2014, []),
-			new YearProgressModel(2015, []),
-			new YearProgressModel(2016, []),
-			new YearProgressModel(2017, []),
-		];
+		/*		// Given
+                const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
+                const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
-		// When
-		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
+                const yearProgressModels: YearProgressModel[] = [
+                    new YearProgressModel(2011, []),
+                    new YearProgressModel(2012, []),
+                    new YearProgressModel(2013, []),
+                    new YearProgressModel(2014, []),
+                    new YearProgressModel(2015, []),
+                    new YearProgressModel(2016, []),
+                    new YearProgressModel(2017, []),
+                ];
 
-		// Then
-		expect(style.colors).toEqual(expectedGlobalColors);
+                // When
+                const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
 
-		expect(style.yearsColorsMap.get(2011)).toEqual("red");
-		expect(style.yearsColorsMap.get(2012)).toEqual("blue");
-		expect(style.yearsColorsMap.get(2013)).toEqual("green");
-		expect(style.yearsColorsMap.get(2014)).toEqual("purple");
-		expect(style.yearsColorsMap.get(2015)).toEqual("orange");
-		expect(style.yearsColorsMap.get(2016)).toEqual("red");
-		expect(style.yearsColorsMap.get(2017)).toEqual("blue");
+                // Then
+                expect(style.colors).toEqual(expectedGlobalColors);
+
+                expect(style.yearsColorsMap.get(2011)).toEqual("red");
+                expect(style.yearsColorsMap.get(2012)).toEqual("blue");
+                expect(style.yearsColorsMap.get(2013)).toEqual("green");
+                expect(style.yearsColorsMap.get(2014)).toEqual("purple");
+                expect(style.yearsColorsMap.get(2015)).toEqual("orange");
+                expect(style.yearsColorsMap.get(2016)).toEqual("red");
+                expect(style.yearsColorsMap.get(2017)).toEqual("blue");*/
 
 	});
 
 	it("should give proper restricted colors from a year selection", () => {
 
-		// Given
-		const colors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+		// TODO Move that test in YearProgressGraphComponent Specs
+		expect(false).toEqual(true);
+		/*	// Given
+            const colors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
-		const yearsColorsMap = new Map<number, string>();
-		yearsColorsMap.set(2011, "red");
-		yearsColorsMap.set(2012, "blue");
-		yearsColorsMap.set(2013, "green");
-		yearsColorsMap.set(2014, "purple");
-		yearsColorsMap.set(2015, "orange");
-		yearsColorsMap.set(2016, "red");
-		yearsColorsMap.set(2017, "blue");
+            const yearsColorsMap = new Map<number, string>();
+            yearsColorsMap.set(2011, "red");
+            yearsColorsMap.set(2012, "blue");
+            yearsColorsMap.set(2013, "green");
+            yearsColorsMap.set(2014, "purple");
+            yearsColorsMap.set(2015, "orange");
+            yearsColorsMap.set(2016, "red");
+            yearsColorsMap.set(2017, "blue");
 
-		const yearSelection: number[] = [2013, 2016, 2017];
+            const yearSelection: number[] = [2013, 2016, 2017];
 
-		const expectedYearSelectedColors: string[] = [
-			yearsColorsMap.get(2013),
-			yearsColorsMap.get(2016),
-			yearsColorsMap.get(2017)
-		];
+            const expectedYearSelectedColors: string[] = [
+                yearsColorsMap.get(2013),
+                yearsColorsMap.get(2016),
+                yearsColorsMap.get(2017)
+            ];
 
-		component.yearProgressStyleModel = new YearProgressStyleModel(yearsColorsMap, colors);
+            component.yearProgressStyleModel = new YearProgressStyleModel(yearsColorsMap, colors);
 
-		// When
-		const yearSelectedColors: string [] = component.colorsOfSelectedYears(yearSelection);
+            // When
+            const yearSelectedColors: string [] = component.colorsOfSelectedYears(yearSelection);
 
-		// Then
-		expect(yearSelectedColors).toEqual(expectedYearSelectedColors);
+            // Then
+            expect(yearSelectedColors).toEqual(expectedYearSelectedColors);*/
 
 	});
 
