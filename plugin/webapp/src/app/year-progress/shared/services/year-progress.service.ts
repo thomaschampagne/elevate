@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { YearProgressModel } from "../models/year-progress.model";
-import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";

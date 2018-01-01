@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { YearProgressStyleModel } from "../models/year-progress-style.model";
-import { ViewableYearProgressDataModel } from "../models/viewable-year-progress-data.model";
-import { ProgressionAtDayModel } from "../models/progression-at-date.model";
+import { YearProgressStyleModel } from "./year-progress-style.model";
+import { ViewableYearProgressDataModel } from "./viewable-year-progress-data.model";
+import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
 import * as moment from "moment";
 import { Moment } from "moment";
 import * as _ from "lodash";
-import { YearProgressModel } from "../models/year-progress.model";
-import { ProgressionModel } from "../models/progression.model";
+import { YearProgressModel } from "../shared/models/year-progress.model";
+import { ProgressionModel } from "../shared/models/progression.model";
 import * as d3 from "d3";
 import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-graphics-event.model";
-import { ProgressType } from "../models/progress-type.enum";
+import { ProgressType } from "../shared/models/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
-import { YearProgressTypeModel } from "../models/year-progress-type.model";
+import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 
 @Component({
 	selector: 'app-year-progress-graph',

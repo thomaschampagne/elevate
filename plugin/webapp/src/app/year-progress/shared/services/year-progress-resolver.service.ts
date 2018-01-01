@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
-import { ActivityDao } from "../../shared/dao/activity/activity.dao";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "../models/required-year-progress-data.model";
 
 @Injectable()

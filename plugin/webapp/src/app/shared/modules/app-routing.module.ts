@@ -9,7 +9,7 @@ import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 import { YearProgressComponent } from "../../year-progress/year-progress.component";
-import { YearProgressResolverService } from "../../year-progress/services/year-progress-resolver.service";
+import { YearProgressResolverService } from "../../year-progress/shared/services/year-progress-resolver.service";
 
 export const routes: Routes = [
 	{

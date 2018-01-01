@@ -32,7 +32,7 @@ import { ReleasesNotesComponent } from "../releases-notes/releases-notes.compone
 import { YearProgressComponent } from "../year-progress/year-progress.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
-import { YearProgressResolverService } from "../year-progress/services/year-progress-resolver.service";
+import { YearProgressResolverService } from "../year-progress/shared/services/year-progress-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";

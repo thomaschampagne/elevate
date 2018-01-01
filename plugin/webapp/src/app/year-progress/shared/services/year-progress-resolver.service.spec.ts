@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { YearProgressResolverService } from './year-progress-resolver.service';
-import { ActivityDao } from "../../shared/dao/activity/activity.dao";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import { RequiredYearProgressDataModel } from "../models/required-year-progress-data.model";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
-import { userSettings } from "../../../../../common/scripts/UserSettings";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { userSettings } from "../../../../../../common/scripts/UserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
 
 describe('YearProgressResolverService', () => {
 

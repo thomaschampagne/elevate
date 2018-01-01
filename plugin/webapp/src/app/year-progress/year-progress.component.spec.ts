@@ -2,12 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { YearProgressComponent } from './year-progress.component';
 import { SharedModule } from "../shared/shared.module";
-import { ActivityCountByTypeModel } from "./models/activity-count-by-type.model";
+import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { CoreModule } from "../core/core.module";
 import { ActivatedRoute } from "@angular/router";
-import { RequiredYearProgressDataModel } from "./models/required-year-progress-data.model";
+import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
 import { Observable } from "rxjs/Observable";
-import { YearProgressActivitiesFixture } from "./services/year-progress-activities.fixture";
+import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
 
 describe('YearProgressComponent', () => {
 

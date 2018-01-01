@@ -1,4 +1,4 @@
-import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 
 export class RequiredYearProgressDataModel {
 
