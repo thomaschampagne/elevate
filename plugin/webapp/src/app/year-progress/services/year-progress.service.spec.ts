@@ -466,7 +466,7 @@ describe('YearProgressService', () => {
 	it("should provide all available years from user history", (done: Function) => {
 
 		// Given
-		const expectedResult: number[] = [2015, 2016, 2017];
+		const expectedResult: number[] = [2015, 2016, 2017, 2018];
 
 		// When
 		const result: number[] = yearProgressService.availableYears(syncedActivityModels);

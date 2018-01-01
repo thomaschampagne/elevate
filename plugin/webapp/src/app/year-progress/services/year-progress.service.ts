@@ -191,14 +191,17 @@ export class YearProgressService {
 
 	public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
 
-		const availableYears = [];
+		syncedActivityModels = _.sortBy(syncedActivityModels, "start_time");
 
-		_.forEach(_.map(syncedActivityModels, "start_time"), (time: string) => {
-			const year = moment(time).year();
-			if (_.indexOf(availableYears, year) === -1) {
-				availableYears.push(year)
-			}
-		});
+		const availableYears = [];
+		const startYear: number = moment(_.first(syncedActivityModels).start_time).year();
+		const endYear: number = this.getTodayMoment().year();
+
+		let year: number = startYear;
+		while (year <= endYear) {
+			availableYears.push(year);
+			year++;
+		}
 
 		return availableYears;
 	}

@@ -21,9 +21,7 @@ import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-
-// TODO:BUG progression to today (2018 not displayed when no activities on that year)
-
+// TODO:BUG stop year progressions graph display after today
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO Run & Ride distance Target line display
@@ -35,6 +33,7 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 // TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
 
+// DONE:BUG progression to today (2018 not displayed when no activities on that year)
 // DONE:BUG Select Walk (only sport) +store,  All Year (store nothing). Reload the page.... Hmm Only 4 years are returned by the progression. Should be more right? (Check service @ L58 first walk activitie start in 2014...)
 // Should be: const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
 // Instead of: const fromMoment: Moment = moment(_.first(yearProgressActivityModels).start_time).startOf("year"); // 1st january of first year
@@ -162,7 +161,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
 		// Push today marker
-		this.todayMoment = moment().startOf("day");
+		this.todayMoment = this.yearProgressService.getTodayMoment().startOf("day");
 		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel([{
 			date: this.todayMoment.toDate(),
 			label: this.todayMoment.format("MMM Do")
