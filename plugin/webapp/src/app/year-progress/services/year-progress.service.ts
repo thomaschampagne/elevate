@@ -55,8 +55,9 @@ export class YearProgressService {
 		});
 
 		// Find along types date from & to / From: 1st january of first year / To: Today
+		const todayMoment = this.getTodayMoment();
 		const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
-		const toMoment: Moment = this.getTodayMoment().endOf("year").endOf("day");
+		const toMoment: Moment = this.getTodayMoment().clone().endOf("year").endOf("day");
 
 		// From 'fromMoment' to 'todayMoment' loop on days...
 		const currentDayMoment = moment(fromMoment);
@@ -160,6 +161,9 @@ export class YearProgressService {
 
 			// Convert time in seconds to hours
 			progression.totalTime = progression.totalTime / 3600;
+
+			// Tag progression day as future or not
+			progression.isFuture = (!currentDayMoment.isSameOrBefore(todayMoment));
 
 			currentYearProgress.progressions.push(progression);
 			currentDayMoment.add(1, "days"); // Add a day until todayMoment

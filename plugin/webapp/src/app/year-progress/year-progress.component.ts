@@ -21,7 +21,7 @@ import { SideNavService } from "../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../shared/services/window/window.service";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-// TODO:BUG stop year progressions graph display after today
+// TODO:BUG MetricsGraphics displays circle color on broken line (when multiple lines)
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO Run & Ride distance Target line display
@@ -32,13 +32,11 @@ import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
 // TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 
-
 // DONE:BUG progression to today (2018 not displayed when no activities on that year)
 // DONE:BUG Select Walk (only sport) +store,  All Year (store nothing). Reload the page.... Hmm Only 4 years are returned by the progression. Should be more right? (Check service @ L58 first walk activitie start in 2014...)
 // Should be: const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
 // Instead of: const fromMoment: Moment = moment(_.first(yearProgressActivityModels).start_time).startOf("year"); // 1st january of first year
-
-
+// DONE:BUG stop year progressions graph display after today
 // DONE:BUG AlpineSki | Walk (only sport) activity count do not match with legacy feature if "commute rides" is disabled
 // DONE:BUG Progression on years selected with no data on sport types
 // DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
@@ -161,7 +159,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
 		// Push today marker
-		this.todayMoment = this.yearProgressService.getTodayMoment().startOf("day");
+		this.todayMoment = this.yearProgressService.getTodayMoment().clone().startOf("day");
 		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel([{
 			date: this.todayMoment.toDate(),
 			label: this.todayMoment.format("MMM Do")
@@ -225,8 +223,8 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 				_.forEach(yearProgressModel.progressions, (progressionModel: ProgressionModel) => {
 
 					const graphPoint: Partial<GraphPointModel> = {
-						date: moment().dayOfYear(progressionModel.onDayOfYear).format("YYYY-MM-DD"),
-						hidden: false
+						date: moment().dayOfYear(progressionModel.dayOfYear).format("YYYY-MM-DD"),
+						hidden: progressionModel.isFuture
 					};
 
 					switch (this.selectedProgressType.type) {
@@ -498,17 +496,17 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 			});
 
 			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
-				onDayOfYear: dayMoment.dayOfYear()
+				dayOfYear: dayMoment.dayOfYear()
 			});
 
 			if (progressionModel) {
 
 				const progressAtDay: ProgressionAtDayModel = {
-					date: dayMoment.year(progressionModel.onYear).toDate(),
-					year: progressionModel.onYear,
+					date: dayMoment.year(progressionModel.year).toDate(),
+					year: progressionModel.year,
 					progressType: this.selectedProgressType.type,
 					value: progressionModel.valueOf(this.selectedProgressType.type),
-					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.onYear)
+					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.year)
 				};
 
 				progressionsAtDay.push(progressAtDay);

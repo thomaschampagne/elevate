@@ -38,7 +38,6 @@ describe('YearProgressService', () => {
 		done();
 	});
 
-
 	it("should compute progression on 4 years", (done: Function) => {
 
 		// Given
@@ -74,6 +73,32 @@ describe('YearProgressService', () => {
 
 	});
 
+	it("should compute progression by tagging future days of current year", (done: Function) => {
+
+		// Given
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
+		const isMetric = true;
+		const includeCommuteRide = true;
+
+		// When
+		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+			typesFilter,
+			yearsFilter,
+			isMetric,
+			includeCommuteRide);
+
+		// Then
+		const yearProgressModel_2018 = progression[3];
+
+		const pastDaysCount_2018 = _.filter(yearProgressModel_2018.progressions, {isFuture: false}).length;
+		expect(pastDaysCount_2018).toEqual(60);
+
+		const futureDaysCount_2018 = _.filter(yearProgressModel_2018.progressions, {isFuture: true}).length;
+		expect(futureDaysCount_2018).toEqual(305);
+
+		done();
+	});
 
 	it("should compute progression on 4 years even with a walk done the 2016-06-06", (done: Function) => {
 
