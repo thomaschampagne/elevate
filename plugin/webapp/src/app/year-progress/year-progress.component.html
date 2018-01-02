@@ -1,6 +1,5 @@
 <mat-card>
 	<mat-card-content>
-
 		<mat-form-field>
 			<mat-select placeholder="Activity Types"
 						(change)="onSelectedActivityTypesChange()"
@@ -42,14 +41,5 @@
 			[yearProgressModels]="yearProgressModels"
 			[todayMoment]="todayMoment">
 		</app-year-progress-graph>
-
 	</mat-card-content>
 </mat-card>
-
-<hr/>
-<br/><br/>
-selectedActivityTypes: {{selectedActivityTypes | json}}
-<br/><br/>
-availableActivityTypes: {{availableActivityTypes | json}}
-<br/><br/>
-progressTypes: {{progressTypes | json}}

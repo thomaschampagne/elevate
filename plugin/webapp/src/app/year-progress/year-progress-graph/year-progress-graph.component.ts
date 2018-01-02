@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { YearProgressStyleModel } from "./year-progress-style.model";
-import { ViewableYearProgressDataModel } from "./viewable-year-progress-data.model";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { YearProgressStyleModel } from "./models/year-progress-style.model";
+import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
 import * as moment from "moment";
 import { Moment } from "moment";
@@ -12,13 +12,16 @@ import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-gr
 import { ProgressType } from "../shared/models/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
+import { Subscription } from "rxjs/Subscription";
+import { WindowService } from "../../shared/services/window/window.service";
+import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 
 @Component({
 	selector: 'app-year-progress-graph',
 	templateUrl: './year-progress-graph.component.html',
 	styleUrls: ['./year-progress-graph.component.scss']
 })
-export class YearProgressGraphComponent implements OnInit {
+export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
 	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
@@ -35,14 +38,18 @@ export class YearProgressGraphComponent implements OnInit {
 	@Input("todayMoment")
 	public todayMoment: Moment;
 
+	public initialized: boolean = false;
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
 	public momentWatched: Moment; // Current day watched on year progress graph mouse over
-
 	public graphConfig: any;
 
-	constructor() {
+	public sideNavChangesSubscription: Subscription;
+	public windowResizingSubscription: Subscription;
+
+	constructor(public sideNavService: SideNavService,
+				public windowService: WindowService) {
 	}
 
 	public ngOnInit(): void {
@@ -67,6 +74,28 @@ export class YearProgressGraphComponent implements OnInit {
 		this.setupViewableGraphData();
 
 		this.updateGraph();
+
+		this.setupComponentSizeChangeHandlers();
+
+		this.initialized = true;
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+
+		if (!this.initialized) {
+			return;
+		}
+
+		// Clear svg content if year selection changed
+		if (changes.selectedYears) {
+			YearProgressGraphComponent.clearSvgGraphContent();
+		}
+
+		// Always re-draw svg content
+		this.reloadGraph();
+
+		// Then update graph legend
+		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.momentWatched);
 	}
 
 	/**
@@ -156,11 +185,8 @@ export class YearProgressGraphComponent implements OnInit {
 	 *
 	 */
 	public draw(): void {
-
 		setTimeout(() => {
-			// this.isGraphDataReady = true;
 			MG.data_graphic(this.graphConfig);
-			// console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
 		});
 	}
 
@@ -173,24 +199,11 @@ export class YearProgressGraphComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {boolean} skipProgressionCalculation
 	 */
-	public reloadGraph(skipProgressionCalculation?: boolean): void {
-
-		// Re-compute progression with new activity types selected
-		if (!skipProgressionCalculation) {
-
-			// TODO ask for progression update from parent
-			console.warn("TODO ask for progression update from parent");
-
-			// this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes, this.isMetric, this.includeCommuteRide);
-		}
-
+	public reloadGraph(): void {
 		this.setupViewableGraphData();
-
 		this.updateGraph();
 	}
-
 
 	/**
 	 *
@@ -287,6 +300,21 @@ export class YearProgressGraphComponent implements OnInit {
 		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.todayMoment);
 	}
 
+	/**
+	 *
+	 */
+	public onComponentSizeChanged(): void {
+		this.draw();
+	}
+
+	public setupComponentSizeChangeHandlers(): void {
+
+		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
+
+		// Or user toggles the side nav (open/close states)
+		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+
+	}
 
 	public setupGraphConfig(): void {
 
@@ -305,7 +333,6 @@ export class YearProgressGraphComponent implements OnInit {
 			missing_is_hidden_accessor: 'hidden',
 			xax_count: 12,
 			yax_count: 10,
-			// x_extended_ticks: true,
 			y_extended_ticks: true,
 			target: "#" + YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID,
 			x_accessor: "date",
@@ -317,9 +344,6 @@ export class YearProgressGraphComponent implements OnInit {
 			colors: [],
 			yax_format: d3.format(""),
 			max_data_size: 0,
-			// click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
-			// 	this.onGraphClick(metricsGraphicsEvent);
-			// },
 			mouseover: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOver(data);
 			},
@@ -327,6 +351,11 @@ export class YearProgressGraphComponent implements OnInit {
 				this.onGraphMouseOut(data);
 			}
 		};
+	}
+
+	public ngOnDestroy(): void {
+		this.windowResizingSubscription.unsubscribe();
+		this.sideNavChangesSubscription.unsubscribe();
 	}
 
 }

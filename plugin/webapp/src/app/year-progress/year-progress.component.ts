@@ -1,6 +1,6 @@
 import { Moment } from "moment";
 import * as _ from "lodash";
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
@@ -9,9 +9,6 @@ import { ProgressType } from "./shared/models/progress-type.enum";
 import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
-import { Subscription } from "rxjs/Subscription";
-import { SideNavService } from "../shared/services/side-nav/side-nav.service";
-import { WindowService } from "../shared/services/window/window.service";
 
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
@@ -43,14 +40,13 @@ import { WindowService } from "../shared/services/window/window.service";
 // DONE Handle metric / imperial here  (distance + elevation)!
 // DONE setupComponentSizeChangeHandlers
 
-
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
 	styleUrls: ['./year-progress.component.scss'],
 	providers: [YearProgressService]
 })
-export class YearProgressComponent implements OnInit, OnDestroy {
+export class YearProgressComponent implements OnInit {
 
 	public static readonly LS_SELECTED_YEARS_KEY: string = "yearProgress_selectedYears";
 	public static readonly LS_SELECTED_ACTIVITY_TYPES_KEY: string = "yearProgress_selectedActivityTypes";
@@ -65,19 +61,12 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 	public selectedProgressType: YearProgressTypeModel;
 	public includeCommuteRide: boolean;
 	public isMetric: boolean;
-
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
-
 	public todayMoment: Moment;
 
-	public sideNavChangesSubscription: Subscription;
-	public windowResizingSubscription: Subscription;
-
 	constructor(public route: ActivatedRoute,
-				public yearProgressService: YearProgressService,
-				public sideNavService: SideNavService,
-				public windowService: WindowService) {
+				public yearProgressService: YearProgressService) {
 	}
 
 	/**
@@ -136,37 +125,21 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		this.selectedYears = (existingSelectedYears) ? existingSelectedYears : this.availableYears;
 
 		// Compute first progression
-		this.yearProgressModels = this.progression(this.syncedActivityModels, this.selectedActivityTypes,
-			this.isMetric, this.includeCommuteRide);
+		this.progression();
 
 		// Push today marker
 		this.todayMoment = this.yearProgressService.getTodayMoment().clone().startOf("day");
-
-		this.setupComponentSizeChangeHandlers();
 	}
-
 
 	/**
 	 *
-	 * @param {SyncedActivityModel[]} syncedActivityModels
-	 * @param {string[]} typesFilter
-	 * @param {number[]} yearsFilter
-	 * @param {boolean} isMetric
-	 * @param {boolean} includeCommuteRide
-	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], isMetric: boolean,
-					   includeCommuteRide: boolean): YearProgressModel[] {
-
-		console.warn("Compute progression with", typesFilter, includeCommuteRide);
-
-		const progression = this.yearProgressService.progression(syncedActivityModels, typesFilter,
-			null, // For all years
-			isMetric, includeCommuteRide);
-
-		console.warn("progression: ", progression);
-
-		return progression;
+	public progression(): void {
+		this.yearProgressModels = this.yearProgressService.progression(this.syncedActivityModels,
+			this.selectedActivityTypes,
+			null, // All Years
+			this.isMetric,
+			this.includeCommuteRide);
 	}
 
 	/**
@@ -178,53 +151,39 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 
-	public setupComponentSizeChangeHandlers(): void {
-
-		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
-
-		// Or user toggles the side nav (open/close states)
-		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
-
-	}
-
 	/**
 	 *
 	 */
 	public onSelectedActivityTypesChange(): void {
 
-		/*if (this.selectedActivityTypes.length > 0) {
-			this.reloadGraph(); // TODO In graph component
+		if (this.selectedActivityTypes.length > 0) {
+			this.progression();
 			localStorage.setItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY, JSON.stringify(this.selectedActivityTypes));
 		}
-*/
 	}
 
 	/**
 	 *
 	 */
 	public onSelectedProgressTypeChange(): void {
-
-		/*this.reloadGraph(true); // TODO In graph component
-		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, this.selectedProgressType.type.toString());*/
-
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, this.selectedProgressType.type.toString());
 	}
 
 	/**
 	 *
 	 */
 	public onSelectedYearsChange(): void {
-		/*YearProgressComponent.clearSvgGraphContent(); // Clear SVG content inside element // TODO In graph component
-		this.reloadGraph(true); // TODO In graph component
-		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.momentWatched); // TODO In graph component
-		localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));*/
+		this.progression();
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
 	}
+
 
 	/**
 	 *
 	 */
 	public onIncludeCommuteRideToggle(): void {
-		/*this.reloadGraph(); // TODO In graph component
-		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));*/
+		this.progression();
+		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
 	}
 
 	/**
@@ -263,19 +222,4 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 		}
 		return null;
 	}
-
-
-	/**
-	 *
-	 */
-	public onComponentSizeChanged(): void {
-		// this.draw(); // TODO In graph component
-	}
-
-	public ngOnDestroy(): void {
-		this.windowResizingSubscription.unsubscribe();
-		this.sideNavChangesSubscription.unsubscribe();
-	}
-
-
 }

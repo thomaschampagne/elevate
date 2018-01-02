@@ -1,5 +1,5 @@
-import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
-import { MarkerModel } from "../../fitness-trend/fitness-trend-graph/models/marker.model";
+import { GraphPointModel } from "../../../shared/models/graphs/graph-point.model";
+import { MarkerModel } from "../../../fitness-trend/fitness-trend-graph/models/marker.model";
 import * as _ from "lodash";
 
 export class ViewableYearProgressDataModel {
