@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { Moment } from "moment";
 import * as _ from "lodash";
 import { Component, OnInit } from '@angular/core';
@@ -12,6 +13,13 @@ import { RequiredYearProgressDataModel } from "./shared/models/required-year-pro
 
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
+// TODO Handle no data UI..
+
+// TODO Unify table format. ex: '0h' '0 km'
+
+// DONE Node years selection behaviour?
+// DONE Node act types selection?
+// DONE Graph click on date => style: cursor
 // TODO Table result
 // TODO Setup nice line colors palette
 // TODO Legend base: Year and value displayed
@@ -63,7 +71,8 @@ export class YearProgressComponent implements OnInit {
 	public isMetric: boolean;
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
-	public todayMoment: Moment;
+	public momentWatched: Moment;
+	public allowResetMomentWatched: boolean;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService) {
@@ -73,6 +82,8 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public ngOnInit(): void {
+
+		this.allowResetMomentWatched = false;
 
 		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 
@@ -107,9 +118,9 @@ export class YearProgressComponent implements OnInit {
 
 		// Set possible progress type to see: distance, time, ...
 		this.progressTypes = [
-			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles"),
-			new YearProgressTypeModel(ProgressType.TIME, "Time", "hours"),
-			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "meters" : "feet"),
+			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles", (this.isMetric) ? "km" : "mi"),
+			new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h"),
+			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "meters" : "feet", (this.isMetric) ? "m" : "ft"),
 			new YearProgressTypeModel(ProgressType.COUNT, "Count")
 		];
 
@@ -128,7 +139,7 @@ export class YearProgressComponent implements OnInit {
 		this.progression();
 
 		// Push today marker
-		this.todayMoment = this.yearProgressService.getTodayMoment().clone().startOf("day");
+		this.momentWatched = this.yearProgressService.getTodayMoment().clone().startOf("day");
 	}
 
 	/**
@@ -173,8 +184,27 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public onSelectedYearsChange(): void {
-		this.progression();
-		localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
+		if (this.selectedYears.length > 0) {
+			this.progression();
+			localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
+		}
+	}
+
+	/**
+	 *
+	 * @param {moment.Moment} momentWatched
+	 */
+	public onMomentWatchedChangesFromGraph(momentWatched: Moment): void {
+		this.momentWatched = momentWatched;
+		this.allowResetMomentWatched = (this.momentWatched.dayOfYear() !== moment().dayOfYear());
+	}
+
+	/**
+	 *
+	 */
+	public onResetMomentWatched(): void {
+		this.momentWatched = this.yearProgressService.getTodayMoment().clone().startOf("day");
+		this.allowResetMomentWatched = false;
 	}
 
 
@@ -222,4 +252,5 @@ export class YearProgressComponent implements OnInit {
 		}
 		return null;
 	}
+
 }

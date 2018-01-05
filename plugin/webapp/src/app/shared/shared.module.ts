@@ -36,6 +36,7 @@ import { YearProgressResolverService } from "../year-progress/shared/services/ye
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";
+import { YearProgressTableComponent } from "../year-progress/year-progress-table/year-progress-table.component";
 
 @NgModule({
 	declarations: [
@@ -51,6 +52,7 @@ import { YearProgressGraphComponent } from "../year-progress/year-progress-graph
 		FitnessTrendTableComponent,
 		YearProgressComponent,
 		YearProgressGraphComponent,
+		YearProgressTableComponent,
 		DonateComponent,
 		ReleasesNotesComponent,
 

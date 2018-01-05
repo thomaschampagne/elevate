@@ -7,6 +7,8 @@ import { Moment } from "moment";
 import { YearProgressActivityModel } from "../models/year-progress-activity.model";
 import { ProgressionModel } from "../models/progression.model";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
+import { ProgressionAtDayModel } from "../models/progression-at-date.model";
+import { ProgressType } from "../models/progress-type.enum";
 
 @Injectable()
 export class YearProgressService {
@@ -193,6 +195,11 @@ export class YearProgressService {
 		});
 	}
 
+	/**
+	 *
+	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 * @returns {number[]}
+	 */
 	public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
 
 		syncedActivityModels = _.sortBy(syncedActivityModels, "start_time");
@@ -207,7 +214,7 @@ export class YearProgressService {
 			year++;
 		}
 
-		return availableYears;
+		return availableYears.reverse();
 	}
 
 	/**
@@ -216,7 +223,7 @@ export class YearProgressService {
 	 * @param {string[]} typesFilter
 	 * @returns {YearProgressActivityModel[]}
 	 */
-	private filterSyncedActivityModelAlongTypes(activities: SyncedActivityModel[], typesFilter: string[]): YearProgressActivityModel[] {
+	public filterSyncedActivityModelAlongTypes(activities: SyncedActivityModel[], typesFilter: string[]): YearProgressActivityModel[] {
 
 		activities = _.filter(activities, (activity: YearProgressActivityModel) => {
 
@@ -236,8 +243,97 @@ export class YearProgressService {
 		return activities as YearProgressActivityModel[];
 	}
 
+	/**
+	 *
+	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {moment.Moment} dayMoment
+	 * @param {ProgressType} progressType
+	 * @param {number[]} selectedYears
+	 * @param {Map<number, string>} yearsColorsMap
+	 * @returns {ProgressionAtDayModel[]}
+	 */
+	public findProgressionsAtDay(yearProgressModels: YearProgressModel[], dayMoment: moment.Moment,
+								 progressType: ProgressType, selectedYears: number[],
+								 yearsColorsMap?: Map<number, string>): ProgressionAtDayModel[] {
+
+		const progressionsAtDay: ProgressionAtDayModel[] = [];
+
+		_.forEach(selectedYears, (selectedYear: number) => {
+
+			const dayMomentAtYear = dayMoment.year(selectedYear).startOf("day");
+
+			const yearProgressModel: YearProgressModel = _.find(yearProgressModels, {
+				year: selectedYear
+			});
+
+			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
+				dayOfYear: dayMomentAtYear.dayOfYear()
+			});
+
+			if (progressionModel) {
+
+				const progressAtDay: ProgressionAtDayModel = {
+					date: dayMomentAtYear.toDate(),
+					year: dayMomentAtYear.year(),
+					progressType: progressType,
+					value: progressionModel.valueOf(progressType),
+					color: (yearsColorsMap) ? yearsColorsMap.get(dayMomentAtYear.year()) : null
+				};
+
+				progressionsAtDay.push(progressAtDay);
+			}
+		});
+
+		return progressionsAtDay;
+	}
+
+	/**
+	 *
+	 * @param {number} hours
+	 * @returns {string}
+	 */
+	public readableTimeProgress(hours: number): string {
+
+		let readableTime = "";
+
+		if (!_.isNumber(hours) || hours === 0) {
+
+			readableTime = "0 hours";
+
+		} else {
+
+			hours = Math.abs(hours);
+
+			const days: number = Math.floor(hours / 24);
+
+			if (days > 0) {
+				readableTime = days + " day" + ((days > 1) ? "s" : "");
+			}
+
+			const remainingHours = hours - (days * 24);
+
+			if (remainingHours > 0) {
+
+				const hoursFloored = Math.floor(remainingHours);
+
+				readableTime = readableTime + ((days > 0) ? ", " : "") + hoursFloored + " hour" + ((hoursFloored > 1) ? "s" : "");
+
+				const remainingMinutes = (remainingHours - hoursFloored) * 60;
+
+				if (remainingMinutes > 0) {
+					readableTime = readableTime + ", " + Math.round(remainingMinutes) + " min";
+				}
+
+			}
+
+		}
+
+		return readableTime;
+	}
+
 	public getTodayMoment(): Moment {
 		return moment();
 	}
+
 }
 

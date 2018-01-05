@@ -30,50 +30,53 @@ export class AppComponent implements OnInit, OnDestroy {
 	public title: string;
 	public sideNavOpened: boolean;
 	public sideNavMode: string;
-	public readonly mainMenuItems: MenuItemModel[] = [
+	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
-			name: "Fitness Trend",
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
 			routerLinkActive: true
 		}, {
-			name: "Year Progression",
 			icon: "date_range",
-			routerLink: AppRoutesModel.yearProgress,
+			routerLink: AppRoutesModel.yearProgressions,
 			routerLinkActive: true
 		}, {
-			name: "Common Settings",
 			icon: "settings",
 			routerLink: AppRoutesModel.commonSettings,
 			routerLinkActive: true
 		}, {
-			name: "Athlete Settings",
 			icon: "accessibility",
 			routerLink: AppRoutesModel.athleteSettings,
 			routerLinkActive: true
 		}, {
-			name: "Zones Settings",
 			icon: "format_line_spacing",
 			routerLink: AppRoutesModel.zonesSettings,
 			routerLinkActive: true
 		},
 		{
-			name: "Donate",
 			icon: "favorite",
 			routerLink: AppRoutesModel.donate,
 			routerLinkActive: true
 		}
 	];
 
-	public static updateToolBarTitle(routerUrl: string): string {
+	public static convertRouteToTitle(route: string): string {
 
-		if (_.isEmpty(routerUrl)) {
+		if (_.isEmpty(route)) {
 			return null;
 		}
 
-		const splitRouterUrl = _.split(routerUrl, "/");
-		splitRouterUrl.shift(); // Remove first slash
-		return _.startCase(_.upperFirst(_.first(splitRouterUrl)));
+		const routeAsArray: string[] = _.split(route, "/");
+
+		let title = null;
+
+		if (routeAsArray.length > 1) {
+			routeAsArray.shift(); // Remove first slash
+			title = _.first(routeAsArray);
+		} else {
+			title = routeAsArray;
+		}
+
+		return _.startCase(_.upperFirst(title));
 
 	}
 
@@ -85,14 +88,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
+		// Update list of sections names displayed in sidebar
+		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
+			menuItemModel.name = AppComponent.convertRouteToTitle(menuItemModel.routerLink);
+		});
+
 		this.sideNavOpened = (AppComponent.DEFAULT_SIDE_NAV_STATUS === SideNavStatus.OPENED);
 		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 
-		this.title = AppComponent.updateToolBarTitle(this.router.url);
+		this.title = AppComponent.convertRouteToTitle(this.router.url);
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.title = AppComponent.updateToolBarTitle(routerEvent.url);
+				this.title = AppComponent.convertRouteToTitle(routerEvent.url);
 			}
 		});
 

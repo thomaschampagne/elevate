@@ -41,7 +41,7 @@ describe('YearProgressGraphComponent', () => {
 		component = fixture.componentInstance;
 
 		// Inject today
-		component.todayMoment = moment();
+		component.momentWatched = moment();
 
 		// Inject fake progression
 		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
@@ -114,7 +114,7 @@ describe('YearProgressGraphComponent', () => {
 		yearsColorsMap.set(2016, "red");
 		yearsColorsMap.set(2017, "blue");
 
-		const yearSelection: number[] = [2013, 2016, 2017];
+		const yearSelection: number[] = [2017, 2016, 2013];
 
 		const expectedYearSelectedColors: string[] = [
 			yearsColorsMap.get(2013),

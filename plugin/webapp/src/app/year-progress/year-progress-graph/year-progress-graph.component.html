@@ -5,18 +5,35 @@
 </div>-->
 
 <div> <!--[hidden]="(selectedActivityTypes.length === 0)"-->
-
 	<div fxLayout="row" fxLayoutAlign="space-between start">
-
 		<div fxFlex="80" id="yearProgressGraph">
 		</div>
 		<div fxFlex="20">
 			{{momentWatched.format("MMM Do")}}
-			<div *ngFor="let progressAtDay of progressionsAtDay | orderBy: '-year'">
-				<span [style.color]="progressAtDay.color">{{progressAtDay.year}}: {{progressAtDay.value.toLocaleString()}}</span>
+			<div *ngFor="let progressAtDay of progressionsAtDay">
+
+				<div [style.color]="progressAtDay.color">
+
+					<span>{{progressAtDay.year}}:</span>
+
+					<span [ngSwitch]="selectedProgressType.type">
+
+						<span *ngSwitchCase="ProgressType.TIME">
+							{{readableTimeProgress(progressAtDay.value)}}
+						</span>
+
+						<span *ngSwitchDefault>
+							{{progressAtDay.value.toLocaleString()}}
+						</span>
+
+					</span>
+				</div>
+
 			</div>
+
 		</div>
 		<div>
+
 			<!--<pre style="font-size: 9px;">{{progressionsAtDay | json}}</pre>-->
 		</div>
 

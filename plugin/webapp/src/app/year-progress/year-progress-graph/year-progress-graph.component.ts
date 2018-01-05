@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
@@ -15,6 +15,7 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "../../shared/services/window/window.service";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
+import { YearProgressService } from "../shared/services/year-progress.service";
 
 @Component({
 	selector: 'app-year-progress-graph',
@@ -26,6 +27,8 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
 
+	public readonly ProgressType = ProgressType;
+
 	@Input("selectedYears")
 	public selectedYears: number[];
 
@@ -35,20 +38,23 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@Input("yearProgressModels")
 	public yearProgressModels: YearProgressModel[];
 
-	@Input("todayMoment")
-	public todayMoment: Moment;
+	@Input("momentWatched")
+	public momentWatched: Moment;
+
+	@Output("momentWatchedChange")
+	public momentWatchedChange: EventEmitter<Moment> = new EventEmitter<Moment>(); // Graph date click
 
 	public initialized: boolean = false;
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 	public progressionsAtDay: ProgressionAtDayModel[]; // Progressions for a specific day
-	public momentWatched: Moment; // Current day watched on year progress graph mouse over
 	public graphConfig: any;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
 
-	constructor(public sideNavService: SideNavService,
+	constructor(public yearProgressService: YearProgressService,
+				public sideNavService: SideNavService,
 				public windowService: WindowService) {
 	}
 
@@ -57,16 +63,11 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Get color style for years
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressGraphComponent.PALETTE);
 
-		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel([{
-			date: this.todayMoment.toDate(),
-			label: this.todayMoment.format("MMM Do")
-		}]);
+		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel();
+		this.viewableYearProgressDataModel.setMarkerMoment(this.momentWatched);
 
 		// By default progression shown in legend is today
-		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.todayMoment);
-
-		// By default moment watched is today
-		this.momentWatched = this.todayMoment;
+		this.applyProgressionsAtDay(this.momentWatched);
 
 		// Now setup graph aspects
 		this.setupGraphConfig();
@@ -86,6 +87,11 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			return;
 		}
 
+		// If moment watched change (case of graph click), then update watched marker
+		if (changes.momentWatched) {
+			this.viewableYearProgressDataModel.setMarkerMoment(changes.momentWatched.currentValue);
+		}
+
 		// Clear svg content if year selection changed
 		if (changes.selectedYears) {
 			YearProgressGraphComponent.clearSvgGraphContent();
@@ -95,12 +101,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.reloadGraph();
 
 		// Then update graph legend
-		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.momentWatched);
+		this.applyProgressionsAtDay(this.momentWatched);
 	}
 
-	/**
-	 *
-	 */
+
 	public setupViewableGraphData(): void {
 
 		const yearLines: GraphPointModel[][] = [];
@@ -153,9 +157,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.viewableYearProgressDataModel.setGraphicsYearLines(yearLines);
 	}
 
-	/**
-	 *
-	 */
+
 	public updateGraph(): void {
 		try {
 			// Apply changes
@@ -169,9 +171,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		}
 	}
 
-	/**
-	 *
-	 */
+
 	public updateViewableData(): void {
 
 		this.graphConfig.data = this.viewableYearProgressDataModel.yearLines;
@@ -181,9 +181,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	}
 
-	/**
-	 *
-	 */
+
 	public draw(): void {
 		setTimeout(() => {
 			MG.data_graphic(this.graphConfig);
@@ -192,14 +190,22 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	/**
 	 *
+	 * @param {moment.Moment} moment
 	 */
+	public applyProgressionsAtDay(moment: Moment): void {
+		this.progressionsAtDay = this.yearProgressService.findProgressionsAtDay(this.yearProgressModels,
+			moment,
+			this.selectedProgressType.type,
+			this.selectedYears,
+			this.yearProgressStyleModel.yearsColorsMap);
+	}
+
+
 	public static clearSvgGraphContent(): void {
 		document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0].remove();
 	}
 
-	/**
-	 *
-	 */
+
 	public reloadGraph(): void {
 		this.setupViewableGraphData();
 		this.updateGraph();
@@ -225,44 +231,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		return new YearProgressStyleModel(yearsColorsMap, colors);
 	}
 
-
-	/**
-	 *
-	 * @param {YearProgressModel[]} yearProgressModels
-	 * @param {moment.Moment} dayMoment
-	 * @returns {ProgressionAtDayModel[]}
-	 */
-	public findProgressionsAtDay(yearProgressModels: YearProgressModel[], dayMoment: Moment): ProgressionAtDayModel[] {
-
-		const progressionsAtDay = [];
-
-		_.forEach(this.selectedYears, (selectedYear: number) => {
-
-			const yearProgressModel: YearProgressModel = _.find(yearProgressModels, {
-				year: selectedYear
-			});
-
-			const progressionModel: ProgressionModel = _.find(yearProgressModel.progressions, {
-				dayOfYear: dayMoment.dayOfYear()
-			});
-
-			if (progressionModel) {
-
-				const progressAtDay: ProgressionAtDayModel = {
-					date: dayMoment.year(progressionModel.year).toDate(),
-					year: progressionModel.year,
-					progressType: this.selectedProgressType.type,
-					value: progressionModel.valueOf(this.selectedProgressType.type),
-					color: this.yearProgressStyleModel.yearsColorsMap.get(progressionModel.year)
-				};
-
-				progressionsAtDay.push(progressAtDay);
-			}
-		});
-
-		return progressionsAtDay;
-	}
-
 	/**
 	 *
 	 * @param {number[]} yearSelection
@@ -272,11 +240,21 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 		const colors = [];
 
-		_.forEach(yearSelection, (year: number) => {
+		_.forEachRight(yearSelection, (year: number) => {
 			colors.push(this.yearProgressStyleModel.yearsColorsMap.get(year));
 		});
 
 		return colors;
+	}
+
+	/**
+	 *
+	 * @param {MetricsGraphicsEventModel} mgEvent
+	 */
+	public onGraphClick(mgEvent: MetricsGraphicsEventModel): void {
+		const momentWatched = moment(mgEvent.key || mgEvent.date);
+		this.momentWatchedChange.emit(momentWatched);
+
 	}
 
 	/**
@@ -288,7 +266,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Seek date for multiple lines at first @ "mgEvent.key"
 		// If not defined, it's a single line, then get date @ "mgEvent.date"
 		this.momentWatched = moment(mgEvent.key || mgEvent.date);
-		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.momentWatched);
+		this.applyProgressionsAtDay(this.momentWatched);
 	}
 
 	/**
@@ -296,16 +274,15 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	 * @param {MetricsGraphicsEventModel} event
 	 */
 	public onGraphMouseOut(event: MetricsGraphicsEventModel): void {
-		this.momentWatched = this.todayMoment;
-		this.progressionsAtDay = this.findProgressionsAtDay(this.yearProgressModels, this.todayMoment);
+		this.momentWatched = this.viewableYearProgressDataModel.getMarkerMoment();
+		this.applyProgressionsAtDay(this.momentWatched);
 	}
 
-	/**
-	 *
-	 */
+
 	public onComponentSizeChanged(): void {
 		this.draw();
 	}
+
 
 	public setupComponentSizeChangeHandlers(): void {
 
@@ -314,6 +291,15 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Or user toggles the side nav (open/close states)
 		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
 
+	}
+
+	/**
+	 *
+	 * @param {number} hours
+	 * @returns {string}
+	 */
+	public readableTimeProgress(hours: number): string {
+		return this.yearProgressService.readableTimeProgress(hours);
 	}
 
 	public setupGraphConfig(): void {
@@ -344,6 +330,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			colors: [],
 			yax_format: d3.format(""),
 			max_data_size: 0,
+			click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
+				this.onGraphClick(metricsGraphicsEvent);
+			},
 			mouseover: (data: MetricsGraphicsEventModel) => {
 				this.onGraphMouseOver(data);
 			},

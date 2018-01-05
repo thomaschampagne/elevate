@@ -17,17 +17,17 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly SWIM_STRESS_SCORE_ENABLED: boolean = true;
 	public static readonly CYCLING_POWER_STRESS_SCORE_ENABLED: boolean = true;
 
-	public static COLUMN_DATE: string = "date";
-	public static COLUMN_TYPES: string = "types";
-	public static COLUMN_ACTIVITIES: string = "activities";
-	public static COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
-	public static COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
-	public static COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
-	public static COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
-	public static COLUMN_CTL: string = "ctl";
-	public static COLUMN_ATL: string = "atl";
-	public static COLUMN_TSB: string = "tsb";
-	public static COLUMN_LINKS: string = "links";
+	public static readonly COLUMN_DATE: string = "date";
+	public static readonly COLUMN_TYPES: string = "types";
+	public static readonly COLUMN_ACTIVITIES: string = "activities";
+	public static readonly COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
+	public static readonly COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
+	public static readonly COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
+	public static readonly COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
+	public static readonly COLUMN_CTL: string = "ctl";
+	public static readonly COLUMN_ATL: string = "atl";
+	public static readonly COLUMN_TSB: string = "tsb";
+	public static readonly COLUMN_LINKS: string = "links";
 
 	public readonly displayedColumns: string[] = [
 		FitnessTrendTableComponent.COLUMN_DATE,
@@ -153,7 +153,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 			previewDay: false,
 		});
 
-		// Sort by
+		// Sort by date desc
 		fitnessTrendModels = _.sortBy(fitnessTrendModels, (dayFitnessTrendModel: DayFitnessTrendModel) => {
 			return dayFitnessTrendModel.timestamp * -1;
 		});

@@ -17,7 +17,7 @@ export const routes: Routes = [
 		component: FitnessTrendComponent
 	},
 	{
-		path: AppRoutesModel.yearProgress,
+		path: AppRoutesModel.yearProgressions,
 		component: YearProgressComponent,
 		resolve: {
 			requiredYearProgressDataModel: YearProgressResolverService

@@ -42,10 +42,10 @@ describe("AppComponent", () => {
 
 		// Given
 		const expected = "Common Settings";
-		const routerUrl = "/commonSettings";
+		const route = "/commonSettings";
 
 		// When
-		const actual = AppComponent.updateToolBarTitle(routerUrl);
+		const actual = AppComponent.convertRouteToTitle(route);
 
 		// Then
 		expect(actual).toBe(expected);
@@ -57,10 +57,25 @@ describe("AppComponent", () => {
 
 		// Given
 		const expected = "Say Hello To World";
-		const routerUrl = "/sayHelloToWorld/ohMyGod";
+		const route = "/sayHelloToWorld/ohMyGod";
 
 		// When
-		const actual = AppComponent.updateToolBarTitle(routerUrl);
+		const actual = AppComponent.convertRouteToTitle(route);
+
+		// Then
+		expect(actual).toBe(expected);
+		done();
+
+	});
+
+	it("should update tool bar title (3)", (done) => {
+
+		// Given
+		const expected = "Oh My God";
+		const route = "ohMyGod";
+
+		// When
+		const actual = AppComponent.convertRouteToTitle(route);
 
 		// Then
 		expect(actual).toBe(expected);
@@ -72,10 +87,10 @@ describe("AppComponent", () => {
 
 		// Given
 		const expected = null;
-		const routerUrl = null;
+		const route = null;
 
 		// When
-		const actual = AppComponent.updateToolBarTitle(routerUrl);
+		const actual = AppComponent.convertRouteToTitle(route);
 
 		// Then
 		expect(actual).toBeNull(expected);

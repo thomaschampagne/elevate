@@ -8,14 +8,13 @@ import * as _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionModel } from "../models/progression.model";
 import * as moment from "moment";
+import { ProgressionAtDayModel } from "../models/progression-at-date.model";
+import { ProgressType } from "../models/progress-type.enum";
 
 describe('YearProgressService', () => {
 
 	let yearProgressService: YearProgressService;
 	let syncedActivityModels: SyncedActivityModel[];
-
-	const todayDate = "2018-03-01 12:00";
-	const momentDatePattern = "YYYY-MM-DD hh:mm";
 
 	beforeEach((done: Function) => {
 
@@ -27,7 +26,7 @@ describe('YearProgressService', () => {
 
 		syncedActivityModels = YearProgressActivitiesFixture.provide();
 
-		spyOn(yearProgressService, "getTodayMoment").and.returnValue(moment(todayDate, momentDatePattern));
+		spyOn(yearProgressService, "getTodayMoment").and.returnValue(moment("2018-03-01 12:00", "YYYY-MM-DD hh:mm"));
 
 		done();
 	});
@@ -491,7 +490,7 @@ describe('YearProgressService', () => {
 	it("should provide all available years from user history", (done: Function) => {
 
 		// Given
-		const expectedResult: number[] = [2015, 2016, 2017, 2018];
+		const expectedResult: number[] = [2018, 2017, 2016, 2015];
 
 		// When
 		const result: number[] = yearProgressService.availableYears(syncedActivityModels);
@@ -503,5 +502,207 @@ describe('YearProgressService', () => {
 		done();
 
 	});
+
+	it("should give progressions for a specific day", (done: Function) => {
+
+		// Given
+		const expectedLength = 4;
+		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
+		const yearsFilter: number[] = []; // All
+		const isMetric = true;
+		const includeCommuteRide = true;
+		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+			typesFilter,
+			yearsFilter,
+			isMetric,
+			includeCommuteRide);
+
+		const selectedYears: number[] = [2018, 2017, 2016, 2015];
+
+		const progressType = ProgressType.DISTANCE;
+
+		const todayDate = "2016-06-01 12:00";
+		const momentDatePattern = "YYYY-MM-DD hh:mm";
+		const dayMoment = moment(todayDate, momentDatePattern).startOf("day");
+
+		const yearsColorsMap = new Map<number, string>();
+		yearsColorsMap.set(2015, "red");
+		yearsColorsMap.set(2016, "blue");
+		yearsColorsMap.set(2017, "green");
+		yearsColorsMap.set(2018, "purple");
+
+		// When
+		const progressionAtDayModels: ProgressionAtDayModel[] = yearProgressService.findProgressionsAtDay(progression, dayMoment, progressType, selectedYears, yearsColorsMap);
+
+		// Then
+		expect(progressionAtDayModels).not.toBeNull();
+		expect(progressionAtDayModels.length).toEqual(expectedLength);
+
+		expect(progressionAtDayModels[3].year).toEqual(2015);
+		expect(progressionAtDayModels[3].date.getFullYear()).toEqual(2015);
+		expect(progressionAtDayModels[3].date).toEqual(new Date(1433109600000));
+		expect(progressionAtDayModels[3].value).toEqual(2580);
+		expect(progressionAtDayModels[3].color).toEqual("red");
+
+		expect(progressionAtDayModels[2].year).toEqual(2016);
+		expect(progressionAtDayModels[2].date.getFullYear()).toEqual(2016);
+		expect(progressionAtDayModels[2].date).toEqual(new Date(1464732000000));
+		expect(progressionAtDayModels[2].value).toEqual(2595);
+
+		expect(progressionAtDayModels[1].year).toEqual(2017);
+		expect(progressionAtDayModels[1].date.getFullYear()).toEqual(2017);
+		expect(progressionAtDayModels[1].date).toEqual(new Date(1496268000000));
+		expect(progressionAtDayModels[1].value).toEqual(2580);
+
+		expect(progressionAtDayModels[0].year).toEqual(2018);
+		expect(progressionAtDayModels[0].date.getFullYear()).toEqual(2018);
+		expect(progressionAtDayModels[0].date).toEqual(new Date(1527804000000));
+		expect(progressionAtDayModels[0].value).toEqual(0);
+		expect(progressionAtDayModels[0].color).toEqual("purple");
+
+		done();
+
+	});
+
+	it("should format 24 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 24;
+		const expected: string = "1 day";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 24 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 1;
+		const expected: string = "1 hour";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 50 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 50;
+		const expected: string = "2 days, 2 hours";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 76.25 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 76.25;
+		const expected: string = "3 days, 4 hours, 15 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 29.5 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 29.5;
+		const expected: string = "1 day, 5 hours, 30 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 15 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 15;
+		const expected: string = "15 hours";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 5.815 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 5.815;
+		const expected: string = "5 hours, 49 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 15.3333333 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 15.3333333;
+		const expected: string = "15 hours, 20 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format -12.5 negative hours to human readable time", () => {
+
+		// Given
+		const hours: number = -12.5;
+		const expected: string = "12 hours, 30 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 0 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 0;
+		const expected: string = "0 hours";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
 
 });
