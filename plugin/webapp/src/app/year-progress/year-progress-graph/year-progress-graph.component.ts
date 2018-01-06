@@ -24,7 +24,15 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
-	public static readonly PALETTE: string[] = ["red", "blue", "green", "purple", "orange"];
+	public static readonly PALETTE: string[] = [
+		"#9f8aff",
+		"#ea7015",
+		"#00b423",
+		"#072fac",
+		"#e1ab19",
+		"#ee135e",
+		"#1fd6d6"
+	];
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
 
 	public readonly ProgressType = ProgressType;

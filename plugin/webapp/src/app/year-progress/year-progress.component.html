@@ -37,10 +37,11 @@
 			</mat-select>
 		</mat-form-field>
 
+		<!--Commute rides-->
 		<mat-slide-toggle
 			[(ngModel)]="includeCommuteRide"
 			(change)="onIncludeCommuteRideToggle()">
-			Commute rides
+			<mat-icon>work</mat-icon>
 		</mat-slide-toggle>
 
 		<div *ngIf="allowResetMomentWatched">
