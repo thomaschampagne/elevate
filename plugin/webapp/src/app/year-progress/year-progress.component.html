@@ -1,68 +1,102 @@
 <mat-card>
+
 	<mat-card-content>
+
+		<div fxLayout="column" fxLayoutAlign="start start">
+
+			<!-- 1st Row: Inputs-->
+			<div fxFill fxLayout="row" fxLayoutAlign="space-between start"
+				 style="border: 1px dashed grey;">
+
+				<div fxLayout="row" fxLayoutAlign="space-between start" fxFlex="65"
+					 style="border: 1px dashed grey;">
+
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Activity Types"
+									(change)="onSelectedActivityTypesChange()"
+									[(ngModel)]="selectedActivityTypes"
+									multiple>
+							<mat-option *ngFor="let type of availableActivityTypes"
+										[value]="type"
+										[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
+								{{type}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<span fxFlex="1"></span> <!-- --------- -->
+
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Progress Type"
+									(change)="onSelectedProgressTypeChange()"
+									[(ngModel)]="selectedProgressType">
+							<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+								{{progressType.label}} {{(progressType.unit) ? "(" + progressType.unit + ")" : ""}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<span fxFlex="1"></span> <!-- --------- -->
+
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Years"
+									[(ngModel)]="selectedYears"
+									(change)="onSelectedYearsChange()"
+									multiple>
+							<mat-option *ngFor="let year of availableYears"
+										[value]="year"
+										[disabled]="(selectedYears.length === 1 && year === selectedYears[0])">
+								{{year}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+					<span fxFlex="5"></span> <!-- --------- -->
+
+					<!--Commute rides-->
+					<mat-slide-toggle fxFlexAlign="center"
+									  [(ngModel)]="includeCommuteRide"
+									  (change)="onIncludeCommuteRideToggle()">
+						<mat-icon>work</mat-icon>
+					</mat-slide-toggle>
+				</div>
+
+				<div fxFlex style="border: 1px dashed grey;">
+					<!--Date?!-->
+				</div>
+
+			</div>
+
+			<!-- 2nd Row: Graph + Table -->
+			<div fxFill fxLayout="row" fxLayoutAlign="space-between start"
+				 style="border: 1px dashed grey;">
+
+				<!-- Graph and Legend -->
+				<app-year-progress-graph
+					style="border: 1px dashed grey;"
+					fxFlex="65"
+					[selectedYears]="selectedYears"
+					[selectedProgressType]="selectedProgressType"
+					[yearProgressModels]="yearProgressModels"
+					[momentWatched]="momentWatched"
+					(momentWatchedChange)="onMomentWatchedChangesFromGraph($event);">
+				</app-year-progress-graph>
+
+				<!-- Table -->
+				<app-year-progress-table
+					style="border: 1px dashed grey;"
+					fxFlex
+					[selectedYears]="selectedYears"
+					[selectedProgressType]="selectedProgressType"
+					[yearProgressModels]="yearProgressModels"
+					[momentWatched]="momentWatched">
+				</app-year-progress-table>
+			</div>
+		</div>
+
 		<div>Note: click date on graph to update table</div>
-		<mat-form-field>
-			<mat-select placeholder="Activity Types"
-						(change)="onSelectedActivityTypesChange()"
-						[(ngModel)]="selectedActivityTypes"
-						multiple>
-				<mat-option *ngFor="let type of availableActivityTypes"
-							[value]="type"
-							[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
-					{{type}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<mat-form-field>
-			<mat-select placeholder="Progress Type"
-						(change)="onSelectedProgressTypeChange()"
-						[(ngModel)]="selectedProgressType">
-				<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
-					{{progressType.label}} {{(progressType.unit) ? "(" + progressType.unit + ")" : ""}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<mat-form-field>
-			<mat-select placeholder="Years"
-						[(ngModel)]="selectedYears"
-						(change)="onSelectedYearsChange()"
-						multiple>
-				<mat-option *ngFor="let year of availableYears"
-							[value]="year"
-							[disabled]="(selectedYears.length === 1 && year === selectedYears[0])">
-					{{year}}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<!--Commute rides-->
-		<mat-slide-toggle
-			[(ngModel)]="includeCommuteRide"
-			(change)="onIncludeCommuteRideToggle()">
-			<mat-icon>work</mat-icon>
-		</mat-slide-toggle>
-
 		<div *ngIf="allowResetMomentWatched">
 			<button mat-button (click)="onResetMomentWatched()">Reset on today</button>
 		</div>
-
-		<!-- Graph and Legend -->
-		<app-year-progress-graph
-			[selectedYears]="selectedYears"
-			[selectedProgressType]="selectedProgressType"
-			[yearProgressModels]="yearProgressModels"
-			[momentWatched]="momentWatched"
-			(momentWatchedChange)="onMomentWatchedChangesFromGraph($event);">
-		</app-year-progress-graph>
-
-		<!-- Table -->
-		<app-year-progress-table
-			[selectedYears]="selectedYears"
-			[selectedProgressType]="selectedProgressType"
-			[yearProgressModels]="yearProgressModels"
-			[momentWatched]="momentWatched">
-		</app-year-progress-table>
 	</mat-card-content>
 </mat-card>

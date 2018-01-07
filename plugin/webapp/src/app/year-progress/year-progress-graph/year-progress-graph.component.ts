@@ -315,7 +315,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: window.innerHeight * 0.55,
+			height: window.innerHeight * 0.70,
 			right: 30,
 			left: 70,
 			baselines: [],
