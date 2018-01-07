@@ -81,7 +81,6 @@ export class YearProgressComponent implements OnInit {
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
-	public allowResetMomentWatched: boolean;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService) {
@@ -91,8 +90,6 @@ export class YearProgressComponent implements OnInit {
 	 *
 	 */
 	public ngOnInit(): void {
-
-		this.allowResetMomentWatched = false;
 
 		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 

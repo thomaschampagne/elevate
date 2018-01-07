@@ -304,6 +304,16 @@ export class YearProgressService {
 	}
 
 	/**
+	 * Reset moment watch to default (today)
+	 * @returns {moment.Moment} default moment
+	 */
+	public resetMomentWatched(): Moment {
+		const todayMoment = this.getTodayMoment().clone().startOf("day");
+		this.onMomentWatchedChange(todayMoment.clone());
+		return todayMoment;
+	};
+
+	/**
 	 *
 	 * @param {number} hours
 	 * @returns {string}

@@ -6,7 +6,9 @@
 
 <div id="yearProgressGraph">
 </div>
-
+<div *ngIf="!isMomentWatchedToday">
+	<button mat-button (click)="onResetMomentWatched()">Reset on today</button>
+</div>
 <!--<div> &lt;!&ndash;[hidden]="(selectedActivityTypes.length === 0)"&ndash;&gt;
 	<div fxLayout="row" fxLayoutAlign="space-between start">
 		<div fxFlex="80" id="yearProgressGraph">

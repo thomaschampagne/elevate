@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import * as moment from "moment";
+import { Moment } from "moment";
 import * as _ from "lodash";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { ProgressionModel } from "../shared/models/progression.model";
@@ -40,6 +41,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 	public graphConfig: any;
+	public isMomentWatchedToday: boolean;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
@@ -56,7 +58,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.viewableYearProgressDataModel = new ViewableYearProgressDataModel();
 
 		// By default progression shown at marker is today
-		this.viewableYearProgressDataModel.setMarkerMoment(this.yearProgressService.momentWatched);
+		const defaultMarkerMoment = this.yearProgressService.momentWatched;
+		this.viewableYearProgressDataModel.setMarkerMoment(defaultMarkerMoment);
+
+		this.isMomentWatchedToday = this.isMomentToday(defaultMarkerMoment);
 
 		// Now setup graph aspects
 		this.setupGraphConfig();
@@ -195,6 +200,15 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	/**
+	 * Tell you if moment given is today without taking care of the year
+	 * @param {moment.Moment} pMoment
+	 * @returns {boolean}
+	 */
+	public isMomentToday(pMoment: Moment) {
+		return (pMoment.dayOfYear() === moment().dayOfYear());
+	}
+
+	/**
 	 *
 	 * @param {MetricsGraphicsEventModel} mgEvent
 	 */
@@ -202,6 +216,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		const momentWatched = moment(mgEvent.key || mgEvent.date);
 		this.viewableYearProgressDataModel.setMarkerMoment(momentWatched);
 		this.updateGraph();
+		this.isMomentWatchedToday = this.isMomentToday(momentWatched);
 	}
 
 	/**
@@ -209,47 +224,39 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	 * @param {MetricsGraphicsEventModel} mgEvent
 	 */
 	public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
-
 		// Seek date for multiple lines at first @ "mgEvent.key"
 		// If not defined, it's a single line, then get date @ "mgEvent.date"
 		const momentWatched = moment(mgEvent.key || mgEvent.date);
 		this.yearProgressService.onMomentWatchedChange(momentWatched);
-
 	}
 
 	/**
 	 *
 	 * @param {MetricsGraphicsEventModel} event
 	 */
-	public onGraphMouseOut(mgEvent: MetricsGraphicsEventModel): void {
-
+	public onGraphMouseOut(): void {
 		const momentWatched = this.viewableYearProgressDataModel.getMarkerMoment();
 		this.yearProgressService.onMomentWatchedChange(momentWatched);
-
 	}
 
+	public onResetMomentWatched(): void {
+		const defaultMomentWatched = this.yearProgressService.resetMomentWatched();
+		this.viewableYearProgressDataModel.setMarkerMoment(defaultMomentWatched);
+		this.updateGraph();
+		this.isMomentWatchedToday = this.isMomentToday(defaultMomentWatched);
+	}
 
 	public onComponentSizeChanged(): void {
 		this.draw();
 	}
 
-
 	public setupComponentSizeChangeHandlers(): void {
 
+		// User resize window
 		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
 
 		// Or user toggles the side nav (open/close states)
 		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
-
-	}
-
-	/**
-	 *
-	 * @param {number} hours
-	 * @returns {string}
-	 */
-	public readableTimeProgress(hours: number): string {
-		return this.yearProgressService.readableTimeProgress(hours);
 	}
 
 	public setupGraphConfig(): void {
@@ -287,7 +294,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 				this.onGraphMouseOver(data);
 			},
 			mouseout: (data: MetricsGraphicsEventModel) => {
-				this.onGraphMouseOut(data);
+				this.onGraphMouseOut();
 			}
 		};
 	}
