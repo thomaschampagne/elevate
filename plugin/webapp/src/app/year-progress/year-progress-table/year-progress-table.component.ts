@@ -9,7 +9,8 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 import { ProgressType } from "../shared/models/progress-type.enum";
 import * as _ from "lodash";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
-import { DeltaSign } from "./models/delta-sign.enum";
+import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
+import { DeltaType } from "./models/delta-type.enum";
 
 @Component({
 	selector: 'app-year-progress-table',
@@ -18,7 +19,7 @@ import { DeltaSign } from "./models/delta-sign.enum";
 })
 export class YearProgressTableComponent implements OnInit, OnChanges {
 
-	public static readonly COLUMN_DATE: string = "date";
+	public static readonly COLUMN_YEAR: string = "year";
 	public static readonly COLUMN_PROGRESS_TYPE_VALUE: string = "progressTypeValue";
 	public static readonly COLUMN_DELTA_PREVIOUS_VALUE: string = "deltaPrevious";
 
@@ -27,13 +28,14 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public static readonly DELTA_SIGN_UNSIGNED: string = "";
 
 	public readonly displayedColumns: string[] = [
-		YearProgressTableComponent.COLUMN_DATE,
+		YearProgressTableComponent.COLUMN_YEAR,
 		YearProgressTableComponent.COLUMN_PROGRESS_TYPE_VALUE,
 		YearProgressTableComponent.COLUMN_DELTA_PREVIOUS_VALUE
 	];
 
 	public readonly ProgressType = ProgressType;
-	public readonly DeltaSign = DeltaSign;
+
+	public readonly DeltaType = DeltaType;
 
 	@Input("selectedYears")
 	public selectedYears: number[];
@@ -44,7 +46,9 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	@Input("yearProgressModels")
 	public yearProgressModels: YearProgressModel[];
 
-	@Input("momentWatched")
+	@Input("yearProgressStyleModel")
+	public yearProgressStyleModel: YearProgressStyleModel;
+
 	public momentWatched: Moment;
 
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
@@ -56,19 +60,21 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 	public ngOnInit(): void {
 
+		// Use default moment provided by service on init (should be today on first load)
+		this.momentWatched = this.yearProgressService.momentWatched;
+
 		// By default moment watched is today
 		this.dataSource = new MatTableDataSource<ProgressionAtDayRow>();
 
-		this.updateDataSource();
+		this.updateRows();
 
 		this.initialized = true;
-	}
 
-	public updateDataSource(): void {
-		this.dataSource.data = this.rows(this.yearProgressService.findProgressionsAtDay(this.yearProgressModels,
-			this.momentWatched,
-			this.selectedProgressType.type,
-			this.selectedYears));
+		// When user mouse moves on graph, listen for moment watched and update table rows
+		this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+			this.momentWatched = momentWatched;
+			this.updateRows();
+		});
 	}
 
 	public ngOnChanges(changes: SimpleChanges): void {
@@ -77,7 +83,17 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		this.updateDataSource();
+		this.updateRows();
+	}
+
+	public updateRows(): void {
+
+		this.dataSource.data = this.rows(this.yearProgressService.findProgressionsAtDay(this.yearProgressModels,
+			this.momentWatched,
+			this.selectedProgressType.type,
+			this.selectedYears,
+			this.yearProgressStyleModel.yearsColorsMap));
+
 	}
 
 	public rows(progressionAtDayModels: ProgressionAtDayModel[]): ProgressionAtDayRow[] {
@@ -94,32 +110,33 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			const delta: number = (_.isNumber(previousValue)) ? (currentValue - previousValue) : null;
 
 			// Sign of delta
-			let deltaSign: DeltaSign;
+			let deltaType: DeltaType;
 			let deltaSignSymbol: string;
 			if (_.isNull(delta)) {
-				deltaSign = DeltaSign.NAN;
+				deltaType = DeltaType.NAN;
 				deltaSignSymbol = null;
 			} else if (delta === 0) {
-				deltaSign = DeltaSign.UNSIGNED;
+				deltaType = DeltaType.UNSIGNED;
 				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_UNSIGNED;
 			} else if (delta < 0) {
-				deltaSign = DeltaSign.NEGATIVE;
+				deltaType = DeltaType.NEGATIVE;
 				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_NEGATIVE
 			} else {
-				deltaSign = DeltaSign.POSITIVE;
+				deltaType = DeltaType.POSITIVE;
 				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_POSITIVE
 			}
 
 			const progressionAtDayRow: ProgressionAtDayRow = {
-				date: moment(progressionAtDayModel.date).format("MMMM DD, YYYY"),
+				year: progressionAtDayModel.year,
+				color: progressionAtDayModel.color,
 				previousDate: (previousYearProgressAtDay) ? moment(previousYearProgressAtDay.date).format("MMMM DD, YYYY") : null,
 				progressTypeLabel: this.selectedProgressType.label,
 				progressTypeUnit: (this.selectedProgressType.shortUnit) ? this.selectedProgressType.shortUnit : "",
 				currentValue: currentValue,
 				delta: (!_.isNull(delta)) ? Math.abs(delta) : null,
-				deltaSign: deltaSign,
+				deltaType: deltaType,
 				deltaSignSymbol: deltaSignSymbol,
-				deltaClass: deltaSign.toString()
+				deltaClass: deltaType.toString()
 			};
 
 			progressionAtDayRows.push(progressionAtDayRow);

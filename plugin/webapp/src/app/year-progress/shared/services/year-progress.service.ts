@@ -9,6 +9,7 @@ import { ProgressionModel } from "../models/progression.model";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
+import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class YearProgressService {
@@ -20,7 +21,13 @@ export class YearProgressService {
 	public static readonly ERROR_NO_TYPES_FILTER: string = "Empty types filter";
 	public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels from given activity types";
 
+	public momentWatched: Moment;
+	public momentWatchedChanges: Subject<Moment>;
+
 	constructor() {
+		// By default moment watched is today. Moment watched can be edited from external
+		this.momentWatched = this.getTodayMoment().clone().startOf("day");
+		this.momentWatchedChanges = new Subject<Moment>();
 	}
 
 	/**
@@ -254,7 +261,7 @@ export class YearProgressService {
 	 */
 	public findProgressionsAtDay(yearProgressModels: YearProgressModel[], dayMoment: moment.Moment,
 								 progressType: ProgressType, selectedYears: number[],
-								 yearsColorsMap?: Map<number, string>): ProgressionAtDayModel[] {
+								 yearsColorsMap: Map<number, string>): ProgressionAtDayModel[] {
 
 		const progressionsAtDay: ProgressionAtDayModel[] = [];
 
@@ -285,6 +292,15 @@ export class YearProgressService {
 		});
 
 		return progressionsAtDay;
+	}
+
+	/**
+	 *
+	 * @param {moment.Moment} momentWatched
+	 */
+	public onMomentWatchedChange(momentWatched: Moment): void {
+		this.momentWatched = momentWatched;
+		this.momentWatchedChanges.next(momentWatched);
 	}
 
 	/**

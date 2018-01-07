@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionModel } from "../models/progression.model";
 import * as moment from "moment";
+import { Moment } from "moment";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 
@@ -562,6 +563,24 @@ describe('YearProgressService', () => {
 
 		done();
 
+	});
+
+	it("should notify subscribers when moment watched has changed", (done: Function) => {
+
+		// Given
+		const expectedCallCount = 1;
+		const spy = spyOn(yearProgressService.momentWatchedChanges, "next");
+		const momentWatched: Moment = moment("2017-04-29 12:00", "YYYY-MM-DD hh:mm");
+		yearProgressService.momentWatched = null;
+
+		// When
+		yearProgressService.onMomentWatchedChange(momentWatched);
+
+		// Then
+		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+		expect(spy).toHaveBeenCalledWith(momentWatched);
+		expect(yearProgressService.momentWatched).toEqual(momentWatched);
+		done();
 	});
 
 	it("should format 24 hours to human readable time", () => {

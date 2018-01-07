@@ -24,7 +24,7 @@ export class ViewableYearProgressDataModel {
 		this.markerMoment = markerMoment;
 		this.markers = [{
 			date: markerMoment.toDate(),
-			label: markerMoment.format("MMM Do")
+			label: markerMoment.format("MMMM Do")
 		}];
 	}
 

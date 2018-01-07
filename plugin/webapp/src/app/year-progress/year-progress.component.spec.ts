@@ -8,6 +8,8 @@ import { ActivatedRoute } from "@angular/router";
 import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
 import { Observable } from "rxjs/Observable";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
+import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
+import { YearProgressModel } from "./shared/models/year-progress.model";
 
 describe('YearProgressComponent', () => {
 
@@ -66,6 +68,38 @@ describe('YearProgressComponent', () => {
 
 		// Then
 		expect(mostPerformedType).toEqual(expected);
+
+	});
+
+	it("should give proper colors to all year lines from a color palette", () => {
+
+		// Given
+		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
+		const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+
+		const yearProgressModels: YearProgressModel[] = [
+			new YearProgressModel(2011, []),
+			new YearProgressModel(2012, []),
+			new YearProgressModel(2013, []),
+			new YearProgressModel(2014, []),
+			new YearProgressModel(2015, []),
+			new YearProgressModel(2016, []),
+			new YearProgressModel(2017, []),
+		];
+
+		// When
+		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
+
+		// Then
+		expect(style.colors).toEqual(expectedGlobalColors);
+
+		expect(style.yearsColorsMap.get(2011)).toEqual("red");
+		expect(style.yearsColorsMap.get(2012)).toEqual("blue");
+		expect(style.yearsColorsMap.get(2013)).toEqual("green");
+		expect(style.yearsColorsMap.get(2014)).toEqual("purple");
+		expect(style.yearsColorsMap.get(2015)).toEqual("orange");
+		expect(style.yearsColorsMap.get(2016)).toEqual("red");
+		expect(style.yearsColorsMap.get(2017)).toEqual("blue");
 
 	});
 

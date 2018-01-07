@@ -1,9 +1,11 @@
+{{momentWatched.format("MMMM Do")}}
 <mat-table #table [dataSource]="dataSource">
 
 	<!--Date per years-->
-	<ng-container matColumnDef="date">
-		<mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-		<mat-cell *matCellDef="let progressionAtDay">{{progressionAtDay.date}}
+	<ng-container matColumnDef="year">
+		<mat-header-cell *matHeaderCellDef>Year</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+			<span [style.color]="progressionAtDay.color"><strong>{{progressionAtDay.year}}</strong></span>
 		</mat-cell>
 	</ng-container>
 
@@ -35,20 +37,20 @@
 
 				<!--Case when ProgressType is TIME-->
 				<span *ngSwitchCase="ProgressType.TIME">
-					<span *ngIf="(progressionAtDay.deltaSign !== DeltaSign.NAN)">
+					<span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
 						{{progressionAtDay.deltaSignSymbol + " " + readableTimeProgress(progressionAtDay.delta)}}
 					</span>
-					<span *ngIf="(progressionAtDay.deltaSign === DeltaSign.NAN)">
+					<span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
 						∅
 					</span>
 				</span>
 
 				<!--Default Case-->
 				<span *ngSwitchDefault>
-					<span *ngIf="(progressionAtDay.deltaSign !== DeltaSign.NAN)">
+					<span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
 						{{progressionAtDay.deltaSignSymbol + " " + progressionAtDay.delta.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
 					</span>
-					<span *ngIf="(progressionAtDay.deltaSign === DeltaSign.NAN)">
+					<span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
 						∅
 					</span>
 				</span>

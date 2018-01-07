@@ -1,5 +1,3 @@
-import * as moment from "moment";
-import { Moment } from "moment";
 import * as _ from "lodash";
 import { Component, OnInit } from '@angular/core';
 import { YearProgressService } from "./shared/services/year-progress.service";
@@ -10,12 +8,13 @@ import { ProgressType } from "./shared/models/progress-type.enum";
 import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
+import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO Handle no data UI..
 
-// TODO Unify table format. ex: '0h' '0 km'
+// DONE Unify table format. ex: '0h' '0 km'
 
 // DONE Node years selection behaviour?
 // DONE Node act types selection?
@@ -56,6 +55,16 @@ import { RequiredYearProgressDataModel } from "./shared/models/required-year-pro
 })
 export class YearProgressComponent implements OnInit {
 
+	public static readonly PALETTE: string[] = [
+		"#9f8aff",
+		"#ea7015",
+		"#00b423",
+		"#072fac",
+		"#e1ab19",
+		"#ee135e",
+		"#1fd6d6"
+	];
+
 	public static readonly LS_SELECTED_YEARS_KEY: string = "yearProgress_selectedYears";
 	public static readonly LS_SELECTED_ACTIVITY_TYPES_KEY: string = "yearProgress_selectedActivityTypes";
 	public static readonly LS_SELECTED_PROGRESS_TYPE_KEY: string = "yearProgress_selectedProgressType";
@@ -71,7 +80,7 @@ export class YearProgressComponent implements OnInit {
 	public isMetric: boolean;
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
-	public momentWatched: Moment;
+	public yearProgressStyleModel: YearProgressStyleModel;
 	public allowResetMomentWatched: boolean;
 
 	constructor(public route: ActivatedRoute,
@@ -138,8 +147,8 @@ export class YearProgressComponent implements OnInit {
 		// Compute first progression
 		this.progression();
 
-		// Push today marker
-		this.momentWatched = this.yearProgressService.getTodayMoment().clone().startOf("day");
+		// Get color style for years
+		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 	}
 
 	/**
@@ -192,28 +201,30 @@ export class YearProgressComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {moment.Moment} momentWatched
-	 */
-	public onMomentWatchedChangesFromGraph(momentWatched: Moment): void {
-		this.momentWatched = momentWatched;
-		this.allowResetMomentWatched = (this.momentWatched.dayOfYear() !== moment().dayOfYear());
-	}
-
-	/**
-	 *
-	 */
-	public onResetMomentWatched(): void {
-		this.momentWatched = this.yearProgressService.getTodayMoment().clone().startOf("day");
-		this.allowResetMomentWatched = false;
-	}
-
-
-	/**
-	 *
 	 */
 	public onIncludeCommuteRideToggle(): void {
 		this.progression();
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
+	}
+
+	/**
+	 *
+	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {string[]} colorPalette
+	 * @returns {YearProgressStyleModel}
+	 */
+	public styleFromPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
+
+		const yearsColorsMap = new Map<number, string>();
+		const colors: string[] = [];
+
+		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
+			const color = colorPalette[index % colorPalette.length];
+			yearsColorsMap.set(yearProgressModel.year, color);
+			colors.push(color);
+		});
+
+		return new YearProgressStyleModel(yearsColorsMap, colors);
 	}
 
 	/**

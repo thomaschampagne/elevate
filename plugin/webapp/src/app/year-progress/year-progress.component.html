@@ -63,6 +63,8 @@
 
 				<div fxFlex style="border: 1px dashed grey;">
 					<!--Date?!-->
+					Remove this cell?
+					<!--<span *ngIf="momentWatched">{{momentWatched.toDate().toDateString()}}</span>-->
 				</div>
 
 			</div>
@@ -78,8 +80,7 @@
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
 					[yearProgressModels]="yearProgressModels"
-					[momentWatched]="momentWatched"
-					(momentWatchedChange)="onMomentWatchedChangesFromGraph($event);">
+					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-graph>
 
 				<!-- Table -->
@@ -89,12 +90,15 @@
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
 					[yearProgressModels]="yearProgressModels"
-					[momentWatched]="momentWatched">
+					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-table>
 			</div>
 		</div>
 
-		<div>Note: click date on graph to update table</div>
+		<div>
+			<!--Note: click date on graph to update table<br/>-->
+			Note: Clicking in graph will lock the marker date watched.
+		</div>
 		<div *ngIf="allowResetMomentWatched">
 			<button mat-button (click)="onResetMomentWatched()">Reset on today</button>
 		</div>
