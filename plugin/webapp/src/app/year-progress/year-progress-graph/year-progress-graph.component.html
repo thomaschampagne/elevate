@@ -1,43 +1,12 @@
-<!--<div *ngIf="(selectedActivityTypes.length === 0)">
-
-	No progression to display. Please select at list 1 type.
-
-</div>-->
-
-<div id="yearProgressGraph">
-</div>
-<div *ngIf="!isMomentWatchedToday">
-	<button mat-button (click)="onResetMomentWatched()">Reset on today</button>
-</div>
-<!--<div> &lt;!&ndash;[hidden]="(selectedActivityTypes.length === 0)"&ndash;&gt;
-	<div fxLayout="row" fxLayoutAlign="space-between start">
-		<div fxFlex="80" id="yearProgressGraph">
-		</div>
-		<div fxFlex="20">
-			{{momentWatched.format("MMM Do")}}
-			<div *ngFor="let progressAtDay of progressionsAtDay">
-
-				<div [style.color]="progressAtDay.color">
-
-					<span>{{progressAtDay.year}}:</span>
-
-					<span [ngSwitch]="selectedProgressType.type">
-
-						<span *ngSwitchCase="ProgressType.TIME">
-							{{readableTimeProgress(progressAtDay.value)}}
-						</span>
-
-						<span *ngSwitchDefault>
-							{{progressAtDay.value.toLocaleString()}}
-						</span>
-
-					</span>
-				</div>
-
-			</div>
-
-		</div>
+<div id="yearProgressGraph"></div>
+<div id="changeMomentWatched">
+	<div *ngIf="!isMomentWatchedToday">
+		<button mat-raised-button color="primary"
+				(click)="onResetMomentWatched()">
+			Reset on today
+		</button>
 	</div>
-</div>-->
-
-<!--<pre style="font-size: 9px;">{{progressionsAtDay | json}}</pre>-->
+	<div *ngIf="isMomentWatchedToday">
+		<i>Hint: You can lock the day watched by clicking the desired day in the upper graph.</i>
+	</div>
+</div>

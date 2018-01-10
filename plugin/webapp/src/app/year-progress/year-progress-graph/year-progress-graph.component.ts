@@ -25,6 +25,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
 
+	public static findGraphicHeight(): number {
+		return window.innerHeight * 0.575;
+	}
+
 	public readonly ProgressType = ProgressType;
 
 	@Input("selectedYears")
@@ -247,6 +251,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public onComponentSizeChanged(): void {
+		this.graphConfig.height = YearProgressGraphComponent.findGraphicHeight(); // Update graph dynamic height
 		this.draw();
 	}
 
@@ -264,8 +269,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: window.innerHeight * 0.70,
-			right: 30,
+			height: YearProgressGraphComponent.findGraphicHeight(),
+			top: 20,
+			right: 15,
 			left: 70,
 			baselines: [],
 			animate_on_load: false,
@@ -276,7 +282,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			missing_is_hidden_accessor: 'hidden',
 			xax_count: 12,
 			yax_count: 10,
-			y_extended_ticks: true,
 			target: "#" + YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID,
 			x_accessor: "date",
 			y_accessor: "value",

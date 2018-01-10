@@ -1,11 +1,10 @@
-{{momentWatched.format("MMMM Do")}}
 <mat-table #table [dataSource]="dataSource">
 
 	<!--Date per years-->
 	<ng-container matColumnDef="year">
 		<mat-header-cell *matHeaderCellDef>Year</mat-header-cell>
 		<mat-cell *matCellDef="let progressionAtDay">
-			<span [style.color]="progressionAtDay.color"><strong>{{progressionAtDay.year}}</strong></span>
+			<span class="mat-title" [style.color]="progressionAtDay.color">{{progressionAtDay.year}}</span>
 		</mat-cell>
 	</ng-container>
 
@@ -35,27 +34,27 @@
 				  [ngClass]="progressionAtDay.deltaClass"
 				  matTooltip="{{(progressionAtDay.previousDate) ? 'Comparing to ' + progressionAtDay.previousDate: ''}}">
 
-				<!--Case when ProgressType is TIME-->
-				<span *ngSwitchCase="ProgressType.TIME">
-					<span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
-						{{progressionAtDay.deltaSignSymbol + " " + readableTimeProgress(progressionAtDay.delta)}}
-					</span>
-					<span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
-						∅
-					</span>
-				</span>
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaSignSymbol + " " + readableTimeProgress(progressionAtDay.delta)}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
 
 				<!--Default Case-->
-				<span *ngSwitchDefault>
-					<span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
-						{{progressionAtDay.deltaSignSymbol + " " + progressionAtDay.delta.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
-					</span>
-					<span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
-						∅
-					</span>
-				</span>
+                <span *ngSwitchDefault>
+                    <span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaSignSymbol + " " + progressionAtDay.delta.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
 
-			</span>
+            </span>
 
 		</mat-cell>
 	</ng-container>

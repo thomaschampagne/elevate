@@ -3,7 +3,6 @@ import { YearProgressModel } from "../shared/models/year-progress.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { MatTableDataSource } from "@angular/material";
 import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { ProgressType } from "../shared/models/progress-type.enum";
@@ -11,6 +10,7 @@ import * as _ from "lodash";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
+import { MatTableDataSource } from "@angular/material";
 
 @Component({
 	selector: 'app-year-progress-table',
@@ -93,7 +93,6 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			this.selectedProgressType.type,
 			this.selectedYears,
 			this.yearProgressStyleModel.yearsColorsMap));
-
 	}
 
 	public rows(progressionAtDayModels: ProgressionAtDayModel[]): ProgressionAtDayRow[] {

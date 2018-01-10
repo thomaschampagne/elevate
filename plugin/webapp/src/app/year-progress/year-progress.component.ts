@@ -9,43 +9,13 @@ import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
+import { Moment } from "moment";
 
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
-
 // TODO Handle no data UI..
-
-// DONE Unify table format. ex: '0h' '0 km'
-
-// DONE Node years selection behaviour?
-// DONE Node act types selection?
-// DONE Graph click on date => style: cursor
-// TODO Table result
-// TODO Setup nice line colors palette
-// TODO Legend base: Year and value displayed
 // TODO Add Trimp progress EZ !!
-
 // TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 // TODO (Delayed) Year progress Targets line display (by KEYS = activityTypes & ProgressType)
-// DONE:BUG MetricsGraphics displays circle color on broken line (when multiple lines)
-// DONE:BUG progression to today (2018 not displayed when no activities on that year)
-// DONE:BUG Select Walk (only sport) +store,  All Year (store nothing). Reload the page.... Hmm Only 4 years are returned by the progression. Should be more right? (Check service @ L58 first walk activitie start in 2014...)
-// Should be: const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
-// Instead of: const fromMoment: Moment = moment(_.first(yearProgressActivityModels).start_time).startOf("year"); // 1st january of first year
-// DONE:BUG stop year progressions graph display after today
-// DONE:BUG AlpineSki | Walk (only sport) activity count do not match with legacy feature if "commute rides" is disabled
-// DONE:BUG Progression on years selected with no data on sport types
-// DONE:BUG Legend do not updates itself when 1 sport (eg Run) and 1 year (eg 2017)
-// DONE:BUG Select 1 sport (Run)& select 1 year (2016) => 2017 (last year ?!) is displayed in legend... fail !
-// DONE:BUG If 2017 (last year ?!) is not selected, then the legends is not displayed after page reload.
-// DONE Persist + Load: "Activity types" checked
-// DONE Persist + Load: "Years" checked
-// DONE Persist + Load: "Commute rides" checked
-// DONE Persist + Load: "Progress type" selected
-// DONE Return current year progress until today or end of the year
-// Service:
-// DONE Return KM instead of meter distance
-// DONE Handle metric / imperial here  (distance + elevation)!
-// DONE setupComponentSizeChangeHandlers
 
 @Component({
 	selector: 'app-year-progress',
@@ -81,6 +51,7 @@ export class YearProgressComponent implements OnInit {
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
+	public momentWatched: Moment;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService) {
@@ -97,6 +68,14 @@ export class YearProgressComponent implements OnInit {
 				data.requiredYearProgressDataModel.isMetric,
 				data.requiredYearProgressDataModel.syncedActivityModels
 			);
+		});
+
+		// Use default moment provided by service on init (should be today on first load)
+		this.momentWatched = this.yearProgressService.momentWatched;
+
+		// When user mouse moves on graph, listen for moment watched and update title
+		this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+			this.momentWatched = momentWatched;
 		});
 	}
 

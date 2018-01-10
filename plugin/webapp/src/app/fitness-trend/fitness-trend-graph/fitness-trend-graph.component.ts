@@ -38,6 +38,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 
+	public static findGraphicHeight(): number {
+		return window.innerHeight * 0.55;
+	}
+
 	public readonly atlColor: string = "#515151";
 	public readonly ctlColor: string = "#e94e1b";
 	public readonly tsbColor: string = "#adadad";
@@ -501,6 +505,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public onComponentSizeChanged(): void {
 		this.PERFORMANCE_MARKER = performance.now();
+		this.graphConfig.height = FitnessTrendGraphComponent.findGraphicHeight(); // Update graph dynamic height
 		this.draw();
 	}
 
