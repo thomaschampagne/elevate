@@ -57,7 +57,7 @@
 
 				<span fxFlex="5"></span>
 
-				<button fxFlexAlign="center" mat-icon-button>
+				<button fxFlexAlign="center" mat-icon-button (click)="onHelperClick()">
 					<mat-icon>help</mat-icon>
 				</button>
 			</div>
@@ -71,7 +71,6 @@
 				<mat-card-title class="mat-title">
 					{{selectedProgressType.label}} progression {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}
-					<!--{{momentWatched.format("MMMM Do")}}-->
 				</mat-card-title>
 				<mat-divider></mat-divider>
 				<app-year-progress-graph

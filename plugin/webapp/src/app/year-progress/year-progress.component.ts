@@ -10,6 +10,8 @@ import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { Moment } from "moment";
+import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
+import { MatDialog } from "@angular/material";
 
 // TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 // TODO Handle no data UI..
@@ -54,7 +56,8 @@ export class YearProgressComponent implements OnInit {
 	public momentWatched: Moment;
 
 	constructor(public route: ActivatedRoute,
-				public yearProgressService: YearProgressService) {
+				public yearProgressService: YearProgressService,
+				public dialog: MatDialog) {
 	}
 
 	/**
@@ -181,6 +184,16 @@ export class YearProgressComponent implements OnInit {
 	public onIncludeCommuteRideToggle(): void {
 		this.progression();
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
+	}
+
+	/**
+	 *
+	 */
+	public onHelperClick(): void {
+		this.dialog.open(YearProgressHelperDialogComponent, {
+			minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,
+			maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH,
+		});
 	}
 
 	/**

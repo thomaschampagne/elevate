@@ -37,6 +37,7 @@ import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";
 import { YearProgressTableComponent } from "../year-progress/year-progress-table/year-progress-table.component";
+import { YearProgressHelperDialogComponent } from "../year-progress/year-progress-helper-dialog/year-progress-helper-dialog.component";
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { YearProgressTableComponent } from "../year-progress/year-progress-table
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
 		FitnessInfoDialogComponent, // TODO Move in a below module?!
+		YearProgressHelperDialogComponent,
 		AboutDialogComponent
 
 	],
@@ -73,6 +75,7 @@ import { YearProgressTableComponent } from "../year-progress/year-progress-table
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
 		FitnessInfoDialogComponent,
+		YearProgressHelperDialogComponent,
 		AboutDialogComponent
 
 	],
