@@ -9,8 +9,7 @@ import * as _ from "lodash";
 })
 export class FitnessTrendComponent implements OnInit {
 
-	public static readonly GRAPH_TAB_INDEX: number = 0;
-	public static readonly TABLE_TAB_INDEX: number = 1;
+	public hasFitnessTrendData: boolean = null; // Can be null because true/false state will assigned through asynchronous data fetching
 
 	public static openActivities(ids: number[]) {
 
@@ -30,6 +29,10 @@ export class FitnessTrendComponent implements OnInit {
 	public ngOnInit(): void {
 	}
 
+	public onHasFitnessTrendDataNotify(hasFitnessTrendData: boolean): void {
+		this.hasFitnessTrendData = hasFitnessTrendData;
+	}
+
 	public onFocusChange(event: MatTabChangeEvent): void {
 	}
 
@@ -43,3 +46,4 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 }
+

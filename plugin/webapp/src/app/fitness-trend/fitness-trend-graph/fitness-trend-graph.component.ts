@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -42,6 +42,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		return window.innerHeight * 0.55;
 	}
 
+	@Output("hasFitnessTrendDataNotify")
+	public hasFitnessTrendDataNotify: EventEmitter<boolean> = new EventEmitter<boolean>();
+	public hasFitnessTrendData: boolean = null; // Can be null because true/false state will assigned through asynchronous data fetching
+
 	public readonly atlColor: string = "#515151";
 	public readonly ctlColor: string = "#e94e1b";
 	public readonly tsbColor: string = "#adadad";
@@ -50,7 +54,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public graphConfig: any;
 	public graphReadyToBeDrawn: boolean = false;
-	public hasFitnessTrendData: boolean = null; //Can be null because true/false state is assigned through asynchronous handling in ngOnInit
 
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
@@ -98,11 +101,13 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 			this.fitnessTrend = fitnessTrend;
 			this.hasFitnessTrendData = true;
+			this.hasFitnessTrendDataNotify.emit(true);
 			this.setup();
 
 		}, error => {
 
 			this.hasFitnessTrendData = false;
+			this.hasFitnessTrendDataNotify.emit(false);
 			console.warn(error);
 
 		});
@@ -656,7 +661,13 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnDestroy(): void {
-		this.windowResizingSubscription.unsubscribe();
-		this.sideNavChangesSubscription.unsubscribe();
+
+		if (this.windowResizingSubscription) {
+			this.windowResizingSubscription.unsubscribe();
+		}
+
+		if (this.sideNavChangesSubscription) {
+			this.sideNavChangesSubscription.unsubscribe();
+		}
 	}
 }

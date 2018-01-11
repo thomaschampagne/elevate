@@ -4,37 +4,6 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="hasFitnessTrendData === false" class="noData mat-body-1">
-	<mat-card-title>
-		Synchronise your history
-	</mat-card-title>
-	<mat-card-content>
-		<div>
-			Please synchronize your history to turn on "Fitness Trend" feature. The history will be locally
-			saved in the storage allocated by the extension.
-		</div>
-		<div>
-			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
-			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
-			the Strava™ premium one, not a duplicate!
-		</div>
-
-		<mat-divider></mat-divider>
-
-		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
-			in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
-			<a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
-				Performance, fellrnr.com</a>
-		</div>
-
-		<div>
-			Please read <a href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions"
-						   target="_blank">Frequently Asked Questions</a>
-		</div>
-
-	</mat-card-content>
-</mat-card>
-
 <mat-card *ngIf="graphReadyToBeDrawn">
 
 	<mat-card-content>
