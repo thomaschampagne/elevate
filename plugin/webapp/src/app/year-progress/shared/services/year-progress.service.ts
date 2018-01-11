@@ -324,7 +324,7 @@ export class YearProgressService {
 
 		if (!_.isNumber(hours) || hours === 0) {
 
-			readableTime = "0 hours";
+			readableTime = "0 h";
 
 		} else {
 
@@ -333,7 +333,7 @@ export class YearProgressService {
 			const days: number = Math.floor(hours / 24);
 
 			if (days > 0) {
-				readableTime = days + " day" + ((days > 1) ? "s" : "");
+				readableTime = days + " d";
 			}
 
 			const remainingHours = hours - (days * 24);
@@ -342,12 +342,14 @@ export class YearProgressService {
 
 				const hoursFloored = Math.floor(remainingHours);
 
-				readableTime = readableTime + ((days > 0) ? ", " : "") + hoursFloored + " hour" + ((hoursFloored > 1) ? "s" : "");
+				if (hoursFloored > 0) {
+					readableTime = readableTime + ((days > 0) ? ", " : "") + hoursFloored + " h";
+				}
 
 				const remainingMinutes = (remainingHours - hoursFloored) * 60;
 
 				if (remainingMinutes > 0) {
-					readableTime = readableTime + ", " + Math.round(remainingMinutes) + " min";
+					readableTime = readableTime + ((hoursFloored > 0) ? ", " : "") + Math.round(remainingMinutes) + " min";
 				}
 
 			}

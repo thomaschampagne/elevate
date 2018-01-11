@@ -587,7 +587,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 24;
-		const expected: string = "1 day";
+		const expected: string = "1 d";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -601,7 +601,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 1;
-		const expected: string = "1 hour";
+		const expected: string = "1 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -615,7 +615,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 50;
-		const expected: string = "2 days, 2 hours";
+		const expected: string = "2 d, 2 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -629,7 +629,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 76.25;
-		const expected: string = "3 days, 4 hours, 15 min";
+		const expected: string = "3 d, 4 h, 15 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -643,7 +643,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 29.5;
-		const expected: string = "1 day, 5 hours, 30 min";
+		const expected: string = "1 d, 5 h, 30 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -657,7 +657,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 15;
-		const expected: string = "15 hours";
+		const expected: string = "15 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -671,7 +671,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 5.815;
-		const expected: string = "5 hours, 49 min";
+		const expected: string = "5 h, 49 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -685,7 +685,21 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 15.3333333;
-		const expected: string = "15 hours, 20 min";
+		const expected: string = "15 h, 20 min";
+
+		// When
+		const result: string = yearProgressService.readableTimeProgress(hours);
+
+		// Then
+		expect(result).toEqual(expected);
+
+	});
+
+	it("should format 0.25 hours to human readable time", () => {
+
+		// Given
+		const hours: number = 0.25;
+		const expected: string = "15 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -699,7 +713,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = -12.5;
-		const expected: string = "12 hours, 30 min";
+		const expected: string = "12 h, 30 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -713,7 +727,7 @@ describe('YearProgressService', () => {
 
 		// Given
 		const hours: number = 0;
-		const expected: string = "0 hours";
+		const expected: string = "0 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
