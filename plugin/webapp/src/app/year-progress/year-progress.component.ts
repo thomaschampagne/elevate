@@ -13,8 +13,6 @@ import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 
-// TODO loading data UI
-
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
@@ -51,6 +49,7 @@ export class YearProgressComponent implements OnInit {
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
 	public hasData: boolean = false;
+	public isFirstProgressionReady: boolean = false;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService,
@@ -129,6 +128,8 @@ export class YearProgressComponent implements OnInit {
 
 		// Get color style for years
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
+
+		this.isFirstProgressionReady = true;
 	}
 
 	/**

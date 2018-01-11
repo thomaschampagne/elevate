@@ -1,4 +1,5 @@
 <div id="graphWrapper">
+	<mat-progress-bar mode="buffer" *ngIf="!isGraphDataReadyOnYearChange"></mat-progress-bar>
 	<div id="yearProgressGraph"></div>
 </div>
 <div id="changeMomentWatched">
