@@ -13,7 +13,8 @@ import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 
-// TODO Handle no data UI..
+// TODO loading data UI
+
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
@@ -49,6 +50,7 @@ export class YearProgressComponent implements OnInit {
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
+	public hasData: boolean = false;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService,
@@ -62,10 +64,14 @@ export class YearProgressComponent implements OnInit {
 
 		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 
-			this.setup(
-				data.requiredYearProgressDataModel.isMetric,
-				data.requiredYearProgressDataModel.syncedActivityModels
-			);
+			this.hasData = (data.requiredYearProgressDataModel.syncedActivityModels.length > 0);
+
+			if (this.hasData) {
+				this.setup(
+					data.requiredYearProgressDataModel.isMetric,
+					data.requiredYearProgressDataModel.syncedActivityModels
+				);
+			}
 		});
 
 		// Use default moment provided by service on init (should be today on first load)

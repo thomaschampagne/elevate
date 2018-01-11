@@ -1,4 +1,16 @@
-<mat-card>
+<mat-card *ngIf="!hasData">
+	<mat-card-title>
+		Synchronise your history
+	</mat-card-title>
+	<mat-card-content>
+		<div>
+			Please synchronize your history to turn on the feature. The history will be locally
+			saved in the storage allocated by the extension.
+		</div>
+	</mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="hasData">
 	<mat-card-content>
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">

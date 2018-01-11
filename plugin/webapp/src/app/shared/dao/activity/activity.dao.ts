@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
+import * as _ from "lodash";
 
 @Injectable()
 export class ActivityDao {
@@ -14,7 +15,8 @@ export class ActivityDao {
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve) => {
 			this.chromeStorageLocal().get("computedActivities", (result: { computedActivities: SyncedActivityModel[] }) => {
-				resolve(result.computedActivities);
+				const syncedActivityModels = (_.isEmpty(result.computedActivities)) ? [] : result.computedActivities;
+				resolve(syncedActivityModels);
 			});
 		});
 	}
