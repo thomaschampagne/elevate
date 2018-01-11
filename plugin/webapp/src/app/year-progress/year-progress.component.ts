@@ -13,12 +13,7 @@ import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 
-// TODO:BUG (Fitness Trend) resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 // TODO Handle no data UI..
-// TODO Add Trimp progress EZ !!
-// TODO (Delayed) Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
-// TODO (Delayed) Year progress Targets line display (by KEYS = activityTypes & ProgressType)
-
 @Component({
 	selector: 'app-year-progress',
 	templateUrl: './year-progress.component.html',
