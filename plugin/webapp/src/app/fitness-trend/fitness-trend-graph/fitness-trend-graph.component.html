@@ -1,113 +1,145 @@
-<mat-card>
+<mat-card *ngIf="hasFitnessTrendData !== false && !graphReadyToBeDrawn">
 	<mat-card-content>
+		<mat-progress-bar mode="buffer"></mat-progress-bar>
+	</mat-card-content>
+</mat-card>
 
-		<div *ngIf="!isGraphDataReady">
-			<mat-progress-bar mode="buffer"></mat-progress-bar>
+<mat-card *ngIf="hasFitnessTrendData === false" class="noData mat-body-1">
+	<mat-card-title>
+		Synchronise your history
+	</mat-card-title>
+	<mat-card-content>
+		<div>
+			Please synchronize your history to turn on "Fitness Trend" feature. The history will be locally
+			saved in the storage allocated by the extension.
+		</div>
+		<div>
+			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
+			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
+			the Strava™ premium one, not a duplicate!
 		</div>
 
-		<div *ngIf="(fitnessTrend && fitnessTrend.length > 0)">
+		<mat-divider></mat-divider>
 
-			<div *ngIf="isGraphDataReady" class="header" fxLayout="column" fxLayoutAlign="start start">
+		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
+			in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
+			<a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
+				Performance, fellrnr.com</a>
+		</div>
 
-				<!--INPUTS-->
-				<div fxFlex fxFill>
-					<div fxLayout="row" fxLayoutAlign="space-between start">
-						<!--PERIODS-->
-						<div fxFlex="70"
-							 fxLayout="row" fxLayoutAlign="start start">
-							<mat-input-container fxFlex="155px">
-								<mat-select
-									[(ngModel)]="lastPeriodViewed"
-									(change)="onLastPeriodSelected()"
-									placeholder="Last">
-									<mat-option
-										*ngFor="let lastPeriod of lastPeriods;"
-										[value]="lastPeriod">
-										{{lastPeriod.label}}
-									</mat-option>
-								</mat-select>
-							</mat-input-container>
+		<div>
+			Please read <a href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions"
+						   target="_blank">Frequently Asked Questions</a>
+		</div>
 
-							<span fxFlex="1"></span> <!-- --------- -->
+	</mat-card-content>
+</mat-card>
 
-							<mat-form-field fxFlex="155px">
-								<input matInput
-									   [(ngModel)]="periodViewed.from"
-									   [min]="dateMin"
-									   [max]="periodViewed.to"
-									   [matDatepicker]="datePickerFrom"
-									   (dateChange)="onDateToDateChange()"
-									   placeholder="From">
-								<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-								<mat-datepicker #datePickerFrom></mat-datepicker>
-							</mat-form-field>
+<mat-card *ngIf="graphReadyToBeDrawn">
 
-							<span fxFlex="1"></span> <!-- --------- -->
+	<mat-card-content>
 
-							<mat-form-field fxFlex="155px">
-								<input matInput
-									   [(ngModel)]="periodViewed.to"
-									   [min]="periodViewed.from"
-									   [max]="dateMax"
-									   [matDatepicker]="datePickerTo"
-									   (dateChange)="onDateToDateChange()"
-									   placeholder="To">
-								<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-								<mat-datepicker #datePickerTo></mat-datepicker>
-							</mat-form-field>
-						</div>
+		<div class="header" fxLayout="column" fxLayoutAlign="start start">
 
-						<!--TOGGLES-->
-						<div fxFlex
-							 fxFlexAlign="start"
-							 fxLayout="row" fxLayoutAlign="end center">
+			<!--INPUTS-->
+			<div fxFlex fxFill>
+				<div fxLayout="row" fxLayoutAlign="space-between start">
+					<!--PERIODS-->
+					<div fxFlex="70"
+						 fxLayout="row" fxLayoutAlign="start start">
+						<mat-input-container fxFlex="155px">
+							<mat-select
+								[(ngModel)]="lastPeriodViewed"
+								(change)="onLastPeriodSelected()"
+								placeholder="Last">
+								<mat-option
+									*ngFor="let lastPeriod of lastPeriods;"
+									[value]="lastPeriod">
+									{{lastPeriod.label}}
+								</mat-option>
+							</mat-select>
+						</mat-input-container>
 
-							<mat-slide-toggle fxFlex
-											  [(ngModel)]="isTrainingZonesEnabled"
-											  (change)="onTrainingZonesToggle()"
-											  matTooltip="Display Form Zones on graph">
-								<mat-icon>power_input</mat-icon>
-							</mat-slide-toggle>
-							<mat-slide-toggle fxFlex
-											  [(ngModel)]="isPowerMeterEnabled"
-											  (change)="onPowerMeterToggle()"
-											  matTooltip="Use cycling power meter when available">
-								<mat-icon>flash_on</mat-icon>
-							</mat-slide-toggle>
+						<span fxFlex="1"></span> <!-- --------- -->
 
-							<mat-slide-toggle fxFlex
-											  [(ngModel)]="isSwimEnabled"
-											  (change)="onSwimToggle()"
-											  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
-								<mat-icon>pool</mat-icon>
-							</mat-slide-toggle>
+						<mat-form-field fxFlex="155px">
+							<input matInput
+								   [(ngModel)]="periodViewed.from"
+								   [min]="dateMin"
+								   [max]="periodViewed.to"
+								   [matDatepicker]="datePickerFrom"
+								   (dateChange)="onDateToDateChange()"
+								   placeholder="From">
+							<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+							<mat-datepicker #datePickerFrom></mat-datepicker>
+						</mat-form-field>
 
-							<button mat-icon-button (click)="onShowInfo()">
-								<mat-icon>info</mat-icon>
-							</button>
-						</div>
+						<span fxFlex="1"></span> <!-- --------- -->
+
+						<mat-form-field fxFlex="155px">
+							<input matInput
+								   [(ngModel)]="periodViewed.to"
+								   [min]="periodViewed.from"
+								   [max]="dateMax"
+								   [matDatepicker]="datePickerTo"
+								   (dateChange)="onDateToDateChange()"
+								   placeholder="To">
+							<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+							<mat-datepicker #datePickerTo></mat-datepicker>
+						</mat-form-field>
+					</div>
+
+					<!--TOGGLES-->
+					<div fxFlex
+						 fxFlexAlign="start"
+						 fxLayout="row" fxLayoutAlign="end center">
+
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isTrainingZonesEnabled"
+										  (change)="onTrainingZonesToggle()"
+										  matTooltip="Display Form Zones on graph">
+							<mat-icon>power_input</mat-icon>
+						</mat-slide-toggle>
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isPowerMeterEnabled"
+										  (change)="onPowerMeterToggle()"
+										  matTooltip="Use cycling power meter when available">
+							<mat-icon>flash_on</mat-icon>
+						</mat-slide-toggle>
+
+						<mat-slide-toggle fxFlex
+										  [(ngModel)]="isSwimEnabled"
+										  (change)="onSwimToggle()"
+										  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+							<mat-icon>pool</mat-icon>
+						</mat-slide-toggle>
+
+						<button mat-icon-button (click)="onShowInfo()">
+							<mat-icon>info</mat-icon>
+						</button>
 					</div>
 				</div>
+			</div>
 
-				<!--DETAILS-->
-				<div fxFlex fxFill
-					 class="mat-subheading-2">
+			<!--DETAILS-->
+			<div fxFlex fxFill
+				 class="mat-subheading-2">
 
-					<div fxLayout="column" fxLayoutAlign="space-between start">
+				<div fxLayout="column" fxLayoutAlign="space-between start">
 
-						<div fxFlex>
+					<div fxFlex>
 						<span fxFlexAlign="start">
 							{{viewedDay.printDate()}}
 						</span>
-						</div>
+					</div>
 
-						<div fxFlex>
+					<div fxFlex>
 						<span fxFlexAlign="center">
 							{{viewedDay.printActivities("Rest day")}}
 						</span>
-						</div>
+					</div>
 
-						<div fxFlex>
+					<div fxFlex>
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
 							<span *ngIf="viewedDay.finalStressScore">
@@ -138,61 +170,30 @@
 								</span>
 							</span>
 						</span>
-						</div>
 					</div>
-				</div>
-
-				<!--Fitness, Fatigue, Form values-->
-				<div fxFill
-					 fxLayout="row" fxLayoutAlign="start center"
-					 class="mat-headline">
-					<div fxFlex="180px" [style.color]="ctlColor">
-						Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
-					</div>
-					<div fxFlex="180px" [style.color]="atlColor">
-						Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
-					</div>
-					<div fxFlex="180px" [style.color]="tsbColor">
-						Form &nbsp;&nbsp;{{viewedDay.printForm()}}
-					</div>
-
 				</div>
 			</div>
 
-			<!--GRAPH-->
-			<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
-				 id="fitnessTrendGraph">
+			<!--Fitness, Fatigue, Form values-->
+			<div fxFill
+				 fxLayout="row" fxLayoutAlign="start center"
+				 class="mat-headline">
+				<div fxFlex="180px" [style.color]="ctlColor">
+					Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
+				</div>
+				<div fxFlex="180px" [style.color]="atlColor">
+					Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
+				</div>
+				<div fxFlex="180px" [style.color]="tsbColor">
+					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
+				</div>
+
 			</div>
 		</div>
-	</mat-card-content>
-</mat-card>
 
-<mat-card *ngIf="(fitnessTrend && fitnessTrend.length === 0)" class="noData mat-body-1">
-	<mat-card-title>
-		Synchronise your history
-	</mat-card-title>
-	<mat-card-content>
-		<div>
-			Please synchronize your history to turn on "Fitness Trend" feature. The history will be locally
-			saved in the storage allocated by the extension.
-		</div>
-		<div>
-			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
-			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
-			the Strava™ premium one, not a duplicate!
-		</div>
-
-		<mat-divider></mat-divider>
-
-		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
-			in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
-			<a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
-				Performance, fellrnr.com</a>
-		</div>
-
-		<div>
-			Please read <a href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions"
-						   target="_blank">Frequently Asked Questions</a>
+		<!--GRAPH-->
+		<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+			 id="fitnessTrendGraph">
 		</div>
 
 	</mat-card-content>

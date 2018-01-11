@@ -49,7 +49,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public PERFORMANCE_MARKER: number;
 
 	public graphConfig: any;
-	public isGraphDataReady: boolean = false;
+	public graphReadyToBeDrawn: boolean = false;
+	public hasFitnessTrendData: boolean = null; //Can be null because true/false state is assigned through asynchronous handling in ngOnInit
 
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
@@ -96,12 +97,13 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fitnessTrend;
+			this.hasFitnessTrendData = true;
 			this.setup();
 
 		}, error => {
 
-			this.fitnessTrend = [];
-			console.error(error);
+			this.hasFitnessTrendData = false;
+			console.warn(error);
 
 		});
 	}
@@ -256,11 +258,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public draw(): void {
 
+		this.graphReadyToBeDrawn = true;
 		setTimeout(() => {
-
 			MG.data_graphic(this.graphConfig);
 			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
-			this.isGraphDataReady = true;
 		});
 	}
 
