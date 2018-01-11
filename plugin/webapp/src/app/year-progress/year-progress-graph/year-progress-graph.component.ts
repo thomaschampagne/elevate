@@ -24,6 +24,7 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
+	public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
 
 	public static findGraphicHeight(): number {
 		return window.innerHeight * 0.575;
@@ -251,7 +252,11 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public onComponentSizeChanged(): void {
-		this.graphConfig.height = YearProgressGraphComponent.findGraphicHeight(); // Update graph dynamic height
+
+		// Update graph dynamic height
+		this.applyGraphHeight();
+
+		// Re-draw
 		this.draw();
 	}
 
@@ -269,7 +274,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: YearProgressGraphComponent.findGraphicHeight(),
+			height: -1, // Applied by applyGraphHeight
 			top: 20,
 			right: 15,
 			left: 70,
@@ -302,6 +307,14 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 				this.onGraphMouseOut();
 			}
 		};
+
+		this.applyGraphHeight();
+	}
+
+	public applyGraphHeight(): void {
+		const height: number = YearProgressGraphComponent.findGraphicHeight();
+		this.graphConfig.height = height;
+		document.getElementById(YearProgressGraphComponent.GRAPH_WRAPPER_DOM_ELEMENT_ID).style.height = height + "px";
 	}
 
 	public ngOnDestroy(): void {
