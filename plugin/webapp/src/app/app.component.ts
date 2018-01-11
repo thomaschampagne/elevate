@@ -11,8 +11,9 @@ import { WindowService } from "./shared/services/window/window.service";
 import { SyncedAthleteProfileService } from "./shared/services/synced-athlete-profile/synced-athlete-profile.service";
 import * as moment from "moment";
 
-// TODO Synchronisation start, display last sync (with Athlete Profile)
+// DONE Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
+// TODO:BUG synced activities models can be partially synced without last sync date time stored => fit trend & yaer progress can be loaded without full data
 // TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
@@ -117,19 +118,24 @@ export class AppComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		// Update sync status in toolbar
-		this.syncedAthleteProfileService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+		// Update sync status in toolbar and Refresh LastSyncDate displayed every minutes
+		this.updateLastSyncDateStatus();
+		setInterval(() => {
+			this.updateLastSyncDateStatus()
+		}, 1000 * 60);
 
+		this.setupWindowResizeBroadcast();
+	}
+
+	public updateLastSyncDateStatus(): void {
+		this.syncedAthleteProfileService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 			if (_.isNumber(lastSyncDateTime)) {
 				this.isSynced = true;
 				this.syncedStateMessage = "Synced " + moment(lastSyncDateTime).fromNow();
 			} else {
 				this.isSynced = false;
 			}
-
 		});
-
-		this.setupWindowResizeBroadcast();
 	}
 
 	public setupWindowResizeBroadcast(): void {
@@ -139,6 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onSync(forceSync: boolean): void {
+		// TODO Move in hisoty service
 		chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
 			const params = "?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
 			const url = "https://www.strava.com/dashboard" + params;
