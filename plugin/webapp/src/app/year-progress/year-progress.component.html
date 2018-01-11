@@ -2,7 +2,7 @@
 	<mat-card-content>
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
-			<div fxFlex="60">
+			<div fxFlex="60" fxFlex.lt-lg="100">
 				<mat-form-field fxFlex="150px">
 					<mat-select placeholder="Progress Type"
 								(change)="onSelectedProgressTypeChange()"
@@ -39,9 +39,9 @@
 
 			</div>
 
-			<span fxFlex="3"></span>
+			<span fxFlex="3" fxHide.lt-lg></span>
 
-			<div fxFlex>
+			<div fxFlex fxHide.lt-lg>
 				<mat-form-field fxFlex>
 					<mat-select placeholder="Years"
 								[(ngModel)]="selectedYears"
@@ -67,7 +67,7 @@
 		<div fxLayout="row" fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="60">
+			<div fxFlex="60" fxFlex.lt-lg="100">
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}
@@ -82,10 +82,10 @@
 			</div>
 
 
-			<span fxFlex="3"></span>
+			<span fxFlex="3" fxHide.lt-lg></span>
 
 			<!-- Table/Legend -->
-			<div fxFlex>
+			<div fxFlex fxHide.lt-lg>
 				<mat-card-title class="mat-title">
 					{{momentWatched.format("MMMM Do")}}
 				</mat-card-title>
