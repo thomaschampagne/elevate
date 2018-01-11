@@ -38,6 +38,8 @@ import { SideNavService } from "./services/side-nav/side-nav.service";
 import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";
 import { YearProgressTableComponent } from "../year-progress/year-progress-table/year-progress-table.component";
 import { YearProgressHelperDialogComponent } from "../year-progress/year-progress-helper-dialog/year-progress-helper-dialog.component";
+import { SyncedAthleteProfileService } from "./services/synced-athlete-profile/synced-athlete-profile.service";
+import { SyncedAthleteProfileDao } from "./dao/synced-athlete-profile/synced-athlete-profile.dao";
 
 @NgModule({
 	declarations: [
@@ -81,6 +83,8 @@ import { YearProgressHelperDialogComponent } from "../year-progress/year-progres
 	],
 	providers: [
 
+		SyncedAthleteProfileService,
+		SyncedAthleteProfileDao,
 		UserSettingsService,
 		UserSettingsDao,
 		ActivityService,

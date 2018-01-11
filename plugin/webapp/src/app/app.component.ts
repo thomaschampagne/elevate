@@ -8,6 +8,8 @@ import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
+import { SyncedAthleteProfileService } from "./shared/services/synced-athlete-profile/synced-athlete-profile.service";
+import * as moment from "moment";
 
 // TODO Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
@@ -38,6 +40,8 @@ export class AppComponent implements OnInit, OnDestroy {
 	public title: string;
 	public sideNavOpened: boolean;
 	public sideNavMode: string;
+	public isSynced: boolean;
+	public syncedStateMessage: string;
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
 			icon: "timeline",
@@ -89,6 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public router: Router,
+				public syncedAthleteProfileService: SyncedAthleteProfileService,
 				public sideNavService: SideNavService,
 				public windowService: WindowService,
 				public dialog: MatDialog) {
@@ -112,6 +117,17 @@ export class AppComponent implements OnInit, OnDestroy {
 			}
 		});
 
+		// Update sync status in toolbar
+		this.syncedAthleteProfileService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+
+			if (_.isNumber(lastSyncDateTime)) {
+				this.isSynced = true;
+				this.syncedStateMessage = "Synced " + moment(lastSyncDateTime).fromNow();
+			} else {
+				this.isSynced = false;
+			}
+
+		});
 
 		this.setupWindowResizeBroadcast();
 	}
@@ -121,6 +137,14 @@ export class AppComponent implements OnInit, OnDestroy {
 			this.windowService.onResize(event); // When user resize the window. Tell it to subscribers
 		};
 	}
+
+	public onSync(forceSync: boolean): void {
+		chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
+			const params = "?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
+			const url = "https://www.strava.com/dashboard" + params;
+			window.open(url, "_blank", "width=700, height=675, location=0");
+		});
+	};
 
 	public onShowShare(): void {
 		// TODO ..

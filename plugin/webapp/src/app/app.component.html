@@ -25,16 +25,41 @@
 
 		<span class="toolbar-spacer"></span>
 
-		<button mat-icon-button [matMenuTriggerFor]="syncMenu">
-			<mat-icon>history</mat-icon>
-		</button>
-
-		<mat-menu #syncMenu="matMenu">
-			<button mat-menu-item>
-				<mat-icon>sync</mat-icon>
-				Sync
+		<ng-container *ngIf="isSynced">
+			<button mat-button [matMenuTriggerFor]="syncMenu">
+				<mat-icon>history</mat-icon>
+				{{syncedStateMessage}}
 			</button>
-		</mat-menu>
+			<mat-menu #syncMenu="matMenu">
+				<button mat-menu-item (click)="onSync(false)">
+					<mat-icon>sync</mat-icon>
+					Sync now
+				</button>
+				<button mat-menu-item (click)="onSync(true)">
+					<mat-icon>redo</mat-icon>
+					Redo Full Sync
+				</button>
+				<!--<button mat-menu-item>
+					<mat-icon>clear</mat-icon>
+					Clear Local History
+				</button>
+				<button mat-menu-item>
+					<mat-icon>file_download</mat-icon>
+					Backup History
+				</button>
+				<button mat-menu-item>
+					<mat-icon>file_upload</mat-icon>
+					Restore History
+				</button>-->
+			</mat-menu>
+		</ng-container>
+
+		<ng-container *ngIf="!isSynced">
+			<button mat-button (click)="onSync(false)">
+				<mat-icon>history</mat-icon>
+				History not synced
+			</button>
+		</ng-container>
 
 		<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 			<mat-icon>more_vert</mat-icon>
