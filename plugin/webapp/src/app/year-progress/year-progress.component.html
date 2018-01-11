@@ -1,10 +1,10 @@
-<mat-card *ngIf="!isFirstProgressionReady">
+<mat-card *ngIf="!isProgressionInitialized && hasActivityModels !== false">
 	<mat-card-content>
 		<mat-progress-bar mode="buffer"></mat-progress-bar>
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="!hasData">
+<mat-card *ngIf="hasActivityModels === false">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>
@@ -16,7 +16,7 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="hasData">
+<mat-card *ngIf="hasActivityModels">
 	<mat-card-content>
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">

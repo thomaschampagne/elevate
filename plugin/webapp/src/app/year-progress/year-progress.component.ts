@@ -48,8 +48,8 @@ export class YearProgressComponent implements OnInit {
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
-	public hasData: boolean = false;
-	public isFirstProgressionReady: boolean = false;
+	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
+	public isProgressionInitialized: boolean = false;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService,
@@ -63,9 +63,9 @@ export class YearProgressComponent implements OnInit {
 
 		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 
-			this.hasData = (data.requiredYearProgressDataModel.syncedActivityModels.length > 0);
+			this.hasActivityModels = (data.requiredYearProgressDataModel.syncedActivityModels.length > 0);
 
-			if (this.hasData) {
+			if (this.hasActivityModels) {
 				this.setup(
 					data.requiredYearProgressDataModel.isMetric,
 					data.requiredYearProgressDataModel.syncedActivityModels
@@ -129,7 +129,7 @@ export class YearProgressComponent implements OnInit {
 		// Get color style for years
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
-		this.isFirstProgressionReady = true;
+		this.isProgressionInitialized = true;
 	}
 
 	/**
