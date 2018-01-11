@@ -6,9 +6,15 @@ This means that null/true state  will not display the message -->
 	</mat-card-title>
 	<mat-card-content>
 		<div>
-			Please synchronize your history to turn on "Fitness Trend" feature. The history will be locally
-			saved in the storage allocated by the extension.
+			Please synchronize your history to turn on "Fitness Trend" feature.
 		</div>
+
+		<div>
+			You can synchronize by clicking on
+			<mat-icon>history</mat-icon>
+			icon in the upper toolbar. The history will be locally saved in the storage allocated by the extension.
+		</div>
+
 		<div>
 			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
 			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
@@ -33,10 +39,10 @@ This means that null/true state  will not display the message -->
 
 <!--If not sure yet to have fitness data (=null) and have fitness data (=true), then we load the tab group -->
 <mat-tab-group *ngIf="hasFitnessTrendData !== false"
-	(focusChange)="onFocusChange($event)"
-	(selectedTabChange)="onSelectedTabChange($event)"
-	(selectChange)="onSelectChange($event)"
-	(selectedIndexChange)="onSelectedIndexChange($event)">
+			   (focusChange)="onFocusChange($event)"
+			   (selectedTabChange)="onSelectedTabChange($event)"
+			   (selectChange)="onSelectChange($event)"
+			   (selectedIndexChange)="onSelectedIndexChange($event)">
 	<mat-tab label="Graph">
 		<app-fitness-trend-graph
 			(hasFitnessTrendDataNotify)="onHasFitnessTrendDataNotify($event)">
