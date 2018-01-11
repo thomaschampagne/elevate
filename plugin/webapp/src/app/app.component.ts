@@ -9,8 +9,9 @@ import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
 
-// TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 // TODO Synchronisation start, display last sync (with Athlete Profile)
+// TODO History import/export/clear
+// TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
