@@ -117,7 +117,9 @@ export class AthleteHistoryService {
 			const blob = new Blob([JSON.stringify(athleteHistoryModel)], {type: "application/json; charset=utf-8"});
 			const filename = moment().format("Y.M.D-H.mm") + "_v" + athleteHistoryModel.pluginVersion + ".history.json";
 			this.saveAs(blob, filename);
-			done();
+			if (done) {
+				done();
+			}
 		});
 
 	}

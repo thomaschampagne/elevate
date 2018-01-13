@@ -5,6 +5,7 @@ import { ActivityDao } from "../../dao/activity/activity.dao";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
+import { NotImplementedException } from "../../exceptions/not-implemented.exception";
 
 describe('AthleteHistoryService', () => {
 
@@ -276,6 +277,18 @@ describe('AthleteHistoryService', () => {
 
 	});
 
+	it("should not export history without last sync date", (done: Function) => {
+		throw new NotImplementedException();
+	});
+
+	it("should not export history without profile", (done: Function) => {
+		throw new NotImplementedException();
+	});
+
+	it("should not export history without synced activities", (done: Function) => {
+		throw new NotImplementedException();
+	});
+
 	it("should import history", (done: Function) => {
 
 		// Given
@@ -306,11 +319,18 @@ describe('AthleteHistoryService', () => {
 		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
 		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
 
+		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
+		spyOn(athleteHistoryService.athleteHistoryDao, "removeProfile").and.returnValue(Promise.resolve(null));
+		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve([]));
+
+		const athleteHistoryRemoveSpy = spyOn(athleteHistoryService, "remove").and.callThrough();
+
 		// When
 		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported);
-
 		// Then
 		promise.then((athleteHistoryModel: AthleteHistoryModel) => {
+
+			expect(athleteHistoryRemoveSpy).toHaveBeenCalledTimes(1);
 
 			expect(athleteHistoryModel).not.toBeNull();
 			expect(athleteHistoryModel.pluginVersion).toEqual(athleteHistoryModelImported.pluginVersion);

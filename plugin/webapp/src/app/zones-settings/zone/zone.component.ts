@@ -50,8 +50,8 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
 	public stepUpdatesSubscription: Subscription;
 
-	constructor(private zonesService: ZonesService,
-				private snackBar: MatSnackBar) {
+	constructor(public zonesService: ZonesService,
+				public snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {

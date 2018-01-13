@@ -31,31 +31,31 @@
 				{{syncedStateMessage}}
 			</button>
 			<mat-menu #syncMenu="matMenu">
-				<button mat-menu-item (click)="onSync(false)">
+				<button mat-menu-item (click)="onAthleteHistorySync(false)">
 					<mat-icon>sync</mat-icon>
 					Sync now
 				</button>
-				<button mat-menu-item (click)="onSync(true)">
+				<button mat-menu-item (click)="onAthleteHistorySync(true)">
 					<mat-icon>redo</mat-icon>
 					Redo Full Sync
 				</button>
-				<!--<button mat-menu-item>
+				<button mat-menu-item (click)="onAthleteHistoryRemove()">
 					<mat-icon>clear</mat-icon>
 					Clear Local History
 				</button>
-				<button mat-menu-item>
+				<button mat-menu-item (click)="onAthleteHistoryExport()">
 					<mat-icon>file_download</mat-icon>
 					Backup History
 				</button>
-				<button mat-menu-item>
+				<button mat-menu-item (click)="onAthleteHistoryImport()">
 					<mat-icon>file_upload</mat-icon>
 					Restore History
-				</button>-->
+				</button>
 			</mat-menu>
 		</ng-container>
 
 		<ng-container *ngIf="!isSynced">
-			<button mat-button (click)="onSync(false)">
+			<button mat-button (click)="onAthleteHistorySync(false)">
 				<mat-icon>history</mat-icon>
 				History not synced
 			</button>

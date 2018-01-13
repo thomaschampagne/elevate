@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
-import { MatDialog } from "@angular/material";
+import { MatDialog, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
@@ -97,9 +97,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(public router: Router,
 				public athleteHistoryService: AthleteHistoryService,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar,
 				public sideNavService: SideNavService,
-				public windowService: WindowService,
-				public dialog: MatDialog) {
+				public windowService: WindowService) {
 	}
 
 	public ngOnInit(): void {
@@ -130,6 +131,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public updateLastSyncDateStatus(): void {
+
 		this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 			if (_.isNumber(lastSyncDateTime)) {
 				this.isSynced = true;
@@ -146,14 +148,28 @@ export class AppComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	public onSync(forceSync: boolean): void {
-		// TODO Move in hisoty service
-		chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
-			const params = "?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
-			const url = "https://www.strava.com/dashboard" + params;
-			window.open(url, "_blank", "width=700, height=675, location=0");
-		});
+	public onAthleteHistorySync(forceSync: boolean): void {
+		this.athleteHistoryService.sync(forceSync);
 	};
+
+	public onAthleteHistoryRemove(): void {
+
+		// TODO warning confirm dialog
+		this.athleteHistoryService.remove().then(() => {
+			window.location.reload();
+		}, error => {
+			this.snackBar.open(error, "Close", {duration: 2500});
+		});
+	}
+
+	public onAthleteHistoryExport(): void {
+		// TODO info dialog in download folder
+		this.athleteHistoryService.export();
+	}
+
+	public onAthleteHistoryImport(): void {
+		// TODO dialog import
+	}
 
 	public onShowShare(): void {
 		// TODO ..
