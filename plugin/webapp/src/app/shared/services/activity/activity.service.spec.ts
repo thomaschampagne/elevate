@@ -86,9 +86,8 @@ describe("ActivityService", () => {
 	it("should remove SyncedActivityModels", (done: Function) => {
 
 		// Given
-		const expected = [];
 		const removeDaoSpy = spyOn(activityService.activityDao, "remove")
-			.and.returnValue(Promise.resolve(expected));
+			.and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<SyncedActivityModel[]> = activityService.remove();
@@ -96,7 +95,7 @@ describe("ActivityService", () => {
 		// Then
 		promise.then((result: SyncedActivityModel[]) => {
 
-			expect(result).toEqual(expected);
+			expect(result).toBeNull();
 			expect(removeDaoSpy).toHaveBeenCalledTimes(1);
 
 			done();

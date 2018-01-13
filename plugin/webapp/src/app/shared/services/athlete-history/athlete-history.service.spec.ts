@@ -321,7 +321,7 @@ describe('AthleteHistoryService', () => {
 
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeProfile").and.returnValue(Promise.resolve(null));
-		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve([]));
+		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve(null));
 
 		const athleteHistoryRemoveSpy = spyOn(athleteHistoryService, "remove").and.callThrough();
 
@@ -400,7 +400,7 @@ describe('AthleteHistoryService', () => {
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeProfile").and.returnValue(Promise.resolve(null));
-		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve([]));
+		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.remove();
@@ -422,7 +422,7 @@ describe('AthleteHistoryService', () => {
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(99));
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeProfile").and.returnValue(Promise.resolve(null));
-		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve([]));
+		spyOn(athleteHistoryService.activityDao, "remove").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.remove();

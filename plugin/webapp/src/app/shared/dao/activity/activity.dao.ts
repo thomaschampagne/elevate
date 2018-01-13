@@ -17,8 +17,7 @@ export class ActivityDao {
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve) => {
 			this.chromeStorageLocal().get(ActivityDao.SYNCED_ACTIVITIES_KEY, (result: { computedActivities: SyncedActivityModel[] }) => {
-				// FIXME Maybe return 'null' instead of [] when empty. If yes check every use of "fetch", "remove", "save" and mocks of "fetch", "remove", "save"
-				const syncedActivityModels = (_.isEmpty(result.computedActivities)) ? [] : result.computedActivities;
+				const syncedActivityModels = (_.isEmpty(result.computedActivities)) ? null : result.computedActivities;
 				resolve(syncedActivityModels);
 			});
 		});

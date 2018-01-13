@@ -65,17 +65,13 @@ describe("ActivityDao", () => {
 			}
 		});
 
-		const expected = [];
-
 		// When
 		const promise: Promise<SyncedActivityModel[]> = activityDao.fetch();
 
 		// Then
 		promise.then((result: SyncedActivityModel[]) => {
 
-			expect(result).not.toBeNull();
-
-			expect(result).toEqual(expected);
+			expect(result).toBeNull();
 			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
@@ -135,7 +131,7 @@ describe("ActivityDao", () => {
 		// Then
 		promise.then((result: SyncedActivityModel[]) => {
 
-			expect(result).toEqual([]);
+			expect(result).toBeNull();
 			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(2);
 
 			done();

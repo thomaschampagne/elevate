@@ -38,7 +38,6 @@ describe("FitnessService", () => {
 		fitnessService = TestBed.get(FitnessService);
 		activityService = TestBed.get(ActivityService);
 
-
 		powerMeterEnable = true;
 		cyclingFtp = 150;
 		swimEnable = true;
