@@ -8,11 +8,13 @@ import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
-import { SyncedAthleteProfileService } from "./shared/services/synced-athlete-profile/synced-athlete-profile.service";
 import * as moment from "moment";
+import { AthleteHistoryService } from "./shared/services/athlete-history/athlete-history.service";
 
 // DONE Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
+// TODO Move SyncedAthleteProfileService methods in AthleteHistoryService
+
 // TODO:BUG synced activities models can be partially synced without last sync date time stored => fit trend & yaer progress can be loaded without full data
 // TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
@@ -94,7 +96,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public router: Router,
-				public syncedAthleteProfileService: SyncedAthleteProfileService,
+				public athleteHistoryService: AthleteHistoryService,
 				public sideNavService: SideNavService,
 				public windowService: WindowService,
 				public dialog: MatDialog) {
@@ -128,7 +130,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public updateLastSyncDateStatus(): void {
-		this.syncedAthleteProfileService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+		this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 			if (_.isNumber(lastSyncDateTime)) {
 				this.isSynced = true;
 				this.syncedStateMessage = "Synced " + moment(lastSyncDateTime).fromNow();

@@ -23,6 +23,10 @@ describe("AppComponent", () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;
+
+		spyOn(component.athleteHistoryService, "getLastSyncDateTime")
+			.and.returnValue(Promise.resolve(Date.now()));
+
 		fixture.detectChanges();
 	});
 

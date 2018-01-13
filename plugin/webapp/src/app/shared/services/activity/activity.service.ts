@@ -16,4 +16,21 @@ export class ActivityService {
 		return this.activityDao.fetch();
 	}
 
+	/**
+	 *
+	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 * @returns {Promise<SyncedActivityModel[]>}
+	 */
+	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
+		return this.activityDao.save(syncedActivityModels);
+	}
+
+	/**
+	 *
+	 * @returns {Promise<SyncedActivityModel[]>}
+	 */
+	public remove(): Promise<SyncedActivityModel[]> {
+		return this.activityDao.remove();
+	}
 }
+

@@ -55,4 +55,56 @@ describe("ActivityService", () => {
 		});
 
 	});
+
+	it("should save SyncedActivityModels", (done: Function) => {
+
+		// Given
+		const syncedActivityModelsToSave = _TEST_SYNCED_ACTIVITIES_;
+		const saveDaoSpy = spyOn(activityService.activityDao, "save")
+			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
+		// When
+		const promise: Promise<SyncedActivityModel[]> = activityService.save(syncedActivityModelsToSave);
+
+		// Then
+		promise.then((result: SyncedActivityModel[]) => {
+
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);
+			expect(result).toEqual(_TEST_SYNCED_ACTIVITIES_);
+			expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
+
+	it("should remove SyncedActivityModels", (done: Function) => {
+
+		// Given
+		const expected = [];
+		const removeDaoSpy = spyOn(activityService.activityDao, "remove")
+			.and.returnValue(Promise.resolve(expected));
+
+		// When
+		const promise: Promise<SyncedActivityModel[]> = activityService.remove();
+
+		// Then
+		promise.then((result: SyncedActivityModel[]) => {
+
+			expect(result).toEqual(expected);
+			expect(removeDaoSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
 });

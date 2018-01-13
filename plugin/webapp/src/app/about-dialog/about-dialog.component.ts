@@ -23,7 +23,7 @@ export class AboutDialogComponent implements OnInit {
 	constructor(public appUsageService: AppUsageService) {
 	}
 
-	public ngOnInit() {
+	public ngOnInit(): void {
 
 		this.appUsageService.get().then((appUsageDetails: AppUsageDetails) => {
 			this.appUsageDetails = appUsageDetails;
@@ -34,7 +34,7 @@ export class AboutDialogComponent implements OnInit {
 		this.d3Version = d3.version;
 	}
 
-	public getAppVersion() {
+	public getAppVersion(): string {
 		return chrome.runtime.getManifest().version;
 	}
 
