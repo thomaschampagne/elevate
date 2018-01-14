@@ -7,6 +7,7 @@ import { AthleteHistoryModel } from "./athlete-history.model";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import * as _ from "lodash";
+import { AthleteHistoryState } from "./athlete-history-state.enum";
 
 @Injectable()
 export class AthleteHistoryService {
@@ -207,6 +208,38 @@ export class AthleteHistoryService {
 
 	/**
 	 *
+	 * @returns {Promise<AthleteHistoryState>}
+	 */
+	public getSyncState(): Promise<AthleteHistoryState> {
+
+		return Promise.all([
+
+			this.getLastSyncDateTime(),
+			this.activityDao.fetch()
+
+		]).then((result: Object[]) => {
+
+			const lastSyncDateTime: number = result[0] as number;
+			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+
+			const hasLastSyncDateTime: boolean = _.isNumber(lastSyncDateTime);
+			const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
+
+			let athleteHistoryState: AthleteHistoryState;
+			if (!hasLastSyncDateTime && !hasSyncedActivityModels) {
+				athleteHistoryState = AthleteHistoryState.NOT_SYNCED;
+			} else if (!hasLastSyncDateTime && hasSyncedActivityModels) {
+				athleteHistoryState = AthleteHistoryState.PARTIALLY_SYNCED;
+			} else {
+				athleteHistoryState = AthleteHistoryState.SYNCED;
+			}
+
+			return Promise.resolve(athleteHistoryState);
+		});
+	}
+
+	/**
+	 *
 	 * @param {boolean} forceSync
 	 */
 	public sync(forceSync: boolean): void {
@@ -243,5 +276,6 @@ export class AthleteHistoryService {
 	public saveAs(blob: Blob, filename: string): void {
 		saveAs(blob, filename);
 	}
+
 
 }

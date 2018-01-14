@@ -5,6 +5,7 @@ import { ActivityDao } from "../../dao/activity/activity.dao";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
+import { AthleteHistoryState } from "./athlete-history-state.enum";
 
 describe('AthleteHistoryService', () => {
 
@@ -32,7 +33,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it('should be created', inject([AthleteHistoryService], (service: AthleteHistoryService) => {
+	it("should be created", inject([AthleteHistoryService], (service: AthleteHistoryService) => {
 		expect(service).toBeTruthy();
 	}));
 
@@ -788,5 +789,75 @@ describe('AthleteHistoryService', () => {
 		expect(window.open).toHaveBeenCalledWith(expectedUrl, jasmine.any(String), jasmine.any(String));
 
 		done();
+	});
+
+	it("should provide NOT_SYNCED state", (done: Function) => {
+
+		// Given
+		const expectedState = AthleteHistoryState.NOT_SYNCED;
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(null));
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(null));
+
+		// When
+		const promise: Promise<AthleteHistoryState> = athleteHistoryService.getSyncState();
+
+		// Then
+		promise.then((athleteHistoryState: AthleteHistoryState) => {
+			expect(athleteHistoryState).toEqual(expectedState);
+			done();
+		});
+	});
+
+	it("should provide PARTIALLY_SYNCED state", (done: Function) => {
+
+		// Given
+		const expectedState = AthleteHistoryState.PARTIALLY_SYNCED;
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(null));
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+		// When
+		const promise: Promise<AthleteHistoryState> = athleteHistoryService.getSyncState();
+
+		// Then
+		promise.then((athleteHistoryState: AthleteHistoryState) => {
+			expect(athleteHistoryState).toEqual(expectedState);
+			done();
+		});
+	});
+
+	it("should provide SYNCED state (1)", (done: Function) => {
+
+		// Given
+		const expectedState = AthleteHistoryState.SYNCED;
+		const lastSyncDateTime = 9999;
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(lastSyncDateTime));
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+		// When
+		const promise: Promise<AthleteHistoryState> = athleteHistoryService.getSyncState();
+
+		// Then
+		promise.then((athleteHistoryState: AthleteHistoryState) => {
+			expect(athleteHistoryState).toEqual(expectedState);
+			done();
+		});
+	});
+
+	it("should provide SYNCED state (2)", (done: Function) => {
+
+		// Given
+		const expectedState = AthleteHistoryState.SYNCED;
+		const lastSyncDateTime = 9999;
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(lastSyncDateTime));
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(null));
+
+		// When
+		const promise: Promise<AthleteHistoryState> = athleteHistoryService.getSyncState();
+
+		// Then
+		promise.then((athleteHistoryState: AthleteHistoryState) => {
+			expect(athleteHistoryState).toEqual(expectedState);
+			done();
+		});
 	});
 });
