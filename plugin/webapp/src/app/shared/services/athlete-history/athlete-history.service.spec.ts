@@ -5,7 +5,6 @@ import { ActivityDao } from "../../dao/activity/activity.dao";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
-import { NotImplementedException } from "../../exceptions/not-implemented.exception";
 
 describe('AthleteHistoryService', () => {
 
@@ -153,7 +152,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should clear athlete profile (for history clear)", (done: Function) => {
+	it("should remove athlete profile (for history remove)", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeProfile").and.returnValue(Promise.resolve(null));
@@ -175,7 +174,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should clear last sync date time (for history clear)", (done: Function) => {
+	it("should remove last sync date time (for history remove)", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
@@ -267,26 +266,96 @@ describe('AthleteHistoryService', () => {
 		const saveAsSpy = spyOn(athleteHistoryService, "saveAs").and.stub();
 
 		// When
-		athleteHistoryService.export(() => {
+		const promise: Promise<any> = athleteHistoryService.export();
 
-			// Then
+		// Then
+		promise.then(() => {
+
 			expect(prepareForExportSpy).toHaveBeenCalledTimes(1);
 			expect(saveAsSpy).toHaveBeenCalledTimes(1);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
 			done();
 		});
 
 	});
 
 	it("should not export history without last sync date", (done: Function) => {
-		throw new NotImplementedException();
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(expectedAthleteProfileModel);
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(null);
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+		const version: string = "1.0.0";
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
+
+		const prepareForExportSpy = spyOn(athleteHistoryService, "prepareForExport").and.callThrough();
+		const saveAsSpy = spyOn(athleteHistoryService, "saveAs").and.stub();
+
+		// When
+		const promise: Promise<any> = athleteHistoryService.export();
+
+		// Then
+		promise.then(() => {
+
+			expect(prepareForExportSpy).toHaveBeenCalledTimes(1);
+			expect(saveAsSpy).toHaveBeenCalledTimes(0);
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual("Cannot export. No last synchronization date found.");
+			done();
+		});
+
 	});
 
 	it("should not export history without profile", (done: Function) => {
-		throw new NotImplementedException();
-	});
 
-	it("should not export history without synced activities", (done: Function) => {
-		throw new NotImplementedException();
+		// Given
+		const lastSyncDateTime: number = 99;
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(null);
+		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
+		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+		const version: string = "1.0.0";
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
+
+		const prepareForExportSpy = spyOn(athleteHistoryService, "prepareForExport").and.callThrough();
+		const saveAsSpy = spyOn(athleteHistoryService, "saveAs").and.stub();
+
+		// When
+		const promise: Promise<any> = athleteHistoryService.export();
+
+		// Then
+		promise.then(() => {
+
+			expect(prepareForExportSpy).toHaveBeenCalledTimes(1);
+			expect(saveAsSpy).toHaveBeenCalledTimes(0);
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual("Cannot export. No athlete history profile saved.");
+			done();
+		});
+
 	});
 
 	it("should import history", (done: Function) => {
@@ -395,7 +464,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should clear history", (done: Function) => {
+	it("should remove history", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
@@ -417,7 +486,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should not clear history", (done: Function) => {
+	it("should not remove history", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(99));

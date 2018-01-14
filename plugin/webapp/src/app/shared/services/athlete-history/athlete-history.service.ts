@@ -84,13 +84,15 @@ export class AthleteHistoryService {
 				"for a " + athleteHistoryModel.pluginVersion + " plugin version. Try perform a clean full sync.");
 		}
 
-		return Promise.all([
+		return this.remove().then(() => {
 
-			this.saveLastSyncDateTime(athleteHistoryModel.lastSyncDateTime),
-			this.saveProfile(athleteHistoryModel.syncWithAthleteProfile),
-			this.activityDao.save(athleteHistoryModel.computedActivities)
+			return Promise.all([
+				this.saveLastSyncDateTime(athleteHistoryModel.lastSyncDateTime),
+				this.saveProfile(athleteHistoryModel.syncWithAthleteProfile),
+				this.activityDao.save(athleteHistoryModel.computedActivities)
+			]);
 
-		]).then((result: Object[]) => {
+		}).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const athleteProfileModel: AthleteProfileModel = result[1] as AthleteProfileModel;
@@ -109,19 +111,21 @@ export class AthleteHistoryService {
 
 	/**
 	 *
-	 * @param {() => void} done
+	 * @returns {Promise<any>} File info
 	 */
-	public export(done?: () => void): void {
+	public export(): Promise<any> {
 
-		this.prepareForExport().then((athleteHistoryModel: AthleteHistoryModel) => {
+		return this.prepareForExport().then((athleteHistoryModel: AthleteHistoryModel) => {
+
 			const blob = new Blob([JSON.stringify(athleteHistoryModel)], {type: "application/json; charset=utf-8"});
 			const filename = moment().format("Y.M.D-H.mm") + "_v" + athleteHistoryModel.pluginVersion + ".history.json";
 			this.saveAs(blob, filename);
-			if (done) {
-				done();
-			}
-		});
+			return Promise.resolve({filename: filename, size: blob.size});
 
+		}, error => {
+
+			return Promise.reject(error);
+		});
 	}
 
 	/**
@@ -141,6 +145,14 @@ export class AthleteHistoryService {
 			const lastSyncDateTime: number = result[0] as number;
 			const athleteProfileModel: AthleteProfileModel = result[1] as AthleteProfileModel;
 			const syncedActivityModels: SyncedActivityModel[] = result[2] as SyncedActivityModel[];
+
+			if (!_.isNumber(lastSyncDateTime)) {
+				return Promise.reject("Cannot export. No last synchronization date found.");
+			}
+
+			if (_.isEmpty(athleteProfileModel)) {
+				return Promise.reject("Cannot export. No athlete history profile saved.");
+			}
 
 			const athleteHistoryModel: AthleteHistoryModel = {
 				syncWithAthleteProfile: athleteProfileModel,

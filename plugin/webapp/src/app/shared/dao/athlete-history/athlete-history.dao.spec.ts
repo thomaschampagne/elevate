@@ -158,7 +158,7 @@ describe('AthleteHistoryDao', () => {
 		});
 	});
 
-	it("should clear athlete profile", (done: Function) => {
+	it("should remove athlete profile", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
@@ -188,7 +188,7 @@ describe('AthleteHistoryDao', () => {
 
 	});
 
-	it("should reject on clear athlete profile", (done: Function) => {
+	it("should reject on remove athlete profile", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -227,7 +227,7 @@ describe('AthleteHistoryDao', () => {
 
 	});
 
-	it("should clear last sync date time", (done: Function) => {
+	it("should remove last sync date time", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
@@ -256,7 +256,7 @@ describe('AthleteHistoryDao', () => {
 
 	});
 
-	it("should reject on clear last sync date time", (done: Function) => {
+	it("should reject on remove last sync date time", (done: Function) => {
 
 		const expectedLastSyncDateTime: number = 9999;
 

@@ -13,7 +13,7 @@ import { AthleteHistoryService } from "./shared/services/athlete-history/athlete
 
 // DONE Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
-// TODO Move SyncedAthleteProfileService methods in AthleteHistoryService
+// DONE Move SyncedAthleteProfileService methods in AthleteHistoryService
 
 // TODO:BUG synced activities models can be partially synced without last sync date time stored => fit trend & yaer progress can be loaded without full data
 // TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
@@ -158,13 +158,19 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.athleteHistoryService.remove().then(() => {
 			window.location.reload();
 		}, error => {
-			this.snackBar.open(error, "Close", {duration: 2500});
+			this.snackBar.open(error, "Close", {duration: 5000});
 		});
 	}
 
 	public onAthleteHistoryExport(): void {
 		// TODO info dialog in download folder
-		this.athleteHistoryService.export();
+		this.athleteHistoryService.export().then((result: any) => {
+
+			console.log(result);
+
+		}, error => {
+			this.snackBar.open(error, "Close", {duration: 5000});
+		});
 	}
 
 	public onAthleteHistoryImport(): void {

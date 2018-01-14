@@ -20,7 +20,7 @@ export class AthleteHistoryDao {
 
 		return new Promise<AthleteProfileModel>((resolve) => {
 			this.chromeStorageLocal().get(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, (result: { syncWithAthleteProfile: AthleteProfileModel }) => {
-				resolve(result.syncWithAthleteProfile);
+				resolve((result.syncWithAthleteProfile) ? result.syncWithAthleteProfile : null);
 			});
 		});
 	}
@@ -66,7 +66,7 @@ export class AthleteHistoryDao {
 	public getLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve) => {
 			this.chromeStorageLocal().get(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
-				resolve(result.lastSyncDateTime);
+				resolve((_.isNumber(result.lastSyncDateTime)) ? result.lastSyncDateTime : null)
 			});
 		});
 	}
@@ -100,8 +100,7 @@ export class AthleteHistoryDao {
 		return new Promise<number>((resolve, reject) => {
 			this.chromeStorageLocal().remove(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, () => {
 				this.getLastSyncDateTime().then((lastSyncDateTime: number) => {
-					(!_.isNumber(lastSyncDateTime) && _.isNull(lastSyncDateTime)) ?
-						resolve(lastSyncDateTime) : reject("LastSyncDateTime has not been deleted");
+					(_.isNumber(lastSyncDateTime)) ? reject("LastSyncDateTime has not been deleted") : resolve(null);
 				});
 			});
 		});
