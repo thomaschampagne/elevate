@@ -78,6 +78,18 @@ export class AthleteHistoryService {
 
 		const installedVersion = this.getAppVersion();
 
+		if (_.isEmpty(athleteHistoryModel.syncWithAthleteProfile)) {
+			return Promise.reject("Athlete profile is not defined in provided backup file. Try to perform a clean full re-sync.");
+		}
+
+		if (_.isEmpty(athleteHistoryModel.computedActivities)) {
+			return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
+		}
+
+		if (_.isEmpty(athleteHistoryModel.pluginVersion)) {
+			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
+		}
+
 		if (installedVersion !== athleteHistoryModel.pluginVersion) {
 			return Promise.reject("Cannot import history because of plugin version mismatch. " +
 				"The installed plugin version is " + installedVersion + " and imported backup file is " +
@@ -186,7 +198,7 @@ export class AthleteHistoryService {
 			if ((!_.isNull(lastSyncDateTime) && _.isNumber(lastSyncDateTime)) ||
 				!_.isEmpty(athleteProfileModel) ||
 				!_.isEmpty(syncedActivityModels)) {
-				return Promise.reject("Athlete history model has not been deleted totally. Some properties cannot be deleted.");
+				return Promise.reject("Athlete history has not been deleted totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 			}
 
 			return Promise.resolve(null);

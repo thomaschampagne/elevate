@@ -55,10 +55,21 @@
 		</ng-container>
 
 		<ng-container *ngIf="!isSynced">
-			<button mat-button (click)="onAthleteHistorySync(false)">
+			<button mat-button [matMenuTriggerFor]="syncMenu">
 				<mat-icon>history</mat-icon>
 				History not synced
 			</button>
+			<mat-menu #syncMenu="matMenu">
+				<!--Force full re-sync even of first sync (to clean up any old history still stored)-->
+				<button mat-menu-item (click)="onAthleteHistorySync(true)">
+					<mat-icon>sync</mat-icon>
+					Sync now
+				</button>
+				<button mat-menu-item (click)="onAthleteHistoryImport()">
+					<mat-icon>file_upload</mat-icon>
+					Restore History
+				</button>
+			</mat-menu>
 		</ng-container>
 
 		<button mat-icon-button [matMenuTriggerFor]="moreMenu">

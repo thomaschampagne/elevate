@@ -40,6 +40,7 @@ import { YearProgressTableComponent } from "../year-progress/year-progress-table
 import { YearProgressHelperDialogComponent } from "../year-progress/year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { AthleteHistoryDao } from "./dao/athlete-history/athlete-history.dao";
 import { AthleteHistoryService } from "./services/athlete-history/athlete-history.service";
+import { AthleteHistoryImportDialogComponent } from './dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -67,7 +68,8 @@ import { AthleteHistoryService } from "./services/athlete-history/athlete-histor
 		ZonesImportExportDialogComponent,
 		FitnessInfoDialogComponent, // TODO Move in a below module?!
 		YearProgressHelperDialogComponent,
-		AboutDialogComponent
+		AboutDialogComponent,
+		AthleteHistoryImportDialogComponent
 
 	],
 	entryComponents: [
@@ -78,7 +80,8 @@ import { AthleteHistoryService } from "./services/athlete-history/athlete-histor
 		ZonesImportExportDialogComponent,
 		FitnessInfoDialogComponent,
 		YearProgressHelperDialogComponent,
-		AboutDialogComponent
+		AboutDialogComponent,
+		AthleteHistoryImportDialogComponent
 
 	],
 	providers: [

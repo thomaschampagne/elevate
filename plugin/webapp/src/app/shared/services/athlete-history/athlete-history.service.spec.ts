@@ -196,7 +196,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should prepare export history", (done: Function) => {
+	it("should prepare export athlete history", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -238,7 +238,7 @@ describe('AthleteHistoryService', () => {
 		});
 	});
 
-	it("should export history", (done: Function) => {
+	it("should export athlete history", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -282,7 +282,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should not export history without last sync date", (done: Function) => {
+	it("should not export athlete history without last sync date", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -325,7 +325,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should not export history without profile", (done: Function) => {
+	it("should not export athlete history without profile", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime: number = 99;
@@ -358,7 +358,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should import history", (done: Function) => {
+	it("should import athlete history", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -415,7 +415,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should not import history with mismatch version", (done: Function) => {
+	it("should not import athlete history with mismatch version", (done: Function) => {
 
 		// Given
 		const gender = "men";
@@ -464,7 +464,271 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should remove history", (done: Function) => {
+	it("should not import athlete history with no version provided (=null)", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: AthleteHistoryModel = {
+			syncWithAthleteProfile: athleteProfileModel,
+			computedActivities: TEST_SYNCED_ACTIVITIES,
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: null
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveProfile").and.returnValue(Promise.resolve(athleteHistoryModelImported.syncWithAthleteProfile));
+		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+	});
+
+	it("should not import athlete history with no version provided (missing key)", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
+			syncWithAthleteProfile: athleteProfileModel,
+			computedActivities: TEST_SYNCED_ACTIVITIES,
+			lastSyncDateTime: lastSyncDateTime
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveProfile").and.returnValue(Promise.resolve(athleteHistoryModelImported.syncWithAthleteProfile));
+		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported as AthleteHistoryModel);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+	});
+
+	it("should not import athlete history with no athlete profile", (done: Function) => {
+
+		// Given
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const importedVersion: string = "1.0.0";
+		const expectedErrorMessage = "Athlete profile is not defined in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
+			computedActivities: TEST_SYNCED_ACTIVITIES,
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: importedVersion
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported as AthleteHistoryModel);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+	});
+
+	it("should not import athlete history with synced activities empty (=null)", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const importedVersion: string = "1.0.0";
+		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: AthleteHistoryModel = {
+			syncWithAthleteProfile: athleteProfileModel,
+			computedActivities: null,
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: importedVersion
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveProfile").and.returnValue(Promise.resolve(athleteHistoryModelImported.syncWithAthleteProfile));
+		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+
+	});
+
+	it("should not import athlete history with synced activities empty (missing key)", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const importedVersion: string = "1.0.0";
+		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
+			syncWithAthleteProfile: athleteProfileModel,
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: importedVersion
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveProfile").and.returnValue(Promise.resolve(athleteHistoryModelImported.syncWithAthleteProfile));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported as AthleteHistoryModel);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+	});
+
+	it("should not import athlete history with synced activities empty (length == 0)", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const lastSyncDateTime: number = 99;
+		const currentInstalledVersion: string = "1.0.0";
+		const importedVersion: string = "1.0.0";
+		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
+
+		const athleteHistoryModelImported: AthleteHistoryModel = {
+			syncWithAthleteProfile: athleteProfileModel,
+			computedActivities: [],
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: importedVersion
+		};
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(athleteHistoryModelImported.lastSyncDateTime));
+		spyOn(athleteHistoryService.athleteHistoryDao, "saveProfile").and.returnValue(Promise.resolve(athleteHistoryModelImported.syncWithAthleteProfile));
+		spyOn(athleteHistoryService.activityDao, "save").and.returnValue(Promise.resolve(athleteHistoryModelImported.computedActivities));
+		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		// When
+		const promise: Promise<AthleteHistoryModel> = athleteHistoryService.import(athleteHistoryModelImported);
+
+		// Then
+		promise.then(() => {
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+
+		}, error => {
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+
+	});
+
+	it("should remove athlete history", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
@@ -486,7 +750,7 @@ describe('AthleteHistoryService', () => {
 
 	});
 
-	it("should not remove history", (done: Function) => {
+	it("should reject on remove history failure (removeLastSyncDateTime not deleted)", (done: Function) => {
 
 		// Given
 		spyOn(athleteHistoryService.athleteHistoryDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(99));
@@ -503,7 +767,7 @@ describe('AthleteHistoryService', () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("Athlete history model has not been deleted totally. Some properties cannot be deleted.");
+			expect(error).toEqual("Athlete history has not been deleted totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 			done();
 		});
 

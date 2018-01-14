@@ -10,6 +10,12 @@ import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
 import * as moment from "moment";
 import { AthleteHistoryService } from "./shared/services/athlete-history/athlete-history.service";
+import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
+import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 
 // DONE Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
@@ -154,27 +160,66 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public onAthleteHistoryRemove(): void {
 
-		// TODO warning confirm dialog
-		this.athleteHistoryService.remove().then(() => {
-			window.location.reload();
-		}, error => {
-			this.snackBar.open(error, "Close", {duration: 5000});
+		const data: ConfirmDialogDataModel = {
+			title: "Clear your athlete history",
+			content: "Are you sure to perform this action? You will be able to re-import history through backup file " +
+			"or a new re-synchronization."
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+			if (confirm) {
+				this.athleteHistoryService.remove().then(() => {
+					location.reload();
+				}, error => {
+					this.snackBar.open(error, "Close");
+				});
+			}
+			afterClosedSubscription.unsubscribe();
 		});
 	}
 
 	public onAthleteHistoryExport(): void {
-		// TODO info dialog in download folder
+
 		this.athleteHistoryService.export().then((result: any) => {
 
-			console.log(result);
+			this.dialog.open(GotItDialogComponent, {
+				minWidth: GotItDialogComponent.MIN_WIDTH,
+				maxWidth: GotItDialogComponent.MAX_WIDTH,
+				data: new GotItDialogDataModel(null, "File \"" + result.filename + "\" is being saved to your download folder.")
+			});
 
 		}, error => {
-			this.snackBar.open(error, "Close", {duration: 5000});
+			this.snackBar.open(error, "Close");
 		});
+
 	}
 
 	public onAthleteHistoryImport(): void {
-		// TODO dialog import
+
+		const dialogRef = this.dialog.open(AthleteHistoryImportDialogComponent, {
+			minWidth: AthleteHistoryImportDialogComponent.MIN_WIDTH,
+			maxWidth: AthleteHistoryImportDialogComponent.MAX_WIDTH,
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((athleteHistoryModel: AthleteHistoryModel) => {
+
+			if (athleteHistoryModel) {
+				this.athleteHistoryService.import(athleteHistoryModel).then(() => {
+					location.reload();
+				}, error => {
+					this.snackBar.open(error, "Close");
+				});
+			}
+
+			afterClosedSubscription.unsubscribe();
+		});
 	}
 
 	public onShowShare(): void {
