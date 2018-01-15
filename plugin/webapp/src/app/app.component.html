@@ -25,45 +25,49 @@
 
 		<span class="toolbar-spacer"></span>
 
-		<ng-container *ngIf="isSynced">
+		<ng-container>
 			<button mat-button [matMenuTriggerFor]="syncMenu">
-				<mat-icon>history</mat-icon>
-				{{syncedStateMessage}}
+				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.NOT_SYNCED">
+					sync_disabled
+				</mat-icon>
+				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED">
+					sync_problem
+				</mat-icon>
+				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
+					sync
+				</mat-icon>
+
+				<span *ngIf="athleteHistoryState === AthleteHistoryState.NOT_SYNCED">
+					History not synced
+				</span>
+				<span *ngIf="athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED">
+					History partially synced
+				</span>
+				<span *ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
+					Synced {{lastSyncDateMessage}}
+				</span>
 			</button>
 			<mat-menu #syncMenu="matMenu">
-				<button mat-menu-item (click)="onAthleteHistorySync(false)">
+				<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
+				<button mat-menu-item
+						(click)="onAthleteHistorySync(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
 					<mat-icon>sync</mat-icon>
 					Sync now
 				</button>
-				<button mat-menu-item (click)="onAthleteHistorySync(true)">
+				<button mat-menu-item (click)="onAthleteHistorySync(true)"
+						*ngIf="athleteHistoryState !== AthleteHistoryState.NOT_SYNCED">
 					<mat-icon>redo</mat-icon>
 					Redo Full Sync
 				</button>
-				<button mat-menu-item (click)="onAthleteHistoryRemove()">
+				<button mat-menu-item (click)="onAthleteHistoryRemove()"
+						*ngIf="athleteHistoryState !== AthleteHistoryState.NOT_SYNCED">
 					<mat-icon>clear</mat-icon>
 					Clear Local History
 				</button>
-				<button mat-menu-item (click)="onAthleteHistoryExport()">
+				<button mat-menu-item (click)="onAthleteHistoryExport()"
+						*ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
 					<mat-icon>file_download</mat-icon>
 					Backup History
-				</button>
-				<button mat-menu-item (click)="onAthleteHistoryImport()">
-					<mat-icon>file_upload</mat-icon>
-					Restore History
-				</button>
-			</mat-menu>
-		</ng-container>
-
-		<ng-container *ngIf="!isSynced">
-			<button mat-button [matMenuTriggerFor]="syncMenu">
-				<mat-icon>history</mat-icon>
-				History not synced
-			</button>
-			<mat-menu #syncMenu="matMenu">
-				<!--Force full re-sync even of first sync (to clean up any old history still stored)-->
-				<button mat-menu-item (click)="onAthleteHistorySync(true)">
-					<mat-icon>sync</mat-icon>
-					Sync now
 				</button>
 				<button mat-menu-item (click)="onAthleteHistoryImport()">
 					<mat-icon>file_upload</mat-icon>

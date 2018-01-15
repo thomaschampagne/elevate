@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
+import * as moment from "moment";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
-import * as moment from "moment";
 import { AthleteHistoryService } from "./shared/services/athlete-history/athlete-history.service";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
@@ -16,6 +16,7 @@ import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dial
 import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
+import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
 // DONE Synchronisation start, display last sync (with Athlete Profile)
 // TODO History import/export/clear
@@ -45,12 +46,15 @@ export class AppComponent implements OnInit, OnDestroy {
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
 
+	public AthleteHistoryState = AthleteHistoryState;
+	public athleteHistoryState: AthleteHistoryState;
+	public lastSyncDateMessage: string;
+
 	public routerEventsSubscription: Subscription;
 	public title: string;
 	public sideNavOpened: boolean;
 	public sideNavMode: string;
-	public isSynced: boolean;
-	public syncedStateMessage: string;
+
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
 			icon: "timeline",
@@ -138,14 +142,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public updateLastSyncDateStatus(): void {
 
-		this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
-			if (_.isNumber(lastSyncDateTime)) {
-				this.isSynced = true;
-				this.syncedStateMessage = "Synced " + moment(lastSyncDateTime).fromNow();
-			} else {
-				this.isSynced = false;
-			}
+		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
+
+			this.athleteHistoryState = athleteHistoryState;
+
+			this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+				if (_.isNumber(lastSyncDateTime)) {
+					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
+				}
+			});
 		});
+
 	}
 
 	public setupWindowResizeBroadcast(): void {
