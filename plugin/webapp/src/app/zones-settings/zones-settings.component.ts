@@ -29,10 +29,10 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 	public areZonesLoaded: boolean = false;
 
-	constructor(private userSettingsService: UserSettingsService,
-				private route: ActivatedRoute,
-				private router: Router,
-				private zonesService: ZonesService) {
+	constructor(public userSettingsService: UserSettingsService,
+				public route: ActivatedRoute,
+				public router: Router,
+				public zonesService: ZonesService) {
 	}
 
 	public ngOnInit(): void {
