@@ -17,7 +17,6 @@ describe('YearProgressResolverService', () => {
 
 	let yearProgressResolverService: YearProgressResolverService;
 	let athleteHistoryService: AthleteHistoryService;
-	let athleteHistoryDao: AthleteHistoryDao;
 	let userSettingsService: UserSettingsService;
 	let activityDao: ActivityDao;
 
@@ -35,7 +34,6 @@ describe('YearProgressResolverService', () => {
 
 		yearProgressResolverService = TestBed.get(YearProgressResolverService);
 		athleteHistoryService = TestBed.get(AthleteHistoryService);
-		athleteHistoryDao = TestBed.get(AthleteHistoryDao);
 		userSettingsService = TestBed.get(UserSettingsService);
 		activityDao = TestBed.get(ActivityDao);
 
@@ -52,8 +50,8 @@ describe('YearProgressResolverService', () => {
 			cyclingFtp,
 			weight);
 
-		spyOn(athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
-		spyOn(athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
+		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
 	});
 

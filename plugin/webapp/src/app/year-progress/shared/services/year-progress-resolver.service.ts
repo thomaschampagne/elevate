@@ -43,6 +43,7 @@ export class YearProgressResolverService implements Resolve<RequiredYearProgress
 					});
 
 				} else {
+					console.warn("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString());
 					resolve(null);
 				}
 			})

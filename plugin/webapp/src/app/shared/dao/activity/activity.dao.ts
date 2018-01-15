@@ -12,7 +12,7 @@ export class ActivityDao {
 
 	/**
 	 *
-	 * @returns {Promise<SyncedActivityModel[]>}
+	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve) => {
@@ -26,7 +26,7 @@ export class ActivityDao {
 	/**
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
-	 * @returns {Promise<SyncedActivityModel[]>}
+	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
 
@@ -45,7 +45,7 @@ export class ActivityDao {
 
 	/**
 	 *
-	 * @returns {Promise<SyncedActivityModel[]>}
+	 * @returns {Promise<SyncedActivityModel[]>} removed SyncedActivityModels
 	 */
 	public remove(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve, reject) => {

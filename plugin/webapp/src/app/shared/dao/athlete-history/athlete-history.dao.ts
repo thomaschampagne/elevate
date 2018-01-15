@@ -5,7 +5,7 @@ import * as _ from "lodash";
 @Injectable()
 export class AthleteHistoryDao {
 
-	// FIXME merge "syncWithAthleteProfile" & "lastSyncDateTime" & "computedActivities" into a single local storage object "AthleteHistory" ?!
+	// FIXME merge physical storage of "syncWithAthleteProfile" & "lastSyncDateTime" & "computedActivities" into a single local storage object "AthleteHistory" ?!
 	public static readonly ATHLETE_SYNCED_PROFILE_KEY: string = "syncWithAthleteProfile";
 	public static readonly LAST_SYNCED_DATE_TIME_KEY: string = "lastSyncDateTime";
 

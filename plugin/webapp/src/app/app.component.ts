@@ -18,11 +18,8 @@ import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-hi
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
-// DONE Synchronisation start, display last sync (with Athlete Profile)
-// TODO History import/export/clear
-// DONE Move SyncedAthleteProfileService methods in AthleteHistoryService
 
-// TODO:BUG synced activities models can be partially synced without last sync date time stored => fit trend & yaer progress can be loaded without full data
+// TODO onShowShare
 // TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
@@ -143,9 +140,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public updateLastSyncDateStatus(): void {
 
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
-
 			this.athleteHistoryState = athleteHistoryState;
-
 			this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 				if (_.isNumber(lastSyncDateTime)) {
 					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
@@ -163,7 +158,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public onAthleteHistorySync(forceSync: boolean): void {
 		this.athleteHistoryService.sync(forceSync);
-	};
+	}
 
 	public onAthleteHistoryRemove(): void {
 
