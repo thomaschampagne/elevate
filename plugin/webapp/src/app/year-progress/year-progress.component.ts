@@ -63,7 +63,8 @@ export class YearProgressComponent implements OnInit {
 
 		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
 
-			this.hasActivityModels = !_.isEmpty(data.requiredYearProgressDataModel.syncedActivityModels);
+			this.hasActivityModels = (!_.isEmpty(data.requiredYearProgressDataModel)
+				&& !_.isEmpty(data.requiredYearProgressDataModel.syncedActivityModels));
 
 			if (this.hasActivityModels) {
 				this.setup(

@@ -20,6 +20,8 @@ import { SideNavService } from "../../shared/services/side-nav/side-nav.service"
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "../../shared/services/window/window.service";
+import { AthleteHistoryState } from "../../shared/services/athlete-history/athlete-history-state.enum";
+import { AthleteHistoryService } from "../../shared/services/athlete-history/athlete-history.service";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -75,7 +77,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
 
-	constructor(public userSettingsService: UserSettingsService,
+	constructor(public athleteHistoryService: AthleteHistoryService,
+				public userSettingsService: UserSettingsService,
 				public fitnessService: FitnessService,
 				public sideNavService: SideNavService,
 				public windowService: WindowService,
@@ -86,7 +89,15 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 		this.PERFORMANCE_MARKER = performance.now();
 
-		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
+
+			if (athleteHistoryState === AthleteHistoryState.SYNCED) {
+				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
+			} else {
+				return Promise.reject("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString()) as PromiseLike<UserSettingsModel>;
+			}
+
+		}).then((userSettings: UserSettingsModel) => {
 
 			this.cyclingFtp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;
