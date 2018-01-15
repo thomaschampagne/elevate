@@ -27,23 +27,23 @@
 
 		<ng-container>
 			<button mat-button [matMenuTriggerFor]="syncMenu">
-				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.NOT_SYNCED">
+				<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
 					sync_disabled
 				</mat-icon>
-				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED">
+				<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
 					sync_problem
 				</mat-icon>
-				<mat-icon *ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
+				<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
 					sync
 				</mat-icon>
 
-				<span *ngIf="athleteHistoryState === AthleteHistoryState.NOT_SYNCED">
+				<span *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
 					History not synced
 				</span>
-				<span *ngIf="athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED">
+				<span *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
 					History partially synced
 				</span>
-				<span *ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
+				<span *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
 					Synced {{lastSyncDateMessage}}
 				</span>
 			</button>
@@ -55,17 +55,17 @@
 					Sync now
 				</button>
 				<button mat-menu-item (click)="onAthleteHistorySync(true)"
-						*ngIf="athleteHistoryState !== AthleteHistoryState.NOT_SYNCED">
+						*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
 					<mat-icon>redo</mat-icon>
 					Redo Full Sync
 				</button>
 				<button mat-menu-item (click)="onAthleteHistoryRemove()"
-						*ngIf="athleteHistoryState !== AthleteHistoryState.NOT_SYNCED">
+						*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
 					<mat-icon>clear</mat-icon>
 					Clear Local History
 				</button>
 				<button mat-menu-item (click)="onAthleteHistoryExport()"
-						*ngIf="athleteHistoryState === AthleteHistoryState.SYNCED">
+						*ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
 					<mat-icon>file_download</mat-icon>
 					Backup History
 				</button>

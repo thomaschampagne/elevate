@@ -8,17 +8,25 @@ import { RequiredYearProgressDataModel } from "../models/required-year-progress-
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { AthleteHistoryService } from "../../../shared/services/athlete-history/athlete-history.service";
+import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
+import { AthleteHistoryState } from "../../../shared/services/athlete-history/athlete-history-state.enum";
+import { AthleteHistoryDao } from "../../../shared/dao/athlete-history/athlete-history.dao";
 
 describe('YearProgressResolverService', () => {
 
-	let userSettingsService: UserSettingsService;
 	let yearProgressResolverService: YearProgressResolverService;
+	let athleteHistoryService: AthleteHistoryService;
+	let athleteHistoryDao: AthleteHistoryDao;
+	let userSettingsService: UserSettingsService;
 	let activityDao: ActivityDao;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [
 				YearProgressResolverService,
+				AthleteHistoryService,
+				AthleteHistoryDao,
 				UserSettingsService,
 				UserSettingsDao,
 				ActivityDao
@@ -26,10 +34,27 @@ describe('YearProgressResolverService', () => {
 		});
 
 		yearProgressResolverService = TestBed.get(YearProgressResolverService);
+		athleteHistoryService = TestBed.get(AthleteHistoryService);
+		athleteHistoryDao = TestBed.get(AthleteHistoryDao);
 		userSettingsService = TestBed.get(UserSettingsService);
 		activityDao = TestBed.get(ActivityDao);
 
+		// Mocking athlete history
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
 
+		spyOn(athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
+		spyOn(athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
 	});
 
 	it("should be created", (done: Function) => {

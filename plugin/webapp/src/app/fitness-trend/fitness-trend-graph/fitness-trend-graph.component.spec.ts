@@ -12,16 +12,20 @@ import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { AppComponent } from "../../app.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
+import { AthleteProfileModel } from "../../../../../common/scripts/models/AthleteProfile";
+import { AthleteHistoryService } from "../../shared/services/athlete-history/athlete-history.service";
+import { AthleteHistoryState } from "../../shared/services/athlete-history/athlete-history-state.enum";
 
 describe("FitnessTrendGraphComponent", () => {
 
-	let activityDao: ActivityDao = null;
-	let userSettingsDao: UserSettingsDao = null;
-	let activityService: ActivityService = null;
-	let fitnessService: FitnessService = null;
-	let component: FitnessTrendGraphComponent = null;
-	let fixture: ComponentFixture<FitnessTrendGraphComponent> = null;
-	let todayMoment: Moment = null;
+	let activityDao: ActivityDao;
+	let userSettingsDao: UserSettingsDao;
+	let activityService: ActivityService;
+	let fitnessService: FitnessService;
+	let athleteHistoryService: AthleteHistoryService;
+	let component: FitnessTrendGraphComponent;
+	let fixture: ComponentFixture<FitnessTrendGraphComponent>;
+	let todayMoment: Moment;
 
 	beforeEach(async(() => {
 
@@ -38,6 +42,7 @@ describe("FitnessTrendGraphComponent", () => {
 		userSettingsDao = TestBed.get(UserSettingsDao);
 		activityService = TestBed.get(ActivityService);
 		fitnessService = TestBed.get(FitnessService);
+		athleteHistoryService = TestBed.get(AthleteHistoryService);
 
 		// Mocking chrome storage
 		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
@@ -59,6 +64,23 @@ describe("FitnessTrendGraphComponent", () => {
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
 		spyOn(fitnessService, "indexesOf").and.returnValue({start: 289, end: 345});
 
+		// Mocking athlete history
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
+		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
+
 	}));
 
 	beforeEach(() => {
@@ -67,6 +89,7 @@ describe("FitnessTrendGraphComponent", () => {
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 
+		// Do not try to draw the graph
 		spyOn(component, "updateGraph").and.stub();
 	});
 
