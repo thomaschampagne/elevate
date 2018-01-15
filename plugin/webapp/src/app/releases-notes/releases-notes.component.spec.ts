@@ -1,14 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReleasesNotesComponent } from './releases-notes.component';
+import { CoreModule } from "../core/core.module";
+import { SharedModule } from "../shared/shared.module";
 
-xdescribe('ReleasesNotesComponent', () => {
+describe('ReleasesNotesComponent', () => {
 	let component: ReleasesNotesComponent;
 	let fixture: ComponentFixture<ReleasesNotesComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ReleasesNotesComponent]
+			imports: [
+				CoreModule,
+				SharedModule,
+			]
 		}).compileComponents();
 	}));
 
