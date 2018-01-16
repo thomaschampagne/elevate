@@ -9,7 +9,6 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../../common/scripts/UserSettings";
-import { AppComponent } from "../../app.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { AthleteProfileModel } from "../../../../../common/scripts/models/AthleteProfile";
@@ -30,7 +29,6 @@ describe("FitnessTrendGraphComponent", () => {
 	beforeEach(async(() => {
 
 		TestBed.configureTestingModule({
-			declarations: [AppComponent],
 			imports: [
 				CoreModule,
 				SharedModule,
@@ -80,6 +78,7 @@ describe("FitnessTrendGraphComponent", () => {
 		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
+		spyOn(athleteHistoryService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
 
 	}));
 

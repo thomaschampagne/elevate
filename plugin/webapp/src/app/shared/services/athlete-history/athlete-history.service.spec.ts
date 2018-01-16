@@ -6,6 +6,9 @@ import { AthleteHistoryModel } from "./athlete-history.model";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
+import { userSettings } from "../../../../../../common/scripts/UserSettings";
+import { UserSettingsService } from "../user-settings/user-settings.service";
+import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 
 describe('AthleteHistoryService', () => {
 
@@ -16,7 +19,7 @@ describe('AthleteHistoryService', () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [AthleteHistoryService, AthleteHistoryDao, ActivityDao]
+			providers: [AthleteHistoryService, AthleteHistoryDao, ActivityDao, UserSettingsService, UserSettingsDao]
 		});
 
 		athleteHistoryService = TestBed.get(AthleteHistoryService);
@@ -28,6 +31,8 @@ describe('AthleteHistoryService', () => {
 			};
 			callback(tab as chrome.tabs.Tab);
 		});
+
+		spyOn(athleteHistoryService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
 
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
