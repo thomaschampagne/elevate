@@ -256,7 +256,7 @@ describe('AthleteHistoryService', () => {
 
 		const lastSyncDateTime: number = 99;
 
-		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(expectedAthleteProfileModel);
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
@@ -298,7 +298,7 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(expectedAthleteProfileModel);
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(null);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
@@ -857,6 +857,79 @@ describe('AthleteHistoryService', () => {
 		// Then
 		promise.then((athleteHistoryState: AthleteHistoryState) => {
 			expect(athleteHistoryState).toEqual(expectedState);
+			done();
+		});
+	});
+
+	it("should provide equality between local athlete profile & remote", (done: Function) => {
+
+		// Given
+		const expected = true;
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const localAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const remoteAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(localAthleteProfileModel));
+
+		// When
+		const promise: Promise<boolean> = athleteHistoryService.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel);
+
+		// Then
+		promise.then((same: boolean) => {
+
+			expect(same).toEqual(expected);
+			done();
+		});
+
+	});
+
+	it("should provide mismatch between local athlete profile & remote", (done: Function) => {
+
+		// Given
+		const expected = false;
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const localAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		const remoteAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight + 1); // Inject difference
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(localAthleteProfileModel));
+
+		// When
+		const promise: Promise<boolean> = athleteHistoryService.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel);
+
+		// Then
+		promise.then((same: boolean) => {
+
+			expect(same).toEqual(expected);
 			done();
 		});
 	});

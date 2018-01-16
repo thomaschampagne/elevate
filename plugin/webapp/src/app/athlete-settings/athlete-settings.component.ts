@@ -5,6 +5,7 @@ import { UserSettingsModel } from "../../../../common/scripts/models/UserSetting
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { GenderModel } from "./gender.model";
+import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 
 @Component({
 	selector: "app-athlete-settings",
@@ -45,8 +46,9 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public isSwimFtpCalculatorEnabled = false;
 
-	constructor(public userSettingsService: UserSettingsService,
-				private snackBar: MatSnackBar) {
+	constructor(public athleteHistoryService: AthleteHistoryService,
+				public userSettingsService: UserSettingsService,
+				public snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
@@ -261,32 +263,20 @@ export class AthleteSettingsComponent implements OnInit {
 	/**
 	 *
 	 */
-	private localStorageMustBeCleared() {
+	public localStorageMustBeCleared() {
 		this.userSettingsService.update(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
 			console.log(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE + " has been updated to " + true);
 		});
 	}
 
+
 	/**
 	 *
+	 * @param {UserSettingsModel} userSettingsModelChanged
 	 */
-	private profileChanged() {
-
+	public profileChanged() {
 		this.localStorageMustBeCleared();
-
-		// TODO.. profileChanged not yet implemented
-		console.warn("profileChanged not yet implemented");
-
-		/*userSettingsService.getProfileConfigured().then((configured: boolean) => {
-			if (!configured) {
-				userSettingsService.setProfileConfigured(true).then(() => {
-					console.log("Profile configured");
-				});
-			}
-		});
-
-		$rootScope.$broadcast(AthleteSettingsController.changedAthleteProfileMessage);*/
-
+		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
 	/**
@@ -294,8 +284,8 @@ export class AthleteSettingsComponent implements OnInit {
 	 * @param {string} key
 	 * @param value
 	 */
-	private saveSetting(key: string, value: any): void {
-		this.userSettingsService.update(key, value).then(() => {
+	public saveSetting(key: string, value: any): void {
+		this.userSettingsService.update(key, value).then((userSettingsModel: UserSettingsModel) => {
 			console.log(key + " has been updated to " + value);
 			this.profileChanged();
 		});
@@ -307,7 +297,7 @@ export class AthleteSettingsComponent implements OnInit {
 	 * @param {string} key
 	 * @returns {Promise<any>}
 	 */
-	private getSavedSetting(key: string): Promise<any> {
+	public getSavedSetting(key: string): Promise<any> {
 		return this.userSettingsService.get(key);
 	}
 
@@ -315,7 +305,7 @@ export class AthleteSettingsComponent implements OnInit {
 	 *
 	 * @param {string} customMessage
 	 */
-	private popError(customMessage?: string) {
+	public popError(customMessage?: string) {
 
 		let message = "Invalid value entered. Reset to previous value.";
 
@@ -331,7 +321,7 @@ export class AthleteSettingsComponent implements OnInit {
 	/**
 	 *
 	 */
-	private popHeartRateError() {
+	public popHeartRateError() {
 		this.popError("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value");
 	}
 }

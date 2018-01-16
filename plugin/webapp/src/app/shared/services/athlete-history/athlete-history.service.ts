@@ -8,6 +8,9 @@ import { saveAs } from "file-saver";
 import * as moment from "moment";
 import * as _ from "lodash";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
+import { Subject } from "rxjs/Subject";
+import { UserSettingsService } from "../user-settings/user-settings.service";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
 
 @Injectable()
 export class AthleteHistoryService {
@@ -16,8 +19,13 @@ export class AthleteHistoryService {
 	public static readonly SYNC_WINDOW_WIDTH: number = 700;
 	public static readonly SYNC_WINDOW_HEIGHT: number = 675;
 
+	public localRemoteAthleteProfileSame: Subject<boolean>;
+
 	constructor(public athleteHistoryDao: AthleteHistoryDao,
+				public userSettingsService: UserSettingsService,
 				public activityDao: ActivityDao) {
+
+		this.localRemoteAthleteProfileSame = new Subject<boolean>();
 	}
 
 	/**
@@ -240,6 +248,50 @@ export class AthleteHistoryService {
 
 	/**
 	 *
+	 * @param {AthleteProfileModel} remoteAthleteProfileModel
+	 * @returns {Promise<boolean>}
+	 */
+	public isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel: AthleteProfileModel): Promise<boolean> {
+
+		return this.getProfile().then((localAthleteProfile: AthleteProfileModel) => {
+
+			let remoteEqualsLocal: boolean = true;
+
+			if (remoteAthleteProfileModel.userGender !== localAthleteProfile.userGender ||
+				remoteAthleteProfileModel.userMaxHr !== localAthleteProfile.userMaxHr ||
+				remoteAthleteProfileModel.userRestHr !== localAthleteProfile.userRestHr ||
+				remoteAthleteProfileModel.userFTP !== localAthleteProfile.userFTP ||
+				remoteAthleteProfileModel.userWeight !== localAthleteProfile.userWeight) {
+
+				remoteEqualsLocal = false;
+			}
+
+			return Promise.resolve(remoteEqualsLocal);
+		});
+	}
+
+	/**
+	 *
+	 */
+	public checkLocalRemoteAthleteProfileSame(): void {
+
+		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+
+			const remoteAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(userSettings.userGender,
+				userSettings.userMaxHr,
+				userSettings.userRestHr,
+				userSettings.userFTP,
+				userSettings.userWeight);
+
+			this.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel).then((isSame: boolean) => {
+				this.localRemoteAthleteProfileSame.next(isSame);
+			});
+
+		});
+	}
+
+	/**
+	 *
 	 * @param {boolean} forceSync
 	 */
 	public sync(forceSync: boolean): void {
@@ -276,6 +328,4 @@ export class AthleteHistoryService {
 	public saveAs(blob: Blob, filename: string): void {
 		saveAs(blob, filename);
 	}
-
-
 }

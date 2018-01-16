@@ -18,7 +18,6 @@ import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-hi
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
-
 // TODO onShowShare
 // TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
@@ -99,7 +98,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 
 		return _.startCase(_.upperFirst(title));
-
 	}
 
 	constructor(public router: Router,
@@ -135,6 +133,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		}, 1000 * 60);
 
 		this.setupWindowResizeBroadcast();
+
+		// Show warn ribbon if athlete settings do not match with athlete settings used for history synchronization
+		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
 	public updateLastSyncDateStatus(): void {
