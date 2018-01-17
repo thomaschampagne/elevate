@@ -11,7 +11,7 @@
 		"package:preview": "npm run clean:jsmap && node ./node_modules/gulp/bin/gulp.js package --preview",
 		"start": "node ./node_modules/concurrently/src/main.js --kill-others --names \"core,webapp\" \"npm run dev:core\" \"npm run dev:webapp\"",
 		"dev:core": "npm run clean:jsmap && npm run tsc:watch",
-		"dev:webapp": "npm run build:webapp -- --aot --watch",
+		"dev:webapp": "npm run build:webapp -- --watch",
 		"tsc:version": "echo TypeScript: && node ./node_modules/typescript/bin/tsc --version",
 		"tsc:compile": "npm run tsc:version && node ./node_modules/typescript/bin/tsc",
 		"tsc:watch": "npm run tsc:version && node ./node_modules/typescript/bin/tsc --watch",
