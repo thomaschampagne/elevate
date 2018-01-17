@@ -19,7 +19,6 @@ import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-h
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
 // TODO onShowShare
-// TODO:BUG @Fitness Trend: resize windows from fitness table cause: ERROR TypeError: Cannot read property 'style' of null
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)

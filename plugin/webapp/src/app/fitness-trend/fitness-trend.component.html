@@ -36,7 +36,6 @@ This means that null/true state  will not display the message -->
 
 	</mat-card-content>
 </mat-card>
-
 <!--If not sure yet to have fitness data (=null) and have fitness data (=true), then we load the tab group -->
 <mat-tab-group *ngIf="hasFitnessTrendData !== false"
 			   (focusChange)="onFocusChange($event)"
@@ -45,7 +44,8 @@ This means that null/true state  will not display the message -->
 			   (selectedIndexChange)="onSelectedIndexChange($event)">
 	<mat-tab label="Graph">
 		<app-fitness-trend-graph
-			(hasFitnessTrendDataNotify)="onHasFitnessTrendDataNotify($event)">
+			(hasFitnessTrendDataNotify)="onHasFitnessTrendDataNotify($event)"
+			[hasComponentFocus]="(!selectedTabIndex || selectedTabIndex === GRAPH_COMPONENT_INDEX)">
 		</app-fitness-trend-graph>
 	</mat-tab>
 	<mat-tab label="Table">

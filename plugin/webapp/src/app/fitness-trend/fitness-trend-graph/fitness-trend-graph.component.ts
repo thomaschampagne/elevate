@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -47,6 +47,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	@Output("hasFitnessTrendDataNotify")
 	public hasFitnessTrendDataNotify: EventEmitter<boolean> = new EventEmitter<boolean>();
 	public hasFitnessTrendData: boolean = null; // Can be null because true/false state will assigned through asynchronous data fetching
+
+	@Input("hasComponentFocus")
+	public hasComponentFocus: boolean;
 
 	public readonly atlColor: string = "#515151";
 	public readonly ctlColor: string = "#e94e1b";
@@ -276,8 +279,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 		this.graphReadyToBeDrawn = true;
 		setTimeout(() => {
-			MG.data_graphic(this.graphConfig);
-			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			if (this.hasComponentFocus) {
+				MG.data_graphic(this.graphConfig);
+				console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			}
 		});
 	}
 

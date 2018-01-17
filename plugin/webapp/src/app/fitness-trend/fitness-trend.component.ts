@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTabChangeEvent } from "@angular/material";
 import * as _ from "lodash";
 
 @Component({
@@ -9,7 +8,10 @@ import * as _ from "lodash";
 })
 export class FitnessTrendComponent implements OnInit {
 
+	public readonly GRAPH_COMPONENT_INDEX: number = 0;
+
 	public hasFitnessTrendData: boolean = null; // Can be null because true/false state will assigned through asynchronous data fetching
+	public selectedTabIndex: number;
 
 	public static openActivities(ids: number[]) {
 
@@ -26,6 +28,7 @@ export class FitnessTrendComponent implements OnInit {
 	constructor() {
 	}
 
+
 	public ngOnInit(): void {
 	}
 
@@ -33,16 +36,8 @@ export class FitnessTrendComponent implements OnInit {
 		this.hasFitnessTrendData = hasFitnessTrendData;
 	}
 
-	public onFocusChange(event: MatTabChangeEvent): void {
-	}
-
-	public onSelectedIndexChange(index: number): void {
-	}
-
-	public onSelectedTabChange(event: MatTabChangeEvent): void {
-	}
-
-	public onSelectChange(event: MatTabChangeEvent): void {
+	public onSelectedIndexChange(selectedTabIndex: number): void {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 }
