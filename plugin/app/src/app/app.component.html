@@ -1,7 +1,6 @@
 <mat-sidenav-container>
 	<mat-sidenav #sidenav
 				 [mode]="sideNavMode"
-				 [opened]="sideNavOpened"
 				 (open)="onSideNavOpened()"
 				 (close)="onSideNavClosed()">
 		<mat-nav-list>
@@ -17,7 +16,7 @@
 	</mat-sidenav>
 	<mat-toolbar>
 
-		<button mat-icon-button id="toolBarMenu" (click)="sidenav.toggle()">
+		<button mat-icon-button id="toolBarMenu" (click)="onSideNavToggle()">
 			<mat-icon>menu</mat-icon>
 		</button>
 

@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog, MatSidenav, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
@@ -18,15 +18,11 @@ import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-hi
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
-
-// TODO [User test preview 1] Tweet prepa for testing 6.0.0 by 30 motivated people:
-// "Hey mates!  I'm seeking for ~30 motivated people to test the new upcoming "Stravistix V6" 😀. Enter your email in that form https://www.google.fr and i will contact you later. (This tweet will be deleted when number of testers is reached)"
-
-// TODO [User test preview 1] Google sheet => fetch 30 mails
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
 // TODO Versions upgrade
+// TODO Map core options links to new app
 
 // TODO Welcome popup "Oh a new App !"
 // TODO Sidenav => Add go to strava
@@ -58,6 +54,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
+	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 
 	public AthleteHistoryState = AthleteHistoryState;
 	public athleteHistoryState: AthleteHistoryState;
@@ -65,7 +62,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public routerEventsSubscription: Subscription;
 	public title: string;
-	public sideNavOpened: boolean;
+
+	@ViewChild(MatSidenav)
+	public sideNav: MatSidenav;
 	public sideNavMode: string;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
@@ -132,8 +131,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			menuItemModel.name = AppComponent.convertRouteToTitle(menuItemModel.routerLink);
 		});
 
-		this.sideNavOpened = (AppComponent.DEFAULT_SIDE_NAV_STATUS === SideNavStatus.OPENED);
-		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
+		this.sideNavSetup();
 
 		this.title = AppComponent.convertRouteToTitle(this.router.url);
 
@@ -153,6 +151,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		// Show warn ribbon if athlete settings do not match with athlete settings used for history synchronization
 		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
+	}
+
+	public sideNavSetup(): void {
+
+		this.sideNav.opened = (AppComponent.DEFAULT_SIDE_NAV_STATUS === SideNavStatus.OPENED);
+
+		const sideNavOpened: string = localStorage.getItem(AppComponent.LS_SIDE_NAV_OPENED_KEY);
+		if (sideNavOpened) {
+			this.sideNav.opened = (sideNavOpened === "true");
+		}
+
+		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 	}
 
 	public updateLastSyncDateStatus(): void {
@@ -259,6 +269,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public onSideNavOpened(): void {
 		this.sideNavService.onChange(SideNavStatus.OPENED);
+	}
+
+	public onSideNavToggle(): void {
+		this.sideNav.toggle();
+		localStorage.setItem(AppComponent.LS_SIDE_NAV_OPENED_KEY, (this.sideNav.opened) ? "true" : "false");
 	}
 
 	public onOpenLink(url: string): void {
