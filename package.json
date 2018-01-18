@@ -14,7 +14,7 @@
 		"clean:jsmap": "node ./node_modules/rimraf/bin.js plugin/common/**/*.js plugin/common/**/*.map plugin/core/**/*.js plugin/core/**/*.map plugin/options/app/**/*.js plugin/options/app/**/*.map specs/**/*.map specs/**/*.js",
 		"clean:package": "node ./node_modules/rimraf/bin.js ./package/",
 		"package": "npm-run-all clean build:prod zipRelease",
-		"postinstall": "cd ./plugin/ && npm install && cd ./webapp/ && npm install",
+		"postinstall": "cd ./plugin/ && npm install && cd ./app/ && npm install",
 		"res-copy:libs@core": "node ./node_modules/cpy-cli/cli.js ./node_modules/systemjs/dist/system.js ./node_modules/systemjs-plugin-css/css.js ./node_modules/geodesy/dms.js ./node_modules/geodesy/latlon-spherical.js ./node_modules/chart.js/dist/Chart.bundle.js ./node_modules/qrcode/build/qrcode.min.js ./node_modules/fancybox/dist/js/jquery.fancybox.pack.js ./node_modules/lodash/lodash.min.js ./node_modules/jquery/dist/jquery.js ../dist/ --cwd=plugin --parents",
 		"res-copy:css@core": "node ./node_modules/cpy-cli/cli.js ./core/css/core.css ./node_modules/fancybox/dist/css/jquery.fancybox.css ../dist/ --cwd=plugin --parents",
 		"res-copy:img@core": "node ./node_modules/cpy-cli/cli.js ./core/icons/* ./node_modules/fancybox/dist/img/* ../dist/ --cwd=plugin --parents",
