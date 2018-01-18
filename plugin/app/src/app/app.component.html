@@ -12,6 +12,13 @@
 					{{item.name}}
 				</button>
 			</mat-list-item>
+			<mat-list-item (click)="onOpenLink('https://www.strava.com')">
+				<button mat-icon-button>
+					<mat-icon svgIcon="strava"></mat-icon>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					Strava
+				</button>
+			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>
 	<mat-toolbar>

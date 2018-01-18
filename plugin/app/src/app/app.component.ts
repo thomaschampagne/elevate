@@ -3,7 +3,7 @@ import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
 import * as moment from "moment";
-import { MatDialog, MatSidenav, MatSnackBar } from "@angular/material";
+import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
@@ -17,13 +17,14 @@ import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dial
 import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
+import { DomSanitizer } from "@angular/platform-browser";
 
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
-// TODO Sidenav => Add go to strava
 // TODO Sidenav => Open old app
 // TODO Versions upgrade
+// TODO Linting
 
 // TODO Welcome popup "Oh a new App !"
 // TODO Dark/light themes switch
@@ -120,7 +121,12 @@ export class AppComponent implements OnInit, OnDestroy {
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar,
 				public sideNavService: SideNavService,
-				public windowService: WindowService) {
+				public windowService: WindowService,
+				public iconRegistry: MatIconRegistry,
+				public sanitizer: DomSanitizer) {
+
+		this.registerCustomIcons();
+
 	}
 
 	public ngOnInit(): void {
@@ -277,6 +283,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public onOpenLink(url: string): void {
 		window.open(url, "_blank")
+	}
+
+	public registerCustomIcons(): void {
+		this.iconRegistry.addSvgIcon('strava',
+			this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/strava.svg"));
 	}
 
 	public ngOnDestroy(): void {
