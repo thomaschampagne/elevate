@@ -39,7 +39,7 @@ export class ActivitiesSyncModifier implements IModifier {
 		html += "       <div id=\"syncMessage\">";
 		html += "           <span style=\"font-size: 28px;\">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension." +
             "<br/><br/>Once the first sync done, your history will be automatically synced every <strong>" + this.userSettings.autoSyncMinutes + " minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if " + this.userSettings.autoSyncMinutes + " minute(s) have been flow out since your last synchronisation" +
-			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
+			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
             "<br/><br/>Manual sync also works by clicking the same button.<br/><br/>" +
             "Closing window stops synchronization. It will close itself when done.";
         html += "       </div>";

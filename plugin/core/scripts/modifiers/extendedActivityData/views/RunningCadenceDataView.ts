@@ -44,7 +44,7 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
     public render(): void {
 
         // Add legs cadence type to view title
-        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.circleNotchIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> CADENCE @ " + ((this.userSettings.enableBothLegsCadence) ? "2 legs" : "1 leg") + " <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/runningCadence\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.circleNotchIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> CADENCE @ " + ((this.userSettings.enableBothLegsCadence) ? "2 legs" : "1 leg") + " <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/runningCadence\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
         super.render();
     }
 

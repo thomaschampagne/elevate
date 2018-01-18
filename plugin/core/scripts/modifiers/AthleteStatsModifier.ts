@@ -258,7 +258,7 @@ export class AthleteStatsModifier implements IModifier {
 				"<li style=\"margin: 8px\"><input id=\"asrdt3\" type=\"radio\" name=\"data-type\" value=\"3\" /> <label style=\"display: inline\" for=\"asrdt3\">Time</label></li>" +
 				"<li style=\"margin: 8px\"><input id=\"asrdt4\" type=\"radio\" name=\"data-type\" value=\"4\" /> <label style=\"display: inline\" for=\"asrdt4\">Distance last year</label></li>" +
 				"<li style=\"margin: 8px\"><input id=\"asrdt5\" type=\"radio\" name=\"data-type\" value=\"5\" /> <label style=\"display: inline\" for=\"asrdt5\">Distance last 30d</label></li>" +
-				"<li><a style=\"display: inline\" target=\"_blank\" href=\"" + self.appResources.settingsLink + "#!/commonSettings?searchText=distance%20target\">Setup " + (new Date()).getFullYear() + " targets here</a></li>" +
+				"<li><a style=\"display: inline\" target=\"_blank\" href=\"" + self.appResources.settingsLink + "#/commonSettings?searchText=distance%20target\">Setup " + (new Date()).getFullYear() + " targets here</a></li>" +
                 "</ul>" +
 				"<div style=\"margin-top: 20px;\">Years:</div>" +
 				"<ul id=\"athleteStatChartYears\"></ul>" +

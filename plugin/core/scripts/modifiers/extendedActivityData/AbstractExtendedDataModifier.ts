@@ -1,8 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
 import {
-	ActivityBasicInfoModel,
-	AnalysisDataModel,
+	ActivityBasicInfoModel, AnalysisDataModel,
 	SpeedUnitDataModel
 } from "../../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
@@ -75,7 +74,7 @@ export abstract class AbstractExtendedDataModifier {
                                 Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, "profileConfigured")
                                     .then((profileConfigured: any) => {
                                         if (!profileConfigured || !profileConfigured.data) {
-                                            $("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#!/athleteSettings'>Did you check your athlete settings before?</a>");
+											$("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'>Did you check your athlete settings before?</a>");
                                         }
                                     });
                             }
@@ -332,7 +331,7 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
-        const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
         if (this.summaryGrid) {
             const content: string = "<span class=\"summaryGridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"summaryGridUnits\">" + units + "</span><br /><span class=\"summaryGridTitle\">" + title + "</span></span>";

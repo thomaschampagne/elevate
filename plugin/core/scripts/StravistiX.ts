@@ -29,9 +29,7 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier,
-	RunningGradeAdjustedPaceModifier,
-	RunningHeartRateModifier,
+	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
@@ -394,7 +392,7 @@ export class StravistiX {
         }
 
         // Donate button
-        message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#!/?showDonation=true\">";
+		message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#/donate\">";
         message += "<button style=\"font-size: 18px; width: 100%;\" class=\"btn btn-primary btn-sm\">Push this project higher !!!</button>";
         message += "</a>";
 

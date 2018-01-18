@@ -11,7 +11,7 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
 
     public render(): void {
 
-        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.circleNotchIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> CADENCE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/cyclingCadence\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.circleNotchIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> CADENCE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/cyclingCadence\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
         super.render();
     }
 

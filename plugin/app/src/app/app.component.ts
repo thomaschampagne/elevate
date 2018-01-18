@@ -21,12 +21,11 @@ import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-h
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
-// TODO Versions upgrade
-// TODO Map core options links to new app
-
-// TODO Welcome popup "Oh a new App !"
 // TODO Sidenav => Add go to strava
 // TODO Sidenav => Open old app
+// TODO Versions upgrade
+
+// TODO Welcome popup "Oh a new App !"
 // TODO Dark/light themes switch
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
