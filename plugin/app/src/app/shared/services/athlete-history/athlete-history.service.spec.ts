@@ -938,4 +938,39 @@ describe('AthleteHistoryService', () => {
 			done();
 		});
 	});
+
+
+	it("should reject if no local athlete profile found", (done: Function) => {
+
+		// Given
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const remoteAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight); // Inject difference
+
+		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(null));
+
+		// When
+		const promise: Promise<boolean> = athleteHistoryService.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel);
+
+		// Then
+		promise.then((same: boolean) => {
+
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		}, error => {
+			expect(error).not.toBeNull();
+			expect(error).toEqual("Local athlete history do not exist.");
+			done();
+		});
+
+	});
+
 });

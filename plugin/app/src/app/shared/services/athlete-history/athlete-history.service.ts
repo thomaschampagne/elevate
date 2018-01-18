@@ -255,6 +255,10 @@ export class AthleteHistoryService {
 
 		return this.getProfile().then((localAthleteProfile: AthleteProfileModel) => {
 
+			if (_.isEmpty(localAthleteProfile)) {
+				return Promise.reject("Local athlete history do not exist.");
+			}
+
 			let remoteEqualsLocal: boolean = true;
 
 			if (remoteAthleteProfileModel.userGender !== localAthleteProfile.userGender ||
@@ -285,6 +289,8 @@ export class AthleteHistoryService {
 
 			this.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel).then((isSame: boolean) => {
 				this.localRemoteAthleteProfileSame.next(isSame);
+			}, error => {
+				console.warn(error);
 			});
 
 		});

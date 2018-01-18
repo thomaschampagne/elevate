@@ -18,11 +18,29 @@ import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-hi
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
+
+// TODO [User test preview 1] Tweet prepa for testing 6.0.0 by 30 motivated people:
+// "Hey mates!  I'm seeking for ~30 motivated people to test the new upcoming "Stravistix V6" 😀. Enter your email in that form https://www.google.fr and i will contact you later. (This tweet will be deleted when number of testers is reached)"
+
+// TODO [User test preview 1] Google sheet => fetch 30 mails
+// TODO [User test preview 1] Google sheet => Bugs preview 1
+// TODO [User test preview 1] Write and send email (30 people)
+
+// TODO Versions upgrade
+
+// TODO Welcome popup "Oh a new App !"
+// TODO Sidenav => Add go to strava
+// TODO Sidenav => Open old app
+// TODO Dark/light themes switch
+// TODO stx icon in sidebar
+// TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
+
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 // TODO:FEAT @YearProgress Year progress Targets line display (by KEYS = activityTypes & ProgressType)
+// TODO: LoggerService
 
 class MenuItemModel {
 	name: string;
