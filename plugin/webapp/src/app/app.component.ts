@@ -19,7 +19,10 @@ import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-h
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
 // TODO onShowShare
+// TODO phantomjs => chrome headless
+// TODO rename webapp folder > application
 
+//--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 // TODO:FEAT @YearProgress Year progress Targets line display (by KEYS = activityTypes & ProgressType)

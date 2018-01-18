@@ -46,8 +46,8 @@ describe("CommonSettingsComponent", () => {
 	it("should get option helper dir", () => {
 
 		// Given
-		const pathname = "/webapp/dist/index.html";
-		const expected = "/webapp/dist/assets/option-helpers/";
+		const pathname = "/app/index.html";
+		const expected = "/app/assets/option-helpers/";
 
 		// When
 		const actual = CommonSettingsComponent.getOptionHelperDir(pathname);

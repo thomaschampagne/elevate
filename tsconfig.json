@@ -7,16 +7,15 @@
 		"plugin/common/**/*.ts",
 		// Core
 		"plugin/core/**/*.ts",
+
 		// AngularJS webapp
-		"plugin/options/**/*.ts",
-		// TODO to be removed once migration done
-		// specs
-		"specs/**/*.ts"
+		"plugin/options/**/*.ts"
 	],
 	"exclude": [
 		"node_modules"
 	],
 	"compilerOptions": {
+		"outDir": "./dist/",
 		"target": "es5",
 		"module": "commonjs",
 		"lib": [
@@ -25,9 +24,8 @@
 			"webworker"
 		],
 		"noImplicitAny": true,
-		"removeComments": true,
 		"preserveConstEnums": true,
-		"sourceMap": true,
+		"inlineSourceMap": true,
 		"inlineSources": true,
 		"skipLibCheck": true
 	},
