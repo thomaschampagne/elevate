@@ -1,28 +1,9 @@
 import { NgModule } from "@angular/core";
 import {
-	MatButtonModule,
-	MatCardModule,
-	MatCheckboxModule,
-	MatDatepickerModule,
-	MatDialogModule,
-	MatGridListModule,
-	MatIconModule,
-	MatInputModule,
-	MatListModule,
-	MatMenuModule,
-	MatNativeDateModule,
-	MatOptionModule,
-	MatPaginatorModule,
-	MatProgressBarModule,
-	MatSelectModule,
-	MatSidenavModule,
-	MatSlideToggleModule,
-	MatSnackBarModule,
-	MatSortModule,
-	MatTableModule,
-	MatTabsModule,
-	MatToolbarModule,
-	MatTooltipModule
+	MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule, MatDialogModule, MatGridListModule,
+	MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatOptionModule,
+	MatPaginatorModule, MatProgressBarModule, MatSelectModule, MatSidenavModule, MatSlideToggleModule,
+	MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule
 } from "@angular/material";
 import { CdkTableModule } from "@angular/cdk/table";
 

@@ -7,8 +7,7 @@
 		"plugin/common/**/*.ts",
 		// Core
 		"plugin/core/**/*.ts",
-
-		// AngularJS webapp
+		// AngularJS application
 		"plugin/options/**/*.ts"
 	],
 	"exclude": [

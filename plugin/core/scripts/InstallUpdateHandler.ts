@@ -48,7 +48,7 @@ class InstallUpdateHandler {
 
         chrome.runtime.onInstalled.addListener((details) => {
             if (details.reason === "install") {
-                this.handleInstall(); // Pop in tab webapp and plugin page
+				this.handleInstall(); // Pop in tab application and plugin page
             } else if (details.reason === "update") {
                 this.handleUpdate(details);
             }
