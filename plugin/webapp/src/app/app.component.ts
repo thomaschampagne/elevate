@@ -19,7 +19,6 @@ import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-h
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 
 // TODO onShowShare
-// TODO phantomjs => chrome headless
 // TODO rename webapp folder > application
 
 //--------
