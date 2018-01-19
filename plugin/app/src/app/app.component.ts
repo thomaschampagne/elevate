@@ -22,12 +22,14 @@ import { DomSanitizer } from "@angular/platform-browser";
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
-// TODO Sidenav => Open old app
-// TODO Versions upgrade
 // TODO Linting
-
 // TODO Welcome popup "Oh a new App !"
+
+// TODO <a/> Links color
+
+// TODO Versions upgrade
 // TODO Dark/light themes switch
+
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
