@@ -74,6 +74,7 @@
 		"bestzip": "^1.1.4",
 		"cpy-cli": "^1.0.1",
 		"jasmine": "^2.9.0",
+		"jasmine-core": "^2.9.0",
 		"karma": "~2.0.0",
 		"karma-chrome-launcher": "~2.2.0",
 		"karma-coverage": "^1.1.1",
