@@ -35,6 +35,15 @@ mat-card {
 	margin: $default-margin;
 }
 
+a {
+	color: $strava-orange;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
 /**
  * Web app Custom typography // TODO Extract in file
  */
