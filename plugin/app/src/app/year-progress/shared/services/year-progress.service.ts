@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { YearProgressModel } from "../models/year-progress.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
@@ -138,7 +138,7 @@ export class YearProgressService {
 
 			if (activitiesFound.length > 0) {
 
-				for (let i: number = 0; i < activitiesFound.length; i++) {
+				for (let i = 0; i < activitiesFound.length; i++) {
 
 					if (!includeCommuteRide && activitiesFound[i].commute) {
 						continue;
@@ -311,7 +311,7 @@ export class YearProgressService {
 		const todayMoment = this.getTodayMoment().clone().startOf("day");
 		this.onMomentWatchedChange(todayMoment.clone());
 		return todayMoment;
-	};
+	}
 
 	/**
 	 *

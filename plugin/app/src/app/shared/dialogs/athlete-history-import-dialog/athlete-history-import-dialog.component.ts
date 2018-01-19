@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material";
 import { AthleteHistoryModel } from "../../services/athlete-history/athlete-history.model";
 
 @Component({
-	selector: 'app-athlete-history-import-dialog',
-	templateUrl: './athlete-history-import-dialog.component.html',
-	styleUrls: ['./athlete-history-import-dialog.component.scss']
+	selector: "app-athlete-history-import-dialog",
+	templateUrl: "./athlete-history-import-dialog.component.html",
+	styleUrls: ["./athlete-history-import-dialog.component.scss"]
 })
 export class AthleteHistoryImportDialogComponent implements OnInit {
 

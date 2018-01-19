@@ -27,7 +27,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 	public routeParamsSubscription: Subscription;
 	public zonesUpdatesSubscription: Subscription;
 
-	public areZonesLoaded: boolean = false;
+	public areZonesLoaded = false;
 
 	constructor(public userSettingsService: UserSettingsService,
 				public route: ActivatedRoute,

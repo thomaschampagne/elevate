@@ -1,8 +1,8 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed } from "@angular/core/testing";
 
-import { WindowService } from './window.service';
+import { WindowService } from "./window.service";
 
-describe('WindowService', () => {
+describe("WindowService", () => {
 
 	let service: WindowService;
 
@@ -15,7 +15,7 @@ describe('WindowService', () => {
 		service = TestBed.get(WindowService);
 	});
 
-	it('should be created', inject([WindowService], (service: WindowService) => {
+	it("should be created", inject([WindowService], (service: WindowService) => {
 		expect(service).toBeTruthy();
 	}));
 

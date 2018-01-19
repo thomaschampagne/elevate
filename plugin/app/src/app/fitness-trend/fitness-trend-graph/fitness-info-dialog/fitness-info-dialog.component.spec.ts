@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FitnessInfoDialogComponent } from './fitness-info-dialog.component';
+import { FitnessInfoDialogComponent } from "./fitness-info-dialog.component";
 import { CoreModule } from "../../../core/core.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { SharedModule } from "../../../shared/shared.module";
 
-describe('FitnessInfoDialogComponent', () => {
+describe("FitnessInfoDialogComponent", () => {
 	let component: FitnessInfoDialogComponent;
 	let fixture: ComponentFixture<FitnessInfoDialogComponent>;
 
@@ -33,7 +33,7 @@ describe('FitnessInfoDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 
 		// Given, When
 		const compiled = fixture.debugElement.nativeElement;

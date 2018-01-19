@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FitnessTrendComponent } from './fitness-trend.component';
+import { FitnessTrendComponent } from "./fitness-trend.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
@@ -13,7 +13,7 @@ import { AthleteHistoryService } from "../shared/services/athlete-history/athlet
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph/fitness-trend-graph.component";
 import { By } from "@angular/platform-browser";
 
-describe('FitnessTrendComponent', () => {
+describe("FitnessTrendComponent", () => {
 
 	let activityDao: ActivityDao;
 	let userSettingsDao: UserSettingsDao;
@@ -81,7 +81,7 @@ describe('FitnessTrendComponent', () => {
 		spyOn(trendGraphComponent, "updateGraph").and.stub();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { AppUsageDao } from "../../dao/app-usage/app-usage.dao";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";

@@ -89,7 +89,7 @@ describe("ZoneToolBarComponent", () => {
 		compiled.querySelector("#addLastZone").click();
 
 		// Then
-		expect(spy).toHaveBeenCalledTimes(1)
+		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
 	it("should call zone service on RemoveLastZone", () => {
@@ -102,7 +102,7 @@ describe("ZoneToolBarComponent", () => {
 		compiled.querySelector("#removeLastZone").click();
 
 		// Then
-		expect(spy).toHaveBeenCalledTimes(1)
+		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
 	it("should call zone service on SaveZones", () => {
@@ -115,7 +115,7 @@ describe("ZoneToolBarComponent", () => {
 		compiled.querySelector("#saveZones").click();
 
 		// Then
-		expect(spy).toHaveBeenCalledTimes(1)
+		expect(spy).toHaveBeenCalledTimes(1);
 	});
 
 });

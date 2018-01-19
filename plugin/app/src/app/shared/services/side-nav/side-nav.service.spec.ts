@@ -1,9 +1,9 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed } from "@angular/core/testing";
 
-import { SideNavService } from './side-nav.service';
+import { SideNavService } from "./side-nav.service";
 import { SideNavStatus } from "./side-nav-status.enum";
 
-describe('SideNavService', () => {
+describe("SideNavService", () => {
 
 	let service: SideNavService;
 
@@ -15,7 +15,7 @@ describe('SideNavService', () => {
 		service = TestBed.get(SideNavService);
 	});
 
-	it('should be created', inject([SideNavService], (service: SideNavService) => {
+	it("should be created", inject([SideNavService], (service: SideNavService) => {
 		expect(service).toBeTruthy();
 	}));
 

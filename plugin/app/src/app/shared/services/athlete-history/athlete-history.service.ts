@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
@@ -259,7 +259,7 @@ export class AthleteHistoryService {
 				return Promise.reject("Local athlete history do not exist.");
 			}
 
-			let remoteEqualsLocal: boolean = true;
+			let remoteEqualsLocal = true;
 
 			if (remoteAthleteProfileModel.userGender !== localAthleteProfile.userGender ||
 				remoteAthleteProfileModel.userMaxHr !== localAthleteProfile.userMaxHr ||

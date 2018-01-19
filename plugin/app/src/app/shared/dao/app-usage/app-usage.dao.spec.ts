@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { AppUsageDao } from './app-usage.dao';
+import { AppUsageDao } from "./app-usage.dao";
 import { AppUsage } from "../../models/app-usage.model";
 
-describe('AppUsageDao', () => {
+describe("AppUsageDao", () => {
 
 	let appUsageDao: AppUsageDao = null;
 

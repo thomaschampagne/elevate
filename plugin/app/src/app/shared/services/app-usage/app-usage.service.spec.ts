@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { AppUsageService } from './app-usage.service';
+import { AppUsageService } from "./app-usage.service";
 import { AppUsageDao } from "../../dao/app-usage/app-usage.dao";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";
 
-describe('AppUsageService', () => {
+describe("AppUsageService", () => {
 
 	let appUsageService: AppUsageService = null;
 

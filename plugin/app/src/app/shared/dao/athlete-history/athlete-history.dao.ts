@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
 import * as _ from "lodash";
 
@@ -66,7 +66,7 @@ export class AthleteHistoryDao {
 	public getLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve) => {
 			this.chromeStorageLocal().get(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
-				resolve((_.isNumber(result.lastSyncDateTime)) ? result.lastSyncDateTime : null)
+				resolve((_.isNumber(result.lastSyncDateTime)) ? result.lastSyncDateTime : null);
 			});
 		});
 	}

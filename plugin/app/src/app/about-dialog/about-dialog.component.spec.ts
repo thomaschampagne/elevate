@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AboutDialogComponent } from './about-dialog.component';
+import { AboutDialogComponent } from "./about-dialog.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { MatDialogRef } from "@angular/material";
@@ -9,7 +9,7 @@ import { AppUsageDao } from "../shared/dao/app-usage/app-usage.dao";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { AppUsage } from "../shared/models/app-usage.model";
 
-describe('AboutDialogComponent', () => {
+describe("AboutDialogComponent", () => {
 	let component: AboutDialogComponent;
 	let fixture: ComponentFixture<AboutDialogComponent>;
 
@@ -33,7 +33,7 @@ describe('AboutDialogComponent', () => {
 		fixture = TestBed.createComponent(AboutDialogComponent);
 		component = fixture.componentInstance;
 
-		const version: string = "1.0.0";
+		const version = "1.0.0";
 		spyOn(component, "getAppVersion").and.returnValue(version);
 
 		const bytes = 1024;
@@ -45,7 +45,7 @@ describe('AboutDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

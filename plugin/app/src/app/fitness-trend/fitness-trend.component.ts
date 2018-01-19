@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import * as _ from "lodash";
 
 @Component({
-	selector: 'app-fitness-trend',
-	templateUrl: './fitness-trend.component.html',
-	styleUrls: ['./fitness-trend.component.scss']
+	selector: "app-fitness-trend",
+	templateUrl: "./fitness-trend.component.html",
+	styleUrls: ["./fitness-trend.component.scss"]
 })
 export class FitnessTrendComponent implements OnInit {
 

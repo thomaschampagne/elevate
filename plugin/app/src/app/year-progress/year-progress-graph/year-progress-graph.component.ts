@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import * as moment from "moment";
@@ -17,9 +17,9 @@ import { SideNavService } from "../../shared/services/side-nav/side-nav.service"
 import { YearProgressService } from "../shared/services/year-progress.service";
 
 @Component({
-	selector: 'app-year-progress-graph',
-	templateUrl: './year-progress-graph.component.html',
-	styleUrls: ['./year-progress-graph.component.scss']
+	selector: "app-year-progress-graph",
+	templateUrl: "./year-progress-graph.component.html",
+	styleUrls: ["./year-progress-graph.component.scss"]
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -51,9 +51,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
 
-	public isGraphDataReadyOnYearChange: boolean = false;
+	public isGraphDataReadyOnYearChange = false;
 
-	public initialized: boolean = false;
+	public initialized = false;
 
 	constructor(public yearProgressService: YearProgressService,
 				public sideNavService: SideNavService,
@@ -288,7 +288,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			aggregate_rollover: true,
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
-			missing_is_hidden_accessor: 'hidden',
+			missing_is_hidden_accessor: "hidden",
 			xax_count: 12,
 			yax_count: 10,
 			target: "#" + YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID,

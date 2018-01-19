@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ReleasesNotesComponent } from './releases-notes.component';
+import { ReleasesNotesComponent } from "./releases-notes.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 
-describe('ReleasesNotesComponent', () => {
+describe("ReleasesNotesComponent", () => {
 	let component: ReleasesNotesComponent;
 	let fixture: ComponentFixture<ReleasesNotesComponent>;
 
@@ -23,7 +23,7 @@ describe('ReleasesNotesComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

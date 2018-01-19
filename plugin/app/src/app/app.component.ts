@@ -148,7 +148,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		// Update sync status in toolbar and Refresh LastSyncDate displayed every minutes
 		this.updateLastSyncDateStatus();
 		setInterval(() => {
-			this.updateLastSyncDateStatus()
+			this.updateLastSyncDateStatus();
 		}, 1000 * 60);
 
 		this.setupWindowResizeBroadcast();
@@ -281,11 +281,11 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onOpenLink(url: string): void {
-		window.open(url, "_blank")
+		window.open(url, "_blank");
 	}
 
 	public registerCustomIcons(): void {
-		this.iconRegistry.addSvgIcon('strava',
+		this.iconRegistry.addSvgIcon("strava",
 			this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/strava.svg"));
 	}
 

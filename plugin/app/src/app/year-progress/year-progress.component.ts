@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
@@ -14,9 +14,9 @@ import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog
 import { MatDialog } from "@angular/material";
 
 @Component({
-	selector: 'app-year-progress',
-	templateUrl: './year-progress.component.html',
-	styleUrls: ['./year-progress.component.scss'],
+	selector: "app-year-progress",
+	templateUrl: "./year-progress.component.html",
+	styleUrls: ["./year-progress.component.scss"],
 	providers: [YearProgressService]
 })
 export class YearProgressComponent implements OnInit {
@@ -49,7 +49,7 @@ export class YearProgressComponent implements OnInit {
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
 	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
-	public isProgressionInitialized: boolean = false;
+	public isProgressionInitialized = false;
 
 	constructor(public route: ActivatedRoute,
 				public yearProgressService: YearProgressService,

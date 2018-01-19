@@ -58,7 +58,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public PERFORMANCE_MARKER: number;
 
 	public graphConfig: any;
-	public graphReadyToBeDrawn: boolean = false;
+	public graphReadyToBeDrawn = false;
 
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
@@ -71,10 +71,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public dateMin: Date;
 	public dateMax: Date;
 
-	public isTrainingZonesEnabled: boolean = false;
-	public isPowerMeterEnabled: boolean = false;
+	public isTrainingZonesEnabled = false;
+	public isPowerMeterEnabled = false;
 	public cyclingFtp: number = null;
-	public isSwimEnabled: boolean = false;
+	public isSwimEnabled = false;
 	public swimFtp: number = null;
 
 	public sideNavChangesSubscription: Subscription;
@@ -402,7 +402,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
 	private onMarkerClick(dayFitnessTrend: DayFitnessTrendModel): void {
-		FitnessTrendComponent.openActivities(dayFitnessTrend.ids)
+		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
 	}
 
 	/**
@@ -558,7 +558,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
 			max_data_size: 6, // FIXME Really usefull?!
-			missing_is_hidden_accessor: 'hidden',
+			missing_is_hidden_accessor: "hidden",
 			yax_count: 10,
 			target: "#fitnessTrendGraph",
 			x_accessor: "date",

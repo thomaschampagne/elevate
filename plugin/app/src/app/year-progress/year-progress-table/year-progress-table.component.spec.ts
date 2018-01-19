@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { YearProgressTableComponent } from './year-progress-table.component';
+import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { YearProgressService } from "../shared/services/year-progress.service";
@@ -14,7 +14,7 @@ import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
 
-describe('YearProgressTableComponent', () => {
+describe("YearProgressTableComponent", () => {
 
 	let component: YearProgressTableComponent;
 	let fixture: ComponentFixture<YearProgressTableComponent>;
@@ -77,7 +77,7 @@ describe('YearProgressTableComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 

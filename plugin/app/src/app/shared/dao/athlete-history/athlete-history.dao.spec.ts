@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { AthleteHistoryDao } from './athlete-history.dao';
+import { AthleteHistoryDao } from "./athlete-history.dao";
 import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
 
 
-describe('AthleteHistoryDao', () => {
+describe("AthleteHistoryDao", () => {
 
 	let athleteHistoryDao: AthleteHistoryDao = null;
 
@@ -63,7 +63,7 @@ describe('AthleteHistoryDao', () => {
 	it("should get last sync date of profile", (done: Function) => {
 
 		// Given
-		const expectedLastSyncDateTime: number = 9999;
+		const expectedLastSyncDateTime = 9999;
 
 		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
@@ -131,7 +131,7 @@ describe('AthleteHistoryDao', () => {
 	it("should save last sync date time", (done: Function) => {
 
 		// Given
-		const expectedLastSyncDateTime: number = 9999;
+		const expectedLastSyncDateTime = 9999;
 
 		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
@@ -258,7 +258,7 @@ describe('AthleteHistoryDao', () => {
 
 	it("should reject on remove last sync date time", (done: Function) => {
 
-		const expectedLastSyncDateTime: number = 9999;
+		const expectedLastSyncDateTime = 9999;
 
 		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {

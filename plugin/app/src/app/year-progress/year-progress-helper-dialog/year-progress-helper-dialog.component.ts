@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import * as moment from "moment";
 import { Moment } from "moment";
 
 @Component({
-	selector: 'app-year-progress-helper-dialog',
-	templateUrl: './year-progress-helper-dialog.component.html',
-	styleUrls: ['./year-progress-helper-dialog.component.scss']
+	selector: "app-year-progress-helper-dialog",
+	templateUrl: "./year-progress-helper-dialog.component.html",
+	styleUrls: ["./year-progress-helper-dialog.component.scss"]
 })
 export class YearProgressHelperDialogComponent implements OnInit {
 

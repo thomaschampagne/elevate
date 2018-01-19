@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { YearProgressService } from './year-progress.service';
+import { YearProgressService } from "./year-progress.service";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { YearProgressModel } from "../models/year-progress.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
@@ -12,7 +12,7 @@ import { Moment } from "moment";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 
-describe('YearProgressService', () => {
+describe("YearProgressService", () => {
 
 	let yearProgressService: YearProgressService;
 	let syncedActivityModels: SyncedActivityModel[];
@@ -586,8 +586,8 @@ describe('YearProgressService', () => {
 	it("should format 24 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 24;
-		const expected: string = "1 d";
+		const hours = 24;
+		const expected = "1 d";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -600,8 +600,8 @@ describe('YearProgressService', () => {
 	it("should format 24 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 1;
-		const expected: string = "1 h";
+		const hours = 1;
+		const expected = "1 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -614,8 +614,8 @@ describe('YearProgressService', () => {
 	it("should format 50 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 50;
-		const expected: string = "2 d, 2 h";
+		const hours = 50;
+		const expected = "2 d, 2 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -628,8 +628,8 @@ describe('YearProgressService', () => {
 	it("should format 76.25 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 76.25;
-		const expected: string = "3 d, 4 h, 15 min";
+		const hours = 76.25;
+		const expected = "3 d, 4 h, 15 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -642,8 +642,8 @@ describe('YearProgressService', () => {
 	it("should format 29.5 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 29.5;
-		const expected: string = "1 d, 5 h, 30 min";
+		const hours = 29.5;
+		const expected = "1 d, 5 h, 30 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -656,8 +656,8 @@ describe('YearProgressService', () => {
 	it("should format 15 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 15;
-		const expected: string = "15 h";
+		const hours = 15;
+		const expected = "15 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -670,8 +670,8 @@ describe('YearProgressService', () => {
 	it("should format 5.815 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 5.815;
-		const expected: string = "5 h, 49 min";
+		const hours = 5.815;
+		const expected = "5 h, 49 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -684,8 +684,8 @@ describe('YearProgressService', () => {
 	it("should format 15.3333333 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 15.3333333;
-		const expected: string = "15 h, 20 min";
+		const hours = 15.3333333;
+		const expected = "15 h, 20 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -698,8 +698,8 @@ describe('YearProgressService', () => {
 	it("should format 0.25 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 0.25;
-		const expected: string = "15 min";
+		const hours = 0.25;
+		const expected = "15 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -712,8 +712,8 @@ describe('YearProgressService', () => {
 	it("should format -12.5 negative hours to human readable time", () => {
 
 		// Given
-		const hours: number = -12.5;
-		const expected: string = "12 h, 30 min";
+		const hours = -12.5;
+		const expected = "12 h, 30 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -726,8 +726,8 @@ describe('YearProgressService', () => {
 	it("should format 0 hours to human readable time", () => {
 
 		// Given
-		const hours: number = 0;
-		const expected: string = "0 h";
+		const hours = 0;
+		const expected = "0 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);

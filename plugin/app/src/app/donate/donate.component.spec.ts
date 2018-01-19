@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { DonateComponent } from './donate.component';
+import { DonateComponent } from "./donate.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
-describe('DonateComponent', () => {
+describe("DonateComponent", () => {
 	let component: DonateComponent;
 	let fixture: ComponentFixture<DonateComponent>;
 
@@ -23,7 +23,7 @@ describe('DonateComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

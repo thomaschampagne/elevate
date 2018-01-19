@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-	selector: 'app-fitness-info-dialog',
-	templateUrl: './fitness-info-dialog.component.html',
-	styleUrls: ['./fitness-info-dialog.component.scss']
+	selector: "app-fitness-info-dialog",
+	templateUrl: "./fitness-info-dialog.component.html",
+	styleUrls: ["./fitness-info-dialog.component.scss"]
 })
 export class FitnessInfoDialogComponent implements OnInit {
 

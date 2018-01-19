@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { YearProgressResolverService } from './year-progress-resolver.service';
+import { YearProgressResolverService } from "./year-progress-resolver.service";
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
@@ -13,7 +13,7 @@ import { AthleteProfileModel } from "../../../../../../common/scripts/models/Ath
 import { AthleteHistoryState } from "../../../shared/services/athlete-history/athlete-history-state.enum";
 import { AthleteHistoryDao } from "../../../shared/dao/athlete-history/athlete-history.dao";
 
-describe('YearProgressResolverService', () => {
+describe("YearProgressResolverService", () => {
 
 	let yearProgressResolverService: YearProgressResolverService;
 	let athleteHistoryService: AthleteHistoryService;

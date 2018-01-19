@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { RemoteAthleteMismatchComponent } from './remote-athlete-mismatch.component';
+import { RemoteAthleteMismatchComponent } from "./remote-athlete-mismatch.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { Subject } from "rxjs/Subject";
 
-describe('RemoteAthleteMismatchComponent', () => {
+describe("RemoteAthleteMismatchComponent", () => {
 	let component: RemoteAthleteMismatchComponent;
 	let fixture: ComponentFixture<RemoteAthleteMismatchComponent>;
 	let athleteHistoryService: AthleteHistoryService;
@@ -32,7 +32,7 @@ describe('RemoteAthleteMismatchComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

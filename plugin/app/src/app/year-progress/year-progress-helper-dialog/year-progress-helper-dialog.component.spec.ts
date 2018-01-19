@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { YearProgressHelperDialogComponent } from './year-progress-helper-dialog.component';
+import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog.component";
 import { CoreModule } from "../../core/core.module";
 import { MatDialogRef } from "@angular/material";
 import { SharedModule } from "../../shared/shared.module";
 
-describe('YearProgressHelperDialogComponent', () => {
+describe("YearProgressHelperDialogComponent", () => {
 	let component: YearProgressHelperDialogComponent;
 	let fixture: ComponentFixture<YearProgressHelperDialogComponent>;
 
@@ -30,7 +30,7 @@ describe('YearProgressHelperDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

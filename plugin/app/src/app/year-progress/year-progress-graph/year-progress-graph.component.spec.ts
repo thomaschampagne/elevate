@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { YearProgressGraphComponent } from './year-progress-graph.component';
+import { YearProgressGraphComponent } from "./year-progress-graph.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { YearProgressActivitiesFixture } from "../shared/services/year-progress-activities.fixture";
@@ -11,7 +11,7 @@ import { ProgressType } from "../shared/models/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 
-describe('YearProgressGraphComponent', () => {
+describe("YearProgressGraphComponent", () => {
 
 	let component: YearProgressGraphComponent;
 	let fixture: ComponentFixture<YearProgressGraphComponent>;
@@ -77,7 +77,7 @@ describe('YearProgressGraphComponent', () => {
 
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 

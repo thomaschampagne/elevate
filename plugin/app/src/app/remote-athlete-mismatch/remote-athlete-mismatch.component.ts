@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
-	selector: 'app-remote-athlete-mismatch',
-	templateUrl: './remote-athlete-mismatch.component.html',
-	styleUrls: ['./remote-athlete-mismatch.component.scss']
+	selector: "app-remote-athlete-mismatch",
+	templateUrl: "./remote-athlete-mismatch.component.html",
+	styleUrls: ["./remote-athlete-mismatch.component.scss"]
 })
 export class RemoteAthleteMismatchComponent implements OnInit, OnDestroy {
 

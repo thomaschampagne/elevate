@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import * as moment from "moment";
@@ -13,9 +13,9 @@ import { DeltaType } from "./models/delta-type.enum";
 import { MatTableDataSource } from "@angular/material";
 
 @Component({
-	selector: 'app-year-progress-table',
-	templateUrl: './year-progress-table.component.html',
-	styleUrls: ['./year-progress-table.component.scss']
+	selector: "app-year-progress-table",
+	templateUrl: "./year-progress-table.component.html",
+	styleUrls: ["./year-progress-table.component.scss"]
 })
 export class YearProgressTableComponent implements OnInit, OnChanges {
 
@@ -53,7 +53,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
 
-	public initialized: boolean = false;
+	public initialized = false;
 
 	constructor(public yearProgressService: YearProgressService) {
 	}
@@ -119,10 +119,10 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_UNSIGNED;
 			} else if (delta < 0) {
 				deltaType = DeltaType.NEGATIVE;
-				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_NEGATIVE
+				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_NEGATIVE;
 			} else {
 				deltaType = DeltaType.POSITIVE;
-				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_POSITIVE
+				deltaSignSymbol = YearProgressTableComponent.DELTA_SIGN_POSITIVE;
 			}
 
 			const progressionAtDayRow: ProgressionAtDayRow = {

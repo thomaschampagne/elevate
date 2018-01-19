@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
@@ -46,7 +46,7 @@ export class YearProgressResolverService implements Resolve<RequiredYearProgress
 					console.warn("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString());
 					resolve(null);
 				}
-			})
+			});
 		});
 	}
 }

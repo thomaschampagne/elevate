@@ -1,4 +1,4 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { inject, TestBed } from "@angular/core/testing";
 import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
 import { AthleteHistoryService } from "./athlete-history.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
@@ -10,9 +10,9 @@ import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 
-describe('AthleteHistoryService', () => {
+describe("AthleteHistoryService", () => {
 
-	const tabId: number = 101;
+	const tabId = 101;
 	let athleteHistoryService: AthleteHistoryService;
 	let athleteHistoryDao: AthleteHistoryDao;
 
@@ -79,7 +79,7 @@ describe('AthleteHistoryService', () => {
 	it("should get last sync date time", (done: Function) => {
 
 		// Given
-		const expectedLastSyncDateTime: number = 666;
+		const expectedLastSyncDateTime = 666;
 		spyOn(athleteHistoryDao, "getLastSyncDateTime").and.returnValue(Promise.resolve(expectedLastSyncDateTime));
 
 		// When
@@ -136,7 +136,7 @@ describe('AthleteHistoryService', () => {
 	it("should save last sync date time (for history import)", (done: Function) => {
 
 		// Given
-		const expectedLastSyncDateTime: number = 9999;
+		const expectedLastSyncDateTime = 9999;
 
 		spyOn(athleteHistoryService.athleteHistoryDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(expectedLastSyncDateTime));
 
@@ -217,12 +217,12 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
+		const lastSyncDateTime = 99;
 		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(expectedAthleteProfileModel);
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version: string = "1.0.0";
+		const version = "1.0.0";
 		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
 
 		// When
@@ -259,13 +259,13 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
+		const lastSyncDateTime = 99;
 
 		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version: string = "1.0.0";
+		const version = "1.0.0";
 		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
 
 		const prepareForExportSpy = spyOn(athleteHistoryService, "prepareForExport").and.callThrough();
@@ -307,7 +307,7 @@ describe('AthleteHistoryService', () => {
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(null);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version: string = "1.0.0";
+		const version = "1.0.0";
 		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
 
 		const prepareForExportSpy = spyOn(athleteHistoryService, "prepareForExport").and.callThrough();
@@ -334,13 +334,13 @@ describe('AthleteHistoryService', () => {
 	it("should not export athlete history without profile", (done: Function) => {
 
 		// Given
-		const lastSyncDateTime: number = 99;
+		const lastSyncDateTime = 99;
 
 		spyOn(athleteHistoryService.athleteHistoryDao, "getProfile").and.returnValue(null);
 		spyOn(athleteHistoryService.athleteHistoryDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version: string = "1.0.0";
+		const version = "1.0.0";
 		spyOn(athleteHistoryService, "getAppVersion").and.returnValue(version);
 
 		const prepareForExportSpy = spyOn(athleteHistoryService, "prepareForExport").and.callThrough();
@@ -379,8 +379,8 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const version: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const version = "1.0.0";
 
 		const athleteHistoryModelImported: AthleteHistoryModel = {
 			syncWithAthleteProfile: athleteProfileModel,
@@ -436,9 +436,9 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
-		const importedVersion: string = "6.6.6";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
+		const importedVersion = "6.6.6";
 		const expectedErrorMessage = "Cannot import history because of plugin version mismatch. " +
 			"The installed plugin version is " + currentInstalledVersion + " and imported backup file is " +
 			"for a " + importedVersion + " plugin version. Try perform a clean full sync.";
@@ -485,8 +485,8 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: AthleteHistoryModel = {
@@ -531,8 +531,8 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
@@ -564,9 +564,9 @@ describe('AthleteHistoryService', () => {
 	it("should not import athlete history with no athlete profile", (done: Function) => {
 
 		// Given
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
-		const importedVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
+		const importedVersion = "1.0.0";
 		const expectedErrorMessage = "Athlete profile is not defined in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
@@ -609,9 +609,9 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
-		const importedVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
+		const importedVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: AthleteHistoryModel = {
@@ -657,9 +657,9 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
-		const importedVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
+		const importedVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: Partial<AthleteHistoryModel> = {
@@ -702,9 +702,9 @@ describe('AthleteHistoryService', () => {
 			cyclingFtp,
 			weight);
 
-		const lastSyncDateTime: number = 99;
-		const currentInstalledVersion: string = "1.0.0";
-		const importedVersion: string = "1.0.0";
+		const lastSyncDateTime = 99;
+		const currentInstalledVersion = "1.0.0";
+		const importedVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const athleteHistoryModelImported: AthleteHistoryModel = {
