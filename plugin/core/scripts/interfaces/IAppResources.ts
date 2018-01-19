@@ -28,7 +28,7 @@ export interface IAppResources {
     systemUpdatesIcon: string;
     fitnessCenterIcon: string;
     timelineIcon: string;
-    timelapseIcon: string;
+	dateRange: string;
     athleteIcon: string;
     donateIcon: string;
     shareIcon: string;
