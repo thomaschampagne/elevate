@@ -22,10 +22,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
-// TODO Year progressions icon in burger menu (strava.com)
-// TODO:BUG title: "Common Settings View Option Helper Id Display Advanced Hr Data"
-// When chrome-extension://[...]/app/index.html#/commonSettings?viewOptionHelperId=displayAdvancedHrData
-
 // TODO Linting
 // TODO Welcome popup "Oh a new App !"
 // TODO <a/> Links color
@@ -109,14 +105,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		const routeAsArray: string[] = _.split(route, "/");
 
-		let title = null;
-
-		if (routeAsArray.length > 1) {
-			routeAsArray.shift(); // Remove first slash
-			title = _.first(routeAsArray);
-		} else {
-			title = routeAsArray;
+		if (_.isEmpty(_.first(routeAsArray))) {
+			routeAsArray.shift(); // Remove first element if empty (occurs when first char is "/")
 		}
+
+		let title = _.first(routeAsArray);
+		title = _.first(title.split("?")); // Remove GET Params from route
 
 		return _.startCase(_.upperFirst(title));
 	}

@@ -107,6 +107,21 @@ describe("AppComponent", () => {
 
 	});
 
+	it("should update tool bar title (4)", (done) => {
+
+		// Given
+		const expected = "Common Settings";
+		const route = "/commonSettings?viewOptionHelperId=displayAdvancedHrData";
+
+		// When
+		const actual = AppComponent.convertRouteToTitle(route);
+
+		// Then
+		expect(actual).toBe(expected);
+		done();
+
+	});
+
 	it("should not update tool bar title", (done) => {
 
 		// Given
