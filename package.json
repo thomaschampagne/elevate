@@ -1,6 +1,6 @@
 {
 	"name": "stravistix",
-	"version": "1.0.0",
+	"version": "6.0.0",
 	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
