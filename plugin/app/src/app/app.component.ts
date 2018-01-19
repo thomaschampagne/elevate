@@ -22,12 +22,15 @@ import { DomSanitizer } from "@angular/platform-browser";
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
+// TODO Year progressions icon in burger menu (strava.com)
+// TODO:BUG title: "Common Settings View Option Helper Id Display Advanced Hr Data"
+// When chrome-extension://[...]/app/index.html#/commonSettings?viewOptionHelperId=displayAdvancedHrData
+
 // TODO Linting
 // TODO Welcome popup "Oh a new App !"
-
 // TODO <a/> Links color
 
-// TODO Versions upgrade
+
 // TODO Dark/light themes switch
 
 // TODO stx icon in sidebar
