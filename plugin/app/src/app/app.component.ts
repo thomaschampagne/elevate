@@ -52,15 +52,15 @@ class MenuItemModel {
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-	public static readonly DARK_THEME: string = "dark";
-	public static readonly LIGHT_THEME: string = "light";
-	public static readonly DEFAULT_THEME: string = AppComponent.DARK_THEME;
-
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
 
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
+
+	public readonly DARK_THEME: string = "dark"; // Not static because used in template
+	public readonly LIGHT_THEME: string = "light"; // Not static because used in template
+	public readonly DEFAULT_THEME: string = this.DARK_THEME;
 
 	public title: string; // TODO Rename as toolBarTitle
 	public theme: string;
@@ -142,16 +142,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public toggleTheme(): void {
 
-		if (this.theme === AppComponent.LIGHT_THEME) {
+		if (this.theme === this.LIGHT_THEME) {
 
-			this.overlayContainer.getContainerElement().classList.remove(AppComponent.LIGHT_THEME);
-			this.overlayContainer.getContainerElement().classList.add(AppComponent.DARK_THEME);
-			this.theme = AppComponent.DARK_THEME;
+			this.overlayContainer.getContainerElement().classList.remove(this.LIGHT_THEME);
+			this.overlayContainer.getContainerElement().classList.add(this.DARK_THEME);
+			this.theme = this.DARK_THEME;
 
-		} else if (this.theme === AppComponent.DARK_THEME) {
-			this.overlayContainer.getContainerElement().classList.remove(AppComponent.DARK_THEME);
-			this.overlayContainer.getContainerElement().classList.add(AppComponent.LIGHT_THEME);
-			this.theme = AppComponent.LIGHT_THEME;
+		} else if (this.theme === this.DARK_THEME) {
+			this.overlayContainer.getContainerElement().classList.remove(this.DARK_THEME);
+			this.overlayContainer.getContainerElement().classList.add(this.LIGHT_THEME);
+			this.theme = this.LIGHT_THEME;
 		}
 
 		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, this.theme);
@@ -202,7 +202,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public setupTheme(): void {
 		const userStoredTheme: string = localStorage.getItem(AppComponent.LS_USER_THEME_PREF);
-		this.theme = (userStoredTheme) ? userStoredTheme : AppComponent.DEFAULT_THEME;
+		this.theme = (userStoredTheme) ? userStoredTheme : this.DEFAULT_THEME;
 	}
 
 	public updateLastSyncDateStatus(): void {

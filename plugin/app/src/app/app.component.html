@@ -97,8 +97,14 @@
 			<mat-menu #moreMenu="matMenu">
 
 				<button mat-menu-item (click)="onThemeSwitch()">
-					<mat-icon>lightbulb_outline</mat-icon>
-					Theme switch
+					<mat-icon *ngIf="theme === LIGHT_THEME"
+							  style="transform: rotate(-35deg) scaleX(-1);">
+						brightness_3 <!--Moon icon rotate by -35deg-->
+					</mat-icon>
+					<mat-icon *ngIf="theme === DARK_THEME">wb_sunny</mat-icon><!--Sun icon-->
+
+					<span *ngIf="theme === LIGHT_THEME">Dark theme</span>
+					<span *ngIf="theme === DARK_THEME">Light theme</span>
 				</button>
 
 				<button mat-menu-item routerLink="/releasesNotes" routerLinkActive="true">
