@@ -1,30 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'assets/styles/constant';
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~@angular/material/theming';
-
-/**
- * Metrics graphics overrides // TODO Extract in file
- */
-
-// Pimp marker lines
-.mg-markers line {
-	opacity: 0.4 !important;
-	shape-rendering: auto;
-	stroke: $light-grey;
-	stroke-width: 1px;
-}
-
-// Pimp baselines
-.mg-baselines line {
-	opacity: 0.4 !important;
-	stroke-dasharray: 15, 15;
-}
-
-// TODO Load dynamically along theme change... find how... @mixin?!
-.mg-x-axis text, .mg-y-axis text, .mg-markers text {
-	fill: #fff !important;
-}
 
 /**
  * Element style overriding
@@ -79,6 +55,7 @@ $web-app-config: mat-typography-config(// Define a typography config that will o
 @include angular-material-typography($web-app-config); // Override typography for all Angular Material, including mat-base-typography and all components.
 @include mat-core($web-app-config); // Override the typography in the core CSS.
 
+
 /**
 * Themes // TODO Refactor in files
 */
@@ -100,3 +77,37 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent);
 .dark {
 	@include angular-material-theme($dark-theme);
 }
+
+/**
+ * Metrics graphics overrides // TODO Extract in file
+ */
+
+// Pimp marker lines
+.mg-markers line {
+	opacity: 0.4 !important;
+	shape-rendering: auto;
+	stroke: $light-grey;
+	stroke-width: 1px;
+}
+
+// Pimp baselines
+.mg-baselines line {
+	opacity: 0.4 !important;
+	stroke-dasharray: 15, 15;
+}
+
+.light {
+	// Change metrics graphics text color along light theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: black;
+	}
+}
+
+.dark {
+	// Change metrics graphics text color along dark theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: white;
+	}
+}
+
+
