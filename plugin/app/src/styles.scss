@@ -21,6 +21,11 @@
 	stroke-dasharray: 15, 15;
 }
 
+// TODO Load dynamically along theme change... find how... @mixin?!
+.mg-x-axis text, .mg-y-axis text, .mg-markers text {
+	fill: #fff !important;
+}
+
 /**
  * Element style overriding
  */
