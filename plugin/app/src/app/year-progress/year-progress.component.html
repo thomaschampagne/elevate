@@ -58,8 +58,9 @@
 				<mat-slide-toggle
 					fxFlexAlign="center"
 					[(ngModel)]="includeCommuteRide"
-					(change)="onIncludeCommuteRideToggle()">
-					Commute rides
+					(change)="onIncludeCommuteRideToggle()"
+					matTooltip="When enabled, activities flagged as commute are integrated into your progression.">
+					Commute activities
 				</mat-slide-toggle>
 
 			</div>
