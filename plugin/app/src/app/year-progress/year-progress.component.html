@@ -98,7 +98,6 @@
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}
 				</mat-card-title>
-				<mat-divider></mat-divider>
 				<app-year-progress-graph
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
@@ -107,7 +106,6 @@
 				</app-year-progress-graph>
 			</div>
 
-
 			<span fxFlex="3" fxHide.lt-lg></span>
 
 			<!-- Table/Legend -->
@@ -115,7 +113,6 @@
 				<mat-card-title class="mat-title">
 					{{momentWatched.format("MMMM Do")}}
 				</mat-card-title>
-				<mat-divider></mat-divider>
 				<app-year-progress-table
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
