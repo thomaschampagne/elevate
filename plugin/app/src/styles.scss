@@ -79,16 +79,14 @@ $web-app-config: mat-typography-config(// Define a typography config that will o
 */
 
 // Light
-$light-primary: mat-palette($mat-deep-orange, 600, 100, 800);
-$light-accent: mat-palette($mat-pink, 600, 100, 800);
-$light-warn: mat-palette($mat-red, 600);
-$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+$light-primary: mat-palette($mat-deep-orange);
+$light-accent: mat-palette($mat-deep-orange);
+$light-theme: mat-light-theme($light-primary, $light-accent);
 
 // Dark
-$dark-primary: mat-palette($mat-orange, 800);
-$dark-accent: mat-palette($mat-deep-orange, 600, 100, 800);
-$dark-warn: mat-palette($mat-red, 600);
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-primary: mat-palette($mat-deep-orange);
+$dark-accent: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent);
 
 .light {
 	@include angular-material-theme($light-theme);

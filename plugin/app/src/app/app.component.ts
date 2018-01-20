@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public readonly DARK_THEME: string = "dark"; // Not static because used in template
 	public readonly LIGHT_THEME: string = "light"; // Not static because used in template
-	public readonly DEFAULT_THEME: string = this.DARK_THEME;
+	public readonly DEFAULT_THEME: string = this.LIGHT_THEME;
 
 	public title: string; // TODO Rename as toolBarTitle
 	public theme: string;
@@ -135,28 +135,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	}
 
-	public onThemeSwitch(): void {
-		this.toggleTheme();
-
-	}
-
-	public toggleTheme(): void {
-
-		if (this.theme === this.LIGHT_THEME) {
-
-			this.overlayContainer.getContainerElement().classList.remove(this.LIGHT_THEME);
-			this.overlayContainer.getContainerElement().classList.add(this.DARK_THEME);
-			this.theme = this.DARK_THEME;
-
-		} else if (this.theme === this.DARK_THEME) {
-			this.overlayContainer.getContainerElement().classList.remove(this.DARK_THEME);
-			this.overlayContainer.getContainerElement().classList.add(this.LIGHT_THEME);
-			this.theme = this.LIGHT_THEME;
-		}
-
-		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, this.theme);
-	}
-
 	public ngOnInit(): void {
 
 		this.setupTheme();
@@ -203,6 +181,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public setupTheme(): void {
 		const userStoredTheme: string = localStorage.getItem(AppComponent.LS_USER_THEME_PREF);
 		this.theme = (userStoredTheme) ? userStoredTheme : this.DEFAULT_THEME;
+		this.overlayContainer.getContainerElement().classList.add(this.theme);
 	}
 
 	public updateLastSyncDateStatus(): void {
@@ -291,6 +270,22 @@ export class AppComponent implements OnInit, OnDestroy {
 			afterClosedSubscription.unsubscribe();
 		});
 	}
+
+	public onThemeToggle(): void {
+
+		if (this.theme === this.LIGHT_THEME) {
+			this.overlayContainer.getContainerElement().classList.remove(this.LIGHT_THEME);
+			this.overlayContainer.getContainerElement().classList.add(this.DARK_THEME);
+			this.theme = this.DARK_THEME;
+
+		} else if (this.theme === this.DARK_THEME) {
+			this.overlayContainer.getContainerElement().classList.remove(this.DARK_THEME);
+			this.overlayContainer.getContainerElement().classList.add(this.LIGHT_THEME);
+			this.theme = this.LIGHT_THEME;
+		}
+		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, this.theme);
+	}
+
 
 	public onShowShare(): void {
 		// TODO ..

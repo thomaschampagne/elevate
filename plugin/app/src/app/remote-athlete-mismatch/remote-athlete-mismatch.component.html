@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" *ngIf="(athleteHistoryService.localRemoteAthleteProfileSame | async) === false">
+<mat-toolbar color="warn" *ngIf="(athleteHistoryService.localRemoteAthleteProfileSame | async) === false">
 	<span class="mat-body-1">
 		Your current saved history has been synchronized with differents athlete settings. You should re-sync your history.
 	</span>

@@ -64,14 +64,12 @@
 						 fxLayout="row" fxLayoutAlign="end center">
 
 						<mat-slide-toggle fxFlex
-										  color="primary"
 										  [(ngModel)]="isTrainingZonesEnabled"
 										  (change)="onTrainingZonesToggle()"
 										  matTooltip="Display Form Zones on graph">
 							<mat-icon>power_input</mat-icon>
 						</mat-slide-toggle>
 						<mat-slide-toggle fxFlex
-										  color="primary"
 										  [(ngModel)]="isPowerMeterEnabled"
 										  (change)="onPowerMeterToggle()"
 										  matTooltip="Use cycling power meter when available">
@@ -79,7 +77,6 @@
 						</mat-slide-toggle>
 
 						<mat-slide-toggle fxFlex
-										  color="primary"
 										  [(ngModel)]="isSwimEnabled"
 										  (change)="onSwimToggle()"
 										  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
