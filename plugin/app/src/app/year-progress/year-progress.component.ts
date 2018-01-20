@@ -25,7 +25,7 @@ export class YearProgressComponent implements OnInit {
 		"#9f8aff",
 		"#ea7015",
 		"#00b423",
-		"#072fac",
+		"#001161",
 		"#e1ab19",
 		"#ee135e",
 		"#1fd6d6"
