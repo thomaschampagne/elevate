@@ -73,3 +73,27 @@ $web-app-config: mat-typography-config(// Define a typography config that will o
 @include mat-checkbox-typography($web-app-config); // Override typography for a specific Angular Material components.
 @include angular-material-typography($web-app-config); // Override typography for all Angular Material, including mat-base-typography and all components.
 @include mat-core($web-app-config); // Override the typography in the core CSS.
+
+/**
+* Themes // TODO Refactor in files
+*/
+
+// Light
+$light-primary: mat-palette($mat-deep-orange, 600, 100, 800);
+$light-accent: mat-palette($mat-pink, 600, 100, 800);
+$light-warn: mat-palette($mat-red, 600);
+$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+
+// Dark
+$dark-primary: mat-palette($mat-orange, 800);
+$dark-accent: mat-palette($mat-deep-orange, 600, 100, 800);
+$dark-warn: mat-palette($mat-red, 600);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+.light {
+	@include angular-material-theme($light-theme);
+}
+
+.dark {
+	@include angular-material-theme($dark-theme);
+}

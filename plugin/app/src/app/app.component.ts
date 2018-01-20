@@ -18,6 +18,7 @@ import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-hi
 import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
+import { OverlayContainer } from "@angular/cdk/overlay";
 
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
@@ -51,16 +52,22 @@ class MenuItemModel {
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+	public static readonly DARK_THEME: string = "dark";
+	public static readonly LIGHT_THEME: string = "light";
+	public static readonly DEFAULT_THEME: string = AppComponent.DARK_THEME;
+
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
-	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 
+	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
+	public static readonly LS_USER_THEME_PREF: string = "theme";
+
+	public title: string; // TODO Rename as toolBarTitle
+	public theme: string;
 	public AthleteHistoryState = AthleteHistoryState;
 	public athleteHistoryState: AthleteHistoryState;
 	public lastSyncDateMessage: string;
-
 	public routerEventsSubscription: Subscription;
-	public title: string;
 
 	@ViewChild(MatSidenav)
 	public sideNav: MatSidenav;
@@ -95,6 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 	];
 
+
 	public static convertRouteToTitle(route: string): string {
 
 		if (_.isEmpty(route)) {
@@ -119,6 +127,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public snackBar: MatSnackBar,
 				public sideNavService: SideNavService,
 				public windowService: WindowService,
+				public overlayContainer: OverlayContainer,
 				public iconRegistry: MatIconRegistry,
 				public sanitizer: DomSanitizer) {
 
@@ -126,7 +135,31 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	}
 
+	public onThemeSwitch(): void {
+		this.toggleTheme();
+
+	}
+
+	public toggleTheme(): void {
+
+		if (this.theme === AppComponent.LIGHT_THEME) {
+
+			this.overlayContainer.getContainerElement().classList.remove(AppComponent.LIGHT_THEME);
+			this.overlayContainer.getContainerElement().classList.add(AppComponent.DARK_THEME);
+			this.theme = AppComponent.DARK_THEME;
+
+		} else if (this.theme === AppComponent.DARK_THEME) {
+			this.overlayContainer.getContainerElement().classList.remove(AppComponent.DARK_THEME);
+			this.overlayContainer.getContainerElement().classList.add(AppComponent.LIGHT_THEME);
+			this.theme = AppComponent.LIGHT_THEME;
+		}
+
+		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, this.theme);
+	}
+
 	public ngOnInit(): void {
+
+		this.setupTheme();
 
 		// Update list of sections names displayed in sidebar
 		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
@@ -165,6 +198,11 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 
 		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
+	}
+
+	public setupTheme(): void {
+		const userStoredTheme: string = localStorage.getItem(AppComponent.LS_USER_THEME_PREF);
+		this.theme = (userStoredTheme) ? userStoredTheme : AppComponent.DEFAULT_THEME;
 	}
 
 	public updateLastSyncDateStatus(): void {
