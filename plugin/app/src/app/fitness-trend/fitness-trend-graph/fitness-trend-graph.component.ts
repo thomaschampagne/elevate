@@ -51,10 +51,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	@Input("hasComponentFocus")
 	public hasComponentFocus: boolean;
 
-	public readonly atlColor: string = "#515151";
-	public readonly ctlColor: string = "#e94e1b";
-	public readonly tsbColor: string = "#adadad";
-
 	public PERFORMANCE_MARKER: number;
 
 	public graphConfig: any;
@@ -557,7 +553,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			aggregate_rollover: true,
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
-			max_data_size: 6, // FIXME Really usefull?!
+			max_data_size: 6,
 			missing_is_hidden_accessor: "hidden",
 			yax_count: 10,
 			target: "#fitnessTrendGraph",
@@ -567,32 +563,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			showActivePoint: false,
 			markers: null,
 			legend: null,
-			custom_style: {
-				lines: [
-					{
-						"stroke": this.atlColor, // Fatigue real
-					},
-					{
-						"stroke": this.ctlColor, // Fitness real
-					},
-					{
-						"stroke": this.tsbColor // Form real
-					},
-					{
-						"stroke": this.atlColor, // Fatigue preview days
-						"stroke-dasharray": "5, 5"
-					},
-					{
-						"stroke": this.ctlColor, // Fitness preview days
-						"stroke-dasharray": "5, 5"
-					},
-					{
-						"stroke": this.tsbColor, // Form preview days
-						"stroke-dasharray": "5, 5"
-					}
-				],
-				circle_colors: [this.atlColor, this.ctlColor, this.tsbColor, this.atlColor, this.ctlColor, this.tsbColor]
-			},
 			click: (metricsGraphicsEvent: MetricsGraphicsEventModel) => {
 				this.onGraphClick(metricsGraphicsEvent);
 			},

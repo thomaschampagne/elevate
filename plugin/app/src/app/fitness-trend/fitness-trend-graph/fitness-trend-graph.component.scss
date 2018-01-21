@@ -1,4 +1,4 @@
-@import '../../../assets/styles/constant';
+//@import '../../../assets/styles/constant';
 
 .header {
 	margin: 0; // Remove mat-title margin
@@ -10,6 +10,193 @@
 	cursor: pointer;
 }
 
-.fitnessTrendGraph {
-	padding-bottom: 10px;
+/*
+// Deep .light & .dark css class to here to manage line color
+::ng-deep {
+
+	.light {
+
+		$atl-color: #0b1340;
+		$ctl-color: #e94e1b;
+		$tsb-color: #6e6e6e;
+
+		.atl_value {
+			color: $atl-color;
+		}
+		.ctl_value {
+			color: $ctl-color;
+		}
+		.tsb_value {
+			color: $tsb-color;
+		}
+
+		#fitnessTrendGraph {
+
+			.mg-area1-color {
+				fill: $atl-color;
+			}
+
+			.mg-line1-color {
+				stroke: $atl-color;
+			}
+
+			.mg-hover-line1-color {
+				fill: $atl-color;
+			}
+
+			.mg-area2-color {
+				fill: $ctl-color;
+			}
+
+			.mg-line2-color {
+				stroke: $ctl-color;
+			}
+
+			.mg-hover-line2-color {
+				fill: $ctl-color;
+			}
+
+			.mg-area3-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line3-color {
+				stroke: $tsb-color;
+			}
+
+			.mg-hover-line3-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line4-color {
+				stroke: $atl-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-area4-color {
+				fill: $atl-color;
+			}
+
+			.mg-area5-color {
+				fill: $ctl-color;
+			}
+
+			.mg-line5-color {
+				stroke: $ctl-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-line5-color {
+				stroke: $ctl-color;
+			}
+
+			.mg-area6-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line6-color {
+				stroke: $tsb-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-hover-line6-color {
+				fill: $tsb-color;
+			}
+		}
+
+	}
+
+	.dark {
+
+		$atl-color: #caff28;
+		$ctl-color: #e94e1b;
+		$tsb-color: #d5d5d5;
+
+		.atl_value {
+			color: $atl-color;
+		}
+		.ctl_value {
+			color: $ctl-color;
+		}
+		.tsb_value {
+			color: $tsb-color;
+		}
+
+		#fitnessTrendGraph {
+
+			.mg-area1-color {
+				fill: $atl-color;
+			}
+
+			.mg-line1-color {
+				stroke: $atl-color;
+			}
+
+			.mg-hover-line1-color {
+				fill: $atl-color;
+			}
+
+			.mg-area2-color {
+				fill: $ctl-color;
+			}
+
+			.mg-line2-color {
+				stroke: $ctl-color;
+			}
+
+			.mg-hover-line2-color {
+				fill: $ctl-color;
+			}
+
+			.mg-area3-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line3-color {
+				stroke: $tsb-color;
+			}
+
+			.mg-hover-line3-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line4-color {
+				stroke: $atl-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-area4-color {
+				fill: $atl-color;
+			}
+
+			.mg-area5-color {
+				fill: $ctl-color;
+			}
+
+			.mg-line5-color {
+				stroke: $ctl-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-line5-color {
+				stroke: $ctl-color;
+			}
+
+			.mg-area6-color {
+				fill: $tsb-color;
+			}
+
+			.mg-line6-color {
+				stroke: $tsb-color;
+				stroke-dasharray: 5, 5;
+			}
+
+			.mg-hover-line6-color {
+				fill: $tsb-color;
+			}
+		}
+
+	}
 }
+
+*/

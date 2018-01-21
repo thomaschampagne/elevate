@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import * as _ from "lodash";
@@ -19,14 +19,16 @@ import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-h
 import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
+import { Theme } from "./shared/enums/theme.enum";
 
 // TODO [User test preview 1] Google sheet => Bugs preview 1
 // TODO [User test preview 1] Write and send email (30 people)
 
-// TODO Welcome popup "Oh a new App !"
+// TODO Welcome popup "A new app for a new start"
 // TODO Twitter follow update sidenav title?
 
 // TODO Dark/light themes switch
+// TODO Try to reuse metrics graphics (official) back
 
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
@@ -58,12 +60,10 @@ export class AppComponent implements OnInit, OnDestroy {
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
 
-	public readonly DARK_THEME: string = "dark"; // Not static because used in template
-	public readonly LIGHT_THEME: string = "light"; // Not static because used in template
-	public readonly DEFAULT_THEME: string = this.LIGHT_THEME;
+	public Theme = Theme;
+	public theme: Theme; // TODO Rename as currentTheme
 
 	public title: string; // TODO Rename as toolBarTitle
-	public theme: string;
 	public AthleteHistoryState = AthleteHistoryState;
 	public athleteHistoryState: AthleteHistoryState;
 	public lastSyncDateMessage: string;
@@ -128,6 +128,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public sideNavService: SideNavService,
 				public windowService: WindowService,
 				public overlayContainer: OverlayContainer,
+				public renderer: Renderer2,
 				public iconRegistry: MatIconRegistry,
 				public sanitizer: DomSanitizer) {
 
@@ -137,7 +138,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
-		this.setupTheme();
+		this.setupThemeOnLoad();
 
 		// Update list of sections names displayed in sidebar
 		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
@@ -178,10 +179,34 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 	}
 
-	public setupTheme(): void {
-		const userStoredTheme: string = localStorage.getItem(AppComponent.LS_USER_THEME_PREF);
-		this.theme = (userStoredTheme) ? userStoredTheme : this.DEFAULT_THEME;
+	public setupThemeOnLoad(): void {
+
+		let themeToBeLoaded: Theme = Theme.DEFAULT;
+
+		const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as Theme;
+
+		if (existingSavedTheme) {
+			themeToBeLoaded = existingSavedTheme;
+		}
+
+		this.setTheme(themeToBeLoaded);
+	}
+
+	public setTheme(theme: Theme): void {
+
+		this.theme = theme;
+
+		// Remove previous theme if exists
+		const previousTheme = this.overlayContainer.getContainerElement().classList[1] as Theme;
+		if (previousTheme) {
+			this.overlayContainer.getContainerElement().classList.remove(previousTheme);
+		}
+
+		// Add theme/class to overlay list
 		this.overlayContainer.getContainerElement().classList.add(this.theme);
+
+		// Change body theme class
+		this.renderer.setAttribute(document.body, "class", this.theme);
 	}
 
 	public updateLastSyncDateStatus(): void {
@@ -272,20 +297,10 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onThemeToggle(): void {
-
-		if (this.theme === this.LIGHT_THEME) {
-			this.overlayContainer.getContainerElement().classList.remove(this.LIGHT_THEME);
-			this.overlayContainer.getContainerElement().classList.add(this.DARK_THEME);
-			this.theme = this.DARK_THEME;
-
-		} else if (this.theme === this.DARK_THEME) {
-			this.overlayContainer.getContainerElement().classList.remove(this.DARK_THEME);
-			this.overlayContainer.getContainerElement().classList.add(this.LIGHT_THEME);
-			this.theme = this.LIGHT_THEME;
-		}
-		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, this.theme);
+		const targetTheme = (this.theme === Theme.LIGHT) ? Theme.DARK : Theme.LIGHT;
+		this.setTheme(targetTheme);
+		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
 	}
-
 
 	public onShowShare(): void {
 		// TODO ..

@@ -1,4 +1,4 @@
-<div id="app-container" [class]="theme">
+<div id="app-container">
 	<mat-sidenav-container>
 		<mat-sidenav #sidenav
 					 [mode]="sideNavMode"
@@ -97,14 +97,14 @@
 			<mat-menu #moreMenu="matMenu">
 
 				<button mat-menu-item (click)="onThemeToggle()">
-					<mat-icon *ngIf="theme === LIGHT_THEME"
+					<mat-icon *ngIf="theme === Theme.LIGHT"
 							  style="transform: rotate(-35deg) scaleX(-1);">
 						brightness_3 <!--Moon icon rotate by -35deg-->
 					</mat-icon>
-					<mat-icon *ngIf="theme === DARK_THEME">wb_sunny</mat-icon><!--Sun icon-->
+					<mat-icon *ngIf="theme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
 
-					<span *ngIf="theme === LIGHT_THEME">Dark theme</span>
-					<span *ngIf="theme === DARK_THEME">Light theme</span>
+					<span *ngIf="theme === Theme.LIGHT">Dark theme</span>
+					<span *ngIf="theme === Theme.DARK">Light theme</span>
 				</button>
 
 				<button mat-menu-item routerLink="/releasesNotes" routerLinkActive="true">

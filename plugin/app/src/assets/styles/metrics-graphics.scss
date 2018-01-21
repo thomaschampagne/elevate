@@ -1,0 +1,25 @@
+@import "./constant";
+
+.mg-markers line {
+	opacity: 0.4 !important;
+	shape-rendering: auto;
+	stroke: $light-grey;
+	stroke-width: 1px;
+}
+
+.mg-baselines line {
+	opacity: 0.75 !important;
+	stroke-dasharray: 8, 8;
+}
+
+.light { // Global change metrics graphics text color along light theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: black;
+	}
+}
+
+.dark { // Global change metrics graphics text color along dark theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: white;
+	}
+}

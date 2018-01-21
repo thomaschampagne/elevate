@@ -1,0 +1,12 @@
+@import "./constant";
+
+html, body, mat-sidenav-container {
+	margin: 0;
+	width: auto;
+	height: 100%;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-card {
+	margin: $default-margin;
+}
