@@ -21,18 +21,16 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 
-// TODO [User test preview 1] Google sheet => Bugs preview 1
-// TODO [User test preview 1] Write and send email (30 people)
+// TODO Bugs list from preview 01
 
 // TODO Welcome popup "A new app for a new start"
 // TODO Twitter follow update sidenav title?
-
-// TODO Dark/light themes switch
 // TODO Try to reuse metrics graphics (official) back
 
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
+
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
