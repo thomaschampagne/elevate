@@ -2,6 +2,7 @@
 
 $base-style-config: mat-typography-config(); // Create a config with the default typography levels.
 $app-style-config: mat-typography-config(// Define a typography config that will override the base typo
+	$font-family: "Roboto, Helvetica",
 	$headline: mat-typography-level(
 			mat-font-size($base-style-config, headline),
 			mat-line-height($base-style-config, headline),
