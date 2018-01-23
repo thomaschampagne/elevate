@@ -32,8 +32,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "6_months";
 
-	public static readonly SPECIAL_CHAR_SUN: string = "☀"; // OR "☀️" @amp-what.com
-	public static readonly SPECIAL_CHAR_FINGER: string = "🠷"; // OR "▾" @amp-what.com
+	public static readonly SPECIAL_CHAR_SUN: string = "☀";
+	public static readonly SPECIAL_CHAR_FINGER: string = "⯆";
 
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
