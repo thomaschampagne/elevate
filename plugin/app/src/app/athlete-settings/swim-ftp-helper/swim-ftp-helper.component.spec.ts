@@ -61,4 +61,30 @@ describe("SwimFtpHelperComponent", () => {
 		// Then
 		expect(actual).toBe("00:00:12");
 	});
+
+	it("should convert pace to swim speed (1)", () => {
+
+		// Given
+		const pace: string = "00:03:14";
+		const expected: number = 31;
+
+		// When
+		const actual = SwimFtpHelperComponent.convertPaceToSwimSpeed(pace);
+
+		// Then
+		expect(actual).toEqual(expected);
+	});
+
+	it("should convert pace to swim speed (2)", () => {
+
+		// Given
+		const pace: string = "00:00:12";
+		const expected: number = 500;
+
+		// When
+		const actual = SwimFtpHelperComponent.convertPaceToSwimSpeed(pace);
+
+		// Then
+		expect(actual).toEqual(expected);
+	});
 });

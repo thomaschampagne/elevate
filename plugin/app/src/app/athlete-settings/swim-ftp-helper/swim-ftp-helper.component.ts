@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import * as _ from "lodash";
 import { SwimCalculationMethod } from "./swim-calculation-method.model";
 import { FormulaParamsModel } from "./formula-params.model";
+import { NotImplementedException } from "../../shared/exceptions/not-implemented.exception";
 
 @Component({
 	selector: "app-swim-ftp-helper",
@@ -67,6 +68,11 @@ export class SwimFtpHelperComponent implements OnInit {
 		return (!swimFtp || swimFtp <= 0) ? "" : hours + ":" + minutes + ":" + seconds;
 	}
 
+	public static convertPaceToSwimSpeed(pace: string): number {
+
+		throw new NotImplementedException();
+	}
+
 	constructor() {
 	}
 
@@ -100,4 +106,6 @@ export class SwimFtpHelperComponent implements OnInit {
 			this.swimFtpChange.emit(this.swimFtp);
 		}
 	}
+
+
 }
