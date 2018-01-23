@@ -30,43 +30,59 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Given
 		const swimFtp = 1;
+		const expected = "01:40:00";
 
 		// When
 		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
 
 		// Then
-		expect(actual).toBe("01:40:00");
+		expect(actual).toBe(expected);
 	});
 
 	it("should convert swim speed to pace (2)", () => {
 
 		// Given
 		const swimFtp = 31;
+		const expected = "00:03:14";
 
 		// When
 		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
 
 		// Then
-		expect(actual).toBe("00:03:14");
+		expect(actual).toBe(expected);
 	});
 
 	it("should convert swim speed to pace (3)", () => {
 
 		// Given
 		const swimFtp = 500;
+		const expected = "00:00:12";
 
 		// When
 		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
 
 		// Then
-		expect(actual).toBe("00:00:12");
+		expect(actual).toBe(expected);
+	});
+
+	it("should convert swim speed to pace (4)", () => {
+
+		// Given
+		const swimFtp = 57;
+		const expected = "00:01:45";
+
+		// When
+		const actual = SwimFtpHelperComponent.convertSwimSpeedToPace(swimFtp);
+
+		// Then
+		expect(actual).toBe(expected);
 	});
 
 	it("should convert pace to swim speed (1)", () => {
 
 		// Given
 		const pace: string = "00:03:14";
-		const expected: number = 31;
+		const expected: number = 30.93;
 
 		// When
 		const actual = SwimFtpHelperComponent.convertPaceToSwimSpeed(pace);

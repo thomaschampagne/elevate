@@ -78,9 +78,6 @@ export class AthleteSettingsComponent implements OnInit {
 		this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_GENDER, this.gender);
 	}
 
-	/**
-	 *
-	 */
 	public onWeightChanged() {
 		if (_.isNumber(this.weight) && this.weight > 0) {
 
@@ -97,9 +94,6 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public onMaxHrChanged() {
 
 		if (_.isNumber(this.maxHr) && this.maxHr > 0) {
@@ -131,10 +125,6 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 	}
 
-
-	/**
-	 *
-	 */
 	public onRestHrChanged() {
 		if (_.isNumber(this.restHr) && this.restHr > 0) {
 
@@ -160,9 +150,6 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public onCyclingFtpChanged() {
 
 		if (_.isNumber(this.ftp) && this.ftp < 0) {
@@ -190,6 +177,7 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 
 		if (_.isNumber(this.swimFtp) && this.swimFtp < 0) {
+
 			// Wrong value...
 			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => {
@@ -207,9 +195,6 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
-	/**
-	 *
-	 */
 	public onSwimFtp100mChanged() {
 
 		let hasErrors = false;
@@ -226,19 +211,16 @@ export class AthleteSettingsComponent implements OnInit {
 
 		} else {
 
+			// TODO To be refactored
 			if (this.swimFtp100m.match("^[0-9]+:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1}$")) {
 
-				// Ok...
-				const split = this.swimFtp100m.split(":");
-				const hours = parseInt(split[0], 10);
-				const minutes = parseInt(split[1], 10);
-				const seconds = parseInt(split[2], 10);
-				const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-				this.swimFtp = parseFloat((60 * 100 / totalSeconds).toFixed(3));
+				this.swimFtp = SwimFtpHelperComponent.convertPaceToSwimSpeed(this.swimFtp100m);
 
 				if (_.isFinite(this.swimFtp)) {
+
 					const changeFromPaceField = true;
 					this.onSwimFtpChanged(changeFromPaceField); // Trigger save & swimFtp100m new value
+
 				} else {
 					hasErrors = true;
 				}
@@ -260,9 +242,6 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
-	/**
-	 *
-	 */
 	public localStorageMustBeCleared() {
 		this.userSettingsService.update(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
 			console.log(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE + " has been updated to " + true);
@@ -318,9 +297,6 @@ export class AthleteSettingsComponent implements OnInit {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public popHeartRateError() {
 		this.popError("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value");
 	}

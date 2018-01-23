@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import * as _ from "lodash";
+import * as moment from "moment";
 import { SwimCalculationMethod } from "./swim-calculation-method.model";
 import { FormulaParamsModel } from "./formula-params.model";
-import { NotImplementedException } from "../../shared/exceptions/not-implemented.exception";
 
 @Component({
 	selector: "app-swim-ftp-helper",
@@ -59,18 +59,16 @@ export class SwimFtpHelperComponent implements OnInit {
 	 */
 	public static convertSwimSpeedToPace(swimFtp: number): string {
 
-		let totalSeconds = 1 / (swimFtp / 60) * 100;
-		const hours = ("00" + Math.floor(totalSeconds / 3600)).slice(-2);
-		totalSeconds %= 3600;
-		const minutes = ("00" + Math.round(totalSeconds / 60)).slice(-2);
-		const seconds = ("00" + Math.round(totalSeconds % 60)).slice(-2);
-
-		return (!swimFtp || swimFtp <= 0) ? "" : hours + ":" + minutes + ":" + seconds;
+		if (!_.isNumber(swimFtp)) {
+			return "";
+		}
+		const totalSeconds = Math.round(1 / (swimFtp / 60) * 100);
+		return moment().startOf('day').seconds(totalSeconds).format("HH:mm:ss");
 	}
 
 	public static convertPaceToSwimSpeed(pace: string): number {
-
-		throw new NotImplementedException();
+		const totalSeconds = moment(pace, "HH:mm:ss").diff(moment().startOf("day"), "seconds");
+		return parseFloat((60 * 100 / totalSeconds).toFixed(2));
 	}
 
 	constructor() {
