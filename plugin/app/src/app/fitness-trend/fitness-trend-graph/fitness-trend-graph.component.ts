@@ -30,7 +30,7 @@ import { AthleteHistoryService } from "../../shared/services/athlete-history/ath
 })
 export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
-	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "6_months";
+	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 
 	public static readonly SPECIAL_CHAR_SUN: string = "☀";
 	public static readonly SPECIAL_CHAR_FINGER: string = "⯆";
@@ -608,6 +608,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			to: toDate,
 			key: "2_months",
 			label: "2 months"
+		}, {
+			from: moment().startOf("day").subtract(3, "months").toDate(),
+			to: toDate,
+			key: "3_months",
+			label: "3 months"
 		}, {
 			from: moment().startOf("day").subtract(4, "months").toDate(),
 			to: toDate,
