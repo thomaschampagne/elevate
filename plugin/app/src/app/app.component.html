@@ -42,7 +42,7 @@
 				<mat-icon>menu</mat-icon>
 			</button>
 
-			<span>{{title}}</span>
+			<span>{{toolBarTitle}}</span>
 
 			<span class="toolbar-spacer"></span>
 
@@ -103,14 +103,14 @@
 			<mat-menu #moreMenu="matMenu">
 
 				<button mat-menu-item (click)="onThemeToggle()">
-					<mat-icon *ngIf="theme === Theme.LIGHT"
+					<mat-icon *ngIf="currentTheme === Theme.LIGHT"
 							  style="transform: rotate(-35deg) scaleX(-1);">
 						brightness_3 <!--Moon icon rotate by -35deg-->
 					</mat-icon>
-					<mat-icon *ngIf="theme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
+					<mat-icon *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
 
-					<span *ngIf="theme === Theme.LIGHT">Dark theme</span>
-					<span *ngIf="theme === Theme.DARK">Light theme</span>
+					<span *ngIf="currentTheme === Theme.LIGHT">Dark theme</span>
+					<span *ngIf="currentTheme === Theme.DARK">Light theme</span>
 				</button>
 
 				<button mat-menu-item

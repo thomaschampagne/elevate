@@ -60,9 +60,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	public static readonly LS_USER_THEME_PREF: string = "theme";
 
 	public Theme = Theme;
-	public theme: Theme; // TODO Rename as currentTheme
+	public currentTheme: Theme;
 
-	public title: string; // TODO Rename as toolBarTitle
+	public toolBarTitle: string;
 	public AthleteHistoryState = AthleteHistoryState;
 	public athleteHistoryState: AthleteHistoryState;
 	public lastSyncDateMessage: string;
@@ -141,11 +141,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.sideNavSetup();
 
-		this.title = AppComponent.convertRouteToTitle(this.router.url);
+		this.toolBarTitle = AppComponent.convertRouteToTitle(this.router.url);
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.title = AppComponent.convertRouteToTitle(routerEvent.url);
+				this.toolBarTitle = AppComponent.convertRouteToTitle(routerEvent.url);
 			}
 		});
 
@@ -188,7 +188,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public setTheme(theme: Theme): void {
 
-		this.theme = theme;
+		this.currentTheme = theme;
 
 		// Remove previous theme if exists
 		const previousTheme = this.overlayContainer.getContainerElement().classList[1] as Theme;
@@ -197,10 +197,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 
 		// Add theme/class to overlay list
-		this.overlayContainer.getContainerElement().classList.add(this.theme);
+		this.overlayContainer.getContainerElement().classList.add(this.currentTheme);
 
 		// Change body theme class
-		this.renderer.setAttribute(document.body, "class", this.theme);
+		this.renderer.setAttribute(document.body, "class", this.currentTheme);
 	}
 
 	public updateLastSyncDateStatus(): void {
@@ -291,7 +291,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onThemeToggle(): void {
-		const targetTheme = (this.theme === Theme.LIGHT) ? Theme.DARK : Theme.LIGHT;
+		const targetTheme = (this.currentTheme === Theme.LIGHT) ? Theme.DARK : Theme.LIGHT;
 		this.setTheme(targetTheme);
 		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
 	}
