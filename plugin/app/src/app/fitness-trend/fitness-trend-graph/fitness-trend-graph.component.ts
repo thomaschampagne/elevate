@@ -32,8 +32,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 
-	public static readonly TODAY_CHAR: string = "\u2600"; // "Sun" (unicode)
-	public static readonly ACTIVE_DAY_CHAR: string = "\u2bc6"; // "Down arrow" (unicode)
+	public static readonly TODAY_CHAR: string = "Today";
 
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
@@ -223,7 +222,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 					mouseover: () => this.onMarkerMouseOver(dayFitnessTrend),
 					mouseout: () => this.onMarkerMouseOut(dayFitnessTrend),
 					click: () => this.onMarkerClick(dayFitnessTrend),
-					label: FitnessTrendGraphComponent.ACTIVE_DAY_CHAR
+					label: dayFitnessTrend.activitiesName.length.toFixed(0)
 				};
 			} else if (dayFitnessTrend.dateString === today) {
 
