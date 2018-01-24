@@ -22,15 +22,16 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 
 // TODO Bugs list from preview 01
+// TODO Fitness Trends look+feel: Add svg icon (bike or run or workout) before activity name. Add
+// TODO Fitness Trends look+feel: Add "Rest day" text less visible on mouse over => better active/rest identification for eyes
+// TODO Fitness Trends look+feel: Add some height to avoid flickering
 
 // TODO Welcome popup "A new app for a new start"
-// TODO Twitter follow update sidenav title?
 // TODO Try to reuse metrics graphics (official) back
 
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
-
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
@@ -91,11 +92,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		}, {
 			icon: "format_line_spacing",
 			routerLink: AppRoutesModel.zonesSettings,
-			routerLinkActive: true
-		},
-		{
-			icon: "favorite",
-			routerLink: AppRoutesModel.donate,
 			routerLinkActive: true
 		}
 	];
