@@ -53,6 +53,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return niceDate;
 	}
 
+	public hasActivities(): boolean {
+		return (this.activitiesName.length > 0);
+	}
+
 	public printActivities(defaultEmptyValue?: string): string {
 
 		if (this.activitiesName.length === 0) {

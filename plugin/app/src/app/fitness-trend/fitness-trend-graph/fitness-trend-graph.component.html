@@ -102,40 +102,43 @@
 						</span>
 					</div>
 
-					<div fxFlex>
-						<span fxFlexAlign="center">
+					<div fxFlex [ngSwitch]="viewedDay.hasActivities()">
+
+						<span *ngSwitchCase="true" class="viewedDayActivities">
+							{{viewedDay.printActivities()}}
+						</span>
+						<span *ngSwitchCase="false">
 							{{viewedDay.printActivities("Rest day")}}
 						</span>
 					</div>
 
-					<div fxFlex>
+					<div fxFlex class="stressScore">
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
 							<span *ngIf="viewedDay.finalStressScore">
-								Stress Score:
 								<!-- Trimp -->
 								<span *ngIf="viewedDay.trainingImpulseScore">
-									{{viewedDay.printTrainingImpulseScore()}} <sub><i>Trimp</i></sub>
+									{{viewedDay.printTrainingImpulseScore()}} <i>Trimp</i>
 								</span>
 
 								<!--PSS-->
 								<span *ngIf="viewedDay.powerStressScore">
 									<span *ngIf="viewedDay.trainingImpulseScore">
-										&nbsp;/&nbsp;
+										&nbsp;&&nbsp;
 									</span>
-									{{viewedDay.printPowerStressScore()}} <sub><i>PowerSS</i></sub>
+									{{viewedDay.printPowerStressScore()}} <i>PowerSS</i>
 								</span>
 
 								<!--SwimSS-->
 								<span *ngIf="viewedDay.swimStressScore">
 									<span *ngIf="viewedDay.trainingImpulseScore">
-										&nbsp;/&nbsp;
+										&nbsp;&&nbsp;
 									</span>
-									{{viewedDay.printSwimStressScore()}} <sub><i>SwimSS</i></sub>
+									{{viewedDay.printSwimStressScore()}} <i>SwimSS</i>
 								</span>
 								<!--Final-->
 								<span>
-									&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>
+									&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong> <i>Stress score</i>
 								</span>
 							</span>
 						</span>

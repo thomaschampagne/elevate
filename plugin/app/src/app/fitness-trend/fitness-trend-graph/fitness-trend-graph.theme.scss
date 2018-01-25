@@ -12,6 +12,10 @@
 	$atl-color: mat-color($primary);
 	$tsb-color: mat-color($primary, 900);
 
+	.viewedDayActivities {
+		color: mat-color($accent);
+	}
+
 	.atl_value {
 		color: $atl-color;
 	}
