@@ -116,7 +116,7 @@
 				<button mat-menu-item
 						(click)="onOpenLink('https://twitter.com/champagnethomas')">
 					<mat-icon>announcement</mat-icon>
-					Features updates
+					App updates
 				</button>
 
 				<button mat-menu-item routerLink="/releasesNotes" routerLinkActive="true">
@@ -139,16 +139,16 @@
 					Plugin page
 				</button>
 
-				<button mat-menu-item
-						(click)="onOpenLink('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions')">
-					<mat-icon>help</mat-icon>
-					FAQ
-				</button>
-
 				<!--TODO use github ISSUE_TEMPLATE.md @see https://github.com/blog/2111-issue-and-pull-request-templates-->
 				<button mat-menu-item (click)="onOpenLink('https://github.com/thomaschampagne/stravistix/issues/new')">
 					<mat-icon>bug_report</mat-icon>
 					Report a bug
+				</button>
+
+				<button mat-menu-item
+						(click)="onOpenLink('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions')">
+					<mat-icon>help</mat-icon>
+					FAQ
 				</button>
 
 				<button mat-menu-item (click)="onShowAbout()">

@@ -28,7 +28,7 @@ import { Theme } from "./shared/enums/theme.enum";
 
 // TODO Welcome popup "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
-
+// TODO use github ISSUE_TEMPLATE.md @see https://github.com/blog/2111-issue-and-pull-request-templates
 // TODO stx icon in sidebar
 // TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
