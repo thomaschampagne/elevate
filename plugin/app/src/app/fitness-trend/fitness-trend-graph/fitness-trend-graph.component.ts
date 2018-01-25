@@ -544,7 +544,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: window.innerHeight * 0.55,
+			height: window.innerHeight * 0.625,
 			right: 40,
 			baselines: [],
 			animate_on_load: false,
@@ -558,7 +558,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			target: "#fitnessTrendGraph",
 			x_accessor: "date",
 			y_accessor: "value",
-			inflator: 1.2,
+			inflator: 1.01,
 			showActivePoint: false,
 			markers: null,
 			legend: null,
