@@ -9,28 +9,24 @@
 							   routerLinkActive="{{item.routerLinkActive}}">
 					<button mat-icon-button>
 						<mat-icon>{{item.icon}}</mat-icon>
-						&nbsp;&nbsp;&nbsp;&nbsp;
 						{{item.name}}
 					</button>
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('https://www.strava.com')">
 					<button mat-icon-button>
 						<mat-icon svgIcon="strava"></mat-icon>
-						&nbsp;&nbsp;&nbsp;&nbsp;
 						Strava
 					</button>
 				</mat-list-item>
 				<mat-list-item routerLink="/donate">
 					<button mat-icon-button>
 						<mat-icon>favorite</mat-icon>
-						&nbsp;&nbsp;&nbsp;&nbsp;
 						Donate
 					</button>
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('/options/app/index.html#!/commonSettings')">
 					<button mat-icon-button>
 						<mat-icon>keyboard_backspace</mat-icon>
-						&nbsp;&nbsp;&nbsp;&nbsp;
 						Back to old app
 					</button>
 				</mat-list-item>
