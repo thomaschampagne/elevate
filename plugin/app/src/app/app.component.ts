@@ -28,7 +28,6 @@ import { Theme } from "./shared/enums/theme.enum";
 // TODO README.md
 // TODO Welcome popup "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
-// TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
 
 //--------
