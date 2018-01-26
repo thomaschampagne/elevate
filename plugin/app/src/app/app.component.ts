@@ -24,8 +24,8 @@ import { Theme } from "./shared/enums/theme.enum";
 // TODO Bugs list from preview 01
 // TODO Fitness Trends look+feel: Add svg icon (bike or run or workout) before activity name. Add
 // TODO Fitness Trends look+feel: Add "Rest day" text less visible on mouse over => better active/rest identification for eyes
-// TODO Fitness Trends look+feel: Add some height to avoid flickering
 
+// TODO README.md
 // TODO Welcome popup "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
 // TODO use github ISSUE_TEMPLATE.md @see https://github.com/blog/2111-issue-and-pull-request-templates
