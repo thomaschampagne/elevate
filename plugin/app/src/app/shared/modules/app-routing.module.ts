@@ -10,6 +10,7 @@ import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.comp
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 import { YearProgressComponent } from "../../year-progress/year-progress.component";
 import { YearProgressResolverService } from "../../year-progress/shared/services/year-progress-resolver.service";
+import { ShareComponent } from "../../share/share.component";
 
 export const routes: Routes = [
 	{
@@ -52,6 +53,10 @@ export const routes: Routes = [
 		resolve: {
 			releasesNotes: ReleasesNotesResolverService
 		}
+	},
+	{
+		path: AppRoutesModel.share,
+		component: ShareComponent
 	},
 ];
 

@@ -41,6 +41,7 @@ import { YearProgressHelperDialogComponent } from "../year-progress/year-progres
 import { AthleteHistoryDao } from "./dao/athlete-history/athlete-history.dao";
 import { AthleteHistoryService } from "./services/athlete-history/athlete-history.service";
 import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
+import { ShareComponent } from "../share/share.component";
 
 @NgModule({
 	declarations: [
@@ -59,6 +60,7 @@ import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-i
 		YearProgressTableComponent,
 		DonateComponent,
 		ReleasesNotesComponent,
+		ShareComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,

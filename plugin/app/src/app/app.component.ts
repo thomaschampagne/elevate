@@ -28,7 +28,6 @@ import { Theme } from "./shared/enums/theme.enum";
 // TODO README.md
 // TODO Welcome popup "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
-// TODO use github ISSUE_TEMPLATE.md @see https://github.com/blog/2111-issue-and-pull-request-templates
 // TODO app favicon + plugin icon change (simple and plain)
 // TODO onShowShare
 
@@ -295,8 +294,12 @@ export class AppComponent implements OnInit, OnDestroy {
 		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
 	}
 
+	public onShowReleaseNotes(): void {
+		this.router.navigate([AppRoutesModel.releasesNotes]);
+	}
+
 	public onShowShare(): void {
-		// TODO ..
+		this.router.navigate([AppRoutesModel.share]);
 	}
 
 	public onShowAbout(): void {
