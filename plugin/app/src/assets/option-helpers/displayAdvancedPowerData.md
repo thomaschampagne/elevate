@@ -39,7 +39,7 @@ Less than 0.75 are recovery rides
 
 Greater than 1.15 prologue TT, track pursuit, track miss-and-o;
 
-## Power Score Score
+## Power Stress Score
 ---
 If you own a cycling power meter then you get get the "Power Stress Score (PSS)" into your cycling activities. PSS formula is:  
 
