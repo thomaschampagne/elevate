@@ -62,8 +62,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
                 } else {
 
                     // Estimated running power data..
-                    if (this.userSettings.showHiddenBetaFeatures // Is beta estimated running power activated?
-                        && this.userSettings.displayRunningPowerEstimation) {
+                    if (this.userSettings.displayRunningPowerEstimation) {
                         averageWattsTitle = "Estimated " + averageWattsTitle;
                         userSettingKey = "displayRunningPowerEstimation";
                         averageWatts = "<span style='font-size: 14px;'>~</span>" + this.analysisData.powerData.avgWatts.toFixed(0);
@@ -131,8 +130,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 
             // Is beta estimated running power activated?
-            const isEstimatedRunningPowerFeatureEnabled = this.userSettings.showHiddenBetaFeatures
-                && this.userSettings.displayRunningPowerEstimation;
+            const isEstimatedRunningPowerFeatureEnabled = this.userSettings.displayRunningPowerEstimation;
 
             if (this.analysisData.powerData.hasPowerMeter || isEstimatedRunningPowerFeatureEnabled) {
 
