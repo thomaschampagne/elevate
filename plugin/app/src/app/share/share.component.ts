@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { MatIconRegistry } from "@angular/material";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
 	selector: "app-share",
@@ -14,10 +16,13 @@ export class ShareComponent implements OnInit {
 	public static readonly FACEBOOK_POST: string = "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.facebook.com/stravistixforstrava";
 	public static readonly LANDING_PAGE_URL: string = "http://thomaschampagne.github.io/stravistix/";
 
-	constructor() {
+	constructor(public iconRegistry: MatIconRegistry,
+				public sanitizer: DomSanitizer) {
 	}
 
 	public ngOnInit(): void {
+		this.iconRegistry.addSvgIcon("twitter", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/twitter.svg"));
+		this.iconRegistry.addSvgIcon("facebook", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/facebook.svg"));
 	}
 
 	public onOpenTweet(): void {
