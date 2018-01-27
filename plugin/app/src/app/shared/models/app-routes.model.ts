@@ -1,4 +1,5 @@
 export class AppRoutesModel {
+	public static readonly welcome: string = "welcome";
 	public static readonly fitnessTrend: string = "fitnessTrend";
 	public static readonly yearProgressions: string = "yearProgressions";
 	public static readonly commonSettings: string = "commonSettings";

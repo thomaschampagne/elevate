@@ -42,11 +42,13 @@ import { AthleteHistoryDao } from "./dao/athlete-history/athlete-history.dao";
 import { AthleteHistoryService } from "./services/athlete-history/athlete-history.service";
 import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
 import { ShareComponent } from "../share/share.component";
+import { WelcomeComponent } from "../welcome/welcome.component";
 
 @NgModule({
 	declarations: [
 
 		// Components
+		WelcomeComponent, // TODO To be removed
 		AthleteSettingsComponent,
 		CommonSettingsComponent,
 		SwimFtpHelperComponent,

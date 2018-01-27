@@ -11,8 +11,13 @@ import { ReleasesNotesResolverService } from "../../releases-notes/releases-note
 import { YearProgressComponent } from "../../year-progress/year-progress.component";
 import { YearProgressResolverService } from "../../year-progress/shared/services/year-progress-resolver.service";
 import { ShareComponent } from "../../share/share.component";
+import { WelcomeComponent } from "../../welcome/welcome.component";
 
 export const routes: Routes = [
+	{
+		path: AppRoutesModel.welcome,
+		component: WelcomeComponent
+	},
 	{
 		path: AppRoutesModel.fitnessTrend,
 		component: FitnessTrendComponent
@@ -41,9 +46,6 @@ export const routes: Routes = [
 		component: ZonesSettingsComponent
 	},
 	{
-		path: "", redirectTo: AppRoutesModel.commonSettings, pathMatch: "full"
-	},
-	{
 		path: AppRoutesModel.donate,
 		component: DonateComponent
 	},
@@ -57,6 +59,9 @@ export const routes: Routes = [
 	{
 		path: AppRoutesModel.share,
 		component: ShareComponent
+	},
+	{
+		path: "", redirectTo: AppRoutesModel.welcome, pathMatch: "full"
 	},
 ];
 

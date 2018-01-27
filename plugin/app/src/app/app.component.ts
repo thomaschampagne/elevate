@@ -28,7 +28,6 @@ import { Theme } from "./shared/enums/theme.enum";
 // TODO README.md
 // TODO Welcome popup "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
-// TODO onShowShare
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
@@ -70,6 +69,11 @@ export class AppComponent implements OnInit, OnDestroy {
 	public sideNavMode: string;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
+		{
+			icon: "home",
+			routerLink: AppRoutesModel.welcome,
+			routerLinkActive: true
+		},
 		{
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
