@@ -326,8 +326,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public registerCustomIcons(): void {
-		this.iconRegistry.addSvgIcon("strava",
-			this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/strava.svg"));
+		this.iconRegistry.addSvgIcon("strava", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/strava.svg"));
+		this.iconRegistry.addSvgIcon("twitter", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/twitter.svg"));
+		this.iconRegistry.addSvgIcon("facebook", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/facebook.svg"));
 	}
 
 	public ngOnDestroy(): void {
