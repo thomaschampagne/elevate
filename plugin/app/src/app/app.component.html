@@ -7,28 +7,20 @@
 			<mat-nav-list>
 				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
 							   routerLinkActive="{{item.routerLinkActive}}">
-					<button mat-icon-button>
-						<mat-icon>{{item.icon}}</mat-icon>
-						{{item.name}}
-					</button>
+					<mat-icon>{{item.icon}}</mat-icon>
+					{{item.name}}
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('https://www.strava.com')">
-					<button mat-icon-button>
-						<mat-icon svgIcon="strava"></mat-icon>
-						Strava
-					</button>
+					<mat-icon svgIcon="strava"></mat-icon>
+					Strava
 				</mat-list-item>
 				<mat-list-item routerLink="/donate">
-					<button mat-icon-button>
-						<mat-icon>favorite</mat-icon>
-						Donate
-					</button>
+					<mat-icon>favorite</mat-icon>
+					Donate
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('/options/app/index.html#!/commonSettings')">
-					<button mat-icon-button>
-						<mat-icon>keyboard_backspace</mat-icon>
-						Back to old app
-					</button>
+					<mat-icon>keyboard_backspace</mat-icon>
+					Back to old app
 				</mat-list-item>
 			</mat-nav-list>
 
