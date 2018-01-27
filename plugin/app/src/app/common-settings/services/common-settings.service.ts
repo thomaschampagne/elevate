@@ -64,7 +64,13 @@ export class CommonSettingsService {
 			key: "displayAdvancedPowerData",
 			type: "checkbox",
 			title: "Power stats",
+			enableSubOption: ["displayRunningPowerEstimation"],
 			labels: ["Cycling", "Running"],
+		}, {
+			key: "displayRunningPowerEstimation",
+			type: "checkbox",
+			title: "Running power estimation (your activities only)",
+			labels: ["Running"],
 		}, {
 			key: "displayAdvancedHrData",
 			type: "checkbox",
@@ -299,12 +305,7 @@ export class CommonSettingsService {
 			type: "checkbox",
 			title: "Enable Hidden/Beta features",
 			labels: ["All"],
-			enableSubOption: ["displayRunningPowerEstimation", "displayRecentEffortsHRAdjustedPacePower"],
-		}, {
-			key: "displayRunningPowerEstimation",
-			type: "checkbox",
-			title: "Display running power estimation on your activities",
-			labels: ["Running"],
+			enableSubOption: ["displayRecentEffortsHRAdjustedPacePower"],
 		}, {
 			key: "displayRecentEffortsHRAdjustedPacePower",
 			type: "checkbox",
