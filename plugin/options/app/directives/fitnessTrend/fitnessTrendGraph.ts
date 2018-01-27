@@ -317,7 +317,7 @@ export class FitnessTrendGraph {
             // Date
             html += "   <tr>";
             html += "       <td class=\"title underlined\">Date</td>";
-            html += "       <td class=\"underlined\" colspan=\"2\">" + moment(d.point.x).format("MMMM Do YYYY") + "</td>";
+			html += "       <td class=\"underlined\" colspan=\"2\">" + moment(d.point.x).format("dd MMM Do YYYY") + "</td>";
             html += "   </tr>";
 
             if (hasActivities) {

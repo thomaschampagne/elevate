@@ -1,22 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
-	AscentSpeedDataModel,
-	CadenceDataModel,
-	ElevationDataModel,
-	GradeDataModel,
-	HeartRateDataModel,
-	MoveDataModel,
-	PaceDataModel,
-	PowerDataModel,
-	SpeedDataModel,
-	StreamsModel,
-	UpFlatDownModel,
-	UpFlatDownSumCounterModel,
-	UpFlatDownSumTotalModel,
-	ZoneModel,
+	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel,
+	GradeDataModel, HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel,
+	UpFlatDownModel, UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
@@ -234,7 +221,7 @@ export class ActivityComputer {
 	protected estimatedRunningPower(activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
 
         try {
-            console.log("Trying to  estimate wattage of this run...");
+			console.log("Trying to estimate wattage of this run...");
             activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
                 athleteWeight,
                 activityStream.distance,

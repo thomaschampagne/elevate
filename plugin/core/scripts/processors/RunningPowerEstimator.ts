@@ -60,6 +60,7 @@ export class RunningPowerEstimator {
         const AbsoluteVO2 = RelativeVO2 * weightKg; // Units: ml/min
 		const horizontalWatts = cyclingEcoWattsPerVolumeO2 * AbsoluteVO2 / 1000 /* divide per 1000 to get ml?!  */; // Units: W / min
         const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds; // Units kg/
-        return Math.round(horizontalWatts + verticalWatts);
+		const power = Math.round(horizontalWatts + verticalWatts);
+		return (power > 0) ? power : 0;
     }
 }

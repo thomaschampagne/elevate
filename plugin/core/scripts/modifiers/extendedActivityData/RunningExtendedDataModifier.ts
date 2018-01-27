@@ -128,7 +128,6 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
         // Power data
         if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) { // Is feature enable?
 
-
             // Is beta estimated running power activated?
             const isEstimatedRunningPowerFeatureEnabled = this.userSettings.displayRunningPowerEstimation;
 
