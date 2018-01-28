@@ -97,7 +97,7 @@
 				<div fxLayout="column" fxLayoutAlign="space-between start">
 
 					<div fxFlex>
-						<span fxFlexAlign="start">
+						<span fxFlexAlign="start" class="viewedDayDate">
 							{{viewedDay.printDate()}}
 						</span>
 					</div>
@@ -105,16 +105,21 @@
 					<div fxFlex [ngSwitch]="viewedDay.hasActivities()">
 
 						<span *ngSwitchCase="true" class="viewedDayActivities">
-							{{viewedDay.printActivities()}}
+							<span *ngFor="let activity of viewedDay.activitiesName; let i = index;">
+								<span class="tag">{{viewedDay.types[i]}}</span> <span class="name">{{activity}}</span>
+								<span *ngIf="(viewedDay.activitiesName.length !== (i + 1))">;&nbsp;&nbsp;</span>
+							</span>
 						</span>
+
 						<span *ngSwitchCase="false">
-							{{viewedDay.printActivities("Rest day")}}
+							<i>{{viewedDay.printActivities("Rest")}}</i>
 						</span>
+
 					</div>
 
 					<div fxFlex class="stressScore">
 						<span fxFlexAlign="end">
-							<span *ngIf="!viewedDay.finalStressScore">No stress score</span>
+							<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
 							<span *ngIf="viewedDay.finalStressScore">
 								<!-- Trimp -->
 								<span *ngIf="viewedDay.trainingImpulseScore">
