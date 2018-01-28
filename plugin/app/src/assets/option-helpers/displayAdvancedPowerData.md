@@ -45,6 +45,8 @@ If you own a cycling power meter then you get get the "Power Stress Score (PSS)"
 
 > $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeigthedPower~\times~Intensity}{Averagewatts}~\times~100$  
 
+_Note: PSS is equivalent to Training Stress Score&reg; (TSS&reg;) from TrainingPeaks&trade;. [Learn more from TrainingPeaks&trade;](https://www.trainingpeaks.com/blog/what-is-tss/)_
+
 ## Average Watts / Kg:
 ---
 "Average Watts / Kg" is basically the power per Kilogram you maintained during an activity  
