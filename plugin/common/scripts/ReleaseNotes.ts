@@ -28,6 +28,21 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: [],
 	},
 	{
+		version: "5.13.0",
+		message: "Added Power estimation on <strong>your</strong> runs <span style='text-decoration: line-through;'>(beta)</span> " +
+		"<strong style='font-size: 16px'>+</strong> cycling \"Power Stress Score (PSS)\" estimation (when no running or cycling power meter available)!!. And few others things...",
+		hotFixes: [],
+		features: [
+			"Added estimation of PSS (Power Stress Score) cycling activities without power meter.",
+			"Added running power estimation of your running activities (comparable with cycling power in watts). Feature is no more in Beta.",
+			"Added the day of the week on graph tooltips of fitness trend feature",
+		],
+		hideFeatureReleaseNote: true,
+		fixes: [
+			"Fixed 'Show Extended Statistics button' not working on some workouts when running power estimation where enabled.",
+		],
+	},
+	{
 		version: "5.12.1",
 		message: "Some bug fixes <strong style='font-size: 16px'>+</strong> Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",
 		hotFixes: [],
