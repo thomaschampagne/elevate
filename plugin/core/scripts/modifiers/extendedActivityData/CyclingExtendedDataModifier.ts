@@ -74,17 +74,17 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
         }
 
         let powerStressScore: string = "-";
-        if (this.analysisData.powerData && this.analysisData.powerData.hasPowerMeter && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
+        if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
 
             let labelPSS: string = "Power Stress Score";
             if (this.analysisData.powerData.powerStressScore) {
                 powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
                 labelPSS = "Power Stress Score";
-                /* Uncomment this for power stress score estimation
+
                 if (!this.analysisData.powerData.hasPowerMeter) {
-                    labelPSS = 'Est. ' + labelPSS;
+                    labelPSS = "Est. " + labelPSS;
                 }
-                */
+
             } else {
                 powerStressScore = "-";
                 labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
