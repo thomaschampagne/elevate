@@ -1,5 +1,7 @@
 @import "~@angular/material/theming";
 
+$config: mat-typography-config();
+
 // Define a mixin that accepts a theme and outputs the color styles for the component.
 @mixin fitness-trend-graph-theme($theme) {
 
@@ -7,13 +9,27 @@
 	$primary: map-get($theme, primary);
 	$accent: map-get($theme, accent);
 
+	$accent-color: mat-color($accent);
+	$primary-color: mat-color($primary);
+
 	// Using mat-color to extract individual colors from the palette
-	$ctl-color: mat-color($accent);
-	$atl-color: mat-color($primary);
+	$ctl-color: $accent-color;
+	$atl-color: $primary-color;
 	$tsb-color: mat-color($primary, 900);
 
 	.viewedDayActivities {
-		color: mat-color($accent);
+
+		.tag {
+			padding: 3px;
+			border: 1px solid $primary-color;
+			border-radius: 4px;
+			font-size: mat-font-size($config, caption);
+			color: $primary-color;
+		}
+
+		.name {
+			color: $accent-color;
+		}
 	}
 
 	.atl_value {
