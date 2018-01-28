@@ -37,7 +37,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added running power estimation of your running activities (comparable with cycling power in watts). Feature is no more in Beta.",
 			"Added the day of the week on graph tooltips of fitness trend feature",
 		],
-		hideFeatureReleaseNote: true,
+		hideFeatureReleaseNote: false,
 		fixes: [
 			"Fixed 'Show Extended Statistics button' not working on some workouts when running power estimation where enabled.",
 		],
