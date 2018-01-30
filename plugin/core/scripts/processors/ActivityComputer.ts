@@ -1,22 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-    IActivityStatsMap,
-    IActivityStream,
-    IAnalysisData,
-    IAscentSpeedData,
-    ICadenceData,
-    IElevationData,
-    IGradeData,
-    IHeartRateData,
-    IMoveData,
-    IPaceData,
-    IPowerData,
-    ISpeedData,
-    IUpFlatDown,
-    IUpFlatDownSumCounter,
-    IUpFlatDownSumTotal,
-    IZone,
+    IActivityStatsMap, IActivityStream, IAnalysisData, IAscentSpeedData, ICadenceData, IElevationData, IGradeData, IHeartRateData,
+    IMoveData, IPaceData, IPowerData, ISpeedData, IUpFlatDown, IUpFlatDownSumCounter, IUpFlatDownSumTotal, IZone,
 } from "../../../common/scripts/interfaces/IActivityData";
 import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
@@ -234,7 +220,7 @@ export class ActivityComputer {
     protected estimatedRunningPower(activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
 
         try {
-            console.log("Trying to  estimate wattage of this run...");
+            console.log("Trying to estimate wattage of this run...");
             activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
                 athleteWeight,
                 activityStream.distance,
