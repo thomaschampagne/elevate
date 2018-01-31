@@ -112,14 +112,14 @@
 						</span>
 
 						<span *ngSwitchCase="false">
-							<i>{{viewedDay.printActivities("Rest")}}</i>
+							<mat-icon matTooltip="You got rest that day!">airline_seat_flat_angled</mat-icon>
 						</span>
 
 					</div>
 
 					<div fxFlex class="stressScore">
 						<span fxFlexAlign="end">
-							<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
+							<span *ngIf="!viewedDay.finalStressScore"><i>Rest day. No stress score</i></span>
 							<span *ngIf="viewedDay.finalStressScore">
 								<!-- Trimp -->
 								<span *ngIf="viewedDay.trainingImpulseScore">
@@ -164,13 +164,33 @@
 				<div fxFlex="180px" class="tsb_value">
 					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
 				</div>
-
 			</div>
 		</div>
 
 		<!--GRAPH-->
-		<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
-			 id="fitnessTrendGraph">
+		<div fxLayout="row" fxLayoutAlign="start center">
+			<div fxFlex="3">
+				<button mat-icon-button matTooltip="2 weeks back (left arrow key)"
+						color="primary"
+						[disabled]="!canPeriodViewedBackward"
+						(click)="onPeriodViewedBackward()">
+					<mat-icon>keyboard_arrow_left</mat-icon>
+				</button>
+			</div>
+			<div fxFlex="94">
+				<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+					 id="fitnessTrendGraph">
+				</div>
+			</div>
+
+			<div fxFlex="3">
+				<button mat-icon-button matTooltip="2 weeks ahead (right arrow key)"
+						color="primary"
+						[disabled]="!canPeriodViewedForward"
+						(click)="onPeriodViewedForward()">
+					<mat-icon>keyboard_arrow_right</mat-icon>
+				</button>
+			</div>
 		</div>
 
 	</mat-card-content>
