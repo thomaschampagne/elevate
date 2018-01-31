@@ -21,10 +21,11 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 
-// TODO:BUG: Fitness trend: enter manually date "from" (10/9/2012) cause: ERROR TypeError: Cannot read property 'date' of undefined
 
 // TODO Welcome "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
+
+// TODO Fitness trend hide toggles responsive (like year progress)
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
