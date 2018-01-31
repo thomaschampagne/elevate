@@ -347,11 +347,19 @@ export class FitnessService {
 			});
 		}
 
+		if (startIndex === -1) {
+			throw (new Error()).message = "No start activity index found for this FROM date";
+		}
+
 		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
 		if (_.isDate(period.to)) { // Then override index if "To" is specified
 			endIndex = _.findIndex(fitnessTrend, {
 				dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT)
 			});
+		}
+
+		if (endIndex === -1) {
+			throw (new Error()).message = "No end activity index found for this TO date";
 		}
 
 		if (startIndex >= endIndex) {
