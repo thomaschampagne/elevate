@@ -96,4 +96,103 @@ describe("FitnessTrendGraphComponent", () => {
 		expect(component).toBeTruthy();
 	});
 
+
+	it("should allow forward period viewed", () => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-01-05";
+		const periodTo = "2015-01-15";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment("2015-01-20", "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment("2015-01-30", "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedForward();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+	});
+
+	it("should NOT forward period viewed", () => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-01-10";
+		const periodTo = "2015-01-20";
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+
+		const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedForward();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+
+	});
+
+	it("should allow backward period viewed", () => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-01-20";
+		const periodTo = "2015-01-30";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment("2015-01-5", "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment("2015-01-15", "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedBackward();
+
+		// Then
+		expect(component.periodViewed.from.toDateString()).toBe(expectedPeriodFrom.toDateString());
+		expect(component.periodViewed.to.toDateString()).toBe(expectedPeriodTo.toDateString());
+	});
+
+	it("should NOT backward period viewed", () => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-01-10";
+		const periodTo = "2015-01-20";
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+
+		const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedBackward();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+
+	});
+
 });

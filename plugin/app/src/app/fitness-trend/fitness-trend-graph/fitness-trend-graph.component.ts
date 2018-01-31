@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -23,6 +23,11 @@ import { WindowService } from "../../shared/services/window/window.service";
 import { AthleteHistoryState } from "../../shared/services/athlete-history/athlete-history-state.enum";
 import { AthleteHistoryService } from "../../shared/services/athlete-history/athlete-history.service";
 
+enum FITNESS_TRENDS_KEY_CODES {
+	RIGHT_ARROW = 39,
+	LEFT_ARROW = 37
+}
+
 @Component({
 	selector: "app-fitness-trend-graph",
 	templateUrl: "./fitness-trend-graph.component.html",
@@ -30,14 +35,14 @@ import { AthleteHistoryService } from "../../shared/services/athlete-history/ath
 })
 export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
+	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 15; // Days
+	public static readonly TODAY_MARKER_LABEL: string = "Today";
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
-
-	public static readonly TODAY_CHAR: string = "Today";
-
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
+
 
 	public static findGraphicHeight(): number {
 		return window.innerHeight * 0.55;
@@ -58,6 +63,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
 	public lastPeriodViewed: LastPeriodModel;
+	public canPeriodViewedForward: boolean;
+	public canPeriodViewedBackward: boolean;
 
 	public fitnessTrend: DayFitnessTrendModel[];
 	public viewableFitnessDataModel: ViewableFitnessDataModel;
@@ -228,7 +235,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 				marker = {
 					date: moment().startOf("day").toDate(),
-					label: FitnessTrendGraphComponent.TODAY_CHAR
+					label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL
 				};
 			}
 
@@ -297,6 +304,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public updateViewableData(): void {
 
+		// Can we slide forward/backward the period viewed?
+		this.canPeriodViewedBackward = this.canBackwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
+		this.canPeriodViewedForward = this.canForwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
+
 		const lines: GraphPointModel[][] = [];
 		const indexes = this.fitnessService.indexesOf(this.periodViewed, this.fitnessTrend);
 
@@ -307,24 +318,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.graphConfig.data = lines;
 		this.graphConfig.markers = this.viewableFitnessDataModel.markers;
 		this.graphConfig.baselines = this.viewableFitnessDataModel.getBaseLines(this.isTrainingZonesEnabled);
-	}
-
-	/**
-	 *
-	 */
-	public onLastPeriodSelected(): void {
-		this.PERFORMANCE_MARKER = performance.now();
-		this.periodViewed = _.clone(this.lastPeriodViewed);
-		localStorage.setItem(FitnessTrendGraphComponent.LS_LAST_PERIOD_VIEWED_KEY, this.lastPeriodViewed.key);
-		this.updateGraph();
-	}
-
-	/**
-	 *
-	 */
-	public onDateToDateChange(): void {
-		this.PERFORMANCE_MARKER = performance.now();
-		this.updateGraph();
 	}
 
 	/**
@@ -352,12 +345,82 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	/**
 	 *
+	 */
+	public onLastPeriodSelected(): void {
+		this.PERFORMANCE_MARKER = performance.now();
+		this.periodViewed = _.clone(this.lastPeriodViewed);
+		localStorage.setItem(FitnessTrendGraphComponent.LS_LAST_PERIOD_VIEWED_KEY, this.lastPeriodViewed.key);
+		this.updateGraph();
+	}
+
+	/**
+	 *
+	 */
+	public onDateToDateChange(): void {
+		this.PERFORMANCE_MARKER = performance.now();
+		this.updateGraph();
+	}
+
+	/**
+	 *
+	 */
+	public onPeriodViewedForward(): void {
+
+		const daysToForward: number = FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS;
+
+		if (!this.canForwardPeriodViewedOf(daysToForward)) {
+			return;
+		}
+
+		this.periodViewed.from = moment(this.periodViewed.from).add(daysToForward, 'days').toDate();
+		this.periodViewed.to = moment(this.periodViewed.to).add(daysToForward, 'days').toDate();
+		this.onDateToDateChange();
+
+	}
+
+	/**
+	 *
+	 */
+	public onPeriodViewedBackward(): void {
+
+		const daysToRewind: number = FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS;
+
+		if (!this.canBackwardPeriodViewedOf(daysToRewind)) {
+			return;
+		}
+
+		this.periodViewed.from = moment(this.periodViewed.from).subtract(daysToRewind, 'days').toDate();
+		this.periodViewed.to = moment(this.periodViewed.to).subtract(daysToRewind, 'days').toDate();
+		this.onDateToDateChange()
+	}
+
+	/**
+	 *
+	 * @param {number} days
+	 * @returns {boolean}
+	 */
+	public canForwardPeriodViewedOf(days: number): boolean {
+		return !moment(this.periodViewed.to).add(days, "days").isAfter(this.dateMax);
+	}
+
+	/**
+	 *
+	 * @param {number} days
+	 * @returns {boolean}
+	 */
+	public canBackwardPeriodViewedOf(days: number): boolean {
+		return !moment(this.periodViewed.from).subtract(days, "days").isBefore(this.dateMin);
+	}
+
+	/**
+	 *
 	 * @param {MetricsGraphicsEventModel} metricsGraphicsEvent
 	 */
 	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
 		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
 		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
 	}
+
 
 	/**
 	 *
@@ -374,7 +437,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	private onGraphMouseOut(date: Date): void {
 		this.setTodayAsViewedDay();
 	}
-
 
 	/**
 	 *
@@ -536,6 +598,18 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	@HostListener('window:keydown', ['$event'])
+	public onKeyDown(event: KeyboardEvent): void {
+
+		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.RIGHT_ARROW) {
+			this.onPeriodViewedForward();
+		}
+
+		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.LEFT_ARROW) {
+			this.onPeriodViewedBackward();
+		}
+	}
+
 	/**
 	 *
 	 */
@@ -545,7 +619,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			data: [],
 			full_width: true,
 			height: window.innerHeight * 0.625,
-			right: 40,
+			right: 0,
+			left: 30,
 			baselines: [],
 			animate_on_load: false,
 			transition_on_update: false,
