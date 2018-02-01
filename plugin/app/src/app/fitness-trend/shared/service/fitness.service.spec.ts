@@ -470,6 +470,74 @@ describe("FitnessService", () => {
 		});
 	});
 
+	it("should skip EBikeRide activity type on prepare fitness w/ PM=OFF & SWIM=OFF", (done: Function) => {
+
+		// Given
+		const expectedFitnessPreparedActivitiesLength = 2;
+		const expectedTrimpScoredActivitiesLength = 2;
+		const expectedPowerScoredActivitiesLength = 0;
+		const expectedSwimScoredActivitiesLength = 0;
+
+		powerMeterEnable = false;
+		cyclingFtp = null;
+		swimEnable = false;
+		swimFtp = null;
+
+		const syncedActivityModels: SyncedActivityModel[] = [];
+		syncedActivityModels.push(createFakeSyncedActivityModel(151,
+			"SuperHeartRateRide 01",
+			"Ride",
+			"2018-01-01",
+			150,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(235,
+			"Super E-Bike Ride",
+			"EBikeRide",
+			"2018-01-15",
+			90,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(966,
+			"SuperHeartRateRide 02",
+			"Ride",
+			"2018-01-30",
+			135,
+			null));
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(syncedActivityModels));
+
+		// When
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService
+			.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+
+		// Then
+		promise.then((result: FitnessPreparedActivityModel[]) => {
+
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
+
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
+
+
 	it("should fail to prepare fitness POWERED ONLY activities w/ PM=OFF & SWIM=OFF", (done: Function) => {
 
 		// Given
