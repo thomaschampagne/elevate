@@ -14,6 +14,8 @@ export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
 
+	public static readonly ACTIVITY_TYPES_SKIPPED: string[] = ["EBikeRide"];
+
 	constructor(private activityService: ActivityService) {
 	}
 
@@ -39,6 +41,10 @@ export class FitnessService {
 				let hasMinimumFitnessRequiredData: boolean = false;
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
+
+					if (_.indexOf(FitnessService.ACTIVITY_TYPES_SKIPPED, activity.type) !== -1) {
+						return;
+					}
 
 					// Check if activity is eligible to fitness computing
 					const hasHeartRateData: boolean = (activity.extendedStats
