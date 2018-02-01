@@ -27,6 +27,7 @@ import { Theme } from "./shared/enums/theme.enum";
 
 // TODO: BUG: Fitness trend: Load Jeremy history fitness with power toggle=OFF
 // TODO Fitness trend hide toggles responsive (like year progress)
+// TODO: Exclude EBikeRide in Multisports Fitness Trend
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!

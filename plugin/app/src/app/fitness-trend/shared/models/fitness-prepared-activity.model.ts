@@ -1,4 +1,4 @@
-export class FitnessReadyActivityModel {
+export class FitnessPreparedActivityModel {
 	public id: number;
 	public date: Date;
 	public timestamp: number;

@@ -24,7 +24,7 @@ export class StreamsModel {
 
 export class AnalysisDataModel {
     moveRatio: number;
-    toughnessScore: number;
+	toughnessScore: number; // TODO Still used?! Remove?
 	speedData: SpeedDataModel;
 	paceData: PaceDataModel;
 	powerData: PowerDataModel;

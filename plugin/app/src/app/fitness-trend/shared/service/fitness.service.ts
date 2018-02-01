@@ -6,7 +6,7 @@ import { ActivityService } from "../../../shared/services/activity/activity.serv
 import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
-import { FitnessReadyActivityModel } from "../models/fitness-ready-activity.model";
+import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { PeriodModel } from "../models/period.model";
 
 @Injectable()
@@ -18,24 +18,23 @@ export class FitnessService {
 	}
 
 	/**
-	 * Return activities having required data to compute fitness trend: heart rate, power data & swim data
+	 * Prepare activities by assigning stress scores on each of them
 	 * @param {boolean} powerMeterEnable
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
-	 * @returns {Promise<FitnessReadyActivityModel[]>}
+	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
-	public getReady(powerMeterEnable: boolean,
-					cyclingFtp: number,
-					swimEnable: boolean,
-					swimFtp: number): Promise<FitnessReadyActivityModel[]> {
+	public prepare(powerMeterEnable: boolean,
+				   cyclingFtp: number,
+				   swimEnable: boolean,
+				   swimFtp: number): Promise<FitnessPreparedActivityModel[]> {
 
-		return new Promise((resolve: (result: FitnessReadyActivityModel[]) => void,
-							reject: (error: string) => void) => {
+		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void) => {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
-				const fitnessReadyActivities: FitnessReadyActivityModel[] = [];
+				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
@@ -56,43 +55,40 @@ export class FitnessService {
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
 						&& activity.moving_time_raw > 0);
 
-					if (hasHeartRateData || isPowerMeterUsePossible || hasSwimmingData) {
+					const momentStartTime: Moment = moment(activity.start_time);
 
-						const momentStartTime: Moment = moment(activity.start_time);
+					const fitnessReadyActivity: FitnessPreparedActivityModel = {
+						id: activity.id,
+						date: momentStartTime.toDate(),
+						timestamp: momentStartTime.toDate().getTime(),
+						dayOfYear: momentStartTime.dayOfYear(),
+						year: momentStartTime.year(),
+						type: activity.type,
+						activityName: activity.name,
 
-						const fitnessReadyActivity: FitnessReadyActivityModel = {
-							id: activity.id,
-							date: momentStartTime.toDate(),
-							timestamp: momentStartTime.toDate().getTime(),
-							dayOfYear: momentStartTime.dayOfYear(),
-							year: momentStartTime.year(),
-							type: activity.type,
-							activityName: activity.name,
+					};
 
-						};
-
-						if (hasHeartRateData) {
-							fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
-						}
-
-						if (isPowerMeterUsePossible) {
-							const movingTime = activity.moving_time_raw;
-							const weightedPower = activity.extendedStats.powerData.weightedPower;
-							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
-						}
-
-						if (hasSwimmingData) {
-							fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
-								activity.moving_time_raw,
-								activity.elapsed_time_raw,
-								swimFtp);
-						}
-
-						fitnessReadyActivities.push(fitnessReadyActivity);
+					if (hasHeartRateData) {
+						fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
 					}
+
+					if (isPowerMeterUsePossible) {
+						const movingTime = activity.moving_time_raw;
+						const weightedPower = activity.extendedStats.powerData.weightedPower;
+						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
+					}
+
+					if (hasSwimmingData) {
+						fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
+							activity.moving_time_raw,
+							activity.elapsed_time_raw,
+							swimFtp);
+					}
+
+					fitnessPreparedActivities.push(fitnessReadyActivity);
 				});
 
-				resolve(fitnessReadyActivities);
+				resolve(fitnessPreparedActivities);
 			});
 		});
 	}
@@ -110,17 +106,17 @@ export class FitnessService {
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.getReady(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
-				.then((fitnessReadyActivities: FitnessReadyActivityModel[]) => {
+			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
+				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
 
-					if (_.isEmpty(fitnessReadyActivities)) {
+					if (_.isEmpty(fitnessPreparedActivities)) {
 						reject("No ready activities");
 						return;
 					}
 
 					// Subtract 1 day to the first activity done in history:
 					// Goal is to show graph point with 1 day before
-					const startDay = moment(_.first(fitnessReadyActivities).date)
+					const startDay = moment(_.first(fitnessPreparedActivities).date)
 						.subtract(1, "days").startOf("day");
 
 					const today: Moment = this.getTodayMoment().startOf("day"); // Today end of day
@@ -132,7 +128,7 @@ export class FitnessService {
 					while (currentDay.isSameOrBefore(today)) {
 
 						// Compute athlete stress on that current day.
-						const dayStress: DayStressModel = this.dayStressOnDate(currentDay, fitnessReadyActivities);
+						const dayStress: DayStressModel = this.dayStressOnDate(currentDay, fitnessPreparedActivities);
 
 						// Then push every day... Rest or active...
 						dailyActivity.push(dayStress);
@@ -262,13 +258,13 @@ export class FitnessService {
 	/**
 	 *
 	 * @param {moment.Moment} currentDay
-	 * @param {FitnessReadyActivityModel[]} fitnessReadyActivities
+	 * @param {FitnessPreparedActivityModel[]} fitnessPreparedActivities
 	 * @returns {DayStressModel}
 	 */
 
-	private dayStressOnDate(currentDay: moment.Moment, fitnessReadyActivities: FitnessReadyActivityModel[]): DayStressModel {
+	private dayStressOnDate(currentDay: moment.Moment, fitnessPreparedActivities: FitnessPreparedActivityModel[]): DayStressModel {
 
-		const foundActivitiesThatDay: FitnessReadyActivityModel[] = _.filter(fitnessReadyActivities, {
+		const foundActivitiesThatDay: FitnessPreparedActivityModel[] = _.filter(fitnessPreparedActivities, {
 			year: currentDay.year(),
 			dayOfYear: currentDay.dayOfYear(),
 		});
@@ -278,7 +274,7 @@ export class FitnessService {
 		// Compute final stress scores on that day
 		if (foundActivitiesThatDay.length > 0) {
 
-			_.forEach(foundActivitiesThatDay, (activity: FitnessReadyActivityModel) => {
+			_.forEach(foundActivitiesThatDay, (activity: FitnessPreparedActivityModel) => {
 
 				dayActivity.ids.push(activity.id);
 				dayActivity.activitiesName.push(activity.activityName);
