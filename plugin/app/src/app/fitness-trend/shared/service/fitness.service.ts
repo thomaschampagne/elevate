@@ -30,11 +30,13 @@ export class FitnessService {
 				   swimEnable: boolean,
 				   swimFtp: number): Promise<FitnessPreparedActivityModel[]> {
 
-		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void) => {
+		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
+							reject: (error: string) => void) => {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
 				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
+				let hasMinimumFitnessRequiredData: boolean = false;
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
@@ -70,12 +72,14 @@ export class FitnessService {
 
 					if (hasHeartRateData) {
 						fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+						hasMinimumFitnessRequiredData = true;
 					}
 
 					if (isPowerMeterUsePossible) {
 						const movingTime = activity.moving_time_raw;
 						const weightedPower = activity.extendedStats.powerData.weightedPower;
 						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
+						hasMinimumFitnessRequiredData = true;
 					}
 
 					if (hasSwimmingData) {
@@ -83,10 +87,15 @@ export class FitnessService {
 							activity.moving_time_raw,
 							activity.elapsed_time_raw,
 							swimFtp);
+						hasMinimumFitnessRequiredData = true;
 					}
 
 					fitnessPreparedActivities.push(fitnessReadyActivity);
 				});
+
+				if (!hasMinimumFitnessRequiredData) {
+					reject("No activities has minimum required data to generate a fitness trend")
+				}
 
 				resolve(fitnessPreparedActivities);
 			});
@@ -108,11 +117,6 @@ export class FitnessService {
 
 			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
-
-					if (_.isEmpty(fitnessPreparedActivities)) {
-						reject("No ready activities");
-						return;
-					}
 
 					// Subtract 1 day to the first activity done in history:
 					// Goal is to show graph point with 1 day before
@@ -146,7 +150,8 @@ export class FitnessService {
 					this.appendPreviewDaysToDailyActivity(currentDay, dailyActivity);
 
 					resolve(dailyActivity);
-				});
+
+				}, error => reject(error));
 		});
 	}
 
@@ -230,9 +235,10 @@ export class FitnessService {
 					});
 
 					resolve(fitnessTrend);
+
 				}, error => {
 
-					reject(error);
+					reject(error); // e.g. No activities found
 
 				});
 		});
