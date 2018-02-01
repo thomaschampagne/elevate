@@ -60,6 +60,7 @@
 
 					<!--TOGGLES-->
 					<div fxFlex
+						 fxHide.lt-md
 						 fxFlexAlign="start"
 						 fxLayout="row" fxLayoutAlign="end center">
 
@@ -170,7 +171,7 @@
 		<!--GRAPH-->
 		<div fxLayout="row" fxLayoutAlign="start center">
 			<div fxFlex="3">
-				<button mat-icon-button matTooltip="2 weeks back (left arrow key)"
+				<button mat-icon-button matTooltip="2 weeks back. Shortcut: Left key"
 						color="primary"
 						[disabled]="!canPeriodViewedBackward"
 						(click)="onPeriodViewedBackward()">
@@ -184,7 +185,7 @@
 			</div>
 
 			<div fxFlex="3">
-				<button mat-icon-button matTooltip="2 weeks ahead (right arrow key)"
+				<button mat-icon-button matTooltip="2 weeks ahead. Shortcut: Right key"
 						color="primary"
 						[disabled]="!canPeriodViewedForward"
 						(click)="onPeriodViewedForward()">
