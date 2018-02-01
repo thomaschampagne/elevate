@@ -25,6 +25,7 @@ import { Theme } from "./shared/enums/theme.enum";
 // TODO Welcome "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
 
+// TODO: BUG: Fitness trend: Load Jeremy history fitness with power toggle=OFF
 // TODO Fitness trend hide toggles responsive (like year progress)
 
 //--------

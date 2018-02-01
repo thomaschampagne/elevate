@@ -26,7 +26,7 @@ describe("FitnessService", () => {
 	let fitnessService: FitnessService = null;
 	let activityService: ActivityService = null;
 
-	beforeEach((/*done: Function*/) => {
+	beforeEach(() => {
 
 		TestBed.configureTestingModule({
 			providers: [FitnessService, ActivityService, ActivityDao]
@@ -474,5 +474,73 @@ describe("FitnessService", () => {
 
 	});
 
+	it("should failed when find index of FROM which do not exists ", (done: Function) => {
+
+		// Given
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
+		const period: PeriodModel = {
+			from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(), // Fake
+			to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate()
+		};
+
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+
+		// When, Then
+		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+			let error = null;
+			try {
+				fitnessService.indexesOf(period, fitnessTrend);
+			} catch (e) {
+				error = e;
+			}
+
+			expect(error).not.toBeNull();
+			expect(error).toBe("No start activity index found for this FROM date");
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
+
+	it("should failed when find index of TO which do not exists ", (done: Function) => {
+
+		// Given
+		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
+		const period: PeriodModel = {
+			from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
+			to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate() // Fake
+		};
+
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+
+		// When, Then
+		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+			let error = null;
+			try {
+				fitnessService.indexesOf(period, fitnessTrend);
+			} catch (e) {
+				error = e;
+			}
+
+			expect(error).not.toBeNull();
+			expect(error).toBe("No end activity index found for this TO date");
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
 
 });
