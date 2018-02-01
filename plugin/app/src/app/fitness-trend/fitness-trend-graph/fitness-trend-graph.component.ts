@@ -221,9 +221,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 			let marker: MarkerModel = null;
 
-			const isActiveDay = dayFitnessTrend.activitiesName.length > 0;
+			const isScoringDay = (dayFitnessTrend.finalStressScore && dayFitnessTrend.finalStressScore > 0);
 
-			if (isActiveDay) {
+			if (isScoringDay) {
 				marker = {
 					date: dayFitnessTrend.date,
 					mouseover: () => this.onMarkerMouseOver(dayFitnessTrend),
