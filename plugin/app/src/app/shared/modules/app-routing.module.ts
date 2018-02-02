@@ -12,6 +12,7 @@ import { YearProgressComponent } from "../../year-progress/year-progress.compone
 import { YearProgressResolverService } from "../../year-progress/shared/services/year-progress-resolver.service";
 import { ShareComponent } from "../../share/share.component";
 import { WelcomeComponent } from "../../welcome/welcome.component";
+import { ReportComponent } from "../../report/report.component";
 
 export const routes: Routes = [
 	{
@@ -59,6 +60,10 @@ export const routes: Routes = [
 	{
 		path: AppRoutesModel.share,
 		component: ShareComponent
+	},
+	{
+		path: AppRoutesModel.report,
+		component: ReportComponent
 	},
 	{
 		path: "", redirectTo: AppRoutesModel.welcome, pathMatch: "full"

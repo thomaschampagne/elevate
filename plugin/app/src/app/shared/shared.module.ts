@@ -43,6 +43,7 @@ import { AthleteHistoryService } from "./services/athlete-history/athlete-histor
 import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { WelcomeComponent } from "../welcome/welcome.component";
+import { ReportComponent } from "../report/report.component";
 
 @NgModule({
 	declarations: [
@@ -63,6 +64,7 @@ import { WelcomeComponent } from "../welcome/welcome.component";
 		DonateComponent,
 		ReleasesNotesComponent,
 		ShareComponent,
+		ReportComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,

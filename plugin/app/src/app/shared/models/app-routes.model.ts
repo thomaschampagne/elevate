@@ -8,4 +8,5 @@ export class AppRoutesModel {
 	public static readonly donate: string = "donate";
 	public static readonly releasesNotes: string = "releasesNotes";
 	public static readonly share: string = "share";
+	public static readonly report: string = "report";
 }
