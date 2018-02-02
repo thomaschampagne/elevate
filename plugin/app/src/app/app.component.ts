@@ -21,12 +21,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 
-
-// TODO Welcome "A new app for a new start"
 // TODO Try to reuse metrics graphics (official) back
-
-// TODO: Exclude EBikeRide in Multisports Fitness Trend
-// TODO: year progress loading
 
 //--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
