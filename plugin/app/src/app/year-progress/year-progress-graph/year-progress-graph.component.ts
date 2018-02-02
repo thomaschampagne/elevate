@@ -27,7 +27,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
 
 	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.575;
+		return window.innerHeight * 0.675;
 	}
 
 	public readonly ProgressType = ProgressType;
