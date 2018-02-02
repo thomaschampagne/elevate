@@ -8,19 +8,23 @@
 				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
 							   routerLinkActive="{{item.routerLinkActive}}">
 					<mat-icon>{{item.icon}}</mat-icon>
-					{{item.name}}
+					<span class="mat-body-1">{{item.name}}</span>
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('https://www.strava.com')">
 					<mat-icon svgIcon="strava"></mat-icon>
-					Strava
+					<span class="mat-body-1">Strava</span>
 				</mat-list-item>
 				<mat-list-item routerLink="/donate">
 					<mat-icon>favorite</mat-icon>
-					Donate
+					<span class="mat-body-1">Donate</span>
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('/options/app/index.html#!/commonSettings')">
 					<mat-icon>keyboard_backspace</mat-icon>
-					Back to old app
+					<span class="mat-body-1">Back to old app</span>
+				</mat-list-item>
+				<mat-list-item (click)="onOpenLink('https://goo.gl/forms/m1L0jXI2PafrgNYv2')">
+					<mat-icon>bug_report</mat-icon>
+					<span class="mat-caption">Report Open Beta Bug</span>
 				</mat-list-item>
 			</mat-nav-list>
 
@@ -38,7 +42,7 @@
 			<span class="toolbar-spacer"></span>
 
 			<ng-container>
-				<button mat-button [matMenuTriggerFor]="syncMenu">
+				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
 					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
 						sync_disabled
 					</mat-icon>
@@ -49,14 +53,14 @@
 						sync
 					</mat-icon>
 					<span *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
-					History not synced
-				</span>
+						History not synced
+					</span>
 					<span *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
-					History partially synced
-				</span>
+						History partially synced
+					</span>
 					<span *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
-					Synced {{lastSyncDateMessage}}
-				</span>
+						Synced {{lastSyncDateMessage}}
+					</span>
 				</button>
 				<mat-menu #syncMenu="matMenu">
 					<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
