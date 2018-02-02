@@ -19,8 +19,6 @@ export class MenuModifier implements IModifier {
         const globalNav: JQuery = $(".global-nav");
         let html: string = "<li class='drop-down-menu'>";
 
-        const newIssueURL: string = "https://github.com/thomaschampagne/stravistix/issues/new?body=**Bug%20description:**%20%0A%0A**Actual%20Behavior:**%20%0A%0A**Expected%20Behavior:**%20%0A%0A**Steps%20to%20Reproduce:**%20%0A-%20...%0A%20-%20...%0A%20-%20...%0A%0A**Chrome%20version**%20%0A%0A**Plugin%20version:**%20%0A%0A**Activities%20links?:**%20%0A%0A**Console%20errors?%20(press%20F12%20to%20see%20developer%20console,%20and%20copy%20paste%20here):**%20%0A%0A```%20%0Aput%20console%20errors%20here%20if%20exist%20%0A```%20%0A%0A**Link%20screenshots%20or%20youtube%20video%20link%20if%20necessary:**";
-
         const menuStyle: string = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors;
         const menuIcon: string = this.appResources.menuIconOrange;
 
@@ -45,7 +43,7 @@ export class MenuModifier implements IModifier {
         html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://www.strava.com/clubs/stravistix' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.peopleIcon + "'/> <span>Join Club</span></a></li>";
         html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.helpIcon + "'/> <span> FAQ</span></a></li>";
 
-        html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + newIssueURL + "' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/> <span>Report bug</span></a></li>";
+		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/report' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/> <span>Report bug</span></a></li>";
 		html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/?showSharing=true'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/> <span>Share</span></a></li>";
         html += "</ul>";
         html += "</li>";

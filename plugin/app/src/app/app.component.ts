@@ -299,6 +299,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.router.navigate([AppRoutesModel.share]);
 	}
 
+	public onShowReport(): void {
+		this.router.navigate([AppRoutesModel.report]);
+	}
+
 	public onShowAbout(): void {
 		this.dialog.open(AboutDialogComponent, {
 			minWidth: AboutDialogComponent.MIN_WIDTH,
