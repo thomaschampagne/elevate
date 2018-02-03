@@ -156,14 +156,6 @@ describe("UserSettingsService", () => {
 			{from: 400, to: 500}
 		];
 
-		const EXISTING_STORED_SPEED_ZONES_MOCKED: ZoneModel[] = [
-			{from: 0, to: 10},
-			{from: 10, to: 20},
-			{from: 20, to: 30},
-			{from: 30, to: 40},
-			{from: 40, to: 50}
-		];
-
 		const zoneDefinition: ZoneDefinitionModel = {
 			name: "Cycling Speed",
 			value: "speed",

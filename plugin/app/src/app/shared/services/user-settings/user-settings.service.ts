@@ -44,6 +44,7 @@ export class UserSettingsService {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public markLocalStorageClear(): Promise<UserSettingsModel> {
+		console.log("Mark localStorage to be cleared on next strava.com load");
 		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
 	}
 
