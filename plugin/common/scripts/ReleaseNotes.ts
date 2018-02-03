@@ -21,7 +21,7 @@ export interface IReleaseNote {
 export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.0.0",
-		message: "Preview 01. Thanks for your help & time ;)",
+		message: "Open Beta testing. Thanks for your help & time ;)",
 		hotFixes: [],
 		features: [],
 		hideFeatureReleaseNote: true,
