@@ -34,7 +34,7 @@
 		"watch:app": "npm run build-project:app -- --watch",
 		"watch:core": "npm-run-all res-copy:* tsc:core@watch",
 		"wipe": "npm run clean && node ./node_modules/rimraf/bin.js ./node_modules/ ./plugin/node_modules/ ./plugin/app/node_modules/",
-		"zipRelease": "node -e \"const z = require('zip-folder'), f = require('fs'), m = require('./dist/manifest.json'), t = './package', o = t + '/v' + m.version + '_' + (new Date()).toJSON().slice(0, 10) + '.zip';if (!f.existsSync(t)) f.mkdirSync(t);z('./dist', o, (e) => {let code = (e) ? 1 : 0;if (!code) console.log('Generated archive ' + o);process.exit(code);});\""
+		"zipRelease": "node -e \"const z = require('zip-folder'), f = require('fs'), m = require('./dist/manifest.json'), t = './package', o = t + '/v' + m.version_name.split(' ').join('_').toLowerCase() + '_' + (new Date()).toJSON().slice(0, 10) + '.zip';if (!f.existsSync(t)) f.mkdirSync(t);z('./dist', o, (e) => {let code = (e) ? 1 : 0;if (!code) console.log('Generated archive ' + o);process.exit(code);});\""
 	},
 	"repository": {
 		"type": "git",
