@@ -14,7 +14,6 @@ import { AthleteHistoryService } from "../shared/services/athlete-history/athlet
 })
 export class AthleteSettingsComponent implements OnInit {
 
-	public static readonly SETTINGS_KEY_CLEAR_LOCAL_STORAGE: string = "localStorageMustBeCleared";
 	public static readonly SETTINGS_KEY_USER_WEIGHT: any = "userWeight";
 	public static readonly SETTINGS_KEY_USER_GENDER: string = "userGender";
 	public static readonly SETTINGS_KEY_USER_MAX_HR: string = "userMaxHr";
@@ -242,19 +241,13 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
-	public localStorageMustBeCleared() {
-		this.userSettingsService.update(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE, true).then(() => {
-			console.log(AthleteSettingsComponent.SETTINGS_KEY_CLEAR_LOCAL_STORAGE + " has been updated to " + true);
-		});
-	}
-
-
 	/**
 	 *
 	 * @param {UserSettingsModel} userSettingsModelChanged
 	 */
 	public profileChanged() {
-		this.localStorageMustBeCleared();
+
+		this.userSettingsService.markLocalStorageClear();
 		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 

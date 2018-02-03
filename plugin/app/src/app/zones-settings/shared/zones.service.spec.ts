@@ -656,6 +656,8 @@ describe("ZonesService", () => {
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(true));
 
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+
 		// When
 		const promiseSave: Promise<string> = zonesService.saveZones();
 
@@ -664,6 +666,7 @@ describe("ZonesService", () => {
 
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -683,6 +686,8 @@ describe("ZonesService", () => {
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(true));
 
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+
 		// When
 		const promiseSave: Promise<string> = zonesService.saveZones();
 
@@ -697,6 +702,8 @@ describe("ZonesService", () => {
 			expect(error).toBe(fakeError);
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
+			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
+
 			done();
 		});
 
@@ -747,7 +754,6 @@ describe("ZonesService", () => {
 			done();
 		});
 	});
-
 
 	it("should not import zones with wrong JSON data", (done: Function) => {
 
