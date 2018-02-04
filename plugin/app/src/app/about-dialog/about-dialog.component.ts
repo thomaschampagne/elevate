@@ -35,7 +35,7 @@ export class AboutDialogComponent implements OnInit {
 	}
 
 	public getAppVersion(): string {
-		return chrome.runtime.getManifest().version;
+		return chrome.runtime.getManifest().version_name;
 	}
 
 }
