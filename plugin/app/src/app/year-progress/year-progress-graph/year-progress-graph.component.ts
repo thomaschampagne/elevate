@@ -185,7 +185,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public static clearSvgGraphContent(): void {
-		document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0].remove();
+		const svgElement = document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0];
+		if (svgElement) {
+			svgElement.remove();
+		}
 	}
 
 
