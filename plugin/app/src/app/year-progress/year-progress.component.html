@@ -90,10 +90,10 @@
 		</div>
 
 		<!--Graph Card + Table Card -->
-		<div fxLayout="row" fxLayoutAlign="start start">
+		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="60" fxFlex.lt-lg="100">
+			<div fxFlex="60" fxFill>
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}
@@ -109,7 +109,7 @@
 			<span fxFlex="3" fxHide.lt-lg></span>
 
 			<!-- Table/Legend -->
-			<div fxFlex fxHide.lt-lg>
+			<div fxFlex fxFill>
 				<mat-card-title class="mat-title">
 					{{momentWatched.format("MMMM Do")}}
 				</mat-card-title>
