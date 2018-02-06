@@ -24,7 +24,6 @@ export interface IUserSettings {
     targetsYearRide: number;
     targetsYearRun: number;
     remoteLinks: boolean;
-    feedAutoScroll: boolean;
     defaultLeaderBoardFilter: string;
     activateRunningGradeAdjustedPace: boolean;
     activateRunningHeartRate: boolean;
