@@ -292,12 +292,6 @@ export let commonSettingsService = () => {
         }, {
             sectionTitle: "Dashboard",
             sectionContent: [{
-                optionKey: "feedAutoScroll",
-                optionType: "checkbox",
-                optionTitle: "Feed auto-scroll",
-                optionLabels: ["All"],
-                optionHtml: "Automatic scrolling on activity dashboard<br /><br /><img src=\"img/feedAutoScroll.png\"/>",
-            }, {
                 optionKey: "feedHideChallenges",
                 optionType: "checkbox",
                 optionTitle: "Hide challenges",
