@@ -31,6 +31,11 @@ export class HideFeedModifier implements IModifier {
                 });
             }
 
+            // If hide posts
+            if (this.userSettings.feedHidePosts) {
+                $(".feed-container").find(".post").remove();
+            }
+            
             // If hide suggested athletes
             if (this.userSettings.feedHideSuggestedAthletes) {
                 $("#suggested-follow-module").remove(); // Will work as long as id remains "suggested-follow-module"
