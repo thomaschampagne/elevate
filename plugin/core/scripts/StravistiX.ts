@@ -13,7 +13,6 @@ import { ActivitiesSyncModifier } from "./modifiers/ActivitiesSyncModifier";
 import { ActivityBestSplitsModifier } from "./modifiers/ActivityBestSplitsModifier";
 import { ActivityBikeOdoModifier } from "./modifiers/ActivityBikeOdoModifier";
 import { ActivityQRCodeDisplayModifier } from "./modifiers/ActivityQRCodeDisplayModifier";
-import { ActivityScrollingModifier } from "./modifiers/ActivityScrollingModifier";
 import { ActivitySegmentTimeComparisonModifier } from "./modifiers/ActivitySegmentTimeComparisonModifier";
 import { ActivityStravaMapTypeModifier } from "./modifiers/ActivityStravaMapTypeModifier";
 import { AthleteStatsModifier } from "./modifiers/AthleteStatsModifier";
@@ -121,7 +120,6 @@ export class StravistiX {
         this.handleRemoteLinks();
         this.handleWindyTyModifier();
         this.handleReliveCCModifier();
-        this.handleActivityScrolling();
         this.handleDefaultLeaderboardFilter();
         this.handleSegmentRankPercentage();
         this.handleSegmentHRAP();
@@ -537,21 +535,6 @@ export class StravistiX {
 
         const reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
         reliveCCModifier.modify();
-    }
-
-    /**
-     *
-     */
-    protected handleActivityScrolling(): void {
-
-        if (!this._userSettings.feedAutoScroll) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleActivityScrolling_()");
-
-        const activityScrollingModifier: ActivityScrollingModifier = new ActivityScrollingModifier();
-        activityScrollingModifier.modify();
     }
 
     /**

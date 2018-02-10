@@ -93,7 +93,6 @@
   "displaySegmentTimeComparisonToPR": true,
   "enableBothLegsCadence": true,
   "extensionHasJustUpdated": false,
-  "feedAutoScroll": true,
   "feedHideChallenges": true,
   "feedHideCreatedRoutes": true,
   "feedHideRideActivitiesUnderDistance": 20,

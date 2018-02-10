@@ -207,7 +207,6 @@ export let userSettings: IUserSettings = {
     targetsYearRide: 5000,
     targetsYearRun: 750,
     remoteLinks: true,
-    feedAutoScroll: true,
     defaultLeaderBoardFilter: "overall",
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
