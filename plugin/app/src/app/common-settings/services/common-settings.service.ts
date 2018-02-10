@@ -255,6 +255,11 @@ export class CommonSettingsService {
 			title: "Hide created routes",
 			labels: ["All"],
 		}, {
+			key: "feedHidePosts",
+			type: "checkbox",
+			title: "Hide posts",
+			labels: ["All"],
+		}, {
 			key: "feedHideSuggestedAthletes",
 			type: "checkbox",
 			title: "Hide suggested athletes",
