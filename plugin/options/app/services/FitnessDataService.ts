@@ -199,6 +199,10 @@ export class FitnessDataService {
 
                         const fitnessActivity: IActivitiesWithFitness = activitiesWithFitnessThatDay[count];
 
+                        if (fitnessActivity.type === "EBikeRide") {
+                            continue;
+                        }
+
                         fitnessObjectOnCurrentDay.ids.push(fitnessActivity.id);
                         fitnessObjectOnCurrentDay.activitiesName.push(fitnessActivity.activityName);
                         fitnessObjectOnCurrentDay.type.push(fitnessActivity.type);
