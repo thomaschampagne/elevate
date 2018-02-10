@@ -245,11 +245,6 @@ export class CommonSettingsService {
 	}, {
 		title: "Dashboard",
 		options: [{
-			key: "feedAutoScroll",
-			type: "checkbox",
-			title: "Feed auto-scroll",
-			labels: ["All"],
-		}, {
 			key: "feedHideChallenges",
 			type: "checkbox",
 			title: "Hide challenges",

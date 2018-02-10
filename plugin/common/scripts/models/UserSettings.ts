@@ -31,7 +31,6 @@ export class UserSettingsModel { // TODO Externalize in a file
 	public targetsYearRide: number;
 	public targetsYearRun: number;
 	public remoteLinks: boolean;
-	public feedAutoScroll: boolean;
 	public defaultLeaderBoardFilter: string;
 	public activateRunningGradeAdjustedPace: boolean;
 	public activateRunningHeartRate: boolean;
