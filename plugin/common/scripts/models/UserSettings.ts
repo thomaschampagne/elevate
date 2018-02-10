@@ -52,6 +52,7 @@ export class UserSettingsModel { // TODO Externalize in a file
 	public feedHideChallenges: boolean;
 	public feedHideCreatedRoutes: boolean;
 	public feedHideSuggestedAthletes: boolean;
+	public feedHidePosts: boolean;
 	public feedHideVirtualRides: boolean;
 	public feedHideRideActivitiesUnderDistance: number;
 	public feedHideRunActivitiesUnderDistance: number;

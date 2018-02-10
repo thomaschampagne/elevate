@@ -228,6 +228,7 @@ export const userSettings: UserSettingsModel = {
     enableBothLegsCadence: true,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+	feedHidePosts: false,
     feedHideSuggestedAthletes: false,
     feedHideVirtualRides: false,
     feedHideRideActivitiesUnderDistance: 0,
