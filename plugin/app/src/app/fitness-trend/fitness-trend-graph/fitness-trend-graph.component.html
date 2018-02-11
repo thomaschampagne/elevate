@@ -162,8 +162,9 @@
 				<div fxFlex="180px" class="atl_value">
 					Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
 				</div>
-				<div fxFlex="180px" class="tsb_value">
+				<div fxFlex="280px" class="tsb_value">
 					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
+					<span *ngIf="isTrainingZonesEnabled" class="mat-body-1">/ {{this.viewedDay.printTrainingZone()}} zone</span>
 				</div>
 			</div>
 		</div>
