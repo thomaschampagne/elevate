@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { DayStressModel } from "./day-stress.model";
+import { TrainingZone } from "./training-zone.enum";
 
 export class DayFitnessTrendModel extends DayStressModel {
 
@@ -20,12 +21,14 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.ctl = ctl;
 		this.atl = atl;
 		this.tsb = tsb;
+		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
 	public dateString: string;
 	public ctl: number;
 	public atl: number;
 	public tsb: number;
+	public trainingZone: TrainingZone;
 
 	public printFitness(): string {
 		return this.ctl.toFixed(1);
@@ -74,4 +77,29 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	}
 
+	public findTrainingZone(tsb: number): TrainingZone {
+
+		if (tsb <= TrainingZone.OVERLOAD) {
+			return TrainingZone.OVERLOAD;
+		}
+
+		if (tsb <= TrainingZone.OPTIMAL) {
+			return TrainingZone.OPTIMAL;
+		}
+
+		if (tsb <= TrainingZone.NEUTRAL) {
+			return TrainingZone.NEUTRAL;
+		}
+
+		if (tsb <= TrainingZone.FRESHNESS) {
+			return TrainingZone.FRESHNESS;
+		}
+
+		return TrainingZone.TRANSITION;
+	}
+
+	public printTrainingZone(): string {
+		const trainingZoneString = TrainingZone[this.trainingZone].toLowerCase();
+		return trainingZoneString.charAt(0).toUpperCase() + trainingZoneString.slice(1);
+	}
 }
