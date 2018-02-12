@@ -314,7 +314,7 @@ export class ZonesService {
 			try {
 				this.currentZones = <ZoneModel[]> JSON.parse(jsonInput);
 			} catch (error) {
-				reject("Provided zones do not respect expected JSON format");
+				reject("Provided zones do not respect expected format");
 				return;
 			}
 

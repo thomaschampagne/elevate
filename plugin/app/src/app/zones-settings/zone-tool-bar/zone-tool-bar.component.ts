@@ -48,14 +48,20 @@ export class ZoneToolBarComponent implements OnInit {
 
 		this.zonesService.addLastZone().then(
 			message => this.popSnack(message),
-			error => this.popSnack(error)
+			error => {
+				console.error(error);
+				this.popSnack(error)
+			}
 		);
 	}
 
 	public onRemoveLastZone(): void {
 		this.zonesService.removeLastZone().then(
 			message => this.popSnack(message),
-			error => this.popSnack(error)
+			error => {
+				console.error(error);
+				this.popSnack(error)
+			}
 		);
 	}
 
@@ -76,7 +82,10 @@ export class ZoneToolBarComponent implements OnInit {
 			if (confirm) {
 				this.zonesService.resetZonesToDefault().then(() => {
 						this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-					}, error => this.popSnack(error)
+					}, error => {
+						console.error(error);
+						this.popSnack(error)
+					}
 				);
 			}
 			afterClosedSubscription.unsubscribe();
@@ -87,7 +96,10 @@ export class ZoneToolBarComponent implements OnInit {
 
 		this.zonesService.saveZones().then(
 			() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
-			error => this.popSnack(error)
+			error => {
+				console.error(error);
+				this.popSnack(error)
+			}
 		);
 	}
 
