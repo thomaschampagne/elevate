@@ -846,7 +846,7 @@ describe("ZonesService", () => {
 			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(0);
 
 			expect(error).not.toBeNull();
-			expect(error).toBe("Provided zones do not respect expected JSON format");
+			expect(error).toBe("Provided zones do not respect expected format");
 
 			done();
 		});
