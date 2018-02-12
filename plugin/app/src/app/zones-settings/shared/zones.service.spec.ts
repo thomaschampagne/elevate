@@ -653,8 +653,9 @@ describe("ZonesService", () => {
 
 		// Given
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
+		const zoneModels: ZoneModel[] = [{from: 0, to: 110}, {from: 110, to: 210}];
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
-			.and.returnValue(Promise.resolve(true));
+			.and.returnValue(Promise.resolve(zoneModels));
 
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
 
@@ -703,6 +704,72 @@ describe("ZonesService", () => {
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
 			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
 			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
+
+			done();
+		});
+
+	});
+
+	it("should not save zones on updateZones rejection", (done: Function) => {
+
+		// Given
+		const fakeError = "UpdateZones Error!";
+		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
+			.and.returnValue(Promise.reject(fakeError));
+
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+
+		// When
+		const promiseSave: Promise<string> = zonesService.saveZones();
+
+		// Then
+		promiseSave.then(() => {
+
+			expect(true).toBeFalsy("Test should no go there");
+			done();
+
+		}, error => {
+
+			expect(error).not.toBeNull();
+			expect(error).toBe(fakeError);
+			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
+
+			done();
+		});
+
+	});
+
+	it("should not save zones on markLocalStorageClear rejection", (done: Function) => {
+
+		// Given
+		const fakeError = "markLocalStorageClear Error!";
+		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
+		const zoneModels: ZoneModel[] = [{from: 0, to: 110}, {from: 110, to: 210}];
+		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
+			.and.returnValue(Promise.resolve(zoneModels));
+
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear")
+			.and.returnValue(Promise.reject(fakeError));
+
+		// When
+		const promiseSave: Promise<string> = zonesService.saveZones();
+
+		// Then
+		promiseSave.then(() => {
+
+			expect(true).toBeFalsy("Test should no go there");
+			done();
+
+		}, error => {
+
+			expect(error).not.toBeNull();
+			expect(error).toBe(fakeError);
+			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
+			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
 
 			done();
 		});

@@ -14,9 +14,14 @@ export class UserSettingsDao {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public fetch(): Promise<UserSettingsModel> {
-		return new Promise<UserSettingsModel>((resolve) => {
+		return new Promise<UserSettingsModel>((resolve, reject) => {
 			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
-				resolve(userSettingsSynced);
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
+				} else {
+					resolve(userSettingsSynced);
+				}
 			});
 		});
 	}
@@ -32,11 +37,16 @@ export class UserSettingsDao {
 
 			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
-				const value = userSettingsSynced[key];
-				if (_.isUndefined(value)) {
-					reject(key + " not found in user settings");
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
 				} else {
-					resolve(value);
+					const value = userSettingsSynced[key];
+					if (_.isUndefined(value)) {
+						reject(key + " not found in user settings");
+					} else {
+						resolve(value);
+					}
 				}
 			});
 		});
@@ -61,9 +71,17 @@ export class UserSettingsDao {
 			settingToBeUpdated[key] = value;
 
 			this.chromeStorageSync().set(settingToBeUpdated, () => {
-				this.fetch().then((userSettingsResult: UserSettingsModel) => {
-					resolve(userSettingsResult);
-				});
+
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
+				} else {
+					this.fetch().then((userSettingsResult: UserSettingsModel) => {
+						resolve(userSettingsResult);
+					}, error => {
+						reject(error);
+					});
+				}
 			});
 		});
 	}
@@ -88,9 +106,17 @@ export class UserSettingsDao {
 			const absoluteObject = this.createNestedObject(path, setting);
 
 			this.chromeStorageSync().set(absoluteObject, () => {
-				this.fetch().then((userSettingsResult: UserSettingsModel) => {
-					resolve(userSettingsResult);
-				});
+
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
+				} else {
+					this.fetch().then((userSettingsResult: UserSettingsModel) => {
+						resolve(userSettingsResult);
+					}, error => {
+						reject(error);
+					});
+				}
 			});
 		});
 	}
@@ -116,4 +142,14 @@ export class UserSettingsDao {
 	public chromeStorageSync(): chrome.storage.SyncStorageArea {
 		return chrome.storage.sync;
 	}
+
+	/**
+	 *
+	 * @returns {chrome.runtime.LastError}
+	 */
+	public getChromeError(): chrome.runtime.LastError {
+		return chrome.runtime.lastError;
+	}
+
+
 }
