@@ -249,7 +249,7 @@ export class ZonesService {
 	 *
 	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public saveZones(): Promise<string> {
+	public saveZones(): Promise<string> { // TODO Return Promise<void> instead
 
 		return new Promise((resolve: (pass: string) => void,
 							reject: (error: string) => void) => {
@@ -261,9 +261,11 @@ export class ZonesService {
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {
-					return this.userSettingsService.markLocalStorageClear()
+					return this.userSettingsService.markLocalStorageClear();
 				}).then(() => {
 					resolve(null);
+				}).catch(error => {
+					reject(error);
 				});
 
 			} else {

@@ -66,19 +66,6 @@ describe("ZoneToolBarComponent", () => {
 		expect(component).toBeTruthy();
 	});
 
-	/*	it("should emit zoneDefinitionSelected on zone definition selection", () => {
-
-            // Given
-            const spy = spyOn(component.zoneDefinitionSelectedChange, "emit");
-            const compiled = fixture.debugElement.nativeElement;
-
-            // When
-            compiled.querySelector("#zoneDefinitionSelection").click();
-
-            // Then
-            expect(spy).toHaveBeenCalledTimes(1)
-        });*/
-
 	it("should call zone service on AddLastZone", () => {
 
 		// Given

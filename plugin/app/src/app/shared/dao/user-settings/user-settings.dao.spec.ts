@@ -51,7 +51,6 @@ describe("UserSettingsDao", () => {
 		done();
 	});
 
-
 	it("should fetch user settings", (done: Function) => {
 
 		// Given
@@ -81,10 +80,11 @@ describe("UserSettingsDao", () => {
 		});
 	});
 
-	it("should fetch user settings", (done: Function) => {
+	it("should reject on fetch user settings", (done: Function) => {
 
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
+		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
 
 		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
@@ -92,20 +92,26 @@ describe("UserSettingsDao", () => {
 			}
 		});
 
+		const chromeError: chrome.runtime.LastError = {
+			message: expectedErrorMessage
+		};
+		const getChromeErrorSpy = spyOn(userSettingsDao, "getChromeError").and.returnValue(chromeError);
+
 		// When
 		const promiseFetch: Promise<UserSettingsModel> = userSettingsDao.fetch();
 
 		// Then
 		promiseFetch.then((result: UserSettingsModel) => {
 
-			expect(result).not.toBeNull();
-			expect(result).toEqual(expectedSettings);
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
-
+			expect(result).toBeNull();
 			done();
 
 		}, error => {
-			expect(error).toBeNull();
+
+			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
+			expect(error).not.toBeNull();
+			expect(error).toEqual(expectedErrorMessage);
 			done();
 		});
 	});
@@ -170,6 +176,42 @@ describe("UserSettingsDao", () => {
 		});
 	});
 
+	it("should reject on get of userWeight setting", (done: Function) => {
+
+		// Given
+		const key = "userWeight";
+		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
+		const expectedSettings = _.cloneDeep(userSettings);
+		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(expectedSettings);
+			}
+		});
+
+		const chromeError: chrome.runtime.LastError = {
+			message: expectedErrorMessage
+		};
+		const getChromeErrorSpy = spyOn(userSettingsDao, "getChromeError").and.returnValue(chromeError);
+
+		// When
+		const promiseGet: Promise<Object> = userSettingsDao.get(key);
+
+		// Then
+		promiseGet.then((result: number) => {
+
+			expect(result).toBeNull();
+			done();
+
+		}, error => {
+
+			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
+			expect(error).not.toBeNull();
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+	});
+
 	it("should update a user setting", (done: Function) => {
 
 		// Given
@@ -209,6 +251,48 @@ describe("UserSettingsDao", () => {
 		});
 	});
 
+	it("should reject on update of a user setting", (done: Function) => {
+
+		// Given
+		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
+		const keyMaxHr = "userMaxHr";
+		const maxHrValue = 199;
+		const expectedSettings = _.cloneDeep(userSettings);
+		expectedSettings.userMaxHr = maxHrValue;
+
+		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+			set: (object: Object, callback: () => {}) => {
+				callback();
+			},
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(expectedSettings);
+			}
+		});
+
+		const chromeError: chrome.runtime.LastError = {
+			message: expectedErrorMessage
+		};
+		const getChromeErrorSpy = spyOn(userSettingsDao, "getChromeError").and.returnValue(chromeError);
+
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keyMaxHr, maxHrValue);
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).toBeNull();
+			done();
+
+		}, error => {
+
+			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
+			expect(error).not.toBeNull();
+			expect(error).toEqual(expectedErrorMessage);
+			done();
+		});
+	});
+
 	it("should update nested user setting", (done: Function) => {
 
 		// Given
@@ -218,7 +302,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.zones.speed = zones;
 
-		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({ // TODO Put spy in beforeEach
+		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -241,6 +325,48 @@ describe("UserSettingsDao", () => {
 
 		}, error => {
 			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should reject update of nested user setting", (done: Function) => {
+
+		// Given
+		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
+		const zones = [{from: 666, to: 999}];
+		const path = "zones.speed";
+
+		const expectedSettings = _.cloneDeep(userSettings);
+		expectedSettings.zones.speed = zones;
+
+		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+			set: (object: Object, callback: () => {}) => {
+				callback();
+			},
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(expectedSettings);
+			}
+		});
+
+		const chromeError: chrome.runtime.LastError = {
+			message: expectedErrorMessage
+		};
+		const getChromeErrorSpy = spyOn(userSettingsDao, "getChromeError").and.returnValue(chromeError);
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.updateNested(path, zones);
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).toBeNull();
+			done();
+
+		}, error => {
+
+			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
+			expect(error).not.toBeNull();
+			expect(error).toEqual(expectedErrorMessage);
 			done();
 		});
 	});
