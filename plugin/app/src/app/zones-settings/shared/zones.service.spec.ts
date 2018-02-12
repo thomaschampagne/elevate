@@ -626,7 +626,7 @@ describe("ZonesService", () => {
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
 		// When
-		const promiseReset: Promise<string> = zonesService.resetZonesToDefault();
+		const promiseReset: Promise<void> = zonesService.resetZonesToDefault();
 
 		// Then
 		promiseReset.then(() => {
@@ -660,7 +660,7 @@ describe("ZonesService", () => {
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
 
 		// When
-		const promiseSave: Promise<string> = zonesService.saveZones();
+		const promiseSave: Promise<void> = zonesService.saveZones();
 
 		// Then
 		promiseSave.then(() => {
@@ -690,7 +690,7 @@ describe("ZonesService", () => {
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
 
 		// When
-		const promiseSave: Promise<string> = zonesService.saveZones();
+		const promiseSave: Promise<void> = zonesService.saveZones();
 
 		// Then
 		promiseSave.then(() => {
@@ -721,7 +721,7 @@ describe("ZonesService", () => {
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
 
 		// When
-		const promiseSave: Promise<string> = zonesService.saveZones();
+		const promiseSave: Promise<void> = zonesService.saveZones();
 
 		// Then
 		promiseSave.then(() => {
@@ -755,7 +755,7 @@ describe("ZonesService", () => {
 			.and.returnValue(Promise.reject(fakeError));
 
 		// When
-		const promiseSave: Promise<string> = zonesService.saveZones();
+		const promiseSave: Promise<void> = zonesService.saveZones();
 
 		// Then
 		promiseSave.then(() => {
