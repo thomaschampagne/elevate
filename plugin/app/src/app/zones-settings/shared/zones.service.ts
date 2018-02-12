@@ -249,9 +249,9 @@ export class ZonesService {
 	 *
 	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public saveZones(): Promise<string> { // TODO Return Promise<void> instead
+	public saveZones(): Promise<void> {
 
-		return new Promise((resolve: (pass: string) => void,
+		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
 			const complianceError = this.isZonesCompliant(this.currentZones);
@@ -263,7 +263,7 @@ export class ZonesService {
 				).then(() => {
 					return this.userSettingsService.markLocalStorageClear();
 				}).then(() => {
-					resolve(null);
+					resolve();
 				}).catch(error => {
 					reject(error);
 				});
@@ -275,19 +275,19 @@ export class ZonesService {
 	}
 
 	/**
-	 * Reset zones to default
-	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
+	 *
+	 * @returns {Promise<void>}
 	 */
-	public resetZonesToDefault(): Promise<string> {
+	public resetZonesToDefault(): Promise<void> {
 
-		return new Promise((resolve: (ok: string) => void,
+		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
 			this.currentZones = _.clone(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
 
 			this.saveZones().then(() => {
 
-				resolve(null);
+				resolve();
 				this.zonesUpdates.next(this.currentZones); // Notify ZonesSettingsComponent to tell him to reload his zones
 
 			}, (error: string) => {
@@ -303,11 +303,11 @@ export class ZonesService {
 	/**
 	 *
 	 * @param {string} jsonInput
-	 * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
+	 * @returns {Promise<void>}
 	 */
-	public importZones(jsonInput: string): Promise<string> {
+	public importZones(jsonInput: string): Promise<void> {
 
-		return new Promise((resolve: (ok: string) => void,
+		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
 			// Try to parse JSON input
@@ -319,10 +319,10 @@ export class ZonesService {
 			}
 
 			// Valid JSON Here... Save & emit zones update
-			this.saveZones().then(status => {
+			this.saveZones().then(() => {
 
 				this.zonesUpdates.next(this.currentZones);
-				resolve(status);
+				resolve();
 
 			}, error => {
 				reject(error);
