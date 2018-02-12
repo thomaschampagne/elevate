@@ -330,30 +330,20 @@ export class YearProgressService {
 
 			hours = Math.abs(hours);
 
-			const days: number = Math.floor(hours / 24);
+			if (hours > 0) {
 
-			if (days > 0) {
-				readableTime = days + " d";
-			}
-
-			const remainingHours = hours - (days * 24);
-
-			if (remainingHours > 0) {
-
-				const hoursFloored = Math.floor(remainingHours);
+				const hoursFloored = Math.floor(hours);
 
 				if (hoursFloored > 0) {
-					readableTime = readableTime + ((days > 0) ? ", " : "") + hoursFloored + " h";
+					readableTime = readableTime + hoursFloored + " h";
 				}
 
-				const remainingMinutes = (remainingHours - hoursFloored) * 60;
+				const remainingMinutes = (hours - hoursFloored) * 60;
 
 				if (remainingMinutes > 0) {
 					readableTime = readableTime + ((hoursFloored > 0) ? ", " : "") + Math.round(remainingMinutes) + " min";
 				}
-
 			}
-
 		}
 
 		return readableTime;
