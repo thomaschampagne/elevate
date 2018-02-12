@@ -587,7 +587,7 @@ describe("YearProgressService", () => {
 
 		// Given
 		const hours = 24;
-		const expected = "1 d";
+		const expected = "24 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -615,7 +615,7 @@ describe("YearProgressService", () => {
 
 		// Given
 		const hours = 50;
-		const expected = "2 d, 2 h";
+		const expected = "50 h";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -629,7 +629,7 @@ describe("YearProgressService", () => {
 
 		// Given
 		const hours = 76.25;
-		const expected = "3 d, 4 h, 15 min";
+		const expected = "76 h, 15 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
@@ -643,7 +643,7 @@ describe("YearProgressService", () => {
 
 		// Given
 		const hours = 29.5;
-		const expected = "1 d, 5 h, 30 min";
+		const expected = "29 h, 30 min";
 
 		// When
 		const result: string = yearProgressService.readableTimeProgress(hours);
