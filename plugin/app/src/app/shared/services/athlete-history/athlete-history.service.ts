@@ -287,12 +287,12 @@ export class AthleteHistoryService {
 				userSettings.userFTP,
 				userSettings.userWeight);
 
-			this.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel).then((isSame: boolean) => {
-				this.localRemoteAthleteProfileSame.next(isSame);
-			}, error => {
-				console.warn(error);
-			});
+			return this.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel);
 
+		}).then((isSame: boolean) => {
+			this.localRemoteAthleteProfileSame.next(isSame);
+		}).catch(error => {
+			console.error(error);
 		});
 	}
 
