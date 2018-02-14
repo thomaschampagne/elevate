@@ -33,17 +33,15 @@
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printTrainingImpulseScore()}}</mat-cell>
 		</ng-container>
 
-		<ng-container matColumnDef="powerStressScore">
-			<mat-header-cell *matHeaderCellDef mat-sort-header
-							 matTooltip="{{(!cyclingFtp) ? 'No data? Did you setup your cycling functional threshold power in athlete settings?': 'Power Stress Score'}}">
+		<ng-container *ngIf="cyclingFtp" matColumnDef="powerStressScore">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>
 				<u>PSS</u>
 			</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printPowerStressScore()}}</mat-cell>
 		</ng-container>
 
-		<ng-container matColumnDef="swimStressScore">
-			<mat-header-cell *matHeaderCellDef mat-sort-header
-							 matTooltip="{{(!swimFtp) ? 'No data? Did you setup your swimming functional threshold pace in athlete settings?': 'Swim Stress Score'}}">
+		<ng-container *ngIf="swimFtp" matColumnDef="swimStressScore">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>
 				<u>SwimSS</u>
 			</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printSwimStressScore()}}</mat-cell>
