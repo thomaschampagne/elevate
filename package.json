@@ -29,6 +29,8 @@
 		"tsc:core@prod": "npm run tsc:version && node ./node_modules/typescript/bin/tsc -p tsconfig.prod.json",
 		"tsc:core@test": "npm run tsc:version && node ./node_modules/typescript/bin/tsc -p tsconfig.test.json",
 		"tsc:core@watch": "npm run tsc:core -- --watch",
+		"tslint-fix:core": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/common/**/*.ts ./specs/**/*.ts --fix",
+		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint --fix",
 		"start": "npm run watch",
 		"watch": "npm run clean && npm-run-all --print-label --parallel watch:*",
 		"watch:app": "npm run build-project:app -- --watch",
@@ -91,6 +93,7 @@
 		"systemjs": "^0.19.0",
 		"systemjs-plugin-babel": "0.0.25",
 		"traceur": "0.0.111",
+		"tslint": "^5.9.1",
 		"typescript": "~2.5.3",
 		"zip-folder": "^1.0.0"
 	}
