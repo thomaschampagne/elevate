@@ -91,7 +91,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 	];
 
-
 	public static convertRouteToTitle(route: string): string {
 
 		if (_.isEmpty(route)) {
