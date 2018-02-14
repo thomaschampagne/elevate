@@ -29,6 +29,8 @@ describe("AthleteSettingsComponent", () => {
 			}
 		});
 
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+
 	}));
 
 	beforeEach(() => {
