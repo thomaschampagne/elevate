@@ -7,7 +7,7 @@ export let removeActivityFromArray = (activityId: number, fromArray: Array<any>)
 };
 
 export let editActivityFromArray = (activityId: number, fromArray: Array<any>, newName: string, newType: string): Array<any> => {
-    let a: any = _.find(fromArray, {
+	const a: any = _.find(fromArray, {
         id: activityId
     });
     a.name = newName;

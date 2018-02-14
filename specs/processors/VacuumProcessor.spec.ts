@@ -5,9 +5,9 @@ describe("VacuumProcessor", () => {
 
 	it("should be a pro", () => {
 
-        let vacuumProcessor: VacuumProcessor = new VacuumProcessor();
+        const vacuumProcessor: VacuumProcessor = new VacuumProcessor();
 
-		let getCurrentAthleteSpy: Spy = spyOn(vacuumProcessor, "getCurrentAthlete"); // Mocking getCurrentAthlete
+		const getCurrentAthleteSpy: Spy = spyOn(vacuumProcessor, "getCurrentAthlete"); // Mocking getCurrentAthlete
 
         // getCurrentAthlete not yet called...
         expect(getCurrentAthleteSpy).not.toHaveBeenCalled();

@@ -79,7 +79,7 @@ interface ICoreConfig {
 
 class CoreSetup {
 
-    public static startCoreEvent: string = "startCoreEvent"; // Same than Content.startCoreEvent
+    public static startCoreEvent = "startCoreEvent"; // Same than Content.startCoreEvent
 
     protected coreConfig: ICoreConfig;
 
@@ -115,13 +115,13 @@ class CoreSetup {
 
             const requiredNonEsModulesPromises: Array<Promise<any>> = Array<Promise<any>>();
 
-            for (let i: number = 0; i < this.coreConfig.requiredNonEsModules.length; i++) {
+            for (let i = 0; i < this.coreConfig.requiredNonEsModules.length; i++) {
                 requiredNonEsModulesPromises.push(SystemJS.import(this.coreConfig.requiredNonEsModules[i]));
             }
 
             const requiredCssPromises: Array<Promise<any>> = Array<Promise<any>>();
 
-            for (let i: number = 0; i < this.coreConfig.requiredCss.length; i++) {
+            for (let i = 0; i < this.coreConfig.requiredCss.length; i++) {
                 requiredCssPromises.push(SystemJS.import(this.coreConfig.requiredCss[i]));
             }
 

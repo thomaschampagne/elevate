@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { WelcomeComponent } from './welcome.component';
+import { WelcomeComponent } from "./welcome.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
-describe('WelcomeComponent', () => {
+describe("WelcomeComponent", () => {
 	let component: WelcomeComponent;
 	let fixture: ComponentFixture<WelcomeComponent>;
 
@@ -23,7 +23,7 @@ describe('WelcomeComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

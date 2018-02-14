@@ -372,8 +372,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		this.periodViewed.from = moment(this.periodViewed.from).add(daysToForward, 'days').toDate();
-		this.periodViewed.to = moment(this.periodViewed.to).add(daysToForward, 'days').toDate();
+		this.periodViewed.from = moment(this.periodViewed.from).add(daysToForward, "days").toDate();
+		this.periodViewed.to = moment(this.periodViewed.to).add(daysToForward, "days").toDate();
 		this.onDateToDateChange();
 
 	}
@@ -389,9 +389,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		this.periodViewed.from = moment(this.periodViewed.from).subtract(daysToRewind, 'days').toDate();
-		this.periodViewed.to = moment(this.periodViewed.to).subtract(daysToRewind, 'days').toDate();
-		this.onDateToDateChange()
+		this.periodViewed.from = moment(this.periodViewed.from).subtract(daysToRewind, "days").toDate();
+		this.periodViewed.to = moment(this.periodViewed.to).subtract(daysToRewind, "days").toDate();
+		this.onDateToDateChange();
 	}
 
 	/**
@@ -598,7 +598,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	@HostListener('window:keydown', ['$event'])
+	@HostListener("window:keydown", ["$event"])
 	public onKeyDown(event: KeyboardEvent): void {
 
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.RIGHT_ARROW) {

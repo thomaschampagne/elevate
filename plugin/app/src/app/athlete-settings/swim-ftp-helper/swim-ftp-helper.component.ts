@@ -63,7 +63,7 @@ export class SwimFtpHelperComponent implements OnInit {
 			return "";
 		}
 		const totalSeconds = Math.round(1 / (swimFtp / 60) * 100);
-		return moment().startOf('day').seconds(totalSeconds).format("HH:mm:ss");
+		return moment().startOf("day").seconds(totalSeconds).format("HH:mm:ss");
 	}
 
 	public static convertPaceToSwimSpeed(pace: string): number {

@@ -10,7 +10,7 @@ describe("ActivitiesSynchronizer", () => {
 	it("should remove activity from array properly ", () => {
 
 		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
-        let sourceCount = rawPageOfActivities.length;
+		const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
 
@@ -23,12 +23,12 @@ describe("ActivitiesSynchronizer", () => {
 	it("should edit activity from array properly ", () => {
 
 		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
-        let sourceCount = rawPageOfActivities.length;
+		const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-		let foundBack: SyncedActivityModel = _.find(rawPageOfActivities, {id: 722210052});
+		const foundBack: SyncedActivityModel = _.find(rawPageOfActivities, {id: 722210052});
         expect(foundBack).toBeDefined();
         expect(foundBack.name).toEqual("New_Name");
         expect(foundBack.type).toEqual("Ride");
@@ -52,7 +52,7 @@ describe("ActivitiesSynchronizer", () => {
 
         // Now find+test changes
         // let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-        let changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
+		const changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
 
         expect(changes).not.toBeNull();
         expect(changes.deleted).toEqual([]);
@@ -80,9 +80,9 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should append history of pages where activities added, modified and deleted ", () => {
 
-		let userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
-		let appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
-        let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+		const userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
+		const appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
+		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         // Append
         activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
