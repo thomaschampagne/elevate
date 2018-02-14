@@ -29,7 +29,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly COLUMN_TSB: string = "tsb";
 	public static readonly COLUMN_LINKS: string = "links";
 
-	public readonly displayedColumns: string[] = [
+	public static readonly availableColumns: string[] = [
 		FitnessTrendTableComponent.COLUMN_DATE,
 		FitnessTrendTableComponent.COLUMN_TYPES,
 		FitnessTrendTableComponent.COLUMN_ACTIVITIES,
@@ -42,6 +42,8 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		FitnessTrendTableComponent.COLUMN_TSB,
 		FitnessTrendTableComponent.COLUMN_LINKS
 	];
+
+	public displayedColumns: string[];
 
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
@@ -70,8 +72,18 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
-			this.cyclingFtp = userSettings.userFTP;
-			this.swimFtp = userSettings.userSwimFTP;
+			this.cyclingFtp = _.isNumber(userSettings.userFTP) ? userSettings.userFTP : null;
+			this.swimFtp = _.isNumber(userSettings.userSwimFTP) ? userSettings.userSwimFTP : null;
+
+			// Hide POWER_STRESS_SCORE and/or SWIM_STRESS_SCORE columns if respective athlete settings are not activated
+			this.displayedColumns = _.filter(FitnessTrendTableComponent.availableColumns, (columnName: string) => {
+
+				if (!this.cyclingFtp && columnName === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE
+					|| !this.swimFtp && columnName === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE) {
+					return false;
+				}
+				return true;
+			});
 
 			return this.fitnessService.computeTrend(
 				FitnessTrendTableComponent.CYCLING_POWER_STRESS_SCORE_ENABLED,
