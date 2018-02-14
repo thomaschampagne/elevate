@@ -81,8 +81,8 @@ describe("SwimFtpHelperComponent", () => {
 	it("should convert pace to swim speed (1)", () => {
 
 		// Given
-		const pace: string = "00:03:14";
-		const expected: number = 30.93;
+		const pace = "00:03:14";
+		const expected = 30.93;
 
 		// When
 		const actual = SwimFtpHelperComponent.convertPaceToSwimSpeed(pace);
@@ -94,8 +94,8 @@ describe("SwimFtpHelperComponent", () => {
 	it("should convert pace to swim speed (2)", () => {
 
 		// Given
-		const pace: string = "00:00:12";
-		const expected: number = 500;
+		const pace = "00:00:12";
+		const expected = 500;
 
 		// When
 		const actual = SwimFtpHelperComponent.convertPaceToSwimSpeed(pace);

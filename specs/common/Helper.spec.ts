@@ -13,15 +13,15 @@ describe("Helper", () => {
     });
 
     it("should give heart rate from heart rate reserve", () => {
-        const maxHr: number = 200;
-        const restHr: number = 50;
+		const maxHr = 200;
+		const restHr = 50;
         expect(Helper.heartrateFromHeartRateReserve(100, maxHr, restHr)).toEqual(maxHr); // 100% HRR
         expect(Helper.heartrateFromHeartRateReserve(50, maxHr, restHr)).toEqual(125); // 50% HRR
     });
 
     it("should give heart rate reserve from heart rate", () => {
-        const maxHr: number = 200;
-        const restHr: number = 100;
+		const maxHr = 200;
+		const restHr = 100;
         expect(Helper.heartRateReserveFromHeartrate(50, maxHr, restHr)).toEqual(-0.5);
         expect(Helper.heartRateReserveFromHeartrate(100, maxHr, restHr)).toEqual(0);
         expect(Helper.heartRateReserveFromHeartrate(150, maxHr, restHr)).toEqual(0.5);

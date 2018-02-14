@@ -52,7 +52,7 @@ export class CourseMaker {
             "<name>" + courseName + "</name>\n" +
             "<trkseg>\n";
 
-        for (let i: number = 0; i < activityStream.latlng.length; i++) {
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
             // Position
 			gpxString += "<trkpt lat=\"" + activityStream.latlng[i][0] + "\" lon=\"" + activityStream.latlng[i][1] + "\">\n";
@@ -130,7 +130,7 @@ export class CourseMaker {
         tcxString += "</Lap>\n";
         tcxString += "<Track>\n";
 
-        for (let i: number = 0; i < activityStream.latlng.length; i++) {
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
             tcxString += "<Trackpoint>\n";
             tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";

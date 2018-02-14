@@ -11,7 +11,7 @@ import { Helper } from "../../plugin/common/scripts/Helper";
 
 describe("RunningPowerEstimator", () => {
 
-    const WATTS_TOLERANCE: number = 35.5; // W
+    const WATTS_TOLERANCE = 35.5; // W
 
     it("estimateRunningPower should provide a consistency average power compared to " +
         "real running power meter (based on https://www.strava.com/activities/874762067)", () => {
@@ -22,7 +22,7 @@ describe("RunningPowerEstimator", () => {
 
         const elevationGain = 25;
         const _expectedAvgPower = 151;
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
 
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
@@ -41,7 +41,7 @@ describe("RunningPowerEstimator", () => {
         const _expectedAvgPower = 287;
 
         // When
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
         expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
@@ -60,7 +60,7 @@ describe("RunningPowerEstimator", () => {
         const _expectedAvgPower = 296;
 
         // When
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
         expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
@@ -78,7 +78,7 @@ describe("RunningPowerEstimator", () => {
         const _expectedAvgPower = 214;
 
         // When
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
         expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
@@ -95,7 +95,7 @@ describe("RunningPowerEstimator", () => {
         const _expectedAvgPower = 215;
 
         // When
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
         expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
@@ -112,7 +112,7 @@ describe("RunningPowerEstimator", () => {
         const _expectedAvgPower = 285;
 
         // When
-        let power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+        const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
         // Then
         expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
         expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
@@ -125,12 +125,12 @@ describe("RunningPowerEstimator", () => {
         // Given
         const _expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
         const athleteWeight = 54.32;
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/874762067/stream"]; // Mikala run sample 1/2 NCNR Run Club
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/874762067/stream"]; // Mikala run sample 1/2 NCNR Run Club
 
         // When
-        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight,
+        const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight,
             stream.distance, stream.time, stream.altitude);
-        let estimatedAvgPower: number = _.mean(powerArray);
+        const estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
@@ -145,13 +145,13 @@ describe("RunningPowerEstimator", () => {
         // Given
         const _expectedPower = 287;
         const athleteWeight = 79.4;
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/852961332/stream"]; // Stryd 3/6 lap test .... brrr
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/852961332/stream"]; // Stryd 3/6 lap test .... brrr
 
         // When
-        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+        const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
             stream.time, stream.altitude);
 
-        let estimatedAvgPower: number = _.mean(powerArray);
+        const estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
@@ -168,13 +168,13 @@ describe("RunningPowerEstimator", () => {
         const athleteWeight = 79.4;
 
         // Two shooting ranges and a road dedicated to the inventor of Velcro
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/878683797/stream"];
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/878683797/stream"];
 
         // When
-        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+        const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
             stream.time, stream.altitude);
 
-        let estimatedAvgPower: number = _.mean(powerArray);
+        const estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
@@ -190,13 +190,13 @@ describe("RunningPowerEstimator", () => {
         const _expectedPower = 310;
         const athleteWeight = 79.4;
 
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/833008371/stream"]; // Morning Run
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/833008371/stream"]; // Morning Run
 
         // When
-        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+        const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
             stream.time, stream.altitude);
 
-        let estimatedAvgPower: number = _.mean(powerArray);
+        const estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
@@ -211,13 +211,13 @@ describe("RunningPowerEstimator", () => {
         const _expectedPower = 151;
         const athleteWeight = 54.32;
 
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/874762067/stream"];
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/874762067/stream"];
 
         // When
-        let powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
+        const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
             stream.time, stream.altitude);
 
-        let estimatedAvgPower: number = _.mean(powerArray);
+        const estimatedAvgPower: number = _.mean(powerArray);
 
         // Then
         expect(estimatedAvgPower).not.toBeNull();
@@ -237,15 +237,15 @@ describe("RunningPowerEstimator", () => {
         const hasPowerMeter = false;
         const bounds: number[] = null;
         const returnZones = true;
-		let userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"]; // Thomas C user settings
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/887284960/stream"];
-		let statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/887284960/statsMap"];
+		const userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"]; // Thomas C user settings
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/887284960/stream"];
+		const statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/887284960/statsMap"];
 
         // When
-        let activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
             isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 
-		let result: AnalysisDataModel = activityComputer.compute();
+		const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
         expect(result.powerData).not.toBeNull();

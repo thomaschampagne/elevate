@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ReportComponent } from './report.component';
+import { ReportComponent } from "./report.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
-describe('ReportComponent', () => {
+describe("ReportComponent", () => {
 	let component: ReportComponent;
 	let fixture: ComponentFixture<ReportComponent>;
 
@@ -23,7 +23,7 @@ describe('ReportComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

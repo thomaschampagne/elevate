@@ -16,7 +16,7 @@ export class Content {
 
     public static loader: Loader = new Loader();
 
-    public static startCoreEvent: string = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
+	public static startCoreEvent = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
 
     protected appResources: IAppResources;
 	protected userSettings: UserSettingsModel;
@@ -28,7 +28,7 @@ export class Content {
 
     public isExtensionRunnableInThisContext(): boolean {
 
-        let isRunnable: boolean = true;
+		let isRunnable = true;
 
         // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
         if (window.location.pathname.match(/^\/routes\/new/) ||

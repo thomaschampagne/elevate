@@ -5,7 +5,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (free)", () => {
 
-        let doe: IAthleteUpdate = AthleteUpdate.create(
+        const doe: IAthleteUpdate = AthleteUpdate.create(
             123,
 			"John Doe",
 			"5.0.0",
@@ -28,7 +28,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (premium)", () => {
 
-        let doe: IAthleteUpdate = AthleteUpdate.create(
+        const doe: IAthleteUpdate = AthleteUpdate.create(
             777,
 			"My Self",
 			"5.0.0",
@@ -50,7 +50,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (pro)", () => {
 
-        let froom: IAthleteUpdate = AthleteUpdate.create(
+        const froom: IAthleteUpdate = AthleteUpdate.create(
             999,
 			"Chris Froome",
 			"5.1.0",
@@ -68,7 +68,7 @@ describe("Generate Athlete Update", () => {
         expect(froom.locale).toEqual("United KingHome");
 
         // Another pro
-        let cavendish: IAthleteUpdate = AthleteUpdate.create(
+        const cavendish: IAthleteUpdate = AthleteUpdate.create(
             888,
 			"Cavendish",
 			"5.1.0",
@@ -84,7 +84,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should pass monkey tests", () => {
 
-        let monkey_01: IAthleteUpdate = AthleteUpdate.create(
+        const monkey_01: IAthleteUpdate = AthleteUpdate.create(
             888,
 			"",
 			"5.1.0",
@@ -96,7 +96,7 @@ describe("Generate Athlete Update", () => {
 
         //...
 
-        let monkey_02: IAthleteUpdate = AthleteUpdate.create(
+        const monkey_02: IAthleteUpdate = AthleteUpdate.create(
             888,
 			"Monkey",
 			"",
@@ -106,7 +106,7 @@ describe("Generate Athlete Update", () => {
         );
         expect(monkey_02).toBeNull();
         //...
-        let monkey_03: IAthleteUpdate = AthleteUpdate.create(
+        const monkey_03: IAthleteUpdate = AthleteUpdate.create(
             888,
             null,
             null,

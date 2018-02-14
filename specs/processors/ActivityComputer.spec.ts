@@ -11,19 +11,19 @@ describe("ActivityComputer", () => {
     // Cycling
     it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
 
-        const powerMeter: boolean = false;
+		const powerMeter = false;
 
-		let userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"];
-		let stream: StreamsModel = window.__fixtures__["fixtures/activities/723224273/stream"];
-		let statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/723224273/statsMap"];
+		const userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"];
+		const stream: StreamsModel = window.__fixtures__["fixtures/activities/723224273/stream"];
+		const statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         const isActivityAuthor = true;
-        let activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
             isActivityAuthor, powerMeter, statsMap, stream, null, true);
 
-		let result: AnalysisDataModel = activityComputer.compute();
+		const result: AnalysisDataModel = activityComputer.compute();
 
         expect(result).not.toBeNull();
         expect(result.speedData).not.toBeNull();

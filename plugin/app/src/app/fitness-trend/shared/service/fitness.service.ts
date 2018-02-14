@@ -38,7 +38,7 @@ export class FitnessService {
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
 				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
-				let hasMinimumFitnessRequiredData: boolean = false;
+				let hasMinimumFitnessRequiredData = false;
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
@@ -100,7 +100,7 @@ export class FitnessService {
 				});
 
 				if (!hasMinimumFitnessRequiredData) {
-					reject("No activities has minimum required data to generate a fitness trend")
+					reject("No activities has minimum required data to generate a fitness trend");
 				}
 
 				resolve(fitnessPreparedActivities);

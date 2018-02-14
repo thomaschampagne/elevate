@@ -50,7 +50,7 @@ export class ZoneToolBarComponent implements OnInit {
 			message => this.popSnack(message),
 			error => {
 				console.error(error);
-				this.popSnack(error)
+				this.popSnack(error);
 			}
 		);
 	}
@@ -60,7 +60,7 @@ export class ZoneToolBarComponent implements OnInit {
 			message => this.popSnack(message),
 			error => {
 				console.error(error);
-				this.popSnack(error)
+				this.popSnack(error);
 			}
 		);
 	}
@@ -84,7 +84,7 @@ export class ZoneToolBarComponent implements OnInit {
 						this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
 					}, error => {
 						console.error(error);
-						this.popSnack(error)
+						this.popSnack(error);
 					}
 				);
 			}
@@ -98,7 +98,7 @@ export class ZoneToolBarComponent implements OnInit {
 			() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
 			error => {
 				console.error(error);
-				this.popSnack(error)
+				this.popSnack(error);
 			}
 		);
 	}

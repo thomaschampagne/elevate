@@ -4,12 +4,12 @@ import { IStorageUsage } from "./modules/StorageManager";
 
 export class Helper {
 
-	public static KPH_TO_MPH_RATIO: number = 0.621371; // TODO Unify with other public static var having value... 0.6213
-    public static getFromStorageMethod: string = "getFromStorage";
-    public static setToStorageMethod: string = "setToStorage";
-    public static removeFromStorageMethod: string = "removeFromStorage";
-    public static reloadBrowserTabMethod: string = "reloadBrowserTab";
-    public static getStorageUsageMethod: string = "getStorageUsage";
+	public static KPH_TO_MPH_RATIO = 0.621371; // TODO Unify with other public static var having value... 0.6213
+	public static getFromStorageMethod = "getFromStorage";
+	public static setToStorageMethod = "setToStorage";
+	public static removeFromStorageMethod = "removeFromStorage";
+	public static reloadBrowserTabMethod = "reloadBrowserTab";
+	public static getStorageUsageMethod = "getStorageUsage";
 
 	public static getSpeedUnitData(): SpeedUnitDataModel {
         const measurementPreference: string = window.currentAthlete.get("measurement_preference");
@@ -63,8 +63,8 @@ export class Helper {
     public static weightedPercentiles(values: number[], weights: number[], percentiles: number[]): number[] {
         // inspired from https://en.wikipedia.org/wiki/Weighted_median and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
         const list: any[] = [];
-        let tot: number = 0;
-        for (let i: number = 0; i < values.length; i++) {
+		let tot = 0;
+		for (let i = 0; i < values.length; i++) {
             list.push({value: values[i], weight: weights[i]});
             tot += weights[i];
         }
@@ -72,13 +72,13 @@ export class Helper {
             return a.value - b.value;
         });
         const result: number[] = [];
-        for (let i: number = 0; i < percentiles.length; i++) {
+		for (let i = 0; i < percentiles.length; i++) {
             result.push(0);
         }
 
-        let cur: number = 0;
-        for (let i: number = 0; i < list.length; i++) {
-            for (let j: number = 0; j < percentiles.length; j++) {
+		let cur = 0;
+		for (let i = 0; i < list.length; i++) {
+			for (let j = 0; j < percentiles.length; j++) {
                 // found the sample matching the percentile
                 if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
                     result[j] = list[i].value;
@@ -114,7 +114,9 @@ export class Helper {
                 value,
             },
         }, (response: any) => {
-            if (callback) callback(response);
+			if (callback) {
+				callback(response);
+			}
             deferred.resolve(response);
         });
 
@@ -141,7 +143,9 @@ export class Helper {
                 key,
             },
         }, (response: any) => {
-            if (callback) callback(response);
+			if (callback) {
+				callback(response);
+			}
             deferred.resolve(response);
         });
 
@@ -160,7 +164,9 @@ export class Helper {
                 key,
             },
         }, (response: any) => {
-            if (callback) callback(response);
+			if (callback) {
+				callback(response);
+			}
             deferred.resolve(response);
         });
 
@@ -190,7 +196,9 @@ export class Helper {
                 storage: storageType,
             },
         }, (response: any) => {
-            if (callback) callback(response.data);
+			if (callback) {
+				callback(response.data);
+			}
             deferred.resolve(response.data);
         });
 
@@ -243,7 +251,9 @@ export class Helper {
             const parts = urlLocation.search.substring(1).split("&");
             for (let i = 0; i < parts.length; i++) {
                 const nv: string[] = parts[i].split("=");
-                if (!nv[0]) continue;
+				if (!nv[0]) {
+					continue;
+				}
                 params[nv[0]] = nv[1] || true;
             }
         }
@@ -295,8 +305,12 @@ export class Helper {
         }
 
         if (zeroExtend) {
-            while (v1parts.length < v2parts.length) v1parts.push("0");
-            while (v2parts.length < v1parts.length) v2parts.push("0");
+			while (v1parts.length < v2parts.length) {
+				v1parts.push("0");
+			}
+			while (v2parts.length < v1parts.length) {
+				v2parts.push("0");
+			}
         }
 
         if (!lexicographical) {
@@ -304,7 +318,7 @@ export class Helper {
             v2parts = v2parts.map(Number);
         }
 
-        for (let i: number = 0; i < v1parts.length; ++i) {
+		for (let i = 0; i < v1parts.length; ++i) {
             if (v2parts.length == i) {
                 return 1;
             }
