@@ -62,6 +62,8 @@ describe("UserSettingsDao", () => {
 			}
 		});
 
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+
 		// When
 		const promiseFetch: Promise<UserSettingsModel> = userSettingsDao.fetch();
 
@@ -127,6 +129,7 @@ describe("UserSettingsDao", () => {
 				callback(expectedSettings);
 			}
 		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
 		const promiseGet: Promise<Object> = userSettingsDao.get(key);
@@ -157,6 +160,7 @@ describe("UserSettingsDao", () => {
 				callback(expectedSettings);
 			}
 		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
 		const promiseGet: Promise<Object> = userSettingsDao.get(key);
@@ -228,6 +232,7 @@ describe("UserSettingsDao", () => {
 				callback(expectedSettings);
 			}
 		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
 		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keyMaxHr, maxHrValue);
@@ -268,6 +273,7 @@ describe("UserSettingsDao", () => {
 				callback(expectedSettings);
 			}
 		});
+
 
 		const chromeError: chrome.runtime.LastError = {
 			message: expectedErrorMessage
@@ -310,6 +316,7 @@ describe("UserSettingsDao", () => {
 				callback(expectedSettings);
 			}
 		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
 		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.updateNested(path, zones);

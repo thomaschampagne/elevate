@@ -31,6 +31,8 @@ describe("CommonSettingsComponent", () => {
 			}
 		});
 
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+
 	}));
 
 	beforeEach(() => {
