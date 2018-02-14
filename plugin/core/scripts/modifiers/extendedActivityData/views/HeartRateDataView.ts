@@ -137,9 +137,9 @@ export class HeartRateDataView extends AbstractDataView {
     protected insertDataIntoGrid(): void {
 
         // Insert some data inside grid
-        this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), "TRaining IMPulse", "", "displayAdvancedHrData");
-        this.insertContentAtGridPosition(1, 0, this.heartRateData.averageHeartRate.toFixed(0), "Average Heart Rate", "bpm", "displayAdvancedHrData"); // Usefull for running
-        this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.averageHeartRate, 0), "Average Heart Rate", "bpm", "displayAdvancedHrData"); // Usefull for running
+		this.insertContentAtGridPosition(2, 0, this.printNumber(this.heartRateData.activityHeartRateReserve, 0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
 
         // Quartiles
         this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
@@ -147,7 +147,7 @@ export class HeartRateDataView extends AbstractDataView {
         this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
 
         // Other
-        this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
     }
 
 }
