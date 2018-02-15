@@ -33,14 +33,14 @@
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printTrainingImpulseScore()}}</mat-cell>
 		</ng-container>
 
-		<ng-container *ngIf="cyclingFtp" matColumnDef="powerStressScore">
+		<ng-container *ngIf="cyclingFtp" matColumnDef="powerStressScore" matTooltip="Power Stress Score">
 			<mat-header-cell *matHeaderCellDef mat-sort-header>
 				<u>PSS</u>
 			</mat-header-cell>
 			<mat-cell *matCellDef="let dayFitnessTrend">{{dayFitnessTrend.printPowerStressScore()}}</mat-cell>
 		</ng-container>
 
-		<ng-container *ngIf="swimFtp" matColumnDef="swimStressScore">
+		<ng-container *ngIf="swimFtp" matColumnDef="swimStressScore" matTooltip="Swim Stress Score">
 			<mat-header-cell *matHeaderCellDef mat-sort-header>
 				<u>SwimSS</u>
 			</mat-header-cell>
