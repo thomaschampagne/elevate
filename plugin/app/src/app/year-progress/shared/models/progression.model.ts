@@ -2,7 +2,6 @@ import { ProgressType } from "./progress-type.enum";
 
 export class ProgressionModel {
 
-	public timestamp: number;
 	public year: number;
 	public dayOfYear: number;
 	public totalDistance: number; // meters
@@ -11,9 +10,8 @@ export class ProgressionModel {
 	public count: number;
 	public isFuture: boolean;
 
-	constructor(timestamp: number, year: number, dayOfYear: number, totalDistance: number, totalTime: number,
+	constructor(year: number, dayOfYear: number, totalDistance: number, totalTime: number,
 				totalElevation: number, count: number, isFuture?: boolean) {
-		this.timestamp = timestamp;
 		this.year = year;
 		this.dayOfYear = dayOfYear;
 		this.totalDistance = totalDistance;
