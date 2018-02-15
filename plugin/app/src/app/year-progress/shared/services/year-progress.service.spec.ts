@@ -156,8 +156,7 @@ describe("YearProgressService", () => {
 		const isMetric = true;
 		const includeCommuteRide = true;
 
-		const expectedFirstDay2015 = new ProgressionModel(1420066800000,
-			2015,
+		const expectedFirstDay2015 = new ProgressionModel(2015,
 			1,
 			10,
 			3600 / 3600, // = Hours
@@ -165,8 +164,7 @@ describe("YearProgressService", () => {
 			1
 		);
 
-		const expectedLastDay2015 = new ProgressionModel(1451516400000,
-			2015,
+		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
 			6205,
 			788400 / 3600, // = Hours
@@ -174,8 +172,7 @@ describe("YearProgressService", () => {
 			292
 		);
 
-		const expectedFirstDay2016 = new ProgressionModel(1451602800000,
-			2016,
+		const expectedFirstDay2016 = new ProgressionModel(2016,
 			1,
 			10,
 			3600 / 3600, // = Hours
@@ -183,8 +180,7 @@ describe("YearProgressService", () => {
 			1
 		);
 
-		const expectedLastDay2016 = new ProgressionModel(1483138800000,
-			2016,
+		const expectedLastDay2016 = new ProgressionModel(2016,
 			366,
 			6215,
 			792000 / 3600, // = Hours
@@ -192,8 +188,7 @@ describe("YearProgressService", () => {
 			293
 		);
 
-		const expectedFirstDay2017 = new ProgressionModel(1483225200000,
-			2017,
+		const expectedFirstDay2017 = new ProgressionModel(2017,
 			1,
 			10,
 			3600 / 3600, // = Hours
@@ -201,8 +196,7 @@ describe("YearProgressService", () => {
 			1
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1514674800000,
-			2017,
+		const expectedLastDay2017 = new ProgressionModel(2017,
 			365,
 			2580,
 			329400 / 3600, // = Hours
@@ -247,8 +241,7 @@ describe("YearProgressService", () => {
 		const isMetric = true;
 		const includeCommuteRide = false;
 
-		const expectedLastDay2015 = new ProgressionModel(1451516400000,
-			2015,
+		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
 			5110,
 			657000 / 3600, // = Hours
@@ -256,16 +249,14 @@ describe("YearProgressService", () => {
 			219
 		);
 
-		const expectedLastDay2016 = new ProgressionModel(1483138800000,
-			2016,
+		const expectedLastDay2016 = new ProgressionModel(2016,
 			366,
 			5120,
 			660600 / 3600, // = Hours
 			69400,
 			220
 		);
-		const expectedLastDay2017 = new ProgressionModel(1514674800000,
-			2017,
+		const expectedLastDay2017 = new ProgressionModel(2017,
 			365,
 			2130,
 			275400 / 3600, // = Hours
@@ -304,8 +295,7 @@ describe("YearProgressService", () => {
 		const isMetric = false;
 		const includeCommuteRide = true;
 
-		const expectedLastDay2015 = new ProgressionModel(1451516400000,
-			2015,
+		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
 			3856, // Miles
 			788400 / 3600, // = Hours
@@ -313,8 +303,7 @@ describe("YearProgressService", () => {
 			292
 		);
 
-		const expectedLastDay2016 = new ProgressionModel(1483138800000,
-			2016,
+		const expectedLastDay2016 = new ProgressionModel(2016,
 			366,
 			3862, // Miles
 			792000 / 3600, // = Hours
@@ -322,8 +311,7 @@ describe("YearProgressService", () => {
 			293
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1514674800000,
-			2017,
+		const expectedLastDay2017 = new ProgressionModel(2017,
 			365,
 			1603, // Miles
 			329400 / 3600, // = Hours
@@ -362,8 +350,7 @@ describe("YearProgressService", () => {
 		const isMetric = true;
 		const includeCommuteRide = false;
 
-		const expectedLastDay2015 = new ProgressionModel(1451516400000,
-			2015,
+		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
 			5110,
 			657000 / 3600, // = Hours
@@ -371,8 +358,7 @@ describe("YearProgressService", () => {
 			219
 		);
 
-		const expectedLastDay2017 = new ProgressionModel(1514674800000,
-			2017,
+		const expectedLastDay2017 = new ProgressionModel(2017,
 			365,
 			2130,
 			275400 / 3600, // = Hours

@@ -103,7 +103,6 @@ export class YearProgressService {
 
 				// Start totals from 0
 				progression = new ProgressionModel(
-					currentDayMoment.toDate().getTime(),
 					currentDayMoment.year(),
 					currentDayMoment.dayOfYear(),
 					0,
@@ -118,7 +117,6 @@ export class YearProgressService {
 
 				// Year exists
 				progression = new ProgressionModel(
-					currentDayMoment.toDate().getTime(),
 					currentDayMoment.year(),
 					currentDayMoment.dayOfYear(),
 					lastProgression.totalDistance,
