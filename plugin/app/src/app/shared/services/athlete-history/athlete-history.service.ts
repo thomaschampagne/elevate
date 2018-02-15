@@ -292,7 +292,7 @@ export class AthleteHistoryService {
 		}).then((isSame: boolean) => {
 			this.localRemoteAthleteProfileSame.next(isSame);
 		}).catch(error => {
-			console.error(error);
+			console.warn(error);
 		});
 	}
 

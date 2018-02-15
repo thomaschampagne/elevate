@@ -9,7 +9,6 @@ import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 import { YearProgressComponent } from "../../year-progress/year-progress.component";
-import { YearProgressResolverService } from "../../year-progress/shared/services/year-progress-resolver.service";
 import { ShareComponent } from "../../share/share.component";
 import { WelcomeComponent } from "../../welcome/welcome.component";
 import { ReportComponent } from "../../report/report.component";
@@ -25,10 +24,7 @@ export const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.yearProgressions,
-		component: YearProgressComponent,
-		resolve: {
-			requiredYearProgressDataModel: YearProgressResolverService
-		}
+		component: YearProgressComponent
 	},
 	{
 		path: AppRoutesModel.commonSettings,
