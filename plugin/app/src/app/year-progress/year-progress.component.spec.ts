@@ -4,37 +4,61 @@ import { YearProgressComponent } from "./year-progress.component";
 import { SharedModule } from "../shared/shared.module";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { CoreModule } from "../core/core.module";
-import { ActivatedRoute } from "@angular/router";
-import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
-import { Observable } from "rxjs/Observable";
-import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
+import { ActivityDao } from "../shared/dao/activity/activity.dao";
+import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { AthleteProfileModel } from "../../../../common/scripts/models/AthleteProfile";
+import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
+import { userSettings } from "../../../../common/scripts/UserSettings";
+import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 
 describe("YearProgressComponent", () => {
 
 	let component: YearProgressComponent;
 	let fixture: ComponentFixture<YearProgressComponent>;
-	let requiredYearProgressDataModel: RequiredYearProgressDataModel;
+
+	let athleteHistoryService: AthleteHistoryService;
+	let userSettingsService: UserSettingsService;
+	let activityDao: ActivityDao;
+	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
 	beforeEach(async(() => {
-
-		requiredYearProgressDataModel = new RequiredYearProgressDataModel(true, YearProgressActivitiesFixture.provide());
 
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
 			],
-			providers: [
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						data: Observable.of({requiredYearProgressDataModel: requiredYearProgressDataModel})
-					}
-				}
-			]
+			providers: []
 		}).compileComponents();
+
+		TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
+		athleteHistoryService = TestBed.get(AthleteHistoryService);
+		userSettingsService = TestBed.get(UserSettingsService);
+		activityDao = TestBed.get(ActivityDao);
+
+		// Mocking athlete history
+		const gender = "men";
+		const maxHr = 200;
+		const restHr = 50;
+		const cyclingFtp = 150;
+		const weight = 75;
+		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
+			gender,
+			maxHr,
+			restHr,
+			cyclingFtp,
+			weight);
+
+		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(athleteProfileModel));
+		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
+		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
 	}));
 
 	beforeEach(() => {

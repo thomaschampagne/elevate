@@ -7,11 +7,15 @@ import { YearProgressTypeModel } from "./shared/models/year-progress-type.model"
 import { ProgressType } from "./shared/models/progress-type.enum";
 import { ActivatedRoute } from "@angular/router";
 import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
-import { RequiredYearProgressDataModel } from "./shared/models/required-year-progress-data.model";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
+import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { ActivityService } from "../shared/services/activity/activity.service";
 
 @Component({
 	selector: "app-year-progress",
@@ -52,6 +56,9 @@ export class YearProgressComponent implements OnInit {
 	public isProgressionInitialized = false;
 
 	constructor(public route: ActivatedRoute,
+				public userSettingsService: UserSettingsService,
+				public athleteHistoryService: AthleteHistoryService,
+				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
 				public dialog: MatDialog) {
 	}
@@ -61,26 +68,50 @@ export class YearProgressComponent implements OnInit {
 	 */
 	public ngOnInit(): void {
 
-		this.route.data.subscribe((data: { requiredYearProgressDataModel: RequiredYearProgressDataModel }) => {
+		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 
-			this.hasActivityModels = (!_.isEmpty(data.requiredYearProgressDataModel)
-				&& !_.isEmpty(data.requiredYearProgressDataModel.syncedActivityModels));
-
-			if (this.hasActivityModels) {
-				this.setup(
-					data.requiredYearProgressDataModel.isMetric,
-					data.requiredYearProgressDataModel.syncedActivityModels
-				);
+			if (athleteHistoryState !== AthleteHistoryState.SYNCED) {
+				console.warn("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString());
+				this.hasActivityModels = false;
+				return;
 			}
+
+			Promise.all([
+
+				this.userSettingsService.fetch(),
+				this.activityService.fetch()
+
+			]).then((results: Object[]) => {
+
+				const userSettingsModel = _.first(results) as UserSettingsModel;
+				const syncedActivityModels = _.last(results) as SyncedActivityModel[];
+				const isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+
+				this.hasActivityModels = !_.isEmpty(syncedActivityModels);
+
+				if (this.hasActivityModels) {
+					this.setup(
+						isMetric,
+						syncedActivityModels
+					);
+				}
+
+				// Use default moment provided by service on init (should be today on first load)
+				this.momentWatched = this.yearProgressService.momentWatched;
+
+				// When user mouse moves on graph, listen for moment watched and update title
+				this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+					this.momentWatched = momentWatched;
+				});
+
+
+			}, error => {
+				console.error(error);
+			});
+
+
 		});
 
-		// Use default moment provided by service on init (should be today on first load)
-		this.momentWatched = this.yearProgressService.momentWatched;
-
-		// When user mouse moves on graph, listen for moment watched and update title
-		this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
-			this.momentWatched = momentWatched;
-		});
 	}
 
 	/**
