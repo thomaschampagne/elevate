@@ -7,11 +7,10 @@ script:
   - npm test
   - npm run package
 before_deploy:
-  # update bintray config before package upload to set version name (current branch) and description (currrent commit id)
   - node -e "const fs = require('fs');const bintray = require('./bintray.json');bintray.version.name = \"$TRAVIS_BRANCH\";bintray.version.desc = \"$TRAVIS_COMMIT\";fs.writeFileSync('./bintray.json', JSON.stringify(bintray), 'utf8');"
 deploy:
   provider: bintray
-  file: "./bintray.json"
+  file: "bintray.json"
   user: $BINTRAY_USERNAME
   key: $BINTRAY_API_KEY
   on:
