@@ -13,12 +13,11 @@
 		</mat-form-field>
 	</div>
 	<mat-table #table [dataSource]="dataSource" matSort>
-
-		<ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
-			<mat-header-cell *cdkHeaderCellDef mat-sort-header matTooltip="{{column.toolTip}}">
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+			<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.toolTip}}">
 				{{column.header}}
 			</mat-header-cell>
-			<mat-cell *cdkCellDef="let dayFitnessTrend">
+			<mat-cell *matCellDef="let dayFitnessTrend">
 				<ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
 					{{column.printText(dayFitnessTrend)}}
 				</ng-container>
