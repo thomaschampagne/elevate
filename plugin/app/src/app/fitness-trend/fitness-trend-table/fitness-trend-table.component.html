@@ -18,7 +18,17 @@
 			<mat-header-cell *cdkHeaderCellDef mat-sort-header matTooltip="{{column.toolTip}}">
 				{{column.header}}
 			</mat-header-cell>
-			<mat-cell *cdkCellDef="let row">{{column.printCellContent(row)}}</mat-cell>
+			<mat-cell *cdkCellDef="let dayFitnessTrend">
+				<ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
+					{{column.printText(dayFitnessTrend)}}
+				</ng-container>
+				<ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
+					<button *ngIf="dayFitnessTrend.ids.length" mat-icon-button color="primary"
+							(click)="onOpenActivities(dayFitnessTrend.ids)">
+						<mat-icon>link</mat-icon>
+					</button>
+				</ng-container>
+			</mat-cell>
 		</ng-container>
 
 		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import * as moment from "moment";
 import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
+import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -29,67 +30,85 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly COLUMN_CTL: string = "ctl";
 	public static readonly COLUMN_ATL: string = "atl";
 	public static readonly COLUMN_TSB: string = "tsb";
-	public static readonly COLUMN_TRAINING_ZONE: string = "Zone";
+	public static readonly COLUMN_TRAINING_ZONE: string = "zone";
+	public static readonly COLUMN_STRAVA_LINK: string = "link";
 
+	public FitnessTrendColumnType = FitnessTrendColumnType;
 	public displayedColumns: string [];
 	public columns: FitnessTrendColumnModel[] = [
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_DATE,
 			header: "Date",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${moment(dayFitnessTrend.date).format("ddd, MMM DD, YYYY")}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${moment(dayFitnessTrend.date).format("ddd, MMM DD, YYYY")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TYPES,
 			header: "Types",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTypes("-")}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTypes("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_ACTIVITIES,
 			header: "Activities",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
 			header: "TRIMP",
 			toolTip: "Training Impulse",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
 			header: "PSS",
 			toolTip: "Power Stress Score",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
 			header: "SwimSS",
 			toolTip: "Swim Stress Score",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
 			header: "Final Stress",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_CTL,
 			header: "Fitness",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFitness()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFitness()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_ATL,
 			header: "Fatigue",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TSB,
 			header: "Form",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printForm()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printForm()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_ZONE,
 			header: "Training Zone",
-			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_STRAVA_LINK,
+			header: "Link",
+			type: FitnessTrendColumnType.STRAVA_LINK
 		}
 	];
 
