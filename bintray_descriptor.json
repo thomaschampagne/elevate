@@ -23,7 +23,7 @@
 	},
 	"files": [
 		{
-			"includePattern": "package/*.zip"
+			"includePattern": "package/.*.zip"
 		}
 	],
 	"publish": true
