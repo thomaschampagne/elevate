@@ -77,8 +77,9 @@ describe("YearProgressGraphComponent", () => {
 
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
 	it("should give proper restricted colors from a year selection", () => {
