@@ -6,7 +6,7 @@
 		"desc": "Travis CI build",
 		"website_url": "http://thomaschampagne.github.io/stravistix/",
 		"issue_tracker_url": "https://github.com/thomaschampagne/stravistix/issues",
-		"vcs_url": "https://github.com/bintray/bintray-client-java.git",
+		"vcs_url": "https://github.com/thomaschampagne/stravistix.git",
 		"licenses": [
 			"MIT"
 		],
@@ -19,7 +19,8 @@
 		"public_stats": true
 	},
 	"version": {
-		"name": "develop"
+		"name": "REPLACED_BY_TRAVIS_DEPLOY",
+		"desc": "REPLACED_BY_TRAVIS_DEPLOY"
 	},
 	"files": [
 		{
