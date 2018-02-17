@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/thomaschampagne/stravistix/develop.svg?label=unitTests@develop)](https://travis-ci.org/thomaschampagne/stravistix/branches)  [![AppVeyor branch](https://img.shields.io/appveyor/ci/thomaschampagne/stravistix/develop.svg?label=zip@develop)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts)
+[![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
@@ -10,7 +10,7 @@ Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.gith
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
 ## From continuous integration
-Using latest **develop** build: https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts
+Using latest **develop** branch builds: https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files
 
 Install steps with a standalone build: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
 
