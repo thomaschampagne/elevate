@@ -15,7 +15,7 @@ import { ProgressType } from "../models/progress-type.enum";
 describe("YearProgressService", () => {
 
 	let yearProgressService: YearProgressService;
-	let syncedActivityModels: SyncedActivityModel[];
+	let TEST_SYNCED_MODELS: SyncedActivityModel[];
 
 	beforeEach((done: Function) => {
 
@@ -25,7 +25,7 @@ describe("YearProgressService", () => {
 
 		yearProgressService = TestBed.get(YearProgressService);
 
-		syncedActivityModels = YearProgressActivitiesFixture.provide();
+		TEST_SYNCED_MODELS = YearProgressActivitiesFixture.provide();
 
 		spyOn(yearProgressService, "getTodayMoment").and.returnValue(moment("2018-03-01 12:00", "YYYY-MM-DD hh:mm"));
 
@@ -48,7 +48,7 @@ describe("YearProgressService", () => {
 		const includeCommuteRide = true;
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -82,7 +82,7 @@ describe("YearProgressService", () => {
 		const includeCommuteRide = true;
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -120,11 +120,11 @@ describe("YearProgressService", () => {
 		fakeWalkActivity.elapsed_time_raw = 3600;
 		fakeWalkActivity.elevation_gain_raw = 0;
 
-		syncedActivityModels.push(fakeWalkActivity);
+		TEST_SYNCED_MODELS.push(fakeWalkActivity);
 
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -205,7 +205,7 @@ describe("YearProgressService", () => {
 		);
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -265,7 +265,7 @@ describe("YearProgressService", () => {
 		);
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -320,7 +320,7 @@ describe("YearProgressService", () => {
 		);
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -367,7 +367,7 @@ describe("YearProgressService", () => {
 		);
 
 		// When
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -416,7 +416,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
-		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
+		const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -436,7 +436,7 @@ describe("YearProgressService", () => {
 		const isMetric = true;
 		const includeCommuteRide = true;
 		const yearsFilter: number[] = []; // All
-		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
+		const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -459,7 +459,7 @@ describe("YearProgressService", () => {
 		];
 
 		// When
-		const result: ActivityCountByTypeModel[] = yearProgressService.activitiesByTypes(syncedActivityModels);
+		const result: ActivityCountByTypeModel[] = yearProgressService.activitiesByTypes(TEST_SYNCED_MODELS);
 
 		// Then
 		expect(result).not.toBeNull();
@@ -480,7 +480,7 @@ describe("YearProgressService", () => {
 		const expectedResult: number[] = [2018, 2017, 2016, 2015];
 
 		// When
-		const result: number[] = yearProgressService.availableYears(syncedActivityModels);
+		const result: number[] = yearProgressService.availableYears(TEST_SYNCED_MODELS);
 
 		// Then
 		expect(result).not.toBeNull();
@@ -498,7 +498,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
-		const progression: YearProgressModel[] = yearProgressService.progression(syncedActivityModels,
+		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
@@ -527,23 +527,23 @@ describe("YearProgressService", () => {
 
 		expect(progressionAtDayModels[3].year).toEqual(2015);
 		expect(progressionAtDayModels[3].date.getFullYear()).toEqual(2015);
-		expect(progressionAtDayModels[3].date).toEqual(new Date(1433109600000));
+		expect(moment(progressionAtDayModels[3].date).dayOfYear()).toEqual(152);
 		expect(progressionAtDayModels[3].value).toEqual(2580);
 		expect(progressionAtDayModels[3].color).toEqual("red");
 
 		expect(progressionAtDayModels[2].year).toEqual(2016);
 		expect(progressionAtDayModels[2].date.getFullYear()).toEqual(2016);
-		expect(progressionAtDayModels[2].date).toEqual(new Date(1464732000000));
+		expect(moment(progressionAtDayModels[2].date).dayOfYear()).toEqual(153);
 		expect(progressionAtDayModels[2].value).toEqual(2595);
 
 		expect(progressionAtDayModels[1].year).toEqual(2017);
 		expect(progressionAtDayModels[1].date.getFullYear()).toEqual(2017);
-		expect(progressionAtDayModels[1].date).toEqual(new Date(1496268000000));
+		expect(moment(progressionAtDayModels[1].date).dayOfYear()).toEqual(152);
 		expect(progressionAtDayModels[1].value).toEqual(2580);
 
 		expect(progressionAtDayModels[0].year).toEqual(2018);
 		expect(progressionAtDayModels[0].date.getFullYear()).toEqual(2018);
-		expect(progressionAtDayModels[0].date).toEqual(new Date(1527804000000));
+		expect(moment(progressionAtDayModels[0].date).dayOfYear()).toEqual(152);
 		expect(progressionAtDayModels[0].value).toEqual(0);
 		expect(progressionAtDayModels[0].color).toEqual("purple");
 
