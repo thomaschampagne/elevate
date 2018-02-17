@@ -62,11 +62,12 @@ describe("ZoneToolBarComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should call zone service on AddLastZone", () => {
+	it("should call zone service on AddLastZone", (done: Function) => {
 
 		// Given
 		const spy = spyOn(component.zonesService, "addLastZone").and.returnValue(Promise.resolve(null));
@@ -77,9 +78,10 @@ describe("ZoneToolBarComponent", () => {
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(1);
+		done();
 	});
 
-	it("should call zone service on RemoveLastZone", () => {
+	it("should call zone service on RemoveLastZone", (done: Function) => {
 
 		// Given
 		const spy = spyOn(component.zonesService, "removeLastZone").and.returnValue(Promise.resolve(null));
@@ -90,9 +92,10 @@ describe("ZoneToolBarComponent", () => {
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(1);
+		done();
 	});
 
-	it("should call zone service on SaveZones", () => {
+	it("should call zone service on SaveZones", (done: Function) => {
 
 		// Given
 		const spy = spyOn(component.zonesService, "saveZones").and.returnValue(Promise.resolve(null));
@@ -103,6 +106,7 @@ describe("ZoneToolBarComponent", () => {
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(1);
+		done();
 	});
 
 });
