@@ -7,14 +7,21 @@ script:
   - npm test
   - npm run package
 before_deploy:
-  - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/_$TRAVIS_COMMIT.zip/`"; done # Append commit to package file
+  - APP_COMMIT_SHA01=$(echo $TRAVIS_COMMIT | cut -c1-8)
+  - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/_$APP_COMMIT_SHA01.zip/`"; done # Append commit to package file
 deploy:
-  provider: bintray
-  file: ".deploy/bintray.json"
-  user: $BINTRAY_USERNAME
-  key: $BINTRAY_API_KEY
-  on:
-    branch: develop
+  - provider: bintray
+    file: ".deploy/master.develop.json"
+    user: $BINTRAY_USERNAME
+    key: $BINTRAY_API_KEY
+    on:
+      branch: master
+  - provider: bintray
+    file: ".deploy/bintray.develop.json"
+    user: $BINTRAY_USERNAME
+    key: $BINTRAY_API_KEY
+    on:
+	  branch: develop
 branches:
   only:
   - master
