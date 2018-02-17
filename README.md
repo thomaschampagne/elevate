@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
-
+[ ![Download](https://api.bintray.com/packages/thomaschampagne/stravistix/travis-ci-builds/images/download.svg?version=develop) ](https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
 # Install StravistiX
