@@ -7,14 +7,14 @@ script:
   - npm test
   - npm run package
 before_deploy:
-  - node -e "const fs = require('fs');const bintray = require('./bintray.json');bintray.version.name = \"$TRAVIS_BRANCH\";bintray.version.desc = \"$TRAVIS_COMMIT\";fs.writeFileSync('./bintray.json', JSON.stringify(bintray), 'utf8');"
+  - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/_$TRAVIS_COMMIT.zip/`"; done # Append commit to package file
 deploy:
   provider: bintray
-  file: "bintray.json"
+  file: ".deploy/bintray.json"
   user: $BINTRAY_USERNAME
   key: $BINTRAY_API_KEY
   on:
- 	condition: $TRAVIS_BRANCH == "master" || $TRAVIS_BRANCH == "develop"
+    branch: develop
 branches:
   only:
   - master
