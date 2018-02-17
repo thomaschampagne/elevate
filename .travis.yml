@@ -11,11 +11,17 @@ before_deploy:
   - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/_$APP_COMMIT_SHA01.zip/`"; done # Append commit to package file
 deploy:
   - provider: bintray
+    file: ".deploy/master.develop.json"
+    user: $BINTRAY_USERNAME
+    key: $BINTRAY_API_KEY
+    on:
+      branch: master
+  - provider: bintray
     file: ".deploy/bintray.develop.json"
     user: $BINTRAY_USERNAME
     key: $BINTRAY_API_KEY
     on:
-	  branch: develop
+      branch: develop
 branches:
   only:
   - master
