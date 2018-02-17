@@ -7,7 +7,7 @@
 			<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
 				   placeholder="Filter by type or activities name">
 			<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
-					(click)="searchText=''">
+					(click)="searchText=''; applyFilter(searchText);">
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
