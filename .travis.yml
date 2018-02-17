@@ -1,10 +1,21 @@
 language: node_js
+
 node_js:
   - "8"
+
 install:
   - npm install
+
 script:
   - npm test
+  - npm run package
+
+deploy:
+  provider: bintray
+  file: "bintray_descriptor.json"
+  user: $BINTRAY_USERNAME
+  key: $BINTRAY_API_KEY
+
 branches:
   only:
   - develop
