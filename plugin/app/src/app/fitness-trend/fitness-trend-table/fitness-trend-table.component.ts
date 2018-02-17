@@ -6,6 +6,8 @@ import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
 import { FitnessTrendComponent } from "../fitness-trend.component";
+import * as moment from "moment";
+import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -27,23 +29,69 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly COLUMN_CTL: string = "ctl";
 	public static readonly COLUMN_ATL: string = "atl";
 	public static readonly COLUMN_TSB: string = "tsb";
-	public static readonly COLUMN_LINKS: string = "links";
+	public static readonly COLUMN_TRAINING_ZONE: string = "Zone";
 
-	public static readonly availableColumns: string[] = [
-		FitnessTrendTableComponent.COLUMN_DATE,
-		FitnessTrendTableComponent.COLUMN_TYPES,
-		FitnessTrendTableComponent.COLUMN_ACTIVITIES,
-		FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
-		FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
-		FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
-		FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
-		FitnessTrendTableComponent.COLUMN_CTL,
-		FitnessTrendTableComponent.COLUMN_ATL,
-		FitnessTrendTableComponent.COLUMN_TSB,
-		FitnessTrendTableComponent.COLUMN_LINKS
+	public displayedColumns: string [];
+	public columns: FitnessTrendColumnModel[] = [
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_DATE,
+			header: "Date",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${moment(dayFitnessTrend.date).format("ddd, MMM DD, YYYY")}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_TYPES,
+			header: "Types",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTypes("-")}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_ACTIVITIES,
+			header: "Activities",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
+			header: "TRIMP",
+			toolTip: "Training Impulse",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
+			header: "PSS",
+			toolTip: "Power Stress Score",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
+			header: "SwimSS",
+			toolTip: "Swim Stress Score",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
+			header: "Final Stress",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_CTL,
+			header: "Fitness",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFitness()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_ATL,
+			header: "Fatigue",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_TSB,
+			header: "Form",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printForm()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_ZONE,
+			header: "Training Zone",
+			printCellContent: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`
+		}
 	];
-
-	public displayedColumns: string[];
 
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
@@ -61,6 +109,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	}
 
 	public ngOnInit(): void {
+
 		this.setup();
 		this.start();
 	}
@@ -76,14 +125,16 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 			this.swimFtp = _.isNumber(userSettings.userSwimFTP) ? userSettings.userSwimFTP : null;
 
 			// Hide POWER_STRESS_SCORE and/or SWIM_STRESS_SCORE columns if respective athlete settings are not activated
-			this.displayedColumns = _.filter(FitnessTrendTableComponent.availableColumns, (columnName: string) => {
+			this.columns = _.filter(this.columns, (column: FitnessTrendColumnModel) => {
 
-				if (!this.cyclingFtp && columnName === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE
-					|| !this.swimFtp && columnName === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE) {
+				if ((!this.cyclingFtp && column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE)
+					|| (!this.swimFtp && column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE)) {
 					return false;
 				}
 				return true;
 			});
+
+			this.displayedColumns = this.columns.map(column => column.columnDef);
 
 			return this.fitnessService.computeTrend(
 				FitnessTrendTableComponent.CYCLING_POWER_STRESS_SCORE_ENABLED,
