@@ -1,0 +1,11 @@
+@import "./constant";
+
+html, body, mat-sidenav-container {
+	margin: 0;
+	width: auto;
+	height: 100%;
+}
+
+mat-card {
+	margin: $default-margin;
+}

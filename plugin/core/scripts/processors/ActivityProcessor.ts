@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { IActivityStatsMap, IActivityStream, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { ActivityStatsMapModel, AnalysisDataModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { env } from "../../config/env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
@@ -18,9 +18,9 @@ export class ActivityProcessor {
     protected isActivityAuthor: boolean;
     protected computeAnalysisWorkerBlobURL: string;
     protected computeAnalysisThread: Worker;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings, isActivityAuthor: boolean) {
+	constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: UserSettingsModel, isActivityAuthor: boolean) {
         this.appResources = appResources;
         this.vacuumProcessor = vacuumProcessor;
         this.userSettings = userSettings;
@@ -42,7 +42,7 @@ export class ActivityProcessor {
         }
     }
 
-    public getAnalysisData(activityId: number, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
+	public getAnalysisData(activityId: number, bounds: number[], callback: (analysisData: AnalysisDataModel) => void): void {
 
         if (!this.activityType) {
             console.error("No activity type set for ActivityProcessor");
@@ -56,7 +56,7 @@ export class ActivityProcessor {
 
         if (useCache) {
             // Find in cache first is data exist
-            const cacheResult: IAnalysisData = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as IAnalysisData;
+			const cacheResult: AnalysisDataModel = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as AnalysisDataModel;
 
             if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
                 console.log("Using existing activity cache mode");
@@ -66,10 +66,10 @@ export class ActivityProcessor {
         }
 
         // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-        this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
+		this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
 
             // Compute data in a background thread to avoid UI locking
-            this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: IAnalysisData) => {
+			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
 
                 callback(resultFromThread);
 
@@ -90,8 +90,8 @@ export class ActivityProcessor {
     }
 
     protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
-                                                    activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[],
-                                                    callback: (analysisData: IAnalysisData) => void): void {
+													activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel, bounds: number[],
+													callback: (analysisData: AnalysisDataModel) => void): void {
 
         // Create worker blob URL if not exist
         if (!this.computeAnalysisWorkerBlobURL) {

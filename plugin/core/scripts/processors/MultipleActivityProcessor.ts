@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { IActivityStatsMap, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
-import { ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify } from "../../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { ActivityStatsMapModel, AnalysisDataModel } from "../../../common/scripts/models/ActivityData";
+import { StreamActivityModel, SyncedActivityModel, SyncNotifyModel } from "../../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
@@ -10,9 +10,9 @@ import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
 export class MultipleActivityProcessor {
 
     protected appResources: IAppResources;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(appResources: IAppResources, userSettings: IUserSettings) {
+	constructor(appResources: IAppResources, userSettings: UserSettingsModel) {
         this.appResources = appResources;
         this.userSettings = userSettings;
     }
@@ -22,23 +22,23 @@ export class MultipleActivityProcessor {
     /**
      * @return Activities array with computed stats
      */
-    public compute(activitiesWithStream: ISyncActivityWithStream[]): Q.IPromise<ISyncActivityComputed[]> {
+	public compute(activitiesWithStream: StreamActivityModel[]): Q.IPromise<SyncedActivityModel[]> {
 
-        const deferred = Q.defer<ISyncActivityComputed[]>();
+		const deferred = Q.defer<SyncedActivityModel[]>();
 
         let computedActivitiesPercentageCount: number = 0;
 
-        let activitiesComputedResults: IAnalysisData[] = [];
+		let activitiesComputedResults: AnalysisDataModel[] = [];
 
-        const queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: ISyncActivityWithStream, index: number) => {
+		const queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: StreamActivityModel, index: number) => {
 
             return promise.then(() => {
 
-                return this.computeActivity(activityWithStream).then((activityComputed: IAnalysisData) => {
+				return this.computeActivity(activityWithStream).then((activityComputed: AnalysisDataModel) => {
 
                     activitiesComputedResults.push(activityComputed);
 
-                    const notify: ISyncNotify = {
+					const notify: SyncNotifyModel = {
                         step: "computedActivitiesPercentage",
                         progress: computedActivitiesPercentageCount / activitiesWithStream.length * 100,
                         index,
@@ -65,23 +65,23 @@ export class MultipleActivityProcessor {
 
             } else {
 
-                let activitiesComputed: ISyncActivityComputed[] = [];
+				let activitiesComputed: SyncedActivityModel[] = [];
 
-                _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
+				_.forEach(activitiesComputedResults, (computedResult: AnalysisDataModel, index: number) => {
 
-                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as ISyncActivityComputed;
+					const activityComputed: SyncedActivityModel = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as SyncedActivityModel;
                     activityComputed.extendedStats = computedResult;
                     activitiesComputed.push(activityComputed);
 
                 });
 
                 // Sort computedActivities by start date ascending before resolve
-                activitiesComputed = _.sortBy(activitiesComputed, (item: ISyncActivityComputed) => {
+				activitiesComputed = _.sortBy(activitiesComputed, (item: SyncedActivityModel) => {
                     return (new Date(item.start_time)).getTime();
                 });
 
                 // Finishing... force progress @ 100% for compute progress callback
-                const notify: ISyncNotify = {
+				const notify: SyncNotifyModel = {
                     step: "computedActivitiesPercentage",
                     progress: 100,
                 };
@@ -104,9 +104,9 @@ export class MultipleActivityProcessor {
         return deferred.promise;
     }
 
-    protected createActivityStatMap(activityWithStream: ISyncActivityWithStream): IActivityStatsMap {
+	protected createActivityStatMap(activityWithStream: StreamActivityModel): ActivityStatsMapModel {
 
-        const statsMap: IActivityStatsMap = {
+		const statsMap: ActivityStatsMapModel = {
             distance: parseInt(activityWithStream.distance),
             elevation: parseInt(activityWithStream.elevation_gain),
             avgPower: null, // Toughness Score will not be computed
@@ -116,9 +116,9 @@ export class MultipleActivityProcessor {
         return statsMap;
     }
 
-    protected computeActivity(activityWithStream: ISyncActivityWithStream): Q.IPromise<IAnalysisData> {
+	protected computeActivity(activityWithStream: StreamActivityModel): Q.IPromise<AnalysisDataModel> {
 
-        const deferred = Q.defer<IAnalysisData>();
+		const deferred = Q.defer<AnalysisDataModel>();
 
         // Lets create that worker/thread!
         const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
@@ -126,7 +126,7 @@ export class MultipleActivityProcessor {
         })));
 
         // Create activity stats map from given activity
-        const activityStatsMap: IActivityStatsMap = this.createActivityStatMap(activityWithStream);
+		const activityStatsMap: ActivityStatsMapModel = this.createActivityStatMap(activityWithStream);
 
         const threadMessage: IComputeActivityThreadMessage = {
             activityType: activityWithStream.type,

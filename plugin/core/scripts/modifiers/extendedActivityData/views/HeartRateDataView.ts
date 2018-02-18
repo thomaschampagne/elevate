@@ -1,17 +1,17 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IHeartRateData } from "../../../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../../../common/scripts/interfaces/IUserSettings";
+import { HeartRateDataModel } from "../../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 import { StravistiX } from "../../../StravistiX";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class HeartRateDataView extends AbstractDataView {
 
-    protected heartRateData: IHeartRateData;
+	protected heartRateData: HeartRateDataModel;
 
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(heartRateData: IHeartRateData, units: string, userSettings: IUserSettings) {
+	constructor(heartRateData: HeartRateDataModel, units: string, userSettings: UserSettingsModel) {
         super(units);
         this.mainColor = [255, 43, 66];
         this.heartRateData = heartRateData;
@@ -116,7 +116,7 @@ export class HeartRateDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.heartBeatIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> HEART RATE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/heartRate\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.heartBeatIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> HEART RATE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/heartRate\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 3); // (col, row)
@@ -137,9 +137,9 @@ export class HeartRateDataView extends AbstractDataView {
     protected insertDataIntoGrid(): void {
 
         // Insert some data inside grid
-        this.insertContentAtGridPosition(0, 0, this.heartRateData.TRIMP.toFixed(0), "TRaining IMPulse", "", "displayAdvancedHrData");
-        this.insertContentAtGridPosition(1, 0, this.heartRateData.averageHeartRate.toFixed(0), "Average Heart Rate", "bpm", "displayAdvancedHrData"); // Usefull for running
-        this.insertContentAtGridPosition(2, 0, this.heartRateData.activityHeartRateReserve.toFixed(0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.averageHeartRate, 0), "Average Heart Rate", "bpm", "displayAdvancedHrData"); // Usefull for running
+		this.insertContentAtGridPosition(2, 0, this.printNumber(this.heartRateData.activityHeartRateReserve, 0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
 
         // Quartiles
         this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
@@ -147,7 +147,7 @@ export class HeartRateDataView extends AbstractDataView {
         this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
 
         // Other
-        this.insertContentAtGridPosition(0, 2, this.heartRateData.TRIMPPerHour.toFixed(1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
     }
 
 }

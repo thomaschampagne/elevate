@@ -1,0 +1,13 @@
+.header {
+	margin: 0; // Remove mat-title margin
+	min-height: 180px;
+}
+
+// Class enabled via ngClass when active day on mouseover
+.openActivities {
+	cursor: pointer;
+}
+
+.stressScore i {
+	font-size: 12px;
+}

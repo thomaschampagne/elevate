@@ -7,7 +7,7 @@ class InstallUpdateHandler {
         }, (tab: chrome.tabs.Tab) => {
             console.log("First install. Display website new tab:", tab);
             chrome.tabs.create({
-                url: chrome.extension.getURL("/options/app/index.html#!/"), // TODO Get from config/constants
+				url: chrome.extension.getURL("/app/index.html"), // TODO Get from config/constants
             }, (tab: chrome.tabs.Tab) => {
                 console.log("First install. Display settings:", tab);
             });
@@ -48,7 +48,7 @@ class InstallUpdateHandler {
 
         chrome.runtime.onInstalled.addListener((details) => {
             if (details.reason === "install") {
-                this.handleInstall(); // Pop in tab webapp and plugin page
+				this.handleInstall(); // Pop in tab application and plugin page
             } else if (details.reason === "update") {
                 this.handleUpdate(details);
             }
@@ -109,7 +109,7 @@ InstallUpdateHandler.listen();
  * Migration from previous version under 5.11.0
  */
 let migration_from_previous_version_under_5_11_0 = function (Helper: any) {
-    const removeDeprecatedHrrZonesKey = function (callback: Function): void {
+	const removeDeprecatedHrrZonesKey = function (callback: Function): void {
         chrome.storage.sync.remove(["userHrrZones"], () => {
             callback();
         });

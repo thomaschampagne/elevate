@@ -1,0 +1,24 @@
+@import "~@angular/material/theming";
+@import "./themes/light";
+@import "./themes/dark";
+
+// Import Mixins
+@import "./native-elements.theme";
+@import "../../app/app.component.theme";
+@import "../../app/fitness-trend/fitness-trend-graph/fitness-trend-graph.component.theme";
+
+@mixin stravistix-custom-theme($theme) {
+	@include native-web-elements($theme);
+	@include app-sidenav-logo-theme($theme);
+	@include fitness-trend-graph-theme($theme);
+}
+
+.light {
+	@include angular-material-theme($light-theme);
+	@include stravistix-custom-theme($light-theme);
+}
+
+.dark {
+	@include angular-material-theme($dark-theme);
+	@include stravistix-custom-theme($dark-theme);
+}

@@ -1,0 +1,44 @@
+<mat-card>
+	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
+		<mat-form-field fxFlex="50">
+			<span matPrefix>
+				<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
+			</span>
+			<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
+				   placeholder="Filter by type or activities name">
+			<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+					(click)="searchText=''; applyFilter(searchText);">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+	<mat-table #table [dataSource]="dataSource" matSort>
+		<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+			<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.toolTip}}">
+				{{column.header}}
+			</mat-header-cell>
+			<mat-cell *matCellDef="let dayFitnessTrend">
+				<ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
+					{{column.printText(dayFitnessTrend)}}
+				</ng-container>
+				<ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
+					<button *ngIf="dayFitnessTrend.ids.length" mat-icon-button color="primary"
+							(click)="onOpenActivities(dayFitnessTrend.ids)">
+						<mat-icon>link</mat-icon>
+					</button>
+				</ng-container>
+			</mat-cell>
+		</ng-container>
+
+		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+	</mat-table>
+	<mat-paginator #paginator
+				   [pageSize]="10"
+				   [pageSizeOptions]="[5, 10, 15, 25, 50]">
+	</mat-paginator>
+
+	<i>I can't see "PSS" and/or "SwimSS" in this table. Why? Simply set your "cycling functional threshold power" and/or
+		"swimming functional threshold pace" in athlete settings and go back to this page.</i>
+
+</mat-card>

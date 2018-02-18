@@ -1,11 +1,11 @@
-import { IElevationData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { ElevationDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export class AscentSpeedDataView extends AbstractDataView {
 
-    protected elevationData: IElevationData;
+	protected elevationData: ElevationDataModel;
 
-    constructor(elevationData: IElevationData, units: string) {
+	constructor(elevationData: ElevationDataModel, units: string) {
         super(units);
         this.mainColor = [44, 0, 204];
         this.setGraphTitleFromUnits();
@@ -17,7 +17,7 @@ export class AscentSpeedDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.tachometerIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> ASCENT SPEED<a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/ascent\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.tachometerIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> ASCENT SPEED<a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/ascent\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 2); // (col, row)

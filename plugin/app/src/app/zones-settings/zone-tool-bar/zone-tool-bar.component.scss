@@ -1,0 +1,21 @@
+@import '../../../assets/styles/constant';
+@import "~@angular/material/theming";
+
+$config: mat-typography-config();
+
+mat-toolbar {
+	font-size: mat-font-size($config, body-1);
+}
+
+.toolbar-spacer {
+	flex: 1 1 auto;
+}
+
+.step {
+	width: 55px;
+}
+
+.zone-select {
+	width: 140px;
+}
+

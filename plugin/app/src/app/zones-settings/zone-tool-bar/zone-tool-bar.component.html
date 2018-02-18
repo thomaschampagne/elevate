@@ -1,0 +1,54 @@
+<mat-toolbar>
+	<mat-toolbar-row>
+		<mat-form-field class="zone-select">
+			<mat-select
+				aria-label="Zone selection"
+				id="zoneDefinitionSelection"
+				(change)="onZoneDefinitionSelected()"
+				[(ngModel)]="zoneDefinitionSelected">
+				<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
+					{{zoneDef.name}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{currentZonesLength}} zones</span>
+
+		<span class="toolbar-spacer"></span>
+
+		<mat-form-field class="step">
+			<input
+				matInput
+				type="number"
+				(change)="onStepChange()"
+				[(ngModel)]="zoneDefinitionSelected.step"
+				matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."/>
+		</mat-form-field>
+
+		<button mat-icon-button id="addLastZone" (click)="onAddLastZone()" matTooltip="Add a last zone">
+			<mat-icon class="info">add</mat-icon>
+		</button>
+
+		<button mat-icon-button id="removeLastZone" (click)="onRemoveLastZone()" matTooltip="Remove the last zone">
+			<mat-icon class="info">delete</mat-icon>
+		</button>
+
+		<button mat-icon-button id="saveZones" (click)="onSaveZones()" matTooltip="Save zones">
+			<mat-icon class="info">save</mat-icon>
+		</button>
+
+		<button mat-icon-button id="resetZonesToDefault" (click)="onResetZonesToDefault()"
+				matTooltip="Reset zones to default">
+			<mat-icon class="info">refresh</mat-icon>
+		</button>
+
+		<button mat-icon-button id="importZones" (click)="onImportZones()" matTooltip="Import zones from a backup">
+			<mat-icon class="info">vertical_align_bottom</mat-icon>
+		</button>
+
+		<button mat-icon-button id="exportZones" (click)="onExportZones()" matTooltip="Export for backup/sharing">
+			<mat-icon class="info">vertical_align_top</mat-icon>
+		</button>
+
+	</mat-toolbar-row>
+</mat-toolbar>

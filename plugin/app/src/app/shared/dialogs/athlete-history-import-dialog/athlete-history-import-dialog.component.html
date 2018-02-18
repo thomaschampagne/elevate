@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Import athlete history</h2>
+<mat-dialog-content class="mat-body-1">
+	<div *ngIf="!file">
+		<button mat-button color="primary" (click)="fileInput.click()">
+			Choose backup file
+			<input #fileInput type="file" (change)="onFileSelected($event.target.files[0])" [hidden]="true"/>
+		</button>
+	</div>
+
+	<div *ngIf="file">
+		<div>
+			Filename: <i>{{displayName}} </i>
+		</div>
+		<div>
+			Size: <i>{{displaySize}} </i>
+		</div>
+	</div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
+	<button *ngIf="file" mat-button (click)="onRestore()">Restore</button>
+</mat-dialog-actions>

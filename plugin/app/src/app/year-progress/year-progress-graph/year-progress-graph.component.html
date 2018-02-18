@@ -1,0 +1,15 @@
+<div id="graphWrapper">
+	<mat-progress-bar mode="buffer" *ngIf="!isGraphDataReadyOnYearChange"></mat-progress-bar>
+	<div id="yearProgressGraph"></div>
+</div>
+<div id="changeMomentWatched">
+	<div *ngIf="!isMomentWatchedToday">
+		<button mat-raised-button color="primary"
+				(click)="onResetMomentWatched()">
+			Reset on today
+		</button>
+	</div>
+	<div *ngIf="isMomentWatchedToday">
+		<i>Hint: You can lock the day watched by clicking the desired date in this graph.</i>
+	</div>
+</div>

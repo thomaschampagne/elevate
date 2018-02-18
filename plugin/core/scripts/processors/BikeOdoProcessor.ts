@@ -51,7 +51,7 @@ export class BikeOdoProcessor {
         });
     }
 
-    public getCacheKey(): string {
+	public getCacheKey(): string {
         return this.cacheKey;
     }
 }

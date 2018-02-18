@@ -23,8 +23,8 @@ interface JQueryStatic {
 (function ($: JQueryStatic) {
     const selectors: JQuery[] = [];
 
-    let check_binded: boolean = false;
-    let check_lock: boolean = false;
+	let check_binded = false;
+	let check_lock = false;
     const defaults: any = {
         interval: 250,
         force_process: false,
@@ -36,8 +36,8 @@ interface JQueryStatic {
 
     function process() {
         check_lock = false;
-        for (let index: number = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
-            const $appeared = $(selectors[index]).filter(function () {
+		for (let index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
+			const $appeared = $(selectors[index]).filter(function () {
                 return $(this).is(":appeared");
             });
 
@@ -57,7 +57,7 @@ interface JQueryStatic {
     }
 
     // "appeared" custom filter
-    $.expr[":"].appeared = function (element: HTMLElement) {
+	$.expr[":"].appeared = function (element: HTMLElement) {
         const $element: JQuery = $(element);
         if (!$element.is(":visible")) {
             return false;
@@ -85,7 +85,7 @@ interface JQueryStatic {
             const opts: any = $.extend({}, defaults, options || {});
             const selector = this.selector || this;
             if (!check_binded) {
-                const on_check = function () {
+				const on_check = function () {
                     if (check_lock) {
                         return;
                     }

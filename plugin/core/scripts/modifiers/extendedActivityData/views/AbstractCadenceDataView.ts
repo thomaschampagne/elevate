@@ -1,11 +1,11 @@
-import { ICadenceData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { CadenceDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
 
-    protected cadenceData: ICadenceData;
+	protected cadenceData: CadenceDataModel;
 
-    constructor(cadenceData: ICadenceData, units: string) {
+	constructor(cadenceData: CadenceDataModel, units: string) {
         super(units);
         this.cadenceData = cadenceData;
         this.mainColor = [213, 0, 195];

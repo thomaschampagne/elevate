@@ -1,0 +1,104 @@
+<mat-card *ngIf="zoneDefinition">
+
+	<mat-card-content fxLayout="row" fxFlexAlign="space-between center">
+
+		<div fxFlex="5" fxLayout="row" fxLayoutAlign="center center">
+			Z{{zoneId + 1}}
+		</div>
+
+		<span fxFlex="5"></span>
+
+		<!--FROM FIELD-->
+		<div fxFlex="40" [ngSwitch]="isFirstZone"> <!-- FIRST ZONE ??? -->
+			<mat-form-field *ngSwitchCase="true" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS FIRST ZONE -->
+				<input
+					matInput
+					placeholder="From {{zoneDefinition.units}}"
+					type="number"
+					min="{{zoneDefinition.min}}"
+					max="{{zone.to}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngSwitchCase="false" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT FIRST ZONE -->
+				<input
+					matInput
+					placeholder="From {{zoneDefinition.units}}"
+					type="number"
+					min="{{prevZoneFrom}}"
+					max="{{zone.to}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<span *ngIf="zoneDefinition.customDisplay" fxFlex="15"></span>
+			<mat-form-field *ngIf="zoneDefinition.customDisplay" fxFlex="40">
+				<input
+					matInput
+					[disabled]="true"
+					[value]="zoneDefinition.customDisplay.output(zone.from)"/>
+			</mat-form-field>
+		</div>
+		<span fxFlex="5"></span>
+
+		<!--TO FIELD-->
+		<div fxFlex="40" [ngSwitch]="isLastZone"> <!-- FIRST ZONE ??? -->
+			<mat-form-field *ngSwitchCase="true" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS LAST ZONE -->
+				<input
+					matInput
+					placeholder="To {{zoneDefinition.units}}"
+					type="number"
+					min="{{zone.from}}"
+					max="{{zoneDefinition.max}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngSwitchCase="false" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT LAST ZONE -->
+				<input
+					matInput
+					placeholder="To {{zoneDefinition.units}}"
+					type="number"
+					min="{{zone.from}}"
+					max="{{nextZoneTo}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<span *ngIf="zoneDefinition.customDisplay" fxFlex="15"></span>
+			<mat-form-field *ngIf="zoneDefinition.customDisplay" fxFlex="45">
+				<input
+					matInput
+					[disabled]="true"
+					[value]="zoneDefinition.customDisplay.output(zone.to)"/>
+			</mat-form-field>
+		</div>
+
+		<span fxFlex="5"></span>
+
+		<div fxFlex="5" fxLayout="row" fxLayoutAlign="center center">
+			<button mat-icon-button (click)="onRemoveZoneAtIndex(zoneId)">
+				<mat-icon class="info">close</mat-icon>
+			</button>
+		</div>
+
+	</mat-card-content>
+
+</mat-card>

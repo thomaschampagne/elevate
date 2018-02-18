@@ -1,0 +1,150 @@
+<div fxLayout="row" fxFlexAlign="center center">
+	<div fxFlex>
+		<mat-card class="gender-card">
+			<mat-card-title>
+				Gender
+			</mat-card-title>
+			<mat-card-content>
+				<mat-input-container fxFill>
+					<mat-select
+						aria-label="Gender"
+						(change)="onGenderChanged()"
+						[(ngModel)]="gender">
+						<mat-option
+							*ngFor="let gender of GENDER_LIST;"
+							[value]="gender.type">
+							{{gender.display}}
+						</mat-option>
+					</mat-select>
+				</mat-input-container>
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div fxFlex>
+		<mat-card>
+			<mat-card-title>
+				Weight
+			</mat-card-title>
+			<mat-card-content>
+				<mat-input-container fxFill>
+					<input
+						matInput
+						type="number" min="10" max="999"
+						[(ngModel)]="weight"
+						(change)="onWeightChanged()"
+						placeholder="Weight in kilograms"/>
+				</mat-input-container>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>
+
+<mat-card>
+	<mat-card-title>
+		Heart rate
+	</mat-card-title>
+	<mat-card-content>
+		<div fxLayout="row" layout-align="center center">
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="number" min="10" max="999"
+					[(ngModel)]="maxHr"
+					(change)="onMaxHrChanged()"/>
+				<mat-placeholder>
+					Max heart rate in Beats Per Minute
+				</mat-placeholder>
+				<mat-icon matSuffix
+						  matTooltip="If you don't know your own max heart rate then setup (220 - 'YOUR AGE') as value.">
+					info
+				</mat-icon>
+			</mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="number" min="10" max="999"
+					[(ngModel)]="restHr"
+					(change)="onRestHrChanged()"/>
+				<mat-placeholder>
+					Rest heart rate in Beats Per Minute
+				</mat-placeholder>
+				<mat-icon matSuffix matTooltip="Measure your rest heart rate by lying down in your bed.">info</mat-icon>
+			</mat-form-field>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-title>
+		Cycling Functional Threshold Power
+	</mat-card-title>
+	<mat-card-content>
+		<mat-card-content>
+			<mat-input-container fxFill>
+				<input
+					matInput
+					type="number" min="10" max="9999"
+					placeholder="Cycling FTP in watts"
+					[(ngModel)]="ftp"
+					(change)="onCyclingFtpChanged()"/>
+				<mat-icon matSuffix
+						  matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">
+					info
+				</mat-icon>
+			</mat-input-container>
+		</mat-card-content>
+	</mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-title>
+		Swimming Functional Threshold Pace
+	</mat-card-title>
+	<mat-card-content>
+		<div fxLayout="row" layout-align="center center">
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					step="0.2"
+					type="number" min="0" max="9999"
+					[(ngModel)]="swimFtp"
+					(change)="onSwimFtpChanged()"/>
+				<mat-placeholder>
+					Enter <strong>meters / min (e.g. 31)</strong>
+				</mat-placeholder>
+			</mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="text" maxlength="8"
+					pattern="^[0-9]+:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1}$"
+					[(ngModel)]="swimFtp100m"
+					(change)="onSwimFtp100mChanged()"/>
+				<mat-placeholder>
+					OR enter as <strong>hh:mm:ss / 100 meters (e.g. 00:03:14)</strong>
+				</mat-placeholder>
+			</mat-form-field>
+		</div>
+
+		<!--Calculator-->
+		<mat-slide-toggle
+			[(ngModel)]="isSwimFtpCalculatorEnabled"
+			(change)="isSwimFtpCalculatorEnabled!=isSwimFtpCalculatorEnabled;"
+			aria-label="Show swim ftp calculator"
+			class="swim-ftp-calculator-toggle">
+			Show swim ftp calculator
+		</mat-slide-toggle>
+
+
+		<ng-container *ngIf="isSwimFtpCalculatorEnabled">
+
+			<h2 class="mat-title">Swimming Functional Threshold Pace Calculator</h2>
+			<app-swim-ftp-helper [swimFtp]="swimFtp"
+								 (swimFtpChange)="swimFtp=$event; onSwimFtpChanged();"></app-swim-ftp-helper>
+		</ng-container>
+
+	</mat-card-content>
+</mat-card>

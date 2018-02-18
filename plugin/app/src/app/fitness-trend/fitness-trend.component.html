@@ -1,0 +1,50 @@
+<!--We show this "must sync" message only when we are sure there is no fitness data.
+This means that null/true state  will not display the message -->
+<mat-card *ngIf="hasFitnessTrendData === false" class="noData mat-body-1">
+	<mat-card-title>
+		Synchronise your history
+	</mat-card-title>
+	<mat-card-content>
+		<div>
+			Please synchronize your history to turn on "Fitness Trend" feature.
+		</div>
+
+		<div>
+			You can synchronize by clicking on
+			<mat-icon>sync_disabled</mat-icon>
+			icon in the upper toolbar. The history will be locally saved in the storage allocated by the extension.
+		</div>
+
+		<div>
+			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
+			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
+			the Strava™ premium one, not a duplicate!
+		</div>
+
+		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
+			in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
+			<a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
+				Performance, fellrnr.com</a>
+		</div>
+
+		<div>
+			Please read <a href="https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions"
+						   target="_blank">Frequently Asked Questions</a>
+		</div>
+
+	</mat-card-content>
+</mat-card>
+<!--If not sure yet to have fitness data (=null) and have fitness data (=true), then we load the tab group -->
+<mat-tab-group *ngIf="hasFitnessTrendData !== false"
+			   (selectedIndexChange)="onSelectedIndexChange($event)">
+	<mat-tab label="Graph">
+		<app-fitness-trend-graph
+			(hasFitnessTrendDataNotify)="onHasFitnessTrendDataNotify($event)"
+			[hasComponentFocus]="(!selectedTabIndex || selectedTabIndex === GRAPH_COMPONENT_INDEX)">
+		</app-fitness-trend-graph>
+	</mat-tab>
+	<mat-tab label="Table">
+		<!--We also load the table if we have fitness data (notified by "app-fitness-trend-graph" child component)-->
+		<app-fitness-trend-table *ngIf="hasFitnessTrendData"></app-fitness-trend-table>
+	</mat-tab>
+</mat-tab-group>

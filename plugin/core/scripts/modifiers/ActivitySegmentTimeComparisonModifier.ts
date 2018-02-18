@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IAppResources } from "../interfaces/IAppResources";
 
 export interface EffortInfo {
@@ -45,7 +45,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
     protected deltaPRLabel: string;
     protected deltaKomLabel: string;
 
-    constructor(userSettings: IUserSettings, appResources: IAppResources, activityType: string, isMyOwn: boolean) {
+	constructor(userSettings: UserSettingsModel, appResources: IAppResources, activityType: string, isMyOwn: boolean) {
         this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
         this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
         this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;
@@ -177,11 +177,11 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
                         elapsedTime = segmentEffortInfo.elapsed_time_raw,
                         komDiffTime = (elapsedTime - parseInt(komSeconds));
 
-                    if (komSeconds == "NaN") {
+					if (komSeconds == "NaN") {
 
-                        deltaKomCell.html("N/A");
+						deltaKomCell.html("N/A");
 
-                    } else if (this.showDifferenceToKOM) {
+					} else if (this.showDifferenceToKOM) {
 
                         const sign: string = (Math.sign(komDiffTime) == 1) ? "+" : "-";
                         deltaKomCell.html("<span title=\"Time difference with current "

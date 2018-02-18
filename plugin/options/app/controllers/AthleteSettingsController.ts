@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { ISwimCalculationMethod, SwimFTPCalculator } from "../directives/swimFTPCalculator";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IAvoidInputKeysService } from "../services/AvoidInputKeysService";
 
 export interface IGenderList {
@@ -26,7 +26,7 @@ export class AthleteSettingsController {
             display: "Female",
         }];
 
-        chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
+		chromeStorageService.fetchUserSettings((userSettingsSynced: UserSettingsModel) => {
             $scope.userSettingsSynced = userSettingsSynced;
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
@@ -48,11 +48,11 @@ export class AthleteSettingsController {
         };
 
         $scope.userGenderChanged = (gender: IGenderList) => {
-            chromeStorageService.updateUserSetting("userGender", gender.type, () => {
-                console.log("userGender has been updated to " + gender.type);
-                $scope.localStorageMustBeCleared();
-                $scope.profileChanged();
-            });
+			chromeStorageService.updateUserSetting("userGender", gender.type, () => {
+				console.log("userGender has been updated to " + gender.type);
+				$scope.localStorageMustBeCleared();
+				$scope.profileChanged();
+			});
         };
 
         $scope.userMaxHrChanged = () => {

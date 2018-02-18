@@ -1,16 +1,16 @@
 import * as _ from "lodash";
 import { ActivitiesSynchronizer, IHistoryChanges } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import { IUserSettings } from "../../plugin/common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
-import { ISyncActivityComputed, ISyncRawStravaActivity } from "../../plugin/common/scripts/interfaces/ISync";
+import { StravaActivityModel, SyncedActivityModel } from "../../plugin/common/scripts/models/Sync";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 
 describe("ActivitiesSynchronizer", () => {
 
-    it("should remove activity from array properly ", () => {
+	it("should remove activity from array properly ", () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
-        let sourceCount = rawPageOfActivities.length;
+		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
+		const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
 
@@ -20,15 +20,15 @@ describe("ActivitiesSynchronizer", () => {
 
     });
 
-    it("should edit activity from array properly ", () => {
+	it("should edit activity from array properly ", () => {
 
-        let rawPageOfActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
-        let sourceCount = rawPageOfActivities.length;
+		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
+		const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        let foundBack: ISyncActivityComputed = _.find(rawPageOfActivities, {id: 722210052});
+		const foundBack: SyncedActivityModel = _.find(rawPageOfActivities, {id: 722210052});
         expect(foundBack).toBeDefined();
         expect(foundBack.name).toEqual("New_Name");
         expect(foundBack.type).toEqual("Ride");
@@ -37,10 +37,10 @@ describe("ActivitiesSynchronizer", () => {
 
     });
 
-    it("should detect activities added, modified and deleted ", () => {
+	it("should detect activities added, modified and deleted ", () => {
 
-        let computedActivities: Array<ISyncActivityComputed> = _.cloneDeep(window.__fixtures__["fixtures/sync/computedActivities20161213"].computedActivities);
-        let rawPageOfActivities: Array<ISyncRawStravaActivity> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
+		let computedActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/computedActivities20161213"].computedActivities);
+		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
 
         // Simulate Added in strava: consist to remove from computed activities...
         computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -52,7 +52,7 @@ describe("ActivitiesSynchronizer", () => {
 
         // Now find+test changes
         // let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-        let changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
+		const changes: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
 
         expect(changes).not.toBeNull();
         expect(changes.deleted).toEqual([]);
@@ -78,11 +78,11 @@ describe("ActivitiesSynchronizer", () => {
 
     });
 
-    it("should append history of pages where activities added, modified and deleted ", () => {
+	it("should append history of pages where activities added, modified and deleted ", () => {
 
-        let userSettingsMock: IUserSettings = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
-        let appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
-        let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+		const userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
+		const appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
+		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
         // Append
         activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
@@ -100,7 +100,7 @@ describe("ActivitiesSynchronizer", () => {
         activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
             added: [4, 5],
             deleted: [],
-            edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}]
+			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}]
         });
         expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
         expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(4);
@@ -111,11 +111,11 @@ describe("ActivitiesSynchronizer", () => {
         activitiesSynchronizer.appendGlobalHistoryChanges(<IHistoryChanges> {
             added: [5, 10, 11],
             deleted: [15, 16],
-            edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}, {
+			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}, {
                 id: 22,
-                name: "Run...",
-                type: "Run",
-                display_type: "Run"
+				name: "Run...",
+				type: "Run",
+				display_type: "Run"
             }]
         });
         expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
