@@ -21,10 +21,18 @@ export interface IReleaseNote {
 export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.0.0",
-		message: "Open Beta testing. Thanks for your help & time ;)",
+		message: "Brand <strong>NEW app</strong> released! Fitness trend, years progress & others features have been fully remade! This <strong>new start</strong> was required to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
 		hotFixes: [],
-		features: [],
-		hideFeatureReleaseNote: true,
+		features: [
+			"Remade and improved fitness trend feature",
+			"Remade and improved year progressions",
+			"Remade and improved common settings section",
+			"Remade and improved athlete settings section",
+			"Remade and improved zones settings section",
+			"Remade global design of the app with light and dark themes",
+			"Improved global reliability & performance of the application"
+		],
+		hideFeatureReleaseNote: false,
 		fixes: [],
 	},
 	{

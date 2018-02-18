@@ -28,9 +28,7 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier,
-	RunningGradeAdjustedPaceModifier,
-	RunningHeartRateModifier,
+	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
@@ -335,13 +333,13 @@ export class StravistiX {
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcomingFixes: [],
-            upcomingFeatures: [
-                // 'Years progressions reworked',
-                "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
-                "Grid: All your activities in a table including stravistix extended stats as columns.",
-                //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
-            ],
+			/* upcomingFeatures: [
+                 // 'Years progressions reworked',
+                 "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
+                 "Grid: All your activities in a table including stravistix extended stats as columns.",
+                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
+                 "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
+             ],*/
         };
 
 		let message = "";
