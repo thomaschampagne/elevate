@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 
-import { ISyncActivityComputed } from "../../../common/scripts/interfaces/ISync";
+import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
 
 export interface IYearProgress {
     year: number;
@@ -22,7 +22,7 @@ export interface IProgression {
     count: number;
 }
 
-export interface YearProgressActivity extends ISyncActivityComputed {
+export interface YearProgressActivity extends SyncedActivityModel {
     year: number;
     dayOfYear: number;
 }
@@ -104,7 +104,7 @@ export class YearProgressComputer {
             }
 
             // Find matching activities
-            const foundOnToday: ISyncActivityComputed[] = _.filter(yearProgressActivities, {
+			const foundOnToday: SyncedActivityModel[] = _.filter(yearProgressActivities, {
                 year: currentDayMoment.year(),
                 dayOfYear: currentDayMoment.dayOfYear(),
             });
@@ -179,7 +179,7 @@ export class YearProgressController {
         };
 
         // Start...
-        chromeStorageService.fetchComputedActivities().then((computedActivities: ISyncActivityComputed[]) => {
+		chromeStorageService.fetchComputedActivities().then((computedActivities: SyncedActivityModel[]) => {
 
             $scope.computedActivities = computedActivities;
 
@@ -210,7 +210,7 @@ export class YearProgressController {
             $scope.applyData($scope.computedActivities, $scope.searchTypesSelected, $scope.dataTypeSelected.value);
         });
 
-        $scope.applyData = function (computedActivities: ISyncActivityComputed[], types: string[], dataType: DataType) {
+		$scope.applyData = function (computedActivities: SyncedActivityModel[], types: string[], dataType: DataType) {
 
             const yearProgressions = yearProgressComputer.compute(computedActivities as YearProgressActivity[], types);
 

@@ -1,12 +1,12 @@
 import { Helper } from "../../../../../common/scripts/Helper";
-import { IGradeData } from "../../../../../common/scripts/interfaces/IActivityData";
+import { GradeDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 
 export abstract class AbstractGradeDataView extends AbstractDataView {
 
-    protected gradeData: IGradeData;
+	protected gradeData: GradeDataModel;
 
-    constructor(gradeData: IGradeData, units: string) {
+	constructor(gradeData: GradeDataModel, units: string) {
         super(units);
         this.mainColor = [0, 128, 0];
         this.setGraphTitleFromUnits();
@@ -19,7 +19,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     public render(): void {
 
         // Add a title
-        this.content += this.generateSectionTitle("<img src=\"" + this.appResources.areaChartIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> GRADE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#!/zonesSettings/grade\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.areaChartIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> GRADE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/grade\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
         // Creates a grid
         this.makeGrid(3, 7); // (col, row)
@@ -39,9 +39,9 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
         this.insertContentAtGridPosition(1, 1, this.gradeData.medianGrade, "50% Quartile Grade", "%", "displayAdvancedGradeData");
         this.insertContentAtGridPosition(2, 1, this.gradeData.upperQuartileGrade, "75% Quartile Grade", "%", "displayAdvancedGradeData");
 
-        this.insertContentAtGridPosition(0, 2, (this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), "% climbing", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(1, 2, (this.gradeData.upFlatDownInSeconds.flat / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), "% flat", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(2, 2, (this.gradeData.upFlatDownInSeconds.down / this.gradeData.upFlatDownInSeconds.total * 100).toFixed(1), "% downhill ", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(0, 2, this.printNumber((this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total * 100), 1), "% climbing", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(1, 2, this.printNumber((this.gradeData.upFlatDownInSeconds.flat / this.gradeData.upFlatDownInSeconds.total * 100), 1), "% flat", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(2, 2, this.printNumber((this.gradeData.upFlatDownInSeconds.down / this.gradeData.upFlatDownInSeconds.total * 100), 1), "% downhill ", "%", "displayAdvancedGradeData");
 
         this.insertContentAtGridPosition(0, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up), "Climbing time", "", "displayAdvancedGradeData");
         this.insertContentAtGridPosition(1, 3, Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat), "Flat time", "", "displayAdvancedGradeData");
@@ -55,8 +55,8 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
         this.insertContentAtGridPosition(1, 5, ((distanceFlat !== 0) ? distanceFlat.toFixed(1) : "-"), "Flat distance", this.speedUnitsData.units, "displayAdvancedGradeData");
         this.insertContentAtGridPosition(2, 5, ((distanceDown !== 0) ? distanceDown.toFixed(1) : "-"), "Downhill distance", this.speedUnitsData.units, "displayAdvancedGradeData");
 
-        this.insertContentAtGridPosition(0, 6, this.gradeData.avgGrade.toFixed(1), "Avg grade", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(1, 6, this.gradeData.avgMaxGrade.toFixed(1), "Max uphill grade", "%", "displayAdvancedGradeData");
-        this.insertContentAtGridPosition(2, 6, this.gradeData.avgMinGrade.toFixed(1), "Max downhill grade", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(0, 6, this.printNumber(this.gradeData.avgGrade, 1), "Avg grade", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(1, 6, this.printNumber(this.gradeData.avgMaxGrade, 1), "Max uphill grade", "%", "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(2, 6, this.printNumber(this.gradeData.avgMinGrade, 1), "Max downhill grade", "%", "displayAdvancedGradeData");
     }
 }

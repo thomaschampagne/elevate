@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>About this plugin</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<div>
+		StravistiX extension is just adding some features that riders and runners would like to see in their Strava web.
+		If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
+		There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
+		experience of all users (Free and Premium) and tends to keep users loyal in Strava.
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<div class="stravaNotes">
+		Strava logos, product and service names are the exclusive trademarks of, and are owned by, Strava, Inc. This
+		extension is not approved by Strava. Do not ask them for support.
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<div *ngIf="appUsageDetails">
+		Synced history size: {{appUsageDetails.megaBytesInUse.toFixed(2)}} MB
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<div>
+		<div>
+			Plugin version: {{appVersion}}
+		</div>
+		<div>
+			Angular version: {{angularVersion}}
+		</div>
+		<div>
+			D3js version: {{d3Version}}
+		</div>
+	</div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">Close</button>
+</mat-dialog-actions>
+

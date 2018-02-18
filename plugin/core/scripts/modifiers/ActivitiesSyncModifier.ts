@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { ISyncNotify } from "../../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { SyncNotifyModel } from "../../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage, StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { env } from "../../config/env";
 import { IAppResources } from "../interfaces/IAppResources";
@@ -14,12 +14,12 @@ export class ActivitiesSyncModifier implements IModifier {
     protected extensionId: string;
     protected sourceTabId: number;
     protected forceSync: boolean;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
     protected appResources: IAppResources;
 
     public closeWindowIntervalId: number = -1;
 
-    constructor(appResources: IAppResources, userSettings: IUserSettings, forceSync: boolean, sourceTabId?: number) {
+	constructor(appResources: IAppResources, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
         this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
         this.userSettings = userSettings;
         this.appResources = appResources;
@@ -35,33 +35,33 @@ export class ActivitiesSyncModifier implements IModifier {
 
         let html = "";
         html += "<div>";
-        html += "    <div id=\"syncContainer\">";
-        html += "       <div id=\"syncMessage\">";
-        html += "           <span style=\"font-size: 28px;\">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension." +
+		html += "    <div id=\"syncContainer\">";
+		html += "       <div id=\"syncMessage\">";
+		html += "           <span style=\"font-size: 28px;\">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension." +
             "<br/><br/>Once the first sync done, your history will be automatically synced every <strong>" + this.userSettings.autoSyncMinutes + " minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if " + this.userSettings.autoSyncMinutes + " minute(s) have been flow out since your last synchronisation" +
-            "<br/><br/><a href=\"" + this.appResources.settingsLink + "#!/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
+			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
             "<br/><br/>Manual sync also works by clicking the same button.<br/><br/>" +
             "Closing window stops synchronization. It will close itself when done.";
         html += "       </div>";
-        html += "       <div class=\"progressBarGroup\">";
-        html += "           <div id=\"totalProgress\">Global synchronisation progress</div>";
-        html += "           <progress id=\"syncProgressBar\" value=\"0\" max=\"100\"></progress>";
-        html += "           <span id=\"totalProgressText\"></span>";
+		html += "       <div class=\"progressBarGroup\">";
+		html += "           <div id=\"totalProgress\">Global synchronisation progress</div>";
+		html += "           <progress id=\"syncProgressBar\" value=\"0\" max=\"100\"></progress>";
+		html += "           <span id=\"totalProgressText\"></span>";
         html += "        </div>";
-        html += "        <div class=\"progressBarGroup\">";
-        html += "           <div id=\"syncStep\"></div>";
-        html += "           <progress id=\"syncStepProgressBar\" value=\"0\" max=\"100\"></progress>";
-        html += "           <span id=\"syncStepProgressText\"></span>";
+		html += "        <div class=\"progressBarGroup\">";
+		html += "           <div id=\"syncStep\"></div>";
+		html += "           <progress id=\"syncStepProgressBar\" value=\"0\" max=\"100\"></progress>";
+		html += "           <span id=\"syncStepProgressText\"></span>";
         html += "        </div>";
-        html += "        <div id=\"syncStatusError\" style=\"display: none;\">";
-        html += "           <div style=\"padding-bottom: 20px;\">Sync error occured. Maybe a network timeout error...<a href=\"#\" onclick=\"window.location.reload();\">Try to sync again</a></div>";
-        html += "           <div id=\"syncStatusErrorContent\" style=\"font-size: 11px;\"></div>";
+		html += "        <div id=\"syncStatusError\" style=\"display: none;\">";
+		html += "           <div style=\"padding-bottom: 20px;\">Sync error occured. Maybe a network timeout error...<a href=\"#\" onclick=\"window.location.reload();\">Try to sync again</a></div>";
+		html += "           <div id=\"syncStatusErrorContent\" style=\"font-size: 11px;\"></div>";
         html += "        </div>";
-        html += "       <div id=\"syncInfos\">";
-        html += "           <div style=\"padding-bottom: 10px;\" id=\"totalActivities\"></div>";
-        html += "           <div style=\"padding-bottom: 10px;\" id=\"browsedActivitiesCount\"></div>";
-        html += "           <div style=\"padding-bottom: 10px;\" id=\"storageUsage\"></div>";
-        html += "           <div style=\"padding-bottom: 10px;\" id=\"autoClose\"></div>";
+		html += "       <div id=\"syncInfos\">";
+		html += "           <div style=\"padding-bottom: 10px;\" id=\"totalActivities\"></div>";
+		html += "           <div style=\"padding-bottom: 10px;\" id=\"browsedActivitiesCount\"></div>";
+		html += "           <div style=\"padding-bottom: 10px;\" id=\"storageUsage\"></div>";
+		html += "           <div style=\"padding-bottom: 10px;\" id=\"autoClose\"></div>";
         html += "       </div>";
         html += "    </div>";
         html += "</div>";
@@ -116,8 +116,8 @@ export class ActivitiesSyncModifier implements IModifier {
 
             let timer: number = 5 * 1000; // 5s for debug...
             this.closeWindowIntervalId = window.setInterval(() => {
-                $("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.globalHistoryChanges.added.length + ", Edited:" + syncResult.globalHistoryChanges.edited.length + ", Deleted:" + syncResult.globalHistoryChanges.deleted.length +
-                    ". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
+				$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.globalHistoryChanges.added.length + ", Edited:" + syncResult.globalHistoryChanges.edited.length + ", Deleted:" + syncResult.globalHistoryChanges.deleted.length +
+					". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
                 if (timer <= 0) {
                     window.close();
                 }
@@ -156,7 +156,7 @@ export class ActivitiesSyncModifier implements IModifier {
                 $("#syncStatusErrorContent").append("<div>" + JSON.stringify(err) + "</div>");
             }
 
-        }, (progress: ISyncNotify) => {
+		}, (progress: SyncNotifyModel) => {
 
             // Global progress
             $("#syncProgressBar").val(progress.browsedActivitiesCount / progress.totalActivities * 100);

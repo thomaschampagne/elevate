@@ -1,7 +1,7 @@
 import * as angular from "angular";
 import { ILocationService, ISCEService } from "angular";
 import * as _ from "lodash";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 import { ICommonSettingsService, ISection, ISectionContent } from "../services/CommonSettingsService";
 
@@ -15,7 +15,7 @@ export class CommonSettingsController {
         // Define options structure
         $scope.sections = CommonSettingsService.provideSections();
 
-        chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
+		chromeStorageService.fetchUserSettings((userSettingsSynced: UserSettingsModel) => {
 
             $scope.userMaxHr = userSettingsSynced.userMaxHr;
             $scope.userRestHr = userSettingsSynced.userRestHr;
@@ -88,7 +88,7 @@ export class CommonSettingsController {
 
             if (_.isNull(option.value) || _.isUndefined(option.value)) {
 
-                chromeStorageService.fetchUserSettings((userSettings: IUserSettings) => {
+				chromeStorageService.fetchUserSettings((userSettings: UserSettingsModel) => {
                     const resetValue = _.propertyOf(userSettings)(option.optionKey);
                     console.log(option.optionKey + " value not compliant, Reset to  " + resetValue);
                     option.value = resetValue;

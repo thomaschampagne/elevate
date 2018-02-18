@@ -1,32 +1,32 @@
 {
-  "files": [
-    "plugin/core/core.d.ts"
-  ],
-  "include": [
-    // Common
-    "plugin/common/**/*.ts",
-
-    // Core
-    "plugin/core/**/*.ts",
-
-    // AngularJS webapp
-    "plugin/options/**/*.ts",
-    // specs
-    "specs/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": ["dom", "es6", "webworker"],
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "skipLibCheck": true
-  },
-  "compileOnSave": false
+	"files": [
+		"plugin/core/core.d.ts"
+	],
+	"include": [
+		// Common
+		"plugin/common/**/*.ts",
+		// Core
+		"plugin/core/**/*.ts",
+		// AngularJS application
+		"plugin/options/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	],
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"target": "es5",
+		"module": "commonjs",
+		"lib": [
+			"dom",
+			"es6",
+			"webworker"
+		],
+		"noImplicitAny": true,
+		"preserveConstEnums": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"skipLibCheck": true
+	},
+	"compileOnSave": false
 }

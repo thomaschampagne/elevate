@@ -31,7 +31,7 @@ export class ActivitiesSummaryModifier implements IModifier {
 
         const waitForTotalActivitiesCountRemove = () => {
             if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function () {
+				setTimeout(function () {
                     waitForTotalActivitiesCountRemove();
                 }, 1000);
                 return;

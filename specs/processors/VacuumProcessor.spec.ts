@@ -3,11 +3,11 @@ import { VacuumProcessor } from "../../plugin/core/scripts/processors/VacuumProc
 
 describe("VacuumProcessor", () => {
 
-    it("should be a pro", () => {
+	it("should be a pro", () => {
 
-        let vacuumProcessor: VacuumProcessor = new VacuumProcessor();
+        const vacuumProcessor: VacuumProcessor = new VacuumProcessor();
 
-        let getCurrentAthleteSpy: Spy = spyOn(vacuumProcessor, "getCurrentAthlete"); // Mocking getCurrentAthlete
+		const getCurrentAthleteSpy: Spy = spyOn(vacuumProcessor, "getCurrentAthlete"); // Mocking getCurrentAthlete
 
         // getCurrentAthlete not yet called...
         expect(getCurrentAthleteSpy).not.toHaveBeenCalled();
@@ -29,7 +29,7 @@ describe("VacuumProcessor", () => {
         expect(vacuumProcessor.getProStatus()).toEqual(true);
 
         // ...
-        expect(getCurrentAthleteSpy).toHaveBeenCalledTimes(3);
+		expect(getCurrentAthleteSpy).toHaveBeenCalledTimes(3);
 
     });
 });

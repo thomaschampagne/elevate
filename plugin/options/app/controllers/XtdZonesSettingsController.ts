@@ -1,7 +1,7 @@
 import { IScope } from "angular";
 import * as _ from "lodash";
-import { IZone } from "../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
+import { ZoneModel } from "../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 
 export interface IXtdData {
@@ -15,8 +15,8 @@ export interface IXtdData {
 }
 
 export interface IXtdZonesSettingsScope extends IScope {
-    zones: { speed: IZone[], pace: IZone[], power: IZone[], cyclingCadence: IZone[], runningCadence: IZone[], grade: IZone[], elevation: IZone[], ascent: IZone[] };
-    xtdZones: IZone[];
+	zones: { speed: ZoneModel[], pace: ZoneModel[], power: ZoneModel[], cyclingCadence: ZoneModel[], runningCadence: ZoneModel[], grade: ZoneModel[], elevation: ZoneModel[], ascent: ZoneModel[] };
+	xtdZones: ZoneModel[];
     xtdData: IXtdData;
     switchZonesFromXtdItem: (xtdData: IXtdData) => void;
     xtdListOptions: IXtdData[];
@@ -113,7 +113,7 @@ export class XtdZonesSettingsController {
             $scope.$apply();
         };
 
-        chromeStorageService.fetchUserSettings((userSettingsSynced: IUserSettings) => {
+		chromeStorageService.fetchUserSettings((userSettingsSynced: UserSettingsModel) => {
 
             $scope.zones = userSettingsSynced.zones;
 

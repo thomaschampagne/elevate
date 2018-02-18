@@ -1,0 +1,125 @@
+<mat-dialog-content class="mat-body-1">
+
+	<div class="disclaimer">
+		The multi sports fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
+		in 1975 and <i>Andrew R. Coggan</i> later. The following reference has been used: <a
+		href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
+		Performance, fellrnr.com</a>.
+	</div>
+
+	<mat-divider></mat-divider>
+
+	<div>
+		<h3 class="mat-title">About Multi-Sports Fitness Trend</h3>
+		The fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling.
+		power meter</i> and/or <i>swimming activities having distance & time</i>. The trend is calculated from your
+		various heart rate stress,
+		and/or cycling power stress and/or swimming stress given in your activities.
+	</div>
+
+	<div>
+		<h3 class="mat-title">Heart Rate Stress Score (all workout types)</h3>
+		A heart rate stress is represented by a value called <i>TRaining IMPulse</i> or <i>TRIMP</i>. Training Impulse
+		concept has been developed by Dr. Eric W. Banister. Basically, it represents the amount of heart stress during
+		an activity: the longer you go at full throttle during an activity, the more <i>TRIMP</i> of activity goes up!
+		<i>TRIMP</i> has both a positive and a negative effect. The positive effect is called <i>fitness</i>,
+		and the negative effect is called <i>fatigue</i>. <i>Fitness</i> and <i>fatigue</i> can combined to provide a
+		value of <i>form</i> & <i>Performance</i>.
+	</div>
+
+	<div>
+		<h3 class="mat-title">Power Stress Score (cycling only)</h3>
+		If you own a power meter and you activated the cycling power meter option in the feature, then the "Power Stress
+		Score (PSS)" will be used instead of TRIMP on cycling activities only if available.
+	</div>
+
+	<div>
+		<i>Note: PSS is equivalent to Training Stress Score&reg; (TSS&reg;) from TrainingPeaks&trade;. <a
+			href="https://www.trainingpeaks.com/blog/what-is-tss/" target="_blank">Learn more from
+			TrainingPeaks&trade;</a></i>
+	</div>
+
+	<div>
+		<h3 class="mat-title">Swimming Stress Score</h3>
+		A "Swimming Stress Score" (Swim SS) can be computed for each of your swim activities if your "Swimming
+		Functional Threshold Pace" (Swim FTP) has been entered inside athlete settings and you enabled swimming stress
+		score option. No heart rate monitor is required. Even a swimming manual activity will be handled by the system.
+		<a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn more from
+			TrainingPeaks&trade;.</a>
+	</div>
+
+	<div>
+		<i>Note: Strava do not support HR data for swimming activities at the moment. In the case where you have
+			HRM while swimming and strava finally support HR data then TRIMP value will be used instead of Swim SS</i>
+	</div>
+
+	<h3 class="mat-title">Reading Curves</h3>
+	<div>
+		The Fitness, Fatigue and Form graph and table is based off an impulse-response model first developed by Dr. Eric
+		W. Banister in 1975. It was later redefined by <a href="http://www.peakscoachinggroup.com/DrAndrewCoggan"
+														  target="_blank">Andrew R. Coggan</a>.
+		This model will show you:
+		<ul>
+			<li>Your <i>Fitness</i> based on your chronic load</li>
+			<li>Your <i>Fatigue</i> based on your acute load</li>
+			<li>Your <i>Form</i> or stress balance</li>
+		</ul>
+
+		At a glance
+
+		<ul>
+			<li>
+				The <i>Fitness</i> curve is the long-term average daily training load. Default period is fixed to 42
+				days (or six weeks), so it will take ~6 weeks for your <i>Fitness</i> to be accurate. It's basically the
+				foundations, the potential availability of the athlete... You can't get into big rides/runs or races
+				without a minimum of fitness acquired. If that curve is too regular or too flat, it is not usually a
+				sign of good training.
+			</li>
+
+			<li>
+				The <i>Fatigue</i> curve is the short-term average daily training load. Same way than <i>Fitness</i> but
+				default period is fixed to 7 days (one week). Conceptually, fatigue is easy to understand: It's the
+				tired feelings which limits your performance. This curve varies much faster than <i>Fitness</i> curve.
+				On <i>Fatigue</i> curve, you can see the fatigue climbing sharply in response where you performed
+				workouts with a high stress. But also go down quickly as you take few days off.
+			</li>
+
+			<li>
+				The <i>Form</i> curve is simply the difference between <i>Fitness</i> and <i>Fatigue</i>, it's the right
+				balance of stress you should look at to avoid over training for example.
+				<div>
+					<i>Form = Fitness - Fatigue</i>
+				</div>
+
+				When:
+				<ul>
+					<li><i>+25 < Form :</i> Transition zone. Athlete is on form. Case where athlete has an
+						extended break. (e.g. illness, injury or end of the season).
+					</li>
+					<li><i>+5 < Form < +25 :</i> Freshness Zone. Athlete is on form. Ready for a race.</li>
+					<li><i>-10 < Form < +5 :</i> Neutral Zone. Zone reached typically when athlete is in a rest
+						or recovery week. After a race or hard training period.
+					</li>
+					<li><i>-30 < Form < -10 :</i> Optimal Training Zone.</li>
+					<li><i>Form < -30 :</i> Over Load Zone. Athlete is on overload or over-training phase. They
+						should take a rest!
+					</li>
+				</ul>
+			</li>
+			<div>
+				<a href="http://www.joefrielsblog.com/2015/12/managing-training-using-tsb.html" target="_blank">Read
+					more from joefrielsblog.com</a>
+			</div>
+			<div>
+				Be fit doesn't mean you are ready to race at your higher level. A negative <i>Form</i> would reveal that
+				you are carrying fatigue and are not on form. By resting you can remove fatigue faster than you lose
+				fitness and come into form for your race day (or punish friend day... ;))!
+			</div>
+		</ul>
+	</div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">Got It</button>
+</mat-dialog-actions>
+

@@ -10,14 +10,14 @@ export class Loader {
         this.totalRequired = scripts.length;
         this.loadingFinished = loadingFinished;
 
-        for (let i: number = 0; i < scripts.length; i++) {
+        for (let i = 0; i < scripts.length; i++) {
             this.writeScript(chrome.extension.getURL(scripts[i]));
         }
     }
 
     public loaded(): void {
         this.loadCount++;
-        if (this.loadCount == this.totalRequired && typeof this.loadingFinished === "function") this.loadingFinished();
+        if (this.loadCount == this.totalRequired && typeof this.loadingFinished === "function") { this.loadingFinished(); }
     }
 
     public writeScript(src: string): void {

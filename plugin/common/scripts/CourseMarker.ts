@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { IActivityStream } from "./interfaces/IActivityData";
+import { StreamsModel } from "./models/ActivityData";
 
 export interface ICourseBounds {
     start: number;
@@ -13,7 +13,7 @@ export enum ExportTypes {
 
 export class CourseMaker {
 
-    public create(exportType: ExportTypes, courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+	public create(exportType: ExportTypes, courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
 
         let courseData: string = null;
 
@@ -34,28 +34,28 @@ export class CourseMaker {
         return courseData;
     }
 
-    private createGpx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+	private createGpx(courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
         }
 
-        let gpxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<gpx creator=\"StravistiX\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">\n" +
+		let gpxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+			"<gpx creator=\"StravistiX\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">\n" +
             "<metadata>\n" +
             "<author>\n" +
             "<name>StravistiX</name>\n" +
-            "<link href=\"http://thomaschampagne.github.io/stravistix/\"/>\n" +
+			"<link href=\"http://thomaschampagne.github.io/stravistix/\"/>\n" +
             "</author>\n" +
             "</metadata>\n" +
             "<trk>\n" +
             "<name>" + courseName + "</name>\n" +
             "<trkseg>\n";
 
-        for (let i: number = 0; i < activityStream.latlng.length; i++) {
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
             // Position
-            gpxString += "<trkpt lat=\"" + activityStream.latlng[i][0] + "\" lon=\"" + activityStream.latlng[i][1] + "\">\n";
+			gpxString += "<trkpt lat=\"" + activityStream.latlng[i][0] + "\" lon=\"" + activityStream.latlng[i][1] + "\">\n";
 
             // Altitude
             if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
@@ -96,7 +96,7 @@ export class CourseMaker {
         return gpxString;
     }
 
-    private createTcx(courseName: string, activityStream: IActivityStream, bounds?: ICourseBounds): string {
+	private createTcx(courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
@@ -117,8 +117,8 @@ export class CourseMaker {
             courseName = courseName.slice(0, 15);
         }
 
-        let tcxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<TrainingCenterDatabase xsi:schemaLocation=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd\" xmlns:ns5=\"http://www.garmin.com/xmlschemas/ActivityGoals/v1\" xmlns:ns3=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\" xmlns:ns2=\"http://www.garmin.com/xmlschemas/UserProfile/v2\" xmlns=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+		let tcxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+			"<TrainingCenterDatabase xsi:schemaLocation=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd\" xmlns:ns5=\"http://www.garmin.com/xmlschemas/ActivityGoals/v1\" xmlns:ns3=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\" xmlns:ns2=\"http://www.garmin.com/xmlschemas/UserProfile/v2\" xmlns=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
             "<Courses>\n" +
             "<Course>\n" +
             "<Name>" + courseName + "</Name>\n" +
@@ -130,7 +130,7 @@ export class CourseMaker {
         tcxString += "</Lap>\n";
         tcxString += "<Track>\n";
 
-        for (let i: number = 0; i < activityStream.latlng.length; i++) {
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
             tcxString += "<Trackpoint>\n";
             tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";
@@ -162,7 +162,7 @@ export class CourseMaker {
         return tcxString;
     }
 
-    protected cutStreamsAlongBounds(activityStream: IActivityStream, bounds: ICourseBounds): IActivityStream {
+	protected cutStreamsAlongBounds(activityStream: StreamsModel, bounds: ICourseBounds): StreamsModel {
 
         if (!_.isEmpty(activityStream.velocity_smooth)) {
             activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds.start, bounds.end);

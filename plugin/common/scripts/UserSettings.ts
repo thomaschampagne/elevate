@@ -1,8 +1,9 @@
-import { IUserSettings } from "./interfaces/IUserSettings";
+import { UserSettingsModel } from "./models/UserSettings";
 
-export let userSettings: IUserSettings = {
+export const userSettings: UserSettingsModel = {
     autoSyncMinutes: 60,
     localStorageMustBeCleared: false,
+	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
     userGender: "men",
     userMaxHr: 190,
     userRestHr: 65,
@@ -207,7 +208,6 @@ export let userSettings: IUserSettings = {
     targetsYearRide: 5000,
     targetsYearRun: 750,
     remoteLinks: true,
-    feedAutoScroll: true,
     defaultLeaderBoardFilter: "overall",
     activateRunningGradeAdjustedPace: true,
     activateRunningHeartRate: true,
@@ -228,6 +228,7 @@ export let userSettings: IUserSettings = {
     enableBothLegsCadence: true,
     feedHideChallenges: false,
     feedHideCreatedRoutes: false,
+	feedHidePosts: false,
     feedHideSuggestedAthletes: false,
     feedHideVirtualRides: false,
     feedHideRideActivitiesUnderDistance: 0,
@@ -242,8 +243,7 @@ export let userSettings: IUserSettings = {
     reviveGoogleMapsLayerType: "terrain",
     displayActivityBestSplits: true,
     bestSplitsConfiguration: null,
-    temperatureUnit: "F",
-    windUnit: "mph",
+	temperatureUnit: "C",
     showHiddenBetaFeatures: false,
     displayReliveCCLink: true,
 };

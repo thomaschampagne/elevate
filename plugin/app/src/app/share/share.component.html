@@ -1,0 +1,36 @@
+<mat-card>
+	<mat-card-title>
+		Share extension to your sports mates !
+	</mat-card-title>
+	<mat-card-content>
+		<div>
+			Sharing this extension is probably nothing for you! But a lot for the project!
+		</div>
+		<div>
+			Thanks you in advance !
+		</div>
+		<div class="buttons-groups">
+			<div>
+				<button mat-button mat-raised-button color="primary"
+						(click)="onOpenFacebook()">
+					<mat-icon svgIcon="facebook"></mat-icon>
+					Share to your facebook friends.
+				</button>
+			</div>
+			<div>
+				<button mat-button mat-raised-button color="primary"
+						(click)="onOpenTweet()">
+					<mat-icon svgIcon="twitter"></mat-icon>
+					Tweet the word to the world!
+				</button>
+			</div>
+			<div>
+				<button mat-button mat-raised-button color="primary"
+						(click)="onOpenLandingPage()">
+					<mat-icon>public</mat-icon>
+					Spread plugin page around you.
+				</button>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>

@@ -1,0 +1,37 @@
+<mat-card *ngIf="!areZonesLoaded">
+	<mat-card-content>
+		<mat-progress-bar mode="buffer"></mat-progress-bar>
+	</mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="zoneDefinitionSelected && areZonesLoaded">
+	<app-zone-tool-bar
+		[currentZonesLength]="currentZones.length"
+		[zoneDefinitions]="zoneDefinitions"
+		[zoneDefinitionSelected]="zoneDefinitionSelected"
+		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
+	</app-zone-tool-bar>
+
+
+	<app-zone *ngFor="let zone of currentZones; let zoneId = index;"
+			  [zone]="zone"
+			  [zoneId]="zoneId"
+			  [zoneFrom]="currentZones[zoneId].from"
+			  [zoneTo]="currentZones[zoneId].to"
+			  [prevZoneFrom]="(currentZones[zoneId - 1]) ? currentZones[zoneId - 1].from : null"
+			  [nextZoneTo]="(currentZones[zoneId + 1]) ? currentZones[zoneId + 1].to : null"
+			  [isFirstZone]="(zoneId == 0)"
+			  [isLastZone]="(zoneId == (currentZones.length - 1))"
+			  [currentZones]="currentZones"
+			  [zoneDefinition]="zoneDefinitionSelected">
+	</app-zone>
+
+	<app-zone-tool-bar
+		[currentZonesLength]="currentZones.length"
+		[zoneDefinitions]="zoneDefinitions"
+		[zoneDefinitionSelected]="zoneDefinitionSelected"
+		(zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)">
+	</app-zone-tool-bar>
+</ng-container>
+
+

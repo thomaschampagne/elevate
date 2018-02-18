@@ -292,12 +292,6 @@ export let commonSettingsService = () => {
         }, {
             sectionTitle: "Dashboard",
             sectionContent: [{
-                optionKey: "feedAutoScroll",
-                optionType: "checkbox",
-                optionTitle: "Feed auto-scroll",
-                optionLabels: ["All"],
-                optionHtml: "Automatic scrolling on activity dashboard<br /><br /><img src=\"img/feedAutoScroll.png\"/>",
-            }, {
                 optionKey: "feedHideChallenges",
                 optionType: "checkbox",
                 optionTitle: "Hide challenges",
@@ -309,6 +303,12 @@ export let commonSettingsService = () => {
                 optionTitle: "Hide created routes",
                 optionLabels: ["All"],
                 optionHtml: "This will hide all routes created in the dashboard feed.",
+            }, {
+                optionKey: "feedHidePosts",
+                optionType: "checkbox",
+                optionTitle: "Hide posts",
+                optionLabels: ["All"],
+                optionHtml: "This will hide posts from the dashboard feed",
             }, {
                 optionKey: "feedHideSuggestedAthletes",
                 optionType: "checkbox",

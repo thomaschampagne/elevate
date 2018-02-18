@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { constants } from "../../common/scripts/Constants";
-import { IConstants } from "../../common/scripts/interfaces/IConstants";
-import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { ConstantsModel } from "../../common/scripts/models/Constants";
+import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { userSettings } from "../../common/scripts/UserSettings";
 import { Loader } from "../modules/Loader";
 import { IAppResources } from "./interfaces/IAppResources";
@@ -16,19 +16,19 @@ export class Content {
 
     public static loader: Loader = new Loader();
 
-    public static startCoreEvent: string = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
+	public static startCoreEvent = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
 
     protected appResources: IAppResources;
-    protected userSettings: IUserSettings;
+	protected userSettings: UserSettingsModel;
 
-    constructor(userSettings: IUserSettings, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
         this.userSettings = userSettings;
         this.appResources = appResources;
     }
 
     public isExtensionRunnableInThisContext(): boolean {
 
-        let isRunnable: boolean = true;
+		let isRunnable = true;
 
         // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
         if (window.location.pathname.match(/^\/routes\/new/) ||
@@ -63,7 +63,7 @@ export class Content {
             return;
         }
 
-        chrome.storage.sync.get(this.userSettings, (chromeSettings: IUserSettings) => {
+		chrome.storage.sync.get(this.userSettings, (chromeSettings: UserSettingsModel) => {
 
             if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
                 chromeSettings = this.userSettings;
@@ -99,10 +99,10 @@ export class Content {
 
     }
 
-    protected assignConstantsValues(constants: IConstants) {
+	protected assignConstantsValues(constants: ConstantsModel) {
         constants.VERSION = chrome.runtime.getManifest().version;
         constants.EXTENSION_ID = chrome.runtime.id;
-        constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/options/app/index.html";
+		constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/app/index.html";
     }
 
     protected emitStartCoreEvent(startCoreData: any) {
@@ -113,7 +113,7 @@ export class Content {
 }
 
 export let appResources: IAppResources = {
-    settingsLink: chrome.extension.getURL("/options/app/index.html"),
+	settingsLink: chrome.extension.getURL("/app/index.html"),
     logoStravistix: chrome.extension.getURL("/core/icons/logo_stravistix_no_circle.svg"),
     menuIconBlack: chrome.extension.getURL("/core/icons/ic_menu_24px_black.svg"),
     menuIconOrange: chrome.extension.getURL("/core/icons/ic_menu_24px_orange.svg"),
@@ -142,7 +142,7 @@ export let appResources: IAppResources = {
     systemUpdatesIcon: chrome.extension.getURL("/core/icons/ic_system_update_24px.svg"),
     fitnessCenterIcon: chrome.extension.getURL("/core/icons/ic_fitness_center_black_24px.svg"),
     timelineIcon: chrome.extension.getURL("/core/icons/ic_timeline_black_24px.svg"),
-    timelapseIcon: chrome.extension.getURL("/core/icons/ic_timelapse_black_24px.svg"),
+	dateRange: chrome.extension.getURL("/core/icons/ic_date_range_black_24px.svg"),
     athleteIcon: chrome.extension.getURL("/core/icons/ic_accessibility_black_24px.svg"),
     donateIcon: chrome.extension.getURL("/core/icons/ic_attach_money_24px.svg"),
     shareIcon: chrome.extension.getURL("/core/icons/ic_share_24px.svg"),

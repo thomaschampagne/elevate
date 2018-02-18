@@ -1,5 +1,5 @@
 {
-  "settingsLink": "chrome-extension://EXT_ID/options/app/index.html",
+	"settingsLink": "chrome-extension://EXT_ID/app/index.html",
   "logoStravistix": "chrome-extension://EXT_ID/icons/logo_stravistix_no_circle.svg",
   "menuIconBlack": "chrome-extension://EXT_ID/icons/ic_menu_24px_black.svg",
   "menuIconOrange": "chrome-extension://EXT_ID/icons/ic_menu_24px_orange.svg",

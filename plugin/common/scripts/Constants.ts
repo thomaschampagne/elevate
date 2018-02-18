@@ -1,7 +1,7 @@
-import { IConstants } from "./interfaces/IConstants";
+import { ConstantsModel } from "./models/Constants";
 
-export const constants: IConstants = {
-    VERSION: null,
-    EXTENSION_ID: null,
-    OPTIONS_URL: null,
+export const constants: ConstantsModel = {
+	VERSION: null,
+	EXTENSION_ID: null,
+	OPTIONS_URL: null,
 };

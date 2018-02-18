@@ -33,7 +33,7 @@ import { releaseNotesService } from "./services/ReleaseNotesService";
 // Assign constants values
 constants.VERSION = chrome.runtime.getManifest().version;
 constants.EXTENSION_ID = chrome.runtime.id;
-constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/options/app/index.html";
+constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/app/index.html";
 
 const ngModules: string[] = [
     "ngRoute",

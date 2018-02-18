@@ -1,0 +1,43 @@
+@import "./constant";
+
+.light { // Global change metrics graphics text color along light theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: black;
+		font-size: 12px;
+		opacity: 0.75;
+	}
+
+	.mg-baselines line {
+		opacity: 0.5;
+		stroke-dasharray: 10, 10;
+		stroke: black;
+	}
+
+	.mg-markers line {
+		opacity: 0.125;
+		shape-rendering: auto;
+		stroke: black;
+		stroke-width: 1px;
+	}
+}
+
+.dark { // Global change metrics graphics text color along dark theme when selected
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: white;
+		font-size: 12px;
+		opacity: 0.75;
+	}
+
+	.mg-baselines line {
+		opacity: 0.5;
+		stroke-dasharray: 10, 10;
+		stroke: white;
+	}
+
+	.mg-markers line {
+		opacity: 0.1;
+		shape-rendering: auto;
+		stroke: white;
+		stroke-width: 1px;
+	}
+}

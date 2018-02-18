@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+	{{((data.mode == Mode.IMPORT) ? "Import" : "Export")}} <{{data.zoneDefinition.name}}> zones
+</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<span *ngIf="(data.mode == Mode.IMPORT)">Paste exported zones in input field.</span>
+	<span *ngIf="(data.mode == Mode.EXPORT)">Copy below content where you want to save it!</span>
+	<br/><br/>
+	<mat-form-field fxFill>
+		<input
+			matInput
+			[readonly]="(data.mode == Mode.EXPORT)"
+			[(ngModel)]="zonesJsonData"
+			placeholder="{{placeholder}}"
+			autofocus/>
+	</mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">Close</button>
+	<button mat-button mat-dialog-close color="primary" *ngIf="(data.mode == Mode.IMPORT)" (click)="OnImport()">
+		Import
+	</button>
+</mat-dialog-actions>

@@ -1,0 +1,12 @@
+@import "~@angular/material/theming";
+
+@mixin native-web-elements($theme) {
+	$accent: map-get($theme, accent);
+	a {
+		color: mat-color($accent);
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+}

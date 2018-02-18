@@ -1,134 +1,182 @@
-[![Build Status](https://img.shields.io/travis/thomaschampagne/stravistix/develop.svg?label=unitTests@develop)](https://travis-ci.org/thomaschampagne/stravistix/branches)  [![AppVeyor branch](https://img.shields.io/appveyor/ci/thomaschampagne/stravistix/develop.svg?label=zip@develop)](https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts)
-
+[![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
+[ ![Download](https://api.bintray.com/packages/thomaschampagne/stravistix/travis-ci-builds/images/download.svg?version=develop) ](https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
-# Table of Content
+# Install StravistiX
 
-<!-- toc -->
+## From a Chrome based browser
 
-- [1/ Install StravistiX](#1-install-stravistix)
-    + [1.1/ From Chrome / Opera Store](#11-from-chrome--opera-store)
-    + [1.2/ From continuous integration](#12-from-continuous-integration)
-- [2/ Install from sources](#2-install-from-sources)
-    + [2.0/ Infos](#20-infos)
-    + [2.1/ Install NodeJS with node package manager](#21-install-nodejs-with-node-package-manager)
-    + [2.2/ Install gulp plugins dependencies](#22-install-gulp-plugins-dependencies)
-    + [2.3/ Build the project](#23-build-the-project)
-    + [2.4/ Loading the extension](#24-loading-the-extension)
-- [3/ How to develop in ?](#3-how-to-develop-in-)
-    + [3.1/ Making changes and view them](#31-making-changes-and-view-them)
-    + [3.2/ Create a package archive](#32-create-a-package-archive)
-    + [3.3/ Clean the project](#33-clean-the-project)
-- [4/ Git repository structure and GitFlow](#4-git-repository-structure-and-gitflow)
-- [5/ Code Editor and Indentation plugin used](#5-code-editor-and-indentation-plugin-used)
-
-<!-- tocstop -->
-
-1/ Install StravistiX
-=====================================================
-### 1.1/ From Chrome / Opera Store
 Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.github.io/stravistix/)
 
-### 1.2/ From continuous integration
-Latest **develop** build: https://ci.appveyor.com/project/thomaschampagne/stravistix/branch/develop/artifacts
+You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
-Install steps to follow: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
+## From continuous integration
+Using latest **develop** branch builds: https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files
 
-2/ Install from sources
-==========
+Install steps with a standalone build: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
 
-### 2.0/ Infos
-StravistiX is using bellow frameworks/libs/tools:
+## From the sources
 
-* Node package manager (npm) provided by [nodejs.org](https://nodejs.org) to fetch modules from [npmjs.com](https://www.npmjs.com/).
-* [Gulp](http://gulpjs.com/) task runner.
-* [Chart.js](http://www.chartjs.org/) Simple yet flexible JavaScript charting.
-* [Lodash](https://lodash.com) that provides a whole mess of useful functional programming helpers.
-* [AngularJS 1.*](https://angularjs.org/) for options page.
-* [Angular Material](https://material.angularjs.org) design 1.* for options page.
-* [TypeScript](https://www.typescriptlang.org) that adds typing & class-based syntax over javascript then compile back to JavaScript (ES5/ES2015/ES6).
+Go to chapter [Environnement setup](#environnement-setup).
 
-**[Learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/). Try it and buy it !**.
+# Development
 
-### 2.1/ Install NodeJS with node package manager
+## Project structure description
 
-You must run **npm** cli command via [nodejs.org](https://nodejs.org) to fetch JS dependencies.
+The project is splitted in 2 sub-projects: the _core_ and the _embedded app_.
 
-Node 8 is currently used in the project. Older version of node may not work.
+### Core
 
-### 2.2/ Install gulp plugins dependencies
+The core contains the plugin's behaviour that acts directly on _strava.com_ website. This include _extended stats on activities & segments efforts, best splits, google maps support, etc..._
+
+> The core sources are located in **plugin/core** directory
+
+### Embedded app
+
+The embedded app contains features like fitness trend, year progressions, ... and global plugin settings such as _common settings, athlete settings & zones settings._
+
+> The embedded app sources are located in **plugin/app** directory
+
+**Notice**: The **plugin/common** directory contains sources shared by both sub-projects.
+
+## Description of frameworks & tools used.
+
+_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compile back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
+
+### At a glance...
+
+### Core dependencies
+* [SystemJS](https://github.com/systemjs/systemjs) as dynamic EcmaScript module loader.
+* [Q](http://documentup.com/kriskowal/q/) as promise library for JavaScript.
+* [Chart.js](http://www.chartjs.org/) for JavaScript charting.
+
+
+### Embedded app dependencies
+* [Angular](https://angular.io/) as frontend framework
+* [Angular Material](https://material.angular.io/) for material designed components.
+* [Metrics Graphics](https://www.metricsgraphicsjs.org/) and [d3js](https://d3js.org/) for charting.
+
+### Shared dependencies
+* [Lodash](https://lodash.com) to get a whole mess of useful functional programming helpers in typescript/javascript.
+* [MomentJS](https://momentjs.com/) to parse, validate, manipulate, and display dates and times.
+
+### Tools
+
+* [NodeJS](https://nodejs.org/en/) as javascript runtime environnement.
+* [Npm](https://www.npmjs.com/) as package manager to fetch project dependencies
+
+## Environnement setup
+
+### Install requirements
+
+Here's what you need to install to run the extension in a chrome based browser:
+
+- Chrome based browser (Chrome, Chromium, Chrome Canary, Opera,...), of course...
+- NodeJS [here](https://nodejs.org). Version 8+ is recommended.
+
+That's all :)
+
+### Clone the project
+
+Using HTTPS
+```bash
+git clone https://github.com/thomaschampagne/stravistix.git
 ```
+
+Or using SSH
+
+```bash
+git clone git@github.com:thomaschampagne/stravistix.git
+```
+
+### Fetch NPM dependencies
+
+The `npm` command should be now installed on your system through the NodeJS installation. 
+
+Enter in project directory
+```bash
+cd stravistix
+```
+
+Then install NPM dependencies with
+```bash
 npm install
 ```
-This will install required gulp plugins in order to run project tasks. Gulp plugins are specified into **./package.json** file as **devDependencies**
 
-### 2.3/ Build the project
-```
+### Build plugin
+
+Once you installed the NPM dependencies, you can build the plugin with the following command:
+
+```bash
 npm run build
 ```
-First, this will download others JS dependencies (lodash, angular, chart.js, ...) specified in **plugin/package.json** file if not already downloaded.
 
-Next, all the needed files from **plugin/** will be copied to **dist/** folder.
+Both _core_ and _embedded app_ will be builded.
 
-### 2.4/ Loading the extension
+Once the build is completed, the plugin will be located in **dist/** directory.
 
-You can now load extension from **chrome://extensions** chrome tab:
+A production build can be also run with
 
-* In chrome, open new tab and type **chrome://extensions** then enter
-* Tick **Developer Mode** checkbox
-* Click **Load Unpacked Extension** button, then choose **dist/** folder (this is where you have **manifest.json** file)
-* Done !
-
-3/ How to develop in ?
-==========
-
-### 3.1/ Making changes and view them
-
-Development must be done inside **plugin/** folder. You can code using TypeScript OR Javascript. But i strongly recommend you to use TypeScript.
-
->_Remember: [Here you can learn TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/)_
->_Most IDE support TypeScript through plugins (Atom, Sublime, WebStorm, VisualStudio code, ...) @see https://www.typescriptlang.org/_
-
-Angular WebApp (**plugin/options** folder) must be coded ideally with TypeScript @see [angular.io/guide/ts-to-js](https://angular.io/guide/ts-to-js)
-
-In chrome, use **plugin/** folder as Unpacked Extension for development
-
-To compile typescript project and listen for changes run:
-```
-npm run dev
+```bash
+npm run build:prod
 ```
 
-To build the app, simply run the following command:
-```
-npm run build
-```
-This will generate a **dist/** folder.
+This will disable TypeScript debug sources map and enable [Ahead-of-Time](https://angular.io/guide/aot-compiler) compilation for _embedded app_.
 
-To test the build in chrome, use now **dist/** folder as Unpacked Extension for development.
+### Load plugin into your browser
 
-_Note: Make sure to declare any new resources in **gulpfile.js** to get them properly copied to **dist/** folder on a build task_ 
+Into your chrome based browser:
 
-Run unit testing suite:
+* Open new tab and type **chrome://extensions**, then enter.
+* Tick **Developer Mode** checkbox.
+* Click **Load Unpacked Extension** button, then choose **dist/** directory (this is where you have the **manifest.json** file)
+* Make sure to disable others instances of stravistix. You can re-enable them back from same tab.
+* Open strava.com
+
+### Build plugin on files changes
+
+In order to avoid to re-run the painfull `npm run build` task on each file changes. You could run the following command:
+
+```bash
+npm start
 ```
+
+This task will watch for files changes and automatically rebuild plugin to **dist/** directory. It's a way more suitable and faster for a development workflow.
+
+### Run unit tests
+
+The below command will run _core_ and _embedded app_ unit tests into a headless chrome.
+
+```bash
 npm test
 ```
-### 3.2/ Create a package archive
-```
+
+Should be **run** and has to **pass** before any work submission.
+
+### Packaging
+
+You can package the extension with the following command
+
+```bash
 npm run package
 ```
-This will create zip archive of **dist/** folder in **package/StravistiX\_vX.X.X\_[date].zip**
 
-### 3.3/ Clean the project
+A production build will be executed for this task.
+
+On packaging done, a release archive will be generated in **package/** directory.
+
+### Clean project
+
+Simply run
+
 ```
 npm run clean
 ```
-This will clean **dist/**, **package/** & *.js *.map compiled sources
 
-4/ Git repository structure and GitFlow
-==========
-This project repository is fitted for **GitFlow** branches management workflow. Learn more @  http://nvie.com/posts/a-successful-git-branching-model/
+This will clean **dist/**, **package/** & __*.js *.map__ generated files
 
-5/ Code Editor
-==========
-[**Visual Studio Code**](https://code.visualstudio.com/) editor was used for that project.
+# Git-Flow Repository structure
 
+The project repository is fitted for **GitFlow** branches management workflow.
+
+Learn more @  http://nvie.com/posts/a-successful-git-branching-model/

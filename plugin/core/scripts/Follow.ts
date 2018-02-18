@@ -49,7 +49,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
             return null;
         }
 
-        let status: number = 0; // Free by default
+        let status = 0; // Free by default
         if (isPremium) {
             status = 1;
         }

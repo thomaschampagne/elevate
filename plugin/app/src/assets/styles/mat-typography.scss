@@ -1,0 +1,27 @@
+@import "~@angular/material/theming";
+
+$base-style-config: mat-typography-config(); // Create a config with the default typography levels.
+$app-style-config: mat-typography-config(// Define a typography config that will override the base typo
+	$font-family: "Roboto, Helvetica",
+	$headline: mat-typography-level(
+			mat-font-size($base-style-config, headline),
+			mat-line-height($base-style-config, headline),
+			300),
+	$title: mat-typography-level(
+			mat-font-size($base-style-config, title),
+			mat-line-height($base-style-config, title),
+			300),
+	$subheading-2: mat-typography-level(
+			mat-font-size($base-style-config, subheading-2),
+			mat-line-height($base-style-config, subheading-2),
+			300),
+	$button: mat-typography-level(
+			mat-font-size($base-style-config, button),
+			mat-line-height($base-style-config, button),
+			300)
+);
+
+@include mat-base-typography($app-style-config); // Override typography CSS classes (e.g., mat-h1, mat-display-1, etc.).
+@include mat-checkbox-typography($app-style-config); // Override typography for a specific Angular Material components.
+@include angular-material-typography($app-style-config); // Override typography for all Angular Material, including mat-base-typography and all components.
+@include mat-core($app-style-config); // Override the typography in the core CSS.

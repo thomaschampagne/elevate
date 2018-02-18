@@ -1,0 +1,156 @@
+<div id="app-container">
+	<mat-sidenav-container>
+		<mat-sidenav #sidenav
+					 [mode]="sideNavMode"
+					 (open)="onSideNavOpened()"
+					 (close)="onSideNavClosed()">
+			<mat-nav-list>
+				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+							   routerLinkActive="{{item.routerLinkActive}}">
+					<mat-icon>{{item.icon}}</mat-icon>
+					<span class="mat-body-1">{{item.name}}</span>
+				</mat-list-item>
+				<mat-list-item (click)="onOpenLink('https://www.strava.com')">
+					<mat-icon svgIcon="strava"></mat-icon>
+					<span class="mat-body-1">Strava</span>
+				</mat-list-item>
+				<mat-list-item routerLink="/donate">
+					<mat-icon>favorite</mat-icon>
+					<span class="mat-body-1">Donate</span>
+				</mat-list-item>
+				<mat-list-item (click)="onOpenLink('/options/app/index.html#!/commonSettings')">
+					<mat-icon>keyboard_backspace</mat-icon>
+					<span class="mat-body-1">Back to old app</span>
+				</mat-list-item>
+			</mat-nav-list>
+
+			<div id="logo"></div>
+
+		</mat-sidenav>
+		<mat-toolbar>
+
+			<button mat-icon-button id="toolBarMenu" (click)="onSideNavToggle()">
+				<mat-icon>menu</mat-icon>
+			</button>
+
+			<span>{{toolBarTitle}}</span>
+
+			<span class="toolbar-spacer"></span>
+
+			<ng-container>
+				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
+					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
+						sync_disabled
+					</mat-icon>
+					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
+						sync_problem
+					</mat-icon>
+					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+						sync
+					</mat-icon>
+					<span *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
+						History not synced
+					</span>
+					<span *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
+						History partially synced
+					</span>
+					<span *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+						Synced {{lastSyncDateMessage}}
+					</span>
+				</button>
+				<mat-menu #syncMenu="matMenu">
+					<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
+					<button mat-menu-item
+							(click)="onAthleteHistorySync(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
+						<mat-icon>sync</mat-icon>
+						Sync now
+					</button>
+					<button mat-menu-item (click)="onAthleteHistorySync(true)"
+							*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
+						<mat-icon>redo</mat-icon>
+						Redo Full Sync
+					</button>
+					<button mat-menu-item (click)="onAthleteHistoryRemove()"
+							*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
+						<mat-icon>clear</mat-icon>
+						Clear Local History
+					</button>
+					<button mat-menu-item (click)="onAthleteHistoryExport()"
+							*ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+						<mat-icon>file_download</mat-icon>
+						Backup History
+					</button>
+					<button mat-menu-item (click)="onAthleteHistoryImport()">
+						<mat-icon>file_upload</mat-icon>
+						Restore History
+					</button>
+				</mat-menu>
+			</ng-container>
+
+			<button mat-icon-button [matMenuTriggerFor]="moreMenu">
+				<mat-icon>more_vert</mat-icon>
+			</button>
+
+			<mat-menu #moreMenu="matMenu">
+
+				<button mat-menu-item (click)="onThemeToggle()">
+					<mat-icon *ngIf="currentTheme === Theme.LIGHT"
+							  style="transform: rotate(-35deg) scaleX(-1);">
+						brightness_3 <!--Moon icon rotate by -35deg-->
+					</mat-icon>
+					<mat-icon *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
+
+					<span *ngIf="currentTheme === Theme.LIGHT">Dark theme</span>
+					<span *ngIf="currentTheme === Theme.DARK">Light theme</span>
+				</button>
+
+				<button mat-menu-item
+						(click)="onOpenLink('https://twitter.com/champagnethomas')">
+					<mat-icon>announcement</mat-icon>
+					App updates
+				</button>
+
+				<button mat-menu-item (click)="onShowReleaseNotes()">
+					<mat-icon>system_update</mat-icon>
+					Release notes
+				</button>
+
+				<button mat-menu-item (click)="onShowShare()">
+					<mat-icon>share</mat-icon>
+					Share plugin
+				</button>
+
+				<button mat-menu-item (click)="onOpenLink('https://www.strava.com/clubs/stravistix')">
+					<mat-icon>group</mat-icon>
+					Strava Club
+				</button>
+
+				<button mat-menu-item (click)="onOpenLink('http://thomaschampagne.github.io/stravistix/')">
+					<mat-icon>public</mat-icon>
+					Plugin page
+				</button>
+
+				<button mat-menu-item (click)="onShowReport()">
+					<mat-icon>bug_report</mat-icon>
+					Report a bug
+				</button>
+
+				<button mat-menu-item
+						(click)="onOpenLink('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions')">
+					<mat-icon>help</mat-icon>
+					FAQ
+				</button>
+
+				<button mat-menu-item (click)="onShowAbout()">
+					<mat-icon>info</mat-icon>
+					About
+				</button>
+			</mat-menu>
+		</mat-toolbar>
+
+		<div>
+			<app-remote-athlete-mismatch></app-remote-athlete-mismatch>
+			<router-outlet></router-outlet>
+		</div>
+	</mat-sidenav-container>
+</div>

@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
-import { IActivityBasicInfo } from "../../common/scripts/interfaces/IActivityData";
-import { ISyncNotify } from "../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../common/scripts/interfaces/IUserSettings";
+import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
+import { SyncNotifyModel } from "../../common/scripts/models/Sync";
+import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
 import { env } from "../config/env";
@@ -13,7 +13,6 @@ import { ActivitiesSyncModifier } from "./modifiers/ActivitiesSyncModifier";
 import { ActivityBestSplitsModifier } from "./modifiers/ActivityBestSplitsModifier";
 import { ActivityBikeOdoModifier } from "./modifiers/ActivityBikeOdoModifier";
 import { ActivityQRCodeDisplayModifier } from "./modifiers/ActivityQRCodeDisplayModifier";
-import { ActivityScrollingModifier } from "./modifiers/ActivityScrollingModifier";
 import { ActivitySegmentTimeComparisonModifier } from "./modifiers/ActivitySegmentTimeComparisonModifier";
 import { ActivityStravaMapTypeModifier } from "./modifiers/ActivityStravaMapTypeModifier";
 import { AthleteStatsModifier } from "./modifiers/AthleteStatsModifier";
@@ -29,10 +28,8 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-    RunningCadenceModifier,
-    RunningGradeAdjustedPaceModifier,
-    RunningHeartRateModifier,
-    RunningTemperatureModifier,
+	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
+	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
 import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/SegmentRecentEffortsHRATimeModifier";
@@ -48,7 +45,7 @@ import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
 export class StravistiX {
     public static instance: StravistiX = null;
 
-    public static versionInstalledKey: string = "versionInstalled";
+	public static versionInstalledKey = "versionInstalled";
     protected isPro: boolean;
 
     protected isPremium: boolean;
@@ -60,11 +57,11 @@ export class StravistiX {
     protected isActivityAuthor: boolean;
     protected extensionId: string;
     protected appResources: IAppResources;
-    protected _userSettings: IUserSettings;
+	protected _userSettings: UserSettingsModel;
     protected vacuumProcessor: VacuumProcessor;
     protected activitiesSynchronizer: ActivitiesSynchronizer;
 
-    constructor(userSettings: IUserSettings, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
 
         this._userSettings = userSettings;
         this.appResources = appResources;
@@ -114,14 +111,15 @@ export class StravistiX {
         // Init "stravistix bridge"
         window.__stravistix_bridge__ = {};
 
-        if (env.debugMode) console.log("Handling " + window.location.pathname);
+		if (env.debugMode) {
+			console.log("Handling " + window.location.pathname);
+		}
 
         // Common
         this.handleMenu();
         this.handleRemoteLinks();
         this.handleWindyTyModifier();
         this.handleReliveCCModifier();
-        this.handleActivityScrolling();
         this.handleDefaultLeaderboardFilter();
         this.handleSegmentRankPercentage();
         this.handleSegmentHRAP();
@@ -321,7 +319,7 @@ export class StravistiX {
      */
     protected handleUpdatePopup(): void {
 
-        let previewBuild: boolean = false;
+		let previewBuild = false;
         if (this.appResources.extVersionName.indexOf("preview@") !== -1) {
             previewBuild = true;
         }
@@ -335,16 +333,16 @@ export class StravistiX {
             features: (latestRelease.features) ? latestRelease.features : [],
             fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
             upcomingFixes: [],
-            upcomingFeatures: [
-                // 'Years progressions reworked',
-                "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
-                "Grid: All your activities in a table including stravistix extended stats as columns.",
-                //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
-            ],
+			/* upcomingFeatures: [
+                 // 'Years progressions reworked',
+                 "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
+                 "Grid: All your activities in a table including stravistix extended stats as columns.",
+                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
+                 "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
+             ],*/
         };
 
-        let message: string = "";
+		let message = "";
         if (!_.isEmpty(latestRelease.message) && !previewBuild) {
             message += "<div style=\"background: #eee; padding: 8px;\">";
             message += latestRelease.message;
@@ -394,7 +392,7 @@ export class StravistiX {
         }
 
         // Donate button
-        message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#!/?showDonation=true\">";
+		message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#/donate\">";
         message += "<button style=\"font-size: 18px; width: 100%;\" class=\"btn btn-primary btn-sm\">Push this project higher !!!</button>";
         message += "</a>";
 
@@ -411,7 +409,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleAthletesStats()");
+		if (env.debugMode) {
+			console.log("Execute handleAthletesStats()");
+		}
 
         const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources, {
             Run: this._userSettings.targetsYearRun,
@@ -443,7 +443,7 @@ export class StravistiX {
      *
      */
     protected handlePreviewRibbon(): void {
-        const globalStyle: string = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
+		const globalStyle = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
         const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
         $("body").before(html);
     }
@@ -453,7 +453,9 @@ export class StravistiX {
      */
     protected handleMenu(): void {
 
-        if (env.debugMode) console.log("Execute handleMenu()");
+		if (env.debugMode) {
+			console.log("Execute handleMenu()");
+		}
 
         const menuModifier: MenuModifier = new MenuModifier(this.athleteId, this.appResources);
         menuModifier.modify();
@@ -473,7 +475,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleRemoteLinks()");
+		if (env.debugMode) {
+			console.log("Execute handleRemoteLinks()");
+		}
 
         const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.activityAthleteId === this.athleteId), this.activityId);
         remoteLinksModifier.modify();
@@ -500,7 +504,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleWindyTyModifier()");
+		if (env.debugMode) {
+			console.log("Execute handleWindyTyModifier()");
+		}
 
         const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this._userSettings);
         windyTyModifier.modify();
@@ -533,25 +539,12 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleReliveCCModifier()");
+		if (env.debugMode) {
+			console.log("Execute handleReliveCCModifier()");
+		}
 
         const reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
         reliveCCModifier.modify();
-    }
-
-    /**
-     *
-     */
-    protected handleActivityScrolling(): void {
-
-        if (!this._userSettings.feedAutoScroll) {
-            return;
-        }
-
-        if (env.debugMode) console.log("Execute handleActivityScrolling_()");
-
-        const activityScrollingModifier: ActivityScrollingModifier = new ActivityScrollingModifier();
-        activityScrollingModifier.modify();
     }
 
     /**
@@ -571,7 +564,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleDefaultLeaderboardFilter()");
+		if (env.debugMode) {
+			console.log("Execute handleDefaultLeaderboardFilter()");
+		}
 
         const defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this._userSettings.defaultLeaderBoardFilter);
         defaultLeaderBoardFilterModifier.modify();
@@ -591,7 +586,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleSegmentRankPercentage()");
+		if (env.debugMode) {
+			console.log("Execute handleSegmentRankPercentage()");
+		}
 
         const segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
         segmentRankPercentage.modify();
@@ -608,7 +605,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleSegmentHRAP_()");
+		if (env.debugMode) {
+			console.log("Execute handleSegmentHRAP_()");
+		}
 
         const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
 
@@ -626,7 +625,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleActivityStravaMapType()");
+		if (env.debugMode) {
+			console.log("Execute handleActivityStravaMapType()");
+		}
 
         const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this._userSettings.activityStravaMapType);
         activityStravaMapTypeModifier.modify();
@@ -639,11 +640,19 @@ export class StravistiX {
             return;
         }
 
-        if (!this._userSettings.feedHideChallenges && !this._userSettings.feedHideCreatedRoutes && !this._userSettings.feedHideRideActivitiesUnderDistance && !this._userSettings.feedHideRunActivitiesUnderDistance && !this._userSettings.feedHideVirtualRides && !this._userSettings.feedHideSuggestedAthletes) {
+		if (!this._userSettings.feedHideChallenges
+			&& !this._userSettings.feedHideCreatedRoutes
+			&& !this._userSettings.feedHidePosts
+			&& !this._userSettings.feedHideRideActivitiesUnderDistance
+			&& !this._userSettings.feedHideRunActivitiesUnderDistance
+			&& !this._userSettings.feedHideVirtualRides
+			&& !this._userSettings.feedHideSuggestedAthletes) {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleHideFeed()");
+		if (env.debugMode) {
+			console.log("Execute handleHideFeed()");
+		}
 
         const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this._userSettings);
         hideFeedModifier.modify();
@@ -656,7 +665,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleDisplayFlyByFeedModifier()");
+		if (env.debugMode) {
+			console.log("Execute handleDisplayFlyByFeedModifier()");
+		}
 
         const displayFlyByFeedModifier: DisplayFlyByFeedModifier = new DisplayFlyByFeedModifier();
         displayFlyByFeedModifier.modify();
@@ -682,9 +693,11 @@ export class StravistiX {
         this.activityProcessor.setActivityType(activityType);
         this.activityProcessor.setTrainer(isTrainer);
 
-        if (env.debugMode) console.log("Execute handleExtendedData_()");
+		if (env.debugMode) {
+			console.log("Execute handleExtendedData_()");
+		}
 
-        const basicInfo: IActivityBasicInfo = {
+		const basicInfo: ActivityBasicInfoModel = {
             activityName: this.vacuumProcessor.getActivityName(),
             activityTime: this.vacuumProcessor.getActivityTime(),
         };
@@ -767,7 +780,7 @@ export class StravistiX {
 
             const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-            const basicInfo: IActivityBasicInfo = {
+			const basicInfo: ActivityBasicInfoModel = {
                 activityName: that.vacuumProcessor.getActivityName(),
                 activityTime: that.vacuumProcessor.getActivityTime(),
             };
@@ -819,7 +832,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleNearbySegments()");
+		if (env.debugMode) {
+			console.log("Execute handleNearbySegments()");
+		}
 
         // Getting segment id
         const segmentId: number = parseInt(segmentData[1]);
@@ -827,7 +842,9 @@ export class StravistiX {
         const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
         segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
 
-            if (env.debugMode) console.log(jsonSegments);
+			if (env.debugMode) {
+				console.log(jsonSegments);
+			}
 
             const nearbySegmentsModifier: NearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources);
             nearbySegmentsModifier.modify();
@@ -858,7 +875,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleActivityBikeOdo()");
+		if (env.debugMode) {
+			console.log("Execute handleActivityBikeOdo()");
+		}
 
         const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
         bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
@@ -885,7 +904,9 @@ export class StravistiX {
         // PR only for my own activities
         const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
 
-        if (env.debugMode) console.log("Execute handleActivitySegmentTimeComparison()");
+		if (env.debugMode) {
+			console.log("Execute handleActivitySegmentTimeComparison()");
+		}
 
         const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources, activityType, isMyOwn);
         activitySegmentTimeComparisonModifier.modify();
@@ -915,7 +936,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleActivityBestSplits()");
+		if (env.debugMode) {
+			console.log("Execute handleActivityBestSplits()");
+		}
 
         // TODO Implement cache here: get stream from cache if exist
         this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, hasPowerMeter: boolean) => {
@@ -955,7 +978,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleRunningGradeAdjustedPace()");
+		if (env.debugMode) {
+			console.log("Execute handleRunningGradeAdjustedPace()");
+		}
 
         const runningGradeAdjustedPace: RunningGradeAdjustedPaceModifier = new RunningGradeAdjustedPaceModifier();
         runningGradeAdjustedPace.modify();
@@ -983,7 +1008,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleRunningHeartRate()");
+		if (env.debugMode) {
+			console.log("Execute handleRunningHeartRate()");
+		}
 
         const runningHeartRateModifier: RunningHeartRateModifier = new RunningHeartRateModifier();
         runningHeartRateModifier.modify();
@@ -1008,7 +1035,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleRunningCadence()");
+		if (env.debugMode) {
+			console.log("Execute handleRunningCadence()");
+		}
 
         const runningCadenceModifier: RunningCadenceModifier = new RunningCadenceModifier();
         runningCadenceModifier.modify();
@@ -1033,7 +1062,9 @@ export class StravistiX {
             return;
         }
 
-        if (env.debugMode) console.log("Execute handleRunningHeartRate()");
+		if (env.debugMode) {
+			console.log("Execute handleRunningHeartRate()");
+		}
 
         const runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
         runningTemperatureModifier.modify();
@@ -1095,16 +1126,20 @@ export class StravistiX {
 
         const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
 
-        if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+		if (env.debugMode) {
+			console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+		}
 
         if (_.isNull(this.athleteId)) {
-            if (env.debugMode) console.log("athleteId is empty value: " + this.athleteId);
+			if (env.debugMode) {
+				console.log("athleteId is empty value: " + this.athleteId);
+			}
             return;
         }
 
         if (!userHasConnectSince24Hour) {
 
-            let accountType: string = "Free";
+			let accountType = "Free";
             const accountName: string = this.athleteName;
 
             // We enter in that condition if user is premium or pro
@@ -1122,7 +1157,9 @@ export class StravistiX {
             // Push IncomingConnection
             const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+			if (env.debugMode) {
+				console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+			}
 
             if (!env.debugMode) {
                 follow("send", "event", "DailyConnection", eventAction, eventName);
@@ -1132,7 +1169,9 @@ export class StravistiX {
             StorageManager.setCookie("stravistix_daily_connection_done", true, 1);
 
         } else {
-            if (env.debugMode) console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+			if (env.debugMode) {
+				console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+			}
         }
     }
 
@@ -1147,7 +1186,7 @@ export class StravistiX {
         }
     }
 
-    public get userSettings(): IUserSettings {
+	public get userSettings(): UserSettingsModel {
         return this._userSettings;
     }
 
@@ -1224,7 +1263,7 @@ export class StravistiX {
                                 },
                             });
 
-                        }, (progress: ISyncNotify) => {
+						}, (progress: SyncNotifyModel) => {
                             // console.log(progress);
                         });
 
