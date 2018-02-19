@@ -2,7 +2,7 @@ const _coreConfig: ICoreConfig = {
     systemJsConfig: {
         baseURL: null, // SystemJS baseURL is set on "startCoreEvent" event handling through "CoreSetup.listenForStartCoreEvent()"
         paths: {
-            "npm:": "node_modules/",
+			"npm:": "core/node_modules/",
             "modules:": "core/modules/",
         },
         packages: {
@@ -21,7 +21,7 @@ const _coreConfig: ICoreConfig = {
             /* Npm Modules */
             "css": "npm:systemjs-plugin-css/css.js",
             "chart.js": "npm:chart.js/dist/Chart.bundle.js",
-            "d3": "npm:d3/d3.js",
+			"d3": "npm:d3/d3.min.js",
             "q": "npm:q/q.js",
             "jquery": "npm:jquery/dist/jquery.js",
             "dms": "npm:geodesy/dms.js",

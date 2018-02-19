@@ -8,11 +8,11 @@ export function ComputeAnalysisWorker() {
 
         const threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
 
-        importScripts("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/node_modules/systemjs/dist/system.js");
+		importScripts("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/node_modules/systemjs/dist/system.js");
         SystemJS.config(mainThreadEvent.data.systemJsConfig);
 
         Promise.all([
-            SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/node_modules/lodash/lodash.min.js"),
+			SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/core/node_modules/lodash/lodash.min.js"),
             SystemJS.import("chrome-extension://" + mainThreadEvent.data.appResources.extensionId + "/common/scripts/Helper.js"),
         ]).then(() => {
 

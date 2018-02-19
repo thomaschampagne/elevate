@@ -87,7 +87,7 @@ export class Content {
             Content.loader.injectJS("let $ = jQuery;");
 
             Content.loader.require([
-                "node_modules/systemjs/dist/system.js", // Inject SystemJS module loader and start core app inner strava.com
+				"core/node_modules/systemjs/dist/system.js", // Inject SystemJS module loader and start core app inner strava.com
             ], () => {
                 Content.loader.require([
                     "core/scripts/SystemJS.core.setup.js", // Now load SystemJS core setup

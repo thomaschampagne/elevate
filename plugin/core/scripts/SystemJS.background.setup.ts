@@ -1,7 +1,7 @@
 SystemJS.config({
     baseURL: "chrome-extension://" + chrome.runtime.id + "/",
     paths: {
-        "npm:": "node_modules/",
+		"npm:": "core/node_modules/",
     },
     packages: {
         "common/": {
