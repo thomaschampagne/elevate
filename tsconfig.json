@@ -6,9 +6,7 @@
 		// Common
 		"plugin/common/**/*.ts",
 		// Core
-		"plugin/core/**/*.ts",
-		// AngularJS application
-		"plugin/options/**/*.ts"
+		"plugin/core/**/*.ts"
 	],
 	"exclude": [
 		"node_modules"
