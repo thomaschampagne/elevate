@@ -1,15 +1,11 @@
 import * as _ from "lodash";
 import * as Q from "q";
+import * as $ from "jquery";
 import { ActivitiesSynchronizer, ISyncResult } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
-import {
-	StravaActivityModel,
-	StreamActivityModel,
-	SyncedActivityModel,
-	SyncNotifyModel
-} from "../../plugin/common/scripts/models/Sync";
+import { StravaActivityModel, StreamActivityModel, SyncedActivityModel, SyncNotifyModel } from "../../plugin/common/scripts/models/Sync";
 import { AnalysisDataModel } from "../../plugin/common/scripts/models/ActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 import { AthleteProfileModel } from "../../plugin/common/scripts/models/AthleteProfile";
@@ -91,6 +87,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
          * Stubing http calls to strava training pages
          */
         spyOn(activitiesSynchronizer, "httpPageGet").and.callFake((perPage: number, page: number) => {
+			debugger;
 			const defer = $.Deferred();
             if (rawPagesOfActivities[page - 1]) {
                 defer.resolve(rawPagesOfActivities[page - 1], "success");
