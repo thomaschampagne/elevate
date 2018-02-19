@@ -21,7 +21,7 @@
 		"test": "npm-run-all clean test:core test:app-headless",
 		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test",
 		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",
-		"test:core": "npm-run-all tsc:core@test && node ./node_modules/karma/bin/karma start karma.conf.js --single-run && node ./node_modules/rimraf/bin.js specs/**/*.map specs/**/*.js",
+		"test:core": "npm-run-all tsc:core@test && node ./node_modules/karma/bin/karma start karma.conf.js --single-run && node ./node_modules/rimraf/bin.js specs/**/*.js plugin/common/specs/*.js",
 		"tsc:version": "node -e \"const tsc = require('typescript'); console.log('typescript version: ' + tsc.version)\"",
 		"tsc:core": "npm run tsc:version && node ./node_modules/typescript/bin/tsc -p tsconfig.json",
 		"tsc:core@prod": "npm run tsc:version && node ./node_modules/typescript/bin/tsc -p tsconfig.prod.json",

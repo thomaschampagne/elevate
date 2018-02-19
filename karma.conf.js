@@ -34,6 +34,8 @@ module.exports = function (config) {
 			'plugin/common/**/*.js',
 			'plugin/core/config/*.js',
 			'plugin/core/scripts/**/*.js',
+
+			// Specs files
 			'specs/**/*.js',
 			'specs/fixtures/**/*.json'
 
