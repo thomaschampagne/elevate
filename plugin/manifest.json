@@ -7,7 +7,7 @@
 	"version_name": "6.0.0 Stable",
 	"background": {
 		"scripts": [
-			"node_modules/systemjs/dist/system.js",
+			"core/node_modules/systemjs/dist/system.js",
 			"core/scripts/InstallUpdateHandler.js",
 			"core/scripts/SystemJS.background.setup.js"
 		]
@@ -15,7 +15,7 @@
 	"content_scripts": [
 		{
 			"js": [
-				"node_modules/systemjs/dist/system.js",
+				"core/node_modules/systemjs/dist/system.js",
 				"core/scripts/SystemJS.content.setup.js"
 			],
 			"run_at": "document_end",
@@ -39,7 +39,7 @@
 		"unlimitedStorage"
 	],
 	"web_accessible_resources": [
-		"node_modules/*",
+		"core/node_modules/*",
 		"common/*",
 		"core/modules/*",
 		"core/system.core.config.js",
@@ -50,7 +50,6 @@
 		"core/scripts/*",
 		"core/css/*",
 		"core/icons/*",
-		"options/*",
 		"app/*"
 	],
 	"externally_connectable": {
