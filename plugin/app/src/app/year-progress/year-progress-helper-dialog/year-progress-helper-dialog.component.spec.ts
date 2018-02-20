@@ -30,7 +30,8 @@ describe("YearProgressHelperDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });

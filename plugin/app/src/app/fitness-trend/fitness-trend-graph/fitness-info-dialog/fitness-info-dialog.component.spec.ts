@@ -33,7 +33,7 @@ describe("FitnessInfoDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 
 		// Given, When
 		const compiled = fixture.debugElement.nativeElement;
@@ -42,12 +42,8 @@ describe("FitnessInfoDialogComponent", () => {
 		// Then
 		expect(component).toBeTruthy();
 		expect(htmlContent).not.toBeNull();
+		done();
 	});
 
-	/*
-	afterEach(() => {
-		fixture.destroy();
-	});
-	*/
 
 });

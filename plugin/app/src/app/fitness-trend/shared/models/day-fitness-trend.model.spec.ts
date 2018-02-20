@@ -4,7 +4,7 @@ import { TrainingZone } from "./training-zone.enum";
 
 describe("DayFitnessTrendModel", () => {
 
-	it("should provide overload training zone (1)", () => {
+	it("should provide overload training zone (1)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -18,10 +18,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.OVERLOAD);
-
+		done();
 	});
 
-	it("should provide overload training zone (2)", () => {
+	it("should provide overload training zone (2)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -35,10 +35,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.OVERLOAD);
-
+		done();
 	});
 
-	it("should provide optimal training zone (1)", () => {
+	it("should provide optimal training zone (1)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -53,9 +53,10 @@ describe("DayFitnessTrendModel", () => {
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.OPTIMAL);
 
+		done();
 	});
 
-	it("should provide optimal training zone (2)", () => {
+	it("should provide optimal training zone (2)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -69,10 +70,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.OPTIMAL);
-
+		done();
 	});
 
-	it("should provide neutral training zone (1)", () => {
+	it("should provide neutral training zone (1)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -86,10 +87,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.NEUTRAL);
-
+		done();
 	});
 
-	it("should provide neutral training zone (2)", () => {
+	it("should provide neutral training zone (2)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -103,10 +104,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.NEUTRAL);
-
+		done();
 	});
 
-	it("should provide freshness training zone (1)", () => {
+	it("should provide freshness training zone (1)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -120,10 +121,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.FRESHNESS);
-
+		done();
 	});
 
-	it("should provide freshness training zone (2)", () => {
+	it("should provide freshness training zone (2)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -137,10 +138,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.FRESHNESS);
-
+		done();
 	});
 
-	it("should provide freshness training zone (3)", () => {
+	it("should provide freshness training zone (3)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -154,10 +155,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.FRESHNESS);
-
+		done();
 	});
 
-	it("should provide transition training zone (1)", () => {
+	it("should provide transition training zone (1)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -171,10 +172,10 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.TRANSITION);
-
+		done();
 	});
 
-	it("should provide transition training zone (2)", () => {
+	it("should provide transition training zone (2)", (done: Function) => {
 
 		// Given
 		const previewDay = false;
@@ -188,7 +189,7 @@ describe("DayFitnessTrendModel", () => {
 
 		// Then
 		expect(trainingZone).toEqual(TrainingZone.TRANSITION);
-
+		done();
 	});
 
 });

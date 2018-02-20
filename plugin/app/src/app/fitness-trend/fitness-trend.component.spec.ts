@@ -81,7 +81,8 @@ describe("FitnessTrendComponent", () => {
 		spyOn(trendGraphComponent, "updateGraph").and.stub();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });

@@ -92,12 +92,13 @@ describe("FitnessTrendGraphComponent", () => {
 		spyOn(component, "updateGraph").and.stub();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
 
-	it("should allow forward period viewed", () => {
+	it("should allow forward period viewed", (done: Function) => {
 
 		// Given
 		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
@@ -119,9 +120,10 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		done();
 	});
 
-	it("should NOT forward period viewed", () => {
+	it("should NOT forward period viewed", (done: Function) => {
 
 		// Given
 		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
@@ -143,10 +145,11 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		done();
 
 	});
 
-	it("should allow backward period viewed", () => {
+	it("should allow backward period viewed", (done: Function) => {
 
 		// Given
 		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
@@ -168,9 +171,10 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.toDateString()).toBe(expectedPeriodFrom.toDateString());
 		expect(component.periodViewed.to.toDateString()).toBe(expectedPeriodTo.toDateString());
+		done();
 	});
 
-	it("should NOT backward period viewed", () => {
+	it("should NOT backward period viewed", (done: Function) => {
 
 		// Given
 		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
@@ -192,7 +196,7 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
-
+		done();
 	});
 
 });

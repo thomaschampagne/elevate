@@ -1,8 +1,7 @@
 import * as _ from "lodash";
 import { RunningPowerEstimator } from "../../plugin/core/scripts/processors/RunningPowerEstimator";
 import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
+	ActivityStatsMapModel, AnalysisDataModel,
 	StreamsModel
 } from "../../plugin/common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
@@ -205,7 +204,7 @@ describe("RunningPowerEstimator", () => {
     });
 
     // Running estimation test
-    it("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", () => {
+	it("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", (done: Function) => {
 
         // Given
         const _expectedPower = 151;
@@ -223,12 +222,12 @@ describe("RunningPowerEstimator", () => {
         expect(estimatedAvgPower).not.toBeNull();
         expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
         expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
-
+		done();
     });
 
     // Running power test
     it("should compute correctly 'Begin Running Ep 1 // Stade 40min' " +
-        "@ https://www.strava.com/activities/887284960", () => {
+		"@ https://www.strava.com/activities/887284960", (done: Function) => {
 
         // Given
         const activityType = "Run";
@@ -249,6 +248,6 @@ describe("RunningPowerEstimator", () => {
 
         // Then
         expect(result.powerData).not.toBeNull();
-
+		done();
     });
 });
