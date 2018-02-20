@@ -36,8 +36,8 @@ module.exports = function (config) {
 			'plugin/core/scripts/**/*.js',
 
 			// Specs files
-			'specs/**/*.js',
-			'specs/fixtures/**/*.json'
+			'plugin/core/specs/**/*.js',
+			'plugin/core/specs/fixtures/**/*.json'
 
 		],
 		exclude: [
@@ -81,7 +81,7 @@ module.exports = function (config) {
 			}
 		},
 		preprocessors: {
-			'specs/fixtures/**/*.json': ['json_fixtures']
+			'plugin/core/specs/fixtures/**/*.json': ['json_fixtures']
 		},
 		jsonFixturesPreprocessor: {
 			// strip this from the file path \ fixture name

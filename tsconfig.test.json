@@ -1,10 +1,10 @@
 {
 	"extends": "./tsconfig.json",
 	"include": [
-		"specs/**/*.ts",
-		"plugin/common/specs/*.ts"
+		"plugin/common/specs/*.ts",
+		"plugin/core/specs/**/*.ts"
 	],
 	"compilerOptions": {
-		"outDir": "./"
+		"outDir": "./plugin/"
 	}
 }

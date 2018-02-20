@@ -7,15 +7,7 @@ dist/
 package/
 chrome-win32/
 
-# common
+# Core karma testing
 plugin/common/**/*.js
-plugin/common/**/*.map
-
-# core
 plugin/core/**/*.js
-plugin/core/**/*.map
-
-# specs
-specs/**/*.js
-specs/**/*.map
 specs.log

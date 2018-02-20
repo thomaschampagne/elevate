@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { StreamsModel } from "../../plugin/common/scripts/models/ActivityData";
-import { CourseMaker, ExportTypes, ICourseBounds } from "../../plugin/common/scripts/CourseMarker";
+import { StreamsModel } from "../../../common/scripts/models/ActivityData";
+import { CourseMaker, ExportTypes, ICourseBounds } from "../../../common/scripts/CourseMarker";
 
 describe("CourseMaker", () => {
 
@@ -9,7 +9,7 @@ describe("CourseMaker", () => {
 	let activityStream: StreamsModel;
 
     beforeEach(() => {
-        activityStream = _.cloneDeep(window.__fixtures__["fixtures/activities/829770999/stream"]);
+		activityStream = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/activities/829770999/stream"]);
     });
 
     it("should export GPX stream with consistency data", () => {
