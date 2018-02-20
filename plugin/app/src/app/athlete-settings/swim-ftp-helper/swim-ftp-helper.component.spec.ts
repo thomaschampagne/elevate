@@ -22,11 +22,12 @@ describe("SwimFtpHelperComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should convert swim speed to pace (1)", () => {
+	it("should convert swim speed to pace (1)", (done: Function) => {
 
 		// Given
 		const swimFtp = 1;
@@ -37,9 +38,10 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toBe(expected);
+		done();
 	});
 
-	it("should convert swim speed to pace (2)", () => {
+	it("should convert swim speed to pace (2)", (done: Function) => {
 
 		// Given
 		const swimFtp = 31;
@@ -50,9 +52,10 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toBe(expected);
+		done();
 	});
 
-	it("should convert swim speed to pace (3)", () => {
+	it("should convert swim speed to pace (3)", (done: Function) => {
 
 		// Given
 		const swimFtp = 500;
@@ -63,9 +66,10 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toBe(expected);
+		done();
 	});
 
-	it("should convert swim speed to pace (4)", () => {
+	it("should convert swim speed to pace (4)", (done: Function) => {
 
 		// Given
 		const swimFtp = 57;
@@ -76,9 +80,10 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toBe(expected);
+		done();
 	});
 
-	it("should convert pace to swim speed (1)", () => {
+	it("should convert pace to swim speed (1)", (done: Function) => {
 
 		// Given
 		const pace = "00:03:14";
@@ -89,9 +94,10 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toEqual(expected);
+		done();
 	});
 
-	it("should convert pace to swim speed (2)", () => {
+	it("should convert pace to swim speed (2)", (done: Function) => {
 
 		// Given
 		const pace = "00:00:12";
@@ -102,5 +108,6 @@ describe("SwimFtpHelperComponent", () => {
 
 		// Then
 		expect(actual).toEqual(expected);
+		done();
 	});
 });

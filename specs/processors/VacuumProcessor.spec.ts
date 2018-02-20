@@ -3,7 +3,7 @@ import { VacuumProcessor } from "../../plugin/core/scripts/processors/VacuumProc
 
 describe("VacuumProcessor", () => {
 
-	it("should be a pro", () => {
+	it("should be a pro", (done: Function) => {
 
         const vacuumProcessor: VacuumProcessor = new VacuumProcessor();
 
@@ -30,6 +30,6 @@ describe("VacuumProcessor", () => {
 
         // ...
 		expect(getCurrentAthleteSpy).toHaveBeenCalledTimes(3);
-
+		done();
     });
 });

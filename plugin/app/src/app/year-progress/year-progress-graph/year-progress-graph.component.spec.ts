@@ -82,7 +82,7 @@ describe("YearProgressGraphComponent", () => {
 		done();
 	});
 
-	it("should give proper restricted colors from a year selection", () => {
+	it("should give proper restricted colors from a year selection", (done: Function) => {
 
 		// Given
 		const yearSelection: number[] = [2017, 2016, 2013];
@@ -98,7 +98,7 @@ describe("YearProgressGraphComponent", () => {
 
 		// Then
 		expect(yearSelectedColors).toEqual(expectedYearSelectedColors);
-
+		done();
 	});
 
 });

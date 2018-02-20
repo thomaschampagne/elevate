@@ -34,11 +34,12 @@ describe("ZoneComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should notify properly a \"from\" zone change", () => {
+	it("should notify properly a \"from\" zone change", (done: Function) => {
 
 		// Given
 		const sourceId = 5;
@@ -66,10 +67,11 @@ describe("ZoneComponent", () => {
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
+		done();
 
 	});
 
-	it("should notify properly a \"to\" zone change", () => {
+	it("should notify properly a \"to\" zone change", (done: Function) => {
 
 		// Given
 		const sourceId = 5;
@@ -97,10 +99,10 @@ describe("ZoneComponent", () => {
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
-
+		done();
 	});
 
-	it("should skip notify is from + to changes (On first display)", () => {
+	it("should skip notify is from + to changes (On first display)", (done: Function) => {
 
 		// Given
 		const changeType: ZoneChangeTypeModel = {from: true, to: true};
@@ -111,6 +113,6 @@ describe("ZoneComponent", () => {
 
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(0);
-
+		done();
 	});
 });

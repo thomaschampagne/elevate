@@ -7,7 +7,7 @@ import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTo
 
 describe("ActivitiesSynchronizer", () => {
 
-	it("should remove activity from array properly ", () => {
+	it("should remove activity from array properly ", (done: Function) => {
 
 		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
 		const sourceCount = rawPageOfActivities.length;
@@ -17,10 +17,10 @@ describe("ActivitiesSynchronizer", () => {
         expect(rawPageOfActivities).not.toBeNull();
         expect(_.find(rawPageOfActivities, {id: 722210052})).toBeUndefined();
         expect(rawPageOfActivities.length).toEqual(sourceCount - 1);
-
+		done();
     });
 
-	it("should edit activity from array properly ", () => {
+	it("should edit activity from array properly ", (done: Function) => {
 
 		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
 		const sourceCount = rawPageOfActivities.length;
@@ -34,10 +34,11 @@ describe("ActivitiesSynchronizer", () => {
         expect(foundBack.type).toEqual("Ride");
         expect(foundBack.display_type).toEqual("Ride");
         expect(rawPageOfActivities.length).toEqual(sourceCount);
+		done();
 
     });
 
-	it("should detect activities added, modified and deleted ", () => {
+	it("should detect activities added, modified and deleted ", (done: Function) => {
 
 		let computedActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/computedActivities20161213"].computedActivities);
 		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(window.__fixtures__["fixtures/sync/rawPage0120161213"].models);
@@ -76,9 +77,11 @@ describe("ActivitiesSynchronizer", () => {
 
         expect(ActivitiesSynchronizer.findAddedAndEditedActivities(null, null)).not.toBeNull();
 
+		done();
+
     });
 
-	it("should append history of pages where activities added, modified and deleted ", () => {
+	it("should append history of pages where activities added, modified and deleted ", (done: Function) => {
 
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["fixtures/userSettings/2470979"]);
 		const appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["fixtures/appResources/appResources"]);
@@ -123,5 +126,6 @@ describe("ActivitiesSynchronizer", () => {
         expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(2);
         expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(3);
 
+		done();
     });
 });

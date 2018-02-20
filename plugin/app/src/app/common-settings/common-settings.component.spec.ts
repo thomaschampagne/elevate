@@ -41,11 +41,12 @@ describe("CommonSettingsComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should get option helper dir", () => {
+	it("should get option helper dir", (done: Function) => {
 
 		// Given
 		const pathname = "/app/index.html";
@@ -56,10 +57,11 @@ describe("CommonSettingsComponent", () => {
 
 		// Then
 		expect(actual).toEqual(expected);
+		done();
 
 	});
 
-	it("should get option helper dir", () => {
+	it("should get option helper dir", (done: Function) => {
 
 		// Given
 		const pathname = null;
@@ -69,6 +71,7 @@ describe("CommonSettingsComponent", () => {
 
 		// Then
 		expect(actual).toBeNull();
+		done();
 
 	});
 });

@@ -52,11 +52,12 @@ describe("ZonesImportExportDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should render the 'Export' zones dialog", () => {
+	it("should render the 'Export' zones dialog", (done: Function) => {
 
 		// Given
 		const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
@@ -68,6 +69,6 @@ describe("ZonesImportExportDialogComponent", () => {
 		// Then
 		expect(component.zonesJsonData).toEqual(JSON.stringify(userSettings.zones.speed));
 		expect(compiled.querySelector("h2").textContent).toContain("Export <Cycling Speed> zones");
-
+		done();
 	});
 });

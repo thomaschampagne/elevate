@@ -67,11 +67,12 @@ describe("YearProgressComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should determine most performed activity type", () => {
+	it("should determine most performed activity type", (done: Function) => {
 
 		// Given
 		const expected = "Ride";
@@ -92,10 +93,10 @@ describe("YearProgressComponent", () => {
 
 		// Then
 		expect(mostPerformedType).toEqual(expected);
-
+		done();
 	});
 
-	it("should give proper colors to all year lines from a color palette", () => {
+	it("should give proper colors to all year lines from a color palette", (done: Function) => {
 
 		// Given
 		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
@@ -124,7 +125,7 @@ describe("YearProgressComponent", () => {
 		expect(style.yearsColorsMap.get(2015)).toEqual("orange");
 		expect(style.yearsColorsMap.get(2016)).toEqual("red");
 		expect(style.yearsColorsMap.get(2017)).toEqual("blue");
-
+		done();
 	});
 
 });
