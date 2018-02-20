@@ -9,7 +9,8 @@
 		"plugin/core/**/*.ts"
 	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"plugin/core/specs/**/*.ts"
 	],
 	"compilerOptions": {
 		"outDir": "./dist/",
