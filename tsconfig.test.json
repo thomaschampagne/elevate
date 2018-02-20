@@ -4,6 +4,9 @@
 		"plugin/common/specs/*.ts",
 		"plugin/core/specs/**/*.ts"
 	],
+	"exclude": [
+		"node_modules"
+	],
 	"compilerOptions": {
 		"outDir": "./plugin/"
 	}
