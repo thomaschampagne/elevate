@@ -14,8 +14,7 @@
 			<div fxFlex fxFill>
 				<div fxLayout="row" fxLayoutAlign="space-between start">
 					<!--PERIODS-->
-					<div fxFlex="70"
-						 fxLayout="row" fxLayoutAlign="start start">
+					<div fxFlex="70" fxLayout="row" fxLayoutAlign="start start">
 						<mat-input-container fxFlex="155px">
 							<mat-select
 								[(ngModel)]="lastPeriodViewed"
@@ -92,18 +91,15 @@
 			</div>
 
 			<!--DETAILS-->
-			<div fxFlex fxFill
-				 class="mat-subheading-2">
+			<div fxFlex fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-subheading-2">
 
-				<div fxLayout="column" fxLayoutAlign="space-between start">
+				<div fxFlex fxLayout="column" fxLayoutAlign="space-between start">
 
-					<div fxFlex>
-						<span fxFlexAlign="start" class="viewedDayDate">
-							{{viewedDay.printDate()}}
-						</span>
+					<div fxFill fxLayout="row" fxLayoutAlign="end start">
+						{{viewedDay.printDate()}}
 					</div>
 
-					<div fxFlex [ngSwitch]="viewedDay.hasActivities()">
+					<div fxFill fxLayout="row" fxLayoutAlign="end start" [ngSwitch]="viewedDay.hasActivities()">
 
 						<span *ngSwitchCase="true" class="viewedDayActivities">
 							<span *ngFor="let activity of viewedDay.activitiesName; let i = index;">
@@ -115,10 +111,9 @@
 						<span *ngSwitchCase="false">
 							<mat-icon matTooltip="You got rest that day!">weekend</mat-icon>
 						</span>
-
 					</div>
 
-					<div fxFlex class="stressScore">
+					<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start" class="stressScore">
 						<span fxFlexAlign="end">
 							<span *ngIf="!viewedDay.finalStressScore"><i>Rest day. No stress score</i></span>
 							<span *ngIf="viewedDay.finalStressScore">
@@ -149,22 +144,27 @@
 							</span>
 						</span>
 					</div>
-				</div>
-			</div>
 
-			<!--Fitness, Fatigue, Form values-->
-			<div fxFill
-				 fxLayout="row" fxLayoutAlign="start center"
-				 class="mat-headline">
-				<div fxFlex="180px" class="ctl_value">
-					Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
-				</div>
-				<div fxFlex="180px" class="atl_value">
-					Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
-				</div>
-				<div fxFlex="280px" class="tsb_value">
-					Form &nbsp;&nbsp;{{viewedDay.printForm()}}
-					<span *ngIf="isTrainingZonesEnabled" class="mat-body-1">/ {{this.viewedDay.printTrainingZone()}} zone</span>
+					<!--Fitness, Fatigue, Form values-->
+					<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
+
+						<div fxFlex></div>
+
+						<div fxFlex fxLayout="row" fxLayoutAlign="end start">
+							<div class="ctl_value">
+								Fitness &nbsp;&nbsp;{{viewedDay.printFitness()}}
+							</div>
+							<span fxFlex="3"></span>
+							<div class="atl_value">
+								Fatigue &nbsp;&nbsp;{{viewedDay.printFatigue()}}
+							</div>
+							<span fxFlex="3"></span>
+							<div class="tsb_value">
+								Form &nbsp;&nbsp;{{viewedDay.printForm()}}
+								<span *ngIf="isTrainingZonesEnabled" class="mat-body-1">/ {{this.viewedDay.printTrainingZone()}} zone</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
