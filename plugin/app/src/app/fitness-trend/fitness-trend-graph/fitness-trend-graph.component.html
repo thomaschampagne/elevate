@@ -108,14 +108,14 @@
 							</span>
 						</span>
 
-						<span *ngSwitchCase="false">
-							<mat-icon matTooltip="You got rest that day!">weekend</mat-icon>
+						<span *ngSwitchCase="false" class="restDay">
+							<i>Rest day</i>
 						</span>
 					</div>
 
 					<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start" class="stressScore">
 						<span fxFlexAlign="end">
-							<span *ngIf="!viewedDay.finalStressScore"><i>Rest day. No stress score</i></span>
+							<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
 							<span *ngIf="viewedDay.finalStressScore">
 								<!-- Trimp -->
 								<span *ngIf="viewedDay.trainingImpulseScore">
