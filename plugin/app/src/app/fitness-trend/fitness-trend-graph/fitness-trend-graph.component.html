@@ -8,14 +8,15 @@
 
 	<mat-card-content>
 
-		<div class="header" fxLayout="column" fxLayoutAlign="start start">
+		<div class="header" fxLayout="row" fxLayoutAlign="start start">
 
 			<!--INPUTS-->
-			<div fxFill>
-				<div fxLayout="row" fxLayoutAlign="space-between start">
-					<!--PERIODS-->
-					<div fxFlex="70" fxLayout="row" fxLayoutAlign="start start">
-						<mat-input-container fxFlex="155px">
+			<div fxFlex="40" fxLayout="column" fxLayoutAlign="start start">
+
+				<div fxFill fxLayout="row" fxLayoutAlign="space-between start">
+
+					<div fxFlex>
+						<mat-input-container fxFill>
 							<mat-select
 								[(ngModel)]="lastPeriodViewed"
 								(change)="onLastPeriodSelected()"
@@ -27,71 +28,69 @@
 								</mat-option>
 							</mat-select>
 						</mat-input-container>
-
-						<span fxFlex="1"></span> <!-- --------- -->
-
-						<mat-form-field fxFlex="155px">
-							<input matInput
-								   [(ngModel)]="periodViewed.from"
-								   [min]="dateMin"
-								   [max]="periodViewed.to"
-								   [matDatepicker]="datePickerFrom"
-								   (dateChange)="onDateToDateChange()"
-								   placeholder="From">
-							<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-							<mat-datepicker #datePickerFrom></mat-datepicker>
-						</mat-form-field>
-
-						<span fxFlex="1"></span> <!-- --------- -->
-
-						<mat-form-field fxFlex="155px">
-							<input matInput
-								   [(ngModel)]="periodViewed.to"
-								   [min]="periodViewed.from"
-								   [max]="dateMax"
-								   [matDatepicker]="datePickerTo"
-								   (dateChange)="onDateToDateChange()"
-								   placeholder="To">
-							<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-							<mat-datepicker #datePickerTo></mat-datepicker>
-						</mat-form-field>
 					</div>
 
-					<!--TOGGLES-->
-					<div fxFlex
-						 fxHide.lt-md
-						 fxFlexAlign="start"
-						 fxLayout="row" fxLayoutAlign="end center">
+					<span fxFlex="2"></span>
 
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isTrainingZonesEnabled"
-										  (change)="onTrainingZonesToggle()"
-										  matTooltip="Display Form Zones on graph">
+					<div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+						<mat-checkbox [(ngModel)]="isTrainingZonesEnabled"
+									  (change)="onTrainingZonesToggle()"
+									  matTooltip="Display Training Zones on graph">
 							<mat-icon>power_input</mat-icon>
-						</mat-slide-toggle>
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isPowerMeterEnabled"
-										  (change)="onPowerMeterToggle()"
-										  matTooltip="Use cycling power meter when available">
+						</mat-checkbox>
+
+						<mat-checkbox [(ngModel)]="isPowerMeterEnabled"
+									  (change)="onPowerMeterToggle()"
+									  matTooltip="Use cycling power meter when available">
 							<mat-icon>flash_on</mat-icon>
-						</mat-slide-toggle>
+						</mat-checkbox>
 
-						<mat-slide-toggle fxFlex
-										  [(ngModel)]="isSwimEnabled"
-										  (change)="onSwimToggle()"
-										  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+						<mat-checkbox [(ngModel)]="isSwimEnabled"
+									  (change)="onSwimToggle()"
+									  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
 							<mat-icon>pool</mat-icon>
-						</mat-slide-toggle>
+						</mat-checkbox>
 
-						<button mat-icon-button (click)="onShowInfo()">
-							<mat-icon>info</mat-icon>
+						<button mat-icon-button color="primary" (click)="onShowInfo()">
+							<mat-icon>help_outline</mat-icon>
 						</button>
 					</div>
 				</div>
+
+				<div fxFill fxLayout="row" fxLayoutAlign="space-between start">
+
+					<mat-form-field fxFlex>
+						<input matInput
+							   [(ngModel)]="periodViewed.from"
+							   [min]="dateMin"
+							   [max]="periodViewed.to"
+							   [matDatepicker]="datePickerFrom"
+							   (dateChange)="onDateToDateChange()"
+							   placeholder="From">
+						<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+						<mat-datepicker #datePickerFrom></mat-datepicker>
+					</mat-form-field>
+
+					<span fxFlex="2"></span>
+
+					<mat-form-field fxFlex>
+						<input matInput
+							   [(ngModel)]="periodViewed.to"
+							   [min]="periodViewed.from"
+							   [max]="dateMax"
+							   [matDatepicker]="datePickerTo"
+							   (dateChange)="onDateToDateChange()"
+							   placeholder="To">
+						<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+						<mat-datepicker #datePickerTo></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<!--</div>-->
 			</div>
 
 			<!--DETAILS-->
-			<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-subheading-2">
+			<div fxFlex fxLayout="row" fxLayoutAlign="end start" class="mat-subheading-2">
 
 				<div fxFlex fxLayout="column" fxLayoutAlign="space-between start">
 
@@ -147,8 +146,6 @@
 
 					<!--Fitness, Fatigue, Form values-->
 					<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
-
-						<div fxFlex></div>
 
 						<div fxFlex fxLayout="row" fxLayoutAlign="end start">
 							<div class="ctl_value">
