@@ -45,7 +45,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 
 	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.70;
+		return window.innerHeight * 0.65;
 	}
 
 	@Output("hasFitnessTrendDataNotify")
