@@ -619,6 +619,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			data: [],
 			full_width: true,
 			height: FitnessTrendGraphComponent.findGraphicHeight(),
+			top: 25,
+			bottom: 30,
 			right: 0,
 			left: 30,
 			baselines: [],
