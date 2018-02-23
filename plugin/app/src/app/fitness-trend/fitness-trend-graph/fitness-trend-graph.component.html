@@ -160,7 +160,10 @@
 							<span fxFlex="1"></span>
 
 							<div fxFlex="130px" class="tsb_value">
-								Form {{viewedDay.printForm()}}
+								<span *ngIf="isTrainingZonesEnabled">Form {{viewedDay.printForm()}}</span>
+								<div *ngIf="!isTrainingZonesEnabled" fxLayoutAlign="end">
+									Form {{viewedDay.printForm()}}
+								</div>
 							</div>
 
 							<div *ngIf="isTrainingZonesEnabled"
