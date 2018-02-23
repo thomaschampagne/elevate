@@ -43,6 +43,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 
+	public readonly MAX_ACTVITIES_LEGEND_SHOWN: number = 2;
 
 	public static findGraphicHeight(): number {
 		return window.innerHeight * 0.670;
