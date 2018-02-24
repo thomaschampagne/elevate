@@ -43,11 +43,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 
-	public readonly MAX_ACTVITIES_LEGEND_SHOWN: number = 2;
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.670;
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
 
-	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.670;
-	}
+	public readonly MAX_ACTVITIES_LEGEND_SHOWN: number = 2;
 
 	@Output("hasFitnessTrendDataNotify")
 	public hasFitnessTrendDataNotify: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -80,6 +79,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public isSwimEnabled = false;
 	public swimFtp: number = null;
 
+	public graphHeightFactor: number;
+
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
 
@@ -92,6 +93,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
+
+		this.findGraphHeightFactor();
 
 		this.PERFORMANCE_MARKER = performance.now();
 
@@ -138,7 +141,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 * First graph draw
 	 */
 	public setup(): void {
-
 		this.setupGraphConfig();
 		this.setupTimeData();
 		this.setupViewableGraphData();
@@ -294,10 +296,25 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public setupComponentSizeChangeHandlers(): void {
 
-		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
+		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => {
+			this.findGraphHeightFactor();
+			this.onComponentSizeChanged();
+		});
 
 		// Or user toggles the side nav (open/close states)
 		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+	}
+
+	/**
+	 *
+	 */
+	public findGraphHeightFactor(): void {
+
+		if (this.windowService.isScreenMediaActive(WindowService.SCREEN_MD)) {
+			this.graphHeightFactor = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_MD;
+		} else {
+			this.graphHeightFactor = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG;
+		}
 	}
 
 	/**
@@ -585,8 +602,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public onComponentSizeChanged(): void {
 		this.PERFORMANCE_MARKER = performance.now();
-		this.graphConfig.height = FitnessTrendGraphComponent.findGraphicHeight(); // Update graph dynamic height
+		this.graphConfig.height = this.graphicHeight(); // Update graph dynamic height
 		this.draw();
+	}
+
+	public graphicHeight(): number {
+		return window.innerHeight * this.graphHeightFactor;
 	}
 
 	/**
@@ -619,7 +640,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: FitnessTrendGraphComponent.findGraphicHeight(),
+			height: this.graphicHeight(),
 			top: 30,
 			bottom: 30,
 			right: 0,
