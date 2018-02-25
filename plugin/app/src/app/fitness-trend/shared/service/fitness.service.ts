@@ -14,9 +14,7 @@ export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
 
-	public static readonly ACTIVITY_TYPES_SKIPPED: string[] = ["EBikeRide"];
-
-	constructor(private activityService: ActivityService) {
+	constructor(public activityService: ActivityService) {
 	}
 
 	/**
@@ -25,12 +23,14 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
+	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
 	public prepare(powerMeterEnable: boolean,
 				   cyclingFtp: number,
 				   swimEnable: boolean,
-				   swimFtp: number): Promise<FitnessPreparedActivityModel[]> {
+				   swimFtp: number,
+				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
 							reject: (error: string) => void) => {
@@ -42,7 +42,7 @@ export class FitnessService {
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
-					if (_.indexOf(FitnessService.ACTIVITY_TYPES_SKIPPED, activity.type) !== -1) {
+					if (!_.isEmpty(skipActivityTypes) && _.indexOf(skipActivityTypes, activity.type) !== -1) {
 						return;
 					}
 
@@ -51,7 +51,7 @@ export class FitnessService {
 						&& !_.isEmpty(activity.extendedStats.heartRateData)
 						&& _.isNumber(activity.extendedStats.heartRateData.TRIMP));
 
-					const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide")
+					const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
 						&& powerMeterEnable
 						&& _.isNumber(cyclingFtp)
 						&& activity.extendedStats && activity.extendedStats.powerData
@@ -114,14 +114,19 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
 	 * @param {number} swimFtp
+	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayStressModel[]>}
 	 */
-	public generateDailyStress(powerMeterEnable: boolean, cyclingFtp: number, swimEnable: boolean, swimFtp: number): Promise<DayStressModel[]> {
+	public generateDailyStress(powerMeterEnable: boolean,
+							   cyclingFtp: number,
+							   swimEnable: boolean,
+							   swimFtp: number,
+							   skipActivityTypes?: string[]): Promise<DayStressModel[]> {
 
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp)
+			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivityTypes)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
 
 					// Subtract 1 day to the first activity done in history:
@@ -165,11 +170,10 @@ export class FitnessService {
 	 *
 	 * @param {number} movingTime
 	 * @param {number} weightedPower
-	 * @param {SyncedActivityModel} activity
 	 * @param {number} cyclingFtp
 	 * @returns {number}
 	 */
-	private computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
+	public computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
 		return (movingTime * weightedPower * (weightedPower / cyclingFtp) / (cyclingFtp * 3600) * 100);
 	}
 
@@ -181,7 +185,7 @@ export class FitnessService {
 	 * @param {number} swimFtp
 	 * @returns {number}
 	 */
-	private computeSwimStressScore(distance: number, movingTime: number, elaspedTime: number, swimFtp: number) {
+	public computeSwimStressScore(distance: number, movingTime: number, elaspedTime: number, swimFtp: number) {
 		const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
 		const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
 		return Math.pow(swimIntensity, 3) * (elaspedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
@@ -193,17 +197,19 @@ export class FitnessService {
 	 * @param {number} cyclingFtp
 	 * @param {boolean} isSwimEnabled
 	 * @param {number} swimFtp
+	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
 	public computeTrend(isPowerMeterEnabled: boolean,
 						cyclingFtp: number,
 						isSwimEnabled: boolean,
-						swimFtp: number): Promise<DayFitnessTrendModel[]> {
+						swimFtp: number,
+						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp)
+			this.generateDailyStress(isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl = 0;
@@ -255,7 +261,7 @@ export class FitnessService {
 	 * @param {moment.Moment} startFrom
 	 * @param {DayStressModel[]} dailyActivity
 	 */
-	private appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStressModel[]) {
+	public appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStressModel[]) {
 
 		for (let i = 0; i < FitnessService.FUTURE_DAYS_PREVIEW; i++) {
 
@@ -274,7 +280,7 @@ export class FitnessService {
 	 * @returns {DayStressModel}
 	 */
 
-	private dayStressOnDate(currentDay: moment.Moment, fitnessPreparedActivities: FitnessPreparedActivityModel[]): DayStressModel {
+	public dayStressOnDate(currentDay: moment.Moment, fitnessPreparedActivities: FitnessPreparedActivityModel[]): DayStressModel {
 
 		const foundActivitiesThatDay: FitnessPreparedActivityModel[] = _.filter(fitnessPreparedActivities, {
 			year: currentDay.year(),
