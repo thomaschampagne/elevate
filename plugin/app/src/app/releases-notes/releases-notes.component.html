@@ -9,7 +9,7 @@
 			<mat-list-item *ngFor="let hotfix of note.hotFixes;">▹&nbsp;&nbsp;&nbsp;{{hotfix}}</mat-list-item>
 		</mat-list>
 
-		<mat-list *ngIf="(note.features && note.features.length && !note.hideFeatureReleaseNote)">
+		<mat-list *ngIf="(note.features && note.features.length && !note.isPatch)">
 			<h3 class="mat-subheading-2">Features</h3>
 			<mat-list-item *ngFor="let feature of note.features;">▹&nbsp;&nbsp;&nbsp;{{feature}}</mat-list-item>
 		</mat-list>
