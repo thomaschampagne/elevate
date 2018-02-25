@@ -17,18 +17,21 @@ $config: mat-typography-config();
 	$atl-color: $primary-color;
 	$tsb-color: mat-color($primary, 900);
 
+	$body-1-font-size: mat-font-size($config, body-1);
+
 	.viewedDayActivities {
 
 		.tag {
-			padding: 2px;
+			padding: 1px 2px;
 			border: 1px solid $primary-color;
 			border-radius: 4px;
-			font-size: mat-font-size($config, caption);
+			font-size: $body-1-font-size;
 			color: $primary-color;
 		}
 
 		.name {
 			color: $accent-color;
+			font-size: $body-1-font-size;
 		}
 	}
 
