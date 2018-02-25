@@ -52,6 +52,12 @@
 							<mat-icon>pool</mat-icon>
 						</mat-checkbox>
 
+						<mat-checkbox [(ngModel)]="isEBikeRidesEnabled"
+									  (change)="onEBikeRidesEnabledToggle()"
+									  matTooltip="Includes electrical assisted efforts in your fitness trend when checked">
+							<mat-icon>battery_charging_full</mat-icon>
+						</mat-checkbox>
+
 						<button mat-icon-button color="primary" (click)="onShowInfo()">
 							<mat-icon>help_outline</mat-icon>
 						</button>
@@ -101,12 +107,12 @@
 
 						<span *ngSwitchCase="true" class="viewedDayActivities">
 							<span *ngFor="let activity of viewedDay.activitiesName; let activityIndex = index;">
-								<span *ngIf="(activityIndex < MAX_ACTVITIES_LEGEND_SHOWN)">
+								<span *ngIf="(activityIndex < MAX_ACTIVITIES_LEGEND_SHOWN)">
 									<span class="tag">{{viewedDay.types[activityIndex]}}</span> <span class="name">{{activity}}</span>
 									<span *ngIf="(viewedDay.activitiesName.length !== (activityIndex + 1))">;&nbsp;&nbsp;</span>
 								</span>
 							</span>
-							<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTVITIES_LEGEND_SHOWN}} more</span>
+							<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}} more</span>
 						</span>
 
 						<span *ngSwitchCase="false" class="restDay">
