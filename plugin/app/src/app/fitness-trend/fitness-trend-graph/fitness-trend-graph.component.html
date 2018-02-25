@@ -11,24 +11,22 @@
 		<div class="header" fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 
 			<!--INPUTS-->
-			<div fxFlex="40" fxFill fxLayout="column" fxLayoutAlign="start start">
+			<div fxFlex="37" fxFill fxLayout="column" fxLayoutAlign="start start">
 
 				<div fxFill fxLayout="row" fxLayoutAlign="space-between start">
 
-					<div fxFlex>
-						<mat-input-container fxFill>
-							<mat-select
-								[(ngModel)]="lastPeriodViewed"
-								(change)="onLastPeriodSelected()"
-								placeholder="Last">
-								<mat-option
-									*ngFor="let lastPeriod of lastPeriods;"
-									[value]="lastPeriod">
-									{{lastPeriod.label}}
-								</mat-option>
-							</mat-select>
-						</mat-input-container>
-					</div>
+					<mat-form-field fxFlex="30" fxFlex.lt-lg="50">
+						<mat-select
+							[(ngModel)]="lastPeriodViewed"
+							(change)="onLastPeriodSelected()"
+							placeholder="Last">
+							<mat-option
+								*ngFor="let lastPeriod of lastPeriods;"
+								[value]="lastPeriod">
+								{{lastPeriod.label}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
 
 					<span fxFlex="2"></span>
 
@@ -66,7 +64,7 @@
 
 				<div fxFill fxLayout="row" fxLayoutAlign="space-between start" class="fromToPeriod">
 
-					<mat-form-field fxFlex>
+					<mat-form-field fxFlex="30" fxFlex.lt-lg="50">
 						<input matInput
 							   [(ngModel)]="periodViewed.from"
 							   [min]="dateMin"
@@ -95,7 +93,7 @@
 			</div>
 
 			<!--DETAILS-->
-			<div fxFlex="60" fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-subheading-2">
+			<div fxFlex="63" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2">
 
 				<div fxFlex fxLayout="column" fxLayoutAlign="space-between end">
 
