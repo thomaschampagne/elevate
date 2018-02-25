@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GotItDialogComponent } from "./got-it-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
@@ -15,7 +15,7 @@ describe("GotItDialogComponent", () => {
 	let fixture: ComponentFixture<GotItDialogComponent>;
 	let gotItDialogDataModel: GotItDialogDataModel;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		gotItDialogDataModel = new GotItDialogDataModel(dialogTitle, dialogContent);
 		TestBed.configureTestingModule({
@@ -33,7 +33,9 @@ describe("GotItDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(GotItDialogComponent);

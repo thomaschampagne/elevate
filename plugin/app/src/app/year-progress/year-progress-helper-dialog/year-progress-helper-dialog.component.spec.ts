@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog.component";
 import { CoreModule } from "../../core/core.module";
@@ -9,7 +9,7 @@ describe("YearProgressHelperDialogComponent", () => {
 	let component: YearProgressHelperDialogComponent;
 	let fixture: ComponentFixture<YearProgressHelperDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -22,7 +22,9 @@ describe("YearProgressHelperDialogComponent", () => {
 				}
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(YearProgressHelperDialogComponent);

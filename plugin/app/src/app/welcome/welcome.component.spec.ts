@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { WelcomeComponent } from "./welcome.component";
 import { SharedModule } from "../shared/shared.module";
@@ -8,14 +8,16 @@ describe("WelcomeComponent", () => {
 	let component: WelcomeComponent;
 	let fixture: ComponentFixture<WelcomeComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(WelcomeComponent);

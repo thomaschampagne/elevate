@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog.component";
 import { CoreModule } from "../../../core/core.module";
@@ -9,7 +9,7 @@ describe("FitnessInfoDialogComponent", () => {
 	let component: FitnessInfoDialogComponent;
 	let fixture: ComponentFixture<FitnessInfoDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -25,7 +25,9 @@ describe("FitnessInfoDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FitnessInfoDialogComponent);

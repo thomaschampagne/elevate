@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressComponent } from "./year-progress.component";
 import { SharedModule } from "../shared/shared.module";
@@ -25,7 +25,7 @@ describe("YearProgressComponent", () => {
 	let activityDao: ActivityDao;
 	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -59,7 +59,8 @@ describe("YearProgressComponent", () => {
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
 		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(YearProgressComponent);

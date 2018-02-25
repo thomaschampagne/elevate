@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZoneToolBarComponent } from "./zone-tool-bar.component";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
@@ -32,7 +32,7 @@ describe("ZoneToolBarComponent", () => {
 		customDisplay: null
 	}];
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -48,7 +48,8 @@ describe("ZoneToolBarComponent", () => {
 			}
 		});
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 

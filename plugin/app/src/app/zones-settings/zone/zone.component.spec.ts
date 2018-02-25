@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZoneComponent } from "./zone.component";
 import { MaterialModule } from "../../shared/modules/material.module";
@@ -17,7 +17,7 @@ describe("ZoneComponent", () => {
 
 	let zonesService: ZonesService;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
@@ -26,7 +26,9 @@ describe("ZoneComponent", () => {
 		}).compileComponents();
 
 		zonesService = TestBed.get(ZonesService);
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ZoneComponent);

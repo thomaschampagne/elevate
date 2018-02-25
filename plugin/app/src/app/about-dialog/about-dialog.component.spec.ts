@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AboutDialogComponent } from "./about-dialog.component";
 import { SharedModule } from "../shared/shared.module";
@@ -13,7 +13,7 @@ describe("AboutDialogComponent", () => {
 	let component: AboutDialogComponent;
 	let fixture: ComponentFixture<AboutDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -27,7 +27,8 @@ describe("AboutDialogComponent", () => {
 				AppUsageDao
 			]
 		}).compileComponents();
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AboutDialogComponent);
