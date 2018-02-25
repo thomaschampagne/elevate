@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AthleteSettingsComponent } from "./athlete-settings.component";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
@@ -12,7 +12,7 @@ describe("AthleteSettingsComponent", () => {
 	let fixture: ComponentFixture<AthleteSettingsComponent>;
 	let userSettingsDao: UserSettingsDao;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -31,7 +31,8 @@ describe("AthleteSettingsComponent", () => {
 
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 

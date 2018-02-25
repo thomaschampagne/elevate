@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { RemoteAthleteMismatchComponent } from "./remote-athlete-mismatch.component";
 import { SharedModule } from "../shared/shared.module";
@@ -11,7 +11,7 @@ describe("RemoteAthleteMismatchComponent", () => {
 	let fixture: ComponentFixture<RemoteAthleteMismatchComponent>;
 	let athleteHistoryService: AthleteHistoryService;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			declarations: [RemoteAthleteMismatchComponent],
 			imports: [
@@ -24,7 +24,8 @@ describe("RemoteAthleteMismatchComponent", () => {
 
 		spyOn(athleteHistoryService, "localRemoteAthleteProfileSame").and.returnValue(new Subject<boolean>());
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RemoteAthleteMismatchComponent);

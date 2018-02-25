@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
@@ -21,7 +21,7 @@ describe("YearProgressTableComponent", () => {
 	let yearProgressService: YearProgressService;
 	let syncedActivityModels: SyncedActivityModel[];
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -32,7 +32,8 @@ describe("YearProgressTableComponent", () => {
 
 		yearProgressService = TestBed.get(YearProgressService);
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ConfirmDialogComponent } from "./confirm-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
@@ -15,7 +15,7 @@ describe("ConfirmDialogComponent", () => {
 	let fixture: ComponentFixture<ConfirmDialogComponent>;
 	let confirmDialogDataModel;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
 
@@ -34,7 +34,9 @@ describe("ConfirmDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ConfirmDialogComponent);

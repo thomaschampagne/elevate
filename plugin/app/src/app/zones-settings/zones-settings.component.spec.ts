@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZonesSettingsComponent } from "./zones-settings.component";
 import { CoreModule } from "../core/core.module";
@@ -11,14 +11,16 @@ describe("ZonesSettingsComponent", () => {
 	let component: ZonesSettingsComponent;
 	let fixture: ComponentFixture<ZonesSettingsComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ZonesSettingsComponent);

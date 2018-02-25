@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { CommonSettingsComponent } from "./common-settings.component";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
@@ -13,7 +13,7 @@ describe("CommonSettingsComponent", () => {
 	let fixture: ComponentFixture<CommonSettingsComponent>;
 	let userSettingsDao: UserSettingsDao;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -33,7 +33,8 @@ describe("CommonSettingsComponent", () => {
 
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CommonSettingsComponent);

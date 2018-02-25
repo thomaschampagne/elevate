@@ -12,7 +12,7 @@ describe("AppComponent", () => {
 	let component: AppComponent = null;
 	let fixture: ComponentFixture<AppComponent> = null;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			declarations: [
 				AppComponent,
@@ -23,7 +23,9 @@ describe("AppComponent", () => {
 				SharedModule
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 

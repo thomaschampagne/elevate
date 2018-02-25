@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/service/fitness.service";
@@ -26,7 +26,7 @@ describe("FitnessTrendGraphComponent", () => {
 	let fixture: ComponentFixture<FitnessTrendGraphComponent>;
 	let todayMoment: Moment;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -80,7 +80,8 @@ describe("FitnessTrendGraphComponent", () => {
 		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
 		spyOn(athleteHistoryService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 
