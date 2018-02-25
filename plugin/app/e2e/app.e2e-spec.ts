@@ -7,8 +7,9 @@ describe("App", () => {
 		page = new AppPage();
 	});
 
-	it("should display welcome message", () => {
+	it("should display welcome message", (done: Function) => {
 		page.navigateTo();
 		expect(page.getParagraphText()).toEqual("Welcome to app!");
+		done();
 	});
 });

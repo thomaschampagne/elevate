@@ -37,7 +37,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 
 	fakeActivity.hasPowerMeter = false;
 
-	// If power given?
+	// If avgHr given? Generate fake stats
 	if (_.isNumber(avgHr)) {
 		fakeActivity.extendedStats.heartRateData = {
 			TRIMP: avgHr * 2,
@@ -53,7 +53,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 		};
 	}
 
-	// If power given?
+	// If power given? Generate fake stats
 	if (_.isNumber(avgWatts)) {
 		fakeActivity.extendedStats.powerData = {
 			avgWatts: avgWatts,
@@ -61,10 +61,10 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			hasPowerMeter: true,
 			lowerQuartileWatts: avgWatts / 4,
 			medianWatts: avgWatts / 2,
-			powerStressScore: null,
-			powerStressScorePerHour: null,
+			powerStressScore: avgWatts * 3,
+			powerStressScorePerHour: avgWatts * 3,
 			powerZones: null,
-			punchFactor: null,
+			punchFactor: avgWatts * 4,
 			upperQuartileWatts: (avgWatts / 4) * 3,
 			variabilityIndex: 1,
 			weightedPower: avgWatts * 1.25,
@@ -470,7 +470,7 @@ describe("FitnessService", () => {
 		});
 	});
 
-	it("should skip EBikeRide activity type on prepare fitness w/ PM=OFF & SWIM=OFF", (done: Function) => {
+	it("should skip activities types 'Run & 'EBikeRide' on prepare fitness w/ PM=OFF & SWIM=OFF", (done: Function) => {
 
 		// Given
 		const expectedFitnessPreparedActivitiesLength = 2;
@@ -482,6 +482,8 @@ describe("FitnessService", () => {
 		cyclingFtp = null;
 		swimEnable = false;
 		swimFtp = null;
+
+		const skipActivitiesTypes: string[] = ["Run", "EBikeRide"];
 
 		const syncedActivityModels: SyncedActivityModel[] = [];
 		syncedActivityModels.push(createFakeSyncedActivityModel(151,
@@ -498,11 +500,18 @@ describe("FitnessService", () => {
 			90,
 			null));
 
-		syncedActivityModels.push(createFakeSyncedActivityModel(966,
+		syncedActivityModels.push(createFakeSyncedActivityModel(666,
 			"SuperHeartRateRide 02",
 			"Ride",
 			"2018-01-30",
 			135,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(999,
+			"SuperHeartRateRun 01",
+			"Run",
+			"2018-01-30",
+			185,
 			null));
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
@@ -510,7 +519,7 @@ describe("FitnessService", () => {
 
 		// When
 		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService
-			.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+			.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivitiesTypes);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -537,6 +546,84 @@ describe("FitnessService", () => {
 		});
 	});
 
+	it("should skip activities types 'Ride & 'Run' on prepare fitness w/ PM=ON & SWIM=OFF", (done: Function) => {
+
+		// Given
+		const expectedFitnessPreparedActivitiesLength = 1;
+		const expectedTrimpScoredActivitiesLength = 1;
+		const expectedPowerScoredActivitiesLength = 1;
+		const expectedSwimScoredActivitiesLength = 0;
+
+		powerMeterEnable = true;
+		cyclingFtp = 200;
+		swimEnable = false;
+		swimFtp = null;
+
+		const skipActivitiesTypes: string[] = ["Ride", "Run"];
+
+		const syncedActivityModels: SyncedActivityModel[] = [];
+		syncedActivityModels.push(createFakeSyncedActivityModel(151,
+			"SuperHeartRateRide 01",
+			"Ride",
+			"2018-01-01",
+			150,
+			230));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(235,
+			"Super E-Bike Ride",
+			"EBikeRide",
+			"2018-01-15",
+			90,
+			210));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(666,
+			"SuperHeartRateRide 02",
+			"Ride",
+			"2018-01-30",
+			135,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(999,
+			"SuperHeartRateRun 01",
+			"Run",
+			"2018-01-30",
+			185,
+			null));
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(syncedActivityModels));
+
+		// When
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService
+			.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivitiesTypes);
+
+		// Then
+		promise.then((result: FitnessPreparedActivityModel[]) => {
+
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
+
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+
+			expect(_.first(trimpScoredActivities).type).toEqual("EBikeRide");
+			expect(_.first(trimpScoredActivities).trainingImpulseScore).not.toBeNull();
+			expect(_.first(trimpScoredActivities).powerStressScore).not.toBeNull();
+
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
 
 	it("should fail to prepare fitness POWERED ONLY activities w/ PM=OFF & SWIM=OFF", (done: Function) => {
 
@@ -768,6 +855,87 @@ describe("FitnessService", () => {
 
 			expect(fitnessTrend.length).toEqual(expectedLength);
 			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+
+			// Test training load
+			const lastRealDay = _.last(_.filter(fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
+				return dayFitnessTrend.previewDay === false;
+			}));
+			expect(lastRealDay.atl.toFixed(5)).toEqual("13.74548");
+			expect(lastRealDay.ctl.toFixed(5)).toEqual("47.19952");
+			expect(lastRealDay.tsb.toFixed(5)).toEqual("33.45404");
+
+			const lastPreviewDay = _.last(fitnessTrend);
+			expect(lastPreviewDay.atl.toFixed(5)).toEqual("1.86025");
+			expect(lastPreviewDay.ctl.toFixed(5)).toEqual("33.81994");
+			expect(lastPreviewDay.tsb.toFixed(5)).toEqual("31.95969");
+
+			// Test stress scores
+			let activity: DayFitnessTrendModel;
+
+			activity = _.find(fitnessTrend, {ids: [429628737]});
+			expect(activity.powerStressScore.toFixed(3)).toEqual("112.749");
+
+			activity = _.find(fitnessTrend, {ids: [332833796]});
+			expect(activity.trainingImpulseScore.toFixed(3)).toEqual("191.715");
+
+			activity = _.find(fitnessTrend, {ids: [873446053]});
+			expect(activity.swimStressScore.toFixed(3)).toEqual("242.818");
+
+			activity = _.find(fitnessTrend, {ids: [873446053, 294909522]});
+			expect(activity.finalStressScore.toFixed(3)).toEqual("384.027");
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
+	it("should skip 'EBikeRide' while computing fitness trend", (done: Function) => {
+
+		// Given
+		const expectedLength = 346;
+		const skipActivitiesTypes: string[] = ["EBikeRide"];
+		const syncedActivityModels = _TEST_SYNCED_ACTIVITIES_;
+
+		// Add some fakes EBikeRides
+		syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			"Super E-Bike Ride 01",
+			"EBikeRide",
+			"2015-08-15",
+			150,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			"Super E-Bike Ride 02",
+			"EBikeRide",
+			"2015-09-15",
+			159,
+			null));
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(syncedActivityModels));
+
+		// When
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp,
+			swimEnable, swimFtp, skipActivitiesTypes);
+
+		// Then
+		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+			expect(fitnessTrend).not.toBeNull();
+
+			expect(fitnessTrend.length).toEqual(expectedLength);
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+
+			const eBikeRideActivities = _.filter(fitnessTrend, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+				return (_.indexOf(dayFitnessTrendModel.types, "EBikeRide") !== -1);
+			});
+
+			expect(eBikeRideActivities.length).toEqual(0);
 
 			// Test training load
 			const lastRealDay = _.last(_.filter(fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {

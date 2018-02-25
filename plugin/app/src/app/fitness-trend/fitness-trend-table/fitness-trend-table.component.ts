@@ -218,6 +218,9 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 				case FitnessTrendTableComponent.COLUMN_TRAINING_ZONE:
 					return dayFitnessTrendModel.trainingZone;
 
+				case FitnessTrendTableComponent.COLUMN_STRAVA_LINK:
+					return dayFitnessTrendModel.timestamp;
+
 				default:
 					throw new Error("sortHeaderId: " + sortHeaderId + " is not listed");
 

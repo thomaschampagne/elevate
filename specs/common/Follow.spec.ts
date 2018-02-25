@@ -3,7 +3,7 @@ import { IAthleteUpdate } from "../../plugin/core/scripts/interfaces/IAthleteUpd
 
 describe("Generate Athlete Update", () => {
 
-	it("should return compliant AthleteUpdate (free)", () => {
+	it("should return compliant AthleteUpdate (free)", (done: Function) => {
 
         const doe: IAthleteUpdate = AthleteUpdate.create(
             123,
@@ -23,10 +23,11 @@ describe("Generate Athlete Update", () => {
         expect(doe.locale).toEqual("France");
         expect(doe.hrMin).toEqual(65);
         expect(doe.hrMax).toEqual(190);
+		done();
     });
 
 
-	it("should return compliant AthleteUpdate (premium)", () => {
+	it("should return compliant AthleteUpdate (premium)", (done: Function) => {
 
         const doe: IAthleteUpdate = AthleteUpdate.create(
             777,
@@ -46,9 +47,10 @@ describe("Generate Athlete Update", () => {
         expect(doe.locale).toEqual("France");
         expect(doe.hrMax).toEqual(190);
         expect(doe.hrMin).toEqual(65);
+		done();
     });
 
-	it("should return compliant AthleteUpdate (pro)", () => {
+	it("should return compliant AthleteUpdate (pro)", (done: Function) => {
 
         const froom: IAthleteUpdate = AthleteUpdate.create(
             999,
@@ -79,10 +81,10 @@ describe("Generate Athlete Update", () => {
         expect(cavendish).not.toBeNull();
         expect(cavendish.status).toEqual(2);
         expect(cavendish.locale).toBeUndefined();
-
+		done();
     });
 
-	it("should pass monkey tests", () => {
+	it("should pass monkey tests", (done: Function) => {
 
         const monkey_01: IAthleteUpdate = AthleteUpdate.create(
             888,
@@ -114,6 +116,7 @@ describe("Generate Athlete Update", () => {
             false // pro true
         );
         expect(monkey_03).toBeNull();
+		done();
     });
 });
 

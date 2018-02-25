@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZoneComponent } from "./zone.component";
 import { MaterialModule } from "../../shared/modules/material.module";
@@ -17,7 +17,7 @@ describe("ZoneComponent", () => {
 
 	let zonesService: ZonesService;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [FormsModule, MaterialModule],
@@ -26,7 +26,9 @@ describe("ZoneComponent", () => {
 		}).compileComponents();
 
 		zonesService = TestBed.get(ZonesService);
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ZoneComponent);
@@ -34,11 +36,12 @@ describe("ZoneComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should notify properly a \"from\" zone change", () => {
+	it("should notify properly a \"from\" zone change", (done: Function) => {
 
 		// Given
 		const sourceId = 5;
@@ -66,10 +69,11 @@ describe("ZoneComponent", () => {
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
+		done();
 
 	});
 
-	it("should notify properly a \"to\" zone change", () => {
+	it("should notify properly a \"to\" zone change", (done: Function) => {
 
 		// Given
 		const sourceId = 5;
@@ -97,10 +101,10 @@ describe("ZoneComponent", () => {
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
-
+		done();
 	});
 
-	it("should skip notify is from + to changes (On first display)", () => {
+	it("should skip notify is from + to changes (On first display)", (done: Function) => {
 
 		// Given
 		const changeType: ZoneChangeTypeModel = {from: true, to: true};
@@ -111,6 +115,6 @@ describe("ZoneComponent", () => {
 
 		// Then
 		expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(0);
-
+		done();
 	});
 });

@@ -43,7 +43,7 @@ Greater than 1.15 prologue TT, track pursuit, track miss-and-o;
 ---
 If you own a cycling power meter then you get get the "Power Stress Score (PSS)" into your cycling activities. PSS formula is:  
 
-> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeigthedPower~\times~Intensity}{Averagewatts}~\times~100$  
+> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeigthedPower~\times~Intensity}{Cycling FTP~\times~3600}~\times~100$  
 
 _Note: PSS is equivalent to Training Stress Score&reg; (TSS&reg;) from TrainingPeaks&trade;. Learn more @ https://www.trainingpeaks.com/blog/what-is-tss/_
 

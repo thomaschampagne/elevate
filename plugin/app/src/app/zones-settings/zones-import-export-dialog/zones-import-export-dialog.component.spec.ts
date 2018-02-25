@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZonesImportExportDialogComponent } from "./zones-import-export-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
@@ -25,7 +25,7 @@ describe("ZonesImportExportDialogComponent", () => {
 	let fixture: ComponentFixture<ZonesImportExportDialogComponent>;
 	let zoneImportExportDataModel_As_Export: ZoneImportExportDataModel;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(zoneSpeedDefinition, userSettings.zones.speed, Mode.EXPORT);
 
@@ -44,7 +44,9 @@ describe("ZonesImportExportDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
@@ -52,11 +54,12 @@ describe("ZonesImportExportDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should render the 'Export' zones dialog", () => {
+	it("should render the 'Export' zones dialog", (done: Function) => {
 
 		// Given
 		const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
@@ -68,6 +71,6 @@ describe("ZonesImportExportDialogComponent", () => {
 		// Then
 		expect(component.zonesJsonData).toEqual(JSON.stringify(userSettings.zones.speed));
 		expect(compiled.querySelector("h2").textContent).toContain("Export <Cycling Speed> zones");
-
+		done();
 	});
 });

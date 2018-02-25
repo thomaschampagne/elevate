@@ -27,7 +27,7 @@
 	<mat-card-content>
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
-			<div fxFlex="60" fxFlex.lt-lg="100">
+			<div fxFlex="70" fxFlex.lt-lg="100">
 				<mat-form-field fxFlex="150px">
 					<mat-select placeholder="Progress Type"
 								(change)="onSelectedProgressTypeChange()"
@@ -93,7 +93,7 @@
 		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="60" fxFill>
+			<div fxFlex="70" fxFill>
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}

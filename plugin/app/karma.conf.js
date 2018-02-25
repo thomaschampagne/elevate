@@ -16,9 +16,9 @@ module.exports = function (config) {
 			clearContext: false // leave Jasmine Spec Runner output visible in browser
 		},
 		/** * maximum number of tries a browser will attempt in the case of a disconnection */
-		browserDisconnectTolerance: 2,
+		browserDisconnectTolerance: 3,
 		/** * How long will Karma wait for a message from a browser before disconnecting from it (in ms). */
-		browserNoActivityTimeout: 50000,
+		browserNoActivityTimeout: 60 * 1000,
 		coverageIstanbulReporter: {
 			reports: ['html', 'lcovonly'],
 			fixWebpackSourcePaths: true
@@ -41,6 +41,7 @@ module.exports = function (config) {
 					'--no-sandbox',
 					'--headless',
 					'--disable-gpu',
+					'--disable-browser-side-navigation',
 					' --remote-debugging-port=9222' // Without a remote debugging port, Google Chrome exits immediately.
 				]
 			}
