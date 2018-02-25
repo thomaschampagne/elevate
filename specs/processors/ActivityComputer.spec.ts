@@ -1,15 +1,14 @@
 import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
+	ActivityStatsMapModel, AnalysisDataModel,
 	StreamsModel
 } from "../../plugin/common/scripts/models/ActivityData";
 
 describe("ActivityComputer", () => {
 
     // Cycling
-    it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
+	it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", (done: Function) => {
 
 		const powerMeter = false;
 
@@ -105,6 +104,8 @@ describe("ActivityComputer", () => {
         expect(result.elevationData.lowerQuartileElevation.toString()).toMatch(/^215/);
         expect(result.elevationData.medianElevation.toString()).toMatch(/^231/);
         expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
+
+		done();
     });
 
 });

@@ -1,6 +1,5 @@
 .header {
 	margin: 0; // Remove mat-title margin
-	min-height: 180px;
 }
 
 // Class enabled via ngClass when active day on mouseover
@@ -8,6 +7,10 @@
 	cursor: pointer;
 }
 
-.stressScore i {
+.stressScore i, .restDay i {
 	font-size: 12px;
+}
+
+.fromToPeriod {
+	padding-top: 20px;
 }

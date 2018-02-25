@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessTrendTableComponent } from "./fitness-trend-table.component";
 import { SharedModule } from "../../shared/shared.module";
@@ -16,7 +16,7 @@ describe("FitnessTrendTableComponent", () => {
 	let component: FitnessTrendTableComponent;
 	let fixture: ComponentFixture<FitnessTrendTableComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -42,7 +42,9 @@ describe("FitnessTrendTableComponent", () => {
 				callback();
 			}
 		});
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FitnessTrendTableComponent);
@@ -50,7 +52,8 @@ describe("FitnessTrendTableComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });

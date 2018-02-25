@@ -569,7 +569,7 @@ describe("YearProgressService", () => {
 		done();
 	});
 
-	it("should format 24 hours to human readable time", () => {
+	it("should format 24 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 24;
@@ -580,10 +580,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 24 hours to human readable time", () => {
+	it("should format 24 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 1;
@@ -594,10 +594,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 50 hours to human readable time", () => {
+	it("should format 50 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 50;
@@ -608,10 +608,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 76.25 hours to human readable time", () => {
+	it("should format 76.25 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 76.25;
@@ -622,10 +622,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 29.5 hours to human readable time", () => {
+	it("should format 29.5 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 29.5;
@@ -636,10 +636,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 15 hours to human readable time", () => {
+	it("should format 15 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 15;
@@ -650,10 +650,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 5.815 hours to human readable time", () => {
+	it("should format 5.815 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 5.815;
@@ -664,10 +664,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 15.3333333 hours to human readable time", () => {
+	it("should format 15.3333333 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 15.3333333;
@@ -678,10 +678,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 0.25 hours to human readable time", () => {
+	it("should format 0.25 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 0.25;
@@ -692,10 +692,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format -12.5 negative hours to human readable time", () => {
+	it("should format -12.5 negative hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = -12.5;
@@ -706,10 +706,10 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
-	it("should format 0 hours to human readable time", () => {
+	it("should format 0 hours to human readable time", (done: Function) => {
 
 		// Given
 		const hours = 0;
@@ -720,7 +720,7 @@ describe("YearProgressService", () => {
 
 		// Then
 		expect(result).toEqual(expected);
-
+		done();
 	});
 
 

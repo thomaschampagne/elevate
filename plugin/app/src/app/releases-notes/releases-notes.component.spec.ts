@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ReleasesNotesComponent } from "./releases-notes.component";
 import { CoreModule } from "../core/core.module";
@@ -8,14 +8,16 @@ describe("ReleasesNotesComponent", () => {
 	let component: ReleasesNotesComponent;
 	let fixture: ComponentFixture<ReleasesNotesComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ReleasesNotesComponent);
@@ -23,7 +25,8 @@ describe("ReleasesNotesComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });
