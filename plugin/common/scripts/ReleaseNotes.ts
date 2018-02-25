@@ -10,7 +10,7 @@ export interface IReleaseNote {
 	/**
 	 * Say if we display again features. Eg. Fix or hotfix release. Default: false
 	 */
-	hideFeatureReleaseNote?: boolean;
+	isPatch?: boolean;
 
 	/**
 	 * Make silent updates... no update ribbon displayed
@@ -19,6 +19,26 @@ export interface IReleaseNote {
 }
 
 export let releaseNotes: IReleaseNote[] = [
+	{
+		version: "6.0.1",
+		message: "First patch of the brand <strong>NEW app</strong>! Fitness trend, years progress & others features have been fully remade! A <strong>new start</strong> to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
+		hotFixes: [],
+		features: [
+			"Remade and improved fitness trend feature",
+			"Remade and improved year progressions",
+			"Remade and improved common settings section",
+			"Remade and improved athlete settings section",
+			"Remade and improved zones settings section",
+			"Remade global design of the app with light and dark themes",
+			"Improved global reliability & performance of the application"
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed E-Bike rides skipped in fitness trend with an option that include/exclude them",
+			"Fixed fitness trend legend readability. Some others improvements are incoming along user feedback (e.g. tooltips & more clarity on training zone)",
+			"Fixed many others minors bugs"
+		]
+	},
 	{
 		version: "6.0.0",
 		message: "Brand <strong>NEW app</strong> released! Fitness trend, years progress & others features have been fully remade! This <strong>new start</strong> was required to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
@@ -32,7 +52,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Remade global design of the app with light and dark themes",
 			"Improved global reliability & performance of the application"
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -45,7 +65,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added running power estimation of your running activities (comparable with cycling power in watts). Feature is no more in Beta.",
 			"Added the day of the week on graph tooltips of fitness trend feature",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed 'Show Extended Statistics button' not working on some workouts when running power estimation where enabled.",
 		],
@@ -59,7 +79,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
 			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fixed 'Show Extended Statistics button' not working for some workouts",
 			"Fixed kom segment time showing NaN:NaN:NaN when strava.com do not provide sufficient info to compute it.",
@@ -76,7 +96,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
 			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed a wrong calculation of variability index due to incorrect average power (average power on moving was previously used).",
 			"Fixed hide virtual rides option not working since new strava UI.",
@@ -92,7 +112,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added an option to hide suggested athletes on dashboard",
 			"Changed heart rate zones inputs from %HRR to BPM. %HRR remains available on data display.",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fixed year progressions missing in strava \"My Profile\" page"
 		],
@@ -107,7 +127,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added an option to hide suggested athletes on dashboard",
 			"Changed heart rate zones inputs from %HRR to BPM. %HRR remains available on data display.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed QRcode feature not working anymore on activities pages"
 		],
@@ -122,7 +142,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
 			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			// "Fixed hidden premium labels and buttons (requested by strava.com)",
 			// "Fixed cases where plugin ran itself on login page & premium promotion page: display glitches could occur on these pages.",
@@ -136,7 +156,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
 			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed hidden premium labels and buttons (requested by strava.com)",
 			"Fixed cases where plugin ran itself on login page & premium promotion page: display glitches could occur on these pages.",
@@ -149,7 +169,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added export segments efforts to your GPS device. Go to an activity, choose a segment effort (from you or another athlete) and click \"Export segment effort for GPS device\".",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed links errors to access some options pages",
 			"Fixed global wrong conversion from seconds to hh:mm:ss format",
@@ -163,7 +183,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added \"Relive\" of your Rides & Runs inside your activity pages with relive.cc. Make sure you have <a href=\"http://relive.cc\" target=\"_blank\">relive.cc</a> account to get the feature onto your next Rides & Runs.",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: ["Fixed time format in years progressions"],
 	},
 	{
@@ -173,7 +193,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added \"Relive\" of your Rides & Runs inside your activity pages with relive.cc. Make sure you have <a href=\"http://relive.cc\" target=\"_blank\">relive.cc</a> account to get the feature onto your next Rides & Runs.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -187,7 +207,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added ribbon on top of page when plugin update occurs. Less annoying than the big update popup ;)",
 			"Minor improvements",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fixed new year progressions \"Time (h)\" jumps",
 			"Fixed new year progressions counts on selected activity types",
@@ -204,7 +224,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added ribbon on top of page when plugin update occurs. Less annoying than the big update popup ;)",
 			"Minor improvements",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed plugin running on strava.com/api/*",
 		],
@@ -220,7 +240,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Improved history synchronization. Synchronization continues where she stopped earlier (in case of any type of interruption).",
 			"Added possibility to filter or not \"commutes\" activities on year progressions.",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [],
 	},
 	{
@@ -232,7 +252,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Improved history synchronization. Synchronization continues where she stopped earlier (in case of any type of interruption).",
 			"Added possibility to filter or not \"commutes\" activities on year progressions.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed date comparison bug on additional goal progress tracking.",
 		],
@@ -248,7 +268,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added support of Running Power Meters (e.g. Stryd, RPM2, ... sensors) inside strava running activities pages.",
 			"Added a period of \"6 weeks\" inside MultiSports Fitness Trend",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed a wrong calculation of TRIMP on elapsed time when your activities were \"paused\" for a long time. <i></i>",
 			"Fixed the use of running power meters matching with cycling power meter option of Multisports Fitness Trend.",
@@ -264,7 +284,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Strava premium additional goal progress is back! Still \"experimental\". Activate it from Hidden feature section",
 			"Renamed cycling stat \"Punch Factor\" to \"Intensity\" (= Weighted Power / FTP)",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Now calculating TRIMP over elapsed time instead of moving time",
 			"Improved memory management during synchronization of your history",
@@ -279,7 +299,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Strava premium additional goal progress is back! Still \"experimental\". Activate it from Hidden feature section",
 			"Renamed cycling stat \"Punch Factor\" to \"Intensity\" (= Weighted Power / FTP)",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fix wrong daily fitness final score in case of multiple activities done on same day having TRIMP score for some and PSS score for others.",
 		],
@@ -293,7 +313,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Strava premium additional goal progress is back! Still \"experimental\". Activate it from Hidden feature section",
 			"Renamed cycling stat \"Punch Factor\" to \"Intensity\" (= Weighted Power / FTP)",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -305,7 +325,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Improved required time to generate fitness trend graph.",
 			"Others minors improvements around MultiSports Fitness Trend & synchronisation.",
 		],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Due to feature problems: strava premium additional goal progress tracking has be removed temporally. It's coming back later.",
 		],
@@ -319,7 +339,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Improved required time to generate fitness trend graph.",
 			"Others minors improvements around MultiSports Fitness Trend & synchronisation.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -329,7 +349,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"MultiSports Fitness Trend released as beta",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -340,7 +360,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"<i>MultiSports Fitness Trend:</i> Sync process fully reworked. Added, deleted & edited activities should be well handled. Sync typescript code is covered by unit tests.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			// 'Fixed cases where activities were not correctly handled on history synchronisation (<i>MultiSports Fitness Trend</i>)',
 			"Fixed a lot of others small things...",
@@ -357,7 +377,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Added an update process of your activities names and types from strava to your local history: performed on a simple sync. ",
 			"Added backup/restore function of your local history synced",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Partially fixed cases where activities not displayed in <i>MultiSports Fitness Trend</i> on simple sync. Working hard!",
 			"Fixed gap between curves of <i>MultiSports Fitness Trend</i> from today to preview days",
@@ -369,7 +389,7 @@ export let releaseNotes: IReleaseNote[] = [
 		message: "<i>\"MultiSports Fitness Trend\"</i> Alpha <strong>V3</strong> fast released! Include fixes of Alpha V2+V1... Feature works with all activities where you held a heart rate monitor. Not only cycling... </br><a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">[You need to activate this alpha feature to use it]</a></br></br>Sticky note: <i>\"Premium additional goal progress tracking\"</i> disabled. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)",
 		hotFixes: [],
 		features: [],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fixed majors bugs of <i>\"MultiSports Fitness Trend\"</i> Alpha V2+V1",
 		],
@@ -381,7 +401,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added plugin permission for users having more than 5MB of history. They can now save locally their history (required by <i>\"MultiSports Fitness Trend\"</i>)",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed majors bugs of <i>\"MultiSports Fitness Trend\"</i> Alpha V1",
 			"Disabled <i>\"Premium additional goal progress tracking\"</i>: few bugs remaining. Still available in common settings (hidden section).",
@@ -394,7 +414,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"MultiSports fitness trend. <a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">Activate the alpha feature</a>",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	},
 	{
@@ -404,7 +424,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added monthly and weekly targets for strava premium annual goals",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fix again monthly and weekly targets number format when language selected is french",
 			"Fix weather on cycling activities: only wind map could be displayed",
@@ -420,7 +440,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added monthly and weekly targets for strava premium annual goals",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed extended stats graph to get Y axis always starting from zero",
 		],
@@ -432,7 +452,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Added monthly and weekly targets for strava premium annual goals",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed extended stats graph to get Y axis always starting from zero",
 		],
@@ -444,7 +464,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Segment time comparison on all activity types.",
 		],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed some bugs on running estimated paces & cycling estimated powers: Recent efforts for running could rarely show watts instead of time & time range could be wrong sometimes",
 		],
@@ -456,7 +476,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [
 			"Fixed year progressions which could be not loaded by users having only running activities.",
 			"Fixed bad axis displayed on running estimated paces & cycling estimated powers.",
@@ -470,7 +490,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
 	}, {
 		version: "4.3.1",
@@ -480,7 +500,7 @@ export let releaseNotes: IReleaseNote[] = [
 			"Cycling estimated powers based on your most painful effort on a segment.",
 			"Running estimated paces based on your most painful effort on a segment.",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
 	}, {
 		version: "4.2.3",
@@ -491,7 +511,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Extended stats on Trainer Rides (where speed was not recorded)",
 			"Invisible enhancement to prepare future: Moved 50% of the JS code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a> (Geeks and developers could understand ;))"],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [],
 	}, {
 		version: "4.2.2",
@@ -502,7 +522,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Extended stats on Trainer Rides (where speed was not recorded)",
 			"Invisible enhancement to prepare future: Moved 50% of the JS code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a> (Geeks and developers could understand ;))"],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [],
 	}, {
 		version: "4.2.1",
@@ -511,7 +531,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Extended stats on Trainer Rides (where speed was not recorded)",
 			"Invisible enhancement to prepare future: Moved 50% of the JS code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a> (Geeks and developers could understand ;))"],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		fixes: [],
 	}, {
 		version: "4.2.0",
@@ -519,7 +539,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Extended stats on Trainer Rides (where speed was not recorded)",
 			"Invisible enhancement to prepare future: Moved 50% of the JS code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a> (Geeks and developers could understand ;))"],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [],
 	}, {
 		version: "4.1.0",
@@ -528,7 +548,7 @@ export let releaseNotes: IReleaseNote[] = [
 		features: [
 			"Segment time comparison now live for RUNNING ! Just open a running activity to see changes.",
 			"Improved zones customization in options: More thinner and explicit."],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed technical error which occured in plugin packaging with gulp",
 		],
@@ -537,7 +557,7 @@ export let releaseNotes: IReleaseNote[] = [
 		message: "NEW options user interface <a href=\"" + constants.OPTIONS_URL + "\" target=\"_blank\">(link)</a> ! A NEW perspective is open for upcoming big features (WIP) ;)",
 		hotFixes: [],
 		features: ["Re-made options UI <a href=\"" + constants.OPTIONS_URL + "\" target=\"_blank\">(link)</a> to prepare future of plugin! Google material design applied!"],
-		hideFeatureReleaseNote: false,
+		isPatch: false,
 		fixes: [
 			"Fixed vanished \"segment veloviewer\" and \"nearby segments\" links on segments pages",
 			"Fixed wrong standard deviation speed when using MPH units",
@@ -546,7 +566,7 @@ export let releaseNotes: IReleaseNote[] = [
 		version: "3.10.1",
 		message: "A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)",
 		hotFixes: [],
-		hideFeatureReleaseNote: true,
+		isPatch: true,
 		features: [
 			"Added Hidden/Beta feature section.",
 			"Added Relive.cc as Hidden/Beta feature.",
