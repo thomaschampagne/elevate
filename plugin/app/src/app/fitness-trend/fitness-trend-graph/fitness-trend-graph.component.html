@@ -101,9 +101,10 @@
 						{{viewedDay.printDate()}}
 					</div>
 
-					<div fxFill fxLayout="row" fxLayoutAlign="end start" [ngSwitch]="viewedDay.hasActivities()">
+					<div fxFill fxLayout="row" fxLayoutAlign="end start" [ngSwitch]="viewedDay.hasActivities()"
+						 class="viewedDayActivities">
 
-						<span *ngSwitchCase="true" class="viewedDayActivities">
+						<span *ngSwitchCase="true">
 							<span *ngFor="let activity of viewedDay.activitiesName; let activityIndex = index;">
 								<span *ngIf="(activityIndex < MAX_ACTIVITIES_LEGEND_SHOWN)">
 									<span class="tag">{{viewedDay.types[activityIndex]}}</span> <span class="name">{{activity}}</span>
@@ -113,7 +114,7 @@
 							<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}} more</span>
 						</span>
 
-						<span *ngSwitchCase="false" class="restDay">
+						<span *ngSwitchCase="false">
 							<i>Rest day</i>
 						</span>
 					</div>
@@ -182,6 +183,7 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 
