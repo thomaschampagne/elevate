@@ -10,7 +10,7 @@ export class ViewableFitnessDataModel {
 			{value: 25, label: "Freshness"},
 			{value: 5, label: "Neutral"},
 			{value: -10, label: "Optimal"},
-			{value: -30, label: "Over training"}
+			{value: -30, label: "Overload"}
 		];
 
 	public readonly zeroBaseLine: BaseLineModel = {value: 0, label: null};

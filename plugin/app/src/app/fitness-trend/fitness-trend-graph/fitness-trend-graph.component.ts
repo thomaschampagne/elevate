@@ -1,4 +1,14 @@
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	HostListener,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
+} from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -83,13 +93,21 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	public isEBikeRidesEnabled = false;
 	public cyclingFtp: number = null;
 	public swimFtp: number = null;
-
 	public skipActivityTypes: string[] = [];
 
 	public graphHeightFactor: number;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
+
+	@ViewChild("viewedDayTooltip")
+	public viewedDayTooltipElement: ElementRef;
+	public viewedDayTooltipBounds: ClientRect = null;
+
+	@ViewChild("fitnessTrendGraph")
+	public fitnessTrendGraphElement: ElementRef;
+	public fitnessTrendGraphBounds: ClientRect = null;
+
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
@@ -309,6 +327,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => {
 			this.findGraphHeightFactor();
 			this.onComponentSizeChanged();
+			this.fitnessTrendGraphBounds = null; // Reset stored fitness graph bounds. It will be updated again by 'onTooltipMouseMove(event: MouseEvent)'
 		});
 
 		// Or user toggles the side nav (open/close states)
@@ -456,6 +475,35 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public onGraphMouseOver(date: Date): void {
 		this.viewedDay = this.getDayFitnessTrendFromDate(date);
+	}
+
+	/**
+	 *
+	 * @param {MouseEvent} mouseEvent
+	 */
+	public onTooltipMouseMove(mouseEvent: MouseEvent): void {
+
+		let mouseDistanceX = 25; // Default value in px. Can be changed below if tooltip goes out of the graph
+
+		if (!this.fitnessTrendGraphBounds) {
+			this.fitnessTrendGraphBounds = this.fitnessTrendGraphElement.nativeElement.getBoundingClientRect();
+		}
+
+		// Get tooltips bounds if not exists (or wrong width)
+		if (!this.viewedDayTooltipBounds || this.viewedDayTooltipBounds.width === 0) {
+			this.viewedDayTooltipBounds = this.viewedDayTooltipElement.nativeElement.getBoundingClientRect();
+		}
+
+		// Place tooltip left to the mouse cursor if she goes out of the graph
+		const horizontalTooltipFlipThreshold = this.fitnessTrendGraphBounds.right - this.viewedDayTooltipBounds.width - mouseDistanceX;
+		if (mouseEvent.clientX > horizontalTooltipFlipThreshold) {
+			mouseDistanceX = (mouseDistanceX + this.viewedDayTooltipBounds.width) * -1;
+		}
+
+		// Finally set tooltip position
+		this.viewedDayTooltipElement.nativeElement.style.left = (mouseEvent.clientX + mouseDistanceX) + 'px';
+		this.viewedDayTooltipElement.nativeElement.style.top = (mouseEvent.clientY - (this.viewedDayTooltipBounds.height / 2)) + 'px';
+
 	}
 
 	/**
