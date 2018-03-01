@@ -187,6 +187,7 @@
 
 		<!--GRAPH-->
 		<div fxLayout="row" fxLayoutAlign="start center">
+
 			<div fxFlex="3">
 				<button mat-icon-button matTooltip="(Left key press) Move Backward 2 weeks"
 						color="primary"
@@ -195,10 +196,56 @@
 					<mat-icon>arrow_back</mat-icon>
 				</button>
 			</div>
+
 			<div fxFlex="94">
-				<div [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
-					 id="fitnessTrendGraph">
+
+				<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewedDayTooltip"
+					 [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+					 (document:mousemove)="onTooltipMouseMove($event)">
+
+					<!--Tooltip shown on mouse move over graph-->
+					<div #viewedDayTooltip>
+						<table cellspacing="0" cellpadding="0">
+
+							<!--Date-->
+							<tr class="date">
+								<td>{{viewedDay.printShortDate()}}</td>
+								<td></td>
+							</tr>
+
+							<!--Stress score-->
+							<tr *ngIf="viewedDay.finalStressScore" class="stressScore">
+								<td>Stress score</td>
+								<td><strong>{{viewedDay.printFinalStressScore()}}</strong></td>
+							</tr>
+							<tr *ngIf="!viewedDay.finalStressScore" class="stressScore">
+								<td>Rest day</td>
+								<td></td>
+							</tr>
+
+							<tr class="separator">
+								<td colspan="2"></td>
+							</tr>
+
+							<!--Fitness, Fatigue & Form-->
+							<tr class="ctl_value">
+								<td>Fitness</td>
+								<td>{{viewedDay.printFitness()}}</td>
+							</tr>
+							<tr class="atl_value">
+								<td>Fatigue</td>
+								<td>{{viewedDay.printFatigue()}}</td>
+							</tr>
+							<tr class="tsb_value">
+								<td>Form <i *ngIf="isTrainingZonesEnabled">@{{viewedDay.printTrainingZone()}}</i></td>
+								<td>{{viewedDay.printForm()}}</td>
+							</tr>
+						</table>
+
+					</div>
+
 				</div>
+
 			</div>
 
 			<div fxFlex="3">
