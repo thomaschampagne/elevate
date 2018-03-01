@@ -197,6 +197,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		const previewFatigueLine: GraphPointModel[] = [];
 		const previewFitnessLine: GraphPointModel[] = [];
 		const previewFormLine: GraphPointModel[] = [];
+		const activeLine: GraphPointModel[] = [];
 
 		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
 
@@ -240,6 +241,13 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 				hidden: isHiddenGraphPoint
 			});
 
+			activeLine.push({
+				date: dayFitnessTrend.dateString,
+				value: 0,
+				hidden: false,
+				active: dayFitnessTrend.hasActivities()
+			});
+
 			let marker: MarkerModel = null;
 
 			const isScoringDay = (dayFitnessTrend.finalStressScore && dayFitnessTrend.finalStressScore > 0);
@@ -273,7 +281,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			formLine,
 			previewFatigueLine,
 			previewFitnessLine,
-			previewFormLine
+			previewFormLine,
+			activeLine
 		);
 	}
 
@@ -732,6 +741,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			missing_is_hidden: true,
 			max_data_size: 6,
 			missing_is_hidden_accessor: "hidden",
+			active_point_on_lines: true,
+			active_point_size: 2.5,
 			yax_count: 10,
 			target: "#fitnessTrendGraph",
 			x_accessor: "date",
