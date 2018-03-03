@@ -30,6 +30,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public atl: number;
 	public tsb: number;
 	public trainingZone: TrainingZone;
+	public trainingZoneAsString: string;
 
 	public printFitness(): string {
 		return this.ctl.toFixed(1);
@@ -131,7 +132,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 	}
 
 	public printTrainingZone(): string {
-		const trainingZoneString = TrainingZone[this.trainingZone].toLowerCase();
-		return trainingZoneString.charAt(0).toUpperCase() + trainingZoneString.slice(1);
+		if (!this.trainingZoneAsString) {
+			const trainingZoneString = TrainingZone[this.trainingZone].toLowerCase();
+			this.trainingZoneAsString = trainingZoneString.charAt(0).toUpperCase() + trainingZoneString.slice(1);
+		}
+		return this.trainingZoneAsString;
 	}
 }
