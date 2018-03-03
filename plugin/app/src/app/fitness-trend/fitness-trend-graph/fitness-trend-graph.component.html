@@ -211,8 +211,12 @@
 
 							<!--Date-->
 							<tr class="date">
-								<td>{{viewedDay.printShortDate()}}</td>
-								<td></td>
+								<td>
+									{{viewedDay.printShortDate()}}
+								</td>
+								<td class="open">
+									<span *ngIf="viewedDay.hasActivities()">(click to open)</span>
+								</td>
 							</tr>
 
 							<!--Stress score-->
@@ -245,6 +249,7 @@
 								<td>Form <i *ngIf="isTrainingZonesEnabled">@{{viewedDay.printTrainingZone()}}</i></td>
 								<td>{{viewedDay.printForm()}}</td>
 							</tr>
+
 						</table>
 
 					</div>
