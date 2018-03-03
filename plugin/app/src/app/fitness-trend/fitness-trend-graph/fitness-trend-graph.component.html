@@ -219,6 +219,12 @@
 								</td>
 							</tr>
 
+							<tr class="typesCount">
+								<td colspan="2">
+									{{viewedDay.printTypesCount(2, "-")}}
+								</td>
+							</tr>
+
 							<!--Stress score-->
 							<tr *ngIf="viewedDay.hasActivities()" class="active">
 								<td>Stress score</td>
@@ -246,7 +252,8 @@
 								<td>{{viewedDay.printFatigue()}}</td>
 							</tr>
 							<tr class="tsb_value">
-								<td>Form <i *ngIf="isTrainingZonesEnabled">@{{viewedDay.printTrainingZone()}}</i></td>
+								<td>Form <span
+									*ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
 								<td>{{viewedDay.printForm()}}</td>
 							</tr>
 

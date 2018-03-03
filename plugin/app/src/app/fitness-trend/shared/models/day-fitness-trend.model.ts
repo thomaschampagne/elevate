@@ -1,6 +1,7 @@
 import * as moment from "moment";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "./training-zone.enum";
+import * as _ from "lodash";
 
 export class DayFitnessTrendModel extends DayStressModel {
 
@@ -79,6 +80,33 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 		return this.types.join("; ");
 
+	}
+
+	public printTypesCount(maxType?: number, defaultEmptyValue?: string): string {
+
+		if (this.types.length === 0) {
+			return (defaultEmptyValue) ? defaultEmptyValue : "";
+		}
+
+		const typesCount = _(this.types).countBy().map((count, type) => {
+			return {type: type, count: count};
+		}).orderBy("count", "desc").value();
+
+		let result = "";
+		_.forEach(typesCount, (obj: any, index: number) => {
+
+			result += obj.count + " " + obj.type + ((obj.count > 1) ? "s" : "");
+
+			if (maxType && index === (maxType - 1)) {
+				const remaining = (typesCount.length - 1) - index;
+				result += ((remaining > 0) ? " & " + remaining + " more" : "");
+				return false;
+			}
+			if (index < (typesCount.length - 1)) {
+				result += ", ";
+			}
+		});
+		return result;
 	}
 
 	public findTrainingZone(tsb: number): TrainingZone {
