@@ -216,11 +216,11 @@
 							</tr>
 
 							<!--Stress score-->
-							<tr *ngIf="viewedDay.finalStressScore" class="stressScore">
+							<tr *ngIf="viewedDay.finalStressScore" class="active">
 								<td>Stress score</td>
-								<td><strong>{{viewedDay.printFinalStressScore()}}</strong></td>
+								<td>{{viewedDay.printFinalStressScore()}}</td>
 							</tr>
-							<tr *ngIf="!viewedDay.finalStressScore" class="stressScore">
+							<tr *ngIf="!viewedDay.finalStressScore" class="rest">
 								<td>Rest day</td>
 								<td></td>
 							</tr>
