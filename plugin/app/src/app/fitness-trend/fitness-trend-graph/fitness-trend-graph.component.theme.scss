@@ -125,6 +125,14 @@ $config: mat-typography-config();
 		position: relative;
 	}
 
+	.active {
+		color: mat-color($mat-red, 600);
+	}
+
+	.rest {
+		color: mat-color($mat-green, 600);
+	}
+
 	.viewedDayTooltip div {
 
 		display: none;
