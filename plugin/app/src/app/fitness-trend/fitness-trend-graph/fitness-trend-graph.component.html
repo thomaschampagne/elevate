@@ -202,7 +202,7 @@
 			<div fxFlex="94">
 
 				<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewedDayTooltip"
-					 [ngClass]='{"openActivities": viewedDay.activitiesName.length}'
+					 [ngClass]='{"openActivities": viewedDay.hasActivities()}'
 					 (document:mousemove)="onTooltipMouseMove($event)">
 
 					<!--Tooltip shown on mouse move over graph-->
@@ -216,12 +216,15 @@
 							</tr>
 
 							<!--Stress score-->
-							<tr *ngIf="viewedDay.finalStressScore" class="active">
+							<tr *ngIf="viewedDay.hasActivities()" class="active">
 								<td>Stress score</td>
 								<td>{{viewedDay.printFinalStressScore()}}</td>
 							</tr>
-							<tr *ngIf="!viewedDay.finalStressScore" class="rest">
-								<td>Rest day</td>
+							<tr *ngIf="!viewedDay.hasActivities()" class="rest">
+								<td>
+									<span *ngIf="!viewedDay.previewDay">Rest day</span>
+									<span *ngIf="viewedDay.previewDay">Preview day</span>
+								</td>
 								<td></td>
 							</tr>
 
