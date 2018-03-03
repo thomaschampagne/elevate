@@ -32,16 +32,16 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
 
-	public printFitness(): string {
-		return this.ctl.toFixed(1);
+	public printFitness(): number {
+		return Math.floor(this.ctl * 10) / 10;
 	}
 
-	public printFatigue(): string {
-		return this.atl.toFixed(1);
+	public printFatigue(): number {
+		return Math.floor(this.atl * 10) / 10;
 	}
 
-	public printForm(): string {
-		return this.tsb.toFixed(1);
+	public printForm(): number {
+		return Math.floor(this.tsb * 10) / 10;
 	}
 
 	public printDate(): string {
