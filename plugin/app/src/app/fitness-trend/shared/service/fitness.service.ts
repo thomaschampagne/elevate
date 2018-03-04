@@ -356,13 +356,14 @@ export class FitnessService {
 
 		let startIndex = 0; // Use first day as start index by default.
 		if (_.isDate(period.from)) { // Then override index if "From" is specified
+
 			startIndex = _.findIndex(fitnessTrend, {
 				dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT)
 			});
-		}
 
-		if (startIndex === -1) {
-			throw (new Error()).message = "No start activity index found for this FROM date";
+			if (startIndex === -1) {
+				startIndex = 0;
+			}
 		}
 
 		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default

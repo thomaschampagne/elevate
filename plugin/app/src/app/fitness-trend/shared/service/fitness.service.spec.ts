@@ -975,7 +975,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should convert -7 days date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
+	it("should convert -7 days date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
 
 
 		// Given
@@ -1007,7 +1007,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should convert -6 weeks date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
+	it("should convert -6 weeks date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
 
 		// Given
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -1037,7 +1037,7 @@ describe("FitnessService", () => {
 		});
 	});
 
-	it("should convert date based period \"from/to\" to \"start/end\" fitness trends indexes", (done: Function) => {
+	it("should convert date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
 
 		// Given
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -1070,7 +1070,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should failed when find indexes of \"from > to\" date", (done: Function) => {
+	it("should failed when find indexes of 'from > to' date", (done: Function) => {
 
 		// Given
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -1104,30 +1104,28 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should failed when find index of FROM which do not exists ", (done: Function) => {
+	it("should provide 'start' index of the first known activity when FROM don't matches athlete history", (done: Function) => {
 
 		// Given
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		const period: PeriodModel = {
-			from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(), // Fake
-			to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate()
+			from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(), // Too old date !
+			to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
 		};
 
 		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 
-		// When, Then
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 
-			let error = null;
-			try {
-				fitnessService.indexesOf(period, fitnessTrend);
-			} catch (e) {
-				error = e;
-			}
+			// When
+			const indexes: { start: number; end: number } = fitnessService.indexesOf(period, fitnessTrend);
 
-			expect(error).not.toBeNull();
-			expect(error).toBe("No start activity index found for this FROM date");
+			// Then
+			expect(indexes).not.toBeNull();
+			expect(indexes.start).toEqual(0);
+			expect(indexes.end).toEqual(269);
+
 			done();
 
 		}, error => {
@@ -1135,7 +1133,6 @@ describe("FitnessService", () => {
 			expect(false).toBeTruthy("Whoops! I should not be here!");
 			done();
 		});
-
 	});
 
 	it("should failed when find index of TO which do not exists ", (done: Function) => {
