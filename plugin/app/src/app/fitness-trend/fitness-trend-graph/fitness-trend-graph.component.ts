@@ -1,14 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	HostListener,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -47,7 +37,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
 
-	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 15; // Days
+	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 14; // Days
 	public static readonly TODAY_MARKER_LABEL: string = "Today";
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 
