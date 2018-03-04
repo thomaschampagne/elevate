@@ -98,15 +98,14 @@ describe("FitnessTrendGraphComponent", () => {
 		done();
 	});
 
-
 	it("should allow forward period viewed", (done: Function) => {
 
 		// Given
 		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
 		component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
 
-		const periodFrom = "2015-01-05";
-		const periodTo = "2015-01-15";
+		const periodFrom = "2015-01-06";
+		const periodTo = "2015-01-16";
 
 		component.periodViewed = {
 			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
@@ -163,8 +162,8 @@ describe("FitnessTrendGraphComponent", () => {
 			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
 			to: moment(periodTo, "YYYY-MM-DD").toDate()
 		};
-		const expectedPeriodFrom = moment("2015-01-5", "YYYY-MM-DD").toDate();
-		const expectedPeriodTo = moment("2015-01-15", "YYYY-MM-DD").toDate();
+		const expectedPeriodFrom = moment("2015-01-6", "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment("2015-01-16", "YYYY-MM-DD").toDate();
 
 		// When
 		component.onPeriodViewedBackward();
