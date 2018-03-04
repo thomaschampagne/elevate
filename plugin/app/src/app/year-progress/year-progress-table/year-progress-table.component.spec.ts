@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
@@ -21,7 +21,7 @@ describe("YearProgressTableComponent", () => {
 	let yearProgressService: YearProgressService;
 	let syncedActivityModels: SyncedActivityModel[];
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -32,7 +32,8 @@ describe("YearProgressTableComponent", () => {
 
 		yearProgressService = TestBed.get(YearProgressService);
 
-	}));
+		done();
+	});
 
 	beforeEach(() => {
 
@@ -77,11 +78,12 @@ describe("YearProgressTableComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should provide year progressions distance rows for data table display", () => {
+	it("should provide year progressions distance rows for data table display", (done: Function) => {
 
 		// Given
 		const dayMoment = moment("2018-03-01 12:00", "YYYY-MM-DD hh:mm");
@@ -142,10 +144,10 @@ describe("YearProgressTableComponent", () => {
 		expect(progressionRow2015.deltaType).toEqual(DeltaType.NAN);
 		expect(progressionRow2015.deltaSignSymbol).toEqual(null);
 		expect(progressionRow2015.deltaClass).toEqual(DeltaType.NAN.toString());
-
+		done();
 	});
 
-	it("should provide proper year progressions time rows between two years (1)", () => {
+	it("should provide proper year progressions time rows between two years (1)", (done: Function) => {
 
 		// Given
 		const hoursFirstYear = 24;
@@ -195,10 +197,10 @@ describe("YearProgressTableComponent", () => {
 		expect(secondRow.deltaType).toEqual(DeltaType.NAN);
 		expect(secondRow.deltaSignSymbol).toEqual(null);
 		expect(secondRow.deltaClass).toEqual(DeltaType.NAN.toString());
-
+		done();
 	});
 
-	it("should provide proper year progressions time rows when no delta between two years (2)", () => {
+	it("should provide proper year progressions time rows when no delta between two years (2)", (done: Function) => {
 		// Given
 		const hoursFirstYear = 24;
 		const firstYear: ProgressionAtDayModel = {
@@ -247,9 +249,10 @@ describe("YearProgressTableComponent", () => {
 		expect(secondRow.deltaType).toEqual(DeltaType.NAN);
 		expect(secondRow.deltaSignSymbol).toEqual(null);
 		expect(secondRow.deltaClass).toEqual(DeltaType.NAN.toString());
+		done();
 	});
 
-	it("should provide proper year progressions time rows when no delta between two years (3)", () => {
+	it("should provide proper year progressions time rows when no delta between two years (3)", (done: Function) => {
 		// Given
 		const hoursFirstYear = 24;
 		const firstYear: ProgressionAtDayModel = {
@@ -298,9 +301,10 @@ describe("YearProgressTableComponent", () => {
 		expect(secondRow.deltaType).toEqual(DeltaType.NAN);
 		expect(secondRow.deltaSignSymbol).toEqual(null);
 		expect(secondRow.deltaClass).toEqual(DeltaType.NAN.toString());
+		done();
 	});
 
-	it("should provide proper year progressions elevation rows when no delta between two years", () => {
+	it("should provide proper year progressions elevation rows when no delta between two years", (done: Function) => {
 
 		// Given
 		const firstYear: ProgressionAtDayModel = {
@@ -349,7 +353,7 @@ describe("YearProgressTableComponent", () => {
 		expect(secondRow.deltaType).toEqual(DeltaType.NAN);
 		expect(secondRow.deltaSignSymbol).toEqual(null);
 		expect(secondRow.deltaClass).toEqual(DeltaType.NAN.toString());
-
+		done();
 	});
 
 });

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ConfirmDialogComponent } from "./confirm-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
@@ -15,7 +15,7 @@ describe("ConfirmDialogComponent", () => {
 	let fixture: ComponentFixture<ConfirmDialogComponent>;
 	let confirmDialogDataModel;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
 
@@ -34,7 +34,9 @@ describe("ConfirmDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ConfirmDialogComponent);
@@ -42,11 +44,12 @@ describe("ConfirmDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should render the confirm dialog", () => {
+	it("should render the confirm dialog", (done: Function) => {
 
 		// Given
 		const fixture = TestBed.createComponent(ConfirmDialogComponent);
@@ -60,6 +63,6 @@ describe("ConfirmDialogComponent", () => {
 		expect(component.dialogData.content).toEqual(confirmDialogDataModel.content);
 		expect(compiled.querySelector("h2").textContent).toContain(dialogTitle);
 		expect(compiled.querySelector("mat-dialog-content").textContent).toContain(dialogContent);
-
+		done();
 	});
 });
