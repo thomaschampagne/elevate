@@ -20,10 +20,10 @@ describe("OptionHelperReaderService", () => {
 		optionHelperReaderService = TestBed.get(OptionHelperReaderService);
 	});
 
-	it("should be created", () => {
+	it("should be created", (done: Function) => {
 		expect(optionHelperReaderService).not.toBeNull();
 		expect(http).not.toBeNull();
-
+		done();
 	});
 
 	it("should return markdown data", (done: Function) => {

@@ -12,7 +12,7 @@ describe("CourseMaker", () => {
 		activityStream = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/activities/829770999/stream"]);
     });
 
-    it("should export GPX stream with consistency data", () => {
+	it("should export GPX stream with consistency data", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -59,9 +59,10 @@ describe("CourseMaker", () => {
         const trackPointExtension = extensions.getElementsByTagNameNS(trackPointNamespaceURI, "TrackPointExtension")[0];
         expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, "hr")[0].childNodes[0].nodeValue).toMatch(/^104/);
         expect(trackPointExtension.getElementsByTagNameNS(trackPointNamespaceURI, "cad")[0].childNodes[0].nodeValue).toMatch(/^69/);
+		done();
     });
 
-    it("should export GPX with no HRM, Cadence, altimeter & Power sensor", () => {
+	it("should export GPX with no HRM, Cadence, altimeter & Power sensor", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -78,9 +79,11 @@ describe("CourseMaker", () => {
         // Then ...
         expect(errorCatched).toBeNull();
 
+		done();
+
     });
 
-    it("should export TCX stream with consistency data", () => {
+	it("should export TCX stream with consistency data", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -127,9 +130,10 @@ describe("CourseMaker", () => {
         expect(firstTrackPoint.getElementsByTagName("HeartRateBpm")[0]
             .getElementsByTagName("Value")[0].childNodes[0].nodeValue).toMatch(/^104$/);
 
+		done();
     });
 
-    it("should export TCX with no HRM, Cadence, altimeter & Power sensor", () => {
+	it("should export TCX with no HRM, Cadence, altimeter & Power sensor", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -145,10 +149,10 @@ describe("CourseMaker", () => {
 
         // Then ...
         expect(errorCatched).toBeNull();
-
+		done();
     });
 
-    it("should export GPX with bounds", () => {
+	it("should export GPX with bounds", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -161,10 +165,10 @@ describe("CourseMaker", () => {
         // Then
         const trackPointsLength = xmlStream.getElementsByTagName("trkpt").length;
         expect(trackPointsLength).toBe(100);
-
+		done();
     });
 
-    it("should export TCX with bounds", () => {
+	it("should export TCX with bounds", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -182,10 +186,10 @@ describe("CourseMaker", () => {
             .getElementsByTagName("Trackpoint").length;
 
         expect(trackPointsLength).toBe(100);
-
+		done();
     });
 
-    it("should failed", () => {
+	it("should failed", (done: Function) => {
 
         // Given
 		const courseName = "MyCourse";
@@ -194,5 +198,6 @@ describe("CourseMaker", () => {
             courseMaker.create(-1, courseName, activityStream); // When
         }).toThrowError("Export type do not exist"); // Then
 
+		done();
     });
 });

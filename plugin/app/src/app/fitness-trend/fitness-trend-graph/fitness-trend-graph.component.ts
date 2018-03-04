@@ -1,4 +1,7 @@
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import {
+	Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
+	ViewChild
+} from "@angular/core";
 import { FitnessService } from "../shared/service/fitness.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -35,18 +38,22 @@ enum FITNESS_TRENDS_KEY_CODES {
 })
 export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
+	public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
+
 	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 15; // Days
 	public static readonly TODAY_MARKER_LABEL: string = "Today";
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
+
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
+	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
 
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.670;
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
 
-	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.55;
-	}
+	public readonly MAX_ACTIVITIES_LEGEND_SHOWN: number = 2;
 
 	@Output("hasFitnessTrendDataNotify")
 	public hasFitnessTrendDataNotify: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -75,12 +82,25 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 
 	public isTrainingZonesEnabled = false;
 	public isPowerMeterEnabled = false;
-	public cyclingFtp: number = null;
 	public isSwimEnabled = false;
+	public isEBikeRidesEnabled = false;
+	public cyclingFtp: number = null;
 	public swimFtp: number = null;
+	public skipActivityTypes: string[] = [];
+
+	public graphHeightFactor: number;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
+
+	@ViewChild("viewedDayTooltip")
+	public viewedDayTooltipElement: ElementRef;
+	public viewedDayTooltipBounds: ClientRect = null;
+
+	@ViewChild("fitnessTrendGraph")
+	public fitnessTrendGraphElement: ElementRef;
+	public fitnessTrendGraphBounds: ClientRect = null;
+
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
@@ -91,6 +111,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
+
+		this.findGraphHeightFactor();
 
 		this.PERFORMANCE_MARKER = performance.now();
 
@@ -110,8 +132,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_TRAINING_ZONES_ENABLED_KEY));
 			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
 			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.swimFtp);
+			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendGraphComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
 
-			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp);
+			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
+
+			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -137,7 +162,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 * First graph draw
 	 */
 	public setup(): void {
-
 		this.setupGraphConfig();
 		this.setupTimeData();
 		this.setupViewableGraphData();
@@ -148,11 +172,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	/**
 	 * Re-compute fitness trends, and apply data to graph.
 	 */
-	private reloadGraph(): void {
+	public reloadGraph(): void {
 
 		this.PERFORMANCE_MARKER = performance.now();
 
-		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp)
+		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes)
 			.then((fitnessTrend: DayFitnessTrendModel[]) => {
 				this.fitnessTrend = fitnessTrend;
 				this.setupViewableGraphData();
@@ -163,7 +187,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	/**
 	 *
 	 */
-	private setupViewableGraphData(): void {
+	public setupViewableGraphData(): void {
 
 		// Prepare viewable lines
 		const today: string = moment().format(DayFitnessTrendModel.DATE_FORMAT);
@@ -293,10 +317,26 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public setupComponentSizeChangeHandlers(): void {
 
-		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
+		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => {
+			this.findGraphHeightFactor();
+			this.onComponentSizeChanged();
+			this.fitnessTrendGraphBounds = null; // Reset stored fitness graph bounds. It will be updated again by 'onTooltipMouseMove(event: MouseEvent)'
+		});
 
 		// Or user toggles the side nav (open/close states)
 		this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+	}
+
+	/**
+	 *
+	 */
+	public findGraphHeightFactor(): void {
+
+		if (this.windowService.isScreenMediaActive(WindowService.SCREEN_MD)) {
+			this.graphHeightFactor = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_MD;
+		} else {
+			this.graphHeightFactor = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG;
+		}
 	}
 
 	/**
@@ -323,7 +363,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	/**
 	 *
 	 */
-	private setupTimeData() {
+	public setupTimeData() {
 
 		this.setTodayAsViewedDay();
 
@@ -416,7 +456,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {MetricsGraphicsEventModel} metricsGraphicsEvent
 	 */
-	private onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
+	public onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
 		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
 		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
 	}
@@ -426,15 +466,44 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {Date} date
 	 */
-	private onGraphMouseOver(date: Date): void {
+	public onGraphMouseOver(date: Date): void {
 		this.viewedDay = this.getDayFitnessTrendFromDate(date);
+	}
+
+	/**
+	 *
+	 * @param {MouseEvent} mouseEvent
+	 */
+	public onTooltipMouseMove(mouseEvent: MouseEvent): void {
+
+		let mouseDistanceX = 25; // Default value in px. Can be changed below if tooltip goes out of the graph
+
+		if (!this.fitnessTrendGraphBounds) {
+			this.fitnessTrendGraphBounds = this.fitnessTrendGraphElement.nativeElement.getBoundingClientRect();
+		}
+
+		// Get tooltips bounds if not exists (or wrong width)
+		if (!this.viewedDayTooltipBounds || this.viewedDayTooltipBounds.width === 0) {
+			this.viewedDayTooltipBounds = this.viewedDayTooltipElement.nativeElement.getBoundingClientRect();
+		}
+
+		// Place tooltip left to the mouse cursor if she goes out of the graph
+		const horizontalTooltipFlipThreshold = this.fitnessTrendGraphBounds.right - this.viewedDayTooltipBounds.width - mouseDistanceX;
+		if (mouseEvent.clientX > horizontalTooltipFlipThreshold) {
+			mouseDistanceX = (mouseDistanceX + this.viewedDayTooltipBounds.width) * -1;
+		}
+
+		// Finally set tooltip position
+		this.viewedDayTooltipElement.nativeElement.style.left = (mouseEvent.clientX + mouseDistanceX) + 'px';
+		this.viewedDayTooltipElement.nativeElement.style.top = (mouseEvent.clientY - (this.viewedDayTooltipBounds.height / 2)) + 'px';
+
 	}
 
 	/**
 	 *
 	 * @param {Date} date
 	 */
-	private onGraphMouseOut(date: Date): void {
+	public onGraphMouseOut(date: Date): void {
 		this.setTodayAsViewedDay();
 	}
 
@@ -442,7 +511,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerMouseOver(dayFitnessTrend: DayFitnessTrendModel): void {
+	public onMarkerMouseOver(dayFitnessTrend: DayFitnessTrendModel): void {
 		this.onGraphMouseOver(dayFitnessTrend.date);
 	}
 
@@ -450,7 +519,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerMouseOut(dayFitnessTrend?: DayFitnessTrendModel): void {
+	public onMarkerMouseOut(dayFitnessTrend?: DayFitnessTrendModel): void {
 		this.setTodayAsViewedDay();
 	}
 
@@ -458,7 +527,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {DayFitnessTrendModel} dayFitnessTrend
 	 */
-	private onMarkerClick(dayFitnessTrend: DayFitnessTrendModel): void {
+	public onMarkerClick(dayFitnessTrend: DayFitnessTrendModel): void {
 		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
 	}
 
@@ -466,7 +535,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 * Provide today DayFitnessTrendModel
 	 * @returns {DayFitnessTrendModel}
 	 */
-	private getTodayViewedDay(): DayFitnessTrendModel {
+	public getTodayViewedDay(): DayFitnessTrendModel {
 		return this.getDayFitnessTrendFromDate(new Date());
 	}
 
@@ -475,7 +544,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 * @param {Date} date
 	 * @returns {DayFitnessTrendModel}
 	 */
-	private getDayFitnessTrendFromDate(date: Date): DayFitnessTrendModel {
+	public getDayFitnessTrendFromDate(date: Date): DayFitnessTrendModel {
 		return _.find(this.fitnessTrend, {
 			dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT)
 		});
@@ -484,7 +553,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	/**
 	 * Assign viewed day to today
 	 */
-	private setTodayAsViewedDay(): void {
+	public setTodayAsViewedDay(): void {
 		this.viewedDay = this.getTodayViewedDay();
 	}
 
@@ -582,10 +651,45 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	/**
 	 *
 	 */
+	public onEBikeRidesEnabledToggle(): void {
+
+		this.PERFORMANCE_MARKER = performance.now();
+
+		this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
+
+		this.reloadGraph();
+
+		if (this.isEBikeRidesEnabled) {
+			localStorage.setItem(FitnessTrendGraphComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY, "true");
+		} else {
+			localStorage.removeItem(FitnessTrendGraphComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
+		}
+
+	}
+
+	/**
+	 *
+	 * @param {boolean} isEBikeRidesEnabled
+	 */
+	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {
+		if (!isEBikeRidesEnabled) {
+			this.skipActivityTypes = [FitnessTrendGraphComponent.ELECTRICAL_BIKE_ACTIVITY_TYPE];
+		} else {
+			this.skipActivityTypes = [];
+		}
+	}
+
+	/**
+	 *
+	 */
 	public onComponentSizeChanged(): void {
 		this.PERFORMANCE_MARKER = performance.now();
-		this.graphConfig.height = FitnessTrendGraphComponent.findGraphicHeight(); // Update graph dynamic height
+		this.graphConfig.height = this.graphicHeight(); // Update graph dynamic height
 		this.draw();
+	}
+
+	public graphicHeight(): number {
+		return window.innerHeight * this.graphHeightFactor;
 	}
 
 	/**
@@ -618,7 +722,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		this.graphConfig = {
 			data: [],
 			full_width: true,
-			height: window.innerHeight * 0.625,
+			height: this.graphicHeight(),
+			top: 30,
+			bottom: 30,
 			right: 0,
 			left: 30,
 			baselines: [],
@@ -653,7 +759,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 *
 	 * @returns {LastPeriodModel[]}
 	 */
-	private provideLastPeriods(): LastPeriodModel[] {
+	public provideLastPeriods(): LastPeriodModel[] {
 
 		const toDate = moment().add(FitnessService.FUTURE_DAYS_PREVIEW, "days").startOf("day").toDate();
 

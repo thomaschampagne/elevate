@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessInfoDialogComponent } from "./fitness-info-dialog.component";
 import { CoreModule } from "../../../core/core.module";
@@ -9,7 +9,7 @@ describe("FitnessInfoDialogComponent", () => {
 	let component: FitnessInfoDialogComponent;
 	let fixture: ComponentFixture<FitnessInfoDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -25,7 +25,9 @@ describe("FitnessInfoDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FitnessInfoDialogComponent);
@@ -33,7 +35,7 @@ describe("FitnessInfoDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 
 		// Given, When
 		const compiled = fixture.debugElement.nativeElement;
@@ -42,12 +44,8 @@ describe("FitnessInfoDialogComponent", () => {
 		// Then
 		expect(component).toBeTruthy();
 		expect(htmlContent).not.toBeNull();
+		done();
 	});
 
-	/*
-	afterEach(() => {
-		fixture.destroy();
-	});
-	*/
 
 });

@@ -1,6 +1,7 @@
 import { inject, TestBed } from "@angular/core/testing";
 
 import { WindowService } from "./window.service";
+import { ObservableMedia } from "@angular/flex-layout";
 
 describe("WindowService", () => {
 
@@ -9,7 +10,7 @@ describe("WindowService", () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [WindowService]
+			providers: [WindowService, ObservableMedia]
 		});
 
 		service = TestBed.get(WindowService);

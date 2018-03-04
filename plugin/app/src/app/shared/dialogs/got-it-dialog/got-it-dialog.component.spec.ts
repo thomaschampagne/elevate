@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GotItDialogComponent } from "./got-it-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
@@ -15,7 +15,7 @@ describe("GotItDialogComponent", () => {
 	let fixture: ComponentFixture<GotItDialogComponent>;
 	let gotItDialogDataModel: GotItDialogDataModel;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 
 		gotItDialogDataModel = new GotItDialogDataModel(dialogTitle, dialogContent);
 		TestBed.configureTestingModule({
@@ -33,7 +33,9 @@ describe("GotItDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(GotItDialogComponent);
@@ -41,11 +43,12 @@ describe("GotItDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 
-	it("should render the 'got-it' dialog", () => {
+	it("should render the 'got-it' dialog", (done: Function) => {
 
 		// Given
 		const fixture = TestBed.createComponent(GotItDialogComponent);
@@ -59,6 +62,7 @@ describe("GotItDialogComponent", () => {
 		expect(component.dialogData.content).toEqual(gotItDialogDataModel.content);
 		expect(compiled.querySelector("h2").textContent).toContain(dialogTitle);
 		expect(compiled.querySelector("mat-dialog-content").textContent).toContain(dialogContent);
+		done();
 
 	});
 });

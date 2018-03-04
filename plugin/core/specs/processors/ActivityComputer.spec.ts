@@ -5,7 +5,7 @@ import { ActivityStatsMapModel, AnalysisDataModel, StreamsModel } from "../../..
 describe("ActivityComputer", () => {
 
     // Cycling
-    it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", () => {
+	it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", (done: Function) => {
 
 		const powerMeter = false;
 
@@ -101,6 +101,8 @@ describe("ActivityComputer", () => {
         expect(result.elevationData.lowerQuartileElevation.toString()).toMatch(/^215/);
         expect(result.elevationData.medianElevation.toString()).toMatch(/^231/);
         expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
+
+		done();
     });
 
 });

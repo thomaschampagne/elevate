@@ -1,6 +1,7 @@
 import * as moment from "moment";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "./training-zone.enum";
+import * as _ from "lodash";
 
 export class DayFitnessTrendModel extends DayStressModel {
 
@@ -29,17 +30,18 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public atl: number;
 	public tsb: number;
 	public trainingZone: TrainingZone;
+	public trainingZoneAsString: string;
 
-	public printFitness(): string {
-		return this.ctl.toFixed(1);
+	public printFitness(): number {
+		return Math.floor(this.ctl * 10) / 10;
 	}
 
-	public printFatigue(): string {
-		return this.atl.toFixed(1);
+	public printFatigue(): number {
+		return Math.floor(this.atl * 10) / 10;
 	}
 
-	public printForm(): string {
-		return this.tsb.toFixed(1);
+	public printForm(): number {
+		return Math.floor(this.tsb * 10) / 10;
 	}
 
 	public printDate(): string {
@@ -54,6 +56,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 
 		return niceDate;
+	}
+
+	public printShortDate(): string {
+		return moment(this.date).format("MMM Do YYYY");
 	}
 
 	public hasActivities(): boolean {
@@ -75,6 +81,33 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 		return this.types.join("; ");
 
+	}
+
+	public printTypesCount(maxType?: number, defaultEmptyValue?: string): string {
+
+		if (this.types.length === 0) {
+			return (defaultEmptyValue) ? defaultEmptyValue : "";
+		}
+
+		const typesCount = _(this.types).countBy().map((count, type) => {
+			return {type: type, count: count};
+		}).orderBy("count", "desc").value();
+
+		let result = "";
+		_.forEach(typesCount, (obj: any, index: number) => {
+
+			result += obj.count + " " + obj.type + ((obj.count > 1) ? "s" : "");
+
+			if (maxType && index === (maxType - 1)) {
+				const remaining = (typesCount.length - 1) - index;
+				result += ((remaining > 0) ? " & " + remaining + " more" : "");
+				return false;
+			}
+			if (index < (typesCount.length - 1)) {
+				result += ", ";
+			}
+		});
+		return result;
 	}
 
 	public findTrainingZone(tsb: number): TrainingZone {
@@ -99,7 +132,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 	}
 
 	public printTrainingZone(): string {
-		const trainingZoneString = TrainingZone[this.trainingZone].toLowerCase();
-		return trainingZoneString.charAt(0).toUpperCase() + trainingZoneString.slice(1);
+		if (!this.trainingZoneAsString) {
+			const trainingZoneString = TrainingZone[this.trainingZone].toLowerCase();
+			this.trainingZoneAsString = trainingZoneString.charAt(0).toUpperCase() + trainingZoneString.slice(1);
+		}
+		return this.trainingZoneAsString;
 	}
 }

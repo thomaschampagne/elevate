@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AthleteHistoryImportDialogComponent } from "./athlete-history-import-dialog.component";
 import { CoreModule } from "../../../core/core.module";
@@ -10,7 +10,7 @@ describe("AthleteHistoryImportDialogComponent", () => {
 	let component: AthleteHistoryImportDialogComponent;
 	let fixture: ComponentFixture<AthleteHistoryImportDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -26,7 +26,9 @@ describe("AthleteHistoryImportDialogComponent", () => {
 				},
 			]
 		}).compileComponents();
-	}));
+
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AthleteHistoryImportDialogComponent);
@@ -34,7 +36,8 @@ describe("AthleteHistoryImportDialogComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });

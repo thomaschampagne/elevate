@@ -5,6 +5,9 @@ $config: mat-typography-config();
 // Define a mixin that accepts a theme and outputs the color styles for the component.
 @mixin fitness-trend-graph-theme($theme) {
 
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+
 	// Extract whichever individual palettes you need from the theme.
 	$primary: map-get($theme, primary);
 	$accent: map-get($theme, accent);
@@ -17,13 +20,14 @@ $config: mat-typography-config();
 	$atl-color: $primary-color;
 	$tsb-color: mat-color($primary, 900);
 
+	$caption-font-size: mat-font-size($config, caption);
+
 	.viewedDayActivities {
 
 		.tag {
-			padding: 3px;
+			padding: 1px 2px;
 			border: 1px solid $primary-color;
 			border-radius: 4px;
-			font-size: mat-font-size($config, caption);
 			color: $primary-color;
 		}
 
@@ -117,4 +121,65 @@ $config: mat-typography-config();
 		}
 	}
 
+	// Tooltip
+	.viewedDayTooltip {
+		text-decoration: none;
+		position: relative;
+	}
+
+	.viewedDayTooltip div {
+
+		display: none;
+
+		width: 220px;
+		height: 145px;
+		border-radius: 3px;
+
+		border: 1px solid mat-color($foreground, text, 0.1);
+		background-color: mat-color($background, background, 0.95);
+		color: mat-color($foreground, text);
+
+		table {
+
+			padding: 8px;
+			width: 100%;
+			height: 100%;
+			.open {
+				font-size: $caption-font-size;
+			}
+
+			.active {
+				color: mat-color($mat-red, 500);
+			}
+
+			.rest, .preview {
+				color: mat-color($mat-green, 600);
+			}
+
+			.separator td {
+				padding-bottom: 4px;
+				border-bottom: 1px solid mat-color($foreground, text, 0.2);
+			}
+
+			.ctl_value td {
+				padding-top: 3px;
+			}
+
+			td:last-child {
+				width: 40%;
+				text-align: right;
+			}
+
+			td:first-child {
+				text-align: left;
+				width: 60%;
+			}
+		}
+	}
+
+	.viewedDayTooltip:hover div {
+		display: block;
+		position: fixed;
+		overflow: hidden;
+	}
 }
