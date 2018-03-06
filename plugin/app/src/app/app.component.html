@@ -87,22 +87,19 @@
 				</mat-menu>
 			</ng-container>
 
+			<button mat-icon-button (click)="onThemeToggle()">
+				<mat-icon *ngIf="currentTheme === Theme.LIGHT"
+						  style="transform: rotate(-35deg) scaleX(-1);">
+					brightness_3 <!--Moon icon rotate by -35deg-->
+				</mat-icon>
+				<mat-icon *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
+			</button>
+
 			<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 				<mat-icon>more_vert</mat-icon>
 			</button>
 
 			<mat-menu #moreMenu="matMenu">
-
-				<button mat-menu-item (click)="onThemeToggle()">
-					<mat-icon *ngIf="currentTheme === Theme.LIGHT"
-							  style="transform: rotate(-35deg) scaleX(-1);">
-						brightness_3 <!--Moon icon rotate by -35deg-->
-					</mat-icon>
-					<mat-icon *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
-
-					<span *ngIf="currentTheme === Theme.LIGHT">Dark theme</span>
-					<span *ngIf="currentTheme === Theme.DARK">Light theme</span>
-				</button>
 
 				<button mat-menu-item
 						(click)="onOpenLink('https://twitter.com/champagnethomas')">
