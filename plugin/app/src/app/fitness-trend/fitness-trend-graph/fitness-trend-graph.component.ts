@@ -500,8 +500,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 		}
 
 		// Finally set tooltip position
-		this.viewedDayTooltipElement.nativeElement.style.left = (mouseEvent.clientX + mouseDistanceX) + 'px';
-		this.viewedDayTooltipElement.nativeElement.style.top = (mouseEvent.clientY - (this.viewedDayTooltipBounds.height / 2)) + 'px';
+		this.viewedDayTooltipElement.nativeElement.style.left = (mouseEvent.clientX + mouseDistanceX) + "px";
+		this.viewedDayTooltipElement.nativeElement.style.top = (mouseEvent.clientY - (this.viewedDayTooltipBounds.height / 2)) + "px";
 
 	}
 
