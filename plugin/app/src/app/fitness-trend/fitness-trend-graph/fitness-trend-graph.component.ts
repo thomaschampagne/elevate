@@ -248,28 +248,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 				active: dayFitnessTrend.hasActivities()
 			});
 
-			let marker: MarkerModel = null;
-
-			const isScoringDay = (dayFitnessTrend.finalStressScore && dayFitnessTrend.finalStressScore > 0);
-
-			if (isScoringDay) {
-				marker = {
-					date: dayFitnessTrend.date,
-					mouseover: () => this.onMarkerMouseOver(dayFitnessTrend),
-					mouseout: () => this.onMarkerMouseOut(dayFitnessTrend),
-					click: () => this.onMarkerClick(dayFitnessTrend),
-					label: dayFitnessTrend.activitiesName.length.toFixed(0)
-				};
-			} else if (dayFitnessTrend.dateString === today) {
-
-				marker = {
+			if (dayFitnessTrend.dateString === today) {
+				const todayMarker = {
 					date: moment().startOf("day").toDate(),
 					label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL
 				};
-			}
-
-			if (!_.isNull(marker)) {
-				markers.push(marker);
+				markers.push(todayMarker);
 			}
 
 		});
