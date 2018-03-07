@@ -466,7 +466,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 	 */
 	public onTooltipMouseMove(mouseEvent: MouseEvent): void {
 
-		let mouseDistanceX = 25; // Default value in px. Can be changed below if tooltip goes out of the graph
+		let mouseDistanceX = 50; // Default value in px. Can be changed below if tooltip goes out of the graph
 
 		if (!this.fitnessTrendGraphBounds) {
 			this.fitnessTrendGraphBounds = this.fitnessTrendGraphElement.nativeElement.getBoundingClientRect();
