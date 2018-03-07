@@ -19,18 +19,37 @@
 
 	<div>
 		<h3 class="mat-title">Heart Rate Stress Score (all workout types)</h3>
-		A heart rate stress is represented by a value called <i>TRaining IMPulse</i> or <i>TRIMP</i>. Training Impulse
+		A heart rate stress is represented by a value called <i>Training Impulse</i> or <i>Training Impulse</i>.
+		Training Impulse
 		concept has been developed by Dr. Eric W. Banister. Basically, it represents the amount of heart stress during
-		an activity: the longer you go at full throttle during an activity, the more <i>TRIMP</i> of activity goes up!
-		<i>TRIMP</i> has both a positive and a negative effect. The positive effect is called <i>fitness</i>,
+		an activity: the longer you go at full throttle during an activity, the more <i>Training Impulse</i> of activity
+		goes up!
+		<i>Training Impulse</i> has both a positive and a negative effect. The positive effect is called <i>fitness</i>,
 		and the negative effect is called <i>fatigue</i>. <i>Fitness</i> and <i>fatigue</i> can combined to provide a
-		value of <i>form</i> & <i>Performance</i>.
+		value of <i>form</i> & <i>Performance</i>.<br/><br/>
+
+		<i>Training Impulse</i> is defined by:<br/><br/>
+
+		<katex
+			[expression]="'Training Impulse = \\displaystyle\\sum_{t=0_{min}}^t{\\delta t~\\times~HRR~\\times~0.64^{k~\\times~HRR}}'"></katex>
+		with
+		<katex [expression]="'k=1.92'"></katex>
+		for mens,
+		<katex [expression]="'k=1.67'"></katex>
+		for womens
+		and
+		<katex [expression]="'HRR=\\frac{HR~-~HR_{rest}}{HR_{max}~-~HR_{rest}}'"></katex>
 	</div>
 
 	<div>
 		<h3 class="mat-title">Power Stress Score (cycling only)</h3>
 		If you own a power meter and you activated the cycling power meter option in the feature, then the "Power Stress
-		Score (PSS)" will be used instead of TRIMP on cycling activities only if available.
+		Score (PSS)" will be used instead of <i>Training Impulse</i> on cycling activities only if available.
+		<br/><br/>
+
+		<i>Power Stress Score</i> is defined by:<br/><br/>
+		<katex
+			[expression]="'PSS=\\frac{EffortInSeconds~\\times~WeigthedPower~\\times~Intensity}{Cycling FTP~\\times~3600}~\\times~100'"></katex>
 	</div>
 
 	<div>
@@ -43,14 +62,26 @@
 		<h3 class="mat-title">Swimming Stress Score</h3>
 		A "Swimming Stress Score" (Swim SS) can be computed for each of your swim activities if your "Swimming
 		Functional Threshold Pace" (Swim FTP) has been entered inside athlete settings and you enabled swimming stress
-		score option. No heart rate monitor is required. Even a swimming manual activity will be handled by the system.
+		score option. No heart rate monitor is required. Even a swimming manual activity will be handled by the
+		system.<br/><br/>
+
+		<i>Swimming Stress Score</i> is defined by:<br/><br/>
+		<katex [expression]="'Swimming Stress Score=Intensity^3~\\times~TotalTimeInHours~\\times~100'"></katex>
+		<br/><br/>
+		with
+		<katex [expression]="'NormalizedSwimSpeed=\\frac{DistanceMeter}{TimeNoRestInMinutes}'"></katex>
+		and
+		<katex [expression]="'Intensity=\\frac{NormalizedSwimSpeed}{Swim~FTP}'"></katex>
+		<br/><br/>
+
 		<a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn more from
 			TrainingPeaks&trade;.</a>
 	</div>
 
 	<div>
 		<i>Note: Strava do not support HR data for swimming activities at the moment. In the case where you have
-			HRM while swimming and strava finally support HR data then TRIMP value will be used instead of Swim SS</i>
+			HRM while swimming and strava finally support HR data then <i>Training Impulse</i> value will be used
+			instead of Swim SS</i>
 	</div>
 
 	<h3 class="mat-title">Reading Curves</h3>

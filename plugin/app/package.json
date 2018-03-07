@@ -24,15 +24,15 @@
 		"@angular/platform-browser": "^5.2.0",
 		"@angular/platform-browser-dynamic": "^5.2.0",
 		"@angular/router": "^5.2.0",
+		"@iktakahiro/markdown-it-katex": "^3.0.3",
 		"core-js": "^2.4.1",
 		"github-markdown-css": "^2.10.0",
 		"hammerjs": "^2.0.8",
-		"markdown-it": "^8.4.0",
-		"markdown-it-katex": "^2.0.3",
+		"markdown-it": "^8.4.1",
 		"metrics-graphics-fastring": "github:thomaschampagne/metrics-graphics-fastring#1.1.0",
 		"moment": "^2.20.0",
-		"rxjs": "^5.5.6",
 		"ngx-pipes": "^2.1.0",
+		"rxjs": "^5.5.6",
 		"zone.js": "^0.8.19"
 	},
 	"devDependencies": {

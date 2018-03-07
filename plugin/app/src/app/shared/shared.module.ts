@@ -43,10 +43,10 @@ import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-i
 import { ShareComponent } from "../share/share.component";
 import { WelcomeComponent } from "../welcome/welcome.component";
 import { ReportComponent } from "../report/report.component";
+import { KatexExpressionComponent } from "./components/katex-expression.component";
 
 @NgModule({
 	declarations: [
-
 		// Components
 		WelcomeComponent, // TODO To be removed
 		AthleteSettingsComponent,
@@ -64,6 +64,7 @@ import { ReportComponent } from "../report/report.component";
 		ReleasesNotesComponent,
 		ShareComponent,
 		ReportComponent,
+		KatexExpressionComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,
@@ -74,11 +75,9 @@ import { ReportComponent } from "../report/report.component";
 		FitnessInfoDialogComponent, // TODO Move in a below module?!
 		YearProgressHelperDialogComponent,
 		AboutDialogComponent,
-		AthleteHistoryImportDialogComponent
-
+		AthleteHistoryImportDialogComponent,
 	],
 	entryComponents: [
-
 		GotItDialogComponent,
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
@@ -87,10 +86,8 @@ import { ReportComponent } from "../report/report.component";
 		YearProgressHelperDialogComponent,
 		AboutDialogComponent,
 		AthleteHistoryImportDialogComponent
-
 	],
 	providers: [
-
 		AthleteHistoryService,
 		AthleteHistoryDao,
 		UserSettingsService,
@@ -104,27 +101,22 @@ import { ReportComponent } from "../report/report.component";
 		ReleasesNotesResolverService,
 		SideNavService,
 		WindowService
-
 	],
 	imports: [
-
 		FormsModule,
 		AppRoutingModule,
 		MaterialModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
 		NgPipesModule
-
 	],
 	exports: [
-
 		FormsModule,
 		AppRoutingModule,
 		MaterialModule,
 		BrowserAnimationsModule,
 		FlexLayoutModule,
 		NgPipesModule
-
 	]
 
 })
