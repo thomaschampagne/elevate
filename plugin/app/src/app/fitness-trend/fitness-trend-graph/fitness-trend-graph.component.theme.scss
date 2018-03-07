@@ -134,8 +134,8 @@ $config: mat-typography-config();
 		height: 145px;
 		border-radius: 3px;
 
-		border: 1px solid mat-color($foreground, text, 0.1);
-		background-color: mat-color($background, background, 0.95);
+		border: 1px solid mat-color($foreground, text, 0.25);
+		background-color: mat-color($background, background, 0.85);
 		color: mat-color($foreground, text);
 
 		table {
