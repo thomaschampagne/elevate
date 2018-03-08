@@ -123,8 +123,8 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public dataSource: MatTableDataSource<DayFitnessTrendModel>;
 	public searchText: string;
 
-	constructor(private userSettingsService: UserSettingsService,
-				private fitnessService: FitnessService) {
+	constructor(public userSettingsService: UserSettingsService,
+				public fitnessService: FitnessService) {
 	}
 
 	public ngOnInit(): void {
@@ -136,7 +136,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	/**
 	 *
 	 */
-	private start() {
+	public start() {
 
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
@@ -177,7 +177,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	/**
 	 *
 	 */
-	private setup() {
+	public setup() {
 
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
 
@@ -234,7 +234,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	 * @param {DayFitnessTrendModel[]} fitnessTrendModels
 	 * @returns {DayFitnessTrendModel[]}
 	 */
-	private prepareFitnessTrendModels(fitnessTrendModels: DayFitnessTrendModel[]): DayFitnessTrendModel[] {
+	public prepareFitnessTrendModels(fitnessTrendModels: DayFitnessTrendModel[]): DayFitnessTrendModel[] {
 
 		// Remove preview days
 		fitnessTrendModels = _.filter(fitnessTrendModels, {
