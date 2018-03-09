@@ -727,6 +727,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnDestroy {
 			missing_is_hidden_accessor: "hidden",
 			active_point_on_lines: true,
 			active_point_size: 2.5,
+			area: [3, 6],
+			area_flip_under_zero: true,
 			point_size: 4,
 			yax_count: 10,
 			target: "#fitnessTrendGraph",
