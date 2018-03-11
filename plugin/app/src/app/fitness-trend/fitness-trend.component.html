@@ -1,6 +1,6 @@
 <!--We show this "must sync" message only when we are sure there is no fitness data.
 This means that null/true state  will not display the message -->
-<mat-card *ngIf="hasFitnessTrendData === false" class="noData mat-body-1">
+<mat-card *ngIf="(hasFitnessTrend === false)" class="no-data">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>
@@ -35,10 +35,60 @@ This means that null/true state  will not display the message -->
 	</mat-card-content>
 </mat-card>
 
-<app-fitness-trend-graph
-	(hasFitnessTrendDataNotify)="onHasFitnessTrendDataNotify($event)"
-	[hasComponentFocus]="(!selectedTabIndex || selectedTabIndex === GRAPH_COMPONENT_INDEX)">
-</app-fitness-trend-graph>
+<mat-card *ngIf="(hasFitnessTrend === null)">
+	<mat-card-content>
+		<mat-progress-bar mode="buffer"></mat-progress-bar>
+	</mat-card-content>
+</mat-card>
 
-<!--We load the table only if we have fitness data (notified by "app-fitness-trend-graph" component)-->
-<app-fitness-trend-table *ngIf="hasFitnessTrendData"></app-fitness-trend-table>
+<mat-card *ngIf="(hasFitnessTrend === true)">
+	<mat-card-content>
+		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+			<app-fitness-trend-inputs fxFlex="37" fxFill fxLayout="column" fxLayoutAlign="start start"
+									  [dateMin]="dateMin"
+									  [dateMax]="dateMax"
+									  [lastPeriods]="lastPeriods"
+									  [periodViewed]="periodViewed"
+									  [lastPeriodViewed]="lastPeriodViewed"
+									  [cyclingFtp]="cyclingFtp"
+									  [swimFtp]="swimFtp"
+									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+									  [isPowerMeterEnabled]="isPowerMeterEnabled"
+									  [isSwimEnabled]="isSwimEnabled"
+									  [isEBikeRidesEnabled]="isEBikeRidesEnabled"
+									  (periodViewedChange)="onPeriodViewedChange($event)"
+									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
+									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
+									  (swimToggleChange)="onSwimToggleChange($event)"
+									  (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)">
+			</app-fitness-trend-inputs>
+
+			<app-fitness-trend-legend fxFlex="63" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2"
+									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"></app-fitness-trend-legend>
+
+		</div>
+
+		<app-fitness-trend-graph [fitnessTrend]="fitnessTrend"
+								 [dateMin]="dateMin"
+								 [dateMax]="dateMax"
+								 [periodViewed]="periodViewed"
+								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
+		</app-fitness-trend-graph>
+
+	</mat-card-content>
+</mat-card>
+
+<mat-card [style.visibility]="((hasFitnessTrend === true) ? 'visible' : 'hidden')">
+	<mat-card-title>
+		Fitness analysis table
+	</mat-card-title>
+	<mat-card-content>
+		<app-fitness-trend-table [fitnessTrend]="fitnessTrend"
+								 [cyclingFtp]="cyclingFtp"
+								 [swimFtp]="swimFtp"
+								 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+								 [isPowerMeterEnabled]="isPowerMeterEnabled"
+								 [isSwimEnabled]="isSwimEnabled">
+		</app-fitness-trend-table>
+	</mat-card-content>
+</mat-card>

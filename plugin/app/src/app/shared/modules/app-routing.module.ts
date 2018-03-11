@@ -4,7 +4,6 @@ import { AppRoutesModel } from "../models/app-routes.model";
 import { AthleteSettingsComponent } from "../../athlete-settings/athlete-settings.component";
 import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
-import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
 import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
@@ -13,14 +12,14 @@ import { ShareComponent } from "../../share/share.component";
 import { WelcomeComponent } from "../../welcome/welcome.component";
 import { ReportComponent } from "../../report/report.component";
 
-export const routes: Routes = [
+const routes: Routes = [
 	{
 		path: AppRoutesModel.welcome,
 		component: WelcomeComponent
 	},
 	{
 		path: AppRoutesModel.fitnessTrend,
-		component: FitnessTrendComponent
+		loadChildren: "../../fitness-trend/fitness-trend.module#FitnessTrendModule"
 	},
 	{
 		path: AppRoutesModel.yearProgressions,

@@ -7,6 +7,7 @@ import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { ActivityDao } from "../../shared/dao/activity/activity.dao";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
+import { FitnessTrendModule } from "../fitness-trend.module";
 
 describe("FitnessTrendTableComponent", () => {
 
@@ -21,6 +22,7 @@ describe("FitnessTrendTableComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				FitnessTrendModule
 			],
 		}).compileComponents();
 

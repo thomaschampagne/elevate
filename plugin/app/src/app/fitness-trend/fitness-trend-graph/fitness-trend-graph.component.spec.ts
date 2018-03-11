@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
-import { FitnessService } from "../shared/service/fitness.service";
+import { FitnessService } from "../shared/services/fitness.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
@@ -11,9 +11,10 @@ import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.da
 import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { AthleteProfileModel } from "../../../../../common/scripts/models/AthleteProfile";
-import { AthleteHistoryService } from "../../shared/services/athlete-history/athlete-history.service";
-import { AthleteHistoryState } from "../../shared/services/athlete-history/athlete-history-state.enum";
+import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
+import * as _ from "lodash";
+import { PeriodModel } from "../shared/models/period.model";
+import { FitnessTrendModule } from "../fitness-trend.module";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -21,10 +22,14 @@ describe("FitnessTrendGraphComponent", () => {
 	let userSettingsDao: UserSettingsDao;
 	let activityService: ActivityService;
 	let fitnessService: FitnessService;
-	let athleteHistoryService: AthleteHistoryService;
 	let component: FitnessTrendGraphComponent;
 	let fixture: ComponentFixture<FitnessTrendGraphComponent>;
 	let todayMoment: Moment;
+
+	const todayDate = "2015-12-01 12:00";
+	const momentDatePattern = "YYYY-MM-DD hh:mm";
+
+	let FITNESS_TREND: DayFitnessTrendModel[] = null;
 
 	beforeEach((done: Function) => {
 
@@ -32,7 +37,8 @@ describe("FitnessTrendGraphComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
-			]
+				FitnessTrendModule
+			],
 		}).compileComponents();
 
 		// Retrieve injected service
@@ -40,12 +46,11 @@ describe("FitnessTrendGraphComponent", () => {
 		userSettingsDao = TestBed.get(UserSettingsDao);
 		activityService = TestBed.get(ActivityService);
 		fitnessService = TestBed.get(FitnessService);
-		athleteHistoryService = TestBed.get(AthleteHistoryService);
 
 		// Mocking chrome storage
 		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
+				callback({computedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
 		});
 
@@ -60,37 +65,43 @@ describe("FitnessTrendGraphComponent", () => {
 
 		todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
-		spyOn(fitnessService, "indexesOf").and.returnValue({start: 289, end: 345});
 
-		// Mocking athlete history
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
+		const powerMeterEnable = true;
 		const cyclingFtp = 150;
-		const weight = 75;
-		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
+		const swimEnable = true;
+		const swimFtp = 31;
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
+			FITNESS_TREND = fitnessTrend;
+			done();
+		});
 
-		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
-		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
-		spyOn(athleteHistoryService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
-
-		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		fixture = TestBed.createComponent(FitnessTrendGraphComponent);
+
 		component = fixture.componentInstance;
+		component.isTrainingZonesEnabled = true;
+
+		component.fitnessTrend = FITNESS_TREND;
+		component.dateMin = moment(_.first(FITNESS_TREND).date).startOf("day").toDate();
+		component.dateMax = moment(_.last(FITNESS_TREND).date).startOf("day").toDate();
+
+		component.periodViewed = {
+			from: component.dateMin,
+			to: component.dateMax
+		};
+
+		spyOn(component, "getTodayViewedDay").and.returnValue(component.getDayFitnessTrendFromDate(todayMoment.toDate()));
+		// spyOn(component, "indexesOf").and.returnValue({start: 289, end: 345});
+		spyOn(component, "updateGraph").and.stub(); // Do not try to draw the graph
+
 		fixture.detectChanges();
 
-		// Do not try to draw the graph
-		spyOn(component, "updateGraph").and.stub();
+		done();
+
 	});
 
 	it("should create", (done: Function) => {
@@ -196,6 +207,127 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		done();
+	});
+
+	it("should convert -7 days date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment(todayDate, momentDatePattern).subtract(7, "days").toDate(), // Nov 24 2015
+			to: null // Indicate we use "Last period of TIME"
+		};
+
+		// When
+		const indexes: { start: number; end: number } = component.indexesOf(period);
+
+		// Then
+		expect(indexes).not.toBeNull();
+		expect(indexes.start).toEqual(324); // Should be Nov 24 2015
+		expect(indexes.end).toEqual(345); // Last preview day index
+		done();
+
+	});
+
+	it("should convert -6 weeks date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment(todayDate, momentDatePattern).subtract(6, "weeks").toDate(), // (= Oct 20 2015)
+			to: null // Indicate we use "Last period of TIME"
+		};
+
+		// When
+		const indexes: { start: number; end: number } = component.indexesOf(period);
+
+		// Then
+		expect(indexes.start).toEqual(289); // Should be Oct 20 2015 index
+		expect(indexes.end).toEqual(345); // Last preview day index
+		done();
+
+	});
+
+	it("should convert date based period 'from/to' to 'start/end' fitness trends indexes", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment("2015-07-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
+			to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
+		};
+
+		// When
+		const indexes: { start: number; end: number } = component.indexesOf(period);
+
+		// Then
+		expect(indexes).not.toBeNull();
+		expect(indexes.start).toEqual(178);
+		expect(indexes.end).toEqual(269);
+		done();
+
+	});
+
+	it("should failed when find indexes of 'from > to' date", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
+			to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate()
+		};
+
+		// When
+		let error = null;
+		try {
+			component.indexesOf(period);
+		} catch (e) {
+			error = e;
+		}
+
+		// Then
+		expect(error).not.toBeNull();
+		expect(error).toBe("FROM cannot be upper than TO date");
+		done();
+
+	});
+
+	it("should provide 'start' index of the first known activity when FROM don't matches athlete history", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(), // Too old date !
+			to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
+		};
+
+		// When
+		const indexes: { start: number; end: number } = component.indexesOf(period);
+
+		// Then
+		expect(indexes).not.toBeNull();
+		expect(indexes.start).toEqual(0);
+		expect(indexes.end).toEqual(269);
+
+		done();
+
+	});
+
+	it("should failed when find index of TO which do not exists ", (done: Function) => {
+
+		// Given
+		const period: PeriodModel = {
+			from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
+			to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate() // Fake
+		};
+
+		// When
+		let error = null;
+		try {
+			component.indexesOf(period);
+		} catch (e) {
+			error = e;
+		}
+
+		// Then
+		expect(error).not.toBeNull();
+		expect(error).toBe("No end activity index found for this TO date");
 		done();
 	});
 

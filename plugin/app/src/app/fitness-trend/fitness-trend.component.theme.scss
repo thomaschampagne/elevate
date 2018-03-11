@@ -1,9 +1,9 @@
-@import "~@angular/material/theming";
+@import "../../../node_modules/@angular/material/theming";
 
 $config: mat-typography-config();
 
 // Define a mixin that accepts a theme and outputs the color styles for the component.
-@mixin fitness-trend-graph-theme($theme) {
+@mixin fitness-trend-theming($theme) {
 
 	$foreground: map-get($theme, foreground);
 	$background: map-get($theme, background);
@@ -22,7 +22,7 @@ $config: mat-typography-config();
 
 	$caption-font-size: mat-font-size($config, caption);
 
-	.viewedDayActivities {
+	.legend-active-day {
 
 		.tag {
 			padding: 1px 2px;
@@ -36,13 +36,13 @@ $config: mat-typography-config();
 		}
 	}
 
-	.atl_value {
+	.atl-value {
 		color: $atl-color;
 	}
-	.ctl_value {
+	.ctl-value {
 		color: $ctl-color;
 	}
-	.tsb_value {
+	.tsb-value {
 		color: $tsb-color;
 	}
 
@@ -128,12 +128,12 @@ $config: mat-typography-config();
 	}
 
 	// Tooltip
-	.viewedDayTooltip {
+	.viewed-day-tooltip {
 		text-decoration: none;
 		position: relative;
 	}
 
-	.viewedDayTooltip div {
+	.viewed-day-tooltip div {
 
 		display: none;
 
@@ -167,7 +167,7 @@ $config: mat-typography-config();
 				border-bottom: 1px solid mat-color($foreground, text, 0.2);
 			}
 
-			.ctl_value td {
+			.ctl-value td {
 				padding-top: 3px;
 			}
 
@@ -183,7 +183,7 @@ $config: mat-typography-config();
 		}
 	}
 
-	.viewedDayTooltip:hover div {
+	.viewed-day-tooltip:hover div {
 		display: block;
 		position: fixed;
 		overflow: hidden;

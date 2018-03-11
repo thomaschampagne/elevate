@@ -7,7 +7,6 @@ import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { PeriodModel } from "../models/period.model";
 
 @Injectable()
 export class FitnessService {
@@ -344,44 +343,6 @@ export class FitnessService {
 		}
 
 		return dayActivity;
-	}
-
-	/**
-	 * Return start/end indexes of fullFitnessTrend collection corresponding to from/to date given in a period
-	 * @param {PeriodModel} period
-	 * @param {DayFitnessTrendModel[]} fitnessTrend
-	 * @returns {{start: number; end: number}}
-	 */
-	public indexesOf(period: PeriodModel, fitnessTrend: DayFitnessTrendModel[]): { start: number; end: number } {
-
-		let startIndex = 0; // Use first day as start index by default.
-		if (_.isDate(period.from)) { // Then override index if "From" is specified
-
-			startIndex = _.findIndex(fitnessTrend, {
-				dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT)
-			});
-
-			if (startIndex === -1) {
-				startIndex = 0;
-			}
-		}
-
-		let endIndex = (fitnessTrend.length - 1); // Use last preview index by default
-		if (_.isDate(period.to)) { // Then override index if "To" is specified
-			endIndex = _.findIndex(fitnessTrend, {
-				dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT)
-			});
-		}
-
-		if (endIndex === -1) {
-			throw (new Error()).message = "No end activity index found for this TO date";
-		}
-
-		if (startIndex >= endIndex) {
-			throw (new Error()).message = "FROM cannot be upper than TO date";
-		}
-
-		return {start: startIndex, end: endIndex};
 	}
 
 	public getTodayMoment(): Moment {
