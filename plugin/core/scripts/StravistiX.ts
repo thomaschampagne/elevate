@@ -365,7 +365,7 @@ export class StravistiX {
 		}
 
 		if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
-			message += "<h5><strong>FIXED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
+			message += "<h5><strong>FIXED / IMPROVED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
 			_.forEach(updateMessageObj.fixes, (fix: string) => {
 				message += "<h6 style=\"margin-top: 12px;\">- " + fix + "</h6>";
 			});
