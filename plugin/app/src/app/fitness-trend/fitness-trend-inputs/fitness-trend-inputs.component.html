@@ -1,0 +1,78 @@
+<div fxFill fxLayout="row" fxLayoutAlign="space-between start">
+
+	<mat-form-field fxFlex="30" fxFlex.lt-lg="50">
+		<mat-select
+			[(ngModel)]="lastPeriodViewed"
+			(change)="onLastPeriodSelected()"
+			placeholder="Last">
+			<mat-option
+				*ngFor="let lastPeriod of lastPeriods;"
+				[value]="lastPeriod">
+				{{lastPeriod.label}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<span fxFlex="2"></span>
+
+	<div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+		<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
+						  (change)="onTrainingZonesToggle()"
+						  matTooltip="Display Training Zones on graph">
+			<mat-icon>power_input</mat-icon>
+		</mat-slide-toggle>
+
+		<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
+						  (change)="onPowerMeterToggle()"
+						  matTooltip="Use cycling power meter when available">
+			<mat-icon>flash_on</mat-icon>
+		</mat-slide-toggle>
+
+		<mat-slide-toggle [(ngModel)]="isSwimEnabled"
+						  (change)="onSwimToggle()"
+						  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+			<mat-icon>pool</mat-icon>
+		</mat-slide-toggle>
+
+		<mat-slide-toggle [(ngModel)]="isEBikeRidesEnabled"
+						  (change)="onEBikeRidesEnabledToggle()"
+						  matTooltip="Includes electrical assisted efforts in your fitness trend when checked">
+			<mat-icon>battery_charging_full</mat-icon>
+		</mat-slide-toggle>
+
+		<button mat-icon-button color="primary" (click)="onShowInfo()">
+			<mat-icon>help_outline</mat-icon>
+		</button>
+	</div>
+</div>
+
+<div fxFill fxLayout="row" fxLayoutAlign="space-between start" class="fromToPeriod">
+
+	<mat-form-field fxFlex="30" fxFlex.lt-lg="50">
+		<input matInput
+			   [(ngModel)]="periodViewed.from"
+			   [min]="dateMin"
+			   [max]="periodViewed.to"
+			   [matDatepicker]="datePickerFrom"
+			   (dateChange)="onDateToDateChange()"
+			   placeholder="From">
+		<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+		<mat-datepicker #datePickerFrom></mat-datepicker>
+	</mat-form-field>
+
+	<span fxFlex="2"></span>
+
+	<mat-form-field fxFlex>
+		<input matInput
+			   [(ngModel)]="periodViewed.to"
+			   [min]="periodViewed.from"
+			   [max]="dateMax"
+			   [matDatepicker]="datePickerTo"
+			   (dateChange)="onDateToDateChange()"
+			   placeholder="To">
+		<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+		<mat-datepicker #datePickerTo></mat-datepicker>
+	</mat-form-field>
+</div>
+
