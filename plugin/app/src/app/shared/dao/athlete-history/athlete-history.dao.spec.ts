@@ -38,7 +38,7 @@ describe("AthleteHistoryDao", () => {
 			cyclingFtp,
 			weight);
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({syncWithAthleteProfile: expectedAthleteProfileModel});
 			}
@@ -65,7 +65,7 @@ describe("AthleteHistoryDao", () => {
 		// Given
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({lastSyncDateTime: expectedLastSyncDateTime});
 			}
@@ -102,7 +102,7 @@ describe("AthleteHistoryDao", () => {
 			cyclingFtp,
 			weight);
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -133,7 +133,7 @@ describe("AthleteHistoryDao", () => {
 		// Given
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -161,7 +161,7 @@ describe("AthleteHistoryDao", () => {
 	it("should remove athlete profile", (done: Function) => {
 
 		// Given
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -177,7 +177,7 @@ describe("AthleteHistoryDao", () => {
 		promise.then((result: AthleteProfileModel) => {
 
 			expect(result).toBeNull();
-			expect(athleteHistoryDao.chromeStorageLocal).toHaveBeenCalled();
+			expect(athleteHistoryDao.browserStorageLocal).toHaveBeenCalled();
 			done();
 
 		}, error => {
@@ -203,7 +203,7 @@ describe("AthleteHistoryDao", () => {
 			cyclingFtp,
 			weight);
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -230,7 +230,7 @@ describe("AthleteHistoryDao", () => {
 	it("should remove last sync date time", (done: Function) => {
 
 		// Given
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -246,7 +246,7 @@ describe("AthleteHistoryDao", () => {
 		promise.then((lastSyncDateTime: number) => {
 
 			expect(lastSyncDateTime).toBeNull();
-			expect(athleteHistoryDao.chromeStorageLocal).toHaveBeenCalled();
+			expect(athleteHistoryDao.browserStorageLocal).toHaveBeenCalled();
 			done();
 
 		}, error => {
@@ -260,7 +260,7 @@ describe("AthleteHistoryDao", () => {
 
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "chromeStorageLocal").and.returnValue({
+		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},

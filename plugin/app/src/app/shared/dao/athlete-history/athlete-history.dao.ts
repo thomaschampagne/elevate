@@ -19,7 +19,7 @@ export class AthleteHistoryDao {
 	public getProfile(): Promise<AthleteProfileModel> {
 
 		return new Promise<AthleteProfileModel>((resolve) => {
-			this.chromeStorageLocal().get(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, (result: { syncWithAthleteProfile: AthleteProfileModel }) => {
+			this.browserStorageLocal().get(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, (result: { syncWithAthleteProfile: AthleteProfileModel }) => {
 				resolve((result.syncWithAthleteProfile) ? result.syncWithAthleteProfile : null);
 			});
 		});
@@ -37,7 +37,7 @@ export class AthleteHistoryDao {
 			const profileData: any = {};
 			profileData[AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY] = athleteProfileModelToSave;
 
-			this.chromeStorageLocal().set(profileData, () => {
+			this.browserStorageLocal().set(profileData, () => {
 				this.getProfile().then((athleteProfileModel: AthleteProfileModel) => {
 					resolve(athleteProfileModel);
 				});
@@ -51,7 +51,7 @@ export class AthleteHistoryDao {
 	 */
 	public removeProfile(): Promise<AthleteProfileModel> {
 		return new Promise<AthleteProfileModel>((resolve, reject) => {
-			this.chromeStorageLocal().remove(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, () => {
+			this.browserStorageLocal().remove(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, () => {
 				this.getProfile().then((athleteProfileModel: AthleteProfileModel) => {
 					(_.isEmpty(athleteProfileModel)) ? resolve(athleteProfileModel) : reject("Profile has not been deleted");
 				});
@@ -65,7 +65,7 @@ export class AthleteHistoryDao {
 	 */
 	public getLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve) => {
-			this.chromeStorageLocal().get(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
+			this.browserStorageLocal().get(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
 				resolve((_.isNumber(result.lastSyncDateTime)) ? result.lastSyncDateTime : null);
 			});
 		});
@@ -83,7 +83,7 @@ export class AthleteHistoryDao {
 			const lastSyncDateTimeData: any = {};
 			lastSyncDateTimeData[AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY] = lastSyncDateTime;
 
-			this.chromeStorageLocal().set(lastSyncDateTimeData, () => {
+			this.browserStorageLocal().set(lastSyncDateTimeData, () => {
 				this.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 					resolve(lastSyncDateTime);
 				});
@@ -98,7 +98,7 @@ export class AthleteHistoryDao {
 	 */
 	public removeLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve, reject) => {
-			this.chromeStorageLocal().remove(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, () => {
+			this.browserStorageLocal().remove(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, () => {
 				this.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 					(_.isNumber(lastSyncDateTime)) ? reject("LastSyncDateTime has not been deleted") : resolve(null);
 				});
@@ -110,7 +110,7 @@ export class AthleteHistoryDao {
 	 *
 	 * @returns {chrome.storage.SyncStorageArea}
 	 */
-	public chromeStorageLocal(): chrome.storage.LocalStorageArea {
+	public browserStorageLocal(): chrome.storage.LocalStorageArea {
 		return chrome.storage.local;
 	}
 
