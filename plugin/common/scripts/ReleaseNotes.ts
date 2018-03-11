@@ -20,6 +20,32 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.0.2",
+		message: "2nd big patch of the brand <strong>NEW APP</strong>!. Fitness trend look has been reworked along your feedbacks. And fitness graph is now linked to fitness table. And tons of other things...",
+		hotFixes: [],
+		features: [
+			"Remade and improved fitness trend feature",
+			"Remade and improved year progressions",
+			"Remade and improved common settings section",
+			"Remade and improved athlete settings section",
+			"Remade and improved zones settings section",
+			"Remade global design of the app with light and dark themes",
+			"Improved global reliability & performance of the application"
+		],
+		isPatch: true,
+		fixes: [
+			"Set default theme is now dark. Added a button directly on toolbar to switch theme (dark/light)",
+			"Reworked fitness trend graph look: Added tooltip for detail of each day. Added active day dotted line & form curve area (both help to distinguish zero line)",
+			"Added data link between fitness trend graph & fitness table. Graph and table are also displayed on same page from now",
+			"Optimized auto sync while on strava.com. You should perform less manual synchronizations",
+			"Changed fitness trend period slide 'forward/backward' from 15 to 14 days",
+			"Fixed bug on fitness trend when user select a bigger last period than his history length",
+			"[Technical] Restructured the global architecture of the fitness trend",
+			"[Technical] Upgraded angular, angular material & flex layouts libraries",
+			"[Technical] Upgraded katex version for maths expressions"
+		]
+	},
+	{
 		version: "6.0.1",
 		message: "First patch of the brand <strong>NEW app</strong>! Fitness trend, years progress & others features have been fully remade! A <strong>new start</strong> to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
 		hotFixes: [],
