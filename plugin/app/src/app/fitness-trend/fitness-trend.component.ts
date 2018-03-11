@@ -66,10 +66,25 @@ export class FitnessTrendComponent implements OnInit {
 			key: "4_months",
 			label: "4 months"
 		}, {
+			from: moment().startOf("day").subtract(5, "months").toDate(),
+			to: toDate,
+			key: "5_months",
+			label: "5 months"
+		}, {
 			from: moment().startOf("day").subtract(6, "months").toDate(),
 			to: toDate,
 			key: "6_months",
 			label: "6 months"
+		}, {
+			from: moment().startOf("day").subtract(7, "months").toDate(),
+			to: toDate,
+			key: "7_months",
+			label: "7 months"
+		}, {
+			from: moment().startOf("day").subtract(8, "months").toDate(),
+			to: toDate,
+			key: "8_months",
+			label: "8 months"
 		}, {
 			from: moment().startOf("day").subtract(9, "months").toDate(),
 			to: toDate,
