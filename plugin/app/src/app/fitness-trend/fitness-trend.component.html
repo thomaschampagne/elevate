@@ -44,7 +44,7 @@ This means that null/true state  will not display the message -->
 <mat-card *ngIf="(hasFitnessTrend === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-			<app-fitness-trend-inputs fxFlex="37" fxFill fxLayout="column" fxLayoutAlign="start start"
+			<app-fitness-trend-inputs fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
 									  [dateMin]="dateMin"
 									  [dateMax]="dateMax"
 									  [lastPeriods]="lastPeriods"
@@ -63,7 +63,7 @@ This means that null/true state  will not display the message -->
 									  (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)">
 			</app-fitness-trend-inputs>
 
-			<app-fitness-trend-legend fxFlex="63" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2"
+			<app-fitness-trend-legend fxFlex="65" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"></app-fitness-trend-legend>
 
 		</div>
