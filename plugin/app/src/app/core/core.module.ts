@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { NgPipesModule } from "ngx-pipes";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MaterialModule } from "../shared/modules/material.module";
-import { KatexExpressionComponent } from "../shared/components/katex-expression.component";
+import { KatexExpressionComponent } from "../shared/components/katex-expression/katex-expression.component";
 
 @NgModule({
 	imports: [
