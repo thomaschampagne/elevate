@@ -25,7 +25,7 @@ describe("CommonSettingsComponent", () => {
 
 		userSettingsDao = TestBed.get(UserSettingsDao);
 
-		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(_.cloneDeep(userSettings));
 			}
