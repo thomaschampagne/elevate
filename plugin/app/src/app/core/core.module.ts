@@ -1,20 +1,33 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { BrowserModule } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
+import { FormsModule } from "@angular/forms";
+import { NgPipesModule } from "ngx-pipes";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MaterialModule } from "../shared/modules/material.module";
+import { KatexExpressionComponent } from "../shared/components/katex-expression/katex-expression.component";
 
 @NgModule({
 	imports: [
 		CommonModule,
-		BrowserModule,
-		HttpClientModule
+		FormsModule,
+		MaterialModule,
+		HttpClientModule,
+		FlexLayoutModule,
+		NgPipesModule
 	],
 	exports: [
 		CommonModule,
-		BrowserModule,
-		HttpClientModule
+		FormsModule,
+		MaterialModule,
+		HttpClientModule,
+		FlexLayoutModule,
+		NgPipesModule,
+		KatexExpressionComponent,
 	],
-	declarations: []
+	declarations: [
+		KatexExpressionComponent
+	]
 })
 export class CoreModule {
 }

@@ -1,6 +1,6 @@
 @import "~@angular/material/theming";
 
-@mixin app-sidenav-logo-theme($theme) {
+@mixin app-theming($theme) {
 
 	$primary: map-get($theme, primary);
 

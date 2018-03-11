@@ -20,7 +20,7 @@
 			"prefix": "app",
 			"styles": [
 				"styles.scss",
-				"../node_modules/katex/dist/katex.min.css",
+				"../node_modules/katex/dist/katex.css",
 				"../node_modules/github-markdown-css/github-markdown.css",
 				"../node_modules/metrics-graphics-fastring/dist/metricsgraphics.css"
 			],

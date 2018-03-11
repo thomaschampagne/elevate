@@ -1,7 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { FitnessService } from "../shared/service/fitness.service";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
@@ -15,10 +12,7 @@ import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 	templateUrl: "./fitness-trend-table.component.html",
 	styleUrls: ["./fitness-trend-table.component.scss"]
 })
-export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
-
-	public static readonly SWIM_STRESS_SCORE_ENABLED: boolean = true;
-	public static readonly CYCLING_POWER_STRESS_SCORE_ENABLED: boolean = true;
+export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewInit {
 
 	public static readonly COLUMN_DATE: string = "date";
 	public static readonly COLUMN_TYPES: string = "types";
@@ -33,9 +27,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 	public static readonly COLUMN_TRAINING_ZONE: string = "zone";
 	public static readonly COLUMN_STRAVA_LINK: string = "link";
 
-	public FitnessTrendColumnType = FitnessTrendColumnType;
-	public displayedColumns: string [];
-	public columns: FitnessTrendColumnModel[] = [
+	public static readonly AVAILABLE_COLUMNS: FitnessTrendColumnModel[] = [
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_DATE,
 			header: "Date",
@@ -112,75 +104,73 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		}
 	];
 
+	public dataSource: MatTableDataSource<DayFitnessTrendModel>;
+	public FitnessTrendColumnType = FitnessTrendColumnType;
+	public columns: FitnessTrendColumnModel[];
+	public displayedColumns: string [];
+	public searchText: string;
+
+	public initialized = false;
+
+	@Input("fitnessTrend")
+	public fitnessTrend: DayFitnessTrendModel[];
+
+	@Input("cyclingFtp")
+	public cyclingFtp: number;
+
+	@Input("swimFtp")
+	public swimFtp: number;
+
+	@Input("isTrainingZonesEnabled")
+	public isTrainingZonesEnabled;
+
+	@Input("isPowerMeterEnabled")
+	public isPowerMeterEnabled;
+
+	@Input("isSwimEnabled")
+	public isSwimEnabled;
+
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
 	@ViewChild(MatSort)
 	public matSort: MatSort;
 
-	public cyclingFtp: number = null;
-	public swimFtp: number = null;
-	public dataSource: MatTableDataSource<DayFitnessTrendModel>;
-	public searchText: string;
-
-	constructor(private userSettingsService: UserSettingsService,
-				private fitnessService: FitnessService) {
+	constructor() {
 	}
 
 	public ngOnInit(): void {
-
 		this.setup();
-		this.start();
+		this.initialized = true;
 	}
 
-	/**
-	 *
-	 */
-	private start() {
+	public ngOnChanges(changes: SimpleChanges): void {
 
-		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+		if (!this.initialized) {
+			return;
+		}
 
-			this.cyclingFtp = _.isNumber(userSettings.userFTP) ? userSettings.userFTP : null;
-			this.swimFtp = _.isNumber(userSettings.userSwimFTP) ? userSettings.userSwimFTP : null;
-
-			// Hide POWER_STRESS_SCORE and/or SWIM_STRESS_SCORE columns if respective athlete settings are not activated
-			this.columns = _.filter(this.columns, (column: FitnessTrendColumnModel) => {
-
-				if ((!this.cyclingFtp && column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE)
-					|| (!this.swimFtp && column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE)) {
+		if (changes.isPowerMeterEnabled || changes.isSwimEnabled || changes.isTrainingZonesEnabled) {
+			this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
+				if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)) {
 					return false;
 				}
 				return true;
 			});
-
 			this.displayedColumns = this.columns.map(column => column.columnDef);
+		}
 
-			return this.fitnessService.computeTrend(
-				FitnessTrendTableComponent.CYCLING_POWER_STRESS_SCORE_ENABLED,
-				this.cyclingFtp,
-				FitnessTrendTableComponent.SWIM_STRESS_SCORE_ENABLED,
-				this.swimFtp
-			);
+		if (changes.fitnessTrend && changes.fitnessTrend.currentValue) {
+			this.dataSource.data = this.prepareFitnessTrendModels(changes.fitnessTrend.currentValue);
+		}
 
-		}).then((fitnessTrendModels: DayFitnessTrendModel[]) => {
-
-			fitnessTrendModels = this.prepareFitnessTrendModels(fitnessTrendModels);
-
-			// Assign models to datasource
-			this.dataSource.data = fitnessTrendModels;
-
-		}, error => {
-			console.error(error);
-		});
 	}
 
-	/**
-	 *
-	 */
-	private setup() {
+	public setup(): void {
 
 		this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
-
 		this.dataSource.sortingDataAccessor = (dayFitnessTrendModel: DayFitnessTrendModel, sortHeaderId: string) => {
 
 			switch (sortHeaderId) {
@@ -229,12 +219,7 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		};
 	}
 
-	/**
-	 *
-	 * @param {DayFitnessTrendModel[]} fitnessTrendModels
-	 * @returns {DayFitnessTrendModel[]}
-	 */
-	private prepareFitnessTrendModels(fitnessTrendModels: DayFitnessTrendModel[]): DayFitnessTrendModel[] {
+	public prepareFitnessTrendModels(fitnessTrendModels: DayFitnessTrendModel[]): DayFitnessTrendModel[] {
 
 		// Remove preview days
 		fitnessTrendModels = _.filter(fitnessTrendModels, {
@@ -248,33 +233,18 @@ export class FitnessTrendTableComponent implements OnInit, AfterViewInit {
 		return fitnessTrendModels;
 	}
 
-
-	/**
-	 *
-	 * @param {string} filterValue
-	 */
 	public applyFilter(filterValue: string): void {
-
 		filterValue = filterValue.trim(); // Remove whitespace
 		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
 		this.dataSource.filter = filterValue;
-
 	}
 
-	/**
-	 *
-	 */
 	public ngAfterViewInit(): void {
 		this.dataSource.paginator = this.matPaginator;
 		this.dataSource.sort = this.matSort;
 	}
 
-	/**
-	 *
-	 * @param {number[]} ids
-	 */
 	public onOpenActivities(ids: number[]): void {
 		FitnessTrendComponent.openActivities(ids);
 	}
-
 }

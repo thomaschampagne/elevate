@@ -10,10 +10,8 @@ export class ViewableFitnessDataModel {
 			{value: 25, label: "Freshness"},
 			{value: 5, label: "Neutral"},
 			{value: -10, label: "Optimal"},
-			{value: -30, label: "Over training"}
+			{value: -30, label: "Overload"}
 		];
-
-	public readonly zeroBaseLine: BaseLineModel = {value: 0, label: null};
 
 	public fatigueLine: GraphPointModel[] = [];
 	public fitnessLine: GraphPointModel[] = [];
@@ -24,6 +22,7 @@ export class ViewableFitnessDataModel {
 	public previewFatigueLine: GraphPointModel[] = [];
 	public previewFitnessLine: GraphPointModel[] = [];
 	public previewFormLine: GraphPointModel[] = [];
+	public activeLine: GraphPointModel[] = [];
 
 	constructor(markers: MarkerModel[],
 				fatigueLine: GraphPointModel[],
@@ -31,7 +30,8 @@ export class ViewableFitnessDataModel {
 				formLine: GraphPointModel[],
 				previewFatigueLine: GraphPointModel[],
 				previewFitnessLine: GraphPointModel[],
-				previewFormLine: GraphPointModel[]) {
+				previewFormLine: GraphPointModel[],
+				activeLine: GraphPointModel[]) {
 
 		this.markers = markers;
 
@@ -41,6 +41,7 @@ export class ViewableFitnessDataModel {
 		this.previewFatigueLine = previewFatigueLine;
 		this.previewFitnessLine = previewFitnessLine;
 		this.previewFormLine = previewFormLine;
+		this.activeLine = activeLine;
 
 		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
@@ -48,13 +49,12 @@ export class ViewableFitnessDataModel {
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFormLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.activeLine, "date"));
 	}
 
 	public getBaseLines(isTrainingZonesEnabled: boolean): BaseLineModel[] {
 
 		let baseLines = [];
-
-		baseLines.push(this.zeroBaseLine);
 
 		if (isTrainingZonesEnabled) {
 			baseLines.push(this.trainingZonesBaseLines);
