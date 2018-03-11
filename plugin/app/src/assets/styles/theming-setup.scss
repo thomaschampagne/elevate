@@ -5,12 +5,12 @@
 // Import Mixins
 @import "./native-elements.theme";
 @import "../../app/app.component.theme";
-@import "../../app/fitness-trend/fitness-trend-graph/fitness-trend-graph.component.theme";
+@import "../../app/fitness-trend/fitness-trend.component.theme";
 
 @mixin stravistix-custom-theme($theme) {
 	@include native-web-elements($theme);
-	@include app-sidenav-logo-theme($theme);
-	@include fitness-trend-graph-theme($theme);
+	@include app-theming($theme);
+	@include fitness-trend-theming($theme);
 }
 
 .light {

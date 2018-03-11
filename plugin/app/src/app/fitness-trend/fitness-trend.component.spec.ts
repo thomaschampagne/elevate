@@ -1,17 +1,15 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { FitnessTrendComponent } from "./fitness-trend.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
-import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { userSettings } from "../../../../common/scripts/UserSettings";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
 import { AthleteProfileModel } from "../../../../common/scripts/models/AthleteProfile";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
-import { FitnessTrendGraphComponent } from "./fitness-trend-graph/fitness-trend-graph.component";
-import { By } from "@angular/platform-browser";
+import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
+import { userSettings } from "../../../../common/scripts/UserSettings";
+import { FitnessTrendModule } from "./fitness-trend.module";
 
 describe("FitnessTrendComponent", () => {
 
@@ -20,29 +18,30 @@ describe("FitnessTrendComponent", () => {
 	let athleteHistoryService: AthleteHistoryService;
 	let component: FitnessTrendComponent;
 	let fixture: ComponentFixture<FitnessTrendComponent>;
-	let trendGraphComponent: FitnessTrendGraphComponent;
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
+				FitnessTrendModule
 			]
 		}).compileComponents();
 
 		// Retrieve injected service
 		activityDao = TestBed.get(ActivityDao);
 		userSettingsDao = TestBed.get(UserSettingsDao);
+		userSettingsDao = TestBed.get(UserSettingsDao);
 		athleteHistoryService = TestBed.get(AthleteHistoryService);
 
 		// Mocking chrome storage
-		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
 			}
 		});
 
-		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(userSettings);
 			},
@@ -51,7 +50,6 @@ describe("FitnessTrendComponent", () => {
 			}
 		});
 
-		// Mocking athlete history
 		const gender = "men";
 		const maxHr = 200;
 		const restHr = 50;
@@ -71,15 +69,11 @@ describe("FitnessTrendComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(FitnessTrendComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-
-		// Do not try to draw the graph
-		const trendGraphComponentElement = fixture.debugElement.query(By.directive(FitnessTrendGraphComponent));
-		trendGraphComponent = trendGraphComponentElement.componentInstance;
-		spyOn(trendGraphComponent, "updateGraph").and.stub();
+		done();
 	});
 
 	it("should create", (done: Function) => {

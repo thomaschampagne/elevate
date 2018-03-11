@@ -1,0 +1,7 @@
+@import "~@angular/material/theming";
+
+$config: mat-typography-config();
+
+span {
+	font-size: mat-font-size($config, caption);
+}

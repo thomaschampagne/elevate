@@ -4,7 +4,7 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="hasActivityModels === false" class="noData mat-body-1">
+<mat-card *ngIf="hasActivityModels === false" class="no-data">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>
@@ -27,7 +27,7 @@
 	<mat-card-content>
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
-			<div fxFlex="70" fxFlex.lt-lg="100">
+			<div fxFlex="75" fxFlex.lt-lg="100">
 				<mat-form-field fxFlex="150px">
 					<mat-select placeholder="Progress Type"
 								(change)="onSelectedProgressTypeChange()"
@@ -65,7 +65,7 @@
 
 			</div>
 
-			<span fxFlex="3" fxHide.lt-lg></span>
+			<span fxFlex="1" fxHide.lt-lg></span>
 
 			<div fxFlex fxHide.lt-lg>
 				<mat-form-field fxFlex>
@@ -83,8 +83,8 @@
 
 				<span fxFlex="5"></span>
 
-				<button fxFlexAlign="center" mat-icon-button (click)="onHelperClick()">
-					<mat-icon>help</mat-icon>
+				<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
+					<mat-icon>help_outline</mat-icon>
 				</button>
 			</div>
 		</div>
@@ -93,7 +93,7 @@
 		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="70" fxFill>
+			<div fxFlex="75" fxFill>
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}}
@@ -106,7 +106,7 @@
 				</app-year-progress-graph>
 			</div>
 
-			<span fxFlex="3" fxHide.lt-lg></span>
+			<span fxFlex="1" fxHide.lt-lg></span>
 
 			<!-- Table/Legend -->
 			<div fxFlex fxFill>

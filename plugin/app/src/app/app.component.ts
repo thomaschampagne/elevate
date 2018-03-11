@@ -21,9 +21,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 
-// TODO Try to reuse metrics graphics (official) back
-
-//--------
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
 // TODO:FEAT @YearProgress Year progress Targets line display (by KEYS = activityTypes & ProgressType)

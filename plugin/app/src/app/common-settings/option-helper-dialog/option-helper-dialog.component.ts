@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material";
 import * as MarkDownIt from "markdown-it";
-import * as Katex from "markdown-it-katex";
+import * as katex from "@iktakahiro/markdown-it-katex";
 import * as _ from "lodash";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { OptionHelperDataModel } from "./option-helper-data.model";
@@ -29,7 +29,7 @@ export class OptionHelperDialogComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel,
 				private domSanitizer: DomSanitizer) {
 		this.markDownParser = new MarkDownIt();
-		this.markDownParser.use(Katex, {"throwOnError": false, "errorColor": " #cc0000"});
+		this.markDownParser.use(katex, {"throwOnError": false, "errorColor": " #cc0000"});
 	}
 
 	public ngOnInit(): void {

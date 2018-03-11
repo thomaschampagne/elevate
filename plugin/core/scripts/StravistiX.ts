@@ -365,7 +365,7 @@ export class StravistiX {
 		}
 
 		if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
-			message += "<h5><strong>FIXED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
+			message += "<h5><strong>FIXED / IMPROVED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
 			_.forEach(updateMessageObj.fixes, (fix: string) => {
 				message += "<h6 style=\"margin-top: 12px;\">- " + fix + "</h6>";
 			});
@@ -1217,17 +1217,6 @@ export class StravistiX {
 
 						console.log("Last sync performed more than " + this.userSettings.autoSyncMinutes + " minutes. auto-sync now");
 
-						// Avoid concurrent auto-sync when several tabs opened
-						if (StorageManager.getCookie("stravistix_auto_sync_locker")) {
-							let warnMessage = "Auto-sync locked for 10 minutes. Skipping auto-sync. Why? another tab/window may have started the sync. ";
-							warnMessage += "If auto-sync has been interrupted (eg. tab closed), auto-sync will be available back in 10 minutes.";
-							console.warn(warnMessage);
-							return;
-						} else {
-							console.log("Auto-sync started, set stravistix_auto_sync_locker to true.");
-							StorageManager.setCookieSeconds("stravistix_auto_sync_locker", true, 60 * 10); // 10 minutes
-						}
-
 						// Start sync
 						this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
 
@@ -1276,7 +1265,7 @@ export class StravistiX {
 				}
 			});
 
-		}, 1000 * 15); // Wait for 15s before starting the auto-sync
+		}, 1000 * 10); // Wait for 10s before starting the auto-sync
 
 	}
 

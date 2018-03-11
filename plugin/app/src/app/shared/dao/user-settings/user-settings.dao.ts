@@ -15,7 +15,7 @@ export class UserSettingsDao {
 	 */
 	public fetch(): Promise<UserSettingsModel> {
 		return new Promise<UserSettingsModel>((resolve, reject) => {
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 				const error = this.getChromeError();
 				if (error) {
 					reject(error.message);
@@ -35,7 +35,7 @@ export class UserSettingsDao {
 
 		return new Promise<Object>((resolve, reject) => {
 
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -70,7 +70,7 @@ export class UserSettingsDao {
 			const settingToBeUpdated: any = {};
 			settingToBeUpdated[key] = value;
 
-			this.chromeStorageSync().set(settingToBeUpdated, () => {
+			this.browserStorageSync().set(settingToBeUpdated, () => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -105,7 +105,7 @@ export class UserSettingsDao {
 
 			const absoluteObject = this.createNestedObject(path, setting);
 
-			this.chromeStorageSync().set(absoluteObject, () => {
+			this.browserStorageSync().set(absoluteObject, () => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -139,7 +139,7 @@ export class UserSettingsDao {
 	 *
 	 * @returns {chrome.storage.SyncStorageArea}
 	 */
-	public chromeStorageSync(): chrome.storage.SyncStorageArea {
+	public browserStorageSync(): chrome.storage.SyncStorageArea {
 		return chrome.storage.sync;
 	}
 
