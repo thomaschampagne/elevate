@@ -96,43 +96,42 @@ export class UserSettingsDao {
 
 		return new Promise<UserSettingsModel>((resolve, reject) => {
 
-			const doesPathExistsInSettings = _.has(userSettings, path);
+			this.fetch().then((userSettingsModel: UserSettingsModel) => {
 
-			if (!doesPathExistsInSettings) {
-				reject(path + " object path does not exists in user settings");
-				return;
-			}
+				const updatedUserSettingsModel = this.updateNestedPropertyOf(userSettingsModel, path, setting);
 
-			const absoluteObject = this.createNestedObject(path, setting);
+				this.browserStorageSync().set(updatedUserSettingsModel, () => {
 
-			this.browserStorageSync().set(absoluteObject, () => {
+					const error = this.getChromeError();
+					if (error) {
+						reject(error.message);
+					} else {
+						this.fetch().then((userSettingsResult: UserSettingsModel) => {
+							resolve(userSettingsResult);
+						}, error => {
+							reject(error);
+						});
+					}
+				});
 
-				const error = this.getChromeError();
-				if (error) {
-					reject(error.message);
-				} else {
-					this.fetch().then((userSettingsResult: UserSettingsModel) => {
-						resolve(userSettingsResult);
-					}, error => {
-						reject(error);
-					});
-				}
+			}, error => {
+				reject(error);
 			});
 		});
 	}
 
 	/**
 	 *
-	 * @param {string} nestedPath
-	 * @param {Object} objectToInsert
+	 * @param {Object} sourceObject
+	 * @param {string} path
+	 * @param {Object} value
 	 * @returns {Object}
 	 */
-	public createNestedObject(nestedPath: string, objectToInsert: Object): Object {
-		const absoluteObject: Object = {};
-		if (!_.has(absoluteObject, nestedPath)) {
-			_.set(absoluteObject, nestedPath, objectToInsert);
+	public updateNestedPropertyOf(sourceObject: Object, path: string, value: Object): Object {
+		if (!_.has(sourceObject, path)) {
+			throw new Error("Property at path '" + path + "' do not exists");
 		}
-		return absoluteObject;
+		return _.set(sourceObject, path, value);
 	}
 
 	/**
