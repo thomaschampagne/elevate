@@ -1,6 +1,6 @@
 {
 	"package": {
-		"name": "travis-ci-builds",
+		"name": "ci-builds",
 		"repo": "stravistix",
 		"subject": "thomaschampagne",
 		"desc": "Travis CI build",
