@@ -1,9 +1,9 @@
 {
 	"package": {
-		"name": "builds",
-		"repo": "repository",
-		"subject": "stravistix",
-		"desc": "Travis CI build",
+		"name": "travis-builds",
+		"repo": "stravistix",
+		"subject": "thomaschampagne",
+		"desc": "Travis builds",
 		"website_url": "http://thomaschampagne.github.io/stravistix/",
 		"issue_tracker_url": "https://github.com/thomaschampagne/stravistix/issues",
 		"vcs_url": "https://github.com/thomaschampagne/stravistix.git",
