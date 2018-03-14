@@ -28,7 +28,9 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
+	RunningCadenceModifier,
+	RunningGradeAdjustedPaceModifier,
+	RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
