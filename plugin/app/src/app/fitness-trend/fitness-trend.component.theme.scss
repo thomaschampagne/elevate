@@ -24,8 +24,11 @@ $config: mat-typography-config();
 	$tsb-color: mat-color($primary, 900);
 
 	$caption-font-size: mat-font-size($config, caption);
+	$body-1-font-size: mat-font-size($config, body-1);
 
 	.legend-active-day {
+
+		font-size: $body-1-font-size;
 
 		.tag {
 			padding: 1px 2px;
