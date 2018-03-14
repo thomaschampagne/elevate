@@ -9,8 +9,8 @@
 			<span *ngSwitchCase="true">
 				<span *ngFor="let activity of viewedDay.activitiesName; let activityIndex = index;">
 					<span *ngIf="(activityIndex < MAX_ACTIVITIES_LEGEND_SHOWN)">
-						<span class="tag">{{viewedDay.types[activityIndex]}}</span> <span
-						class="name">{{activity}}</span>
+						<span class="tag">{{viewedDay.types[activityIndex]}}</span>
+						<span class="name"> {{activity | shorten: ((viewedDay.activitiesName.length > 1) ? MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED : MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED) : "..."}}</span>
 						<span *ngIf="(viewedDay.activitiesName.length !== (activityIndex + 1))">;&nbsp;&nbsp;</span>
 					</span>
 				</span>
