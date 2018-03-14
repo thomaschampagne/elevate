@@ -11,6 +11,7 @@ import { AthleteHistoryState } from "./athlete-history-state.enum";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { environment } from "../../../../environments/environment";
 
 @Injectable()
 export class AthleteHistoryService {
@@ -99,7 +100,7 @@ export class AthleteHistoryService {
 			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		if (installedVersion !== athleteHistoryModel.pluginVersion) {
+		if (!environment.skipRestoreHistoryCheck && installedVersion !== athleteHistoryModel.pluginVersion) {
 			return Promise.reject("Cannot import history because of plugin version mismatch. " +
 				"The installed plugin version is " + installedVersion + " and imported backup file is " +
 				"for a " + athleteHistoryModel.pluginVersion + " plugin version. Try perform a clean full sync.");
