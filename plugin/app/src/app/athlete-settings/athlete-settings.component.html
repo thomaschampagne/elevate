@@ -30,7 +30,7 @@
 				<mat-input-container fxFill>
 					<input
 						matInput
-						type="number" min="10" max="999"
+						type="number" min="1" max="999"
 						[(ngModel)]="weight"
 						(change)="onWeightChanged()"
 						placeholder="Weight in kilograms"/>
@@ -42,59 +42,100 @@
 
 <mat-card>
 	<mat-card-title>
-		Heart rate
+		Max heart rate
 	</mat-card-title>
 	<mat-card-content>
-		<div fxLayout="row" layout-align="center center">
+		<div class="hint">
+			Enter your max heart rate measured at full throttle. If you're not aware of your max heart rate you can
+			enter "220 bpm <strong>-</strong> YOUR_AGE" as <strong>temporally</strong> value.
+		</div>
+		<div>
 			<mat-form-field fxFlex>
 				<input
 					matInput
-					type="number" min="10" max="999"
+					type="number" min="1" max="999"
 					[(ngModel)]="maxHr"
 					(change)="onMaxHrChanged()"/>
 				<mat-placeholder>
-					Max heart rate in Beats Per Minute
+					Your max HR in beats per minute
 				</mat-placeholder>
-				<mat-icon matSuffix
-						  matTooltip="If you don't know your own max heart rate then setup (220 - 'YOUR AGE') as value.">
-					info
-				</mat-icon>
 			</mat-form-field>
-			<span fxFlex="1"></span>
+		</div>
+	</mat-card-content>
+
+	<mat-card-title>
+		Rest heart rate
+	</mat-card-title>
+	<mat-card-content>
+		<div class="hint">
+			Enter your rest heart rate. Lie down in your bed and measure the lower value.
+		</div>
+		<div>
 			<mat-form-field fxFlex>
 				<input
 					matInput
-					type="number" min="10" max="999"
+					type="number" min="1" max="999"
 					[(ngModel)]="restHr"
 					(change)="onRestHrChanged()"/>
 				<mat-placeholder>
-					Rest heart rate in Beats Per Minute
+					Your rest HR in beats per minute
 				</mat-placeholder>
-				<mat-icon matSuffix matTooltip="Measure your rest heart rate by lying down in your bed.">info</mat-icon>
 			</mat-form-field>
+		</div>
+	</mat-card-content>
+
+	<mat-card-title>
+		Lactate Threshold Heart Rate (LTHR)
+	</mat-card-title>
+	<mat-card-content>
+		<div class="hint">
+			The LTHR is the point, above which, increased blood acidification occurs in your body. Above this
+			threshold your endurance performance will rapidly decrease. To find your LTHR do a 30-minute time trial
+			<strong>alone</strong>. Perform this TT like if it was a race. At 10 minutes elapsed into the test, start
+			measuring your heart rate until the end. When done, check your average heart rate on these last 20 minutes.
+			This value is your LTHR.
+		</div>
+		<div>
+			<mat-form-field fxFlex>
+				<input
+					matInput
+					type="number" min="1" max="999"
+					[(ngModel)]="lthr"
+					(change)="onLTHRChanged()"/>
+				<mat-placeholder>
+					Your LTHR in beats per minute
+				</mat-placeholder>
+			</mat-form-field>
+
+		</div>
+		<div *ngIf="!lthr">
+			<span>
+				<mat-icon color="warn" class="no-lthr-warn">warning</mat-icon>
+				Since no lactate threshold heart rate is currently defined. The value being used by default is 86% of your max HR or <strong>{{(DEFAULT_LTHR_HR_MAX_FACTOR * maxHr).toFixed(0)}} bpm</strong>
+			</span>
 		</div>
 	</mat-card-content>
 </mat-card>
 
 <mat-card>
 	<mat-card-title>
-		Cycling Functional Threshold Power
+		Cycling Functional Threshold Power (FTP)
 	</mat-card-title>
 	<mat-card-content>
-		<mat-card-content>
+		<div class="hint">
+			The FTP is the constant average power you are able to maintain during 20 minutes. Give everything on your
+			bike during 20min and enter result below.
+		</div>
+		<div>
 			<mat-input-container fxFill>
 				<input
 					matInput
-					type="number" min="10" max="9999"
-					placeholder="Cycling FTP in watts"
+					type="number" min="1" max="999"
+					placeholder="Your cycling FTP in watts"
 					[(ngModel)]="ftp"
 					(change)="onCyclingFtpChanged()"/>
-				<mat-icon matSuffix
-						  matTooltip="The Functional Threshold Power (FTP) is the constant average power you are able to maintain during 20 minutes.">
-					info
-				</mat-icon>
 			</mat-input-container>
-		</mat-card-content>
+		</div>
 	</mat-card-content>
 </mat-card>
 
@@ -132,7 +173,7 @@
 		<!--Calculator-->
 		<mat-slide-toggle
 			[(ngModel)]="isSwimFtpCalculatorEnabled"
-			(change)="isSwimFtpCalculatorEnabled!=isSwimFtpCalculatorEnabled;"
+			(change)="onSwimFtpCalculatorEnabled();"
 			aria-label="Show swim ftp calculator"
 			class="swim-ftp-calculator-toggle">
 			Show swim ftp calculator
@@ -145,6 +186,8 @@
 			<app-swim-ftp-helper [swimFtp]="swimFtp"
 								 (swimFtpChange)="swimFtp=$event; onSwimFtpChanged();"></app-swim-ftp-helper>
 		</ng-container>
+
+		<div #bottom></div>
 
 	</mat-card-content>
 </mat-card>

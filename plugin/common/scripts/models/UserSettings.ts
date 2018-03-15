@@ -24,6 +24,7 @@ export class UserSettingsModel { // TODO Externalize in a file
 	public userGender: string;
 	public userMaxHr: number;
 	public userRestHr: number;
+	public userLTHR: number;
 	public userFTP: number;
 	public userSwimFTP: number;
 	public userWeight: number;
