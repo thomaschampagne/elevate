@@ -11,6 +11,9 @@ import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 
+// TODO Add user LTHR user settings
+// TODO Fitness trend UI, User warning dialogs, Rework helper
+
 @Component({
 	selector: "app-fitness-trend",
 	templateUrl: "./fitness-trend.component.html",
@@ -152,8 +155,8 @@ export class FitnessTrendComponent implements OnInit {
 
 		}).then((userSettings: UserSettingsModel) => {
 
-			this.cyclingFtp = userSettings.userFTP;
-			this.swimFtp = userSettings.userSwimFTP;
+			this.cyclingFtp = userSettings.userFTP; // TODO To be removed
+			this.swimFtp = userSettings.userSwimFTP; // TODO To be removed
 
 			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
 			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
@@ -162,8 +165,8 @@ export class FitnessTrendComponent implements OnInit {
 
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
-			return this.fitnessService.computeTrend(null, null, null, null, HeartRateImpulseMode.TRIMP, // TODO Temporary
-				this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes);
+			// TODO Temporary computeTrend call
+			return this.fitnessService.computeTrend(null, HeartRateImpulseMode.TRIMP, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -210,9 +213,10 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(null, null, null, null, HeartRateImpulseMode.TRIMP, // TODO Temporary
-			this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes)
-			.then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+		// TODO Temporary computeTrend call
+		this.fitnessService.computeTrend(null, HeartRateImpulseMode.TRIMP, this.isPowerMeterEnabled,
+			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
 				this.fitnessTrend = fitnessTrend;
 			});
 	}
