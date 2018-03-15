@@ -271,7 +271,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 		this.graphConfig.data = lines;
 		this.graphConfig.markers = this.viewableFitnessDataModel.markers;
-		this.graphConfig.baselines = this.viewableFitnessDataModel.getBaseLines(this.isTrainingZonesEnabled); // TODO
+		this.graphConfig.baselines = this.viewableFitnessDataModel.getBaseLines(this.isTrainingZonesEnabled);
 
 	}
 
