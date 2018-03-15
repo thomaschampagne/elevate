@@ -7,11 +7,13 @@ import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
+import { Gender } from "../../../shared/enums/gender.enum";
 
 @Injectable()
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
+	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
 
 	constructor(public activityService: ActivityService) {
 	}
@@ -192,6 +194,23 @@ export class FitnessService {
 
 	/**
 	 *
+	 * @param {Gender} gender
+	 * @param {number} maxHr
+	 * @param {number} minHr
+	 * @param {number} userLactateThreshold
+	 * @param {number} activityTrainingImpulse
+	 * @returns {number}
+	 */
+	public computeHeartRateStressScore(gender: Gender, maxHr: number, minHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR * maxHr;
+		const lactateThresholdReserve = (lactateThreshold - minHr) / (maxHr - minHr);
+		const TRIMPGenderFactor: number = (gender === Gender.MEN) ? 1.92 : 1.67;
+		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 *
 	 * @param {boolean} isPowerMeterEnabled
 	 * @param {number} cyclingFtp
 	 * @param {boolean} isSwimEnabled
@@ -348,4 +367,6 @@ export class FitnessService {
 	public getTodayMoment(): Moment {
 		return moment();
 	}
+
+
 }
