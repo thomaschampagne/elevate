@@ -11,7 +11,6 @@ import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 
-// TODO Add user LTHR user settings
 // TODO Fitness trend UI, User warning dialogs, Rework helper
 
 @Component({

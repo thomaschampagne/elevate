@@ -7,8 +7,7 @@ import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.compon
 import { GenderModel } from "./gender.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { FitnessService } from "../fitness-trend/shared/services/fitness.service";
-
-// TODO Use Gender enum plzz
+import { Gender } from "../shared/enums/gender.enum";
 
 @Component({
 	selector: "app-athlete-settings",
@@ -26,19 +25,19 @@ export class AthleteSettingsComponent implements OnInit {
 	public static readonly SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
 	public readonly GENDER_LIST: GenderModel[] = [{
-		type: "men",
+		type: Gender.MEN,
 		display: "Male",
 	}, {
-		type: "women",
+		type: Gender.WOMEN,
 		display: "Female",
 	}];
-	public readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR;
 
+	public readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR;
 
 	@ViewChild("bottom")
 	public bottomElement: ElementRef;
 
-	public gender: string;
+	public gender: Gender;
 	public weight: number;
 	public swimFtp: number;
 	public restHr: number;
@@ -59,7 +58,7 @@ export class AthleteSettingsComponent implements OnInit {
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 			this.gender = _.find(this.GENDER_LIST, {
-				type: userSettings.userGender,
+				type: (userSettings.userGender === Gender.MEN) ? Gender.MEN : Gender.WOMEN
 			}).type;
 
 			this.maxHr = userSettings.userMaxHr;
