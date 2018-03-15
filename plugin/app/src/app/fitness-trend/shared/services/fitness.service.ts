@@ -33,16 +33,29 @@ export class FitnessService {
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
-	public prepare(userGender: Gender,
-				   userMaxHr: number,
-				   userMinHr: number,
-				   userLactateThreshold: number,
+	public prepare(userGender: Gender, // TODO Pass a FitnessUserSettings model?
+				   userMaxHr: number, // TODO Pass a FitnessUserSettings model?
+				   userMinHr: number, // TODO Pass a FitnessUserSettings model?
+				   userLactateThreshold: number, // TODO Pass a FitnessUserSettings model?
 				   heartRateImpulseMode: HeartRateImpulseMode,
 				   powerMeterEnable: boolean,
 				   cyclingFtp: number,
 				   swimEnable: boolean,
 				   swimFtp: number,
 				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
+
+
+		if (heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+
+			if (powerMeterEnable) {
+				return Promise.reject("'Power Stress Score' calculation method cannot work with " +
+					"'TRIMP (Training Impulse)' calculation method.");
+			}
+
+			if (swimEnable) {
+				return Promise.reject("'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.");
+			}
+		}
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
 							reject: (error: string) => void) => {
@@ -96,7 +109,7 @@ export class FitnessService {
 
 						} else if (heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
 
-							fitnessReadyActivity.hearRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
+							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
 								userLactateThreshold, activity.extendedStats.heartRateData.TRIMP);
 						}
 
@@ -225,7 +238,7 @@ export class FitnessService {
 	}
 
 	/**
-	 *
+	 * Compute Heart Rate Stress Score (HRSS)
 	 * @param {Gender} userGender
 	 * @param {number} userMaxHr
 	 * @param {number} userMinHr
@@ -286,6 +299,10 @@ export class FitnessService {
 						tsb = ctl - atl;
 
 						const dayFitnessTrend: DayFitnessTrendModel = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+
+						if (_.isNumber(dayStress.heartRateStressScore) && dayStress.heartRateStressScore > 0) {
+							dayFitnessTrend.heartRateStressScore = dayStress.heartRateStressScore;
+						}
 
 						if (_.isNumber(dayStress.trainingImpulseScore) && dayStress.trainingImpulseScore > 0) {
 							dayFitnessTrend.trainingImpulseScore = dayStress.trainingImpulseScore;
@@ -361,7 +378,7 @@ export class FitnessService {
 
 				// Apply scores for that day
 				// PSS
-				if (activity.powerStressScore) {
+				if (_.isNumber(activity.powerStressScore)) {
 
 					if (!dayActivity.powerStressScore) { // Initialize value if not exists
 						dayActivity.powerStressScore = 0;
@@ -370,8 +387,16 @@ export class FitnessService {
 					dayActivity.powerStressScore += activity.powerStressScore;
 				}
 
+				// HRSS
+				if (_.isNumber(activity.heartRateStressScore)) { // Check for HRSS score if available
+					if (!dayActivity.heartRateStressScore) { // Initialize value if not exists
+						dayActivity.heartRateStressScore = 0;
+					}
+					dayActivity.heartRateStressScore += activity.heartRateStressScore;
+				}
+
 				// TRIMP
-				if (activity.trainingImpulseScore) { // Check for TRIMP score if available
+				if (_.isNumber(activity.trainingImpulseScore)) { // Check for TRIMP score if available
 					if (!dayActivity.trainingImpulseScore) { // Initialize value if not exists
 						dayActivity.trainingImpulseScore = 0;
 					}
@@ -379,7 +404,7 @@ export class FitnessService {
 				}
 
 				// SwimSS
-				if (activity.swimStressScore) { // Check for TRIMP score if available
+				if (_.isNumber(activity.swimStressScore)) { // Check for TRIMP score if available
 					if (!dayActivity.swimStressScore) { // Initialize value if not exists
 						dayActivity.swimStressScore = 0;
 					}
@@ -387,9 +412,13 @@ export class FitnessService {
 				}
 
 				// Apply final stress score for that day
-				if (activity.powerStressScore) { // Use PSS has priority over TRIMP
+				if (activity.powerStressScore) { // Use PSS has priority over TRIMP/HRSS
 
 					dayActivity.finalStressScore += activity.powerStressScore;
+
+				} else if (activity.heartRateStressScore) {
+
+					dayActivity.finalStressScore += activity.heartRateStressScore;
 
 				} else if (activity.trainingImpulseScore) {
 
