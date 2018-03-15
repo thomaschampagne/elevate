@@ -7,14 +7,16 @@ import { ActivityService } from "../../../shared/services/activity/activity.serv
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
-import { DayStressModel } from "../models/day-stress.model";
 import { Gender } from "../../../shared/enums/gender.enum";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
+import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
+import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
+import { DayStressModel } from "../models/day-stress.model";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 
 	const fakeActivity = new SyncedActivityModel();
+	fakeActivity.id = id;
 	fakeActivity.id = id;
 	fakeActivity.name = name;
 	fakeActivity.type = type;
@@ -79,18 +81,22 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 
 describe("FitnessService", () => {
 
-	let userGender: Gender;
-	let userMaxHr: number;
-	let userMinHr: number;
-	let userLactateThreshold: number;
-	let heartRateImpulseMode: HeartRateImpulseMode;
-	let powerMeterEnable;
-	let cyclingFtp;
-	let swimEnable;
-	let swimFtp;
-
 	const todayDate = "2015-12-01 12:00";
 	const momentDatePattern = "YYYY-MM-DD hh:mm";
+
+	const FITNESS_USER_SETTINGS_MODEL: FitnessUserSettingsModel = {
+		userGender: Gender.MEN,
+		userMaxHr: 190,
+		userMinHr: 60,
+		userLactateThreshold: 163,
+		cyclingFtp: 150,
+		swimFtp: 31,
+	};
+
+	let fitnessUserSettingsModel: FitnessUserSettingsModel;
+	let heartRateImpulseMode: HeartRateImpulseMode;
+	let powerMeterEnable;
+	let swimEnable;
 
 	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 	let fitnessService: FitnessService = null;
@@ -108,16 +114,13 @@ describe("FitnessService", () => {
 		fitnessService = TestBed.get(FitnessService);
 		activityService = TestBed.get(ActivityService);
 
-		// Default settings
-		userGender = Gender.MEN;
-		userMaxHr = 190;
-		userMinHr = 60;
-		userLactateThreshold = 163;
+		// Set default fitness users settings
+		fitnessUserSettingsModel = _.clone(FITNESS_USER_SETTINGS_MODEL);
 		heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+
+		// Enable PSS and SSS by default
 		powerMeterEnable = true;
-		cyclingFtp = 150;
 		swimEnable = true;
-		swimFtp = 31;
 
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(moment(todayDate, momentDatePattern));
 
@@ -137,8 +140,11 @@ describe("FitnessService", () => {
 		const expectedStressScore = 239;
 
 		// When
-		const heartRateStressScore = fitnessService.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, activityTrainingImpulse);
+		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
+			fitnessUserSettingsModel.userMaxHr,
+			fitnessUserSettingsModel.userMinHr,
+			fitnessUserSettingsModel.userLactateThreshold,
+			activityTrainingImpulse);
 
 		// Then
 		expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
@@ -149,13 +155,16 @@ describe("FitnessService", () => {
 	it("should compute hrSS without lactate threshold given (has to use 86% of max HR)", (done: Function) => {
 
 		// Given
-		userLactateThreshold = null;
+		fitnessUserSettingsModel.userLactateThreshold = null;
 		const activityTrainingImpulse = 333;
 		const expectedStressScore = 236;
 
 		// When
-		const heartRateStressScore = fitnessService.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, activityTrainingImpulse);
+		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
+			fitnessUserSettingsModel.userMaxHr,
+			fitnessUserSettingsModel.userMinHr,
+			fitnessUserSettingsModel.userLactateThreshold,
+			activityTrainingImpulse);
 
 		// Then
 		expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
@@ -174,16 +183,16 @@ describe("FitnessService", () => {
 
 		heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		powerMeterEnable = false;
-		cyclingFtp = null;
 		swimEnable = false;
-		swimFtp = null;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode,
+			powerMeterEnable,
+			swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -222,9 +231,7 @@ describe("FitnessService", () => {
 
 		heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		powerMeterEnable = false;
-		cyclingFtp = null;
 		swimEnable = false;
-		swimFtp = null;
 
 		const syncedActivityModels: SyncedActivityModel[] = [];
 		syncedActivityModels.push(createFakeSyncedActivityModel(1,
@@ -252,8 +259,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -290,17 +297,12 @@ describe("FitnessService", () => {
 		const expectedPowerScoredActivitiesLength = 6;
 		const expectedSwimScoredActivitiesLength = 2;
 
-		powerMeterEnable = true;
-		cyclingFtp = 150;
-		swimEnable = true;
-		swimFtp = 31;
-
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -349,17 +351,14 @@ describe("FitnessService", () => {
 		const expectedPowerScoredActivitiesLength = 6;
 		const expectedSwimScoredActivitiesLength = 0;
 
-		powerMeterEnable = true;
-		cyclingFtp = 150;
 		swimEnable = false;
-		swimFtp = null;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -385,7 +384,6 @@ describe("FitnessService", () => {
 			expect(_.floor(activity.powerStressScore, 3)).toEqual(112.749);
 
 			activity = _.find(result, {id: 332833796});
-			console.log(activity);
 			expect(_.floor(activity.heartRateStressScore, 3)).toEqual(137.647);
 			expect(activity.trainingImpulseScore).toBeUndefined();
 
@@ -402,73 +400,6 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should prepare fitness activities (only power based history) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
-
-		// Given
-		const expectedFitnessPreparedActivitiesLength = 3;
-		const expectedTrimpScoredActivitiesLength = 0;
-		const expectedPowerScoredActivitiesLength = 3;
-		const expectedSwimScoredActivitiesLength = 0;
-
-		powerMeterEnable = true;
-		cyclingFtp = 200;
-		swimEnable = false;
-		swimFtp = null;
-
-		const syncedActivityModels: SyncedActivityModel[] = [];
-		syncedActivityModels.push(createFakeSyncedActivityModel(1,
-			"SuperPoweredRide 01",
-			"Ride",
-			"2018-01-01",
-			null,
-			250));
-
-		syncedActivityModels.push(createFakeSyncedActivityModel(2,
-			"SuperPoweredRide 02",
-			"Ride",
-			"2018-01-15",
-			null,
-			275));
-
-		syncedActivityModels.push(createFakeSyncedActivityModel(3,
-			"SuperPoweredRide 03",
-			"Ride",
-			"2018-01-30",
-			null,
-			190));
-
-		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
-			.and.returnValue(Promise.resolve(syncedActivityModels));
-
-		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
-
-		// Then
-		promise.then((result: FitnessPreparedActivityModel[]) => {
-
-			expect(result).not.toBeNull();
-			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
-
-			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
-			const powerScoredActivities = _.filter(result, "powerStressScore");
-			const swimScored = _.filter(result, "swimStressScore");
-
-			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
-			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
-			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
-
-			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
-		});
-	});
-
 	it("should prepare fitness activities w/ PM=OFF & SWIM=ON & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
@@ -479,16 +410,13 @@ describe("FitnessService", () => {
 		const expectedSwimScoredActivitiesLength = 2;
 
 		powerMeterEnable = false;
-		cyclingFtp = null;
-		swimEnable = true;
-		swimFtp = 31;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -533,28 +461,232 @@ describe("FitnessService", () => {
 	it("should prepare fitness activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
-		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+		const expectedFitnessPreparedActivitiesLength = 138;
+		const expectedHeartRateStressScoredActivitiesLength = 90;
+		const expectedTrimpScoredActivitiesLength = 0;
+		const expectedPowerScoredActivitiesLength = 0;
+		const expectedSwimScoredActivitiesLength = 0;
+
+		powerMeterEnable = false;
+		swimEnable = false;
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
+
+		// Then
+		promise.then((result: FitnessPreparedActivityModel[]) => {
+
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+			const hearRateStressScoredActivities = _.filter(result, "heartRateStressScore");
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
+
+			expect(hearRateStressScoredActivities.length).toEqual(expectedHeartRateStressScoredActivitiesLength);
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+
+			let activity: FitnessPreparedActivityModel;
+
+			activity = _.find(result, {id: 429628737});
+			expect(activity.powerStressScore).toBeUndefined();
+
+			activity = _.find(result, {id: 332833796});
+			expect(_.floor(activity.heartRateStressScore, 3)).toEqual(137.647);
+			expect(activity.trainingImpulseScore).toBeUndefined();
+
+			activity = _.find(result, {id: 873446053});
+			expect(activity.swimStressScore).toBeUndefined();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
+
+	it("should prepare fitness activities w/ cyclingFtp=null & swimFtp={a_value} & HR_Mode=HRSS", (done: Function) => {
+
+		// Given
+		const expectedFitnessPreparedActivitiesLength = 138;
+		const expectedHeartRateStressScoredActivitiesLength = 90;
+		const expectedTrimpScoredActivitiesLength = 0;
+		const expectedPowerScoredActivitiesLength = 0;
+		const expectedSwimScoredActivitiesLength = 2;
+
+		fitnessUserSettingsModel.cyclingFtp = null;
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
+		// When
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
+
+		// Then
+		promise.then((result: FitnessPreparedActivityModel[]) => {
+
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+			const hearRateStressScoredActivities = _.filter(result, "heartRateStressScore");
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
+
+			expect(hearRateStressScoredActivities.length).toEqual(expectedHeartRateStressScoredActivitiesLength);
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+
+			let activity: FitnessPreparedActivityModel;
+
+			activity = _.find(result, {id: 429628737});
+			expect(activity.powerStressScore).toBeUndefined();
+
+			activity = _.find(result, {id: 332833796});
+			expect(_.floor(activity.heartRateStressScore, 3)).toEqual(137.647);
+			expect(activity.trainingImpulseScore).toBeUndefined();
+
+			activity = _.find(result, {id: 873446053});
+			expect(_.floor(activity.swimStressScore, 3)).toEqual(242.818);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
+	it("should prepare fitness activities w/ cyclingFtp={a_value} & swimFtp=null & HR_Mode=HRSS", (done: Function) => {
+
+		// Given
+		const expectedFitnessPreparedActivitiesLength = 138;
+		const expectedHeartRateStressScoredActivitiesLength = 90;
+		const expectedTrimpScoredActivitiesLength = 0;
+		const expectedPowerScoredActivitiesLength = 6;
+		const expectedSwimScoredActivitiesLength = 0;
+
+		fitnessUserSettingsModel.swimFtp = null;
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
+		// When
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
+
+		// Then
+		promise.then((result: FitnessPreparedActivityModel[]) => {
+
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+			const hearRateStressScoredActivities = _.filter(result, "heartRateStressScore");
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
+
+			expect(hearRateStressScoredActivities.length).toEqual(expectedHeartRateStressScoredActivitiesLength);
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+
+			let activity: FitnessPreparedActivityModel;
+
+			activity = _.find(result, {id: 429628737});
+			expect(_.floor(activity.powerStressScore, 3)).toEqual(112.749);
+
+			activity = _.find(result, {id: 332833796});
+			expect(_.floor(activity.heartRateStressScore, 3)).toEqual(137.647);
+			expect(activity.trainingImpulseScore).toBeUndefined();
+
+			activity = _.find(result, {id: 873446053});
+			expect(activity.swimStressScore).toBeUndefined();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
+	it("should prepare fitness activities (only power based history) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+
+		// Given
+		const expectedFitnessPreparedActivitiesLength = 3;
+		const expectedTrimpScoredActivitiesLength = 0;
+		const expectedPowerScoredActivitiesLength = 3;
+		const expectedSwimScoredActivitiesLength = 0;
+
+		fitnessUserSettingsModel.cyclingFtp = 200;
+		swimEnable = false;
+
+		const syncedActivityModels: SyncedActivityModel[] = [];
+		syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			"SuperPoweredRide 01",
+			"Ride",
+			"2018-01-01",
+			null,
+			250));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			"SuperPoweredRide 02",
+			"Ride",
+			"2018-01-15",
+			null,
+			275));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			"SuperPoweredRide 03",
+			"Ride",
+			"2018-01-30",
+			null,
+			190));
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(syncedActivityModels));
+
+		// When
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
 
 			expect(result).not.toBeNull();
-			let activity: FitnessPreparedActivityModel;
+			expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
 
-			activity = _.find(result, {id: 429628737});
-			expect(Math.floor(activity.powerStressScore)).toEqual(112); // TODO 0?!
+			const trimpScoredActivities = _.filter(result, "trainingImpulseScore");
+			const powerScoredActivities = _.filter(result, "powerStressScore");
+			const swimScored = _.filter(result, "swimStressScore");
 
-			// TODO Expect on a swmin activity toBeNull() ?
+			expect(trimpScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+			expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+			expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-			activity = _.find(result, {id: 332833796});
-			expect(Math.floor(activity.heartRateStressScore)).toEqual(137);
-			expect(activity.trainingImpulseScore).toBeUndefined();
-
-			activity = _.find(result, {id: 873446053});
-			expect(Math.floor(activity.swimStressScore)).toEqual(242);
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -575,9 +707,7 @@ describe("FitnessService", () => {
 
 		heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		powerMeterEnable = false;
-		cyclingFtp = null;
 		swimEnable = false;
-		swimFtp = null;
 
 		const skipActivitiesTypes: string[] = ["Run", "EBikeRide"];
 
@@ -614,8 +744,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivitiesTypes);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable, skipActivitiesTypes);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -650,10 +780,8 @@ describe("FitnessService", () => {
 		const expectedPowerScoredActivitiesLength = 1;
 		const expectedSwimScoredActivitiesLength = 0;
 
-		powerMeterEnable = true;
-		cyclingFtp = 200;
+		fitnessUserSettingsModel.cyclingFtp = 200;
 		swimEnable = false;
-		swimFtp = null;
 
 		const skipActivitiesTypes: string[] = ["Ride", "Run"];
 
@@ -690,8 +818,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivitiesTypes);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable, skipActivitiesTypes);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -725,17 +853,15 @@ describe("FitnessService", () => {
 
 		// Given
 		const expectedErrorMessage = "'Power Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
+
 		heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
-		powerMeterEnable = true;
-		cyclingFtp = 150;
 		swimEnable = false;
-		swimFtp = null;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -759,16 +885,13 @@ describe("FitnessService", () => {
 		const expectedErrorMessage = "'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
 		heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		powerMeterEnable = false;
-		cyclingFtp = null;
-		swimEnable = true;
-		swimFtp = 31;
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -789,9 +912,7 @@ describe("FitnessService", () => {
 
 		// Given
 		powerMeterEnable = false;
-		cyclingFtp = null;
 		swimEnable = false;
-		swimFtp = null;
 
 		const syncedActivityModels: SyncedActivityModel[] = [];
 		syncedActivityModels.push(createFakeSyncedActivityModel(1,
@@ -818,8 +939,8 @@ describe("FitnessService", () => {
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -839,9 +960,7 @@ describe("FitnessService", () => {
 
 		// Given
 		powerMeterEnable = false;
-		cyclingFtp = null;
 		swimEnable = false;
-		swimFtp = null;
 
 		const syncedActivityModels: SyncedActivityModel[] = [];
 		syncedActivityModels.push(createFakeSyncedActivityModel(1,
@@ -869,8 +988,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -902,7 +1021,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((dailyActivity: DayStressModel[]) => {
@@ -962,7 +1082,6 @@ describe("FitnessService", () => {
 
 		// Given
 		swimEnable = false;
-		swimFtp = null;
 		const rideId = 343080886;
 		const expectedDailyActivityLength = 346;
 		const expectedPreviewDays = 14;
@@ -975,7 +1094,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((dailyActivity: DayStressModel[]) => {
@@ -1055,8 +1175,8 @@ describe("FitnessService", () => {
 
 		spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
-		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((dailyActivity: DayStressModel[]) => {
@@ -1084,8 +1204,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
@@ -1147,8 +1267,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable);
 
 		// Then
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
@@ -1227,9 +1347,8 @@ describe("FitnessService", () => {
 			.and.returnValue(Promise.resolve(syncedActivityModels));
 
 		// When
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(userGender, userMaxHr, userMinHr,
-			userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp,
-			swimEnable, swimFtp, skipActivitiesTypes);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable, skipActivitiesTypes);
 
 		// Then
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {

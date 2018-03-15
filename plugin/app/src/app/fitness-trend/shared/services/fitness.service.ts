@@ -9,6 +9,7 @@ import { SyncedActivityModel } from "../../../../../../common/scripts/models/Syn
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { Gender } from "../../../shared/enums/gender.enum";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
+import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 
 @Injectable()
 export class FitnessService {
@@ -21,27 +22,17 @@ export class FitnessService {
 
 	/**
 	 * Prepare activities by assigning stress scores on each of them
-	 * @param {Gender} userGender
-	 * @param {number} userMaxHr
-	 * @param {number} userMinHr
-	 * @param {number} userLactateThreshold
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
 	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
-	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
-	public prepare(userGender: Gender, // TODO Pass a FitnessUserSettings model?
-				   userMaxHr: number, // TODO Pass a FitnessUserSettings model?
-				   userMinHr: number, // TODO Pass a FitnessUserSettings model?
-				   userLactateThreshold: number, // TODO Pass a FitnessUserSettings model?
+	public prepare(fitnessUserSettingsModel: FitnessUserSettingsModel,
 				   heartRateImpulseMode: HeartRateImpulseMode,
 				   powerMeterEnable: boolean,
-				   cyclingFtp: number,
 				   swimEnable: boolean,
-				   swimFtp: number,
 				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
 
 
@@ -78,12 +69,12 @@ export class FitnessService {
 
 					const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
 						&& powerMeterEnable
-						&& _.isNumber(cyclingFtp)
+						&& _.isNumber(fitnessUserSettingsModel.cyclingFtp)
 						&& activity.extendedStats && activity.extendedStats.powerData
 						&& activity.extendedStats.powerData.hasPowerMeter
 						&& _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-					const hasSwimmingData: boolean = (swimEnable && _.isNumber(swimFtp) && swimFtp > 0
+					const hasSwimmingData: boolean = (swimEnable && _.isNumber(fitnessUserSettingsModel.swimFtp) && fitnessUserSettingsModel.swimFtp > 0
 						&& activity.type === "Swim"
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
 						&& activity.moving_time_raw > 0);
@@ -109,8 +100,11 @@ export class FitnessService {
 
 						} else if (heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
 
-							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
-								userLactateThreshold, activity.extendedStats.heartRateData.TRIMP);
+							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
+								fitnessUserSettingsModel.userMaxHr,
+								fitnessUserSettingsModel.userMinHr,
+								fitnessUserSettingsModel.userLactateThreshold,
+								activity.extendedStats.heartRateData.TRIMP);
 						}
 
 						hasMinimumFitnessRequiredData = true;
@@ -119,7 +113,7 @@ export class FitnessService {
 					if (isPowerMeterUsePossible) {
 						const movingTime = activity.moving_time_raw;
 						const weightedPower = activity.extendedStats.powerData.weightedPower;
-						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
+						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
 						hasMinimumFitnessRequiredData = true;
 					}
 
@@ -127,7 +121,7 @@ export class FitnessService {
 						fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
 							activity.moving_time_raw,
 							activity.elapsed_time_raw,
-							swimFtp);
+							fitnessUserSettingsModel.swimFtp);
 						hasMinimumFitnessRequiredData = true;
 					}
 
@@ -145,34 +139,23 @@ export class FitnessService {
 
 	/**
 	 * Return day by day the athlete stress. Active & rest days included
-	 * @param {Gender} userGender
-	 * @param {number} userMaxHr
-	 * @param {number} userMinHr
-	 * @param {number} userLactateThreshold
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
 	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
-	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayStressModel[]>}
 	 */
-	public generateDailyStress(userGender: Gender,
-							   userMaxHr: number,
-							   userMinHr: number,
-							   userLactateThreshold: number,
+	public generateDailyStress(fitnessUserSettingsModel: FitnessUserSettingsModel,
 							   heartRateImpulseMode: HeartRateImpulseMode,
 							   powerMeterEnable: boolean,
-							   cyclingFtp: number,
 							   swimEnable: boolean,
-							   swimFtp: number,
 							   skipActivityTypes?: string[]): Promise<DayStressModel[]> {
 
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.prepare(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable,
-				cyclingFtp, swimEnable, swimFtp, skipActivityTypes)
+			this.prepare(fitnessUserSettingsModel, heartRateImpulseMode, powerMeterEnable, swimEnable, skipActivityTypes)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
 
 					// Subtract 1 day to the first activity done in history:
@@ -255,35 +238,24 @@ export class FitnessService {
 	}
 
 	/**
-	 *
-	 * @param {Gender} userGender
-	 * @param {number} userMaxHr
-	 * @param {number} userMinHr
-	 * @param {number} userLactateThreshold
+	 * ComputeTrend the fitness trend
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
 	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} isPowerMeterEnabled
-	 * @param {number} cyclingFtp
 	 * @param {boolean} isSwimEnabled
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
-	public computeTrend(userGender: Gender,
-						userMaxHr: number,
-						userMinHr: number,
-						userLactateThreshold: number,
+	public computeTrend(fitnessUserSettingsModel: FitnessUserSettingsModel,
 						heartRateImpulseMode: HeartRateImpulseMode,
 						isPowerMeterEnabled: boolean,
-						cyclingFtp: number,
 						isSwimEnabled: boolean,
-						swimFtp: number,
 						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode,
-				isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp, skipActivityTypes)
+			this.generateDailyStress(fitnessUserSettingsModel, heartRateImpulseMode, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl = 0;
