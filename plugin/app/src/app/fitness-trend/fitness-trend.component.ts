@@ -9,6 +9,7 @@ import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
+import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -161,7 +162,8 @@ export class FitnessTrendComponent implements OnInit {
 
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
-			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(null, null, null, null, HeartRateImpulseMode.TRIMP, // TODO Temporary
+				this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -208,10 +210,11 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled,
-			this.swimFtp, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
-			this.fitnessTrend = fitnessTrend;
-		});
+		this.fitnessService.computeTrend(null, null, null, null, HeartRateImpulseMode.TRIMP, // TODO Temporary
+			this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes)
+			.then((fitnessTrend: DayFitnessTrendModel[]) => {
+				this.fitnessTrend = fitnessTrend;
+			});
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {

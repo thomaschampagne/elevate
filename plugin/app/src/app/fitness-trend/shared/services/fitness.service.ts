@@ -8,6 +8,7 @@ import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { Gender } from "../../../shared/enums/gender.enum";
+import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 
 @Injectable()
 export class FitnessService {
@@ -20,6 +21,11 @@ export class FitnessService {
 
 	/**
 	 * Prepare activities by assigning stress scores on each of them
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} userLactateThreshold
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
@@ -27,7 +33,12 @@ export class FitnessService {
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
-	public prepare(powerMeterEnable: boolean,
+	public prepare(userGender: Gender,
+				   userMaxHr: number,
+				   userMinHr: number,
+				   userLactateThreshold: number,
+				   heartRateImpulseMode: HeartRateImpulseMode,
+				   powerMeterEnable: boolean,
 				   cyclingFtp: number,
 				   swimEnable: boolean,
 				   swimFtp: number,
@@ -78,7 +89,17 @@ export class FitnessService {
 					};
 
 					if (hasHeartRateData) {
-						fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+
+						if (heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+
+							fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+
+						} else if (heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
+
+							fitnessReadyActivity.hearRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userMinHr,
+								userLactateThreshold, activity.extendedStats.heartRateData.TRIMP);
+						}
+
 						hasMinimumFitnessRequiredData = true;
 					}
 
@@ -111,6 +132,11 @@ export class FitnessService {
 
 	/**
 	 * Return day by day the athlete stress. Active & rest days included
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} userLactateThreshold
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
 	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
@@ -118,7 +144,12 @@ export class FitnessService {
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayStressModel[]>}
 	 */
-	public generateDailyStress(powerMeterEnable: boolean,
+	public generateDailyStress(userGender: Gender,
+							   userMaxHr: number,
+							   userMinHr: number,
+							   userLactateThreshold: number,
+							   heartRateImpulseMode: HeartRateImpulseMode,
+							   powerMeterEnable: boolean,
 							   cyclingFtp: number,
 							   swimEnable: boolean,
 							   swimFtp: number,
@@ -127,7 +158,8 @@ export class FitnessService {
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivityTypes)
+			this.prepare(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable,
+				cyclingFtp, swimEnable, swimFtp, skipActivityTypes)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
 
 					// Subtract 1 day to the first activity done in history:
@@ -194,23 +226,28 @@ export class FitnessService {
 
 	/**
 	 *
-	 * @param {Gender} gender
-	 * @param {number} maxHr
-	 * @param {number} minHr
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
 	 * @param {number} userLactateThreshold
 	 * @param {number} activityTrainingImpulse
 	 * @returns {number}
 	 */
-	public computeHeartRateStressScore(gender: Gender, maxHr: number, minHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR * maxHr;
-		const lactateThresholdReserve = (lactateThreshold - minHr) / (maxHr - minHr);
-		const TRIMPGenderFactor: number = (gender === Gender.MEN) ? 1.92 : 1.67;
+	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR * userMaxHr;
+		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
 		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
 	}
 
 	/**
 	 *
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} userLactateThreshold
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} isPowerMeterEnabled
 	 * @param {number} cyclingFtp
 	 * @param {boolean} isSwimEnabled
@@ -218,7 +255,12 @@ export class FitnessService {
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
-	public computeTrend(isPowerMeterEnabled: boolean,
+	public computeTrend(userGender: Gender,
+						userMaxHr: number,
+						userMinHr: number,
+						userLactateThreshold: number,
+						heartRateImpulseMode: HeartRateImpulseMode,
+						isPowerMeterEnabled: boolean,
 						cyclingFtp: number,
 						isSwimEnabled: boolean,
 						swimFtp: number,
@@ -227,7 +269,8 @@ export class FitnessService {
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp, skipActivityTypes)
+			this.generateDailyStress(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode,
+				isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl = 0;

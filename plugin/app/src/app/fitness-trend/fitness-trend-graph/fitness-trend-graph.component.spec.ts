@@ -15,6 +15,8 @@ import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import * as _ from "lodash";
 import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
+import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { Gender } from "../../shared/enums/gender.enum";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -66,11 +68,16 @@ describe("FitnessTrendGraphComponent", () => {
 		todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
 
+		const userGender = Gender.MEN;
+		const userMaxHr = 190;
+		const userMinHr = 60;
+		const userLactateThreshold = 163;
+		const heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		const powerMeterEnable = true;
 		const cyclingFtp = 150;
 		const swimEnable = true;
 		const swimFtp = 31;
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(userGender, userMaxHr, userMinHr, userLactateThreshold, heartRateImpulseMode, powerMeterEnable, cyclingFtp, swimEnable, swimFtp);
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 			FITNESS_TREND = fitnessTrend;
 			done();
@@ -95,7 +102,6 @@ describe("FitnessTrendGraphComponent", () => {
 		};
 
 		spyOn(component, "getTodayViewedDay").and.returnValue(component.getDayFitnessTrendFromDate(todayMoment.toDate()));
-		// spyOn(component, "indexesOf").and.returnValue({start: 289, end: 345});
 		spyOn(component, "updateGraph").and.stub(); // Do not try to draw the graph
 
 		fixture.detectChanges();
