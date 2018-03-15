@@ -9,6 +9,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
+import { Gender } from "../../../shared/enums/gender.enum";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 
@@ -973,6 +974,46 @@ describe("FitnessService", () => {
 			done();
 		});
 
+	});
+
+	it("should compute hrSS", (done: Function) => {
+
+		// Given
+		const gender = Gender.MEN;
+		const maxHr = 190;
+		const minHr = 60;
+		const lactateThreshold = 163;
+		const activityTrainingImpulse = 333;
+		const expectedStressScore = 239;
+
+		// When
+		const heartRateStressScore = fitnessService.computeHeartRateStressScore(gender, maxHr, minHr,
+			lactateThreshold, activityTrainingImpulse);
+
+		// Then
+		expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
+
+		done();
+	});
+
+	it("should compute hrSS without lactate threshold given (has to use 86% of max HR)", (done: Function) => {
+
+		// Given
+		const gender = Gender.MEN;
+		const maxHr = 190;
+		const minHr = 60;
+		const lactateThreshold = null;
+		const activityTrainingImpulse = 333;
+		const expectedStressScore = 236;
+
+		// When
+		const heartRateStressScore = fitnessService.computeHeartRateStressScore(gender, maxHr, minHr,
+			lactateThreshold, activityTrainingImpulse);
+
+		// Then
+		expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
+
+		done();
 	});
 
 });
