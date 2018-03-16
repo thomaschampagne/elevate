@@ -9,6 +9,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
+import { AppError } from "../../../shared/models/app-error.model";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 
@@ -667,9 +668,10 @@ describe("FitnessService", () => {
 			expect(result).toBeNull();
 			done();
 
-		}, error => {
+		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error).toBe("No activities has minimum required data to generate a fitness trend");
+			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
 
 		});
@@ -719,11 +721,11 @@ describe("FitnessService", () => {
 			expect(result).toBeNull();
 			done();
 
-		}, error => {
+		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error).toBe("No activities has minimum required data to generate a fitness trend");
+			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
-
 		});
 	});
 
@@ -829,9 +831,10 @@ describe("FitnessService", () => {
 			expect(dailyActivity).toBeNull();
 			done();
 
-		}, error => {
+		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error).toBe("No activities has minimum required data to generate a fitness trend");
+			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
 		});
 
