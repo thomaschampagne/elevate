@@ -446,7 +446,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			active_point_on_lines: true,
 			active_point_size: 2.5,
 			area: [3, 6],
-			area_flip_under_zero: true,
+			flip_area_under_y_value: 0,
 			point_size: 4,
 			yax_count: 8,
 			y_extended_ticks: true,
