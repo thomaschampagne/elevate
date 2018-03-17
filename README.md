@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
-[ ![Download](https://api.bintray.com/packages/thomaschampagne/stravistix/travis-ci-builds/images/download.svg?version=develop) ](https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files)
+[![Artifacts Dowloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/stravistix?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/stravistix&utm_campaign=badger)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
@@ -12,7 +12,7 @@ Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.gith
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
 ## From continuous integration
-Using latest **develop** branch builds: https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files
+Using latest **develop** branch builds: https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/
 
 Install steps with a standalone build: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
 
