@@ -7,6 +7,8 @@ import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-
 import { MatDialog } from "@angular/material";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { FitnessInfoDialogComponent } from "../fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
+import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 
 @Component({
 	selector: "app-fitness-trend-inputs",
@@ -14,6 +16,8 @@ import { FitnessInfoDialogComponent } from "../fitness-trend-graph/fitness-info-
 	styleUrls: ["./fitness-trend-inputs.component.scss"]
 })
 export class FitnessTrendInputsComponent implements OnInit {
+
+	public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
 	// Inputs
 	@Input("dateMin")
@@ -31,27 +35,30 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Input("periodViewed")
 	public periodViewed: PeriodModel;
 
-	@Input("cyclingFtp")
-	public cyclingFtp: number;
+	@Input("fitnessUserSettingsModel")
+	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 
-	@Input("swimFtp")
-	public swimFtp: number;
+	@Input("heartRateImpulseMode")
+	public heartRateImpulseMode: HeartRateImpulseMode;
 
 	@Input("isTrainingZonesEnabled")
-	public isTrainingZonesEnabled;
+	public isTrainingZonesEnabled: boolean;
 
 	@Input("isPowerMeterEnabled")
-	public isPowerMeterEnabled;
+	public isPowerMeterEnabled: boolean;
 
 	@Input("isSwimEnabled")
-	public isSwimEnabled;
+	public isSwimEnabled: boolean;
 
 	@Input("isEBikeRidesEnabled")
-	public isEBikeRidesEnabled;
+	public isEBikeRidesEnabled: boolean;
 
 	// Outputs
 	@Output("periodViewedChange")
 	public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
+
+	@Output("heartRateImpulseModeChange")
+	public heartRateImpulseModeChange: EventEmitter<HeartRateImpulseMode> = new EventEmitter<HeartRateImpulseMode>();
 
 	@Output("trainingZonesToggleChange")
 	public trainingZonesToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -80,6 +87,12 @@ export class FitnessTrendInputsComponent implements OnInit {
 		this.updatePeriodViewedTo(this.periodViewed);
 	}
 
+	public onHeartRateImpulseModeChange(): void {
+		this.heartRateImpulseMode = Number(this.heartRateImpulseMode);
+		localStorage.setItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY, String(this.heartRateImpulseMode));
+		this.heartRateImpulseModeChange.emit(this.heartRateImpulseMode);
+	}
+
 	public onTrainingZonesToggle(): void {
 
 		if (this.isTrainingZonesEnabled) {
@@ -93,7 +106,7 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public onPowerMeterToggle(): void {
 
-		if (!_.isNumber(this.cyclingFtp)) {
+		if (!_.isNumber(this.fitnessUserSettingsModel.cyclingFtp)) {
 
 			const data: GotItDialogDataModel = {
 				title: "Cycling Functional Threshold Power Empty",
@@ -126,7 +139,7 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public onSwimToggle(): void {
 
-		if (!_.isNumber(this.swimFtp)) {
+		if (!_.isNumber(this.fitnessUserSettingsModel.swimFtp)) {
 
 			const data: GotItDialogDataModel = {
 				title: "Swimming Functional Threshold Pace Empty",

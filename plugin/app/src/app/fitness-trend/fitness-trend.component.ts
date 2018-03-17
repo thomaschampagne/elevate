@@ -11,6 +11,7 @@ import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../shared/models/app-error.model";
+import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
 
 // TODO Fitness trend UI, User warning dialogs, Rework helper
 
@@ -21,10 +22,12 @@ import { AppError } from "../shared/models/app-error.model";
 })
 export class FitnessTrendComponent implements OnInit {
 
+	public static readonly DEFAULT_HEART_RATE_IMPULSE_MODE: HeartRateImpulseMode = HeartRateImpulseMode.HRSS;
+
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 	public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
-
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
+	public static readonly LS_HEART_RATE_IMPULSE_MODE_KEY: string = "fitnessTrend_heartRateImpulseMode";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
@@ -118,23 +121,18 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public fitnessTrend: DayFitnessTrendModel[];
-
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
 	public lastPeriodViewed: PeriodModel;
 	public dateMin: Date;
 	public dateMax: Date;
-
-	public isTrainingZonesEnabled;
-	public isPowerMeterEnabled;
-	public isSwimEnabled;
-	public isEBikeRidesEnabled;
-
-	public cyclingFtp: number = null;
-	public swimFtp: number = null;
-
+	public heartRateImpulseMode: HeartRateImpulseMode;
+	public isTrainingZonesEnabled: boolean;
+	public isPowerMeterEnabled: boolean;
+	public isSwimEnabled: boolean;
+	public isEBikeRidesEnabled: boolean;
+	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 	public skipActivityTypes: string[] = [];
-
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
 	public isHistoryCompliant: boolean = null; // Can be null: don't know yet true/false status on load
 
@@ -157,18 +155,18 @@ export class FitnessTrendComponent implements OnInit {
 
 		}).then((userSettings: UserSettingsModel) => {
 
-			this.cyclingFtp = userSettings.userFTP; // TODO To be removed
-			this.swimFtp = userSettings.userSwimFTP; // TODO To be removed
+			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
 
+			this.heartRateImpulseMode = (HeartRateImpulseMode.TRIMP === Number(localStorage.getItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY)))
+				? HeartRateImpulseMode.TRIMP : FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
 			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
-			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
-			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.swimFtp);
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.swimFtp);
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
 
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
-			// TODO Temporary computeTrend call
-			return this.fitnessService.computeTrend(null, HeartRateImpulseMode.TRIMP, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -201,6 +199,11 @@ export class FitnessTrendComponent implements OnInit {
 		this.periodViewed = periodViewed;
 	}
 
+	public onHeartRateImpulseModeChange(heartRateImpulseMode: HeartRateImpulseMode): void {
+		this.heartRateImpulseMode = heartRateImpulseMode;
+		this.reloadFitnessTrend();
+	}
+
 	public onTrainingZonesToggleChange(enabled: boolean): void {
 		this.isTrainingZonesEnabled = enabled;
 	}
@@ -222,12 +225,10 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-
-		// TODO Temporary computeTrend call
-		this.fitnessService.computeTrend(null, HeartRateImpulseMode.TRIMP, this.isPowerMeterEnabled,
+		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled,
 			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
-				this.fitnessTrend = fitnessTrend;
-			});
+			this.fitnessTrend = fitnessTrend;
+		}, error => console.error(error));
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {

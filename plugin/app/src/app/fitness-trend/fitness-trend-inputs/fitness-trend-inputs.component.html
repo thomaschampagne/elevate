@@ -73,6 +73,12 @@
 	<button mat-icon-button color="primary" (click)="onShowInfo()">
 		<mat-icon>help_outline</mat-icon>
 	</button>
+</div>
 
+<div fxFill fxLayout="row" fxLayoutAlign="space-between center">
+	<mat-radio-group [(ngModel)]="heartRateImpulseMode" (change)="onHeartRateImpulseModeChange()">
+		<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">HRSS</mat-radio-button>
+		<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">TRIMP</mat-radio-button>
+	</mat-radio-group>
 </div>
 
