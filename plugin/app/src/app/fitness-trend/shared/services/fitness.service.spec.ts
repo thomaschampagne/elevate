@@ -88,7 +88,7 @@ describe("FitnessService", () => {
 	const FITNESS_USER_SETTINGS_MODEL: FitnessUserSettingsModel = {
 		userGender: Gender.MEN,
 		userMaxHr: 190,
-		userMinHr: 60,
+		userRestHr: 60,
 		userLactateThreshold: 163,
 		cyclingFtp: 150,
 		swimFtp: 31,
@@ -143,7 +143,7 @@ describe("FitnessService", () => {
 		// When
 		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 			fitnessUserSettingsModel.userMaxHr,
-			fitnessUserSettingsModel.userMinHr,
+			fitnessUserSettingsModel.userRestHr,
 			fitnessUserSettingsModel.userLactateThreshold,
 			activityTrainingImpulse);
 
@@ -163,7 +163,7 @@ describe("FitnessService", () => {
 		// When
 		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 			fitnessUserSettingsModel.userMaxHr,
-			fitnessUserSettingsModel.userMinHr,
+			fitnessUserSettingsModel.userRestHr,
 			fitnessUserSettingsModel.userLactateThreshold,
 			activityTrainingImpulse);
 

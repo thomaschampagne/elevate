@@ -104,7 +104,7 @@ export class FitnessService {
 
 							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 								fitnessUserSettingsModel.userMaxHr,
-								fitnessUserSettingsModel.userMinHr,
+								fitnessUserSettingsModel.userRestHr,
 								fitnessUserSettingsModel.userLactateThreshold,
 								activity.extendedStats.heartRateData.TRIMP);
 						}

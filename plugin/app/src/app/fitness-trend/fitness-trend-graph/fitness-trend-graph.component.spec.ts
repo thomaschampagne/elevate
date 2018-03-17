@@ -76,7 +76,7 @@ describe("FitnessTrendGraphComponent", () => {
 		const fitnessUserSettingsModel: FitnessUserSettingsModel = {
 			userGender: Gender.MEN,
 			userMaxHr: 190,
-			userMinHr: 60,
+			userRestHr: 60,
 			userLactateThreshold: 163,
 			cyclingFtp: 150,
 			swimFtp: 31,
