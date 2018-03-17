@@ -10,11 +10,13 @@ import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activit
 import { Gender } from "../../../shared/enums/gender.enum";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
+import { AppError } from "../../../shared/models/app-error.model";
 
 @Injectable()
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
+	public static readonly ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES: string = "FT_1";
 	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
 
 	constructor(public activityService: ActivityService) {
@@ -49,7 +51,7 @@ export class FitnessService {
 		}
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
-							reject: (error: string) => void) => {
+							reject: (error: AppError) => void) => {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
@@ -129,7 +131,8 @@ export class FitnessService {
 				});
 
 				if (!hasMinimumFitnessRequiredData) {
-					reject("No activities has minimum required data to generate a fitness trend");
+					reject(new AppError(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES,
+						"No activities has minimum required data to generate a fitness trend"));
 				}
 
 				resolve(fitnessPreparedActivities);

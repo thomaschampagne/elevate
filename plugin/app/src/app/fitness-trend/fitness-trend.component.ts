@@ -10,6 +10,7 @@ import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
+import { AppError } from "../shared/models/app-error.model";
 
 // TODO Fitness trend UI, User warning dialogs, Rework helper
 
@@ -134,7 +135,8 @@ export class FitnessTrendComponent implements OnInit {
 
 	public skipActivityTypes: string[] = [];
 
-	public hasFitnessTrend: boolean = null; // Can be null: don't know yet true/false status on load
+	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+	public isHistoryCompliant: boolean = null; // Can be null: don't know yet true/false status on load
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
@@ -146,9 +148,10 @@ export class FitnessTrendComponent implements OnInit {
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 
 			if (athleteHistoryState === AthleteHistoryState.SYNCED) {
+				this.isSynced = true;
 				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
 			} else {
-				this.hasFitnessTrend = false;
+				this.isSynced = false;
 				return Promise.reject("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString()) as PromiseLike<UserSettingsModel>;
 			}
 
@@ -170,7 +173,7 @@ export class FitnessTrendComponent implements OnInit {
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.hasFitnessTrend = !_.isEmpty(this.fitnessTrend);
+			this.isHistoryCompliant = !_.isEmpty(this.fitnessTrend);
 
 			// Provide min and max date to input component
 			this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
@@ -184,7 +187,14 @@ export class FitnessTrendComponent implements OnInit {
 			});
 			this.lastPeriodViewed = this.periodViewed;
 
-		}, error => console.warn(error));
+		}, (error: AppError) => {
+
+			if (error.code === FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES) {
+				this.isHistoryCompliant = false;
+			} else {
+				console.error(error);
+			}
+		});
 	}
 
 	public onPeriodViewedChange(periodViewed: PeriodModel): void {
