@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { VacuumProcessor } from "./VacuumProcessor";
 
 export interface ISegmentInfo {
@@ -32,8 +32,8 @@ export class SegmentProcessor {
 		// NearbySegmentsAround cached?
 		const cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
 
-		if (!_.isNull(cacheResult) && !env.debugMode) {
-			if (env.debugMode) console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
+		if (!_.isNull(cacheResult) && !CoreEnv.debugMode) {
+			if (CoreEnv.debugMode) console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
 			callback(cacheResult);
 			return;
 		}
@@ -47,7 +47,7 @@ export class SegmentProcessor {
 			// Find segments in bounding box
 			this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: ISegmentInfo[]) => {
 
-				if (env.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
+				if (CoreEnv.debugMode) console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
 				try {
 					localStorage.setItem(SegmentProcessor.cachePrefix + this.segmentId, JSON.stringify(segmentsInBounds)); // Cache the result to local storage
 				} catch (err) {
