@@ -870,12 +870,12 @@ describe("FitnessService", () => {
 			expect(result).toBeNull();
 			done();
 
-		}, error => {
+		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-
-			expect(error).toEqual(expectedErrorMessage);
-			expect(fetchDaoSpy).toHaveBeenCalledTimes(0);
+			expect(error.code).toBe(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD);
+			expect(error.message).toBe(expectedErrorMessage);
 			done();
+
 		});
 
 	});
@@ -900,11 +900,12 @@ describe("FitnessService", () => {
 			expect(result).toBeNull();
 			done();
 
-		}, error => {
+		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error).toEqual(expectedErrorMessage);
-			expect(fetchDaoSpy).toHaveBeenCalledTimes(0);
+			expect(error.code).toBe(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD);
+			expect(error.message).toBe(expectedErrorMessage);
 			done();
+
 		});
 
 	});
@@ -951,7 +952,7 @@ describe("FitnessService", () => {
 
 		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
 			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
 
@@ -1001,7 +1002,7 @@ describe("FitnessService", () => {
 
 		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
 			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
 		});
@@ -1187,7 +1188,7 @@ describe("FitnessService", () => {
 
 		}, (error: AppError) => {
 			expect(error).not.toBeNull();
-			expect(error.code).toBe(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES);
+			expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
 			expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
 			done();
 		});

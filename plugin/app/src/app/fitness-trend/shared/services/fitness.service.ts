@@ -16,7 +16,6 @@ import { AppError } from "../../../shared/models/app-error.model";
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
-	public static readonly ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES: string = "FT_1";
 	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
 
 	constructor(public activityService: ActivityService) {
@@ -41,12 +40,14 @@ export class FitnessService {
 		if (heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
 
 			if (powerMeterEnable) {
-				return Promise.reject("'Power Stress Score' calculation method cannot work with " +
-					"'TRIMP (Training Impulse)' calculation method.");
+				const reason = "'Power Stress Score' calculation method cannot work with " +
+					"'TRIMP (Training Impulse)' calculation method.";
+				return Promise.reject(new AppError(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD, reason));
 			}
 
 			if (swimEnable) {
-				return Promise.reject("'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.");
+				const reason = "'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
+				return Promise.reject(new AppError(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD, reason));
 			}
 		}
 
@@ -131,7 +132,7 @@ export class FitnessService {
 				});
 
 				if (!hasMinimumFitnessRequiredData) {
-					reject(new AppError(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES,
+					reject(new AppError(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES,
 						"No activities has minimum required data to generate a fitness trend"));
 				}
 
