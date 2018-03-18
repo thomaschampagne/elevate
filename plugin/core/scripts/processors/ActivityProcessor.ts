@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { ActivityStatsMapModel, AnalysisDataModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { VacuumProcessor } from "./VacuumProcessor";
@@ -58,7 +58,7 @@ export class ActivityProcessor {
 			// Find in cache first is data exist
 			const cacheResult: AnalysisDataModel = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as AnalysisDataModel;
 
-			if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
+			if (!_.isNull(cacheResult) && CoreEnv.useActivityStreamCache) {
 				console.log("Using existing activity cache mode");
 				callback(cacheResult);
 				return;
