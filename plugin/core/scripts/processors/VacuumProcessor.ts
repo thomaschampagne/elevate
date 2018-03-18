@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 
 export class VacuumProcessor {
 
@@ -19,7 +19,7 @@ export class VacuumProcessor {
 				athleteId = window.currentAthlete.id;
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) console.warn(err);
 		}
 
 		return athleteId;
@@ -36,7 +36,7 @@ export class VacuumProcessor {
 				athleteName = window.currentAthlete.get("display_name");
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) console.warn(err);
 		}
 		return athleteName;
 	}
@@ -74,7 +74,7 @@ export class VacuumProcessor {
 				premiumStatus = window.currentAthlete.attributes.premium;
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) console.warn(err);
 		}
 
 		return premiumStatus;
@@ -99,7 +99,7 @@ export class VacuumProcessor {
 			}
 
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) console.warn(err);
 		}
 
 		return proStatus;

@@ -1,7 +1,7 @@
 // This code is from Google, so let's not modify it too much, just add gaNewElem and gaElems:
 import * as _ from "lodash";
 import * as Q from "q";
-import { env } from "../config/env";
+import { CoreEnv } from "../config/core-env";
 import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
 import { ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
 import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
@@ -19,7 +19,7 @@ const currentDate: any = new Date();
 	m.parentNode.insertBefore(a, m);
 })(window, document, "script", "//www.google-analytics.com/analytics.js", "follow");
 
-follow("create", env.analyticsTrackingID, "auto");
+follow("create", CoreEnv.analyticsTrackingID, "auto");
 follow("send", "pageview");
 
 export class AthleteUpdate { // TODO Refactor outside + rerun specs
@@ -75,7 +75,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
 	public static commit(athleteUpdate: IAthleteUpdate): Q.IPromise<any> {
 
 		const deferred = Q.defer<ISyncResult>();
-		const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/athlete/update";
+		const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/athlete/update";
 
 		$.post({
 			url: endPoint,
