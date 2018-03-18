@@ -3,7 +3,7 @@ import { Helper } from "../../../common/scripts/Helper";
 import { SyncNotifyModel } from "../../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage, StorageManager } from "../../../common/scripts/modules/StorageManager";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { ActivitiesSynchronizer, ISyncResult } from "../synchronizer/ActivitiesSynchronizer";
 import { HerokuEndpoints } from "../../../common/scripts/modules/HerokuEndpoint";
@@ -133,7 +133,7 @@ export class ActivitiesSyncModifier implements IModifier {
 				error: {path: window.location.href, date: new Date(), content: err},
 			};
 
-			const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+			const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,

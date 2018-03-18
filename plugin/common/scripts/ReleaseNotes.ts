@@ -20,6 +20,30 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.0.3",
+		message: "Third patch of <strong>NEW APP</strong> released in February. Mainly bugs fixes and improvements. Click \"show details\" for more info.",
+		hotFixes: [],
+		features: [
+			"New fitness trend feature. Fully reworked on patch 6.0.2: Added tooltip for detail of each day; Added active day dotted line & form curve area to distinguish zero line.",
+			"New year progressions",
+			"New common settings section",
+			"New athlete settings section",
+			"New zones settings section",
+			"New themes: light & dark",
+			"Pushed reliability & global performance",
+			"Optimized the \"auto-sync\" in background: You'll perform less manual syncs"
+		],
+		isPatch: true,
+		fixes: [
+			"Added some horizontal lines on fitness trend graph",
+			"Improved graphs rendering performance",
+			"Added missing message on fitness trend when user as no eligible history to access feature",
+			"Fixed fitness graph vertical flicks when text of activities were too long",
+			"Fixed a zones settings major issue when zones could be saved on some cases",
+			"Fixed wrong power stress score calculation when an activity were on pause"
+		]
+	},
+	{
 		version: "6.0.2",
 		message: "2nd big patch of the brand <strong>NEW APP</strong>!. Fitness trend look has been reworked along your feedbacks. And fitness graph is now linked to fitness table. And tons of other things...",
 		hotFixes: [],
