@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material";
 import { AthleteHistoryModel } from "../../services/athlete-history/athlete-history.model";
+import * as _ from "lodash";
 
 @Component({
 	selector: "app-athlete-history-import-dialog",
@@ -45,6 +46,6 @@ export class AthleteHistoryImportDialogComponent implements OnInit {
 	public onFileSelected(file: File): void {
 		this.file = file;
 		this.displayName = this.file.name;
-		this.displaySize = Math.floor(this.file.size / 1024).toLocaleString() + " MB";
+		this.displaySize = _.floor(this.file.size / (1024 * 1024), 2) + " MB";
 	}
 }

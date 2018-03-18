@@ -1,6 +1,5 @@
-<!--We show this "must sync" message only when we are sure there is no fitness data.
-This means that null/true state  will not display the message -->
-<mat-card *ngIf="(hasFitnessTrend === false)" class="no-data">
+<!--History not synced-->
+<mat-card *ngIf="(isSynced === false)" class="no-data">
 	<mat-card-title>
 		Synchronise your history
 	</mat-card-title>
@@ -35,13 +34,37 @@ This means that null/true state  will not display the message -->
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="(hasFitnessTrend === null)">
+<!--History not compliant with the feature-->
+<mat-card *ngIf="(isHistoryCompliant === false && isSynced !== false)">
+	<mat-card-title>
+		Your history is not supported by this feature
+	</mat-card-title>
+	<mat-card-content>
+		The fitness trend requires an athlete history with at least:
+		<ul>
+			<li>
+				Heart rate data coming from an heart rate monitor and regardless types of sports.
+			</li>
+			<li>
+				Or power data coming a cycling power meter (or emulated power data such as "ZWIFT" sessions).
+			</li>
+			<li>
+				Or any swimming activities having distance & time (no sensors required). For this make sure you have set
+				your <strong>Swimming Functional Threshold Pace</strong> in <a routerLink="/athleteSettings">athlete
+				settings</a>.
+			</li>
+		</ul>
+	</mat-card-content>
+</mat-card>
+
+<!--Loading-->
+<mat-card *ngIf="(isSynced !== false && isHistoryCompliant === null)">
 	<mat-card-content>
 		<mat-progress-bar mode="buffer"></mat-progress-bar>
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="(hasFitnessTrend === true)">
+<mat-card *ngIf="(isHistoryCompliant === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 			<app-fitness-trend-inputs fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
@@ -78,7 +101,7 @@ This means that null/true state  will not display the message -->
 	</mat-card-content>
 </mat-card>
 
-<mat-card [style.visibility]="((hasFitnessTrend === true) ? 'visible' : 'hidden')">
+<mat-card [style.visibility]="((isHistoryCompliant === true) ? 'visible' : 'hidden')">
 	<mat-card-title>
 		Fitness analysis table
 	</mat-card-title>

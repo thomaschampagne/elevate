@@ -1,4 +1,14 @@
-import { Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import {
+	Component,
+	ElementRef,
+	HostListener,
+	Input,
+	OnChanges,
+	OnDestroy,
+	OnInit,
+	SimpleChanges,
+	ViewChild
+} from "@angular/core";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
@@ -436,9 +446,10 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			active_point_on_lines: true,
 			active_point_size: 2.5,
 			area: [3, 6],
-			area_flip_under_zero: true,
+			flip_area_under_y_value: 0,
 			point_size: 4,
-			yax_count: 10,
+			yax_count: 8,
+			y_extended_ticks: true,
 			target: "#fitnessTrendGraph",
 			x_accessor: "date",
 			y_accessor: "value",

@@ -7,11 +7,13 @@ import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
+import { AppError } from "../../../shared/models/app-error.model";
 
 @Injectable()
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
+	public static readonly ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES: string = "FT_1";
 
 	constructor(public activityService: ActivityService) {
 	}
@@ -32,7 +34,7 @@ export class FitnessService {
 				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
-							reject: (error: string) => void) => {
+							reject: (error: AppError) => void) => {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
@@ -99,7 +101,8 @@ export class FitnessService {
 				});
 
 				if (!hasMinimumFitnessRequiredData) {
-					reject("No activities has minimum required data to generate a fitness trend");
+					reject(new AppError(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES,
+						"No activities has minimum required data to generate a fitness trend"));
 				}
 
 				resolve(fitnessPreparedActivities);

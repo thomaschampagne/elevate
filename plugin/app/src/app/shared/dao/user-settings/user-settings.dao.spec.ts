@@ -24,29 +24,41 @@ describe("UserSettingsDao", () => {
 		done();
 	});
 
-	it("should create object at path", (done: Function) => {
+	it("should update an object property at given path", (done: Function) => {
 
 		// Given
-		const nestedPath = "a.b.c.d";
-		const objectToInsert: any = {value: 10};
+		const sourceUserSettings = _.cloneDeep(userSettings);
 
-		const expected = {
-			a: {
-				b: {
-					c: {
-						d: {
-							value: 10
-						}
-					}
-				}
-			}
-		};
+		const newSpeedZones = [{from: 666, to: 999}];
+		const zoneSpeedPath = "zones.speed";
+
+		const expectedUpdatedSettings = _.cloneDeep(sourceUserSettings);
+		expectedUpdatedSettings.zones.speed = newSpeedZones;
 
 		// When
-		const absoluteObject = userSettingsDao.createNestedObject(nestedPath, objectToInsert);
+		const updatedSettings = userSettingsDao.updateNestedPropertyOf(sourceUserSettings, zoneSpeedPath, newSpeedZones);
 
 		// Then
-		expect(absoluteObject).toEqual(expected);
+		expect(updatedSettings).toEqual(expectedUpdatedSettings);
+
+		done();
+	});
+
+	it("should NOT update an object property at unknown given path", (done: Function) => {
+
+		// Given
+		const sourceUserSettings = _.cloneDeep(userSettings);
+
+		const newSpeedZones = [{from: 666, to: 999}];
+		const zoneSpeedPath = "zones.fakeZone";
+
+		// When
+		const call = () => {
+			userSettingsDao.updateNestedPropertyOf(sourceUserSettings, zoneSpeedPath, newSpeedZones);
+		};
+
+		// Then
+		expect(call).toThrow(new Error("Property at path 'zones.fakeZone' do not exists"));
 
 		done();
 	});
