@@ -187,8 +187,11 @@ export class FitnessTrendComponent implements OnInit {
 
 		}, (error: AppError) => {
 
-			if (error.code === FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES) {
+			if (error.code === AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES) {
 				this.isHistoryCompliant = false;
+			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
+				console.warn(error);
+				this.resetUserPreferences();
 			} else {
 				console.error(error);
 			}
@@ -226,9 +229,19 @@ export class FitnessTrendComponent implements OnInit {
 
 	public reloadFitnessTrend(): void {
 		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled,
+
 			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
 			this.fitnessTrend = fitnessTrend;
-		}, error => console.error(error));
+
+		}, (error: AppError) => {
+
+			if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
+				console.warn(error);
+				this.resetUserPreferences();
+			} else {
+				console.error(error);
+			}
+		});
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {
@@ -248,6 +261,18 @@ export class FitnessTrendComponent implements OnInit {
 		} else {
 			console.warn("No activities found");
 		}
+	}
+
+	public resetUserPreferences(): void {
+		alert("Whoops! We got a little problem while computing your fitness trend. Your graph inputs preferences will be reset.");
+		localStorage.removeItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
+		console.log("User stored fitness prefs have been cleared");
+		window.location.reload();
 	}
 
 }
