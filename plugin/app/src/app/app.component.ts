@@ -306,6 +306,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	public onAdvanceMenu(): void {
+		this.router.navigate([AppRoutesModel.advancedMenu]);
+	}
+
 	public onSideNavClosed(): void {
 		this.sideNavService.onChange(SideNavStatus.CLOSED);
 	}
