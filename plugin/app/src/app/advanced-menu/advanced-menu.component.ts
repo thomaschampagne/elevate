@@ -66,7 +66,7 @@ export class AdvancedMenuComponent implements OnInit {
 			if (confirm) {
 				localStorage.clear();
 				this.userSettingsService.markLocalStorageClear().then(() => {
-					this.snackBar.open("Plugin cache as been cleared", "Reload App").afterDismissed().toPromise().then(() => {
+					this.snackBar.open("Plugin cache has been cleared", "Reload App").afterDismissed().toPromise().then(() => {
 						location.reload();
 					});
 					afterClosedSubscription.unsubscribe();
@@ -78,8 +78,8 @@ export class AdvancedMenuComponent implements OnInit {
 	public onUserSettingsReset(): void {
 
 		const data: ConfirmDialogDataModel = {
-			title: "TODO",
-			content: "TODO"
+			title: "Reset settings",
+			content: "This will reset your athlete settings and global settings. Are you sure to perform this action?"
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -90,9 +90,10 @@ export class AdvancedMenuComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
-				alert("TO BE DONE");
-				// TODO UserSettingsService::reset()
-				// TODO UserSettingsDao::reset()
+				this.userSettingsService.reset().then(() => {
+					this.snackBar.open("Settings have been reset", "Close");
+					afterClosedSubscription.unsubscribe();
+				});
 			}
 		});
 
