@@ -67,8 +67,8 @@ describe("AppComponent", () => {
 	it("should update tool bar title (1)", (done) => {
 
 		// Given
-		const expected = "Common Settings";
-		const route = "/commonSettings";
+		const expected = "Global Settings";
+		const route = "/globalSettings";
 
 		// When
 		const actual = AppComponent.convertRouteToTitle(route);
@@ -112,8 +112,8 @@ describe("AppComponent", () => {
 	it("should update tool bar title (4)", (done) => {
 
 		// Given
-		const expected = "Common Settings";
-		const route = "/commonSettings?viewOptionHelperId=displayAdvancedHrData";
+		const expected = "Global Settings";
+		const route = "/globalSettings?viewOptionHelperId=displayAdvancedHrData";
 
 		// When
 		const actual = AppComponent.convertRouteToTitle(route);
