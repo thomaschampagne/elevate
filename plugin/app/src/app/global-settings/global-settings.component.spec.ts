@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CommonSettingsComponent } from "./common-settings.component";
+import { GlobalSettingsComponent } from "./global-settings.component";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { CoreModule } from "../core/core.module";
 
-describe("CommonSettingsComponent", () => {
+describe("GlobalSettingsComponent", () => {
 
-	let component: CommonSettingsComponent;
-	let fixture: ComponentFixture<CommonSettingsComponent>;
+	let component: GlobalSettingsComponent;
+	let fixture: ComponentFixture<GlobalSettingsComponent>;
 	let userSettingsDao: UserSettingsDao;
 
 	beforeEach((done: Function) => {
@@ -37,7 +37,7 @@ describe("CommonSettingsComponent", () => {
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(CommonSettingsComponent);
+		fixture = TestBed.createComponent(GlobalSettingsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -54,7 +54,7 @@ describe("CommonSettingsComponent", () => {
 		const expected = "/app/assets/option-helpers/";
 
 		// When
-		const actual = CommonSettingsComponent.getOptionHelperDir(pathname);
+		const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
 
 		// Then
 		expect(actual).toEqual(expected);
@@ -68,7 +68,7 @@ describe("CommonSettingsComponent", () => {
 		const pathname = null;
 
 		// When
-		const actual = CommonSettingsComponent.getOptionHelperDir(pathname);
+		const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
 
 		// Then
 		expect(actual).toBeNull();

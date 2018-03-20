@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			routerLinkActive: true
 		}, {
 			icon: "settings",
-			routerLink: AppRoutesModel.commonSettings,
+			routerLink: AppRoutesModel.globalSettings,
 			routerLinkActive: true
 		}, {
 			icon: "accessibility",
