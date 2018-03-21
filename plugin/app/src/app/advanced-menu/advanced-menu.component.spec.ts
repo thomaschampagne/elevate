@@ -1,17 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AdvancedMenuComponent } from './advanced-menu.component';
+import { AdvancedMenuComponent } from "./advanced-menu.component";
+import { CoreModule } from "../core/core.module";
+import { SharedModule } from "../shared/shared.module";
 
-describe('AdvancedMenuComponent', () => {
+describe("AdvancedMenuComponent", () => {
 	let component: AdvancedMenuComponent;
 	let fixture: ComponentFixture<AdvancedMenuComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
-			declarations: [AdvancedMenuComponent]
-		})
-			.compileComponents();
-	}));
+			imports: [
+				CoreModule,
+				SharedModule,
+			]
+		}).compileComponents();
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AdvancedMenuComponent);
@@ -19,7 +24,7 @@ describe('AdvancedMenuComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });
