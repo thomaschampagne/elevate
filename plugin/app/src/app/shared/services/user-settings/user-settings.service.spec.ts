@@ -191,4 +191,35 @@ describe("UserSettingsService", () => {
 
 	});
 
+	it("should reset user settings", (done: Function) => {
+
+		// Given
+		const oldSettings = _.cloneDeep(userSettings);
+		oldSettings.userFTP = 99;
+		oldSettings.userMaxHr = 99;
+		oldSettings.userRestHr = 99;
+		oldSettings.userGender = "fakeGender";
+		oldSettings.zones.speed = [];
+		oldSettings.zones.heartRate = [];
+		oldSettings.zones.power = [];
+		oldSettings.zones.cyclingCadence = [];
+
+		spyOn(userSettingsService.userSettingsDao, "reset").and.returnValue(Promise.resolve(userSettings));
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(userSettings);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 });

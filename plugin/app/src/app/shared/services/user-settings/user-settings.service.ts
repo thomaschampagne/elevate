@@ -72,6 +72,15 @@ export class UserSettingsService {
 		});
 	}
 
+
+	/**
+	 *
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public reset(): Promise<UserSettingsModel> {
+		return this.userSettingsDao.reset();
+	}
+
 	get userSettingsDao(): UserSettingsDao {
 		return this._userSettingsDao;
 	}
