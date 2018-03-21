@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -53,7 +53,7 @@ export class AdvancedMenuComponent implements OnInit {
 
 		const data: ConfirmDialogDataModel = {
 			title: "Clear the plugin cache",
-			content: "This will remove caches of the plugin including saved feature preferences. You will not loose your history or athlete settings."
+			content: "This will remove caches of the plugin including display preferences (e.g. app theme chosen). You will not loose your history, athlete settings, zones settings or global settings."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -79,7 +79,7 @@ export class AdvancedMenuComponent implements OnInit {
 
 		const data: ConfirmDialogDataModel = {
 			title: "Reset settings",
-			content: "This will reset your athlete settings and global settings. Are you sure to perform this action?"
+			content: "This will reset your athlete settings, zones settings and global settings. Are you sure to perform this action?"
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
