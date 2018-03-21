@@ -36,6 +36,7 @@ import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
+import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
 
 @NgModule({
 	imports: [
@@ -65,6 +66,7 @@ import { BrowserModule } from "@angular/platform-browser";
 		ReleasesNotesComponent,
 		ShareComponent,
 		ReportComponent,
+		AdvancedMenuComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,
