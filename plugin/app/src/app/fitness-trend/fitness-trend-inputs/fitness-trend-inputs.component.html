@@ -60,16 +60,17 @@
 	<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
 					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onTrainingZonesToggle()"
-					  matTooltip="Display Training Zones on graph">
+					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Training Zones are disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. You can switch of method in feature settings (click yellow cog).' :
+					  'Display Training Zones on graph'}}">
 		<mat-icon>power_input</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
 					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onPowerMeterToggle()"
-					  matTooltip="Use cycling power meter when available"
 					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
-					  'Cycling power based stress scrores are disabled when heart rate stress score calculation method is set to TRIMP (Training Impulse). You must enable the HRSS (Heart Rate Stress Score) method instead in the feature settings.' :
+					  'Cycling PSS (Power Stress Scores) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. You can switch of method in feature settings (click yellow cog).' :
 					  'Use cycling power meter when available'}}">
 		<mat-icon>flash_on</mat-icon>
 	</mat-slide-toggle>
@@ -78,7 +79,7 @@
 					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onSwimToggle()"
 					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
-					  'Swimming activities are disabled when heart rate stress score calculation method is set to TRIMP (Training Impulse). You must enable the HRSS (Heart Rate Stress Score) method instead in the feature settings.' :
+					  'SwminSS (Swimming Stress Scores) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. You can switch of method in feature settings (click yellow cog).' :
 					  'Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)'}}">
 		<mat-icon>pool</mat-icon>
 	</mat-slide-toggle>
