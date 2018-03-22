@@ -157,13 +157,13 @@ export class FitnessTrendComponent implements OnInit {
 
 			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
 
-			this.heartRateImpulseMode = (HeartRateImpulseMode.TRIMP === Number(localStorage.getItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY)))
-				? HeartRateImpulseMode.TRIMP : FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
-			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
-			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
-			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.swimFtp);
-			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
+			this.heartRateImpulseMode = FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
+			if (HeartRateImpulseMode.TRIMP === Number(localStorage.getItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY))) {
+				this.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+			}
+			this.verifyTogglesStatesAlongHrMode();
 
+			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
 			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
@@ -204,20 +204,24 @@ export class FitnessTrendComponent implements OnInit {
 
 	public onHeartRateImpulseModeChange(heartRateImpulseMode: HeartRateImpulseMode): void {
 		this.heartRateImpulseMode = heartRateImpulseMode;
+		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onTrainingZonesToggleChange(enabled: boolean): void {
 		this.isTrainingZonesEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 	}
 
 	public onPowerMeterToggleChange(enabled: boolean): void {
 		this.isPowerMeterEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onSwimToggleChange(enabled: boolean): void {
 		this.isSwimEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
@@ -225,6 +229,19 @@ export class FitnessTrendComponent implements OnInit {
 		this.isEBikeRidesEnabled = enabled;
 		this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 		this.reloadFitnessTrend();
+	}
+
+	public verifyTogglesStatesAlongHrMode(): void {
+
+		if (this.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+			this.isTrainingZonesEnabled = false;
+			this.isPowerMeterEnabled = false;
+			this.isSwimEnabled = false;
+		} else { // HeartRateImpulseMode.HRSS
+			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.swimFtp);
+		}
 	}
 
 	public reloadFitnessTrend(): void {
@@ -271,7 +288,7 @@ export class FitnessTrendComponent implements OnInit {
 		localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
 		localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
 		localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
-		console.log("User stored fitness prefs have been cleared");
+		console.warn("User stored fitness prefs have been cleared");
 		window.location.reload();
 	}
 
