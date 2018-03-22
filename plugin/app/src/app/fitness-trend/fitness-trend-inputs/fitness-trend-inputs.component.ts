@@ -9,6 +9,8 @@ import { FitnessTrendComponent } from "../fitness-trend.component";
 import { FitnessInfoDialogComponent } from "../fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
+import { FitnessTrendSettingsDialogComponent, } from "./fitness-trend-settings-dialog/fitness-trend-settings-dialog.component";
+import { FitnessTrendSettingsModel } from "./models/fitness-trend-settings.model";
 
 @Component({
 	selector: "app-fitness-trend-inputs",
@@ -85,12 +87,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public onDateToDateChange(): void {
 		this.updatePeriodViewedTo(this.periodViewed);
-	}
-
-	public onHeartRateImpulseModeChange(): void {
-		this.heartRateImpulseMode = Number(this.heartRateImpulseMode);
-		localStorage.setItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY, String(this.heartRateImpulseMode));
-		this.heartRateImpulseModeChange.emit(this.heartRateImpulseMode);
 	}
 
 	public onTrainingZonesToggle(): void {
@@ -181,6 +177,29 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	}
 
+	public onSettingsClicked(): void {
+
+		const fitnessTrendSettingsModel: FitnessTrendSettingsModel = {
+			heartRateImpulseMode: this.heartRateImpulseMode
+		};
+
+		const dialogRef = this.dialog.open(FitnessTrendSettingsDialogComponent, {
+			minWidth: FitnessTrendSettingsDialogComponent.MIN_WIDTH,
+			maxWidth: FitnessTrendSettingsDialogComponent.MAX_WIDTH,
+			data: fitnessTrendSettingsModel
+		});
+
+		dialogRef.afterClosed().subscribe((settingsModel: FitnessTrendSettingsModel) => {
+
+			const heartRateImpulseModeSelected = Number(settingsModel.heartRateImpulseMode);
+			if (this.heartRateImpulseMode !== heartRateImpulseModeSelected) {
+				this.heartRateImpulseMode = heartRateImpulseModeSelected;
+				localStorage.setItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY, String(this.heartRateImpulseMode));
+				this.heartRateImpulseModeChange.emit(this.heartRateImpulseMode);
+			}
+		});
+	}
+
 	public onShowInfo(): void {
 		this.dialog.open(FitnessInfoDialogComponent, {
 			minWidth: FitnessInfoDialogComponent.MIN_WIDTH,
@@ -195,4 +214,5 @@ export class FitnessTrendInputsComponent implements OnInit {
 		};
 		this.periodViewedChange.emit(this.periodViewed);
 	}
+
 }
