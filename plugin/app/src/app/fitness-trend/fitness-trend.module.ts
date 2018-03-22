@@ -9,6 +9,7 @@ import { FitnessService } from "./shared/services/fitness.service";
 import { ViewedDayService } from "./shared/services/viewed-day.service";
 import { CoreModule } from "../core/core.module";
 import { FitnessTrendRoutingModule } from "./fitness-trend-routing.module";
+import { FitnessTrendSettingsDialogComponent } from './fitness-trend-inputs/fitness-trend-settings-dialog/fitness-trend-settings-dialog.component';
 
 @NgModule({
 	imports: [
@@ -22,9 +23,11 @@ import { FitnessTrendRoutingModule } from "./fitness-trend-routing.module";
 		FitnessTrendGraphComponent,
 		FitnessTrendTableComponent,
 		FitnessInfoDialogComponent,
+		FitnessTrendSettingsDialogComponent,
 	],
 	entryComponents: [
-		FitnessInfoDialogComponent
+		FitnessInfoDialogComponent,
+		FitnessTrendSettingsDialogComponent
 	],
 	providers: [
 		FitnessService,

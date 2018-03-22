@@ -1,6 +1,6 @@
-<div fxFill fxLayout="row" fxLayoutAlign="space-between start">
+<div fxFill fxLayout="row" fxLayoutAlign="space-between center">
 
-	<mat-form-field fxFlex="40" fxFlex.lt-lg="47">
+	<mat-form-field fxFlex="25" fxFlex.lt-lg="47">
 		<mat-select
 			[(ngModel)]="lastPeriodViewed"
 			(change)="onLastPeriodSelected()"
@@ -41,26 +41,45 @@
 		<mat-datepicker #datePickerTo></mat-datepicker>
 	</mat-form-field>
 
+	<span fxFlex="3"></span>
+
+	<button mat-icon-button color="primary" (click)="onSettingsClicked()">
+		<mat-icon>settings</mat-icon>
+	</button>
+
+	<span fxFlex="3"></span>
+
+	<button mat-icon-button color="primary" (click)="onShowInfo()">
+		<mat-icon>help_outline</mat-icon>
+	</button>
 
 </div>
 
 <div fxFill fxLayout="row" fxLayoutAlign="space-between center" class="fromToPeriod">
 
 	<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
+					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onTrainingZonesToggle()"
 					  matTooltip="Display Training Zones on graph">
 		<mat-icon>power_input</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
+					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onPowerMeterToggle()"
-					  matTooltip="Use cycling power meter when available">
+					  matTooltip="Use cycling power meter when available"
+					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Cycling power based stress scrores are disabled when heart rate stress score calculation method is set to TRIMP (Training Impulse). You must enable the HRSS (Heart Rate Stress Score) method instead in the feature settings.' :
+					  'Use cycling power meter when available'}}">
 		<mat-icon>flash_on</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isSwimEnabled"
+					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onSwimToggle()"
-					  matTooltip="Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)">
+					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Swimming activities are disabled when heart rate stress score calculation method is set to TRIMP (Training Impulse). You must enable the HRSS (Heart Rate Stress Score) method instead in the feature settings.' :
+					  'Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)'}}">
 		<mat-icon>pool</mat-icon>
 	</mat-slide-toggle>
 
@@ -70,15 +89,4 @@
 		<mat-icon>battery_charging_full</mat-icon>
 	</mat-slide-toggle>
 
-	<button mat-icon-button color="primary" (click)="onShowInfo()">
-		<mat-icon>help_outline</mat-icon>
-	</button>
 </div>
-
-<div fxFill fxLayout="row" fxLayoutAlign="space-between center">
-	<mat-radio-group [(ngModel)]="heartRateImpulseMode" (change)="onHeartRateImpulseModeChange()">
-		<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">HRSS</mat-radio-button>
-		<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">TRIMP</mat-radio-button>
-	</mat-radio-group>
-</div>
-

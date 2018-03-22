@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Change heart rate effort impulse mode</h2>
+<mat-dialog-content class="mat-body-1">
+	<mat-radio-group [(ngModel)]="settingsModel.heartRateImpulseMode">
+		<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">Heart Rate Stress Score (HRSS)</mat-radio-button>
+		<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">Training Impulse (TRIMP)</mat-radio-button>
+	</mat-radio-group>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary" (click)="onSave()">Save</button>
+	<button mat-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>
