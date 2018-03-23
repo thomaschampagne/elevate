@@ -1,37 +1,25 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
-	AscentSpeedDataModel,
-	CadenceDataModel,
-	ElevationDataModel,
-	GradeDataModel,
-	HeartRateDataModel,
-	MoveDataModel,
-	PaceDataModel,
-	PowerDataModel,
-	SpeedDataModel,
-	StreamsModel,
-	UpFlatDownModel,
-	UpFlatDownSumCounterModel,
-	UpFlatDownSumTotalModel,
-	ZoneModel,
+	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel,
+	GradeDataModel, HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel,
+	UpFlatDownModel, UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 
-	public static MOVING_THRESHOLD_KPH: number = 0.1; // Kph
-	public static CADENCE_THRESHOLD_RPM: number = 35; // RPMs
-	public static GRADE_CLIMBING_LIMIT: number = 1.6;
-	public static GRADE_DOWNHILL_LIMIT: number = -1.6;
-	public static GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED: number = 60;
-	public static GRADE_PROFILE_FLAT: string = "FLAT";
-	public static GRADE_PROFILE_HILLY: string = "HILLY";
-	public static ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-	public static AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
+	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
+	public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
+	public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
+	public static readonly GRADE_CLIMBING_LIMIT: number = 1.6;
+	public static readonly GRADE_DOWNHILL_LIMIT: number = -1.6;
+	public static readonly GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED: number = 60;
+	public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
+	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
+	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
+	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -78,7 +66,9 @@ export class ActivityComputer {
 		// It's mainly used for segment effort extended stats
 		this.sliceStreamFromBounds(this.activityStream, this.bounds);
 
-		return this.computeAnalysisData(this.userSettings.userGender, this.userSettings.userRestHr, this.userSettings.userMaxHr, this.userSettings.userFTP, this.athleteWeight, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
+		return this.computeAnalysisData(this.userSettings.userGender, this.userSettings.userRestHr, this.userSettings.userMaxHr,
+			this.userSettings.userLTHR, this.userSettings.userFTP, this.athleteWeight, this.hasPowerMeter,
+			this.activityStatsMap, this.activityStream);
 	}
 
 	protected sliceStreamFromBounds(activityStream: StreamsModel, bounds: number[]): void {
@@ -141,7 +131,9 @@ export class ActivityComputer {
 	}
 
 
-	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel): AnalysisDataModel {
+	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThreshold: number,
+								  userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
+								  activityStream: StreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
 		this.movementData = null;
@@ -196,7 +188,7 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
+		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, userLactateThreshold, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
@@ -454,6 +446,24 @@ export class ActivityComputer {
 	}
 
 	/**
+	 * Compute Heart Rate Stress Score (HRSS)
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} userLactateThreshold
+	 * @param {number} activityTrainingImpulse
+	 * @returns {number}
+	 */
+	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : ActivityComputer.DEFAULT_LTHR_HR_MAX_FACTOR * userMaxHr;
+		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
+		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+
+	/**
 	 * Andrew Coggan weighted power compute method
 	 * (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
 	 * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
@@ -586,7 +596,8 @@ export class ActivityComputer {
 		return powerData;
 	}
 
-	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, heartRateArray: number[], timeArray: number[], velocityArray: number[]): HeartRateDataModel {
+	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThreshold: number, heartRateArray: number[],
+							timeArray: number[], velocityArray: number[]): HeartRateDataModel {
 
 		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -649,9 +660,14 @@ export class ActivityComputer {
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
+		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLactateThreshold, trainingImpulse);
+		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
+
 		return {
+			HRSS: heartRateStressScore,
+			HRSSPerHour: HRSSPerHour,
 			TRIMP: trainingImpulse,
-			TRIMPPerHour,
+			TRIMPPerHour: TRIMPPerHour,
 			heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
