@@ -26,6 +26,12 @@
 		<span fxFlexAlign="end">
 			<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
 			<span *ngIf="viewedDay.finalStressScore">
+
+				<!-- HRSS -->
+				<span *ngIf="viewedDay.heartRateStressScore">
+					{{viewedDay.printHeartRateStressScore()}} <i>HRSS</i>
+				</span>
+
 				<!-- Trimp -->
 				<span *ngIf="viewedDay.trainingImpulseScore">
 					{{viewedDay.printTrainingImpulseScore()}} <i>Trimp</i>

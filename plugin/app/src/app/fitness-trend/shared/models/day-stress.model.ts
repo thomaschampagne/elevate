@@ -23,6 +23,10 @@ export class DayStressModel {
 		this.previewDay = previewDay;
 	}
 
+	public printHeartRateStressScore(): string {
+		return (this.heartRateStressScore) ? Math.floor(this.heartRateStressScore).toString() : "-";
+	}
+
 	public printTrainingImpulseScore(): string {
 		return (this.trainingImpulseScore) ? Math.floor(this.trainingImpulseScore).toString() : "-";
 	}
