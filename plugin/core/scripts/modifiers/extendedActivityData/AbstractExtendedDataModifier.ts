@@ -1,8 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
 import {
-	ActivityBasicInfoModel,
-	AnalysisDataModel,
+	ActivityBasicInfoModel, AnalysisDataModel,
 	SpeedUnitDataModel
 } from "../../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
@@ -134,15 +133,13 @@ export abstract class AbstractExtendedDataModifier {
 
 		// ...
 		let trainingImpulse: string = "-";
-		let activityHeartRateReserve: string = "-";
-		let activityHeartRateReserveUnit: string = "%";
+		let hrss: string = "-";
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
-			activityHeartRateReserve = this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0);
-			activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.analysisData.heartRateData.activityHeartRateReserveMax.toFixed(0) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
+			hrss = this.analysisData.heartRateData.HRSS.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.HRSSPerHour.toFixed(1) + " / hour)</span>";
 		}
-		this.insertContentAtGridPosition(0, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 1, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
 
 		// ...
 		let climbTime: string = "-";
