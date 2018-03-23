@@ -191,6 +191,10 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((settingsModel: FitnessTrendSettingsModel) => {
 
+			if (_.isEmpty(settingsModel)) {
+				return;
+			}
+
 			const heartRateImpulseModeSelected = Number(settingsModel.heartRateImpulseMode);
 			if (this.heartRateImpulseMode !== heartRateImpulseModeSelected) {
 				this.heartRateImpulseMode = heartRateImpulseModeSelected;

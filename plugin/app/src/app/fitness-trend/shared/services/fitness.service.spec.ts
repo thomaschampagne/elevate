@@ -44,6 +44,8 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 	// If avgHr given? Generate fake stats
 	if (_.isNumber(avgHr)) {
 		fakeActivity.extendedStats.heartRateData = {
+			HRSS: avgHr,
+			HRSSPerHour: avgHr / 90,
 			TRIMP: avgHr * 2,
 			TRIMPPerHour: avgHr / 60,
 			activityHeartRateReserve: avgHr * 0.25,
