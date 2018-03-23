@@ -12,6 +12,8 @@ import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../shared/models/app-error.model";
 import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
+import { MatDialog } from "@angular/material";
+import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 
 // TODO Fitness trend UI, User warning dialogs, Rework helper
 
@@ -138,10 +140,13 @@ export class FitnessTrendComponent implements OnInit {
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
-				public fitnessService: FitnessService) {
+				public fitnessService: FitnessService,
+				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
+
+		this.showFitnessWelcomeDialog();
 
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 
@@ -290,6 +295,18 @@ export class FitnessTrendComponent implements OnInit {
 		localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
 		console.warn("User stored fitness prefs have been cleared");
 		window.location.reload();
+	}
+
+	public showFitnessWelcomeDialog(): void {
+
+		const show: boolean = _.isEmpty(localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG));
+
+		if (show) {
+			this.dialog.open(FitnessTrendWelcomeDialogComponent, {
+				minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
+				maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH
+			});
+		}
 	}
 
 }
