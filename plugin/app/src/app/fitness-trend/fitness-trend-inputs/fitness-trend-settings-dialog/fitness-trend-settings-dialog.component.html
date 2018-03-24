@@ -1,9 +1,28 @@
-<h2 mat-dialog-title>Change heart rate effort impulse mode</h2>
+<h2 mat-dialog-title>Change heart rate effort stress score calculation mode</h2>
 <mat-dialog-content class="mat-body-1">
-	<mat-radio-group [(ngModel)]="settingsModel.heartRateImpulseMode">
-		<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">Heart Rate Stress Score (HRSS)</mat-radio-button>
-		<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">Training Impulse (TRIMP)</mat-radio-button>
+	<mat-radio-group (change)="onModeChange()" [(ngModel)]="settingsModel.heartRateImpulseMode">
+		<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">HRSS: Heart Rate Stress Score (recommend)
+		</mat-radio-button>
+		<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">TRIMP: Training Impulse (not recommend)
+		</mat-radio-button>
 	</mat-radio-group>
+	<div *ngIf="(settingsModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
+		<span>
+			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+			When heart rate stress calculation method is set to TRIMP (Training Impulse):
+			<ul>
+				<li>Training Zones will be disabled<br/>
+					➔&nbsp;&nbsp;TRIMP scores are not optimized to be use with Training Zones.</li>
+				<li>Cycling Power Stress Scores (PSS) will not be used<br/>
+					➔&nbsp;&nbsp;TRIMP scores can't be compared with PSS scores.
+				</li>
+				<li>Swimming Stress Scores (SSS) will not be used<br/>
+					➔&nbsp;&nbsp;TRIMP scores can't be compared with SSS scores.
+				</li>
+			</ul>
+		</span>
+
+	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button mat-dialog-close color="primary" (click)="onSave()">Save</button>
