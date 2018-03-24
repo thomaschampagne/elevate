@@ -6,6 +6,7 @@ import { FitnessTrendComponent } from "../fitness-trend.component";
 import * as moment from "moment";
 import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
+import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -18,6 +19,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_TYPES: string = "types";
 	public static readonly COLUMN_ACTIVITIES: string = "activities";
 	public static readonly COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
+	public static readonly COLUMN_HEART_RATE_STRESS_SCORE: string = "heartRateStressScore";
 	public static readonly COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
 	public static readonly COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
 	public static readonly COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
@@ -45,6 +47,13 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			header: "Activities",
 			type: FitnessTrendColumnType.TEXT,
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE,
+			header: "HRSS",
+			toolTip: "Heart Rate Stress Score",
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printHeartRateStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
@@ -121,6 +130,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("swimFtp")
 	public swimFtp: number;
 
+	@Input("heartRateImpulseMode")
+	public heartRateImpulseMode: HeartRateImpulseMode;
+
 	@Input("isTrainingZonesEnabled")
 	public isTrainingZonesEnabled;
 
@@ -154,7 +166,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
 				if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
 					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)) {
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
 					return false;
 				}
 				return true;
@@ -183,6 +197,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 				case FitnessTrendTableComponent.COLUMN_ACTIVITIES:
 					return dayFitnessTrendModel.printActivities();
+
+				case FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE:
+					return dayFitnessTrendModel.heartRateStressScore;
 
 				case FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE:
 					return dayFitnessTrendModel.trainingImpulseScore;
