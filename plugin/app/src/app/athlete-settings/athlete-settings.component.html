@@ -110,7 +110,7 @@
 		</div>
 		<div *ngIf="!lthr">
 			<span>
-				<mat-icon color="warn" class="no-lthr-warn">warning</mat-icon>
+				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
 				Since no lactate threshold heart rate is currently defined. The value being used by default is 86% of your max HR or <strong>{{(DEFAULT_LTHR_HR_MAX_FACTOR * maxHr).toFixed(0)}} bpm</strong>
 			</span>
 		</div>
