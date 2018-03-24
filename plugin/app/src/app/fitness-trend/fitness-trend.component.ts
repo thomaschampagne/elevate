@@ -302,10 +302,13 @@ export class FitnessTrendComponent implements OnInit {
 		const show: boolean = _.isEmpty(localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG));
 
 		if (show) {
-			this.dialog.open(FitnessTrendWelcomeDialogComponent, {
-				minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
-				maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH
+			setTimeout(() => {
+				this.dialog.open(FitnessTrendWelcomeDialogComponent, {
+					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
+					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
+				});
 			});
+
 		}
 	}
 
