@@ -15,8 +15,6 @@ import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 
-// TODO Fitness trend UI, User warning dialogs, Rework helper
-
 @Component({
 	selector: "app-fitness-trend",
 	templateUrl: "./fitness-trend.component.html",
