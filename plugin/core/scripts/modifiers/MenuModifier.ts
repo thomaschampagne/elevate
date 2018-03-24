@@ -30,7 +30,7 @@ export class MenuModifier implements IModifier {
 		html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/fitnessTrend'><img style='vertical-align:middle' src='" + this.appResources.timelineIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Fitness Trend</span></a></li>";
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/yearProgressions'><img style='vertical-align:middle' src='" + this.appResources.dateRange + "'/>&nbsp;&nbsp;&nbsp;<span>Year Progressions</span></a></li>";
-		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/commonSettings'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Settings</span></a></li>";
+		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/globalSettings'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Settings</span></a></li>";
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Athlete Settings</span></a></li>";
 		// html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
 		html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Heatmap</span></a></li>";

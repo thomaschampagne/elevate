@@ -329,7 +329,7 @@ export abstract class AbstractExtendedDataModifier {
 	}
 
 	protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
-		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
 		if (this.summaryGrid) {
 			const content: string = "<span class=\"summaryGridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"summaryGridUnits\">" + units + "</span><br /><span class=\"summaryGridTitle\">" + title + "</span></span>";
