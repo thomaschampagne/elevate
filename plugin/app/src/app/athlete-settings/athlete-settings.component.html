@@ -45,9 +45,13 @@
 		Max heart rate
 	</mat-card-title>
 	<mat-card-content>
-		<div class="hint">
+		<div class="howTo">
+			<a [routerLink]="" (click)="maxHrHint.style.display = 'block'">How to setup max heart rate</a>
+		</div>
+		<div class="hint" #maxHrHint [style.display]="'none'">
 			Enter your max heart rate measured at full throttle. If you're not aware of your max heart rate you can
-			enter "220 bpm <strong>-</strong> YOUR_AGE" as <strong>temporally</strong> value.
+			enter "220 bpm <strong>-</strong> YOUR_AGE" as <strong>temporally</strong> value and think to measure it for
+			real.
 		</div>
 		<div>
 			<mat-form-field fxFlex>
@@ -67,8 +71,12 @@
 		Rest heart rate
 	</mat-card-title>
 	<mat-card-content>
-		<div class="hint">
-			Enter your rest heart rate. Lie down in your bed and measure the lower value.
+		<div class="howTo">
+			<a [routerLink]="" (click)="restHrHint.style.display = 'block'">How to setup rest heart rate</a>
+		</div>
+		<div class="hint" #restHrHint [style.display]="'none'">
+			Enter your rest heart rate. Lie down in your bed and measure the lower value with an hear rate monitor or <a
+			href="https://www.youtube.com/watch?v=JQwc-DtY5zA" target="_blank">like this</a>.
 		</div>
 		<div>
 			<mat-form-field fxFlex>
@@ -88,9 +96,12 @@
 		Lactate Threshold Heart Rate (LTHR)
 	</mat-card-title>
 	<mat-card-content>
-		<div class="hint">
+		<div class="howTo">
+			<a [routerLink]="" (click)="lthrHint.style.display = 'block'">How to setup LTHR</a>
+		</div>
+		<div class="hint" #lthrHint [style.display]="'none'">
 			The LTHR is the point, above which, increased blood acidification occurs in your body. Above this
-			threshold your endurance performance will rapidly decrease.<br/><br/>To find your LTHR do a 30 minutes Time
+			threshold your endurance performance will rapidly decrease.<br/>To find your LTHR do a 30 minutes Time
 			Trial <strong>alone</strong>. Perform this TT like if it was a race. At 10 minutes elapsed into the test,
 			start measuring your heart rate until the end. When done, check your average heart rate on these last 20
 			minutes. This value is your LTHR.
@@ -122,9 +133,14 @@
 		Cycling Functional Threshold Power (FTP)
 	</mat-card-title>
 	<mat-card-content>
-		<div class="hint">
+		<div class="howTo">
+			<a [routerLink]="" (click)="cyclingFtpHint.style.display = 'block'">How to setup cycling FTP</a>
+		</div>
+		<div class="hint" #cyclingFtpHint [style.display]="'none'">
 			The FTP is the constant average power you are able to maintain during 20 minutes. Give everything on your
-			bike during 20min and enter result below.
+			bike during 20min and enter result below. If you're not aware of your cycling FTP or don't own a power
+			meter: open your last strava race activity (or last heavy training day) and use "StravistiX Best Split"
+			feature to find your best average power over 20 min.
 		</div>
 		<div>
 			<mat-input-container fxFill>
