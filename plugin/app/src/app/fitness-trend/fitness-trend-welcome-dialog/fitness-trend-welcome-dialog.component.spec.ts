@@ -1,17 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FitnessTrendWelcomeDialogComponent } from './fitness-trend-welcome-dialog.component';
+import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog.component";
+import { SharedModule } from "../../shared/shared.module";
+import { CoreModule } from "../../core/core.module";
+import { FitnessTrendModule } from "../fitness-trend.module";
 
-describe('FitnessTrendWelcomeDialogComponent', () => {
+describe("FitnessTrendWelcomeDialogComponent", () => {
 	let component: FitnessTrendWelcomeDialogComponent;
 	let fixture: ComponentFixture<FitnessTrendWelcomeDialogComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
-			declarations: [FitnessTrendWelcomeDialogComponent]
-		})
-			.compileComponents();
-	}));
+			imports: [
+				CoreModule,
+				SharedModule,
+				FitnessTrendModule
+			]
+		}).compileComponents();
+		done();
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FitnessTrendWelcomeDialogComponent);
@@ -19,7 +26,7 @@ describe('FitnessTrendWelcomeDialogComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
 });

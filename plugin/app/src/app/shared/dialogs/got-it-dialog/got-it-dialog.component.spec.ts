@@ -23,7 +23,6 @@ describe("GotItDialogComponent", () => {
 				CoreModule,
 				SharedModule,
 			],
-			declarations: [],
 			providers: [
 				{
 					provide: MAT_DIALOG_DATA, useValue: gotItDialogDataModel,

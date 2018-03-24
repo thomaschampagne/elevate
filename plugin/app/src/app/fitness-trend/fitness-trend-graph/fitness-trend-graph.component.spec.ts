@@ -69,7 +69,7 @@ describe("FitnessTrendGraphComponent", () => {
 		todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
 
-		const heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+		const heartRateImpulseMode = HeartRateImpulseMode.HRSS;
 		const powerMeterEnable = true;
 		const swimEnable = true;
 
