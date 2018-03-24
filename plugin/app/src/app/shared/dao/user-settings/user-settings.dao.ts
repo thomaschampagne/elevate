@@ -122,6 +122,30 @@ export class UserSettingsDao {
 
 	/**
 	 *
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public reset(): Promise<UserSettingsModel> {
+
+		return new Promise<UserSettingsModel>((resolve, reject) => {
+
+			this.browserStorageSync().set(userSettings, () => {
+
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
+				} else {
+					this.fetch().then((userSettingsResult: UserSettingsModel) => {
+						resolve(userSettingsResult);
+					}, error => {
+						reject(error);
+					});
+				}
+			});
+		});
+	}
+
+	/**
+	 *
 	 * @param {Object} sourceObject
 	 * @param {string} path
 	 * @param {Object} value
@@ -149,6 +173,4 @@ export class UserSettingsDao {
 	public getChromeError(): chrome.runtime.LastError {
 		return chrome.runtime.lastError;
 	}
-
-
 }
