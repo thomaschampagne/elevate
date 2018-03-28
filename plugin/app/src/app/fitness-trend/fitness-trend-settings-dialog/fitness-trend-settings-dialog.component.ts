@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { FitnessTrendSettingsModel } from "../models/fitness-trend-settings.model";
-import { HeartRateImpulseMode } from "../../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessTrendSettingsModel } from "../shared/models/fitness-trend-settings.model";
+import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 
 @Component({
 	selector: "app-fitness-trend-settings-dialog",

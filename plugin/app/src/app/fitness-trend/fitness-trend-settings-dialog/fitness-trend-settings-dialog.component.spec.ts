@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FitnessTrendSettingsDialogComponent } from "./fitness-trend-settings-dialog.component";
-import { SharedModule } from "../../../shared/shared.module";
-import { CoreModule } from "../../../core/core.module";
-import { FitnessTrendModule } from "../../fitness-trend.module";
+import { SharedModule } from "../../shared/shared.module";
+import { CoreModule } from "../../core/core.module";
+import { FitnessTrendModule } from "../fitness-trend.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { FitnessTrendSettingsModel } from "../models/fitness-trend-settings.model";
-import { HeartRateImpulseMode } from "../../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessTrendSettingsModel } from "../shared/models/fitness-trend-settings.model";
+import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 
 describe("FitnessTrendSettingsDialogComponent", () => {
 	let component: FitnessTrendSettingsDialogComponent;

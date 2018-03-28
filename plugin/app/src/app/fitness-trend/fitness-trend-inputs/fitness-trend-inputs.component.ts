@@ -6,11 +6,11 @@ import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { MatDialog } from "@angular/material";
 import { FitnessTrendComponent } from "../fitness-trend.component";
-import { FitnessInfoDialogComponent } from "../fitness-trend-graph/fitness-info-dialog/fitness-info-dialog.component";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
-import { FitnessTrendSettingsDialogComponent, } from "./fitness-trend-settings-dialog/fitness-trend-settings-dialog.component";
-import { FitnessTrendSettingsModel } from "./models/fitness-trend-settings.model";
+import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
+import { FitnessTrendSettingsModel } from "../shared/models/fitness-trend-settings.model";
+import { FitnessTrendSettingsDialogComponent } from "../fitness-trend-settings-dialog/fitness-trend-settings-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend-inputs",

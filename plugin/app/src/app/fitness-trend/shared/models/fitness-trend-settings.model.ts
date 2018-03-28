@@ -1,4 +1,4 @@
-import { HeartRateImpulseMode } from "../../shared/enums/heart-rate-impulse-mode.enum";
+import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 
 export class FitnessTrendSettingsModel {
 	public heartRateImpulseMode: HeartRateImpulseMode;
