@@ -208,6 +208,7 @@ export class FitnessTrendInputsComponent implements OnInit {
 		this.dialog.open(FitnessInfoDialogComponent, {
 			minWidth: FitnessInfoDialogComponent.MIN_WIDTH,
 			maxWidth: FitnessInfoDialogComponent.MAX_WIDTH,
+			autoFocus: false
 		});
 	}
 

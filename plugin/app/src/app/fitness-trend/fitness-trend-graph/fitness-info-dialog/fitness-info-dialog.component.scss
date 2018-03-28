@@ -1,5 +1,10 @@
-.disclaimer {
-	font-style: italic;
+h1 {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+h2 {
+	margin-top: 24px;
 }
 
 div {
@@ -12,7 +17,16 @@ mat-divider {
 	margin-bottom: 20px;
 }
 
-li {
-	padding-top: 5px;
-	padding-bottom: 5px;
+ul {
+	list-style-type: square;
+}
+
+ul > li {
+	margin-bottom: 10px;
+}
+
+.maths-area {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-left: 20px;
 }
