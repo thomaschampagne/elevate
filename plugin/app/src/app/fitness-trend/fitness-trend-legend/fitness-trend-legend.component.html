@@ -39,7 +39,7 @@
 
 				<!--PSS-->
 				<span *ngIf="viewedDay.powerStressScore">
-					<span *ngIf="viewedDay.trainingImpulseScore">
+					<span *ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore">
 						&nbsp;&&nbsp;
 					</span>
 					{{viewedDay.printPowerStressScore()}} <i>PowerSS</i>
