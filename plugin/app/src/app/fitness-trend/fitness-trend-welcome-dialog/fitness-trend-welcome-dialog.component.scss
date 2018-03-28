@@ -6,3 +6,11 @@ div {
 mat-dialog-content {
 	overflow: initial;
 }
+
+ul {
+	list-style-type: square;
+}
+
+ul > li {
+	margin-bottom: 10px;
+}

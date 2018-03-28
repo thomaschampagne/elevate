@@ -1,15 +1,36 @@
-<h2 mat-dialog-title>Important notice about improved fitness trend accuracy using a heart rate monitor.</h2>
+<h2 mat-dialog-title>Notice: improved fitness trend accuracy with a heart rate monitor.</h2>
 <mat-dialog-content class="mat-body-1">
 	<div>
-		From now, heart rate based activities have their stress scores processed with Heart Rate Stress Score (HRSS)
-		method.
-		Previously they were calculated using Training Impulse (TRIMP) method.<br/><br/>
-		Using HRSS over TRIMP is profitable because it allows direct comparison with others stress scores such as
-		cycling
-		Power Stress Score (PSS) & Swiming Stress Score (SSS) and a right use of the training zones (overload, optimal,
-		neutral, freshness...).<br/><br/>
-		In previous version, you were able to use training zones with TRIMPS scored activities: the
-		interpretation of the zones were clearly less accurate...
+		From now, heart rate based activities have their stress scores processed with <strong><i>Heart Rate Stress Score
+		(HRSS)</i></strong> method. They were previously processed using the <strong><i>Training Impulse
+		(TRIMP)</i></strong> method only.<br/><br/>
+
+		The <i>HRSS</i> method has been added over <i>TRIMP</i> because:
+
+		<ul>
+			<li>
+				<i>HRSS</i> scores are scaled to be use with <i>Training Zones</i>. <i>TRIMP</i> had a scale missmatch
+				with <i>Training Zones</i>.
+			</li>
+			<li>
+				<i>HRSS</i> scores can be directly compared to <i>Cycling Power Stress Scores (PSS)</i>. They use same
+				referential or scale.
+			</li>
+			<li>
+				<i>HRSS</i> scores can be directly compared to <i>Swimming Stress Scores (SSS)</i>. They also use same
+				referential or scale.
+			</li>
+		</ul>
+
+		However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation
+		method in the feature settings by clicking the
+		<mat-icon color="primary">settings</mat-icon>
+		icon.<br/>
+
+		A new fitness trend guide is accessible from
+		<mat-icon color="primary">help_outline</mat-icon>
+		icon. Reading this guide is strongly recommended too.
+
 	</div>
 	<div>
 		<mat-checkbox [(ngModel)]="hideMessage" (change)="onShowMessageChange()">
