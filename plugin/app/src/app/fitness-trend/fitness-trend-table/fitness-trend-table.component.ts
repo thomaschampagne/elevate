@@ -124,12 +124,6 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("fitnessTrend")
 	public fitnessTrend: DayFitnessTrendModel[];
 
-	@Input("cyclingFtp")
-	public cyclingFtp: number;
-
-	@Input("swimFtp")
-	public swimFtp: number;
-
 	@Input("heartRateImpulseMode")
 	public heartRateImpulseMode: HeartRateImpulseMode;
 
