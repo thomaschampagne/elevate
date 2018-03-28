@@ -155,12 +155,12 @@ describe("FitnessService", () => {
 		done();
 	});
 
-	it("should compute hrSS without lactate threshold given (has to use 86% of max HR)", (done: Function) => {
+	it("should compute hrSS without lactate threshold given (has to use Karvonen formula with 85% of HRR)", (done: Function) => {
 
 		// Given
 		fitnessUserSettingsModel.userLactateThreshold = null;
 		const activityTrainingImpulse = 333;
-		const expectedStressScore = 236;
+		const expectedStressScore = 199;
 
 		// When
 		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,

@@ -32,7 +32,7 @@ export class AthleteSettingsComponent implements OnInit {
 		display: "Female",
 	}];
 
-	public readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR;
+	public readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR;
 
 	@ViewChild("bottom")
 	public bottomElement: ElementRef;

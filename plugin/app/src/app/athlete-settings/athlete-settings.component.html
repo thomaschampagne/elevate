@@ -122,7 +122,8 @@
 		<div *ngIf="!lthr">
 			<span>
 				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-				Since no lactate threshold heart rate is currently defined. The value being used by default is 86% of your max HR or <strong>{{(DEFAULT_LTHR_HR_MAX_FACTOR * maxHr).toFixed(0)}} bpm</strong>
+				Since no lactate threshold heart rate is currently defined. The value being used by default
+				is <strong>{{(restHr +  DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (maxHr - restHr)).toFixed(0)}} bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
 			</span>
 		</div>
 	</mat-card-content>
