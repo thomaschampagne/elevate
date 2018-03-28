@@ -1,16 +1,29 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel,
-	GradeDataModel, HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel,
-	UpFlatDownModel, UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
+	ActivityStatsMapModel,
+	AnalysisDataModel,
+	AscentSpeedDataModel,
+	CadenceDataModel,
+	ElevationDataModel,
+	GradeDataModel,
+	HeartRateDataModel,
+	MoveDataModel,
+	PaceDataModel,
+	PowerDataModel,
+	SpeedDataModel,
+	StreamsModel,
+	UpFlatDownModel,
+	UpFlatDownSumCounterModel,
+	UpFlatDownSumTotalModel,
+	ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 
 export class ActivityComputer {
 
-	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
+	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 	public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
 	public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
 	public static readonly GRADE_CLIMBING_LIMIT: number = 1.6;
@@ -455,7 +468,7 @@ export class ActivityComputer {
 	 * @returns {number}
 	 */
 	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : ActivityComputer.DEFAULT_LTHR_HR_MAX_FACTOR * userMaxHr;
+		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
 		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
 		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
@@ -617,10 +630,10 @@ export class ActivityComputer {
 		for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
 
 			if (i > 0 && (
-					this.isTrainer || // can be cycling home trainer
-					!velocityArray || // OR Non movements activities
-					velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
-				)) {
+				this.isTrainer || // can be cycling home trainer
+				!velocityArray || // OR Non movements activities
+				velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
+			)) {
 
 				// Compute heartrate data while moving from now
 				durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)

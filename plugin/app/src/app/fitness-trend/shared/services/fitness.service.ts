@@ -16,7 +16,7 @@ import { AppError } from "../../../shared/models/app-error.model";
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
-	public static readonly DEFAULT_LTHR_HR_MAX_FACTOR: number = 0.86;
+	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 
 	constructor(public activityService: ActivityService) {
 	}
@@ -234,7 +234,7 @@ export class FitnessService {
 	 * @returns {number}
 	 */
 	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : FitnessService.DEFAULT_LTHR_HR_MAX_FACTOR * userMaxHr;
+		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
 		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
 		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
