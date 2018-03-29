@@ -24,11 +24,11 @@ Go to chapter [Environnement setup](#environnement-setup).
 
 ## Project structure description
 
-The project is splitted in 2 sub-projects: the _core_ and the _embedded app_.
+The project is split into 2 sub-projects: the _core_ and the _embedded app_.
 
 ### Core
 
-The core contains the plugin's behaviour that acts directly on _strava.com_ website. This include _extended stats on activities & segments efforts, best splits, google maps support, etc..._
+The core contains the plugin's behaviour that acts directly on _strava.com_ website. This includes _extended stats on activities & segments efforts, best splits, google maps support, etc..._
 
 > The core sources are located in **plugin/core** directory
 
@@ -42,7 +42,7 @@ The embedded app contains features like fitness trend, year progressions, ... an
 
 ## Description of frameworks & tools used.
 
-_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compile back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
+_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compiles back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
 
 ### At a glance...
 
@@ -92,7 +92,7 @@ git clone git@github.com:thomaschampagne/stravistix.git
 
 ### Fetch NPM dependencies
 
-The `npm` command should be now installed on your system through the NodeJS installation. 
+The `npm` command should be installed on your system through the NodeJS installation. 
 
 Enter in project directory
 ```bash
@@ -106,13 +106,13 @@ npm install
 
 ### Build plugin
 
-Once you installed the NPM dependencies, you can build the plugin with the following command:
+Once you have installed the NPM dependencies, you can build the plugin with the following command:
 
 ```bash
 npm run build
 ```
 
-Both _core_ and _embedded app_ will be builded.
+Both _core_ and _embedded app_ will be built.
 
 Once the build is completed, the plugin will be located in **dist/** directory.
 
@@ -131,12 +131,12 @@ Into your chrome based browser:
 * Open new tab and type **chrome://extensions**, then enter.
 * Tick **Developer Mode** checkbox.
 * Click **Load Unpacked Extension** button, then choose **dist/** directory (this is where you have the **manifest.json** file)
-* Make sure to disable others instances of stravistix. You can re-enable them back from same tab.
+* Make sure to disable other instances of stravistix. You can re-enable them back from same tab.
 * Open strava.com
 
 ### Build plugin on files changes
 
-In order to avoid to re-run the painfull `npm run build` task on each file changes. You could run the following command:
+In order to avoid to re-run the painful `npm run build` task on each file changes. You could run the following command:
 
 ```bash
 npm start
