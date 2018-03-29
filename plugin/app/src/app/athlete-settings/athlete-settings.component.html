@@ -61,7 +61,7 @@
 					[(ngModel)]="maxHr"
 					(change)="onMaxHrChanged()"/>
 				<mat-placeholder>
-					Your max HR in beats per minute
+					Your max HR in bpm
 				</mat-placeholder>
 			</mat-form-field>
 		</div>
@@ -86,7 +86,7 @@
 					[(ngModel)]="restHr"
 					(change)="onRestHrChanged()"/>
 				<mat-placeholder>
-					Your rest HR in beats per minute
+					Your rest HR in bpm
 				</mat-placeholder>
 			</mat-form-field>
 		</div>
@@ -106,23 +106,43 @@
 			start measuring your heart rate until the end. When done, check your average heart rate on these last 20
 			minutes. This value is your LTHR.
 		</div>
-		<div>
+		<div fxLayout="column" layout-align="start center">
 			<mat-form-field fxFlex>
-				<input
-					matInput
-					type="number" min="1" max="999"
-					[(ngModel)]="lthr"
-					(change)="onLTHRChanged()"/>
+				<input matInput
+					   type="number" min="1" max="999"
+					   [(ngModel)]="defaultLTHR"
+					   (change)="onLTHRChanged()"/>
 				<mat-placeholder>
-					Your LTHR in beats per minute
+					Default LTHR in bpm
+					{{(!defaultLTHR) ? '(currently ' + (restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (maxHr -
+					restHr)).toFixed(0) + ' bpm)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
-
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input matInput
+					   type="number" min="1" max="999"
+					   [(ngModel)]="cyclingLTHR"
+					   (change)="onCyclingLTHRChanged()"/>
+				<mat-placeholder>
+					Cycling LTHR in bpm {{(!cyclingLTHR) ? '(using default LTHR)' : ''}}
+				</mat-placeholder>
+			</mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
+				<input matInput
+					   type="number" min="1" max="999"
+					   [(ngModel)]="runningLTHR"
+					   (change)="onRunningLTHRChanged()"/>
+				<mat-placeholder>
+					Running LTHR in bpm {{(!runningLTHR) ? '(using default LTHR)' : ''}}
+				</mat-placeholder>
+			</mat-form-field>
 		</div>
-		<div *ngIf="!lthr">
+		<div *ngIf="!defaultLTHR">
 			<span>
 				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-				Since no lactate threshold heart rate is currently defined. The value being used by default
+				Since no default lactate threshold heart rate is currently defined. The value being used by default
 				is <strong>{{(restHr +  DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (maxHr - restHr)).toFixed(0)}} bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
 			</span>
 		</div>
