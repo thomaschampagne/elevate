@@ -91,7 +91,11 @@ describe("FitnessService", () => {
 		userGender: Gender.MEN,
 		userMaxHr: 190,
 		userRestHr: 60,
-		userLactateThreshold: 163,
+		userLactateThreshold: {
+			default: 163,
+			cycling: null,
+			running: null
+		},
 		cyclingFtp: 150,
 		swimFtp: 31,
 	};
@@ -118,7 +122,7 @@ describe("FitnessService", () => {
 		activityService = TestBed.get(ActivityService);
 
 		// Set default fitness users settings
-		fitnessUserSettingsModel = _.clone(FITNESS_USER_SETTINGS_MODEL);
+		fitnessUserSettingsModel = _.cloneDeep(FITNESS_USER_SETTINGS_MODEL);
 		heartRateImpulseMode = HeartRateImpulseMode.HRSS;
 
 		// Enable PSS and SSS by default
@@ -135,6 +139,235 @@ describe("FitnessService", () => {
 		done();
 	});
 
+	// Resolve proper LTHR along user prefs and activity type
+	it("should resolve LTHR without user LTHR preferences, activityType='Ride'", (done: Function) => {
+
+		// Given
+		const activityType = "Ride";
+		const expectedLTHR = 170.5;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: null,
+			cycling: null,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR without user LTHR preferences, activityType='Run'", (done: Function) => {
+
+		// Given
+		const activityType = "Run";
+		const expectedLTHR = 170.5;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: null,
+			cycling: null,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR without user LTHR preferences, activityType='Rowing'", (done: Function) => {
+
+		// Given
+		const activityType = "Rowing";
+		const expectedLTHR = 163;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: 175,
+			running: 185
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, activityType='Ride'", (done: Function) => {
+
+		// Given
+		const activityType = "Ride";
+		const expectedLTHR = 163;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: null,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, activityType='Run'", (done: Function) => {
+
+		// Given
+		const activityType = "Run";
+		const expectedLTHR = 163;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: null,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, activityType='Rowing'", (done: Function) => {
+
+		// Given
+		const activityType = "Rowing";
+		const expectedLTHR = 163;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: null,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, activityType='Ride'", (done: Function) => {
+
+		// Given
+		const activityType = "Ride";
+		const expectedLTHR = 175;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: 175,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Cycling LTHR=175, activityType='VirtualRide'", (done: Function) => {
+
+		// Given
+		const activityType = "VirtualRide";
+		const expectedLTHR = 175;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: null,
+			cycling: 175,
+			running: null
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='EBikeRide'", (done: Function) => {
+
+		// Given
+		const activityType = "EBikeRide";
+		const expectedLTHR = 175;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: null,
+			cycling: 175,
+			running: 185
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
+
+		// Given
+		const activityType = "Run";
+		const expectedLTHR = 185;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: null,
+			cycling: 175,
+			running: 185
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
+
+		// Given
+		const activityType = "Run";
+		const expectedLTHR = 185;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: 175,
+			running: 185
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
+	it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Rowing'", (done: Function) => {
+
+		// Given
+		const activityType = "Rowing";
+		const expectedLTHR = 163;
+		fitnessUserSettingsModel.userLactateThreshold = {
+			default: 163,
+			cycling: 175,
+			running: 185
+		};
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
 	// Compute Heart Rate Stress Score (HRSS)
 	it("should compute hrSS", (done: Function) => {
 
@@ -146,19 +379,18 @@ describe("FitnessService", () => {
 		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 			fitnessUserSettingsModel.userMaxHr,
 			fitnessUserSettingsModel.userRestHr,
-			fitnessUserSettingsModel.userLactateThreshold,
+			fitnessUserSettingsModel.userLactateThreshold.default,
 			activityTrainingImpulse);
 
 		// Then
 		expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
-
 		done();
 	});
 
 	it("should compute hrSS without lactate threshold given (has to use Karvonen formula with 85% of HRR)", (done: Function) => {
 
 		// Given
-		fitnessUserSettingsModel.userLactateThreshold = null;
+		fitnessUserSettingsModel.userLactateThreshold.default = 170.5;
 		const activityTrainingImpulse = 333;
 		const expectedStressScore = 199;
 
@@ -166,7 +398,7 @@ describe("FitnessService", () => {
 		const heartRateStressScore = fitnessService.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 			fitnessUserSettingsModel.userMaxHr,
 			fitnessUserSettingsModel.userRestHr,
-			fitnessUserSettingsModel.userLactateThreshold,
+			fitnessUserSettingsModel.userLactateThreshold.default,
 			activityTrainingImpulse);
 
 		// Then
@@ -302,6 +534,7 @@ describe("FitnessService", () => {
 
 		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+
 
 		// When
 		const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,

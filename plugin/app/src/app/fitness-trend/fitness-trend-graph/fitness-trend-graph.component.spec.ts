@@ -77,7 +77,11 @@ describe("FitnessTrendGraphComponent", () => {
 			userGender: Gender.MEN,
 			userMaxHr: 190,
 			userRestHr: 60,
-			userLactateThreshold: 163,
+			userLactateThreshold: {
+				default: 163,
+				cycling: null,
+				running: null
+			},
 			cyclingFtp: 150,
 			swimFtp: 31,
 		};
