@@ -31,25 +31,59 @@
 
 			<!--Test ProgressType-->
 			<span [ngSwitch]="selectedProgressType.type"
-				  [ngClass]="progressionAtDay.deltaClass"
-				  matTooltip="{{(progressionAtDay.previousDate) ? 'Comparing to ' + progressionAtDay.previousDate: ''}}">
+				  [ngClass]="progressionAtDay.deltaPreviousYear.class"
+				  matTooltip="{{(progressionAtDay.deltaPreviousYear.date) ? 'Compared to ' + progressionAtDay.deltaPreviousYear.date: ''}}">
 
                 <!--Case when ProgressType is TIME-->
                 <span *ngSwitchCase="ProgressType.TIME">
-                    <span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
-                        {{progressionAtDay.deltaSignSymbol + " " + readableTimeProgress(progressionAtDay.delta)}}
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaPreviousYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaPreviousYear.value)}}
                     </span>
-                    <span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
                         ∅
                     </span>
                 </span>
 
 				<!--Default Case-->
                 <span *ngSwitchDefault>
-                    <span *ngIf="(progressionAtDay.deltaType !== DeltaType.NAN)">
-                        {{progressionAtDay.deltaSignSymbol + " " + progressionAtDay.delta.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaPreviousYear.signSymbol + " " + progressionAtDay.deltaPreviousYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
                     </span>
-                    <span *ngIf="(progressionAtDay.deltaType === DeltaType.NAN)">
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+		</mat-cell>
+	</ng-container>
+
+	<ng-container matColumnDef="deltaCurrent">
+		<mat-header-cell *matHeaderCellDef>&Delta; With {{currentYear}}</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+
+			<!--Test ProgressType-->
+			<span [ngSwitch]="selectedProgressType.type"
+				  [ngClass]="progressionAtDay.deltaCurrentYear.class"
+				  matTooltip="{{(progressionAtDay.deltaCurrentYear.date) ? 'Compared to ' + progressionAtDay.deltaCurrentYear.date: ''}}">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaCurrentYear.value)}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+				<!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + progressionAtDay.deltaCurrentYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
                         ∅
                     </span>
                 </span>
