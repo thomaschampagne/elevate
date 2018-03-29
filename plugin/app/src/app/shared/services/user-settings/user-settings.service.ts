@@ -25,8 +25,8 @@ export class UserSettingsService {
 	 * @param {string} key
 	 * @returns {Promise<Object>}
 	 */
-	public get(key: string): Promise<Object> {
-		return this.userSettingsDao.get(key);
+	public get<T>(key: string): Promise<T> {
+		return this.userSettingsDao.get<T>(key);
 	}
 
 	/**
@@ -37,6 +37,16 @@ export class UserSettingsService {
 	 */
 	public update(key: string, value: any): Promise<UserSettingsModel> {
 		return this.userSettingsDao.update(key, value);
+	}
+
+	/**
+	 *
+	 * @param {string} path
+	 * @param {number} value
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public updateNested(path: string, value: number): Promise<UserSettingsModel> {
+		return this.userSettingsDao.updateNested(path, value);
 	}
 
 	/**
@@ -88,4 +98,5 @@ export class UserSettingsService {
 	set userSettingsDao(value: UserSettingsDao) {
 		this._userSettingsDao = value;
 	}
+
 }
