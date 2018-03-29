@@ -18,7 +18,7 @@ import {
 	UpFlatDownSumTotalModel,
 	ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserLactateThresholdModel, UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 
 export class ActivityComputer {
@@ -144,7 +144,7 @@ export class ActivityComputer {
 	}
 
 
-	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThreshold: number,
+	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel,
 								  userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
 								  activityStream: StreamsModel): AnalysisDataModel {
 
@@ -201,7 +201,7 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, userLactateThreshold, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
+		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, userLactateThresholdModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
@@ -458,21 +458,67 @@ export class ActivityComputer {
 		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
 	}
 
+	/*	/!**
+         * Compute Heart Rate Stress Score (HRSS)
+         * @param {Gender} userGender
+         * @param {number} userMaxHr
+         * @param {number} userMinHr
+         * @param {number} userLactateThreshold
+         * @param {number} activityTrainingImpulse
+         * @returns {number}
+         *!/
+        public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
+            const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
+            const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+            const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
+            const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+            return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+        }*/
+
 	/**
+	 * TODO Duplicated code of FitnessService.computeHeartRateStressScore. To be refactored
 	 * Compute Heart Rate Stress Score (HRSS)
-	 * @param {Gender} userGender
+	 * @param {string} userGender
 	 * @param {number} userMaxHr
 	 * @param {number} userMinHr
-	 * @param {number} userLactateThreshold
+	 * @param {number} lactateThreshold
 	 * @param {number} activityTrainingImpulse
 	 * @returns {number}
 	 */
-	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
+	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
 		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
 		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
 		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 * TODO Duplicated code of FitnessService.resolveLTHR. To be refactored
+	 * @param {string} activityType
+	 * @param {number} userMaxHr
+	 * @param {number} userRestHr
+	 * @param {UserLactateThresholdModel} userLactateThresholdModel
+	 * @returns {number}
+	 */
+	public resolveLTHR(activityType: string, userMaxHr: number, userRestHr: number, userLactateThresholdModel: UserLactateThresholdModel): number {
+
+		if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+			if (_.isNumber(userLactateThresholdModel.cycling)) {
+				return userLactateThresholdModel.cycling;
+			}
+		}
+
+		if (activityType === "Run") {
+			if (_.isNumber(userLactateThresholdModel.running)) {
+				return userLactateThresholdModel.running;
+			}
+		}
+
+		if (_.isNumber(userLactateThresholdModel.default)) {
+			return userLactateThresholdModel.default;
+		}
+
+		return userRestHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userRestHr);
 	}
 
 
@@ -609,7 +655,7 @@ export class ActivityComputer {
 		return powerData;
 	}
 
-	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThreshold: number, heartRateArray: number[],
+	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel, heartRateArray: number[],
 							timeArray: number[], velocityArray: number[]): HeartRateDataModel {
 
 		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
@@ -673,7 +719,9 @@ export class ActivityComputer {
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLactateThreshold, trainingImpulse);
+		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, userMaxHr, userRestHr, userLactateThresholdModel);
+
+		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
 
 		return {
