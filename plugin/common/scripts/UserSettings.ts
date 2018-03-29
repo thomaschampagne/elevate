@@ -7,7 +7,11 @@ export const userSettings: UserSettingsModel = {
     userGender: "men",
     userMaxHr: 190,
     userRestHr: 65,
-	userLTHR: null,
+	userLTHR: {
+		default: null,
+		cycling: null,
+		running: null
+	},
     userFTP: null,
     userSwimFTP: null,
     userWeight: 70,

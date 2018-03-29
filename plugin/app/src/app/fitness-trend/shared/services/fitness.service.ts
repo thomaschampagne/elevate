@@ -103,10 +103,12 @@ export class FitnessService {
 
 						} else if (heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
 
+							const userLthrAlongActivityType: number = this.resolveLTHR(activity.type, fitnessUserSettingsModel);
+
 							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
 								fitnessUserSettingsModel.userMaxHr,
 								fitnessUserSettingsModel.userRestHr,
-								fitnessUserSettingsModel.userLactateThreshold,
+								userLthrAlongActivityType,
 								activity.extendedStats.heartRateData.TRIMP);
 						}
 
@@ -225,16 +227,43 @@ export class FitnessService {
 	}
 
 	/**
+	 *
+	 * @param {string} activityType
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
+	 * @returns {number}
+	 */
+	public resolveLTHR(activityType: string, fitnessUserSettingsModel: FitnessUserSettingsModel): number {
+
+		if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.cycling)) {
+				return fitnessUserSettingsModel.userLactateThreshold.cycling;
+			}
+		}
+
+		if (activityType === "Run") {
+			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.running)) {
+				return fitnessUserSettingsModel.userLactateThreshold.running;
+			}
+		}
+
+		if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.default)) {
+			return fitnessUserSettingsModel.userLactateThreshold.default;
+		}
+
+		return fitnessUserSettingsModel.userRestHr + FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR
+			* (fitnessUserSettingsModel.userMaxHr - fitnessUserSettingsModel.userRestHr);
+	}
+
+	/**
 	 * Compute Heart Rate Stress Score (HRSS)
 	 * @param {Gender} userGender
 	 * @param {number} userMaxHr
 	 * @param {number} userMinHr
-	 * @param {number} userLactateThreshold
+	 * @param {number} lactateThreshold
 	 * @param {number} activityTrainingImpulse
 	 * @returns {number}
 	 */
-	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
+	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
 		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
 		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);

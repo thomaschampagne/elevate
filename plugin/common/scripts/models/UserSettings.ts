@@ -1,5 +1,11 @@
 import { ZoneModel } from "./ActivityData";
 
+export class UserLactateThresholdModel { // TODO Externalize in a file
+	public default: number;
+	public cycling: number;
+	public running: number;
+}
+
 export class UserZonesModel { // TODO Externalize in a file
 	public speed: ZoneModel[];
 	public pace: ZoneModel[];
@@ -24,7 +30,7 @@ export class UserSettingsModel { // TODO Externalize in a file
 	public userGender: string;
 	public userMaxHr: number;
 	public userRestHr: number;
-	public userLTHR: number;
+	public userLTHR: UserLactateThresholdModel;
 	public userFTP: number;
 	public userSwimFTP: number;
 	public userWeight: number;
