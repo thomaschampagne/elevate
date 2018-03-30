@@ -3,9 +3,9 @@ import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 
 export class HideFeedModifier implements IModifier {
 
-	private static VIRTUAL_RIDE: string = "virtualride";
-	private static RIDE: string = "ride";
-	private static RUN: string = "run";
+	private static VIRTUAL_RIDE = "virtualride";
+	private static RIDE = "ride";
+	private static RUN = "run";
 
 	protected userSettings: UserSettingsModel;
 
@@ -27,7 +27,9 @@ export class HideFeedModifier implements IModifier {
 			// If hide created routes
 			if (this.userSettings.feedHideCreatedRoutes) {
 				$("div.feed>.min-view").each((index: number, element: Element) => {
-					if ($("div.feed").find("div.entry-container").has("a[href*='/routes']").length > 0) $(element).remove();
+					if ($("div.feed").find("div.entry-container").has("a[href*='/routes']").length > 0) {
+						$(element).remove();
+					}
 				});
 			}
 

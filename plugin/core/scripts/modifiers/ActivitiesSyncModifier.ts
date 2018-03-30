@@ -17,7 +17,7 @@ export class ActivitiesSyncModifier implements IModifier {
 	protected userSettings: UserSettingsModel;
 	protected appResources: IAppResources;
 
-	public closeWindowIntervalId: number = -1;
+	public closeWindowIntervalId = -1;
 
 	constructor(appResources: IAppResources, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
 		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
@@ -163,7 +163,7 @@ export class ActivitiesSyncModifier implements IModifier {
 			$("#totalProgressText").html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + "%");
 
 			// Step
-			let stepMessage: string = "";
+			let stepMessage = "";
 
 			switch (progress.step) {
 

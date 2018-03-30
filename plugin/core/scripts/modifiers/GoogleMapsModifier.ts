@@ -123,11 +123,15 @@ export class GoogleMapsModifier implements IModifier {
 	protected placeSegmentAreaGoogleMapButton(activityId: number): void {
 
 		// Listening for Segment Change visualization
-		if (!Strava.Labs) return;
+		if (!Strava.Labs) {
+			return;
+		}
 
 		const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
 
-		if (!view) return;
+		if (!view) {
+			return;
+		}
 
 		const functionRender: Function = view.prototype.render;
 

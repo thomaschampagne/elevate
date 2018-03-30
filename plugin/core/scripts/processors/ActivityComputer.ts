@@ -279,7 +279,7 @@ export class ActivityComputer {
 	}
 
 	protected getZoneId(zones: ZoneModel[], value: number): number {
-		for (let zoneId: number = 0; zoneId < zones.length; zoneId++) {
+		for (let zoneId = 0; zoneId < zones.length; zoneId++) {
 			if (value <= zones[zoneId].to) {
 				return zoneId;
 			}
@@ -297,10 +297,10 @@ export class ActivityComputer {
 	}
 
 	protected finalizeDistributionComputationZones(zones: ZoneModel[]): ZoneModel[] {
-		let total: number = 0;
+		let total = 0;
 		let zone: ZoneModel;
 
-		for (let i: number = 0; i < zones.length; i++) {
+		for (let i = 0; i < zones.length; i++) {
 			zone = zones[i];
 			if (zone.s) {
 				total += zone.s;
@@ -309,7 +309,7 @@ export class ActivityComputer {
 		}
 
 		if (total > 0) {
-			for (let i: number = 0; i < zones.length; i++) {
+			for (let i = 0; i < zones.length; i++) {
 				zone = zones[i];
 				if (zone.s) {
 					zone.percentDistrib = zone.s / total * 100;
@@ -336,21 +336,21 @@ export class ActivityComputer {
 			return null;
 		}
 
-		let genuineAvgSpeedSum: number = 0,
-			genuineAvgSpeedSumCount: number = 0;
+		let genuineAvgSpeedSum = 0,
+			genuineAvgSpeedSumCount = 0;
 		const speedsNonZero: number[] = [];
 		const speedsNonZeroDuration: number[] = [];
-		let speedVarianceSum: number = 0;
+		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
 		let speedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
 		let paceZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
 
-		let movingSeconds: number = 0;
-		let elapsedSeconds: number = 0;
+		let movingSeconds = 0;
+		let elapsedSeconds = 0;
 
 		// End Preparing zone
-		for (let i: number = 0; i < velocityArray.length; i++) { // Loop on samples
+		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
 
 			// Compute distribution for graph/table
 			if (i > 0) {
@@ -539,19 +539,19 @@ export class ActivityComputer {
 
 		powerZonesAlongActivityType = this.prepareZonesForDistributionComputation(powerZonesAlongActivityType);
 
-		let accumulatedWattsOnMove: number = 0;
-		let wattSampleOnMoveCount: number = 0;
+		let accumulatedWattsOnMove = 0;
+		let wattSampleOnMoveCount = 0;
 		const wattsSamplesOnMove: number[] = [];
 		const wattsSamplesOnMoveDuration: number[] = [];
 
 		let durationInSeconds: number;
-		let totalMovingInSeconds: number = 0;
+		let totalMovingInSeconds = 0;
 
-		let timeWindowValue: number = 0;
+		let timeWindowValue = 0;
 		let sumPowerTimeWindow: number[] = [];
 		const sum4thPower: number[] = [];
 
-		for (let i: number = 0; i < powerArray.length; i++) { // Loop on samples
+		for (let i = 0; i < powerArray.length; i++) { // Loop on samples
 
 			if ((this.isTrainer || !velocityArray || _.isNumber(velocityArray[i])) && i > 0) {
 
@@ -653,16 +653,16 @@ export class ActivityComputer {
 
 		this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
 
-		let trainingImpulse: number = 0;
+		let trainingImpulse = 0;
 		const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
-		let hrrSecondsCount: number = 0;
+		let hrrSecondsCount = 0;
 		let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number,
 			zoneId: number;
-		let hrSum: number = 0;
+		let hrSum = 0;
 		const heartRateArrayMoving: any[] = [];
 		const heartRateArrayMovingDuration: any[] = [];
 
-		for (let i: number = 0; i < heartRateArray.length; i++) { // Loop on samples
+		for (let i = 0; i < heartRateArray.length; i++) { // Loop on samples
 
 			if (i > 0 && (
 				this.isTrainer || // can be cycling home trainer
@@ -739,14 +739,14 @@ export class ActivityComputer {
 		const hasDistanceData = !_.isEmpty(distanceArray);
 
 		// recomputing crank revolutions using cadence data
-		let totalOccurrences: number = 0;
+		let totalOccurrences = 0;
 
 		// On Moving
-		let cadenceSumOnMoving: number = 0;
-		let cadenceSumDurationOnMoving: number = 0;
-		let cadenceVarianceSumOnMoving: number = 0;
-		let cadenceOnMoveSampleCount: number = 0;
-		let movingSampleCount: number = 0;
+		let cadenceSumOnMoving = 0;
+		let cadenceSumDurationOnMoving = 0;
+		let cadenceVarianceSumOnMoving = 0;
+		let cadenceOnMoveSampleCount = 0;
+		let movingSampleCount = 0;
 
 		let cadenceZoneTyped: ZoneModel[];
 		if (this.activityType === "Ride") {
@@ -759,14 +759,14 @@ export class ActivityComputer {
 
 		let cadenceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(cadenceZoneTyped);
 
-		let durationInSeconds: number = 0;
+		let durationInSeconds = 0;
 		const cadencesOnMoving: number[] = [];
 		const cadencesDuration: number[] = [];
 
 		const distancesPerOccurrenceOnMoving: number[] = []; // Can be: Each time a foot touch the ground while running OR Each crank revolution for Cycling
 		const distancesPerOccurrenceDuration: number[] = [];
 
-		for (let i: number = 0; i < cadenceArray.length; i++) {
+		for (let i = 0; i < cadenceArray.length; i++) {
 
 			if (i > 0) {
 
@@ -869,8 +869,8 @@ export class ActivityComputer {
 			return;
 		}
 
-		let gradeSum: number = 0,
-			gradeCount: number = 0;
+		let gradeSum = 0,
+			gradeCount = 0;
 
 		let gradeZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
 		const upFlatDownInSeconds: UpFlatDownSumTotalModel = {
@@ -902,18 +902,18 @@ export class ActivityComputer {
 			countDown: 0
 		};
 
-		let durationInSeconds: number, durationCount: number = 0;
-		let distance: number = 0;
+		let durationInSeconds: number, durationCount = 0;
+		let distance = 0;
 		let currentSpeed: number;
-		let avgMinGrade: number = 0;
-		let avgMaxGrade: number = 0;
+		let avgMinGrade = 0;
+		let avgMaxGrade = 0;
 
 		const gradeArrayMoving: any[] = [];
 		const gradeArrayDistance: any[] = [];
 
 		const hasCadenceData: boolean = !_.isEmpty(cadenceArray);
 
-		for (let i: number = 0; i < gradeArray.length; i++) { // Loop on samples
+		for (let i = 0; i < gradeArray.length; i++) { // Loop on samples
 
 			if (i > 0) {
 
@@ -1012,7 +1012,7 @@ export class ActivityComputer {
 
 		const avgGrade: number = gradeSum / gradeCount;
 		// Find min and max grade
-		let sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
+		const sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
 			return grade;
 		});
 		const minMaxGradeSamplePercentage = 0.25; //%
@@ -1055,26 +1055,26 @@ export class ActivityComputer {
 
 		const skipAscentSpeedCompute: boolean = !_.isEmpty(this.bounds);
 
-		let accumulatedElevation: number = 0;
-		let accumulatedElevationAscent: number = 0;
-		let accumulatedElevationDescent: number = 0;
-		let accumulatedDistance: number = 0;
+		let accumulatedElevation = 0;
+		let accumulatedElevationAscent = 0;
+		let accumulatedElevationDescent = 0;
+		let accumulatedDistance = 0;
 
 		// specials arrays for ascent speeds
 		const ascentSpeedMeterPerHourSamples: number[] = [];
 		const ascentSpeedMeterPerHourDistance: number[] = [];
-		let ascentSpeedMeterPerHourSum: number = 0;
+		let ascentSpeedMeterPerHourSum = 0;
 
-		let elevationSampleCount: number = 0;
+		let elevationSampleCount = 0;
 		const elevationSamples: number[] = [];
 		const elevationSamplesDistance: number[] = [];
 		let elevationZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.elevation);
 		let ascentSpeedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.ascent);
-		let durationInSeconds: number = 0;
-		let distance: number = 0;
-		let ascentDurationInSeconds: number = 0;
+		let durationInSeconds = 0;
+		let distance = 0;
+		let ascentDurationInSeconds = 0;
 
-		for (let i: number = 0; i < altitudeArray.length; i++) { // Loop on samples
+		for (let i = 0; i < altitudeArray.length; i++) { // Loop on samples
 
 			// Compute distribution for graph/table
 			if (i > 0 && velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) {
@@ -1176,16 +1176,16 @@ export class ActivityComputer {
 		const distanceArray: number[] = activityStream.distance;
 		//  let timeArray = activityStream.time;  // for smoothing by time
 		const velocityArray: number[] = activityStream.velocity_smooth;
-		let smoothingL: number = 10;
-		let smoothingH: number = 600;
+		let smoothingL = 10;
+		let smoothingH = 600;
 		let smoothing: number;
 		let altitudeArray: number[] = [];
 		while (smoothingH - smoothingL >= 1) {
 			smoothing = smoothingL + (smoothingH - smoothingL) / 2;
 			altitudeArray = this.lowPassDataSmoothing(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
 			// altitudeArray = this.lowPassDataSmoothing(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
-			let totalElevation: number = 0;
-			for (let i: number = 0; i < altitudeArray.length; i++) { // Loop on samples
+			let totalElevation = 0;
+			for (let i = 0; i < altitudeArray.length; i++) { // Loop on samples
 				if (i > 0 && velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) {
 					const elevationDiff: number = altitudeArray[i] - altitudeArray[i - 1];
 					if (elevationDiff > 0) {
@@ -1208,11 +1208,11 @@ export class ActivityComputer {
 		// http://phrogz.net/js/framerate-independent-low-pass-filter.html
 		// value += (currentValue - value) / (smoothing / timeSinceLastSample);
 		// it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
-		let smooth_factor: number = 0;
+		let smooth_factor = 0;
 		const result: number[] = [];
 		if (data && distance) {
 			result[0] = data[0];
-			for (let i: number = 1, max = data.length; i < max; i++) {
+			for (let i = 1, max = data.length; i < max; i++) {
 				if (smoothing === 0) {
 					result[i] = data[i];
 				} else {

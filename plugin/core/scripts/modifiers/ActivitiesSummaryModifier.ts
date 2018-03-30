@@ -18,16 +18,16 @@ export class ActivitiesSummaryModifier implements IModifier {
 
 	public modify(): void {
 
-		let activitiesCountElementId: string = "totals-activities-count",
+		let activitiesCountElementId = "totals-activities-count",
 			$totals: JQuery = $("#totals"),
 			requests: JQueryXHR[] = [],
 			activityTypes: any[] = [],
-			distanceUnit: string = "km",
-			elevationUnit: string = "m",
-			speedUnit: string = "km/h",
-			paceUnit: string = "/km";
-		let speedUnitRatio: number = 1; // Default Kilometers
-		let elevationUnitRatio: number = 1; // Default Kilometers
+			distanceUnit = "km",
+			elevationUnit = "m",
+			speedUnit = "km/h",
+			paceUnit = "/km";
+		let speedUnitRatio = 1; // Default Kilometers
+		let elevationUnitRatio = 1; // Default Kilometers
 
 		const waitForTotalActivitiesCountRemove = () => {
 			if ($("#" + activitiesCountElementId).length !== 0) {
@@ -82,7 +82,7 @@ export class ActivitiesSummaryModifier implements IModifier {
 		});
 
 		$.when.apply(this, requests).done(() => {
-			let index: number = 0,
+			let index = 0,
 				total: any = {
 					type: "Total",
 					count: 0,

@@ -24,7 +24,9 @@ export class ActivityQRCodeDisplayModifier implements IModifier {
 
 				QRCode.toCanvas(document.getElementById("qrcode"),
 					"http://app.strava.com/activities/" + this.activityId, (error) => {
-						if (error) console.error(error);
+						if (error) {
+							console.error(error);
+						}
 						console.log("QRCode created");
 					});
 

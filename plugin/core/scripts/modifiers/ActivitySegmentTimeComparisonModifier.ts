@@ -246,7 +246,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 			fetchedLeaderboardData = [];
 		}
 
-		const perPage: number = 50;
+		const perPage = 50;
 
 		const jqxhr: JQueryXHR = $.getJSON("/segments/" + segmentId + "/leaderboard?raw=true&page=" + page + "&per_page=" + perPage + "&viewer_context=false&filter=my_results");
 
@@ -301,7 +301,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 		let deltaTime: number;
 
 		if (this.showDifferenceToPR) {
-			for (let i: number = 0; i < leaderBoardData.length; i++) {
+			for (let i = 0; i < leaderBoardData.length; i++) {
 				if (leaderBoardData[i].__dateTime < currentSegmentEffortDateTime) {
 					previousPersonalSeconds = leaderBoardData[i].elapsed_time_raw;
 					previousPersonalDate = leaderBoardData[i].start_date_local;
@@ -321,7 +321,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
 			let resultsThisYear: EffortInfo[] = [];
 
-			for (let j: number = 0; j < leaderBoardData.length; j++) {
+			for (let j = 0; j < leaderBoardData.length; j++) {
 				if (leaderBoardData[j].__dateTime.getFullYear() === currentSegmentEffortDateTime.getFullYear()) {
 					currentYearPRSeconds = leaderBoardData[j].elapsed_time_raw;
 					currentYearPRDate = leaderBoardData[j].start_date_local;

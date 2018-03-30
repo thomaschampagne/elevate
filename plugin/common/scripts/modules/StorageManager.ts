@@ -8,8 +8,8 @@ export interface IStorageUsage {
 
 export class StorageManager {
 
-    public static storageSyncType: string = "sync";
-    public static storageLocalType: string = "local";
+	public static storageSyncType = "sync";
+	public static storageLocalType = "local";
 
     public static setCookie(cname: string, cvalue: any, exdays: number): void {
         const d: Date = new Date();
@@ -28,10 +28,14 @@ export class StorageManager {
     public static getCookie(cname: string): string {
         const name: string = cname + "=";
         const ca: string[] = document.cookie.split(";");
-        for (let i: number = 0; i < ca.length; i++) {
+		for (let i = 0; i < ca.length; i++) {
             let c: string = ca[i];
-            while (c.charAt(0) === " ") c = c.substring(1);
-            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+			while (c.charAt(0) === " ") {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) != -1) {
+				return c.substring(name.length, c.length);
+			}
         }
         return null;
     }

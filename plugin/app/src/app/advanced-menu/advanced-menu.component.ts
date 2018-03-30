@@ -6,9 +6,9 @@ import { MatDialog, MatSnackBar } from "@angular/material";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 
 @Component({
-	selector: 'app-advanced-menu',
-	templateUrl: './advanced-menu.component.html',
-	styleUrls: ['./advanced-menu.component.scss']
+	selector: "app-advanced-menu",
+	templateUrl: "./advanced-menu.component.html",
+	styleUrls: ["./advanced-menu.component.scss"]
 })
 export class AdvancedMenuComponent implements OnInit {
 

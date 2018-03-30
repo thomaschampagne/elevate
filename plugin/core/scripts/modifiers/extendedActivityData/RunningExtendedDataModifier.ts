@@ -21,14 +21,14 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		super.insertContentSummaryGridContent();
 
 		// Speed and pace
-		let q3Move: string = "-";
+		let q3Move = "-";
 		if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
 			q3Move = Helper.secondsToHHMMSS(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true);
 			this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
 		}
 
 		// Avg climb pace
-		let climbPaceDisplayed: string = "-";
+		let climbPaceDisplayed = "-";
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
 			// Convert speed to pace
@@ -73,7 +73,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
 		}
 
-		let weightedPower: string = "-";
+		let weightedPower = "-";
 		if (this.userSettings.displayAdvancedPowerData) {
 
 			if (this.analysisData.powerData
@@ -94,7 +94,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 	protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
 		setTimeout(() => { // Execute at the end to make sure DOM is ready
-			let htmlButton: string = "<section>";
+			let htmlButton = "<section>";
 			htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
 			htmlButton += "Show extended statistics of effort";
 			htmlButton += "</a>";

@@ -35,7 +35,7 @@ export class RemoteLinksModifier implements IModifier {
 
 		// Activity page
 		// Adding remote view links on left panel
-		let html: string = "<li class='group'>";
+		let html = "<li class='group'>";
 		html += "<div class='title' id='stravistix_remote_title' style='cursor: pointer;'>Remote Views</div>";
 		html += "<ul style='display: none;' id='stravistix_remoteViews'>";
 		_.forEach(remoteViewActivityLinksArray, (linkArray: string[]) => {
@@ -90,7 +90,7 @@ export class RemoteLinksModifier implements IModifier {
 			["<img width='24px' style='vertical-align:middle' src='" + this.appResources.veloviewerIcon + "'/> <span>VeloViewer</span>", "http://veloviewer.com/segment/", "?referrer=stravistiX"],
 			["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details by J.Okeeffe</span>", "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=", ""],
 		];
-		let html: string = "<div class='dropdown'>";
+		let html = "<div class='dropdown'>";
 		html += "<div class='drop-down-menu' style='width: 100%;' >";
 		html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span></button>";
 		html += "<ul class='dropdown-menu'>";

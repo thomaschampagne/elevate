@@ -1,6 +1,6 @@
 abstract class AbstractRunningDataModifier implements IModifier {
 
-	public static INTERVAL_DELAY: number = 750;
+	public static INTERVAL_DELAY = 750;
 	protected intervalId: number;
 	protected dataWatch: string;
 
