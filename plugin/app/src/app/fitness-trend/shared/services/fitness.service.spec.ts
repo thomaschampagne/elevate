@@ -159,6 +159,21 @@ describe("FitnessService", () => {
 		done();
 	});
 
+	it("should resolve LTHR without user LTHR preferences (empty), activityType='Ride'", (done: Function) => {
+
+		// Given
+		const activityType = "Ride";
+		const expectedLTHR = 170.5;
+		fitnessUserSettingsModel.userLactateThreshold = null;
+
+		// When
+		const lthr = fitnessService.resolveLTHR(activityType, fitnessUserSettingsModel);
+
+		// Then
+		expect(lthr).toEqual(expectedLTHR);
+		done();
+	});
+
 	it("should resolve LTHR without user LTHR preferences, activityType='Run'", (done: Function) => {
 
 		// Given
