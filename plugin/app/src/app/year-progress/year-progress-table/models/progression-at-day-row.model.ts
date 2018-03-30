@@ -1,14 +1,11 @@
-import { DeltaType } from "./delta-type.enum";
+import { Delta } from "./delta.model";
 
 export class ProgressionAtDayRow {
 	public year: number;
 	public color: string;
-	public previousDate: string;
+	public currentValue: number;
 	public progressTypeLabel: string;
 	public progressTypeUnit: string;
-	public currentValue: number;
-	public delta: number;
-	public deltaType: DeltaType;
-	public deltaSignSymbol: string;
-	public deltaClass: string;
+	public deltaPreviousYear: Delta;
+	public deltaCurrentYear: Delta;
 }
