@@ -11,8 +11,23 @@ import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
+import { UserLactateThresholdModel } from "../../../../common/scripts/models/UserSettings";
+import { Gender } from "../shared/enums/gender.enum";
 
 describe("FitnessTrendComponent", () => {
+
+	const gender = "men";
+	const userGender = Gender.MEN;
+	const maxHr = 200;
+	const restHr = 50;
+	const cyclingFtp = 150;
+	const swimFtp = 31;
+	const weight = 75;
+	const userLactateThreshold: UserLactateThresholdModel = {
+		default: 175,
+		cycling: null,
+		running: null
+	};
 
 	let activityDao: ActivityDao;
 	let userSettingsDao: UserSettingsDao;
@@ -51,11 +66,6 @@ describe("FitnessTrendComponent", () => {
 			}
 		});
 
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
 		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
 			gender,
 			maxHr,
@@ -73,6 +83,16 @@ describe("FitnessTrendComponent", () => {
 	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(FitnessTrendComponent);
 		component = fixture.componentInstance;
+
+		component.fitnessUserSettingsModel = {
+			userGender: userGender,
+			userMaxHr: maxHr,
+			userRestHr: restHr,
+			userLactateThreshold: userLactateThreshold,
+			cyclingFtp: cyclingFtp,
+			swimFtp: swimFtp,
+		};
+
 		fixture.detectChanges();
 		done();
 	});
