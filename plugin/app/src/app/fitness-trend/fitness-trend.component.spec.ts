@@ -10,6 +10,7 @@ import { AthleteHistoryService } from "../shared/services/athlete-history/athlet
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
+import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 
 describe("FitnessTrendComponent", () => {
 
@@ -78,6 +79,56 @@ describe("FitnessTrendComponent", () => {
 
 	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
+	});
+
+	it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", (done: Function) => {
+
+		// Given
+		component.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		component.isTrainingZonesEnabled = true;
+		component.isPowerMeterEnabled = true;
+		component.isSwimEnabled = true;
+		component.isEBikeRidesEnabled = true;
+		component.fitnessUserSettingsModel.cyclingFtp = 250;
+		component.fitnessUserSettingsModel.swimFtp = 40;
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
+
+		// When
+		component.verifyTogglesStatesAlongHrMode();
+
+		// Then
+		expect(component.isTrainingZonesEnabled).toEqual(true);
+		expect(component.isPowerMeterEnabled).toEqual(true);
+		expect(component.isSwimEnabled).toEqual(true);
+		expect(component.isEBikeRidesEnabled).toEqual(true);
+		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(3);
+
+		done();
+	});
+
+	it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", (done: Function) => {
+
+		// Given
+		component.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+		component.isTrainingZonesEnabled = true;
+		component.isPowerMeterEnabled = true;
+		component.isSwimEnabled = true;
+		component.isEBikeRidesEnabled = true;
+		component.fitnessUserSettingsModel.cyclingFtp = 250;
+		component.fitnessUserSettingsModel.swimFtp = 40;
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
+
+		// When
+		component.verifyTogglesStatesAlongHrMode();
+
+		// Then
+		expect(component.isTrainingZonesEnabled).toEqual(false);
+		expect(component.isPowerMeterEnabled).toEqual(false);
+		expect(component.isSwimEnabled).toEqual(false);
+		expect(component.isEBikeRidesEnabled).toEqual(true);
+		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(0);
+
 		done();
 	});
 });

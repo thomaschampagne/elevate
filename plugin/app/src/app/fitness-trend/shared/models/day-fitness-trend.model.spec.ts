@@ -1,6 +1,6 @@
 import { DayFitnessTrendModel } from "./day-fitness-trend.model";
 import { DayStressModel } from "./day-stress.model";
-import { TrainingZone } from "./training-zone.enum";
+import { TrainingZone } from "../enums/training-zone.enum";
 
 describe("DayFitnessTrendModel", () => {
 

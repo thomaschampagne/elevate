@@ -1,11 +1,13 @@
 import * as _ from "lodash";
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserLactateThresholdModel, UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { GenderModel } from "./gender.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { FitnessService } from "../fitness-trend/shared/services/fitness.service";
+import { Gender } from "../shared/enums/gender.enum";
 
 @Component({
 	selector: "app-athlete-settings",
@@ -18,32 +20,38 @@ export class AthleteSettingsComponent implements OnInit {
 	public static readonly SETTINGS_KEY_USER_GENDER: string = "userGender";
 	public static readonly SETTINGS_KEY_USER_MAX_HR: string = "userMaxHr";
 	public static readonly SETTINGS_KEY_USER_REST_HR: string = "userRestHr";
+	public static readonly SETTINGS_KEY_USER_LTHR: string = "userLTHR";
+	public static readonly SETTINGS_KEY_USER_DEFAULT_LTHR: string = "userLTHR.default";
+	public static readonly SETTINGS_KEY_USER_CYCLING_LTHR: string = "userLTHR.cycling";
+	public static readonly SETTINGS_KEY_USER_RUNNING_LTHR: string = "userLTHR.running";
 	public static readonly SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
 	public static readonly SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
 	public readonly GENDER_LIST: GenderModel[] = [{
-		type: "men",
+		type: Gender.MEN,
 		display: "Male",
 	}, {
-		type: "women",
+		type: Gender.WOMEN,
 		display: "Female",
 	}];
 
-	public gender: string;
+	public readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR;
 
+	@ViewChild("bottom")
+	public bottomElement: ElementRef;
+
+	public gender: Gender;
 	public weight: number;
-
 	public swimFtp: number;
-
 	public restHr: number;
-
 	public maxHr: number;
-
+	public defaultLTHR: number;
+	public cyclingLTHR: number;
+	public runningLTHR: number;
 	public ftp: number;
-
 	public swimFtp100m: string;
 
-	public isSwimFtpCalculatorEnabled = false;
+	public isSwimFtpCalculatorEnabled: boolean = false;
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
@@ -55,12 +63,15 @@ export class AthleteSettingsComponent implements OnInit {
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 			this.gender = _.find(this.GENDER_LIST, {
-				type: userSettings.userGender,
+				type: (userSettings.userGender === Gender.MEN) ? Gender.MEN : Gender.WOMEN
 			}).type;
 
 			this.maxHr = userSettings.userMaxHr;
 			this.restHr = userSettings.userRestHr;
 			this.weight = userSettings.userWeight;
+			this.defaultLTHR = userSettings.userLTHR.default;
+			this.cyclingLTHR = userSettings.userLTHR.cycling;
+			this.runningLTHR = userSettings.userLTHR.running;
 			this.ftp = userSettings.userFTP;
 			this.swimFtp = userSettings.userSwimFTP;
 			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.swimFtp);
@@ -69,10 +80,6 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
-	/**
-	 *
-	 * @param {GenderModel} gender
-	 */
 	public onGenderChanged() {
 		this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_GENDER, this.gender);
 	}
@@ -84,7 +91,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 		} else {
 
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_WEIGHT).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_WEIGHT).then(
 				saved => this.weight = saved,
 				error => this.popError("Error: " + error)
 			);
@@ -102,7 +109,7 @@ export class AthleteSettingsComponent implements OnInit {
 				// No... reset !
 				this.popHeartRateError();
 
-				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
+				this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
 					saved => this.maxHr = saved,
 					error => this.popError("Error: " + error)
 				);
@@ -115,7 +122,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 		} else {
 
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_MAX_HR).then(
 				saved => this.maxHr = saved,
 				error => this.popError("Error: " + error)
 			);
@@ -131,7 +138,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 				this.popHeartRateError();
 
-				this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
+				this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
 					saved => this.restHr = saved,
 					error => this.popError("Error: " + error)
 				);
@@ -141,7 +148,7 @@ export class AthleteSettingsComponent implements OnInit {
 			}
 
 		} else {
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_REST_HR).then(
 				saved => this.restHr = saved,
 				error => this.popError("Error: " + error)
 			);
@@ -149,12 +156,63 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 	}
 
+	public onLTHRChanged() {
+		if (_.isNumber(this.defaultLTHR) && this.defaultLTHR < 0) {
+
+			// Wrong value...
+			this.getSavedSetting<UserLactateThresholdModel>(AthleteSettingsComponent.SETTINGS_KEY_USER_LTHR).then(
+				saved => this.defaultLTHR = saved.default,
+				error => this.popError("Error: " + error)
+			);
+			this.popError();
+
+		} else {
+			// Ok...
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_DEFAULT_LTHR, this.defaultLTHR);
+		}
+	}
+
+	public onCyclingLTHRChanged() {
+
+		if (_.isNumber(this.cyclingLTHR) && this.cyclingLTHR < 0) {
+
+			// Wrong value...
+			this.getSavedSetting<UserLactateThresholdModel>(AthleteSettingsComponent.SETTINGS_KEY_USER_LTHR).then(
+				saved => this.cyclingLTHR = saved.default,
+				error => this.popError("Error: " + error)
+			);
+			this.popError();
+
+		} else {
+			// Ok...
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_LTHR, this.cyclingLTHR);
+		}
+	}
+
+	public onRunningLTHRChanged() {
+
+		if (_.isNumber(this.runningLTHR) && this.runningLTHR < 0) {
+
+			// Wrong value...
+			this.getSavedSetting<UserLactateThresholdModel>(AthleteSettingsComponent.SETTINGS_KEY_USER_LTHR).then(
+				saved => this.runningLTHR = saved.default,
+				error => this.popError("Error: " + error)
+			);
+			this.popError();
+
+		} else {
+			// Ok...
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_RUNNING_LTHR, this.runningLTHR);
+		}
+	}
+
+
 	public onCyclingFtpChanged() {
 
 		if (_.isNumber(this.ftp) && this.ftp < 0) {
 
 			// Wrong value...
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP).then(
 				saved => this.ftp = saved,
 				error => this.popError("Error: " + error)
 			);
@@ -166,9 +224,15 @@ export class AthleteSettingsComponent implements OnInit {
 		}
 	}
 
-	/**
-	 * Watch value changes from field directly OR from swim FTP calculator
-	 */
+	public onSwimFtpCalculatorEnabled(): void {
+
+		// Scroll down to bottom element
+		setTimeout(() => {
+			this.bottomElement.nativeElement.scrollIntoView();
+		});
+
+	}
+
 	public onSwimFtpChanged(changeFromPaceField?: boolean) {
 
 		if (_.isUndefined(changeFromPaceField) || !changeFromPaceField) { // If change is not from "hh:mm:ss / 100m" pace field
@@ -178,7 +242,7 @@ export class AthleteSettingsComponent implements OnInit {
 		if (_.isNumber(this.swimFtp) && this.swimFtp < 0) {
 
 			// Wrong value...
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => {
 					this.swimFtp = saved;
 					this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved);
@@ -231,7 +295,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 		if (hasErrors) {
 			// Wrong value...
-			this.getSavedSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_SWIMMING_FTP).then(
 				saved => this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(saved),
 				error => this.popError("Error: " + error)
 			);
@@ -241,42 +305,34 @@ export class AthleteSettingsComponent implements OnInit {
 
 	}
 
-	/**
-	 *
-	 * @param {UserSettingsModel} userSettingsModelChanged
-	 */
 	public profileChanged() {
 
 		this.userSettingsService.markLocalStorageClear();
 		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
-	/**
-	 *
-	 * @param {string} key
-	 * @param value
-	 */
 	public saveSetting(key: string, value: any): void {
-		this.userSettingsService.update(key, value).then((userSettingsModel: UserSettingsModel) => {
-			console.log(key + " has been updated to " + value);
-			this.profileChanged();
-		});
+
+		const isPath: boolean = (key.indexOf(".") !== -1);
+
+		if (isPath) {
+			this.userSettingsService.updateNested(key, value).then((userSettingsModel: UserSettingsModel) => {
+				console.log(key + " has been updated to " + _.get(userSettingsModel, key));
+				this.profileChanged();
+			});
+		} else {
+			this.userSettingsService.update(key, value).then((userSettingsModel: UserSettingsModel) => {
+				console.log(key + " has been updated to " + _.get(userSettingsModel, key));
+				this.profileChanged();
+			});
+		}
 
 	}
 
-	/**
-	 *
-	 * @param {string} key
-	 * @returns {Promise<any>}
-	 */
-	public getSavedSetting(key: string): Promise<any> {
-		return this.userSettingsService.get(key);
+	public getSavedSetting<T>(key: string): Promise<T> {
+		return this.userSettingsService.get<T>(key);
 	}
 
-	/**
-	 *
-	 * @param {string} customMessage
-	 */
 	public popError(customMessage?: string) {
 
 		let message = "Invalid value entered. Reset to previous value.";
@@ -290,7 +346,8 @@ export class AthleteSettingsComponent implements OnInit {
 		});
 	}
 
-	public popHeartRateError() {
+	public popHeartRateError(): void {
 		this.popError("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value");
 	}
+
 }

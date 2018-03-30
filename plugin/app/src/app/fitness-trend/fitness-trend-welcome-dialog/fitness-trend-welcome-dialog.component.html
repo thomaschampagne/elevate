@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>Notice: improved fitness trend accuracy with a heart rate monitor.</h2>
+<mat-dialog-content class="mat-body-1">
+	<div>
+		From now, heart rate based activities have their stress scores processed with <strong><i>Heart Rate Stress Score
+		(HRSS)</i></strong> method. They were previously processed using the <strong><i>Training Impulse
+		(TRIMP)</i></strong> method only.<br/><br/>
+
+		The <i>HRSS</i> method has been added over <i>TRIMP</i> because:
+
+		<ul>
+			<li>
+				<i>HRSS</i> scores are scaled to be use with <i>Training Zones</i>. <i>TRIMP</i> had a scale missmatch
+				with <i>Training Zones</i>.
+			</li>
+			<li>
+				<i>HRSS</i> scores can be directly compared to <i>Cycling Power Stress Scores (PSS)</i>. They use same
+				referential or scale.
+			</li>
+			<li>
+				<i>HRSS</i> scores can be directly compared to <i>Swimming Stress Scores (SSS)</i>. They also use same
+				referential or scale.
+			</li>
+		</ul>
+
+		<div>
+			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+			You should <strong>setup your own <i>Lactate Threshold Heart Rate (LTHR)</i></strong> in <a
+			routerLink="/athleteSettings">athlete settings</a>
+			for best results. (<i>LTHR</i> is basically the latest best average heart rate you can maintain for up to an
+			hour.)
+		</div>
+		<div>
+			However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation
+			method in the feature settings by clicking the
+			<mat-icon color="primary">settings</mat-icon>
+			icon.
+		</div>
+		<div>
+			And a new fitness trend guide is accessible from
+			<mat-icon color="primary">help_outline</mat-icon>
+			icon. Reading this guide is also strongly recommended.
+		</div>
+	</div>
+	<div>
+		<mat-checkbox [(ngModel)]="hideMessage" (change)="onShowMessageChange()">
+			Don't show this message again
+		</mat-checkbox>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">Got it</button>
+</mat-dialog-actions>

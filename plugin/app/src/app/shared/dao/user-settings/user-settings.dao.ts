@@ -29,11 +29,11 @@ export class UserSettingsDao {
 	/**
 	 *
 	 * @param {string} key
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<T>}
 	 */
-	public get(key: string): Promise<Object> {
+	public get<T>(key: string): Promise<T> {
 
-		return new Promise<Object>((resolve, reject) => {
+		return new Promise<T>((resolve, reject) => {
 
 			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
