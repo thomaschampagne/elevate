@@ -22,15 +22,24 @@
 			</li>
 		</ul>
 
-		However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation
-		method in the feature settings by clicking the
-		<mat-icon color="primary">settings</mat-icon>
-		icon.<br/>
-
-		A new fitness trend guide is accessible from
-		<mat-icon color="primary">help_outline</mat-icon>
-		icon. Reading this guide is strongly recommended.
-
+		<div>
+			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+			You should <strong>setup your own <i>Lactate Threshold Heart Rate (LTHR)</i></strong> in <a
+			routerLink="/athleteSettings">athlete settings</a>
+			for best results. (<i>LTHR</i> is basically the latest best average heart rate you can maintain for up to an
+			hour.)
+		</div>
+		<div>
+			However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation
+			method in the feature settings by clicking the
+			<mat-icon color="primary">settings</mat-icon>
+			icon.
+		</div>
+		<div>
+			And new fitness trend guide is accessible from
+			<mat-icon color="primary">help_outline</mat-icon>
+			icon. Reading this guide is also strongly recommended.
+		</div>
 	</div>
 	<div>
 		<mat-checkbox [(ngModel)]="hideMessage" (change)="onShowMessageChange()">

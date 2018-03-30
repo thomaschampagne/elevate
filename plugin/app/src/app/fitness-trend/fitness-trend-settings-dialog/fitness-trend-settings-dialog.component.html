@@ -9,19 +9,19 @@
 	<div *ngIf="(settingsModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
 		<span>
 			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-			When heart rate stress calculation method is set to TRIMP (Training Impulse):
+			When heart rate stress score calculation method is set to TRIMP (Training Impulse):
 			<ul>
-				<li>Training Zones will be disabled<br/>
-					➔&nbsp;&nbsp;TRIMP scores are not optimized to be use with Training Zones.</li>
-				<li>Cycling Power Stress Scores (PSS) will not be used<br/>
-					➔&nbsp;&nbsp;TRIMP scores compared to PSS scores is not fully reliable.
+				<li>
+					Training Zones will be disabled because TRIMP has a scale missmatch with Training Zones.
 				</li>
-				<li>Swimming Stress Scores (SSS) will not be used<br/>
-					➔&nbsp;&nbsp;TRIMP scores compared to SSS scores is not fully reliable.
+				<li>
+					Cycling Power Stress Scores (PSS) will not be taken into account because TRIMP scores are not scaled with PSS stress scores.
+				</li>
+				<li>
+					Swimming Stress Scores (SSS) will not be taken into account because TRIMP scores are not scaled with SSS stress scores.
 				</li>
 			</ul>
 		</span>
-
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
