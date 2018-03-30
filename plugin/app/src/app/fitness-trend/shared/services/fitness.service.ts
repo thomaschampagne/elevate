@@ -234,20 +234,22 @@ export class FitnessService {
 	 */
 	public resolveLTHR(activityType: string, fitnessUserSettingsModel: FitnessUserSettingsModel): number {
 
-		if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
-			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.cycling)) {
-				return fitnessUserSettingsModel.userLactateThreshold.cycling;
+		if (fitnessUserSettingsModel.userLactateThreshold) {
+			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+				if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.cycling)) {
+					return fitnessUserSettingsModel.userLactateThreshold.cycling;
+				}
 			}
-		}
 
-		if (activityType === "Run") {
-			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.running)) {
-				return fitnessUserSettingsModel.userLactateThreshold.running;
+			if (activityType === "Run") {
+				if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.running)) {
+					return fitnessUserSettingsModel.userLactateThreshold.running;
+				}
 			}
-		}
 
-		if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.default)) {
-			return fitnessUserSettingsModel.userLactateThreshold.default;
+			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.default)) {
+				return fitnessUserSettingsModel.userLactateThreshold.default;
+			}
 		}
 
 		return fitnessUserSettingsModel.userRestHr + FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR
