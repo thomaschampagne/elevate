@@ -1,22 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
-	AscentSpeedDataModel,
-	CadenceDataModel,
-	ElevationDataModel,
-	GradeDataModel,
-	HeartRateDataModel,
-	MoveDataModel,
-	PaceDataModel,
-	PowerDataModel,
-	SpeedDataModel,
-	StreamsModel,
-	UpFlatDownModel,
-	UpFlatDownSumCounterModel,
-	UpFlatDownSumTotalModel,
-	ZoneModel,
+	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel,
+	GradeDataModel, HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel,
+	UpFlatDownModel, UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
 import { UserLactateThresholdModel, UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
@@ -502,20 +489,22 @@ export class ActivityComputer {
 	 */
 	public resolveLTHR(activityType: string, userMaxHr: number, userRestHr: number, userLactateThresholdModel: UserLactateThresholdModel): number {
 
-		if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
-			if (_.isNumber(userLactateThresholdModel.cycling)) {
-				return userLactateThresholdModel.cycling;
+		if (userLactateThresholdModel) {
+			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+				if (_.isNumber(userLactateThresholdModel.cycling)) {
+					return userLactateThresholdModel.cycling;
+				}
 			}
-		}
 
-		if (activityType === "Run") {
-			if (_.isNumber(userLactateThresholdModel.running)) {
-				return userLactateThresholdModel.running;
+			if (activityType === "Run") {
+				if (_.isNumber(userLactateThresholdModel.running)) {
+					return userLactateThresholdModel.running;
+				}
 			}
-		}
 
-		if (_.isNumber(userLactateThresholdModel.default)) {
-			return userLactateThresholdModel.default;
+			if (_.isNumber(userLactateThresholdModel.default)) {
+				return userLactateThresholdModel.default;
+			}
 		}
 
 		return userRestHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userRestHr);
