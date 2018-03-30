@@ -53,18 +53,16 @@
 			enter "220 bpm <strong>-</strong> YOUR_AGE" as <strong>temporally</strong> value and think to measure it for
 			real.
 		</div>
-		<div>
-			<mat-form-field fxFlex>
-				<input
-					matInput
-					type="number" min="1" max="999"
-					[(ngModel)]="maxHr"
-					(change)="onMaxHrChanged()"/>
-				<mat-placeholder>
-					Your max HR in bpm
-				</mat-placeholder>
-			</mat-form-field>
-		</div>
+		<mat-form-field fxFlex fxFill>
+			<input
+				matInput
+				type="number" min="1" max="999"
+				[(ngModel)]="maxHr"
+				(change)="onMaxHrChanged()"/>
+			<mat-placeholder>
+				Your max HR in bpm
+			</mat-placeholder>
+		</mat-form-field>
 	</mat-card-content>
 
 	<mat-card-title>
@@ -78,18 +76,16 @@
 			Enter your rest heart rate. Lie down in your bed and measure the lower value with an hear rate monitor or <a
 			href="https://www.youtube.com/watch?v=JQwc-DtY5zA" target="_blank">like this</a>.
 		</div>
-		<div>
-			<mat-form-field fxFlex>
-				<input
-					matInput
-					type="number" min="1" max="999"
-					[(ngModel)]="restHr"
-					(change)="onRestHrChanged()"/>
-				<mat-placeholder>
-					Your rest HR in bpm
-				</mat-placeholder>
-			</mat-form-field>
-		</div>
+		<mat-form-field fxFlex fxFill>
+			<input
+				matInput
+				type="number" min="1" max="999"
+				[(ngModel)]="restHr"
+				(change)="onRestHrChanged()"/>
+			<mat-placeholder>
+				Your rest HR in bpm
+			</mat-placeholder>
+		</mat-form-field>
 	</mat-card-content>
 
 	<mat-card-title>

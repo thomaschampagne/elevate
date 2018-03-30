@@ -28,64 +28,61 @@
 
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
 			<div fxFlex="68" fxFlex.lt-lg="100">
-				<mat-form-field fxFlex="150px">
-					<mat-select placeholder="Progress Type"
-								(change)="onSelectedProgressTypeChange()"
-								[(ngModel)]="selectedProgressType">
-						<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
-							{{progressType.label}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<span fxFlex="2"></span>
-
-				<mat-form-field fxFlex>
-					<mat-select placeholder="Activity Types"
-								(change)="onSelectedActivityTypesChange()"
-								[(ngModel)]="selectedActivityTypes"
-								multiple>
-						<mat-option *ngFor="let type of availableActivityTypes"
-									[value]="type"
-									[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
-							{{type}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<span fxFlex="2"></span>
-
-				<mat-slide-toggle
-					fxFlexAlign="center"
-					[(ngModel)]="includeCommuteRide"
-					(change)="onIncludeCommuteRideToggle()"
-					matTooltip="When enabled, activities flagged as commute are integrated into your progression.">
-					Commute activities
-				</mat-slide-toggle>
-
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<mat-form-field fxFlex="150px">
+						<mat-select placeholder="Progress Type"
+									(change)="onSelectedProgressTypeChange()"
+									[(ngModel)]="selectedProgressType">
+							<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+								{{progressType.label}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="1"></span>
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Activity Types"
+									(change)="onSelectedActivityTypesChange()"
+									[(ngModel)]="selectedActivityTypes"
+									multiple>
+							<mat-option *ngFor="let type of availableActivityTypes"
+										[value]="type"
+										[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
+								{{type}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeCommuteRide"
+						(change)="onIncludeCommuteRideToggle()"
+						matTooltip="When enabled, activities flagged as commute are integrated into your progression.">
+						Commute activities
+					</mat-slide-toggle>
+				</div>
 			</div>
 
 			<span fxFlex="1" fxHide.lt-lg></span>
 
 			<div fxFlex fxHide.lt-lg>
-				<mat-form-field fxFlex>
-					<mat-select placeholder="Years"
-								[(ngModel)]="selectedYears"
-								(change)="onSelectedYearsChange()"
-								multiple>
-						<mat-option *ngFor="let year of availableYears"
-									[value]="year"
-									[disabled]="(selectedYears.length === 1 && year === selectedYears[0])">
-							{{year}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<span fxFlex="5"></span>
-
-				<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
-					<mat-icon>help_outline</mat-icon>
-				</button>
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Years"
+									[(ngModel)]="selectedYears"
+									(change)="onSelectedYearsChange()"
+									multiple>
+							<mat-option *ngFor="let year of availableYears"
+										[value]="year"
+										[disabled]="(selectedYears.length === 1 && year === selectedYears[0])">
+								{{year}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="2"></span>
+					<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
+						<mat-icon>help_outline</mat-icon>
+					</button>
+				</div>
 			</div>
 		</div>
 
