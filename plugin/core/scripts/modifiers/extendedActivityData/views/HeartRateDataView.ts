@@ -137,17 +137,19 @@ export class HeartRateDataView extends AbstractDataView {
 	protected insertDataIntoGrid(): void {
 
 		// Insert some data inside grid
-		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.averageHeartRate, 0), "Average Heart Rate", "bpm", "displayAdvancedHrData"); // Usefull for running
+		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.HRSS, 0), "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.HRSSPerHour, 1), "<strong>HRSS</strong> / Hour", "", "displayAdvancedHrData"); // Usefull for running
 		this.insertContentAtGridPosition(2, 0, this.printNumber(this.heartRateData.activityHeartRateReserve, 0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
 
-		// Quartiles
-		this.insertContentAtGridPosition(0, 1, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 1, this.heartRateData.medianHeartRate, "50% Quartile HeartRate", "bpm", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(2, 1, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		// Trimp
+		this.insertContentAtGridPosition(0, 1, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 1, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
 
-		// Other
-		this.insertContentAtGridPosition(0, 2, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
+		// Quartiles
+		this.insertContentAtGridPosition(0, 2, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 2, this.heartRateData.medianHeartRate, "50% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(2, 2, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+
 	}
 
 }

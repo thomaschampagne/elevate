@@ -220,7 +220,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 				this.dialog.open(OptionHelperDialogComponent, {
 					minWidth: OptionHelperDialogComponent.MIN_WIDTH,
 					maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
-					data: optionHelperData
+					data: optionHelperData,
+					autoFocus: false
 				});
 			});
 		}

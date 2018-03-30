@@ -7,6 +7,11 @@ export const userSettings: UserSettingsModel = {
 	userGender: "men",
 	userMaxHr: 190,
 	userRestHr: 65,
+	userLTHR: {
+		default: null,
+		cycling: null,
+		running: null
+	},
 	userFTP: null,
 	userSwimFTP: null,
 	userWeight: 70,
@@ -47,14 +52,34 @@ export const userSettings: UserSettingsModel = {
 		}, {
 			from: 240,
 			to: 280
-		}, {from: 280, to: 420}, {from: 420, to: 1000}],
-		runningPower: [{from: 25, to: 50}, {from: 50, to: 100}, {from: 100, to: 150}, {from: 150, to: 200}, {
-			from: 200,
-			to: 250
-		}, {from: 250, to: 300}, {from: 300, to: 350}, {from: 350, to: 400}, {from: 400, to: 500}, {
+		}, {from: 280, to: 420}, {
+			from: 420,
+			to: 1000
+		}],
+		runningPower: [{from: 25, to: 50}, {
+			from: 50,
+			to: 100
+		}, {from: 100, to: 150}, {
+			from: 150,
+			to: 200
+		}, {
+			from: 200, to: 250
+		}, {
+			from: 250,
+			to: 300
+		}, {from: 300, to: 350}, {
+			from: 350,
+			to: 400
+		}, {
+			from: 400,
+			to: 500
+		}, {
 			from: 500,
 			to: 600
-		}, {from: 600, to: 800}, {from: 800, to: 1000}],
+		}, {from: 600, to: 800}, {
+			from: 800,
+			to: 1000
+		}],
 		cyclingCadence: [{from: 0, to: 5}, {from: 5, to: 10}, {from: 10, to: 15}, {
 			from: 15,
 			to: 20,
