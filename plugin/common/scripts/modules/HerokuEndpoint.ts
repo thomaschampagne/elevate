@@ -1,7 +1,7 @@
 export class HerokuEndpoints {
 
-    private static totalEndpoints: number = 2;
-    private static patternId: string = "${id}";
+	private static totalEndpoints = 2;
+	private static patternId = "${id}";
 
     public static resolve(url: string): string {
         const now: Date = new Date();

@@ -8,7 +8,7 @@ export class ReliveCCModifier implements IModifier {
 
 	public modify(): void {
 
-		let html: string = "<li class='group'>";
+		let html = "<li class='group'>";
 		html += "<div class='title' style='cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
 
 		$("#pagenav").append($(html)).each(() => {
@@ -20,8 +20,8 @@ export class ReliveCCModifier implements IModifier {
 
 				const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
 
-				const windowWidth: number = 800;
-				const windowHeight: number = 600;
+				const windowWidth = 800;
+				const windowHeight = 600;
 
 				$.fancybox({
 					fitToView: true,

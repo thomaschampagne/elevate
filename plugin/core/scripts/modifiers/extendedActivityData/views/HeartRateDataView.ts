@@ -23,7 +23,7 @@ export class HeartRateDataView extends AbstractDataView {
 
 	protected setupDistributionTable(): void {
 
-		let htmlTable: string = "";
+		let htmlTable = "";
 		htmlTable += "<div>";
 		htmlTable += "<div style=\"height:500px; overflow:auto;\">";
 		htmlTable += "<table class=\"distributionTable\">";
@@ -36,7 +36,7 @@ export class HeartRateDataView extends AbstractDataView {
 		htmlTable += "<td>% ZONE</td>"; // % in zone
 		htmlTable += "</tr>";
 
-		let zoneId: number = 1;
+		let zoneId = 1;
 		for (const zone in this.heartRateData.heartRateZones) {
 
 			let fromHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].from, this.userSettings.userMaxHr, this.userSettings.userRestHr) * 100;

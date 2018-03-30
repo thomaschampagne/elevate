@@ -43,8 +43,8 @@ function BestSplitWorker() {
 		}
 
 		protected averageOfValues(activityJson: any, start: number, end: number, array: number[]): number {
-			let sumValues: number = 0;
-			let sumTime: number = 0;
+			let sumValues = 0;
+			let sumTime = 0;
 			let deltaTime: number;
 			start++;
 			for (; array && start <= end; start++) {
@@ -62,7 +62,7 @@ function BestSplitWorker() {
 			if (!array) {
 				return 0;
 			}
-			let result: number = 0;
+			let result = 0;
 			let previous: number = array[start++];
 			for (; start <= end; start++) {
 				const value: number = array[start];
@@ -78,7 +78,7 @@ function BestSplitWorker() {
 			if (!array) {
 				return 0;
 			}
-			let result: number = 0;
+			let result = 0;
 			let previous: number = array[start++];
 			for (; start <= end; start++) {
 				const value: number = array[start];
@@ -92,11 +92,11 @@ function BestSplitWorker() {
 
 		protected dropOfValues(start: number, end: number, array: number[]): any {
 			const dropHr: any = this.newSplitValue();
-			let maxDrop: number = 0;
-			let maxBegin: number = 0;
-			let maxEnd: number = 0;
-			let maxValueBegin: number = 0;
-			let maxValueEnd: number = 0;
+			let maxDrop = 0;
+			let maxBegin = 0;
+			let maxEnd = 0;
+			let maxValueBegin = 0;
+			let maxValueEnd = 0;
 			if (array) {
 				let previous: number = array[start++];
 				let currentMax: number = previous;
@@ -129,11 +129,11 @@ function BestSplitWorker() {
 
 		protected riseOfValues(start: number, end: number, array: number[]): any {
 			const riseHr: any = this.newSplitValue();
-			let maxRise: number = 0;
-			let maxBegin: number = 0;
-			let maxEnd: number = 0;
-			let maxValueBegin: number = 0;
-			let maxValueEnd: number = 0;
+			let maxRise = 0;
+			let maxBegin = 0;
+			let maxEnd = 0;
+			let maxValueBegin = 0;
+			let maxValueEnd = 0;
 			if (array) {
 				let previous: number = array[start++];
 				let currentMin: number = previous;
@@ -166,7 +166,7 @@ function BestSplitWorker() {
 		}
 
 		protected coutOfNonZero(start: number, end: number, array: number[]): number {
-			let result: number = 0;
+			let result = 0;
 			for (; array && start <= end; start++) {
 				if (array[start]) {
 					result += 1;
@@ -273,7 +273,7 @@ function BestSplitWorker() {
 					splitInSeconds = split.length;
 				}
 
-				for (let i: number = 0, max = activityJson.time.length; i < max; i++) {
+				for (let i = 0, max = activityJson.time.length; i < max; i++) {
 					time = 0;
 					begin = i;
 					end = i + 1;
@@ -312,7 +312,7 @@ function BestSplitWorker() {
 			if (split.unit === options.Kilometers || split.unit === options.Miles) {
 				let distanceInMeters: number = split.length * (split.unit === options.Miles ? options.MilesToMetersFactor : options.KilometersToMetersFactor),
 					distanceInUserUnits: number;
-				for (let i: number = 0, max = activityJson.distance.length; i < max; i++) {
+				for (let i = 0, max = activityJson.distance.length; i < max; i++) {
 					distance = 0;
 					begin = i;
 					end = i + 1;
@@ -457,10 +457,10 @@ export class ActivityBestSplitsModifier implements IModifier {
 		// it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
 		let max: number;
 		if (data && distance) {
-			let smooth_factor: number = 0;
+			let smooth_factor = 0;
 			const result: number[] = [];
 			result[0] = data[0];
-			for (let i: number = 1, max = data.length; i < max; i++) {
+			for (let i = 1, max = data.length; i < max; i++) {
 				if (smoothing === 0) {
 					result[i] = data[i];
 				} else {

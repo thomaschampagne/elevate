@@ -51,7 +51,7 @@ export class AthleteSettingsComponent implements OnInit {
 	public ftp: number;
 	public swimFtp100m: string;
 
-	public isSwimFtpCalculatorEnabled: boolean = false;
+	public isSwimFtpCalculatorEnabled = false;
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,

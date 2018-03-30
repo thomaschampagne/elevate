@@ -17,13 +17,13 @@ export class MenuModifier implements IModifier {
 
 		// Add kom-map to global navigation
 		const globalNav: JQuery = $(".global-nav");
-		let html: string = "<li class='drop-down-menu'>";
+		let html = "<li class='drop-down-menu'>";
 
-		const menuStyle: string = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors;
+		const menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors;
 		const menuIcon: string = this.appResources.menuIconOrange;
 
-		const styleSideRight: string = "display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;";
-		const styleSideLeft: string = "border-top: 1px solid #DDD; width: 50%;";
+		const styleSideRight = "display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;";
+		const styleSideLeft = "border-top: 1px solid #DDD; width: 50%;";
 
 		html += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
 		html += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";

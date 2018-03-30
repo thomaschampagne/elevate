@@ -13,7 +13,7 @@ export class ActivityBikeOdoModifier implements IModifier {
 		const bikeDisplayedOnActivityPage: string = $(".gear-name").text().trim();
 
 		// Get odo from map
-		let activityBikeOdo: string = "No bike declared";
+		let activityBikeOdo = "No bike declared";
 		try {
 			activityBikeOdo = this.bikeOdoArray[btoa(bikeDisplayedOnActivityPage)];
 		} catch (err) {
@@ -22,7 +22,7 @@ export class ActivityBikeOdoModifier implements IModifier {
 
 		const newBikeDisplayHTML: string = bikeDisplayedOnActivityPage + "<strong> / " + activityBikeOdo + "</strong>";
 
-		const forceRefreshActionHTML: string = "<a href=\"#\" style=\"cursor: pointer;\" title=\"Force odo refresh for this athlete's bike. Usually it refresh every 2 hours...\" id=\"bikeOdoForceRefresh\">Force refresh odo</a>";
+		const forceRefreshActionHTML = "<a href=\"#\" style=\"cursor: pointer;\" title=\"Force odo refresh for this athlete's bike. Usually it refresh every 2 hours...\" id=\"bikeOdoForceRefresh\">Force refresh odo</a>";
 
 		// Edit Activity Page
 		$(".gear-name").html(newBikeDisplayHTML + "<br />" + forceRefreshActionHTML).each(() => {

@@ -27,7 +27,9 @@ export class AppError {
 
 	public checkForDuplicatesErrors(): void {
 		const duplicates = _.transform(_.countBy(this._codes), (result: string[], count: number, value: string) => {
-			if (count > 1) result.push(value);
+			if (count > 1) {
+				result.push(value);
+			}
 		}, []);
 
 		if (duplicates.length > 0) {

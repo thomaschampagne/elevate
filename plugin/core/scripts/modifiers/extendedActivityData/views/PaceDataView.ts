@@ -56,7 +56,7 @@ export class PaceDataView extends AbstractDataView {
 			return;
 		}
 
-		let htmlTable: string = "";
+		let htmlTable = "";
 		htmlTable += "<div>";
 		htmlTable += "<div style=\"height:500px; overflow:auto;\">";
 		htmlTable += "<table class=\"distributionTable\">";

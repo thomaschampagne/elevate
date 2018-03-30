@@ -15,8 +15,8 @@ export class AthleteStatsModifier implements IModifier {
 	protected yearTargets: any;
 	protected progressThisYear: JQuery;
 
-	public static metersTo1000thOfMileFactor: number = 0.621371192;
-	public static metersToFeetsFactor: number = 3.2808399;
+	public static metersTo1000thOfMileFactor = 0.621371192;
+	public static metersToFeetsFactor = 3.2808399;
 
 	constructor(appResources: IAppResources, yearTargets: any) {
 
@@ -63,7 +63,7 @@ export class AthleteStatsModifier implements IModifier {
 		let activity: any;
 		let date: Date;
 
-		for (let i: number = 0, max: number = activities.length; i < max; i++) {
+		for (let i = 0, max: number = activities.length; i < max; i++) {
 
 			activity = activities[i];
 
@@ -144,7 +144,7 @@ export class AthleteStatsModifier implements IModifier {
 			return;
 		}
 
-		for (let i: number = 0; i < types.length; i++) {
+		for (let i = 0; i < types.length; i++) {
 
 			years = types[i];
 			yearsList = [];
@@ -218,10 +218,10 @@ export class AthleteStatsModifier implements IModifier {
 			return;
 		}
 
-		let total: number = 0,
+		let total = 0,
 			i: number,
 			max: number,
-			url: string = "/athlete/training_activities?new_activity_only=false&per_page=2000&page=",
+			url = "/athlete/training_activities?new_activity_only=false&per_page=2000&page=",
 			currentActivities: any[] = [],
 			requests: JQueryXHR[] = [],
 			activitiesFromCache: string = localStorage.getItem(this.cacheKey_),
@@ -417,7 +417,7 @@ export class AthleteStatsModifier implements IModifier {
 						// Create data for trend line only if target is non-zero
 						// Target is stored against new key value target and year is future year for differentiation
 						// Query target type while at it
-						let yearTarget: number = 0;
+						let yearTarget = 0;
 						switch (activities[0].t) {
 							// Cycling
 							case 0:
@@ -492,7 +492,7 @@ export class AthleteStatsModifier implements IModifier {
 
 			processData();
 
-			const container: string = "#athleteStatChart",
+			const container = "#athleteStatChart",
 				width = $(container).width(),
 				height = $(container).height();
 
@@ -577,7 +577,7 @@ export class AthleteStatsModifier implements IModifier {
 				trendLinesGroup = svg.append("svg:g");
 
 			const generateLines = function () {
-				let i: number = 0;
+				let i = 0;
 				$("#athleteStatChartYears").empty();
 				trendLinesGroup.selectAll("path.trend-line").remove();
 				data.forEach(function (yearData: any) {

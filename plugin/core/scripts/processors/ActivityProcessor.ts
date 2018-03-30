@@ -9,7 +9,7 @@ import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
 
 export class ActivityProcessor {
 
-	public static cachePrefix: string = "stravistix_activity_";
+	public static cachePrefix = "stravistix_activity_";
 	protected appResources: IAppResources;
 	protected vacuumProcessor: VacuumProcessor;
 	protected zones: any;
@@ -49,7 +49,7 @@ export class ActivityProcessor {
 		}
 
 		// We are not using cache when bounds are given
-		let useCache: boolean = true;
+		let useCache = true;
 		if (!_.isEmpty(bounds)) {
 			useCache = false;
 		}

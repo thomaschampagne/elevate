@@ -15,8 +15,8 @@ import { HeartRateDataView } from "./views/HeartRateDataView";
 
 export abstract class AbstractExtendedDataModifier {
 
-	public static TYPE_ACTIVITY: number = 0;
-	public static TYPE_SEGMENT: number = 1;
+	public static TYPE_ACTIVITY = 0;
+	public static TYPE_SEGMENT = 1;
 
 	protected activityProcessor: ActivityProcessor;
 	protected activityId: number;
@@ -97,20 +97,22 @@ export abstract class AbstractExtendedDataModifier {
 
 		$(".inline-stats.section").first().after(this.summaryGrid.html()).each(() => {
 			// Grid placed
-			if (panelAdded) panelAdded();
+			if (panelAdded) {
+				panelAdded();
+			}
 		});
 	}
 
 	protected makeSummaryGrid(columns: number, rows: number): void {
 
-		let summaryGrid: string = "";
+		let summaryGrid = "";
 		summaryGrid += "<div>";
 		summaryGrid += "<div class=\"summaryGrid\">";
 		summaryGrid += "<table>";
 
-		for (let i: number = 0; i < rows; i++) {
+		for (let i = 0; i < rows; i++) {
 			summaryGrid += "<tr>";
-			for (let j: number = 0; j < columns; j++) {
+			for (let j = 0; j < columns; j++) {
 				summaryGrid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
 				summaryGrid += "</td>";
 			}
@@ -125,15 +127,15 @@ export abstract class AbstractExtendedDataModifier {
 	protected insertContentSummaryGridContent(): void {
 
 		// Insert summary data
-		let moveRatio: string = "-";
+		let moveRatio = "-";
 		if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
 			moveRatio = this.analysisData.moveRatio.toFixed(2);
 		}
 		this.insertContentAtGridPosition(0, 0, moveRatio, "Move Ratio", "", "displayActivityRatio");
 
 		// ...
-		let trainingImpulse: string = "-";
-		let hrss: string = "-";
+		let trainingImpulse = "-";
+		let hrss = "-";
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
 			hrss = this.analysisData.heartRateData.HRSS.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.HRSSPerHour.toFixed(1) + " / hour)</span>";
@@ -142,8 +144,8 @@ export abstract class AbstractExtendedDataModifier {
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
 
 		// ...
-		let climbTime: string = "-";
-		let climbTimeExtra: string = "";
+		let climbTime = "-";
+		let climbTimeExtra = "";
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			climbTime = Helper.secondsToHHMMSS(this.analysisData.gradeData.upFlatDownInSeconds.up);
 			climbTimeExtra = "<span class=\"summarySubGridTitle\">(" + (this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100).toFixed(0) + "% of time)</span>";
@@ -155,7 +157,7 @@ export abstract class AbstractExtendedDataModifier {
 
 	protected placeExtendedStatsButton(buttonAdded: () => void): void {
 
-		let htmlButton: string = "<section style=\"text-align: center;\">";
+		let htmlButton = "<section style=\"text-align: center;\">";
 		htmlButton += "<a class=\"button btn-block btn-primary\" id=\"extendedStatsButton\" href=\"#\">";
 		htmlButton += "Show extended statistics";
 		htmlButton += "</a>";
@@ -177,7 +179,9 @@ export abstract class AbstractExtendedDataModifier {
 					},
 				);
 			});
-			if (buttonAdded) buttonAdded();
+			if (buttonAdded) {
+				buttonAdded();
+			}
 		});
 	}
 
@@ -210,7 +214,9 @@ export abstract class AbstractExtendedDataModifier {
 
 		});
 
-		if (buttonAdded) buttonAdded();
+		if (buttonAdded) {
+			buttonAdded();
+		}
 	}
 
 	protected getSegmentInfos(callback: (segmentInfosResponse: any) => any): void {
@@ -320,7 +326,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected cleanDataViews(): void {
 
 		if (!_.isEmpty(this.dataViews)) {
-			for (let i: number = 0; i < this.dataViews.length; i++) {
+			for (let i = 0; i < this.dataViews.length; i++) {
 				this.dataViews[i] = null;
 				delete this.dataViews[i];
 			}

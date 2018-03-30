@@ -26,7 +26,7 @@ export class MultipleActivityProcessor {
 
 		const deferred = Q.defer<SyncedActivityModel[]>();
 
-		let computedActivitiesPercentageCount: number = 0;
+		let computedActivitiesPercentageCount = 0;
 
 		let activitiesComputedResults: AnalysisDataModel[] = [];
 
