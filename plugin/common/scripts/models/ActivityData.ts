@@ -81,6 +81,8 @@ export class PowerDataModel {
 }
 
 export class HeartRateDataModel {
+	HRSS: number;
+	HRSSPerHour: number;
     TRIMP: number;
     TRIMPPerHour: number;
     lowerQuartileHeartRate: number;

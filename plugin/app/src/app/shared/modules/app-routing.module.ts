@@ -2,9 +2,8 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppRoutesModel } from "../models/app-routes.model";
 import { AthleteSettingsComponent } from "../../athlete-settings/athlete-settings.component";
-import { CommonSettingsComponent } from "../../common-settings/common-settings.component";
+import { GlobalSettingsComponent } from "../../global-settings/global-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
-import { FitnessTrendComponent } from "../../fitness-trend/fitness-trend.component";
 import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
@@ -12,23 +11,24 @@ import { YearProgressComponent } from "../../year-progress/year-progress.compone
 import { ShareComponent } from "../../share/share.component";
 import { WelcomeComponent } from "../../welcome/welcome.component";
 import { ReportComponent } from "../../report/report.component";
+import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
 
-export const routes: Routes = [
+const routes: Routes = [
 	{
 		path: AppRoutesModel.welcome,
 		component: WelcomeComponent
 	},
 	{
 		path: AppRoutesModel.fitnessTrend,
-		component: FitnessTrendComponent
+		loadChildren: "../../fitness-trend/fitness-trend.module#FitnessTrendModule"
 	},
 	{
 		path: AppRoutesModel.yearProgressions,
 		component: YearProgressComponent
 	},
 	{
-		path: AppRoutesModel.commonSettings,
-		component: CommonSettingsComponent
+		path: AppRoutesModel.globalSettings,
+		component: GlobalSettingsComponent
 	},
 	{
 		path: AppRoutesModel.athleteSettings,
@@ -60,6 +60,10 @@ export const routes: Routes = [
 	{
 		path: AppRoutesModel.report,
 		component: ReportComponent
+	},
+	{
+		path: AppRoutesModel.advancedMenu,
+		component: AdvancedMenuComponent
 	},
 	{
 		path: "", redirectTo: AppRoutesModel.welcome, pathMatch: "full"

@@ -28,7 +28,7 @@ describe("AppUsageDao", () => {
 		const quotaBytes = 1024;
 		const bytesInUse = 512;
 
-		spyOn(appUsageDao, "chromeStorageLocal").and.returnValue({
+		spyOn(appUsageDao, "browserStorageLocal").and.returnValue({
 			QUOTA_BYTES: quotaBytes,
 			getBytesInUse: (callback: (bytesInUse: number) => {}) => {
 				callback(bytesInUse);

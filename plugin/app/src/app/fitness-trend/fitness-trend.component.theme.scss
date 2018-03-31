@@ -1,0 +1,225 @@
+@import "../../../node_modules/@angular/material/theming";
+@import "../../../node_modules/@angular/material/theming";
+
+$config: mat-typography-config();
+
+// Define a mixin that accepts a theme and outputs the color styles for the component.
+@mixin fitness-trend-theming($theme) {
+
+	$foreground: map-get($theme, foreground);
+	$background: map-get($theme, background);
+
+	$text-color: mat-color($foreground, text);
+
+	// Extract whichever individual palettes you need from the theme.
+	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+
+	$accent-color: mat-color($accent);
+	$primary-color: mat-color($primary);
+
+	// Using mat-color to extract individual colors from the palette
+	$ctl-color: $accent-color;
+	$atl-color: $primary-color;
+	$tsb-color: mat-color($primary, 900);
+
+	$caption-font-size: mat-font-size($config, caption);
+	$body-1-font-size: mat-font-size($config, body-1);
+
+	.legend-active-day {
+
+		font-size: $body-1-font-size;
+
+		.tag {
+			padding: 1px 2px;
+			border: 1px solid $primary-color;
+			border-radius: 4px;
+			color: $primary-color;
+		}
+
+		.name {
+			color: $accent-color;
+		}
+	}
+
+	.atl-value {
+		color: $atl-color;
+	}
+	.ctl-value {
+		color: $ctl-color;
+	}
+	.tsb-value {
+		color: $tsb-color;
+	}
+
+	#fitnessTrendGraph {
+
+		// Lines
+
+		// 1
+		.mg-area1-color {
+			fill: $atl-color;
+			fill-opacity: 0.35;
+		}
+
+		.mg-line1-color {
+			stroke: $atl-color;
+		}
+
+		// 2
+		.mg-area2-color {
+			fill: $ctl-color;
+			fill-opacity: 0.35;
+		}
+
+		.mg-line2-color {
+			stroke: $ctl-color;
+		}
+
+		// 3
+		.mg-area3-color {
+			fill: $tsb-color;
+			fill-opacity: 0.35;
+		}
+
+		.mg-line3-color {
+			stroke: $tsb-color;
+		}
+
+		// 4
+		.mg-line4-color {
+			stroke: $atl-color;
+			stroke-dasharray: 5, 5;
+		}
+
+		.mg-area4-color {
+			fill: $atl-color;
+			fill-opacity: 0.10;
+		}
+
+		// 5
+		.mg-area5-color {
+			fill: $ctl-color;
+			fill-opacity: 0.10;
+		}
+
+		.mg-line5-color {
+			stroke: $ctl-color;
+			stroke-dasharray: 5, 5;
+		}
+
+		// 6
+		.mg-area6-color {
+			fill: $tsb-color;
+			fill-opacity: 0.10;
+		}
+
+		.mg-line6-color {
+			stroke: $tsb-color;
+			stroke-dasharray: 5, 5;
+		}
+
+		// 7 (active line)
+		.mg-area7-color {
+			fill: $text-color;
+		}
+
+		.mg-line7-color {
+			fill: $text-color;
+			fill-opacity: 0.35;
+			stroke: $text-color;
+			stroke-width: 1px;
+		}
+
+	}
+
+	// Tooltip
+	.viewed-day-tooltip {
+		text-decoration: none;
+		position: relative;
+	}
+
+	.viewed-day-tooltip div {
+
+		display: none;
+
+		width: 220px;
+		height: 145px;
+		border-radius: 3px;
+
+		border: 1px solid mat-color($foreground, text, 0.25); // Use from text color
+		background-color: mat-color($background, background, 0.85); // Use background color
+		color: $text-color;
+
+		table {
+
+			padding: 8px;
+			width: 100%;
+			height: 100%;
+			.open {
+				font-size: $caption-font-size;
+			}
+
+			.active {
+				color: mat-color($mat-red, 500);
+			}
+
+			.rest, .preview {
+				color: mat-color($mat-green, 600);
+			}
+
+			.separator td {
+				padding-bottom: 4px;
+				border-bottom: 1px solid mat-color($foreground, text, 0.2);
+			}
+
+			.ctl-value td {
+				padding-top: 3px;
+			}
+
+			td:last-child {
+				width: 40%;
+				text-align: right;
+			}
+
+			td:first-child {
+				text-align: left;
+				width: 60%;
+			}
+		}
+	}
+
+	.viewed-day-tooltip:hover div {
+		display: block;
+		position: fixed;
+		overflow: hidden;
+	}
+
+	.mg-x-axis text, .mg-y-axis text, .mg-markers text, .mg-baselines text {
+		fill: $text-color;
+		font-size: 12px;
+		opacity: 1;
+	}
+
+	.mg-baselines line {
+		opacity: 0.75;
+		stroke-dasharray: 9, 6, 2, 6;
+		stroke-width: 1;
+		stroke-linecap: round;
+		stroke: $text-color;
+	}
+
+	.mg-extended-yax-ticks {
+		stroke: $text-color;
+		shape-rendering: auto;
+		stroke-opacity: 0.175;
+		stroke-width: 1px;
+	}
+
+	.mg-markers line {
+		opacity: 0.175;
+		shape-rendering: auto;
+		stroke: $text-color;
+		stroke-width: 1px;
+	}
+}

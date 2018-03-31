@@ -5,7 +5,7 @@ import { SyncNotifyModel } from "../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
-import { env } from "../config/env";
+import { CoreEnv } from "../config/core-env";
 import { AthleteUpdate } from "./Follow";
 import { IAppResources } from "./interfaces/IAppResources";
 import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
@@ -97,7 +97,7 @@ export class StravistiX {
 		// Handle some tasks when install/update occurs
 		this.handlePluginInstallOrUpgrade();
 
-		if (env.preview) {
+		if (CoreEnv.preview) {
 			this.handlePreviewRibbon();
 		}
 
@@ -111,7 +111,7 @@ export class StravistiX {
 		// Init "stravistix bridge"
 		window.__stravistix_bridge__ = {};
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Handling " + window.location.pathname);
 		}
 
@@ -254,7 +254,7 @@ export class StravistiX {
 		Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, (response: any) => {
 
 			// Override version with fake one to simulate update
-			if (env.simulateUpdate) {
+			if (CoreEnv.simulateUpdate) {
 				response = {
 					data: {
 						version: "fakeVersion",
@@ -365,7 +365,7 @@ export class StravistiX {
 		}
 
 		if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
-			message += "<h5><strong>FIXED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
+			message += "<h5><strong>FIXED / IMPROVED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
 			_.forEach(updateMessageObj.fixes, (fix: string) => {
 				message += "<h6 style=\"margin-top: 12px;\">- " + fix + "</h6>";
 			});
@@ -409,7 +409,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleAthletesStats()");
 		}
 
@@ -453,7 +453,7 @@ export class StravistiX {
 	 */
 	protected handleMenu(): void {
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleMenu()");
 		}
 
@@ -475,7 +475,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRemoteLinks()");
 		}
 
@@ -504,7 +504,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleWindyTyModifier()");
 		}
 
@@ -539,7 +539,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleReliveCCModifier()");
 		}
 
@@ -564,7 +564,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleDefaultLeaderboardFilter()");
 		}
 
@@ -586,7 +586,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleSegmentRankPercentage()");
 		}
 
@@ -605,7 +605,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleSegmentHRAP_()");
 		}
 
@@ -625,7 +625,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityStravaMapType()");
 		}
 
@@ -650,7 +650,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleHideFeed()");
 		}
 
@@ -665,7 +665,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleDisplayFlyByFeedModifier()");
 		}
 
@@ -693,7 +693,7 @@ export class StravistiX {
 		this.activityProcessor.setActivityType(activityType);
 		this.activityProcessor.setTrainer(isTrainer);
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleExtendedData_()");
 		}
 
@@ -832,7 +832,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleNearbySegments()");
 		}
 
@@ -842,7 +842,7 @@ export class StravistiX {
 		const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
 		segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
 
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log(jsonSegments);
 			}
 
@@ -875,7 +875,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityBikeOdo()");
 		}
 
@@ -904,7 +904,7 @@ export class StravistiX {
 		// PR only for my own activities
 		const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivitySegmentTimeComparison()");
 		}
 
@@ -936,7 +936,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityBestSplits()");
 		}
 
@@ -978,7 +978,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningGradeAdjustedPace()");
 		}
 
@@ -1008,7 +1008,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningHeartRate()");
 		}
 
@@ -1035,7 +1035,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningCadence()");
 		}
 
@@ -1062,7 +1062,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningHeartRate()");
 		}
 
@@ -1126,12 +1126,12 @@ export class StravistiX {
 
 		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 		}
 
 		if (_.isNull(this.athleteId)) {
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("athleteId is empty value: " + this.athleteId);
 			}
 			return;
@@ -1157,11 +1157,11 @@ export class StravistiX {
 			// Push IncomingConnection
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 			}
 
-			if (!env.debugMode) {
+			if (!CoreEnv.debugMode) {
 				follow("send", "event", "DailyConnection", eventAction, eventName);
 			}
 
@@ -1169,7 +1169,7 @@ export class StravistiX {
 			StorageManager.setCookie("stravistix_daily_connection_done", true, 1);
 
 		} else {
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 			}
 		}
@@ -1237,7 +1237,7 @@ export class StravistiX {
 								error: {path: window.location.href, date: new Date(), content: err},
 							};
 
-							const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+							const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 							$.post({
 								url: endPoint,

@@ -31,7 +31,7 @@ describe("ActivityDao", () => {
 	it("should fetch SyncedActivityModels", (done: Function) => {
 
 		// Given
-		const chromeStorageLocalSpy = spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({computedActivities: _TEST_SYNCED_ACTIVITIES_});
 			}
@@ -46,7 +46,7 @@ describe("ActivityDao", () => {
 			expect(result).not.toBeNull();
 			expect(result).toEqual(_TEST_SYNCED_ACTIVITIES_);
 			expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);
-			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -59,7 +59,7 @@ describe("ActivityDao", () => {
 	it("should fetch empty SyncedActivityModels", (done: Function) => {
 
 		// Given
-		const chromeStorageLocalSpy = spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({computedActivities: null});
 			}
@@ -72,7 +72,7 @@ describe("ActivityDao", () => {
 		promise.then((result: SyncedActivityModel[]) => {
 
 			expect(result).toBeNull();
-			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -86,7 +86,7 @@ describe("ActivityDao", () => {
 
 		// Given
 		const syncedActivityModelsToSave = _TEST_SYNCED_ACTIVITIES_;
-		const chromeStorageLocalSpy = spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -103,7 +103,7 @@ describe("ActivityDao", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(syncedActivityModelsToSave);
-			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(2);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
 
 			done();
 
@@ -116,7 +116,7 @@ describe("ActivityDao", () => {
 	it("should remove SyncedActivityModels", (done: Function) => {
 
 		// Given
-		const chromeStorageLocalSpy = spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -132,7 +132,7 @@ describe("ActivityDao", () => {
 		promise.then((result: SyncedActivityModel[]) => {
 
 			expect(result).toBeNull();
-			expect(chromeStorageLocalSpy).toHaveBeenCalledTimes(2);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
 
 			done();
 
@@ -146,7 +146,7 @@ describe("ActivityDao", () => {
 
 		// Given
 		const syncedActivityModelsToSave = _TEST_SYNCED_ACTIVITIES_;
-		spyOn(activityDao, "chromeStorageLocal").and.returnValue({
+		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},

@@ -1,4 +1,5 @@
-import { Component, OnInit, VERSION } from "@angular/core";
+import { Component, OnInit, VERSION as  angularCoreVersion } from "@angular/core";
+import { VERSION as angularMaterialVersion } from "@angular/material";
 import * as d3 from "d3";
 import { AppUsageService } from "../shared/services/app-usage/app-usage.service";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
@@ -15,7 +16,8 @@ export class AboutDialogComponent implements OnInit {
 	public static readonly MAX_WIDTH: string = "40%";
 	public static readonly MIN_WIDTH: string = "40%";
 
-	public angularVersion: string;
+	public angularCoreVersion: string;
+	public angularMaterialVersion: string;
 	public d3Version: string;
 	public appVersion: string;
 	public appUsageDetails: AppUsageDetails;
@@ -30,7 +32,8 @@ export class AboutDialogComponent implements OnInit {
 		});
 
 		this.appVersion = this.getAppVersion();
-		this.angularVersion = VERSION.full;
+		this.angularCoreVersion = angularCoreVersion.full;
+		this.angularMaterialVersion = angularMaterialVersion.full;
 		this.d3Version = d3.version;
 	}
 

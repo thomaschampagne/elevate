@@ -20,13 +20,13 @@
 			"prefix": "app",
 			"styles": [
 				"styles.scss",
-				"../node_modules/katex/dist/katex.min.css",
+				"../node_modules/katex/dist/katex.css",
 				"../node_modules/github-markdown-css/github-markdown.css",
-				"../node_modules/metrics-graphics-fastring/dist/metricsgraphics.css"
+				"../modules/metrics-graphics/metricsgraphics.css"
 			],
 			"scripts": [
 				"../node_modules/d3/build/d3.js",
-				"../node_modules/metrics-graphics-fastring/dist/metricsgraphics.js"
+				"../modules/metrics-graphics/metricsgraphics.js"
 			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {

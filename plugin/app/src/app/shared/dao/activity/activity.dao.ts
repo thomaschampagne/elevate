@@ -16,7 +16,7 @@ export class ActivityDao {
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve) => {
-			this.chromeStorageLocal().get(ActivityDao.SYNCED_ACTIVITIES_KEY, (result: { computedActivities: SyncedActivityModel[] }) => {
+			this.browserStorageLocal().get(ActivityDao.SYNCED_ACTIVITIES_KEY, (result: { computedActivities: SyncedActivityModel[] }) => {
 				const syncedActivityModels = (_.isEmpty(result.computedActivities)) ? null : result.computedActivities;
 				resolve(syncedActivityModels);
 			});
@@ -34,7 +34,7 @@ export class ActivityDao {
 
 			const syncedActivityData: any = {};
 			syncedActivityData[ActivityDao.SYNCED_ACTIVITIES_KEY] = syncedActivityModels;
-			this.chromeStorageLocal().set(syncedActivityData, () => {
+			this.browserStorageLocal().set(syncedActivityData, () => {
 				this.fetch().then((athleteProfileModel: SyncedActivityModel[]) => {
 					resolve(athleteProfileModel);
 				});
@@ -49,7 +49,7 @@ export class ActivityDao {
 	 */
 	public remove(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve, reject) => {
-			this.chromeStorageLocal().remove(ActivityDao.SYNCED_ACTIVITIES_KEY, () => {
+			this.browserStorageLocal().remove(ActivityDao.SYNCED_ACTIVITIES_KEY, () => {
 				this.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
 					(_.isEmpty(syncedActivityModels)) ? resolve(syncedActivityModels) : reject("SyncedActivityModels have not been deleted");
 				});
@@ -61,7 +61,7 @@ export class ActivityDao {
 	 *
 	 * @returns {chrome.storage.SyncStorageArea}
 	 */
-	public chromeStorageLocal(): chrome.storage.LocalStorageArea {
+	public browserStorageLocal(): chrome.storage.LocalStorageArea {
 		return chrome.storage.local;
 	}
 }

@@ -20,6 +20,64 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.1.0",
+		message: "Test build",
+		hotFixes: [],
+		features: [],
+		isPatch: false,
+		fixes: []
+	},
+	{
+		version: "6.0.3",
+		message: "Third patch of <strong>NEW APP</strong> released in February. Mainly bugs fixes and improvements. Click \"show details\" for more info.",
+		hotFixes: [],
+		features: [
+			"New fitness trend feature. Fully reworked on patch 6.0.2: Added tooltip for detail of each day; Added active day dotted line & form curve area to distinguish zero line.",
+			"New year progressions",
+			"New common settings section",
+			"New athlete settings section",
+			"New zones settings section",
+			"New themes: light & dark",
+			"Pushed reliability & global performance",
+			"Optimized the \"auto-sync\" in background: You'll perform less manual syncs"
+		],
+		isPatch: true,
+		fixes: [
+			"Added some horizontal lines on fitness trend graph",
+			"Improved graphs rendering performance",
+			"Added missing message on fitness trend when user as no eligible history to access feature",
+			"Fixed fitness graph vertical flicks when text of activities were too long",
+			"Fixed a zones settings major issue when zones could be saved on some cases",
+			"Fixed wrong power stress score calculation when an activity were on pause"
+		]
+	},
+	{
+		version: "6.0.2",
+		message: "2nd big patch of the brand <strong>NEW APP</strong>!. Fitness trend look has been reworked along your feedbacks. And fitness graph is now linked to fitness table. And tons of other things...",
+		hotFixes: [],
+		features: [
+			"Remade and improved fitness trend feature",
+			"Remade and improved year progressions",
+			"Remade and improved common settings section",
+			"Remade and improved athlete settings section",
+			"Remade and improved zones settings section",
+			"Remade global design of the app with light and dark themes",
+			"Improved global reliability & performance of the application"
+		],
+		isPatch: true,
+		fixes: [
+			"Set default theme is now dark. Added a button directly on toolbar to switch theme (dark/light)",
+			"Reworked fitness trend graph look: Added tooltip for detail of each day. Added active day dotted line & form curve area (both help to distinguish zero line)",
+			"Added data link between fitness trend graph & fitness table. Graph and table are also displayed on same page from now",
+			"Optimized auto sync while on strava.com. You should perform less manual synchronizations",
+			"Changed fitness trend period slide 'forward/backward' from 15 to 14 days",
+			"Fixed bug on fitness trend when user select a bigger last period than his history length",
+			"[Technical] Restructured the global architecture of the fitness trend",
+			"[Technical] Upgraded angular, angular material & flex layouts libraries",
+			"[Technical] Upgraded katex version for maths expressions"
+		]
+	},
+	{
 		version: "6.0.1",
 		message: "First patch of the brand <strong>NEW app</strong>! Fitness trend, years progress & others features have been fully remade! A <strong>new start</strong> to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
 		hotFixes: [],
@@ -470,11 +528,11 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.3",
-		message: "Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
+		message: "Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
-			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
-			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: true,
 		fixes: [
@@ -484,11 +542,11 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.2",
-		message: "<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
+		message: "<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
-			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
-			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],

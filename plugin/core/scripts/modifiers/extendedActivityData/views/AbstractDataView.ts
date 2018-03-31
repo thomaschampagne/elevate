@@ -85,7 +85,7 @@ export abstract class AbstractDataView {
 			graphWidth = graphWidth * 1.3;
 		}
 
-		let htmlCanvas: string = "";
+		let htmlCanvas = "";
 		htmlCanvas += "<div>";
 		htmlCanvas += "<div>";
 		htmlCanvas += "<canvas id=\"" + this.canvasId + "\" height=\"450\" width=\"" + graphWidth + "\"></canvas>";
@@ -194,7 +194,7 @@ export abstract class AbstractDataView {
 			return;
 		}
 
-		let htmlTable: string = "";
+		let htmlTable = "";
 		htmlTable += "<div>";
 		htmlTable += "<div style=\"height:500px; overflow:auto;\">";
 		htmlTable += "<table class=\"distributionTable\">";
@@ -208,7 +208,7 @@ export abstract class AbstractDataView {
 		htmlTable += "<td>% ZONE</td>"; // % in zone
 		htmlTable += "</tr>";
 
-		let zoneId: number = 1;
+		let zoneId = 1;
 		let zone: any;
 		for (zone in zones) {
 			htmlTable += "<tr>"; // Zone
@@ -229,14 +229,14 @@ export abstract class AbstractDataView {
 
 	protected makeGrid(columns: number, rows: number): void {
 
-		let grid: string = "";
+		let grid = "";
 		grid += "<div>";
 		grid += "<div class=\"grid\">";
 		grid += "<table>";
 
-		for (let i: number = 0; i < rows; i++) {
+		for (let i = 0; i < rows; i++) {
 			grid += "<tr>";
-			for (let j: number = 0; j < columns; j++) {
+			for (let j = 0; j < columns; j++) {
 				grid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
 				grid += "</td>";
 			}
@@ -250,7 +250,7 @@ export abstract class AbstractDataView {
 
 	protected insertContentAtGridPosition(columnId: number, rowId: number, data: any, title: string, units: string, userSettingKey: string): void {
 
-		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 
 		if (this.grid) {
 			const content: string = "<span class=\"gridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"gridUnits\">" + units + "</span><br /><span class=\"gridTitle\">" + title + "</span></span>";

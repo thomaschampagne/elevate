@@ -1,0 +1,14 @@
+How to install this build
+=========================
+
+- Extract the content of this zip into a folder on your file system.
+
+- In your browser, open a new tab and type "chrome://extensions" then ENTER.
+
+- Enable "Developer Mode" option.
+
+- Disable the official "StravistiX for Strava" extension (if you use it in your browser) to avoid any conflicts with the version you are installing now.
+
+- Click "Load Unpacked Extension" button, then select the folder where are extension files. And click OK .
+
+- Open "strava.com" web page and go to your activities to see changes... ;)
