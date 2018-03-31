@@ -11,7 +11,7 @@ export class AppUsageDao {
 	 *
 	 * @returns {chrome.storage.SyncStorageArea}
 	 */
-	public chromeStorageLocal(): chrome.storage.LocalStorageArea {
+	public browserStorageLocal(): chrome.storage.LocalStorageArea {
 		return chrome.storage.local;
 	}
 
@@ -19,8 +19,8 @@ export class AppUsageDao {
 
 		return new Promise<AppUsage>((resolve) => {
 
-			this.chromeStorageLocal().getBytesInUse((bytesInUse: number) => {
-				resolve(new AppUsage(bytesInUse, this.chromeStorageLocal().QUOTA_BYTES));
+			this.browserStorageLocal().getBytesInUse((bytesInUse: number) => {
+				resolve(new AppUsage(bytesInUse, this.browserStorageLocal().QUOTA_BYTES));
 			});
 		});
 	}

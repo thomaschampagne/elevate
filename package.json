@@ -1,6 +1,6 @@
 {
 	"name": "stravistix",
-	"version": "6.0.1",
+	"version": "6.0.3",
 	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
@@ -19,6 +19,7 @@
 		"res-copy:css@core": "node ./node_modules/cpy-cli/cli.js ./core/css/core.css ./core/node_modules/fancybox/dist/css/jquery.fancybox.css ../dist/ --cwd=plugin --parents",
 		"res-copy:img@core": "node ./node_modules/cpy-cli/cli.js ./common/icons/* ./core/icons/* ./core/node_modules/fancybox/dist/img/* ../dist/ --cwd=plugin --parents",
 		"res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",
+		"res-copy:install-guide": "node ./node_modules/cpy-cli/cli.js ./plugin/INSTALL.txt ./dist/",
 		"test": "npm-run-all clean test:core test:app-headless",
 		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test",
 		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",

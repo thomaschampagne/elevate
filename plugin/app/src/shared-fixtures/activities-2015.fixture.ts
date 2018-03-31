@@ -1,7 +1,7 @@
 import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
 
 /**
- * 2015-01-01 => 2015-11-15 fake data
+ * 2015-01-05 => 2015-11-15 fake data
  *
  * @type {SyncedActivityModel[]}
  */

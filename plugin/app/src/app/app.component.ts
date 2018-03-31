@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			routerLinkActive: true
 		}, {
 			icon: "settings",
-			routerLink: AppRoutesModel.commonSettings,
+			routerLink: AppRoutesModel.globalSettings,
 			routerLinkActive: true
 		}, {
 			icon: "accessibility",
@@ -304,6 +304,10 @@ export class AppComponent implements OnInit, OnDestroy {
 			minWidth: AboutDialogComponent.MIN_WIDTH,
 			maxWidth: AboutDialogComponent.MAX_WIDTH,
 		});
+	}
+
+	public onAdvanceMenu(): void {
+		this.router.navigate([AppRoutesModel.advancedMenu]);
 	}
 
 	public onSideNavClosed(): void {

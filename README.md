@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
-[ ![Download](https://api.bintray.com/packages/thomaschampagne/stravistix/travis-ci-builds/images/download.svg?version=develop) ](https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files)
+[![Artifacts Dowloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/stravistix?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/stravistix&utm_campaign=badger)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
@@ -12,7 +12,7 @@ Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.gith
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
 ## From continuous integration
-Using latest **develop** branch builds: https://bintray.com/thomaschampagne/stravistix/travis-ci-builds/develop#files
+Using latest **develop** branch builds: https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/
 
 Install steps with a standalone build: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
 
@@ -24,11 +24,11 @@ Go to chapter [Environnement setup](#environnement-setup).
 
 ## Project structure description
 
-The project is splitted in 2 sub-projects: the _core_ and the _embedded app_.
+The project is split into 2 sub-projects: the _core_ and the _embedded app_.
 
 ### Core
 
-The core contains the plugin's behaviour that acts directly on _strava.com_ website. This include _extended stats on activities & segments efforts, best splits, google maps support, etc..._
+The core contains the plugin's behaviour that acts directly on _strava.com_ website. This includes _extended stats on activities & segments efforts, best splits, google maps support, etc..._
 
 > The core sources are located in **plugin/core** directory
 
@@ -42,7 +42,7 @@ The embedded app contains features like fitness trend, year progressions, ... an
 
 ## Description of frameworks & tools used.
 
-_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compile back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
+_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compiles back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
 
 ### At a glance...
 
@@ -92,7 +92,7 @@ git clone git@github.com:thomaschampagne/stravistix.git
 
 ### Fetch NPM dependencies
 
-The `npm` command should be now installed on your system through the NodeJS installation. 
+The `npm` command should be installed on your system through the NodeJS installation. 
 
 Enter in project directory
 ```bash
@@ -106,13 +106,13 @@ npm install
 
 ### Build plugin
 
-Once you installed the NPM dependencies, you can build the plugin with the following command:
+Once you have installed the NPM dependencies, you can build the plugin with the following command:
 
 ```bash
 npm run build
 ```
 
-Both _core_ and _embedded app_ will be builded.
+Both _core_ and _embedded app_ will be built.
 
 Once the build is completed, the plugin will be located in **dist/** directory.
 
@@ -131,12 +131,12 @@ Into your chrome based browser:
 * Open new tab and type **chrome://extensions**, then enter.
 * Tick **Developer Mode** checkbox.
 * Click **Load Unpacked Extension** button, then choose **dist/** directory (this is where you have the **manifest.json** file)
-* Make sure to disable others instances of stravistix. You can re-enable them back from same tab.
+* Make sure to disable other instances of stravistix. You can re-enable them back from same tab.
 * Open strava.com
 
 ### Build plugin on files changes
 
-In order to avoid to re-run the painfull `npm run build` task on each file changes. You could run the following command:
+In order to avoid to re-run the painful `npm run build` task on each file changes. You could run the following command:
 
 ```bash
 npm start

@@ -15,7 +15,7 @@ export class UserSettingsDao {
 	 */
 	public fetch(): Promise<UserSettingsModel> {
 		return new Promise<UserSettingsModel>((resolve, reject) => {
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 				const error = this.getChromeError();
 				if (error) {
 					reject(error.message);
@@ -29,13 +29,13 @@ export class UserSettingsDao {
 	/**
 	 *
 	 * @param {string} key
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<T>}
 	 */
-	public get(key: string): Promise<Object> {
+	public get<T>(key: string): Promise<T> {
 
-		return new Promise<Object>((resolve, reject) => {
+		return new Promise<T>((resolve, reject) => {
 
-			this.chromeStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -70,7 +70,7 @@ export class UserSettingsDao {
 			const settingToBeUpdated: any = {};
 			settingToBeUpdated[key] = value;
 
-			this.chromeStorageSync().set(settingToBeUpdated, () => {
+			this.browserStorageSync().set(settingToBeUpdated, () => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -96,16 +96,39 @@ export class UserSettingsDao {
 
 		return new Promise<UserSettingsModel>((resolve, reject) => {
 
-			const doesPathExistsInSettings = _.has(userSettings, path);
+			this.fetch().then((userSettingsModel: UserSettingsModel) => {
 
-			if (!doesPathExistsInSettings) {
-				reject(path + " object path does not exists in user settings");
-				return;
-			}
+				const updatedUserSettingsModel = this.updateNestedPropertyOf(userSettingsModel, path, setting);
 
-			const absoluteObject = this.createNestedObject(path, setting);
+				this.browserStorageSync().set(updatedUserSettingsModel, () => {
 
-			this.chromeStorageSync().set(absoluteObject, () => {
+					const error = this.getChromeError();
+					if (error) {
+						reject(error.message);
+					} else {
+						this.fetch().then((userSettingsResult: UserSettingsModel) => {
+							resolve(userSettingsResult);
+						}, error => {
+							reject(error);
+						});
+					}
+				});
+
+			}, error => {
+				reject(error);
+			});
+		});
+	}
+
+	/**
+	 *
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public reset(): Promise<UserSettingsModel> {
+
+		return new Promise<UserSettingsModel>((resolve, reject) => {
+
+			this.browserStorageSync().set(userSettings, () => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -123,23 +146,23 @@ export class UserSettingsDao {
 
 	/**
 	 *
-	 * @param {string} nestedPath
-	 * @param {Object} objectToInsert
+	 * @param {Object} sourceObject
+	 * @param {string} path
+	 * @param {Object} value
 	 * @returns {Object}
 	 */
-	public createNestedObject(nestedPath: string, objectToInsert: Object): Object {
-		const absoluteObject: Object = {};
-		if (!_.has(absoluteObject, nestedPath)) {
-			_.set(absoluteObject, nestedPath, objectToInsert);
+	public updateNestedPropertyOf(sourceObject: Object, path: string, value: Object): Object {
+		if (!_.has(sourceObject, path)) {
+			throw new Error("Property at path '" + path + "' do not exists");
 		}
-		return absoluteObject;
+		return _.set(sourceObject, path, value);
 	}
 
 	/**
 	 *
 	 * @returns {chrome.storage.SyncStorageArea}
 	 */
-	public chromeStorageSync(): chrome.storage.SyncStorageArea {
+	public browserStorageSync(): chrome.storage.SyncStorageArea {
 		return chrome.storage.sync;
 	}
 
@@ -150,6 +173,4 @@ export class UserSettingsDao {
 	public getChromeError(): chrome.runtime.LastError {
 		return chrome.runtime.lastError;
 	}
-
-
 }

@@ -24,29 +24,41 @@ describe("UserSettingsDao", () => {
 		done();
 	});
 
-	it("should create object at path", (done: Function) => {
+	it("should update an object property at given path", (done: Function) => {
 
 		// Given
-		const nestedPath = "a.b.c.d";
-		const objectToInsert: any = {value: 10};
+		const sourceUserSettings = _.cloneDeep(userSettings);
 
-		const expected = {
-			a: {
-				b: {
-					c: {
-						d: {
-							value: 10
-						}
-					}
-				}
-			}
-		};
+		const newSpeedZones = [{from: 666, to: 999}];
+		const zoneSpeedPath = "zones.speed";
+
+		const expectedUpdatedSettings = _.cloneDeep(sourceUserSettings);
+		expectedUpdatedSettings.zones.speed = newSpeedZones;
 
 		// When
-		const absoluteObject = userSettingsDao.createNestedObject(nestedPath, objectToInsert);
+		const updatedSettings = userSettingsDao.updateNestedPropertyOf(sourceUserSettings, zoneSpeedPath, newSpeedZones);
 
 		// Then
-		expect(absoluteObject).toEqual(expected);
+		expect(updatedSettings).toEqual(expectedUpdatedSettings);
+
+		done();
+	});
+
+	it("should NOT update an object property at unknown given path", (done: Function) => {
+
+		// Given
+		const sourceUserSettings = _.cloneDeep(userSettings);
+
+		const newSpeedZones = [{from: 666, to: 999}];
+		const zoneSpeedPath = "zones.fakeZone";
+
+		// When
+		const call = () => {
+			userSettingsDao.updateNestedPropertyOf(sourceUserSettings, zoneSpeedPath, newSpeedZones);
+		};
+
+		// Then
+		expect(call).toThrow(new Error("Property at path 'zones.fakeZone' do not exists"));
 
 		done();
 	});
@@ -56,7 +68,7 @@ describe("UserSettingsDao", () => {
 		// Given
 		const expectedSettings = _.cloneDeep(userSettings);
 
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -72,7 +84,7 @@ describe("UserSettingsDao", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedSettings);
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageSyncGetSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -88,7 +100,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
 
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -110,7 +122,7 @@ describe("UserSettingsDao", () => {
 
 		}, error => {
 
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageSyncGetSpy).toHaveBeenCalledTimes(1);
 			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
 			expect(error).not.toBeNull();
 			expect(error).toEqual(expectedErrorMessage);
@@ -124,7 +136,7 @@ describe("UserSettingsDao", () => {
 		const key = "userGender";
 		const expectedResult = "men";
 		const expectedSettings = _.cloneDeep(userSettings);
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -139,7 +151,7 @@ describe("UserSettingsDao", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageSyncGetSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -155,7 +167,7 @@ describe("UserSettingsDao", () => {
 		const key = "userWeight";
 		const expectedSettings = _.cloneDeep(userSettings);
 		const expectedResult = expectedSettings.userWeight;
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -170,7 +182,7 @@ describe("UserSettingsDao", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageSyncGetSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -186,7 +198,7 @@ describe("UserSettingsDao", () => {
 		const key = "userWeight";
 		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
 		const expectedSettings = _.cloneDeep(userSettings);
-		const chromeStorageSyncGetSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
@@ -208,7 +220,7 @@ describe("UserSettingsDao", () => {
 
 		}, error => {
 
-			expect(chromeStorageSyncGetSpy).toHaveBeenCalledTimes(1);
+			expect(browserStorageSyncGetSpy).toHaveBeenCalledTimes(1);
 			expect(getChromeErrorSpy).toHaveBeenCalledTimes(1);
 			expect(error).not.toBeNull();
 			expect(error).toEqual(expectedErrorMessage);
@@ -224,7 +236,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.userMaxHr = maxHrValue;
 
-		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({ // TODO Put spy in beforeEach
+		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({ // TODO Put spy in beforeEach
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -246,7 +258,7 @@ describe("UserSettingsDao", () => {
 			expect(result).not.toEqual(userSettings);
 			expect(result.userMaxHr).not.toEqual(userSettings.userMaxHr);
 
-			expect(chromeStorageSyncSpy).toHaveBeenCalled();
+			expect(browserStorageSyncSpy).toHaveBeenCalled();
 
 			done();
 
@@ -265,7 +277,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.userMaxHr = maxHrValue;
 
-		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -308,7 +320,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.zones.speed = zones;
 
-		const chromeStorageSyncSpy = spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -326,7 +338,7 @@ describe("UserSettingsDao", () => {
 
 			expect(result).not.toBeNull();
 			expect(result.zones.speed).toEqual(zones);
-			expect(chromeStorageSyncSpy).toHaveBeenCalled();
+			expect(browserStorageSyncSpy).toHaveBeenCalled();
 
 			done();
 
@@ -346,7 +358,7 @@ describe("UserSettingsDao", () => {
 		const expectedSettings = _.cloneDeep(userSettings);
 		expectedSettings.zones.speed = zones;
 
-		spyOn(userSettingsDao, "chromeStorageSync").and.returnValue({
+		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -377,4 +389,46 @@ describe("UserSettingsDao", () => {
 			done();
 		});
 	});
+
+	it("should reset user settings", (done: Function) => {
+
+		// Given
+		const oldSettings = _.cloneDeep(userSettings);
+		oldSettings.userFTP = 99;
+		oldSettings.userMaxHr = 99;
+		oldSettings.userRestHr = 99;
+		oldSettings.userGender = "fakeGender";
+		oldSettings.zones.speed = [];
+		oldSettings.zones.heartRate = [];
+		oldSettings.zones.power = [];
+		oldSettings.zones.cyclingCadence = [];
+
+		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
+			set: (object: Object, callback: () => {}) => {
+				callback();
+			},
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(userSettings);
+			}
+		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.reset();
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(userSettings);
+			expect(browserStorageSyncSpy).toHaveBeenCalled();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 });

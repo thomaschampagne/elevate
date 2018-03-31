@@ -1,4 +1,6 @@
+import { Gender } from "../shared/enums/gender.enum";
+
 export class GenderModel {
-	public type: string;
+	public type: Gender;
 	public display: string;
 }
