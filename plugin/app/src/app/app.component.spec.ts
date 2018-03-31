@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
@@ -52,19 +52,20 @@ describe("AppComponent", () => {
 		fixture.detectChanges();
 	});
 
-	it("should create the app", async(() => {
+	it("should create the app", (done: Function) => {
 		const app = fixture.debugElement.componentInstance;
 		expect(app).toBeTruthy();
-	}));
+		done();
+	});
 
 
-	it("should have main menu items", async(() => {
+	it("should have main menu items", (done: Function) => {
 		const app = fixture.debugElement.componentInstance;
 		expect(app.mainMenuItems.length).toEqual(6);
+		done();
+	});
 
-	}));
-
-	it("should update tool bar title (1)", (done) => {
+	it("should update tool bar title (1)", (done: Function) => {
 
 		// Given
 		const expected = "Global Settings";
@@ -79,7 +80,7 @@ describe("AppComponent", () => {
 
 	});
 
-	it("should update tool bar title (2)", (done) => {
+	it("should update tool bar title (2)", (done: Function) => {
 
 		// Given
 		const expected = "Say Hello To World";
@@ -94,7 +95,7 @@ describe("AppComponent", () => {
 
 	});
 
-	it("should update tool bar title (3)", (done) => {
+	it("should update tool bar title (3)", (done: Function) => {
 
 		// Given
 		const expected = "Oh My God";
@@ -109,7 +110,7 @@ describe("AppComponent", () => {
 
 	});
 
-	it("should update tool bar title (4)", (done) => {
+	it("should update tool bar title (4)", (done: Function) => {
 
 		// Given
 		const expected = "Global Settings";
@@ -124,7 +125,7 @@ describe("AppComponent", () => {
 
 	});
 
-	it("should not update tool bar title", (done) => {
+	it("should not update tool bar title", (done: Function) => {
 
 		// Given
 		const expected = null;
