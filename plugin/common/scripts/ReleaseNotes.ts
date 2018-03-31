@@ -20,6 +20,16 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.1.0",
+		message: "Test build",
+		hotFixes: [],
+		features: [
+		],
+		isPatch: false,
+		fixes: [
+		]
+	},
+	{
 		version: "6.0.3",
 		message: "Third patch of <strong>NEW APP</strong> released in February. Mainly bugs fixes and improvements. Click \"show details\" for more info.",
 		hotFixes: [],
