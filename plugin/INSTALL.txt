@@ -5,7 +5,7 @@ How to install this build
 
 - In your browser, open a new tab and type "chrome://extensions" then ENTER.
 
-- Tick "Developer Mode" checkbox.
+- Enable "Developer Mode" option.
 
 - Disable the official "StravistiX for Strava" extension (if you use it in your browser) to avoid any conflicts with the version you are installing now.
 
