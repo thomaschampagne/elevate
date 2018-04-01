@@ -19,6 +19,10 @@ _Variability Index_ is an indication of how your activity was paced. This indica
 
 > $VariabilityIndex=\frac{WeigthedPower}{Averagewatts}$
 
+# Functional Threshold Power (FTP)
+---
+Represents your best average power over 20 minutes that can be assimilated to your highest physical intensity you can sustain for approximately one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf). 
+
 # Intensity:
 ---
 Although _Weighted Power_ is a better measure of training _intensity_ than average power, it does not take into account differences in fitness within or between individuals.
