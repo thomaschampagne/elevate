@@ -1,4 +1,4 @@
-## Weighted Power & Estimated Weighted Power
+# Weighted Power & Estimated Weighted Power
 ---
 
 Note: If you own a power meter, the true weighted power will be of course computed. Estimated Weighted Power is only a estimation for cyclist who don't have this sensor.  
@@ -13,13 +13,17 @@ _Weighted Power_ is calculated from an algorithm introduced by Dr. Andy Coggan t
 
 Remember that _Estimated Weighted Power_ is an estimation because it's based on _Estimated Average Power_ !  
 
-## Variability Index:
+# Variability Index:
 ---
 _Variability Index_ is an indication of how your activity was paced. This indication shows how smooth or evenly paced the power output was during a race or work out. Basically _Variability Index_ is _Weighted Power_ over _Average watts_:  
 
 > $VariabilityIndex=\frac{WeigthedPower}{Averagewatts}$
 
-## Intensity:
+# Functional Threshold Power (FTP)
+---
+Represents your best average power over 20 minutes that can be assimilated to your highest physical intensity you can sustain for approximately one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf). 
+
+# Intensity:
 ---
 Although _Weighted Power_ is a better measure of training _intensity_ than average power, it does not take into account differences in fitness within or between individuals.
 _Intensity_ is simply the ratio of the _Weighted Power_ as above over your Functional Threshold Power (FTP) (entered in athlete settings):.  
@@ -39,27 +43,27 @@ Less than 0.75 are recovery rides
 
 Greater than 1.15 prologue TT, track pursuit, track miss-and-o;
 
-## Power Stress Score
+# Power Stress Score
 ---
 If you own a cycling power meter then you get get the "Power Stress Score (PSS)" into your cycling activities. PSS formula is:  
 
 > $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeigthedPower~\times~Intensity}{Cycling FTP~\times~3600}~\times~100$  
 
-_Note: PSS is equivalent to Training Stress Score&reg; (TSS&reg;) from TrainingPeaks&trade;. Learn more @ https://www.trainingpeaks.com/blog/what-is-tss/_
+Note that _PSS_ is equivalent to [_TSS&reg;_ from TrainingPeaks&trade;](https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained)
 
-## Average Watts / Kg:
+# Average Watts / Kg:
 ---
 "Average Watts / Kg" is basically the power per Kilogram you maintained during an activity  
 
 That's simply your _Average Power_ over your weight.  
 
-## Weighted Watts / Kg
+# Weighted Watts / Kg
 ---
 "Weighted Watts / Kg" is basically an estimation of the power per Kilogram that you could have maintained for the same physiological "cost" if your power output had been constant  
 
 That's simply your _Weighted Power_ over your weight.  
 
-## Quartiles and median
+# Quartiles and median
 ---
 
 For understanding these indicators, we assume that 0% to 100% are all the heart rates sorted ascending you obtained during an activity.  

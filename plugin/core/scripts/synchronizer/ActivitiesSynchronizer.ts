@@ -3,9 +3,7 @@ import * as Q from "q";
 import { Helper } from "../../../common/scripts/Helper";
 import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
 import {
-	StravaActivityModel,
-	StreamActivityModel,
-	SyncedActivityModel,
+	StravaActivityModel, StreamActivityModel, SyncedActivityModel,
 	SyncNotifyModel
 } from "../../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
@@ -28,18 +26,18 @@ export interface ISyncResult {
 
 export class ActivitiesSynchronizer {
 
-	public static lastSyncDateTime: string = "lastSyncDateTime";
-	public static computedActivities: string = "computedActivities";
-	public static syncWithAthleteProfile: string = "syncWithAthleteProfile";
+	public static lastSyncDateTime = "lastSyncDateTime";
+	public static computedActivities = "computedActivities";
+	public static syncWithAthleteProfile = "syncWithAthleteProfile";
 
 	protected appResources: IAppResources;
 	protected userSettings: UserSettingsModel;
 	protected extensionId: string;
 	protected totalRawActivityIds: number[] = [];
-	public static pagesPerGroupToRead: number = 2; // = 40 activities with 20 activities per page.
+	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
 	protected _hasBeenComputedActivities: SyncedActivityModel[] = null;
 	protected _multipleActivityProcessor: MultipleActivityProcessor;
-	protected _endReached: boolean = false;
+	protected _endReached = false;
 
 	private _globalHistoryChanges: IHistoryChanges = {
 		added: [],
@@ -156,8 +154,8 @@ export class ActivitiesSynchronizer {
 			// Success
 			console.log("Activities fetched in group " + this.printGroupLimits(fromPage, pagesToRead) + ": " + rawActivities.length);
 
-			let fetchedActivitiesStreamCount: number = 0;
-			let fetchedActivitiesProgress: number = 0;
+			let fetchedActivitiesStreamCount = 0;
+			let fetchedActivitiesProgress = 0;
 			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
 
 			this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
@@ -202,7 +200,7 @@ export class ActivitiesSynchronizer {
 							// Find raw activities of fetched stream and push
 							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: data.value.activityId});
 
-							let hasPowerMeter: boolean = true;
+							let hasPowerMeter = true;
 							if (_.isEmpty(data.value.watts)) {
 								data.value.watts = data.value.watts_calc;
 								hasPowerMeter = false;
@@ -291,7 +289,7 @@ export class ActivitiesSynchronizer {
 			activitiesList = [];
 		}
 
-		const perPage: number = 20;
+		const perPage = 20;
 		const promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
 		const notify: SyncNotifyModel = {

@@ -29,11 +29,11 @@ export class UserSettingsDao {
 	/**
 	 *
 	 * @param {string} key
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<T>}
 	 */
-	public get(key: string): Promise<Object> {
+	public get<T>(key: string): Promise<T> {
 
-		return new Promise<Object>((resolve, reject) => {
+		return new Promise<T>((resolve, reject) => {
 
 			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
 
@@ -122,6 +122,30 @@ export class UserSettingsDao {
 
 	/**
 	 *
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public reset(): Promise<UserSettingsModel> {
+
+		return new Promise<UserSettingsModel>((resolve, reject) => {
+
+			this.browserStorageSync().set(userSettings, () => {
+
+				const error = this.getChromeError();
+				if (error) {
+					reject(error.message);
+				} else {
+					this.fetch().then((userSettingsResult: UserSettingsModel) => {
+						resolve(userSettingsResult);
+					}, error => {
+						reject(error);
+					});
+				}
+			});
+		});
+	}
+
+	/**
+	 *
 	 * @param {Object} sourceObject
 	 * @param {string} path
 	 * @param {Object} value
@@ -149,6 +173,4 @@ export class UserSettingsDao {
 	public getChromeError(): chrome.runtime.LastError {
 		return chrome.runtime.lastError;
 	}
-
-
 }

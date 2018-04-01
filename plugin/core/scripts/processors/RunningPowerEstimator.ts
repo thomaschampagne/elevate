@@ -25,7 +25,7 @@ export class RunningPowerEstimator {
 			throw new InconsistentParameters("timeArray required as array");
 		}
 
-		let powerStream: Array<number> = [];
+		const powerStream: Array<number> = [];
 		for (let i = 0; i < timeArray.length; i++) {
 			let power = 0;
 			if (i > 0) {

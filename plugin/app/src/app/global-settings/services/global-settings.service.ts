@@ -3,7 +3,7 @@ import { SectionModel } from "../models/section.model";
 import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
 
 @Injectable()
-export class CommonSettingsService {
+export class GlobalSettingsService {
 
 	public static readonly TYPE_OPTION_CHECKBOX: string = "checkbox";
 	public static readonly TYPE_OPTION_LIST: string = "list";

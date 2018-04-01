@@ -10,8 +10,24 @@ import { AthleteHistoryService } from "../shared/services/athlete-history/athlet
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
+import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
+import { UserLactateThresholdModel } from "../../../../common/scripts/models/UserSettings";
+import { Gender } from "../shared/enums/gender.enum";
 
 describe("FitnessTrendComponent", () => {
+
+	const gender = "men";
+	const userGender = Gender.MEN;
+	const maxHr = 200;
+	const restHr = 50;
+	const cyclingFtp = 150;
+	const swimFtp = 31;
+	const weight = 75;
+	const userLactateThreshold: UserLactateThresholdModel = {
+		default: 175,
+		cycling: null,
+		running: null
+	};
 
 	let activityDao: ActivityDao;
 	let userSettingsDao: UserSettingsDao;
@@ -50,11 +66,6 @@ describe("FitnessTrendComponent", () => {
 			}
 		});
 
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
 		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
 			gender,
 			maxHr,
@@ -72,12 +83,72 @@ describe("FitnessTrendComponent", () => {
 	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(FitnessTrendComponent);
 		component = fixture.componentInstance;
+
+		component.fitnessUserSettingsModel = {
+			userGender: userGender,
+			userMaxHr: maxHr,
+			userRestHr: restHr,
+			userLactateThreshold: userLactateThreshold,
+			cyclingFtp: cyclingFtp,
+			swimFtp: swimFtp,
+		};
+
 		fixture.detectChanges();
 		done();
 	});
 
 	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
+	});
+
+	it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", (done: Function) => {
+
+		// Given
+		component.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		component.isTrainingZonesEnabled = true;
+		component.isPowerMeterEnabled = true;
+		component.isSwimEnabled = true;
+		component.isEBikeRidesEnabled = true;
+		component.fitnessUserSettingsModel.cyclingFtp = 250;
+		component.fitnessUserSettingsModel.swimFtp = 40;
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
+
+		// When
+		component.verifyTogglesStatesAlongHrMode();
+
+		// Then
+		expect(component.isTrainingZonesEnabled).toEqual(true);
+		expect(component.isPowerMeterEnabled).toEqual(true);
+		expect(component.isSwimEnabled).toEqual(true);
+		expect(component.isEBikeRidesEnabled).toEqual(true);
+		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(3);
+
+		done();
+	});
+
+	it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", (done: Function) => {
+
+		// Given
+		component.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+		component.isTrainingZonesEnabled = true;
+		component.isPowerMeterEnabled = true;
+		component.isSwimEnabled = true;
+		component.isEBikeRidesEnabled = true;
+		component.fitnessUserSettingsModel.cyclingFtp = 250;
+		component.fitnessUserSettingsModel.swimFtp = 40;
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
+
+		// When
+		component.verifyTogglesStatesAlongHrMode();
+
+		// Then
+		expect(component.isTrainingZonesEnabled).toEqual(false);
+		expect(component.isPowerMeterEnabled).toEqual(false);
+		expect(component.isSwimEnabled).toEqual(false);
+		expect(component.isEBikeRidesEnabled).toEqual(true);
+		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(0);
+
 		done();
 	});
 });

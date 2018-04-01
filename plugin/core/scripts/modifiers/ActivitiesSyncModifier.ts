@@ -3,7 +3,7 @@ import { Helper } from "../../../common/scripts/Helper";
 import { SyncNotifyModel } from "../../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage, StorageManager } from "../../../common/scripts/modules/StorageManager";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { ActivitiesSynchronizer, ISyncResult } from "../synchronizer/ActivitiesSynchronizer";
 import { HerokuEndpoints } from "../../../common/scripts/modules/HerokuEndpoint";
@@ -17,7 +17,7 @@ export class ActivitiesSyncModifier implements IModifier {
 	protected userSettings: UserSettingsModel;
 	protected appResources: IAppResources;
 
-	public closeWindowIntervalId: number = -1;
+	public closeWindowIntervalId = -1;
 
 	constructor(appResources: IAppResources, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
 		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
@@ -39,7 +39,7 @@ export class ActivitiesSyncModifier implements IModifier {
 		html += "       <div id=\"syncMessage\">";
 		html += "           <span style=\"font-size: 28px;\">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension." +
 			"<br/><br/>Once the first sync done, your history will be automatically synced every <strong>" + this.userSettings.autoSyncMinutes + " minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if " + this.userSettings.autoSyncMinutes + " minute(s) have been flow out since your last synchronisation" +
-			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#/commonSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
+			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
 			"<br/><br/>Manual sync also works by clicking the same button.<br/><br/>" +
 			"Closing window stops synchronization. It will close itself when done.";
 		html += "       </div>";
@@ -133,7 +133,7 @@ export class ActivitiesSyncModifier implements IModifier {
 				error: {path: window.location.href, date: new Date(), content: err},
 			};
 
-			const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+			const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,
@@ -163,7 +163,7 @@ export class ActivitiesSyncModifier implements IModifier {
 			$("#totalProgressText").html((progress.browsedActivitiesCount / progress.totalActivities * 100).toFixed(0) + "%");
 
 			// Step
-			let stepMessage: string = "";
+			let stepMessage = "";
 
 			switch (progress.step) {
 

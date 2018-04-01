@@ -1,6 +1,16 @@
-<mat-card *ngFor="let note of releasesNotes;">
+<mat-toolbar color="primary">
+	<span class="mat-body-1">
+		This project is developed on free time with passion and for <strong>+20 hours of work / week</strong>.
+		<button mat-button routerLink="/donate">
+			Support the project you love 💗
+		</button>
+	</span>
+</mat-toolbar>
+<mat-card *ngFor="let note of releasesNotes; let i = index;">
 	<mat-card-title>
-		Version {{note.version}}
+		<a target="_blank"
+		   href="https://github.com/thomaschampagne/stravistix/compare/{{releasesNotes[i + 1]?.version}}...{{note.version}}">Version
+			{{note.version}}</a>
 	</mat-card-title>
 	<mat-card-content>
 
@@ -15,7 +25,7 @@
 		</mat-list>
 
 		<mat-list *ngIf="(note.fixes && note.fixes.length)">
-			<h3 class="mat-subheading-2">Fixes / Improvements</h3>
+			<h3 class="mat-subheading-2">Improvements and fixes</h3>
 			<mat-list-item *ngFor="let fix of note.fixes;">▹&nbsp;&nbsp;&nbsp;{{fix}}</mat-list-item>
 		</mat-list>
 

@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { VacuumProcessor } from "./VacuumProcessor";
 
 export class BikeOdoProcessor {
@@ -22,7 +22,7 @@ export class BikeOdoProcessor {
 		const storedOdos: any = JSON.parse(localStorage.getItem(this.cacheKey));
 
 		// Test if cache is still valid
-		let cacheDeprecated: boolean = false;
+		let cacheDeprecated = false;
 		const now: number = Math.floor(Date.now() / 1000);
 		if (storedOdos && (now > storedOdos.cachedOnTimeStamp + this.cacheAgingTime)) {
 			console.log("bike ode cache is deprecated");
@@ -30,7 +30,9 @@ export class BikeOdoProcessor {
 		}
 
 		if (!_.isNull(cache) && !_.isEqual(cache, "null") && !cacheDeprecated) {
-			if (env.debugMode) console.log("Using bike odo cache: " + cache);
+			if (CoreEnv.debugMode) {
+				console.log("Using bike odo cache: " + cache);
+			}
 			callback(storedOdos);
 			return;
 		}
@@ -40,7 +42,9 @@ export class BikeOdoProcessor {
 			bikeOdoArray.cachedOnTimeStamp = Math.floor(Date.now() / 1000);
 
 			// Cache result
-			if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheKey);
+			if (CoreEnv.debugMode) {
+				console.log("Creating bike odo cache inside cookie " + this.cacheKey);
+			}
 			try {
 				localStorage.setItem(this.cacheKey, JSON.stringify(bikeOdoArray));
 			} catch (err) {

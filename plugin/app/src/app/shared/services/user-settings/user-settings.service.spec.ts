@@ -114,6 +114,40 @@ describe("UserSettingsService", () => {
 
 	});
 
+	it("should update a user nested setting", (done: Function) => {
+
+		// Given
+		const path = "userLTHR.default";
+		const value = 175;
+		const expectedSettings = _.cloneDeep(userSettings);
+		expectedSettings.userLTHR.default = value;
+
+		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
+			.and.returnValue(Promise.resolve(expectedSettings));
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.updateNested(path, value);
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(result.userLTHR.default).toEqual(value);
+			expect(result).toEqual(expectedSettings);
+			expect(result).not.toEqual(userSettings);
+			expect(result.userLTHR.default).not.toEqual(userSettings.userLTHR.default);
+			expect(updateNestedDaoSpy).toHaveBeenCalledTimes(1);
+			expect(updateNestedDaoSpy).toHaveBeenCalledWith(path, value);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+
+	});
+
 	it("should mark local storage to be clear", (done: Function) => {
 
 		// Given
@@ -189,6 +223,37 @@ describe("UserSettingsService", () => {
 			done();
 		});
 
+	});
+
+	it("should reset user settings", (done: Function) => {
+
+		// Given
+		const oldSettings = _.cloneDeep(userSettings);
+		oldSettings.userFTP = 99;
+		oldSettings.userMaxHr = 99;
+		oldSettings.userRestHr = 99;
+		oldSettings.userGender = "fakeGender";
+		oldSettings.zones.speed = [];
+		oldSettings.zones.heartRate = [];
+		oldSettings.zones.power = [];
+		oldSettings.zones.cyclingCadence = [];
+
+		spyOn(userSettingsService.userSettingsDao, "reset").and.returnValue(Promise.resolve(userSettings));
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(userSettings);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
 	});
 
 });

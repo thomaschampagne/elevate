@@ -7,31 +7,49 @@ import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
+import { Gender } from "../../../shared/enums/gender.enum";
+import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
+import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 import { AppError } from "../../../shared/models/app-error.model";
 
 @Injectable()
 export class FitnessService {
 
 	public static readonly FUTURE_DAYS_PREVIEW: number = 14;
-	public static readonly ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES: string = "FT_1";
+	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 
 	constructor(public activityService: ActivityService) {
 	}
 
 	/**
 	 * Prepare activities by assigning stress scores on each of them
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
-	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<FitnessPreparedActivityModel[]>}
 	 */
-	public prepare(powerMeterEnable: boolean,
-				   cyclingFtp: number,
+	public prepare(fitnessUserSettingsModel: FitnessUserSettingsModel,
+				   heartRateImpulseMode: HeartRateImpulseMode,
+				   powerMeterEnable: boolean,
 				   swimEnable: boolean,
-				   swimFtp: number,
 				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
+
+
+		if (heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+
+			if (powerMeterEnable) {
+				const reason = "'Power Stress Score' calculation method cannot work with " +
+					"'TRIMP (Training Impulse)' calculation method.";
+				return Promise.reject(new AppError(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD, reason));
+			}
+
+			if (swimEnable) {
+				const reason = "'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
+				return Promise.reject(new AppError(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD, reason));
+			}
+		}
 
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
 							reject: (error: AppError) => void) => {
@@ -54,12 +72,12 @@ export class FitnessService {
 
 					const isPowerMeterUsePossible: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
 						&& powerMeterEnable
-						&& _.isNumber(cyclingFtp)
+						&& _.isNumber(fitnessUserSettingsModel.cyclingFtp)
 						&& activity.extendedStats && activity.extendedStats.powerData
 						&& activity.extendedStats.powerData.hasPowerMeter
 						&& _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-					const hasSwimmingData: boolean = (swimEnable && _.isNumber(swimFtp) && swimFtp > 0
+					const hasSwimmingData: boolean = (swimEnable && _.isNumber(fitnessUserSettingsModel.swimFtp) && fitnessUserSettingsModel.swimFtp > 0
 						&& activity.type === "Swim"
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
 						&& activity.moving_time_raw > 0);
@@ -78,14 +96,29 @@ export class FitnessService {
 					};
 
 					if (hasHeartRateData) {
-						fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+
+						if (heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+
+							fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+
+						} else if (heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
+
+							const userLthrAlongActivityType: number = this.resolveLTHR(activity.type, fitnessUserSettingsModel);
+
+							fitnessReadyActivity.heartRateStressScore = this.computeHeartRateStressScore(fitnessUserSettingsModel.userGender,
+								fitnessUserSettingsModel.userMaxHr,
+								fitnessUserSettingsModel.userRestHr,
+								userLthrAlongActivityType,
+								activity.extendedStats.heartRateData.TRIMP);
+						}
+
 						hasMinimumFitnessRequiredData = true;
 					}
 
 					if (isPowerMeterUsePossible) {
 						const movingTime = activity.moving_time_raw;
 						const weightedPower = activity.extendedStats.powerData.weightedPower;
-						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, cyclingFtp);
+						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
 						hasMinimumFitnessRequiredData = true;
 					}
 
@@ -93,7 +126,7 @@ export class FitnessService {
 						fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
 							activity.moving_time_raw,
 							activity.elapsed_time_raw,
-							swimFtp);
+							fitnessUserSettingsModel.swimFtp);
 						hasMinimumFitnessRequiredData = true;
 					}
 
@@ -101,7 +134,7 @@ export class FitnessService {
 				});
 
 				if (!hasMinimumFitnessRequiredData) {
-					reject(new AppError(FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES,
+					reject(new AppError(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES,
 						"No activities has minimum required data to generate a fitness trend"));
 				}
 
@@ -112,23 +145,23 @@ export class FitnessService {
 
 	/**
 	 * Return day by day the athlete stress. Active & rest days included
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} powerMeterEnable
-	 * @param {number} cyclingFtp
 	 * @param {boolean} swimEnable
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayStressModel[]>}
 	 */
-	public generateDailyStress(powerMeterEnable: boolean,
-							   cyclingFtp: number,
+	public generateDailyStress(fitnessUserSettingsModel: FitnessUserSettingsModel,
+							   heartRateImpulseMode: HeartRateImpulseMode,
+							   powerMeterEnable: boolean,
 							   swimEnable: boolean,
-							   swimFtp: number,
 							   skipActivityTypes?: string[]): Promise<DayStressModel[]> {
 
 		return new Promise((resolve: (activityDays: DayStressModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.prepare(powerMeterEnable, cyclingFtp, swimEnable, swimFtp, skipActivityTypes)
+			this.prepare(fitnessUserSettingsModel, heartRateImpulseMode, powerMeterEnable, swimEnable, skipActivityTypes)
 				.then((fitnessPreparedActivities: FitnessPreparedActivityModel[]) => {
 
 					// Subtract 1 day to the first activity done in history:
@@ -195,23 +228,69 @@ export class FitnessService {
 
 	/**
 	 *
+	 * @param {string} activityType
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
+	 * @returns {number}
+	 */
+	public resolveLTHR(activityType: string, fitnessUserSettingsModel: FitnessUserSettingsModel): number {
+
+		if (fitnessUserSettingsModel.userLactateThreshold) {
+			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+				if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.cycling)) {
+					return fitnessUserSettingsModel.userLactateThreshold.cycling;
+				}
+			}
+
+			if (activityType === "Run") {
+				if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.running)) {
+					return fitnessUserSettingsModel.userLactateThreshold.running;
+				}
+			}
+
+			if (_.isNumber(fitnessUserSettingsModel.userLactateThreshold.default)) {
+				return fitnessUserSettingsModel.userLactateThreshold.default;
+			}
+		}
+
+		return fitnessUserSettingsModel.userRestHr + FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR
+			* (fitnessUserSettingsModel.userMaxHr - fitnessUserSettingsModel.userRestHr);
+	}
+
+	/**
+	 * Compute Heart Rate Stress Score (HRSS)
+	 * @param {Gender} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} lactateThreshold
+	 * @param {number} activityTrainingImpulse
+	 * @returns {number}
+	 */
+	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
+		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 * ComputeTrend the fitness trend
+	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
+	 * @param {HeartRateImpulseMode} heartRateImpulseMode
 	 * @param {boolean} isPowerMeterEnabled
-	 * @param {number} cyclingFtp
 	 * @param {boolean} isSwimEnabled
-	 * @param {number} swimFtp
 	 * @param {string[]} skipActivityTypes
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
-	public computeTrend(isPowerMeterEnabled: boolean,
-						cyclingFtp: number,
+	public computeTrend(fitnessUserSettingsModel: FitnessUserSettingsModel,
+						heartRateImpulseMode: HeartRateImpulseMode,
+						isPowerMeterEnabled: boolean,
 						isSwimEnabled: boolean,
-						swimFtp: number,
 						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(isPowerMeterEnabled, cyclingFtp, isSwimEnabled, swimFtp, skipActivityTypes)
+			this.generateDailyStress(fitnessUserSettingsModel, heartRateImpulseMode, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl = 0;
@@ -227,6 +306,10 @@ export class FitnessService {
 						tsb = ctl - atl;
 
 						const dayFitnessTrend: DayFitnessTrendModel = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+
+						if (_.isNumber(dayStress.heartRateStressScore) && dayStress.heartRateStressScore > 0) {
+							dayFitnessTrend.heartRateStressScore = dayStress.heartRateStressScore;
+						}
 
 						if (_.isNumber(dayStress.trainingImpulseScore) && dayStress.trainingImpulseScore > 0) {
 							dayFitnessTrend.trainingImpulseScore = dayStress.trainingImpulseScore;
@@ -302,7 +385,7 @@ export class FitnessService {
 
 				// Apply scores for that day
 				// PSS
-				if (activity.powerStressScore) {
+				if (_.isNumber(activity.powerStressScore)) {
 
 					if (!dayActivity.powerStressScore) { // Initialize value if not exists
 						dayActivity.powerStressScore = 0;
@@ -311,8 +394,16 @@ export class FitnessService {
 					dayActivity.powerStressScore += activity.powerStressScore;
 				}
 
+				// HRSS
+				if (_.isNumber(activity.heartRateStressScore)) { // Check for HRSS score if available
+					if (!dayActivity.heartRateStressScore) { // Initialize value if not exists
+						dayActivity.heartRateStressScore = 0;
+					}
+					dayActivity.heartRateStressScore += activity.heartRateStressScore;
+				}
+
 				// TRIMP
-				if (activity.trainingImpulseScore) { // Check for TRIMP score if available
+				if (_.isNumber(activity.trainingImpulseScore)) { // Check for TRIMP score if available
 					if (!dayActivity.trainingImpulseScore) { // Initialize value if not exists
 						dayActivity.trainingImpulseScore = 0;
 					}
@@ -320,7 +411,7 @@ export class FitnessService {
 				}
 
 				// SwimSS
-				if (activity.swimStressScore) { // Check for TRIMP score if available
+				if (_.isNumber(activity.swimStressScore)) { // Check for TRIMP score if available
 					if (!dayActivity.swimStressScore) { // Initialize value if not exists
 						dayActivity.swimStressScore = 0;
 					}
@@ -328,9 +419,13 @@ export class FitnessService {
 				}
 
 				// Apply final stress score for that day
-				if (activity.powerStressScore) { // Use PSS has priority over TRIMP
+				if (activity.powerStressScore) { // Use PSS has priority over TRIMP/HRSS
 
 					dayActivity.finalStressScore += activity.powerStressScore;
+
+				} else if (activity.heartRateStressScore) {
+
+					dayActivity.finalStressScore += activity.heartRateStressScore;
 
 				} else if (activity.trainingImpulseScore) {
 
@@ -351,4 +446,6 @@ export class FitnessService {
 	public getTodayMoment(): Moment {
 		return moment();
 	}
+
+
 }

@@ -389,4 +389,46 @@ describe("UserSettingsDao", () => {
 			done();
 		});
 	});
+
+	it("should reset user settings", (done: Function) => {
+
+		// Given
+		const oldSettings = _.cloneDeep(userSettings);
+		oldSettings.userFTP = 99;
+		oldSettings.userMaxHr = 99;
+		oldSettings.userRestHr = 99;
+		oldSettings.userGender = "fakeGender";
+		oldSettings.zones.speed = [];
+		oldSettings.zones.heartRate = [];
+		oldSettings.zones.power = [];
+		oldSettings.zones.cyclingCadence = [];
+
+		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
+			set: (object: Object, callback: () => {}) => {
+				callback();
+			},
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(userSettings);
+			}
+		});
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.reset();
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(userSettings);
+			expect(browserStorageSyncSpy).toHaveBeenCalled();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 });

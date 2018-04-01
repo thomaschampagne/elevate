@@ -84,7 +84,7 @@ export class WindyTyModifier implements IModifier {
 			["Humidity", "rh"],
 		];
 
-		let html: string = "<li class='group'>";
+		let html = "<li class='group'>";
 		html += "<div class='title' style='cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
 		html += "<ul style='display: none;' id='stravistix_weatherList'>";
 		$.each(remoteViewActivityLinksArray, function () {
@@ -121,7 +121,7 @@ export class WindyTyModifier implements IModifier {
 	protected showWeather(type: string): void {
 
 		const date: Date = new Date(window.pageView.activity().get("startDateLocal") * 1000);
-		const defaultZoomLevel: number = 11;
+		const defaultZoomLevel = 11;
 		const windyTyHour: number = Math.round(date.getUTCHours() / 6) * 6;
 
 		const windUnitConfig: string = "metricWind=" + ((this.speedUnitData.units === "km") ? "km/h" : "mph");
