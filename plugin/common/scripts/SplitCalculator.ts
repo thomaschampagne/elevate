@@ -22,22 +22,21 @@ export class SplitCalculator {
 
 			interpolatedData.push(_.isNumber(this.data[index]) ? this.data[index] : 0);
 			normalizedScale.push(scaleValue);
+
 			const nextScaleValue = scale[index + 1];
 
 			if (_.isNumber(nextScaleValue)) {
 
-				// Is next scale not linear normalized (+1) with current scale?
-				if (nextScaleValue !== (scaleValue + 1)) {
+				if (nextScaleValue !== (scaleValue + 1)) { // Is next scale not linear normalized (+1) with current scale?
 
-					const interpolize = this.getLinearFunction(this.data[index + 1], this.data[index], nextScaleValue, scaleValue);
+					const linearFunction = this.getLinearFunction(this.data[index + 1], this.data[index], nextScaleValue, scaleValue);
 					let missingScaleValue = scaleValue + 1;
 
 					while (missingScaleValue < nextScaleValue) {
-						interpolatedData.push(interpolize(missingScaleValue));
+						interpolatedData.push(linearFunction(missingScaleValue));
 						normalizedScale.push(missingScaleValue);
 						missingScaleValue++;
 					}
-
 				}
 			}
 		});
@@ -51,31 +50,36 @@ export class SplitCalculator {
 		if (scaleRange > this.scale.length) {
 			throw new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + ".");
 		}
-		let currentMaxAverage: number = null;
+
+		let currentMaxSplit: number;
+		let maxSplit: number;
 
 		if (scaleRange > 1) {
 
-			const seekToMaxRange = this.scale.length - scaleRange;
+			let index: number = 0;
+			maxSplit = _.sum(this.data.slice(index, scaleRange));
+			currentMaxSplit = maxSplit;
 
-			for (let i: number = 0; i <= seekToMaxRange; i++) {
-
-				const averageInRange = _.mean(this.data.slice(i, scaleRange + i));
-
-				if (!currentMaxAverage || currentMaxAverage < averageInRange) {
-					currentMaxAverage = averageInRange;
+			while (this.scale[scaleRange + index]) {
+				maxSplit = maxSplit + this.data[scaleRange + index] - this.data[index];
+				if (currentMaxSplit < maxSplit) {
+					currentMaxSplit = maxSplit;
 				}
+				index++;
 			}
 
 		} else {
-			currentMaxAverage = _.max(this.data);
+			currentMaxSplit = _.max(this.data);
 		}
+
+		const bestSplit = (currentMaxSplit / scaleRange);
 
 		if (showProcessTime) {
 			const processTime = performance.now() - this.start;
-			console.log("Processed split in " + _.floor(processTime, 4) + " ms.");
+			console.debug("Processed split of range " + scaleRange + " in " + _.floor(processTime, 4) + " ms.");
 		}
 
-		return currentMaxAverage;
+		return bestSplit;
 	}
 
 	public getBestSplitRanges(ranges: number[], showProcessTime?: boolean): { range: number, result: number }[] {
@@ -91,7 +95,7 @@ export class SplitCalculator {
 
 		if (showProcessTime) {
 			const processTime = performance.now() - this.start;
-			console.log("Processed split in " + _.floor(processTime, 4) + " ms.");
+			console.debug("Processed split in " + _.floor(processTime, 4) + " ms.");
 		}
 
 		return results;
