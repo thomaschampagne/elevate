@@ -43,7 +43,7 @@ export abstract class AbstractDataView {
 	}
 
 	public printNumber(value: number, decimals: number): string {
-		return (value) ? value.toFixed(decimals) : "-";
+		return (_.isNumber(value)) ? value.toFixed(decimals) : "-";
 	}
 
 	public setIsSegmentEffortView(bool: boolean): void {

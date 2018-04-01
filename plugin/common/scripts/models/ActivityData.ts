@@ -68,6 +68,7 @@ export class PowerDataModel {
     avgWatts: number;
     avgWattsPerKg: number;
     weightedPower: number;
+	ftp: number;
     variabilityIndex: number;
     punchFactor: number;
     powerStressScore: number;
@@ -85,6 +86,7 @@ export class HeartRateDataModel {
 	HRSSPerHour: number;
     TRIMP: number;
     TRIMPPerHour: number;
+	fthr: number;
     lowerQuartileHeartRate: number;
     medianHeartRate: number;
     upperQuartileHeartRate: number;

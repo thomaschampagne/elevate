@@ -50,6 +50,9 @@ export class CyclingPowerDataView extends AbstractDataView {
 		if (_.isNumber(this.powerData.weightedWattsPerKg)) {
 			this.insertContentAtGridPosition(1, 2, this.printNumber(this.powerData.weightedWattsPerKg, 2), "Weighted Watts/Kg", "W/Kg", "displayAdvancedPowerData");
 		}
+		if (_.isNumber(this.powerData.ftp) && !this.isSegmentEffortView) {
+			this.insertContentAtGridPosition(2, 2, this.printNumber(this.powerData.ftp, 0), "FTP <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "W", "displayAdvancedPowerData");
+		}
 
 		if (_.isNumber(this.powerData.powerStressScore)) {
 			this.insertContentAtGridPosition(0, 3, this.printNumber(this.powerData.powerStressScore, 0), "Power Stress Score", "", "displayAdvancedPowerData");

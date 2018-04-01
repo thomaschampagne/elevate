@@ -1,5 +1,6 @@
 import { PowerDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
+import * as _ from "lodash";
 
 export class RunningPowerDataView extends AbstractDataView {
 
@@ -20,7 +21,7 @@ export class RunningPowerDataView extends AbstractDataView {
 		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.boltIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> POWER <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/runningPower\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
 		// Creates a grid
-		this.makeGrid(3, 3); // (col, row)
+		this.makeGrid(3, 4); // (col, row)
 
 		this.insertDataIntoGrid();
 		this.generateCanvasForGraph();
@@ -38,18 +39,23 @@ export class RunningPowerDataView extends AbstractDataView {
 		this.insertContentAtGridPosition(0, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.avgWatts, 0),
 			printEstimatedWordWhenRealPower + "Average Power", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 
+		if (_.isNumber(this.powerData.ftp)) {
+			this.insertContentAtGridPosition(1, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.ftp, 0),
+				printEstimatedWordWhenRealPower + " FTP <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
+		}
+
 		if (isRealPower) {
-			this.insertContentAtGridPosition(1, 0, this.printNumber(this.powerData.weightedPower, 0),
+			this.insertContentAtGridPosition(0, 1, this.printNumber(this.powerData.weightedPower, 0),
 				printEstimatedWordWhenRealPower + "Weighted Power", "W", "displayAdvancedPowerData");
-			this.insertContentAtGridPosition(2, 0, this.printNumber(this.powerData.variabilityIndex, 2),
+			this.insertContentAtGridPosition(1, 1, this.printNumber(this.powerData.variabilityIndex, 2),
 				printEstimatedWordWhenRealPower + "Variability Index", "", "displayAdvancedPowerData");
 		}
 
-		this.insertContentAtGridPosition(0, 1, printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts,
+		this.insertContentAtGridPosition(0, 2, printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts,
 			printEstimatedWordWhenRealPower + "25% Quartile Watts", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
-		this.insertContentAtGridPosition(1, 1, printEstimatedTildWhenRealPower + this.powerData.medianWatts,
+		this.insertContentAtGridPosition(1, 2, printEstimatedTildWhenRealPower + this.powerData.medianWatts,
 			printEstimatedWordWhenRealPower + "50% Quartile Watts", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
-		this.insertContentAtGridPosition(2, 1, printEstimatedTildWhenRealPower + this.powerData.upperQuartileWatts,
+		this.insertContentAtGridPosition(2, 2, printEstimatedTildWhenRealPower + this.powerData.upperQuartileWatts,
 			printEstimatedWordWhenRealPower + "75% Quartile Watts", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 
 	}
