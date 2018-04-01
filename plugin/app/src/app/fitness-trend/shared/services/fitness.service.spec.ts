@@ -48,6 +48,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			HRSSPerHour: avgHr / 90,
 			TRIMP: avgHr * 2,
 			TRIMPPerHour: avgHr / 60,
+			fthr: avgHr * 1.5,
 			activityHeartRateReserve: avgHr * 0.25,
 			activityHeartRateReserveMax: avgHr / 2,
 			averageHeartRate: avgHr,
@@ -74,6 +75,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			upperQuartileWatts: (avgWatts / 4) * 3,
 			variabilityIndex: 1,
 			weightedPower: avgWatts * 1.25,
+			ftp: avgWatts * 1.5,
 			weightedWattsPerKg: avgWatts * 1.25 / 70,
 		};
 		fakeActivity.hasPowerMeter = true;
