@@ -21,12 +21,24 @@ export interface IReleaseNote {
 export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.1.0",
-		message: "Test build",
+		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTP and FTHR.",
 		hotFixes: [],
 		features: [
+			"Fitness Trend: increased fitness trend accuracy using a heart rate monitor. Heart rate based activities have their stress scores " +
+			"processed with Heart Rate Stress Score (HRSS). The HRSS method has been added over TRIMP because HRSS scores are scaled to be use with Training Zones; " +
+			"HRSS scores can be directly compared to Cycling Power Stress Scores (PSS); HRSS scores can be directly compared to Swimming Stress Scores (SSS).",
+
+			"Year progression: new delta comparison for each year with the current year.",
+			"Data-fields: added HRSS (Heart Rate Stress Score) and HRSS/Hour to activity stats.",
+			"Data-fields: added FTP (Functional Threshold Power) and FTHR (Functional Threshold Heart Rate) to activity stats.",
+			"Added an \"Advanced Menu\" to manage plugin caches and reset settings."
 		],
 		isPatch: false,
 		fixes: [
+			"Updated fitness trend user guide",
+			"Updated heart rate stats helper",
+			"Updated power stats helper",
+			"Upgraded plugin libraries"
 		]
 	},
 	{
