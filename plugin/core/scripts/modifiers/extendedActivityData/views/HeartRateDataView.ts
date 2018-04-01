@@ -137,13 +137,14 @@ export class HeartRateDataView extends AbstractDataView {
 	protected insertDataIntoGrid(): void {
 
 		// Insert some data inside grid
-		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.HRSS, 0), "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.HRSSPerHour, 1), "<strong>HRSS</strong> / Hour", "", "displayAdvancedHrData"); // Usefull for running
+		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.HRSS, 0), "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.HRSSPerHour, 1), "<strong>HRSS</strong> / Hour <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "", "displayAdvancedHrData"); // Usefull for running
 		this.insertContentAtGridPosition(2, 0, this.printNumber(this.heartRateData.activityHeartRateReserve, 0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
 
 		// Trimp
 		this.insertContentAtGridPosition(0, 1, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(2, 1, this.printNumber(this.heartRateData.fthr, 0), "FTHR <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "bpm", "displayAdvancedHrData");
 
 		// Quartiles
 		this.insertContentAtGridPosition(0, 2, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");

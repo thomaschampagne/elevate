@@ -9,6 +9,7 @@ import { CyclingGradeDataView } from "./views/CyclingGradeDataView";
 import { CyclingPowerDataView } from "./views/CyclingPowerDataView";
 import { ElevationDataView } from "./views/ElevationDataView";
 import { SpeedDataView } from "./views/SpeedDataView";
+import * as _ from "lodash";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -32,7 +33,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			climbSpeed = (this.analysisData.gradeData.upFlatDownMoveData.up * this.speedUnitsData.speedUnitFactor).toFixed(1);
 		}
-		this.insertContentAtGridPosition(1, 2, climbSpeed, "Avg climbing speed", this.speedUnitsData.speedUnitPerHour, "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(1, 3, climbSpeed, "Avg climbing speed", this.speedUnitsData.speedUnitPerHour, "displayAdvancedGradeData");
 
 		// Cadence
 		let medianCadence = "-";
@@ -41,7 +42,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			medianCadence = this.analysisData.cadenceData.medianCadence.toString();
 			standardDeviationCadence = this.analysisData.cadenceData.standardDeviationCadence.toString();
 		}
-		this.insertContentAtGridPosition(0, 3, medianCadence, "Median Cadence", (standardDeviationCadence !== "-") ? " rpm <span class=\"summarySubGridTitle\">(&sigma; :" + standardDeviationCadence + " )</span>" : "", "displayCadenceData");
+		this.insertContentAtGridPosition(0, 4, medianCadence, "Median Cadence", (standardDeviationCadence !== "-") ? " rpm <span class=\"summarySubGridTitle\">(&sigma; :" + standardDeviationCadence + " )</span>" : "", "displayCadenceData");
 
 		let cadenceTimeMoving = "-";
 		let cadencePercentageMoving = "-";
@@ -49,7 +50,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData.cadenceData.cadenceTimeMoving);
 			cadencePercentageMoving = this.analysisData.cadenceData.cadencePercentageMoving.toFixed(0);
 		}
-		this.insertContentAtGridPosition(1, 3, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? " <span class=\"summarySubGridTitle\">(" + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
+		this.insertContentAtGridPosition(1, 4, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? " <span class=\"summarySubGridTitle\">(" + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
 
 		let weightedPower = "-";
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
@@ -59,7 +60,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
 				labelWeightedPower = "Estimated " + labelWeightedPower;
 			}
-			this.insertContentAtGridPosition(0, 4, weightedPower, labelWeightedPower, " w <span class=\"summarySubGridTitle\" style=\"font-size: 11px;\">(Dr. A. Coggan formula)</span>", "displayAdvancedPowerData");
+			this.insertContentAtGridPosition(0, 5, weightedPower, labelWeightedPower, " w <span class=\"summarySubGridTitle\" style=\"font-size: 11px;\">(Dr. A. Coggan formula)</span>", "displayAdvancedPowerData");
 		}
 
 		let avgWattsPerKg = "-";
@@ -70,7 +71,27 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				avgWattsPerKg = "<span style='font-size: 14px;'>~</span>" + avgWattsPerKg;
 				labelWKg = "Estimated " + labelWKg;
 			}
-			this.insertContentAtGridPosition(1, 4, avgWattsPerKg, labelWKg, " w/kg", "displayAdvancedPowerData");
+			this.insertContentAtGridPosition(1, 5, avgWattsPerKg, labelWKg, " w/kg", "displayAdvancedPowerData");
+		}
+
+		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
+
+			let label = "Functional Threshold Power";
+			let ftp = "-";
+			let ftpUnits = "";
+
+			if (_.isNumber(this.analysisData.powerData.ftp)) {
+
+				ftp = this.analysisData.powerData.ftp.toFixed(0);
+				ftpUnits = "w";
+
+				if (!this.analysisData.powerData.hasPowerMeter) {
+					ftp = "<span style='font-size: 14px;'>~</span>" + ftp;
+					label = "Estimated " + label;
+				}
+			}
+
+			this.insertContentAtGridPosition(0, 6, ftp, label, ftpUnits, "displayAdvancedPowerData");
 		}
 
 		let powerStressScore = "-";
@@ -90,13 +111,13 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
 			}
 
-			this.insertContentAtGridPosition(0, 5, powerStressScore, labelPSS, "", "displayAdvancedPowerData");
+			this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);
 		}
 
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
-		this.makeSummaryGrid(2, 6);
+		this.makeSummaryGrid(2, 7);
 		super.placeSummaryPanel(panelAdded);
 	}
 

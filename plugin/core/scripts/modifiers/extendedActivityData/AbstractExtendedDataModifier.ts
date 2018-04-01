@@ -1,9 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
-import {
-	ActivityBasicInfoModel, AnalysisDataModel,
-	SpeedUnitDataModel
-} from "../../../../common/scripts/models/ActivityData";
+import { ActivityBasicInfoModel, AnalysisDataModel, SpeedUnitDataModel } from "../../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../../interfaces/IAppResources";
@@ -136,12 +133,26 @@ export abstract class AbstractExtendedDataModifier {
 		// ...
 		let trainingImpulse = "-";
 		let hrss = "-";
+		let fthr = "-";
+		let fthrUnit = "";
+		let activityHeartRateReserve: string = "-";
+		let activityHeartRateReserveUnit: string = "";
+
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
 			hrss = this.analysisData.heartRateData.HRSS.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.HRSSPerHour.toFixed(1) + " / hour)</span>";
+			activityHeartRateReserve = this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0);
+			if (_.isNumber(this.analysisData.heartRateData.fthr)) {
+				fthr = this.analysisData.heartRateData.fthr.toFixed(0);
+				fthrUnit = "bpm";
+			}
+			activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.analysisData.heartRateData.activityHeartRateReserveMax.toFixed(0) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
 		}
+
 		this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, fthr, "Functional Threshold Heart Rate", fthrUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
 
 		// ...
 		let climbTime = "-";
@@ -151,7 +162,7 @@ export abstract class AbstractExtendedDataModifier {
 			climbTimeExtra = "<span class=\"summarySubGridTitle\">(" + (this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100).toFixed(0) + "% of time)</span>";
 		}
 
-		this.insertContentAtGridPosition(0, 2, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
+		this.insertContentAtGridPosition(0, 3, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
 
 	}
 
@@ -335,7 +346,11 @@ export abstract class AbstractExtendedDataModifier {
 	}
 
 	protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
-		const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+
+		let onClickHtmlBehaviour: string = "";
+		if (userSettingKey) {
+			onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+		}
 
 		if (this.summaryGrid) {
 			const content: string = "<span class=\"summaryGridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"summaryGridUnits\">" + units + "</span><br /><span class=\"summaryGridTitle\">" + title + "</span></span>";
