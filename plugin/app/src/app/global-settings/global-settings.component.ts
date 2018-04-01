@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
-import { CommonSettingsService } from "./services/common-settings.service";
+import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { MatDialog } from "@angular/material";
@@ -15,12 +15,12 @@ import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
-	selector: "app-common-settings",
-	templateUrl: "./common-settings.component.html",
-	styleUrls: ["./common-settings.component.scss"],
+	selector: "app-global-settings",
+	templateUrl: "./global-settings.component.html",
+	styleUrls: ["./global-settings.component.scss"],
 
 })
-export class CommonSettingsComponent implements OnInit, OnDestroy {
+export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 	public sections: SectionModel[];
 	public searchText = null;
@@ -38,17 +38,17 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 		return pathNames.join("/") + "/assets/option-helpers/";
 	}
 
-	constructor(private platformLocation: PlatformLocation,
-				private userSettingsService: UserSettingsService,
-				private commonSettingsService: CommonSettingsService,
-				private optionHelperReaderService: OptionHelperReaderService,
-				private route: ActivatedRoute,
-				private dialog: MatDialog) {
+	constructor(public platformLocation: PlatformLocation,
+				public userSettingsService: UserSettingsService,
+				public globalSettingsService: GlobalSettingsService,
+				public optionHelperReaderService: OptionHelperReaderService,
+				public route: ActivatedRoute,
+				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
 
-		this.sections = this.commonSettingsService.sections;
+		this.sections = this.globalSettingsService.sections;
 
 		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 			this.renderOptionsForEachSection(userSettingsSynced);
@@ -75,13 +75,13 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {UserSettingsModel} userSettingsSynced
 	 */
-	private renderOptionsForEachSection(userSettingsSynced: UserSettingsModel): void {
+	public renderOptionsForEachSection(userSettingsSynced: UserSettingsModel): void {
 
 		_.forEach(this.sections, (section: SectionModel) => {
 
 			_.forEach(section.options, (option: OptionModel) => {
 
-				if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+				if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
 					option.active = _.propertyOf(userSettingsSynced)(option.key);
 
@@ -91,13 +91,13 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 						});
 					}
 
-				} else if (option.type === CommonSettingsService.TYPE_OPTION_LIST) {
+				} else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
 					option.active = _.find(option.list, {
 						key: _.propertyOf(userSettingsSynced)(option.key),
 					});
 
-				} else if (option.type === CommonSettingsService.TYPE_OPTION_NUMBER) {
+				} else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
 
 					option.value = _.propertyOf(userSettingsSynced)(option.key);
 
@@ -114,7 +114,7 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 	 */
 	public onOptionChange(option: OptionModel): void {
 
-		if (option.type === CommonSettingsService.TYPE_OPTION_CHECKBOX) {
+		if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
 			this.userSettingsService.update(option.key, option.active).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
@@ -127,13 +127,13 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 					this.displaySubOption(subKey, option.active);
 				});
 			}
-		} else if (option.type === CommonSettingsService.TYPE_OPTION_LIST) {
+		} else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
 			this.userSettingsService.update(option.key, option.active.key).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
-		} else if (option.type === CommonSettingsService.TYPE_OPTION_NUMBER) {
+		} else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
 
 
 			if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
@@ -159,7 +159,7 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 	 *
 	 * @param {OptionModel} option
 	 */
-	private resetOptionToDefaultValue(option: OptionModel): void {
+	public resetOptionToDefaultValue(option: OptionModel): void {
 		const resetValue = _.propertyOf(userSettings)(option.key);
 		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
@@ -208,7 +208,7 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 
 			// Construct markdown template URI from asset option helper dir & option key
 			const pathName: string = this.platformLocation["location"].pathname;
-			const markdownTemplateUri = CommonSettingsComponent.getOptionHelperDir(pathName) + option.key + ".md";
+			const markdownTemplateUri = GlobalSettingsComponent.getOptionHelperDir(pathName) + option.key + ".md";
 
 			this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
 
@@ -220,7 +220,8 @@ export class CommonSettingsComponent implements OnInit, OnDestroy {
 				this.dialog.open(OptionHelperDialogComponent, {
 					minWidth: OptionHelperDialogComponent.MIN_WIDTH,
 					maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
-					data: optionHelperData
+					data: optionHelperData,
+					autoFocus: false
 				});
 			});
 		}

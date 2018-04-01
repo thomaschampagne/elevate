@@ -11,7 +11,7 @@ describe("ActivityService", () => {
 
 	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			providers: [ActivityService, ActivityDao]
@@ -22,6 +22,7 @@ describe("ActivityService", () => {
 		// Retrieve injected service
 		activityService = TestBed.get(ActivityService);
 
+		done();
 	});
 
 	it("should be created", (done: Function) => {

@@ -20,6 +20,28 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.1.0",
+		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTP and FTHR.",
+		hotFixes: [],
+		features: [
+			"Fitness Trend: increased fitness trend accuracy using a heart rate monitor. Heart rate based activities have their stress scores " +
+			"processed with Heart Rate Stress Score (HRSS). The HRSS method has been added over TRIMP because HRSS scores are scaled to be use with Training Zones; " +
+			"HRSS scores can be directly compared to Cycling Power Stress Scores (PSS); HRSS scores can be directly compared to Swimming Stress Scores (SSS).",
+
+			"Year progression: new delta comparison for each year with the current year.",
+			"Data-fields: added HRSS (Heart Rate Stress Score) and HRSS/Hour to activity stats.",
+			"Data-fields: added FTP (Functional Threshold Power) and FTHR (Functional Threshold Heart Rate) to activity stats.",
+			"Added an \"Advanced Menu\" to manage plugin caches and reset settings."
+		],
+		isPatch: false,
+		fixes: [
+			"Updated fitness trend user guide",
+			"Updated heart rate stats helper",
+			"Updated power stats helper",
+			"Upgraded plugin libraries"
+		]
+	},
+	{
 		version: "6.0.3",
 		message: "Third patch of <strong>NEW APP</strong> released in February. Mainly bugs fixes and improvements. Click \"show details\" for more info.",
 		hotFixes: [],
@@ -520,11 +542,11 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.3",
-		message: "Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
+		message: "Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
-			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
-			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: true,
 		fixes: [
@@ -534,11 +556,11 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.2",
-		message: "<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
+		message: "<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
-			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
-			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/commonSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Cycling estimated powers based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
+			"BETA: Running estimated paces based on your most painful effort on a segment. <a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">Don't forget to activate beta/hidden feature at first</a>",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],

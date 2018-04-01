@@ -38,7 +38,7 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 			fetchedLeaderBoardData = [];
 		}
 
-		const perPage: number = 50;
+		const perPage = 50;
 
 		const jqxhr: JQueryXHR = $.getJSON("/segments/" + segmentId + "/leaderboard?raw=true&page=" + page + "&per_page=" + perPage + "&viewer_context=false&filter=my_results");
 
@@ -154,7 +154,9 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 
 						const ratio = (r.avg_heart_rate - restHR) / (targetHR - restHR);
 						return new HRValueComputed(r, showWatts ? mValue / ratio : mValue * ratio);
-					} else return new HRValueComputed(r);
+					} else {
+						return new HRValueComputed(r);
+					}
 				});
 
 				const hrValues = hrValuesComputed.filter((h: HRValueComputed) => h.hraValue != null).length;
@@ -352,14 +354,15 @@ export class SegmentRecentEffortsHRATimeModifier implements IModifier {
 						let infoY = lastHRAY;
 
 						if (infoY + hoverH / 2 < pbTop) {
-						} // infobox above the PB top
-						else if (infoY - hoverH / 2 > pbBot) {
-						} // infobox below the PB bottom
-						else {
+						} else if (infoY - hoverH / 2 > pbBot) {
+						} else {
 							// infobox colliding with the PB info
 							// move it up or down, whichever is closer
-							if (infoY < (pbTop + pbBot) / 2) infoY = pbTop - hoverH / 2;
-							else infoY = pbBot + hoverH / 2;
+							if (infoY < (pbTop + pbBot) / 2) {
+								infoY = pbTop - hoverH / 2;
+							} else {
+								infoY = pbBot + hoverH / 2;
+							}
 						}
 
 						const boxX = parseFloat(pbLabel.attr("x"));

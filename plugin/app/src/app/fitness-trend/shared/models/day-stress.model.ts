@@ -6,6 +6,7 @@ export class DayStressModel {
 	public types: string[];
 	public activitiesName: string[];
 
+	public heartRateStressScore?: number = null;
 	public trainingImpulseScore?: number = null;
 	public powerStressScore?: number = null;
 	public swimStressScore?: number = null;
@@ -20,6 +21,10 @@ export class DayStressModel {
 		this.types = [];
 		this.activitiesName = [];
 		this.previewDay = previewDay;
+	}
+
+	public printHeartRateStressScore(): string {
+		return (this.heartRateStressScore) ? Math.floor(this.heartRateStressScore).toString() : "-";
 	}
 
 	public printTrainingImpulseScore(): string {

@@ -6,6 +6,7 @@ export class FitnessPreparedActivityModel {
 	public year: number;
 	public type: string;
 	public activityName: string;
+	public heartRateStressScore?: number;
 	public trainingImpulseScore?: number;
 	public powerStressScore?: number;
 	public swimStressScore?: number;

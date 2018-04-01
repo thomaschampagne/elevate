@@ -43,12 +43,12 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
 		this.insertContentAtGridPosition(0, 3, this.cadenceData.standardDeviationCadence, "Std Deviation &sigma;", "rpm", "displayCadenceData");
 
 		if (hasHasPerCadenceOccurrence) {
-			this.insertContentAtGridPosition(1, 3, this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2), "Avg Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+			this.insertContentAtGridPosition(1, 3, this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2), "Avg Dist. / Crank Rev.", "M", "displayCadenceData");
 
 			// Row 5
-			this.insertContentAtGridPosition(0, 4, this.printNumber(this.cadenceData.lowerQuartileDistancePerOccurrence, 2), "25% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
-			this.insertContentAtGridPosition(1, 4, this.printNumber(this.cadenceData.medianDistancePerOccurrence, 2), "50% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
-			this.insertContentAtGridPosition(2, 4, this.printNumber(this.cadenceData.upperQuartileDistancePerOccurrence, 2), "75% Dist. / Crank Rev. <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "M", "displayCadenceData");
+			this.insertContentAtGridPosition(0, 4, this.printNumber(this.cadenceData.lowerQuartileDistancePerOccurrence, 2), "25% Dist. / Crank Rev.", "M", "displayCadenceData");
+			this.insertContentAtGridPosition(1, 4, this.printNumber(this.cadenceData.medianDistancePerOccurrence, 2), "50% Dist. / Crank Rev.", "M", "displayCadenceData");
+			this.insertContentAtGridPosition(2, 4, this.printNumber(this.cadenceData.upperQuartileDistancePerOccurrence, 2), "75% Dist. / Crank Rev.", "M", "displayCadenceData");
 		}
 	}
 }

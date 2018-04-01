@@ -9,7 +9,11 @@ import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
+import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../shared/models/app-error.model";
+import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
+import { MatDialog } from "@angular/material";
+import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -18,10 +22,12 @@ import { AppError } from "../shared/models/app-error.model";
 })
 export class FitnessTrendComponent implements OnInit {
 
+	public static readonly DEFAULT_HEART_RATE_IMPULSE_MODE: HeartRateImpulseMode = HeartRateImpulseMode.HRSS;
+
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 	public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
-
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
+	public static readonly LS_HEART_RATE_IMPULSE_MODE_KEY: string = "fitnessTrend_heartRateImpulseMode";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
@@ -115,29 +121,25 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public fitnessTrend: DayFitnessTrendModel[];
-
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
 	public lastPeriodViewed: PeriodModel;
 	public dateMin: Date;
 	public dateMax: Date;
-
-	public isTrainingZonesEnabled;
-	public isPowerMeterEnabled;
-	public isSwimEnabled;
-	public isEBikeRidesEnabled;
-
-	public cyclingFtp: number = null;
-	public swimFtp: number = null;
-
+	public heartRateImpulseMode: HeartRateImpulseMode;
+	public isTrainingZonesEnabled: boolean;
+	public isPowerMeterEnabled: boolean;
+	public isSwimEnabled: boolean;
+	public isEBikeRidesEnabled: boolean;
+	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 	public skipActivityTypes: string[] = [];
-
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
 	public isHistoryCompliant: boolean = null; // Can be null: don't know yet true/false status on load
 
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
-				public fitnessService: FitnessService) {
+				public fitnessService: FitnessService,
+				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
@@ -154,17 +156,20 @@ export class FitnessTrendComponent implements OnInit {
 
 		}).then((userSettings: UserSettingsModel) => {
 
-			this.cyclingFtp = userSettings.userFTP;
-			this.swimFtp = userSettings.userSwimFTP;
+			this.showFitnessWelcomeDialog();
 
-			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
-			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.cyclingFtp);
-			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.swimFtp);
+			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
+
+			this.heartRateImpulseMode = FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
+			if (HeartRateImpulseMode.TRIMP === Number(localStorage.getItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY))) {
+				this.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+			}
+			this.verifyTogglesStatesAlongHrMode();
+
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
-
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
-			return this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled, this.swimFtp, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -185,8 +190,11 @@ export class FitnessTrendComponent implements OnInit {
 
 		}, (error: AppError) => {
 
-			if (error.code === FitnessService.ERROR_NO_MINIMUM_REQUIRED_ACTIVITIES) {
+			if (error.code === AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES) {
 				this.isHistoryCompliant = false;
+			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
+				console.warn(error);
+				this.resetUserPreferences();
 			} else {
 				console.error(error);
 			}
@@ -197,17 +205,26 @@ export class FitnessTrendComponent implements OnInit {
 		this.periodViewed = periodViewed;
 	}
 
+	public onHeartRateImpulseModeChange(heartRateImpulseMode: HeartRateImpulseMode): void {
+		this.heartRateImpulseMode = heartRateImpulseMode;
+		this.verifyTogglesStatesAlongHrMode();
+		this.reloadFitnessTrend();
+	}
+
 	public onTrainingZonesToggleChange(enabled: boolean): void {
 		this.isTrainingZonesEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 	}
 
 	public onPowerMeterToggleChange(enabled: boolean): void {
 		this.isPowerMeterEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onSwimToggleChange(enabled: boolean): void {
 		this.isSwimEnabled = enabled;
+		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
@@ -217,10 +234,33 @@ export class FitnessTrendComponent implements OnInit {
 		this.reloadFitnessTrend();
 	}
 
+	public verifyTogglesStatesAlongHrMode(): void {
+
+		if (this.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+			this.isTrainingZonesEnabled = false;
+			this.isPowerMeterEnabled = false;
+			this.isSwimEnabled = false;
+		} else { // HeartRateImpulseMode.HRSS
+			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.swimFtp);
+		}
+	}
+
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(this.isPowerMeterEnabled, this.cyclingFtp, this.isSwimEnabled,
-			this.swimFtp, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
+		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled,
+
+			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
 			this.fitnessTrend = fitnessTrend;
+
+		}, (error: AppError) => {
+
+			if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
+				console.warn(error);
+				this.resetUserPreferences();
+			} else {
+				console.error(error);
+			}
 		});
 	}
 
@@ -240,6 +280,33 @@ export class FitnessTrendComponent implements OnInit {
 			});
 		} else {
 			console.warn("No activities found");
+		}
+	}
+
+	public resetUserPreferences(): void {
+		alert("Whoops! We got a little problem while computing your fitness trend. Your graph inputs preferences will be reset.");
+		localStorage.removeItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
+		console.warn("User stored fitness prefs have been cleared");
+		window.location.reload();
+	}
+
+	public showFitnessWelcomeDialog(): void {
+
+		const show: boolean = _.isEmpty(localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG));
+
+		if (show) {
+			setTimeout(() => {
+				this.dialog.open(FitnessTrendWelcomeDialogComponent, {
+					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
+					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
+				});
+			});
+
 		}
 	}
 

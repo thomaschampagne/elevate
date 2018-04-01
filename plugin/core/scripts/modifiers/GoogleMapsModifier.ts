@@ -123,11 +123,15 @@ export class GoogleMapsModifier implements IModifier {
 	protected placeSegmentAreaGoogleMapButton(activityId: number): void {
 
 		// Listening for Segment Change visualization
-		if (!Strava.Labs) return;
+		if (!Strava.Labs) {
+			return;
+		}
 
 		const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
 
-		if (!view) return;
+		if (!view) {
+			return;
+		}
 
 		const functionRender: Function = view.prototype.render;
 
@@ -245,7 +249,7 @@ export class GoogleMapsModifier implements IModifier {
 			window.innerHeight * 0.875,
 		];
 
-		const html: string = "<div style=\"padding-bottom:10px; text-align:center;\"><div style=\"height:" + mapSize[1] + "px;width:" + mapSize[0] + "px;\" id=\"gmaps_canvas\"></div><a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/commonSettings?searchText=Google%20Maps\">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>";
+		const html: string = "<div style=\"padding-bottom:10px; text-align:center;\"><div style=\"height:" + mapSize[1] + "px;width:" + mapSize[0] + "px;\" id=\"gmaps_canvas\"></div><a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/globalSettings?searchText=Google%20Maps\">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>";
 
 		$.fancybox(html, {
 			autoScale: true,

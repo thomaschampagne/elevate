@@ -13,7 +13,7 @@ export class ReleasesNotesComponent implements OnInit, OnDestroy {
 	public releasesNotes: IReleaseNote[];
 	public routeDataSubscription: Subscription;
 
-	constructor(private route: ActivatedRoute) {
+	constructor(public route: ActivatedRoute) {
 	}
 
 	public ngOnInit(): void {

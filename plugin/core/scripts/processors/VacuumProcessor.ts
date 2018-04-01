@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 
 export class VacuumProcessor {
 
-	public static cachePrefix: string = "stravistix_activityStream_";
+	public static cachePrefix = "stravistix_activityStream_";
 
 	/**
 	 *  Get the strava athlete id connected
@@ -19,7 +19,9 @@ export class VacuumProcessor {
 				athleteId = window.currentAthlete.id;
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) {
+				console.warn(err);
+			}
 		}
 
 		return athleteId;
@@ -36,7 +38,9 @@ export class VacuumProcessor {
 				athleteName = window.currentAthlete.get("display_name");
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) {
+				console.warn(err);
+			}
 		}
 		return athleteName;
 	}
@@ -74,7 +78,9 @@ export class VacuumProcessor {
 				premiumStatus = window.currentAthlete.attributes.premium;
 			}
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) {
+				console.warn(err);
+			}
 		}
 
 		return premiumStatus;
@@ -90,7 +96,7 @@ export class VacuumProcessor {
 	 */
 	public getProStatus(): boolean {
 
-		let proStatus: boolean = false;
+		let proStatus = false;
 		const currentAthlete: any = this.getCurrentAthlete();
 
 		try {
@@ -99,7 +105,9 @@ export class VacuumProcessor {
 			}
 
 		} catch (err) {
-			if (env.debugMode) console.warn(err);
+			if (CoreEnv.debugMode) {
+				console.warn(err);
+			}
 		}
 
 		return proStatus;
@@ -282,7 +290,7 @@ export class VacuumProcessor {
 
 		$.ajax(url).done((activityStream: StreamsModel) => {
 
-			let hasPowerMeter: boolean = true;
+			let hasPowerMeter = true;
 
 			if (_.isEmpty(activityStream.watts)) {
 				activityStream.watts = activityStream.watts_calc;

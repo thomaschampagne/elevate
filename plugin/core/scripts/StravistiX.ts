@@ -5,7 +5,7 @@ import { SyncNotifyModel } from "../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
-import { env } from "../config/env";
+import { CoreEnv } from "../config/core-env";
 import { AthleteUpdate } from "./Follow";
 import { IAppResources } from "./interfaces/IAppResources";
 import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
@@ -28,9 +28,7 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier,
-	RunningGradeAdjustedPaceModifier,
-	RunningHeartRateModifier,
+	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
@@ -99,7 +97,7 @@ export class StravistiX {
 		// Handle some tasks when install/update occurs
 		this.handlePluginInstallOrUpgrade();
 
-		if (env.preview) {
+		if (CoreEnv.preview) {
 			this.handlePreviewRibbon();
 		}
 
@@ -113,7 +111,7 @@ export class StravistiX {
 		// Init "stravistix bridge"
 		window.__stravistix_bridge__ = {};
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Handling " + window.location.pathname);
 		}
 
@@ -182,13 +180,16 @@ export class StravistiX {
 			return;
 		}
 
-		const ribbonMessage: string = "<img style=\"width: 24px;\" src=\"" + this.appResources.systemUpdatesIcon + "\" /><strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "<a href=\"#\" class=\"pluginInstallOrUpgrade_details\">StravistiX v" + this.appResources.extVersion + ":</a></strong> " + latestRelease.message + ".";
-		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"position: absolute;z-index: 999; width: 100%; background-color: rgba(255, 212, 1, 1); text-align: left; padding-left: 4%; padding-top: 18px; padding-bottom: 18px;\">" +
-			"<div style=\"display:inline; font-size: 14px;\">" + ribbonMessage + "</div>" +
-			"<div style=\"display:inline; float: right; font-size: 14px; padding-right: 10px;\">" +
-			"<a href=\"#\" style=\"padding-right: 15px;\" class=\"pluginInstallOrUpgrade_details\">[show details]</a>" +
-			"<a href=\"#\" id=\"pluginInstallOrUpgrade_close\">[close (<span id=\"pluginInstallOrUpgrade_counter\"></span>)]</a>" +
-			"</div></div>";
+		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "Stravistix v" + this.appResources.extVersion + " updated</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
+			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
+			"	<div>" +
+			"		<div class=\"btn btn-primary btn-xs pluginInstallOrUpgrade_details\">View full release note</div>" +
+			"		<div id=\"pluginInstallOrUpgrade_close\" class=\"btn btn-primary btn-xs\" style=\"margin-left: 10px;\">Close (<span id=\"pluginInstallOrUpgrade_counter\"></span>)</div>" +
+			"	</div>" +
+			"</div>" +
+			"</div>";
 
 		$("body").before(ribbonHtml).each(() => {
 
@@ -220,7 +221,7 @@ export class StravistiX {
 			});
 
 			$(".pluginInstallOrUpgrade_details").on("click", () => {
-				this.handleUpdatePopup();
+				window.open(this.appResources.settingsLink + "#/releasesNotes", "_blank");
 			});
 		});
 	}
@@ -256,7 +257,7 @@ export class StravistiX {
 		Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, (response: any) => {
 
 			// Override version with fake one to simulate update
-			if (env.simulateUpdate) {
+			if (CoreEnv.simulateUpdate) {
 				response = {
 					data: {
 						version: "fakeVersion",
@@ -319,91 +320,6 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleUpdatePopup(): void {
-
-		let previewBuild = false;
-		if (this.appResources.extVersionName.indexOf("preview@") !== -1) {
-			previewBuild = true;
-		}
-
-		const latestRelease: IReleaseNote = _.first(releaseNotes);
-
-		const updateMessageObj: any = {
-			logo: "<img src=\"" + this.appResources.logoStravistix + "\"/>",
-			title: "This browser was just updated to <strong>v" + this.appResources.extVersionName + "</strong> :)",
-			hotFixes: (latestRelease.hotFixes) ? latestRelease.hotFixes : [],
-			features: (latestRelease.features) ? latestRelease.features : [],
-			fixes: (latestRelease.fixes) ? latestRelease.fixes : [],
-			upcomingFixes: [],
-			/* upcomingFeatures: [
-                 // 'Years progressions reworked',
-                 "Dashboard: Interrogate any stats of your history on a period. By sports, by bike, by shoes... Fully customisable.",
-                 "Grid: All your activities in a table including stravistix extended stats as columns.",
-                 //'3D display of an activity ?! I\'ve skills in video games development. Looking to do something clean with WebGL ;)',
-                 "Stay tunned via <a target=\"_blank\" href=\"https://twitter.com/champagnethomas\">My Twitter</a> // Just created <a target=\"_blank\" href=\"https://www.strava.com/clubs/stravistix\">Strava Club</a>",
-             ],*/
-		};
-
-		let message = "";
-		if (!_.isEmpty(latestRelease.message) && !previewBuild) {
-			message += "<div style=\"background: #eee; padding: 8px;\">";
-			message += latestRelease.message;
-			message += "</div>";
-		}
-
-		const baseVersion: string[] = this.appResources.extVersion.split(".");
-		if (!_.isEmpty(updateMessageObj.features) && !previewBuild) {
-			message += "<h5><strong>NEW in " + baseVersion[0] + "." + baseVersion[1] + ".x" + ":</strong></h5>";
-			_.forEach(updateMessageObj.features, (feature: string) => {
-				message += "<h6 style=\"margin-top: 12px;\">- " + feature + "</h6>";
-			});
-		}
-
-		if (!_.isEmpty(updateMessageObj.hotFixes) && !previewBuild) {
-			message += "<h5><strong>HOTFIXES " + this.appResources.extVersion + ":</strong></h5>";
-			_.forEach(updateMessageObj.hotFixes, (hotFix: string) => {
-				message += "<h6 style=\"margin-top: 12px;\">- " + hotFix + "</h6>";
-			});
-		}
-
-		if (!_.isEmpty(updateMessageObj.fixes) && !previewBuild) {
-			message += "<h5><strong>FIXED / IMPROVED in " + baseVersion[0] + "." + baseVersion[1] + "." + baseVersion[2] + ":</strong></h5>";
-			_.forEach(updateMessageObj.fixes, (fix: string) => {
-				message += "<h6 style=\"margin-top: 12px;\">- " + fix + "</h6>";
-			});
-		}
-
-		if (!_.isEmpty(updateMessageObj.upcomingFixes) && !previewBuild) {
-			message += "<h5><strong>Upcoming Fixes:</strong></h5>";
-			_.forEach(updateMessageObj.upcomingFixes, (upcomingFixes: string) => {
-				message += "<h6 style=\"margin-top: 12px;\">- " + upcomingFixes + "</h6>";
-			});
-		}
-
-		if (!_.isEmpty(updateMessageObj.upcomingFeatures) && !previewBuild) {
-			message += "<h5><strong>Upcoming Features:</strong></h5>";
-			_.forEach(updateMessageObj.upcomingFeatures, (upcomingFeatures: string) => {
-				message += "<h6 style=\"margin-top: 12px;\">- " + upcomingFeatures + "</h6>";
-			});
-		}
-
-		if (previewBuild) {
-			updateMessageObj.title = this.appResources.extVersionName;
-			const shortSha1Commit: string = this.appResources.extVersionName.slice(this.appResources.extVersionName.indexOf("@") + 1);
-			message += "<a href=\"https://github.com/thomaschampagne/stravistix/compare/master..." + shortSha1Commit + "\" target=\"_blank\">Git diff between " + this.appResources.extVersionName + " and master (code in production)</a></br></br> ";
-		}
-
-		// Donate button
-		message += "<a class=\"button btn-primary\" target=\"_blank\" id=\"extendedStatsButton\" href=\"" + this.appResources.settingsLink + "#/donate\">";
-		message += "<button style=\"font-size: 18px; width: 100%;\" class=\"btn btn-primary btn-sm\">Push this project higher !!!</button>";
-		message += "</a>";
-
-		$.fancybox("<div style=\"margin-left: auto; margin-right: auto; width: 25%;\">" + updateMessageObj.logo + "</div><h2>" + updateMessageObj.title + "</h2>" + message);
-	}
-
-	/**
-	 *
-	 */
 	protected handleAthletesStats(): void {
 
 		// If we are not on the athletes page then return...
@@ -411,7 +327,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleAthletesStats()");
 		}
 
@@ -455,7 +371,7 @@ export class StravistiX {
 	 */
 	protected handleMenu(): void {
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleMenu()");
 		}
 
@@ -477,7 +393,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRemoteLinks()");
 		}
 
@@ -506,7 +422,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleWindyTyModifier()");
 		}
 
@@ -541,7 +457,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleReliveCCModifier()");
 		}
 
@@ -566,7 +482,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleDefaultLeaderboardFilter()");
 		}
 
@@ -588,7 +504,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleSegmentRankPercentage()");
 		}
 
@@ -607,7 +523,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleSegmentHRAP_()");
 		}
 
@@ -627,7 +543,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityStravaMapType()");
 		}
 
@@ -652,7 +568,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleHideFeed()");
 		}
 
@@ -667,7 +583,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleDisplayFlyByFeedModifier()");
 		}
 
@@ -695,7 +611,7 @@ export class StravistiX {
 		this.activityProcessor.setActivityType(activityType);
 		this.activityProcessor.setTrainer(isTrainer);
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleExtendedData_()");
 		}
 
@@ -834,7 +750,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleNearbySegments()");
 		}
 
@@ -844,7 +760,7 @@ export class StravistiX {
 		const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
 		segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
 
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log(jsonSegments);
 			}
 
@@ -877,7 +793,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityBikeOdo()");
 		}
 
@@ -906,7 +822,7 @@ export class StravistiX {
 		// PR only for my own activities
 		const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivitySegmentTimeComparison()");
 		}
 
@@ -938,7 +854,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleActivityBestSplits()");
 		}
 
@@ -980,7 +896,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningGradeAdjustedPace()");
 		}
 
@@ -1010,7 +926,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningHeartRate()");
 		}
 
@@ -1037,7 +953,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningCadence()");
 		}
 
@@ -1064,7 +980,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Execute handleRunningHeartRate()");
 		}
 
@@ -1128,12 +1044,12 @@ export class StravistiX {
 
 		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
 
-		if (env.debugMode) {
+		if (CoreEnv.debugMode) {
 			console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 		}
 
 		if (_.isNull(this.athleteId)) {
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("athleteId is empty value: " + this.athleteId);
 			}
 			return;
@@ -1159,11 +1075,11 @@ export class StravistiX {
 			// Push IncomingConnection
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 			}
 
-			if (!env.debugMode) {
+			if (!CoreEnv.debugMode) {
 				follow("send", "event", "DailyConnection", eventAction, eventName);
 			}
 
@@ -1171,7 +1087,7 @@ export class StravistiX {
 			StorageManager.setCookie("stravistix_daily_connection_done", true, 1);
 
 		} else {
-			if (env.debugMode) {
+			if (CoreEnv.debugMode) {
 				console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 			}
 		}
@@ -1239,7 +1155,7 @@ export class StravistiX {
 								error: {path: window.location.href, date: new Date(), content: err},
 							};
 
-							const endPoint = HerokuEndpoints.resolve(env.endPoint) + "/api/errorReport";
+							const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 							$.post({
 								url: endPoint,

@@ -21,14 +21,14 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		super.insertContentSummaryGridContent();
 
 		// Speed and pace
-		let q3Move: string = "-";
+		let q3Move = "-";
 		if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
 			q3Move = Helper.secondsToHHMMSS(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true);
 			this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
 		}
 
 		// Avg climb pace
-		let climbPaceDisplayed: string = "-";
+		let climbPaceDisplayed = "-";
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
 			// Convert speed to pace
@@ -42,7 +42,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 			}
 
-			this.insertContentAtGridPosition(1, 2, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
+			this.insertContentAtGridPosition(1, 3, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
 		}
 
 		if (this.userSettings.displayAdvancedPowerData) {
@@ -70,10 +70,10 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 			}
 
-			this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
+			this.insertContentAtGridPosition(0, 4, averageWatts, averageWattsTitle, "w", userSettingKey);
 		}
 
-		let weightedPower: string = "-";
+		let weightedPower = "-";
 		if (this.userSettings.displayAdvancedPowerData) {
 
 			if (this.analysisData.powerData
@@ -81,20 +81,20 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				&& this.analysisData.powerData.hasPowerMeter
 			) {
 				weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
-				this.insertContentAtGridPosition(1, 3, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
+				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
-		this.makeSummaryGrid(2, 4);
+		this.makeSummaryGrid(2, 5);
 		super.placeSummaryPanel(panelAdded);
 	}
 
 	protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
 		setTimeout(() => { // Execute at the end to make sure DOM is ready
-			let htmlButton: string = "<section>";
+			let htmlButton = "<section>";
 			htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
 			htmlButton += "Show extended statistics of effort";
 			htmlButton += "</a>";
