@@ -144,8 +144,6 @@ export class FitnessTrendComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.showFitnessWelcomeDialog();
-
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 
 			if (athleteHistoryState === AthleteHistoryState.SYNCED) {
@@ -157,6 +155,8 @@ export class FitnessTrendComponent implements OnInit {
 			}
 
 		}).then((userSettings: UserSettingsModel) => {
+
+			this.showFitnessWelcomeDialog();
 
 			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
 
