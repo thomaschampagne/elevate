@@ -1,12 +1,13 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel,
-	GradeDataModel, HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel,
-	UpFlatDownModel, UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
+	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel, GradeDataModel,
+	HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel, UpFlatDownModel,
+	UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
 import { UserLactateThresholdModel, UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
+import { SplitCalculator } from "../../../common/scripts/SplitCalculator";
 
 export class ActivityComputer {
 
@@ -445,23 +446,6 @@ export class ActivityComputer {
 		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
 	}
 
-	/*	/!**
-         * Compute Heart Rate Stress Score (HRSS)
-         * @param {Gender} userGender
-         * @param {number} userMaxHr
-         * @param {number} userMinHr
-         * @param {number} userLactateThreshold
-         * @param {number} activityTrainingImpulse
-         * @returns {number}
-         *!/
-        public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-            const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
-            const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
-            const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
-            const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
-            return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
-        }*/
-
 	/**
 	 * TODO Duplicated code of FitnessService.computeHeartRateStressScore. To be refactored
 	 * Compute Heart Rate Stress Score (HRSS)
@@ -621,11 +605,20 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
+		let ftp = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
+			ftp = splitCalculator.getBestSplit(60 * 20, true);
+		} catch (err) {
+			console.warn("No ftp available for this range");
+		}
+
 		const powerData: PowerDataModel = {
 			hasPowerMeter,
 			avgWatts,
 			avgWattsPerKg,
 			weightedPower,
+			ftp,
 			variabilityIndex,
 			punchFactor,
 			powerStressScore,
@@ -665,10 +658,10 @@ export class ActivityComputer {
 		for (let i = 0; i < heartRateArray.length; i++) { // Loop on samples
 
 			if (i > 0 && (
-				this.isTrainer || // can be cycling home trainer
-				!velocityArray || // OR Non movements activities
-				velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
-			)) {
+					this.isTrainer || // can be cycling home trainer
+					!velocityArray || // OR Non movements activities
+					velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
+				)) {
 
 				// Compute heartrate data while moving from now
 				durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -695,29 +688,33 @@ export class ActivityComputer {
 			}
 		}
 
-		const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
-			return a - b;
-		});
-
 		// Update zone distribution percentage
 		this.userSettings.zones.heartRate = this.finalizeDistributionComputationZones(this.userSettings.zones.heartRate);
-
-		const averageHeartRate: number = hrSum / hrrSecondsCount;
-		const maxHeartRate: number = heartRateArraySorted[heartRateArraySorted.length - 1];
 
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
 		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, userMaxHr, userRestHr, userLactateThresholdModel);
-
 		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
+
+		const averageHeartRate: number = hrSum / hrrSecondsCount;
+		const maxHeartRate: number = _.max(heartRateArray);
+
+		let fthr = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
+			fthr = splitCalculator.getBestSplit(60 * 20, true);
+		} catch (err) {
+			console.warn("No fthr available for this range");
+		}
 
 		return {
 			HRSS: heartRateStressScore,
 			HRSSPerHour: HRSSPerHour,
 			TRIMP: trainingImpulse,
 			TRIMPPerHour: TRIMPPerHour,
+			fthr: fthr,
 			heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
