@@ -39,7 +39,7 @@ export class RunningPowerDataView extends AbstractDataView {
 		this.insertContentAtGridPosition(0, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.avgWatts, 0),
 			printEstimatedWordWhenRealPower + "Average Power", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 
-		if (_.isNumber(this.powerData.ftp)) {
+		if (_.isNumber(this.powerData.ftp) && !this.isSegmentEffortView) {
 			this.insertContentAtGridPosition(1, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.ftp, 0),
 				printEstimatedWordWhenRealPower + " FTP <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 		}
