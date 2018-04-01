@@ -58,8 +58,8 @@ export class FeaturedDataView extends AbstractDataView {
 		}
 
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-			this.insertContentAtGridPosition(2, 0, this.printNumber(this.analysisData.heartRateData.HRSS, 0), "HRSS <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "", "displayAdvancedHrData");
-			this.insertContentAtGridPosition(3, 0, this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1), "HRSS / Hour <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "", "displayAdvancedHrData");
+			this.insertContentAtGridPosition(2, 0, this.printNumber(this.analysisData.heartRateData.HRSS, 0), "HRSS <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedHrData");
+			this.insertContentAtGridPosition(3, 0, this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1), "HRSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedHrData");
 		}
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
@@ -69,7 +69,7 @@ export class FeaturedDataView extends AbstractDataView {
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}
-				this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.powerData.ftp, 0), label + " <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "w", "displayAdvancedPowerData"); // Avg watt /kg
+				this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.powerData.ftp, 0), label + " <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "w", "displayAdvancedPowerData"); // Avg watt /kg
 			}
 
 			if (_.isNumber(this.analysisData.powerData.weightedWattsPerKg)) {

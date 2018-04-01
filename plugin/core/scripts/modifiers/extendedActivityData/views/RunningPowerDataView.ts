@@ -41,7 +41,7 @@ export class RunningPowerDataView extends AbstractDataView {
 
 		if (_.isNumber(this.powerData.ftp)) {
 			this.insertContentAtGridPosition(1, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.ftp, 0),
-				printEstimatedWordWhenRealPower + " FTP <sup style='color:#FC4C02; font-size:12px;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
+				printEstimatedWordWhenRealPower + " FTP <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 		}
 
 		if (isRealPower) {
