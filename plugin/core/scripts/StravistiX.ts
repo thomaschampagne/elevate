@@ -180,13 +180,16 @@ export class StravistiX {
 			return;
 		}
 
-		const ribbonMessage: string = "<strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "Stravistix v" + this.appResources.extVersion + " updated</strong> <span style='margin-left: 10px;'>" + latestRelease.message + "</span>.";
-		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); text-align: left; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
-			"<div style=\"display:inline; color: white; font-size: 12px; line-height: 20px;\">" + ribbonMessage + "</div>" +
-			"<div style=\"display:inline; float: right;  padding-right: 10px;\">" +
-			"<div class=\"btn btn-primary btn-xs pluginInstallOrUpgrade_details\">View full release note</div>" +
-			"<div id=\"pluginInstallOrUpgrade_close\" class=\"btn btn-primary btn-xs\" style=\"margin-left: 10px;\">Close (<span id=\"pluginInstallOrUpgrade_counter\"></span>)</div>" +
-			"</div></div>";
+		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "Stravistix v" + this.appResources.extVersion + " updated</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
+			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
+			"	<div>" +
+			"		<div class=\"btn btn-primary btn-xs pluginInstallOrUpgrade_details\">View full release note</div>" +
+			"		<div id=\"pluginInstallOrUpgrade_close\" class=\"btn btn-primary btn-xs\" style=\"margin-left: 10px;\">Close (<span id=\"pluginInstallOrUpgrade_counter\"></span>)</div>" +
+			"	</div>" +
+			"</div>" +
+			"</div>";
 
 		$("body").before(ribbonHtml).each(() => {
 
