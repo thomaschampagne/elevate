@@ -6,9 +6,11 @@
 		</button>
 	</span>
 </mat-toolbar>
-<mat-card *ngFor="let note of releasesNotes;">
+<mat-card *ngFor="let note of releasesNotes; let i = index;">
 	<mat-card-title>
-		Version {{note.version}}
+		<a target="_blank"
+		   href="https://github.com/thomaschampagne/stravistix/compare/{{releasesNotes[i + 1]?.version}}...{{note.version}}">Version
+			{{note.version}}</a>
 	</mat-card-title>
 	<mat-card-content>
 
