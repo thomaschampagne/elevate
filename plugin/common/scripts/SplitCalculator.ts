@@ -51,28 +51,28 @@ export class SplitCalculator {
 			throw new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + ".");
 		}
 
-		let currentMaxSplit: number;
-		let maxSplit: number;
+		let maxSumFound: number;
+		let currentMaxSum: number;
 
 		if (scaleRange > 1) {
 
 			let index: number = 0;
-			maxSplit = _.sum(this.data.slice(index, scaleRange));
-			currentMaxSplit = maxSplit;
+			currentMaxSum = _.sum(this.data.slice(index, scaleRange));
+			maxSumFound = currentMaxSum;
 
 			while (this.scale[scaleRange + index]) {
-				maxSplit = maxSplit + this.data[scaleRange + index] - this.data[index];
-				if (currentMaxSplit < maxSplit) {
-					currentMaxSplit = maxSplit;
+				currentMaxSum = currentMaxSum + this.data[scaleRange + index] - this.data[index];
+				if (maxSumFound < currentMaxSum) {
+					maxSumFound = currentMaxSum;
 				}
 				index++;
 			}
 
 		} else {
-			currentMaxSplit = _.max(this.data);
+			maxSumFound = _.max(this.data);
 		}
 
-		const bestSplit = (currentMaxSplit / scaleRange);
+		const bestSplit = (maxSumFound / scaleRange);
 
 		if (showProcessTime) {
 			const processTime = performance.now() - this.start;
