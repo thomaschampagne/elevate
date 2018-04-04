@@ -2,6 +2,8 @@ import * as _ from "lodash";
 
 export class SplitCalculator {
 
+	public static readonly GAP_THRESHOLD: number = 3000;
+
 	public scale: number[];
 	public data: number[];
 	public start: number;
@@ -27,8 +29,18 @@ export class SplitCalculator {
 
 			if (_.isNumber(nextScaleValue)) {
 
-				if (nextScaleValue !== (scaleValue + 1)) { // Is next scale not linear normalized (+1) with current scale?
+				const nextScaleDiff = nextScaleValue - scaleValue;
 
+				if (nextScaleDiff <= 0) {
+					throw new Error("Scale should have gaps >=1");
+				}
+
+				if (nextScaleDiff > SplitCalculator.GAP_THRESHOLD) {
+					throw new Error("Scale has a too important gap. Cannot normalize scale");
+				}
+
+
+				if (nextScaleDiff > 1) { // Is next scale not linear normalized (+1) with current scale?
 					const linearFunction = this.getLinearFunction(this.data[index + 1], this.data[index], nextScaleValue, scaleValue);
 					let missingScaleValue = scaleValue + 1;
 
