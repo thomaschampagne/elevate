@@ -156,8 +156,6 @@ export class FitnessTrendComponent implements OnInit {
 
 		}).then((userSettings: UserSettingsModel) => {
 
-			this.showFitnessWelcomeDialog();
-
 			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
 
 			this.heartRateImpulseMode = FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
@@ -187,6 +185,8 @@ export class FitnessTrendComponent implements OnInit {
 				key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
 			});
 			this.lastPeriodViewed = this.periodViewed;
+
+			this.showFitnessWelcomeDialog();
 
 		}, (error: AppError) => {
 
@@ -305,7 +305,7 @@ export class FitnessTrendComponent implements OnInit {
 					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
 					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
 				});
-			});
+			}, 1000);
 
 		}
 	}
