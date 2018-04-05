@@ -44,7 +44,7 @@ describe("SplitCalculator", () => {
 		};
 
 		// Then
-		expect(call).toThrow(new Error("Scale has a too important gap. Cannot normalize scale"));
+		expect(call).toThrow(new Error("Scale has a too importants gap. Cannot normalize scale"));
 
 		done();
 	});
