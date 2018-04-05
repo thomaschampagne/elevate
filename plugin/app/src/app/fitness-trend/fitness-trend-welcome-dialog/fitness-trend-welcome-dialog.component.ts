@@ -15,7 +15,7 @@ export class FitnessTrendWelcomeDialogComponent implements OnInit {
 
 	public hideMessage: boolean;
 
-	constructor(public dialogRef: MatDialogRef<FitnessTrendWelcomeDialogComponent>,) {
+	constructor(public dialogRef: MatDialogRef<FitnessTrendWelcomeDialogComponent>) {
 	}
 
 	public ngOnInit(): void {
