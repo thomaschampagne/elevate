@@ -36,7 +36,7 @@ export class SplitCalculator {
 				}
 
 				if (nextScaleDiff > SplitCalculator.GAP_THRESHOLD) {
-					throw new Error("Scale has a too important gap. Cannot normalize scale");
+					throw new Error("Scale has a too importants gap. Cannot normalize scale");
 				}
 
 
