@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
 import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
-import { SyncNotifyModel } from "../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
@@ -28,7 +27,9 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
+	RunningCadenceModifier,
+	RunningGradeAdjustedPaceModifier,
+	RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
@@ -40,7 +41,8 @@ import { BikeOdoProcessor } from "./processors/BikeOdoProcessor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
 import { ActivitiesSynchronizer, ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
-import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
+import * as Q from "q";
+import { SyncNotifyModel } from "../../common/scripts/models/Sync";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -1127,63 +1129,48 @@ export class StravistiX {
 
 				const lastSyncDateTime: number = response.data;
 
-				if (lastSyncDateTime) {
+				if (_.isNumber(lastSyncDateTime)) {
 
 					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
 
-					if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
+					const isDelayReached = Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes);
 
+					let syncPromise: Q.Promise<ISyncResult>;
+
+					if (isDelayReached) {
 						console.log("Last sync performed more than " + this.userSettings.autoSyncMinutes + " minutes. auto-sync now");
-
-						// Start sync
-						this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
-
-							console.log("Sync finished", syncResult);
-
-							// Remove auto-sync lock
-							StorageManager.setCookieSeconds("stravistix_auto_sync_locker", true, 0);
-
-						}, (err: any) => {
-
-							console.error("Sync error", err);
-
-							// Remove auto-sync lock
-							StorageManager.setCookieSeconds("stravistix_auto_sync_locker", true, 0);
-
-							const errorUpdate: any = {
-								stravaId: this.athleteId,
-								error: {path: window.location.href, date: new Date(), content: err},
-							};
-
-							const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
-
-							$.post({
-								url: endPoint,
-								data: JSON.stringify(errorUpdate),
-								dataType: "json",
-								contentType: "application/json",
-								success: (response: any) => {
-									console.log("Commited: ", response);
-								},
-								error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-									console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-								},
-							});
-
-						}, (progress: SyncNotifyModel) => {
-							// console.log(progress);
-						});
+						syncPromise = this.activitiesSynchronizer.sync();
 
 					} else {
-						console.log("Do not auto-sync. Last sync done under than " + this.userSettings.autoSyncMinutes + " minute(s) ago");
+						console.log("Last sync done under than " + this.userSettings.autoSyncMinutes + " minute(s) ago");
+						console.log("Fast checking if activities count missmatch exists between remote and local");
+
+						syncPromise = this.activitiesSynchronizer.hasRemoteLocalActivitiesCountMissmatch().then((missmatch: boolean) => {
+
+							if (missmatch) {
+								console.log("Syncing the first page");
+								const firstPage = true;
+								return this.activitiesSynchronizer.sync(firstPage)
+							} else {
+								return Q.reject("Nothing to fast sync");
+							}
+						});
 					}
+
+					syncPromise.then((syncResult: ISyncResult) => {
+						console.log("Sync finished", syncResult);
+					}, (err: any) => {
+						console.warn(err);
+					}, (progress: SyncNotifyModel) => {
+						// console.log(progress);
+					});
 
 				} else {
 					console.log("No previous sync found. A first sync must be performed");
 				}
 			});
 
-		}, 1000 * 10); // Wait for 10s before starting the auto-sync
+		}, 1000 * 5); // Wait for 10s before starting the auto-sync
 
 	}
 
