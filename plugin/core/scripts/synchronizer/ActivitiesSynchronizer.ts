@@ -509,7 +509,11 @@ export class ActivitiesSynchronizer {
 	 * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
 	 * @return {Q.Promise<Array<SyncedActivityModel>>}
 	 */
-	public computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<SyncedActivityModel[]> {
+	public computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, maxGroupCount?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<SyncedActivityModel[]> {
+
+		if (!maxGroupCount) {
+			maxGroupCount = 0;
+		}
 
 		if (!handledGroupCount) {
 			handledGroupCount = 0;
@@ -539,13 +543,8 @@ export class ActivitiesSynchronizer {
 
 				handledGroupCount++;
 
-				// if(handledGroupCount >= 1) {
-				//     deferred.resolve();
-				// }
-
 				computedActivitiesInGroup = computedActivitiesPromised;
 				computedActivitiesPromised = null; // Free mem !
-				// console.log(computedActivitiesInGroup.length + '  activities computed in group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead), computedActivitiesInGroup);
 				console.log("Group handled count: " + handledGroupCount);
 
 				// Retrieve previous saved activities
@@ -591,8 +590,13 @@ export class ActivitiesSynchronizer {
 
 						deferred.notify(notify);
 
-						// Continue to next group, recursive call.
-						this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, handledGroupCount, deferred);
+						if (maxGroupCount > 0 && handledGroupCount >= maxGroupCount) {
+							console.log("Max group count of " + maxGroupCount + " reached. Handled group count: " + handledGroupCount);
+							deferred.resolve();
+						} else {
+							// Continue to next group, recursive call.
+							this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
+						}
 
 						// Free mem !
 						computedActivitiesInGroup = null;
@@ -612,8 +616,13 @@ export class ActivitiesSynchronizer {
 
 					deferred.notify(notify);
 
-					// Continue to next group, recursive call.
-					this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, handledGroupCount, deferred);
+					if (maxGroupCount > 0 && handledGroupCount >= maxGroupCount) {
+						console.log("Max group count of " + maxGroupCount + " reached. Handled group count: " + handledGroupCount);
+						deferred.resolve();
+					} else {
+						// Continue to next group, recursive call.
+						this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
+					}
 
 					// Free mem !
 					computedActivitiesInGroup = null;
@@ -639,7 +648,7 @@ export class ActivitiesSynchronizer {
 	 * Trigger the computing of new activities and save the result to local storage by merging with existing activities
 	 * @return Q.Promise of synced activities
 	 */
-	public sync(): Q.Promise<ISyncResult> {
+	public sync(firstPageOnly?: boolean): Q.Promise<ISyncResult> {
 
 		// let updateActivitiesInfoAtEnd: boolean = false;
 		const deferred = Q.defer<ISyncResult>();
@@ -652,7 +661,15 @@ export class ActivitiesSynchronizer {
 		this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 
 			const lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
-			return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+
+			if (firstPageOnly && firstPageOnly === true) {
+				const fromPage = 1;
+				const pagesPerGroupToRead = 1;
+				const maxGroupCount = 1;
+				return this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead, maxGroupCount);
+			} else {
+				return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+			}
 
 		}).then(() => {
 
@@ -660,6 +677,10 @@ export class ActivitiesSynchronizer {
 			return this.getComputedActivitiesFromLocal();
 
 		}).then((computedActivitiesStored: any) => {
+
+			if (firstPageOnly) { // Skip edit/delete from scanned ids. We dont crawled the whole history to do it.
+				return null;
+			}
 
 			if (computedActivitiesStored && computedActivitiesStored.data) {
 
