@@ -3,7 +3,9 @@ import * as Q from "q";
 import { Helper } from "../../../common/scripts/Helper";
 import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
 import {
-	StravaActivityModel, StreamActivityModel, SyncedActivityModel,
+	StravaActivityModel,
+	StreamActivityModel,
+	SyncedActivityModel,
 	SyncNotifyModel
 } from "../../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
@@ -255,6 +257,52 @@ export class ActivitiesSynchronizer {
 
 	public httpPageGet(perPage: number, page: number): JQueryXHR {
 		return $.ajax("/athlete/training_activities?new_activity_only=false&per_page=" + perPage + "&page=" + page);
+	}
+
+	/**
+	 *
+	 * @returns {Q.Promise<number>}
+	 */
+	public getRemoteActivitiesCount(): Q.Promise<number> {
+
+		const deferred = Q.defer<number>();
+
+		const perPage = 1;
+		const page = 1;
+		const promise: JQueryXHR = this.httpPageGet(perPage, page);
+
+		promise.then((data: { models: Array<StravaActivityModel>, total: number }, textStatus: string, jqXHR: JQueryXHR) => {
+
+			if (data && _.isNumber(data.total)) {
+				deferred.resolve(data.total);
+			} else {
+				deferred.reject("No remote total activities available");
+			}
+		});
+
+		return deferred.promise;
+	}
+
+	public hasRemoteLocalActivitiesCountMissmatch(): Q.Promise<boolean> {
+
+		const deferred = Q.defer<boolean>();
+
+		let localSyncedActivitiesLength: number = null;
+
+		this.getComputedActivitiesFromLocal().then((result: { data: SyncedActivityModel[] }) => {
+
+			if (result && result.data && _.isNumber(result.data.length)) {
+				localSyncedActivitiesLength = result.data.length;
+				return this.getRemoteActivitiesCount();
+			} else {
+				deferred.reject("No local computed activities");
+				return;
+			}
+		}).then((remoteCount: number) => {
+			deferred.resolve((remoteCount !== localSyncedActivitiesLength));
+		});
+
+		return deferred.promise;
 	}
 
 	/**
