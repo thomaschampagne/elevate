@@ -13,9 +13,11 @@ import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { UserLactateThresholdModel } from "../../../../common/scripts/models/UserSettings";
 import { Gender } from "../shared/enums/gender.enum";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 
 describe("FitnessTrendComponent", () => {
 
+	let pluginId: string = "c061d18abea0";
 	const gender = "men";
 	const userGender = Gender.MEN;
 	const maxHr = 200;
@@ -36,6 +38,14 @@ describe("FitnessTrendComponent", () => {
 	let fixture: ComponentFixture<FitnessTrendComponent>;
 
 	beforeEach((done: Function) => {
+
+		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			}
+		});
+
+		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
+
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,

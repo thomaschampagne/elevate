@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivitiesSynchronizer, ISyncResult } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
+import { ActivitiesSynchronizer } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
@@ -13,6 +13,7 @@ import {
 import { AnalysisDataModel } from "../../plugin/common/scripts/models/ActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 import { AthleteProfileModel } from "../../plugin/common/scripts/models/AthleteProfile";
+import { SyncResultModel } from "../../plugin/core/scripts/synchronizer/sync-result.model";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 
@@ -398,7 +399,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Check no computedActivitiesStored
 			expect(_.isNull(computedActivitiesStored.data) || _.isUndefined(computedActivitiesStored.data)).toBeTruthy();
 			return activitiesSynchronizer.sync(); // Start sync
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			// Sync finished
 			expect(activitiesSynchronizer.getComputedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
@@ -460,7 +461,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate 2 new added activities on strava.com
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -487,7 +488,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
 			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
@@ -511,7 +512,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate 1 new added 2 weeks ago
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -535,7 +536,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
 			expect(syncResult.computedActivities.length).toEqual(140);
@@ -556,7 +557,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(140);
 			expect(syncResult.computedActivities.length).toEqual(140);
@@ -581,7 +582,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -598,7 +599,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -648,7 +649,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -669,7 +670,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.computedActivities.length).toEqual(138); // -2 deleted
@@ -706,7 +707,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
@@ -762,7 +763,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Ready for a new sync
 			return activitiesSynchronizer.sync();
 
-		}).then((syncResult: ISyncResult) => {
+		}).then((syncResult: SyncResultModel) => {
 
 			expect(CHROME_STORAGE_STUB.computedActivities).not.toBeNull();
 			expect(syncResult.computedActivities).not.toBeNull();
@@ -824,7 +825,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 		// Given
 		const newStravaActivityId = 799672885;
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
+		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
 			addStravaActivity(newStravaActivityId); // New strava activity "Running back... Hard"
 			return Q.resolve();
 		});

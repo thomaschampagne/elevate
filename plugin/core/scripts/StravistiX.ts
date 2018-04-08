@@ -40,9 +40,11 @@ import { ActivityProcessor } from "./processors/ActivityProcessor";
 import { BikeOdoProcessor } from "./processors/BikeOdoProcessor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
-import { ActivitiesSynchronizer, ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
+import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
 import { SyncNotifyModel } from "../../common/scripts/models/Sync";
+import { SyncResultModel } from "./synchronizer/sync-result.model";
+import { Messages } from "../../common/scripts/Messages";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -1135,7 +1137,7 @@ export class StravistiX {
 
 					const isDelayReached = Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes);
 
-					let syncPromise: Q.Promise<ISyncResult>;
+					let syncPromise: Q.Promise<SyncResultModel>;
 
 					if (isDelayReached) {
 						console.log("Last sync performed more than " + this.userSettings.autoSyncMinutes + " minutes. auto-sync now");
@@ -1149,8 +1151,20 @@ export class StravistiX {
 						syncPromise = this.activitiesSynchronizer.sync(fastSync);
 					}
 
-					syncPromise.then((syncResult: ISyncResult) => {
+					syncPromise.then((syncResult: SyncResultModel) => {
+
 						console.log("Sync finished", syncResult);
+
+						// Notify background page that sync is finished
+						chrome.runtime.sendMessage(this.extensionId, {
+							method: Messages.ON_EXTERNAL_SYNC_DONE,
+							params: {
+								syncResult: syncResult,
+							},
+						}, (response: any) => {
+							console.log(response);
+						});
+
 					}, (err: any) => {
 						console.warn(err);
 					}, (progress: SyncNotifyModel) => {
