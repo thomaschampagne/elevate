@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { ActivitiesSynchronizer } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
-import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 import { HistoryChangesModel } from "../../plugin/core/scripts/synchronizer/history-changes.model";

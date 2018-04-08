@@ -11,7 +11,7 @@ import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";

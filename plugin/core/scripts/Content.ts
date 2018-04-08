@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { constants } from "../../common/scripts/Constants";
 import { ConstantsModel } from "../../common/scripts/models/Constants";
-import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
 import { userSettings } from "../../common/scripts/UserSettings";
 import { Loader } from "../modules/Loader";
 import { IAppResources } from "./interfaces/IAppResources";

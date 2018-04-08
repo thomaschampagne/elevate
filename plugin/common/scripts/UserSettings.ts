@@ -1,4 +1,4 @@
-import { UserSettingsModel } from "./models/UserSettings";
+import { UserSettingsModel } from "./models/user-settings/user-settings.model";
 
 export const userSettings: UserSettingsModel = {
 	autoSyncMinutes: 1440,

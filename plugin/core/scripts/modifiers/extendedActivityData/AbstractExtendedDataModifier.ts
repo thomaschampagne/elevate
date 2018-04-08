@@ -1,7 +1,11 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
-import { ActivityBasicInfoModel, AnalysisDataModel, SpeedUnitDataModel } from "../../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import {
+	ActivityBasicInfoModel,
+	AnalysisDataModel,
+	SpeedUnitDataModel
+} from "../../../../common/scripts/models/ActivityData";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../../interfaces/IAppResources";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";

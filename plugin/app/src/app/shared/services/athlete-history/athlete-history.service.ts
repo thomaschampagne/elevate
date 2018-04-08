@@ -9,7 +9,7 @@ import * as _ from "lodash";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/user-settings/user-settings.model";
 import { environment } from "../../../../environments/environment";
 import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 

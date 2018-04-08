@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { CadenceDataModel } from "../../../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/user-settings/user-settings.model";
 import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {

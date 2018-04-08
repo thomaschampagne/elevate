@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as Q from "q";
 import { ActivitiesSynchronizer } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
-import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
 import { AnalysisDataModel } from "../../plugin/common/scripts/models/ActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
@@ -856,8 +856,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(hasMissMatch).toBeFalsy();
 			done();
 		});
-		;
-
 	});
 
 	afterEach(() => {

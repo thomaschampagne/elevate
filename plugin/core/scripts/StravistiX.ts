@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
 import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
 import { CoreEnv } from "../config/core-env";

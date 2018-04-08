@@ -3,10 +3,10 @@ import IDeferred = angular.IDeferred;
 import { IPromise } from "angular";
 import * as _ from "lodash";
 import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
 import { userSettings } from "../../../common/scripts/UserSettings";
 import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
 export class ChromeStorageService {
 
