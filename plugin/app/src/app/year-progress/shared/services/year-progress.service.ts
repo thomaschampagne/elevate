@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { YearProgressModel } from "../models/year-progress.model";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
@@ -10,6 +9,7 @@ import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 import { Subject } from "rxjs/Subject";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 @Injectable()
 export class YearProgressService {

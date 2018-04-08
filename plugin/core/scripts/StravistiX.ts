@@ -42,9 +42,9 @@ import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
 import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
-import { SyncNotifyModel } from "../../common/scripts/models/Sync";
-import { SyncResultModel } from "./synchronizer/sync-result.model";
+import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
 import { Messages } from "../../common/scripts/Messages";
+import { SyncNotifyModel } from "../../common/scripts/models/sync/sync-notify.model";
 
 export class StravistiX {
 	public static instance: StravistiX = null;

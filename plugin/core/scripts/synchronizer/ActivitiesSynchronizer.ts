@@ -2,18 +2,16 @@ import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../../../common/scripts/Helper";
 import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import {
-	StravaActivityModel,
-	StreamActivityModel,
-	SyncedActivityModel,
-	SyncNotifyModel
-} from "../../../common/scripts/models/Sync";
 import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../interfaces/IAppResources";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
-import { SyncResultModel } from "./sync-result.model";
+import { SyncResultModel } from "../../../common/scripts/models/sync/sync-result.model";
 import { HistoryChangesModel } from "./history-changes.model";
+import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../../common/scripts/models/sync/strava-activity.model";
+import { SyncNotifyModel } from "../../../common/scripts/models/sync/sync-notify.model";
+import { StreamActivityModel } from "../../../common/scripts/models/sync/stream-activity.model";
 
 export class ActivitiesSynchronizer {
 

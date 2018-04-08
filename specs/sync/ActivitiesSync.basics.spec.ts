@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import { ActivitiesSynchronizer } from "../../plugin/core/scripts/synchronizer/ActivitiesSynchronizer";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
-import { StravaActivityModel, SyncedActivityModel } from "../../plugin/common/scripts/models/Sync";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 import { HistoryChangesModel } from "../../plugin/core/scripts/synchronizer/history-changes.model";
+import { SyncedActivityModel } from "../../plugin/common/scripts/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../plugin/common/scripts/models/sync/strava-activity.model";
 
 describe("ActivitiesSynchronizer", () => {
 

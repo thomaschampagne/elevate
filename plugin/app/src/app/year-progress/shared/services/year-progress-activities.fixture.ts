@@ -1,5 +1,5 @@
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import * as moment from "moment";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 export class YearProgressActivitiesFixture {
 

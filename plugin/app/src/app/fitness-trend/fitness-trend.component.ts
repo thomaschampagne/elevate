@@ -15,7 +15,7 @@ import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../../core/scripts/synchronizer/sync-result.model";
+import { SyncResultModel } from "../../../../common/scripts/models/sync/sync-result.model";
 
 @Component({
 	selector: "app-fitness-trend",
