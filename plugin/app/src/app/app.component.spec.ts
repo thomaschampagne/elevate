@@ -6,13 +6,16 @@ import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfi
 import { TEST_SYNCED_ACTIVITIES } from "../shared-fixtures/activities-2015.fixture";
 import { RemoteAthleteMismatchComponent } from "./remote-athlete-mismatch/remote-athlete-mismatch.component";
 import { userSettings } from "../../../common/scripts/UserSettings";
+import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 
 describe("AppComponent", () => {
 
+	let pluginId: string = "c061d18abea0";
 	let component: AppComponent = null;
 	let fixture: ComponentFixture<AppComponent> = null;
 
 	beforeEach((done: Function) => {
+
 		TestBed.configureTestingModule({
 			declarations: [
 				AppComponent,
@@ -28,6 +31,13 @@ describe("AppComponent", () => {
 	});
 
 	beforeEach(() => {
+
+		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			}
+		});
+
+		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;

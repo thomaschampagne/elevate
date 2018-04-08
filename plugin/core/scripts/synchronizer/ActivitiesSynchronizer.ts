@@ -12,19 +12,8 @@ import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../interfaces/IAppResources";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
-
-export interface IHistoryChanges {
-	added: number[];
-	deleted: number[];
-	edited: Array<{ id: number, name: string, type: string, display_type: string }>;
-}
-
-export interface ISyncResult {
-	globalHistoryChanges: IHistoryChanges;
-	computedActivities: SyncedActivityModel[];
-	lastSyncDateTime: number;
-	syncWithAthleteProfile: AthleteProfileModel;
-}
+import { SyncResultModel } from "./sync-result.model";
+import { HistoryChangesModel } from "./history-changes.model";
 
 export class ActivitiesSynchronizer {
 
@@ -41,7 +30,7 @@ export class ActivitiesSynchronizer {
 	protected _multipleActivityProcessor: MultipleActivityProcessor;
 	protected _endReached = false;
 
-	private _globalHistoryChanges: IHistoryChanges = {
+	private _globalHistoryChanges: HistoryChangesModel = {
 		added: [],
 		deleted: [],
 		edited: [],
@@ -54,7 +43,7 @@ export class ActivitiesSynchronizer {
 		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings);
 	}
 
-	public appendGlobalHistoryChanges(historyIn: IHistoryChanges): void {
+	public appendGlobalHistoryChanges(historyIn: HistoryChangesModel): void {
 		this._globalHistoryChanges.added = _.union(this._globalHistoryChanges.added, historyIn.added);
 		this._globalHistoryChanges.deleted = _.union(this._globalHistoryChanges.deleted, historyIn.deleted);
 		this._globalHistoryChanges.edited = _.union(this._globalHistoryChanges.edited, historyIn.edited);
@@ -66,9 +55,9 @@ export class ActivitiesSynchronizer {
 	 * - activity IDs to edit with their values (edited from strava.com)
 	 * @param activities Array<StravaActivityModel>
 	 * @param computedActivities Array<SyncedActivityModel>
-	 * @return IHistoryChanges
+	 * @return HistoryChangesModel
 	 */
-	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], computedActivities: SyncedActivityModel[]): IHistoryChanges {
+	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
@@ -105,7 +94,7 @@ export class ActivitiesSynchronizer {
 			});
 		}
 
-		const historyChanges: IHistoryChanges = {
+		const historyChanges: HistoryChangesModel = {
 			added,
 			deleted,
 			edited,
@@ -121,7 +110,7 @@ export class ActivitiesSynchronizer {
 	 * @param computedActivities
 	 * @returns {null}
 	 */
-	public static findDeletedActivities(rawActivityIds: number[], computedActivities: SyncedActivityModel[]): IHistoryChanges {
+	public static findDeletedActivities(rawActivityIds: number[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
@@ -135,7 +124,7 @@ export class ActivitiesSynchronizer {
 			}
 		});
 
-		const historyChanges: IHistoryChanges = {
+		const historyChanges: HistoryChangesModel = {
 			added,
 			deleted,
 			edited,
@@ -163,7 +152,7 @@ export class ActivitiesSynchronizer {
 			this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
 
 				// Should find added and edited activities
-				const historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
+				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
 				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
@@ -648,10 +637,10 @@ export class ActivitiesSynchronizer {
 	 * Trigger the computing of new activities and save the result to local storage by merging with existing activities
 	 * @return Q.Promise of synced activities
 	 */
-	public sync(fastSync?: boolean): Q.Promise<ISyncResult> {
+	public sync(fastSync?: boolean): Q.Promise<SyncResultModel> {
 
 		// let updateActivitiesInfoAtEnd: boolean = false;
-		const deferred = Q.defer<ISyncResult>();
+		const deferred = Q.defer<SyncResultModel>();
 		let syncNotify: SyncNotifyModel = {};
 
 		// Reset values for a sync
@@ -700,7 +689,7 @@ export class ActivitiesSynchronizer {
 			if (computedActivitiesStored && computedActivitiesStored.data) {
 
 				// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-				const historyChangesOnPagesRode: IHistoryChanges = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (computedActivitiesStored.data as SyncedActivityModel[]));
+				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (computedActivitiesStored.data as SyncedActivityModel[]));
 				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
 
 				// Apply names/types changes
@@ -758,7 +747,7 @@ export class ActivitiesSynchronizer {
 			// Synced Athlete Profile saved ...
 			console.log("Sync With Athlete Profile done");
 
-			const syncResult: ISyncResult = {
+			const syncResult: SyncResultModel = {
 				globalHistoryChanges: this._globalHistoryChanges,
 				computedActivities: saved.data.computedActivities,
 				lastSyncDateTime: saved.data.lastSyncDateTime,
@@ -833,7 +822,7 @@ export class ActivitiesSynchronizer {
 		return this._hasBeenComputedActivities;
 	}
 
-	get globalHistoryChanges(): IHistoryChanges {
+	get globalHistoryChanges(): HistoryChangesModel {
 		return this._globalHistoryChanges;
 	}
 }

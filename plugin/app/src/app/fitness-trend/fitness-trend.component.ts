@@ -14,6 +14,8 @@ import { AppError } from "../shared/models/app-error.model";
 import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { SyncResultModel } from "../../../../core/scripts/synchronizer/sync-result.model";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -139,6 +141,7 @@ export class FitnessTrendComponent implements OnInit {
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
 				public fitnessService: FitnessService,
+				public externalUpdatesService: ExternalUpdatesService,
 				public dialog: MatDialog) {
 	}
 
@@ -185,6 +188,15 @@ export class FitnessTrendComponent implements OnInit {
 				key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
 			});
 			this.lastPeriodViewed = this.periodViewed;
+
+			// Listen for syncFinished update then reload graph if neccesary.
+			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+				if (syncResult.globalHistoryChanges.added.length > 0
+					|| syncResult.globalHistoryChanges.edited.length > 0
+					|| syncResult.globalHistoryChanges.deleted.length > 0) {
+					this.reloadFitnessTrend();
+				}
+			});
 
 			this.showFitnessWelcomeDialog();
 

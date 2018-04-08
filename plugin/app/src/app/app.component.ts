@@ -20,6 +20,8 @@ import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-h
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
+import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
+import { SyncResultModel } from "../../../core/scripts/synchronizer/sync-result.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
@@ -115,7 +117,8 @@ export class AppComponent implements OnInit, OnDestroy {
 				public overlayContainer: OverlayContainer,
 				public renderer: Renderer2,
 				public iconRegistry: MatIconRegistry,
-				public sanitizer: DomSanitizer) {
+				public sanitizer: DomSanitizer,
+				public externalUpdatesService: ExternalUpdatesService) {
 
 		this.registerCustomIcons();
 
@@ -145,6 +148,12 @@ export class AppComponent implements OnInit, OnDestroy {
 		setInterval(() => {
 			this.updateLastSyncDateStatus();
 		}, 1000 * 60);
+
+		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+			if (syncResult) {
+				this.updateLastSyncDateStatus();
+			}
+		});
 
 		this.setupWindowResizeBroadcast();
 
@@ -195,7 +204,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public updateLastSyncDateStatus(): void {
-
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 			this.athleteHistoryState = athleteHistoryState;
 			this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
@@ -204,7 +212,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
-
 	}
 
 	public setupWindowResizeBroadcast(): void {
