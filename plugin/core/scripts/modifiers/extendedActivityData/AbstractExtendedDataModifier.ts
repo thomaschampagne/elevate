@@ -1,10 +1,5 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../common/scripts/Helper";
-import {
-	ActivityBasicInfoModel,
-	AnalysisDataModel,
-	SpeedUnitDataModel
-} from "../../../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../../interfaces/IAppResources";
@@ -13,6 +8,9 @@ import { AbstractDataView } from "./views/AbstractDataView";
 import { FeaturedDataView } from "./views/FeaturedDataView";
 import { HeaderView } from "./views/HeaderView";
 import { HeartRateDataView } from "./views/HeartRateDataView";
+import { ActivityBasicInfoModel } from "../../../../common/scripts/models/activity-data/activity-basic-info.model";
+import { SpeedUnitDataModel } from "../../../../common/scripts/models/activity-data/speed-unit-data.model";
+import { AnalysisDataModel } from "../../../../common/scripts/models/activity-data/analysis-data.model";
 
 export abstract class AbstractExtendedDataModifier {
 

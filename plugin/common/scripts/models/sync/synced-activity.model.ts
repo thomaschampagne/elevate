@@ -1,4 +1,4 @@
-import { AnalysisDataModel } from "../ActivityData";
+import { AnalysisDataModel } from "../activity-data/analysis-data.model";
 
 export class SyncedActivityModel {
 	public id: number;

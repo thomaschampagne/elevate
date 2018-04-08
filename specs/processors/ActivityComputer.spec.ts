@@ -1,10 +1,8 @@
 import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
-import {
-	ActivityStatsMapModel,
-	AnalysisDataModel,
-	StreamsModel
-} from "../../plugin/common/scripts/models/ActivityData";
+import { ActivityStatsMapModel } from "../../plugin/common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../plugin/common/scripts/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../plugin/common/scripts/models/activity-data/analysis-data.model";
 
 describe("ActivityComputer", () => {
 
@@ -14,7 +12,7 @@ describe("ActivityComputer", () => {
 		const powerMeter = false;
 
 		const userSettingsMock: UserSettingsModel = window.__fixtures__["fixtures/userSettings/2470979"];
-		const stream: StreamsModel = window.__fixtures__["fixtures/activities/723224273/stream"];
+		const stream: ActivityStreamsModel = window.__fixtures__["fixtures/activities/723224273/stream"];
 		const statsMap: ActivityStatsMapModel = window.__fixtures__["fixtures/activities/723224273/statsMap"];
 
         stream.watts = stream.watts_calc; // because powerMeter is false

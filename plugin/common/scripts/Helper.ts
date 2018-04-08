@@ -1,7 +1,7 @@
 import * as Q from "q";
-import { SpeedUnitDataModel } from "./models/ActivityData";
 import { IStorageUsage } from "./modules/StorageManager";
 import { Messages } from "./Messages";
+import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
 
 export class Helper {
 

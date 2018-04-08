@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { UserSettingsModel } from "../../../../../../common/scripts/models/user-settings/user-settings.model";
-import { ZoneModel } from "../../../../../../common/scripts/models/ActivityData";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
+import { ZoneModel } from "../../../../../../common/scripts/models/activity-data/zone.model";
 
 @Injectable()
 export class UserSettingsService {

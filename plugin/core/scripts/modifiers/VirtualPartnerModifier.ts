@@ -1,8 +1,9 @@
 import { saveAs } from "file-saver";
 import * as _ from "lodash";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../../common/scripts/CourseMarker";
-import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
 import { VacuumProcessor } from "../processors/VacuumProcessor";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
 
 export class VirtualPartnerModifier implements IModifier {
 
@@ -112,7 +113,7 @@ export class VirtualPartnerModifier implements IModifier {
 
 		this.getSegmentInfos(effortId, (segmentData: any) => {
 
-			this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel) => { // Get stream on page
+			this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel) => { // Get stream on page
 				if (_.isEmpty(activityStream.latlng)) {
 					alert("No GPS Data found");
 					return;

@@ -4,14 +4,14 @@ import { ActivitiesSynchronizer } from "../../plugin/core/scripts/synchronizer/A
 import { MultipleActivityProcessor } from "../../plugin/core/scripts/processors/MultipleActivityProcessor";
 import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../../plugin/core/scripts/interfaces/IAppResources";
-import { AnalysisDataModel } from "../../plugin/common/scripts/models/ActivityData";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { AthleteProfileModel } from "../../plugin/common/scripts/models/AthleteProfile";
+import { AthleteProfileModel } from "../../plugin/common/scripts/models/athlete-profile.model";
 import { SyncResultModel } from "../../plugin/common/scripts/models/sync/sync-result.model";
 import { StravaActivityModel } from "../../plugin/common/scripts/models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../../plugin/common/scripts/models/sync/sync-notify.model";
 import { SyncedActivityModel } from "../../plugin/common/scripts/models/sync/synced-activity.model";
 import { StreamActivityModel } from "../../plugin/common/scripts/models/sync/stream-activity.model";
+import { AnalysisDataModel } from "../../plugin/common/scripts/models/activity-data/analysis-data.model";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 
