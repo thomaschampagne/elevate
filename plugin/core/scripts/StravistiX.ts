@@ -1145,16 +1145,8 @@ export class StravistiX {
 						console.log("Last sync done under than " + this.userSettings.autoSyncMinutes + " minute(s) ago");
 						console.log("Fast checking if activities count missmatch exists between remote and local");
 
-						syncPromise = this.activitiesSynchronizer.hasRemoteLocalActivitiesCountMissmatch().then((missmatch: boolean) => {
-
-							if (missmatch) {
-								console.log("Syncing the first page");
-								const firstPage = true;
-								return this.activitiesSynchronizer.sync(firstPage)
-							} else {
-								return Q.reject("Nothing to fast sync");
-							}
-						});
+						const fastSync = true;
+						syncPromise = this.activitiesSynchronizer.sync(fastSync);
 					}
 
 					syncPromise.then((syncResult: ISyncResult) => {
