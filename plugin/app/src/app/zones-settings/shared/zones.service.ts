@@ -11,7 +11,7 @@ import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 @Injectable()
 export class ZonesService {
 
-	private readonly MAX_ZONES_COUNT: number = 50;
+	private readonly MAX_ZONES_COUNT: number = 40;
 	private readonly MIN_ZONES_COUNT: number = 3;
 
 	public currentZones: ZoneModel[];
