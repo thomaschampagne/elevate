@@ -648,7 +648,7 @@ export class ActivitiesSynchronizer {
 	 * Trigger the computing of new activities and save the result to local storage by merging with existing activities
 	 * @return Q.Promise of synced activities
 	 */
-	public sync(firstPageOnly?: boolean): Q.Promise<ISyncResult> {
+	public sync(fastSync?: boolean): Q.Promise<ISyncResult> {
 
 		// let updateActivitiesInfoAtEnd: boolean = false;
 		const deferred = Q.defer<ISyncResult>();
@@ -662,25 +662,40 @@ export class ActivitiesSynchronizer {
 
 			const lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
 
-			if (firstPageOnly && firstPageOnly === true) {
-				const fromPage = 1;
-				const pagesPerGroupToRead = 1;
-				const maxGroupCount = 1;
-				return this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead, maxGroupCount);
+			if (fastSync && fastSync === true) {
+
+				console.log("Fast sync mode enabled");
+
+				return this.hasRemoteLocalActivitiesCountMissmatch().then((missMatch: boolean) => {
+
+					if (missMatch) {
+						console.log("Miss match found between local and remote activities. Syncing first page only.");
+						const fromPage = 1;
+						const pagesPerGroupToRead = 1;
+						const maxGroupCount = 1;
+						return this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead, maxGroupCount);
+
+					} else {
+						console.log("Local and remote activities count matches.");
+						return null;
+					}
+				});
+
 			} else {
 				return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
 			}
 
 		}).then(() => {
 
+			if (fastSync) { // Skip edit/delete from scanned ids. We dont crawled the whole history to do it.
+				console.log("Skipping HistoryChanges analisys");
+				return null;
+			}
+
 			// Let's check for deletion + apply edits
 			return this.getComputedActivitiesFromLocal();
 
 		}).then((computedActivitiesStored: any) => {
-
-			if (firstPageOnly) { // Skip edit/delete from scanned ids. We dont crawled the whole history to do it.
-				return null;
-			}
 
 			if (computedActivitiesStored && computedActivitiesStored.data) {
 
@@ -709,15 +724,14 @@ export class ActivitiesSynchronizer {
 
 				return this.saveComputedActivitiesToLocal(computedActivitiesStored.data);
 
-			} else {
-				deferred.reject("You tried to edit/delete from local history without having local data ?!");
-				return null;
 			}
+
+			return null;
 
 		}).then(() => {
 
 			// Compute Activities By Groups Of Pages done... Now updating the last sync date
-			return this.saveLastSyncDateToLocal((new Date()).getTime());
+			return this.updateLastSyncDateToNow();
 
 		}).then((saved: any) => {
 
@@ -774,6 +788,10 @@ export class ActivitiesSynchronizer {
 		});
 
 		return deferred.promise;
+	}
+
+	public updateLastSyncDateToNow() {
+		return this.saveLastSyncDateToLocal((new Date()).getTime());
 	}
 
 	protected initializeForSync() {
