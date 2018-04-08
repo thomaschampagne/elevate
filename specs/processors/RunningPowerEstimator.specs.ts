@@ -1,10 +1,11 @@
 import * as _ from "lodash";
 import { RunningPowerEstimator } from "../../plugin/core/scripts/processors/RunningPowerEstimator";
 import {
-	ActivityStatsMapModel, AnalysisDataModel,
+	ActivityStatsMapModel,
+	AnalysisDataModel,
 	StreamsModel
 } from "../../plugin/common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
 import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
 import { Helper } from "../../plugin/common/scripts/Helper";
 

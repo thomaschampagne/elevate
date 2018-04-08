@@ -1,13 +1,27 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
 import {
-	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel, GradeDataModel,
-	HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel, UpFlatDownModel,
-	UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
+	ActivityStatsMapModel,
+	AnalysisDataModel,
+	AscentSpeedDataModel,
+	CadenceDataModel,
+	ElevationDataModel,
+	GradeDataModel,
+	HeartRateDataModel,
+	MoveDataModel,
+	PaceDataModel,
+	PowerDataModel,
+	SpeedDataModel,
+	StreamsModel,
+	UpFlatDownModel,
+	UpFlatDownSumCounterModel,
+	UpFlatDownSumTotalModel,
+	ZoneModel,
 } from "../../../common/scripts/models/ActivityData";
-import { UserLactateThresholdModel, UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 import { SplitCalculator } from "../../../common/scripts/SplitCalculator";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
+import { UserLactateThresholdModel } from "../../../common/scripts/models/user-settings/user-lactate-threshold.model";
 
 export class ActivityComputer {
 

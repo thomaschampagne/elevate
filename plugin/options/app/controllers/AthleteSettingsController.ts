@@ -3,8 +3,8 @@ import * as _ from "lodash";
 import { ISwimCalculationMethod, SwimFTPCalculator } from "../directives/swimFTPCalculator";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { IAvoidInputKeysService } from "../services/AvoidInputKeysService";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
 export interface IGenderList {
     type: string;

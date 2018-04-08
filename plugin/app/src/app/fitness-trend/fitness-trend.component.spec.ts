@@ -11,9 +11,9 @@ import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
-import { UserLactateThresholdModel } from "../../../../common/scripts/models/UserSettings";
 import { Gender } from "../shared/enums/gender.enum";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { UserLactateThresholdModel } from "../../../../common/scripts/models/user-settings/user-lactate-threshold.model";
 
 describe("FitnessTrendComponent", () => {
 

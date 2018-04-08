@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { ActivityStatsMapModel, AnalysisDataModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";

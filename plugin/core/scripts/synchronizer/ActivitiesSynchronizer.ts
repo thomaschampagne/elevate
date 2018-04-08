@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../../../common/scripts/Helper";
 import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { IAppResources } from "../interfaces/IAppResources";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";

@@ -1,7 +1,8 @@
 import { ActivityComputer } from "../../plugin/core/scripts/processors/ActivityComputer";
-import { UserSettingsModel } from "../../plugin/common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../plugin/common/scripts/models/user-settings/user-settings.model";
 import {
-	ActivityStatsMapModel, AnalysisDataModel,
+	ActivityStatsMapModel,
+	AnalysisDataModel,
 	StreamsModel
 } from "../../plugin/common/scripts/models/ActivityData";
 

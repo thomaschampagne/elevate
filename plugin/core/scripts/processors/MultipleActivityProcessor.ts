@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import { ActivityStatsMapModel, AnalysisDataModel } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";

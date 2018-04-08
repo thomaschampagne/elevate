@@ -1,5 +1,5 @@
 import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "./IAppResources";
 
 export interface IComputeActivityThreadMessage {
