@@ -1,9 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import * as _ from "lodash";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 describe("ActivityService", () => {
 

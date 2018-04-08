@@ -1,5 +1,3 @@
-import { AnalysisDataModel } from "./ActivityData";
-
 export class StravaActivityModel {
 	public id: number;
 	public name: string;
@@ -39,42 +37,4 @@ export class StravaActivityModel {
 	public flagged: boolean;
 	public hide_power: boolean;
 	public hide_heartrate: boolean;
-}
-
-export class StreamActivityModel extends StravaActivityModel {
-	public stream: any;
-	public hasPowerMeter: boolean;
-}
-
-export class SyncedActivityModel {
-	public id: number;
-	public name: string;
-	public type: string;
-	public display_type: string;
-	public private: boolean;
-	public bike_id: number;
-	public start_time: string;
-	public distance_raw: number;
-	public short_unit: string;
-	public moving_time_raw: number;
-	public elapsed_time_raw: number;
-	public hasPowerMeter: boolean;
-	public trainer: boolean;
-	public commute: boolean;
-	public elevation_unit: string;
-	public elevation_gain_raw: number;
-	public calories: number;
-	public extendedStats: AnalysisDataModel;
-}
-
-export class SyncNotifyModel {
-	public step?: string;
-	public progress?: number;
-	public index?: number;
-	public activityId?: number;
-	public fromPage?: number;
-	public toPage?: number;
-	public pageGroupId?: number;
-	public browsedActivitiesCount?: number;
-	public totalActivities?: number;
 }

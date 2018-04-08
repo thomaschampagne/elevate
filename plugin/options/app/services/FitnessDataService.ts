@@ -3,8 +3,7 @@ import * as _ from "lodash";
 import * as moment from "moment";
 import { Moment } from "moment";
 import { ChromeStorageService } from "./ChromeStorageService";
-
-import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
+import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
 
 export interface IActivitiesWithFitness {
     id: number;

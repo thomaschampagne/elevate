@@ -1,6 +1,6 @@
 import { IStorageUsage, StorageManager } from "./modules/StorageManager";
 import * as _ from "lodash";
-import { SyncResultModel } from "../../core/scripts/synchronizer/sync-result.model";
+import { SyncResultModel } from "./models/sync/sync-result.model";
 import { Messages } from "./Messages";
 
 export class Background {

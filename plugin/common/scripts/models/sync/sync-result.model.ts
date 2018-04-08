@@ -1,6 +1,6 @@
-import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
-import { HistoryChangesModel } from "./history-changes.model";
+import { AthleteProfileModel } from "../AthleteProfile";
+import { HistoryChangesModel } from "../../../../core/scripts/synchronizer/history-changes.model";
+import { SyncedActivityModel } from "./synced-activity.model";
 
 export class SyncResultModel {
 	public globalHistoryChanges: HistoryChangesModel;

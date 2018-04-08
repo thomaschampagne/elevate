@@ -2,7 +2,6 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
@@ -13,6 +12,7 @@ import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model"
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 

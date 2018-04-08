@@ -4,7 +4,7 @@ import * as Q from "q";
 import { CoreEnv } from "../config/core-env";
 import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
 import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
-import { SyncResultModel } from "./synchronizer/sync-result.model";
+import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
 
 const currentDate: any = new Date();
 (function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
