@@ -5,7 +5,7 @@ import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { AthleteProfileModel } from "../../../../common/scripts/models/AthleteProfile";
+import { AthleteProfileModel } from "../../../../common/scripts/models/athlete-profile.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../common/scripts/UserSettings";

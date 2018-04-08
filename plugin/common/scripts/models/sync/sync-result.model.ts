@@ -1,4 +1,4 @@
-import { AthleteProfileModel } from "../AthleteProfile";
+import { AthleteProfileModel } from "../athlete-profile.model";
 import { HistoryChangesModel } from "../../../../core/scripts/synchronizer/history-changes.model";
 import { SyncedActivityModel } from "./synced-activity.model";
 

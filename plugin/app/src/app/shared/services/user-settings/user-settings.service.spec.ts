@@ -4,8 +4,8 @@ import { UserSettingsModel } from "../../../../../../common/scripts/models/user-
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { ZoneModel } from "../../../../../../common/scripts/models/ActivityData";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
+import { ZoneModel } from "../../../../../../common/scripts/models/activity-data/zone.model";
 
 describe("UserSettingsService", () => {
 

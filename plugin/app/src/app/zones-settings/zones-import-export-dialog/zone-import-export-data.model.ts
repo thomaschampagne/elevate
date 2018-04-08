@@ -1,6 +1,6 @@
-import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { Mode } from "./mode.enum";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
+import { ZoneModel } from "../../../../../common/scripts/models/activity-data/zone.model";
 
 export class ZoneImportExportDataModel {
 

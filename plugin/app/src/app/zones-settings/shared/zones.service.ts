@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import * as _ from "lodash";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
@@ -7,6 +6,7 @@ import { userSettings } from "../../../../../common/scripts/UserSettings";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
+import { ZoneModel } from "../../../../../common/scripts/models/activity-data/zone.model";
 
 @Injectable()
 export class ZonesService {

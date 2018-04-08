@@ -1,4 +1,4 @@
-import { ZoneModel } from "../ActivityData";
+import { ZoneModel } from "../activity-data/zone.model";
 
 export class UserZonesModel {
 	public speed: ZoneModel[];

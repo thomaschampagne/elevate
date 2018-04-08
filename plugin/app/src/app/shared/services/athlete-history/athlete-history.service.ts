@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
+import { AthleteProfileModel } from "../../../../../../common/scripts/models/athlete-profile.model";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { saveAs } from "file-saver";
 import * as moment from "moment";

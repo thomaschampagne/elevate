@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
 import { CoreEnv } from "../../config/core-env";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
 
 export class VacuumProcessor {
 
@@ -276,7 +277,7 @@ export class VacuumProcessor {
 	/**
 	 * @returns activity stream in callback
 	 */
-	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean) => void): void {
+	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean) => void): void {
 
 		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
 
@@ -288,7 +289,7 @@ export class VacuumProcessor {
 
 		const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_distance";
 
-		$.ajax(url).done((activityStream: StreamsModel) => {
+		$.ajax(url).done((activityStream: ActivityStreamsModel) => {
 
 			let hasPowerMeter = true;
 

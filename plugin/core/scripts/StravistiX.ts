@@ -1,6 +1,5 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
-import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
 import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
@@ -45,6 +44,7 @@ import * as Q from "q";
 import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
 import { Messages } from "../../common/scripts/Messages";
 import { SyncNotifyModel } from "../../common/scripts/models/sync/sync-notify.model";
+import { ActivityBasicInfoModel } from "../../common/scripts/models/activity-data/activity-basic-info.model";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
