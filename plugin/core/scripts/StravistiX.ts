@@ -43,7 +43,6 @@ import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
 import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
 import { Messages } from "../../common/scripts/Messages";
-import { SyncNotifyModel } from "../../common/scripts/models/sync/sync-notify.model";
 import { ActivityBasicInfoModel } from "../../common/scripts/models/activity-data/activity-basic-info.model";
 
 export class StravistiX {
@@ -1114,6 +1113,17 @@ export class StravistiX {
 
 	protected handleOnFlyActivitiesSync(): void {
 
+		function notifyBackgroundSyncDone(syncResult: SyncResultModel) {
+			chrome.runtime.sendMessage(this.extensionId, {
+				method: Messages.ON_EXTERNAL_SYNC_DONE,
+				params: {
+					syncResult: syncResult,
+				},
+			}, (response: any) => {
+				console.log(response);
+			});
+		}
+
 		if (window.location.pathname.match("login") || window.location.pathname.match("upload")) {
 			console.log("Login or upload page. Skip handleOnFlyActivitiesSync()");
 			return;
@@ -1135,40 +1145,38 @@ export class StravistiX {
 
 					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
 
-					const isDelayReached = Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes);
+					// If last sync is has been done more than "autoSyncMinutes"
+					const hasNormalSyncToBeDone = (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes));
 
-					let syncPromise: Q.Promise<SyncResultModel>;
-
-					if (isDelayReached) {
-						console.log("Last sync performed more than " + this.userSettings.autoSyncMinutes + " minutes. auto-sync now");
-						syncPromise = this.activitiesSynchronizer.sync();
-
-					} else {
-						console.log("Last sync done under than " + this.userSettings.autoSyncMinutes + " minute(s) ago");
-						console.log("Fast checking if activities count missmatch exists between remote and local");
-
-						const fastSync = true;
-						syncPromise = this.activitiesSynchronizer.sync(fastSync);
+					// Then store that it has to be performed absolutely (but at later time)!
+					if (hasNormalSyncToBeDone) {
+						console.log("A normal sync will be done later");
+						localStorage.setItem("stravistix_normal_sync_tdb", "true");
 					}
 
-					syncPromise.then((syncResult: SyncResultModel) => {
+					// At first perform a fast sync to get the "just uploaded ride/run" ready
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(true);
+					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
-						console.log("Sync finished", syncResult);
+						console.log("Fast sync finished", syncResult);
+						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
 
-						// Notify background page that sync is finished
-						chrome.runtime.sendMessage(this.extensionId, {
-							method: Messages.ON_EXTERNAL_SYNC_DONE,
-							params: {
-								syncResult: syncResult,
-							},
-						}, (response: any) => {
-							console.log(response);
-						});
+						if (hasNormalSyncToBeDone || localStorage.getItem("stravistix_normal_sync_tdb")) {
+							return this.activitiesSynchronizer.sync();
+						} else {
+							return null;
+						}
 
-					}, (err: any) => {
+					}).then((syncResult: SyncResultModel) => {
+
+						if (syncResult) {
+							console.log("Normal sync finished", syncResult);
+							notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
+							localStorage.removeItem("stravistix_normal_sync_tdb");
+						}
+
+					}).catch((err: any) => {
 						console.warn(err);
-					}, (progress: SyncNotifyModel) => {
-						// console.log(progress);
 					});
 
 				} else {
