@@ -4,6 +4,7 @@ import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dial
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
+import { MatDialogRef } from "@angular/material";
 
 describe("FitnessTrendWelcomeDialogComponent", () => {
 	let component: FitnessTrendWelcomeDialogComponent;
@@ -15,6 +16,11 @@ describe("FitnessTrendWelcomeDialogComponent", () => {
 				CoreModule,
 				SharedModule,
 				FitnessTrendModule
+			],
+			providers: [
+				{
+					provide: MatDialogRef, useValue: {},
+				},
 			]
 		}).compileComponents();
 		done();

@@ -2,10 +2,10 @@ import { ILocationService, IScope, IWindowService } from "angular";
 import * as _ from "lodash";
 import { AthleteSettingsController } from "../controllers/AthleteSettingsController";
 import { ChromeStorageService } from "../services/ChromeStorageService";
-import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { AthleteProfileModel } from "../../../common/scripts/models/athlete-profile.model";
 import { StorageManager } from "../../../common/scripts/modules/StorageManager";
 import { routeMap } from "../Config";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import Tab = chrome.tabs.Tab;
 
 export interface IProfileConfiguredRibbonScope extends IScope {

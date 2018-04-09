@@ -1,11 +1,14 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivityStatsMapModel, AnalysisDataModel } from "../../../common/scripts/models/ActivityData";
-import { StreamActivityModel, SyncedActivityModel, SyncNotifyModel } from "../../../common/scripts/models/Sync";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
+import { StreamActivityModel } from "../../../common/scripts/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
+import { SyncNotifyModel } from "../../../common/scripts/models/sync/sync-notify.model";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
 
 export class MultipleActivityProcessor {
 

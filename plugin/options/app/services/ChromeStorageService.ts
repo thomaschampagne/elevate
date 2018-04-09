@@ -2,11 +2,11 @@ import IQService = angular.IQService;
 import IDeferred = angular.IDeferred;
 import { IPromise } from "angular";
 import * as _ from "lodash";
-import { AthleteProfileModel } from "../../../common/scripts/models/AthleteProfile";
-import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { AthleteProfileModel } from "../../../common/scripts/models/athlete-profile.model";
 import { IStorageUsage } from "../../../common/scripts/modules/StorageManager";
 import { userSettings } from "../../../common/scripts/UserSettings";
+import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
 export class ChromeStorageService {
 

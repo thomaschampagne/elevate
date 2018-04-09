@@ -30,6 +30,43 @@ describe("SplitCalculator", () => {
 		done();
 	});
 
+	it("should NOT normalize scale having a gaps over 5000", (done: Function) => {
+
+		// Given
+		const scale: number[] = [0, 1, 3, 6, 6000];
+		const data: number[] = [0, 10, 40, 60, 90];
+		const scaleRange = 3;
+
+		// When
+		const call = () => {
+			const splitCalculator = new SplitCalculator(scale, data);
+			splitCalculator.getBestSplit(scaleRange, true);
+		};
+
+		// Then
+		expect(call).toThrow(new Error("Scale has a too importants gap. Cannot normalize scale"));
+
+		done();
+	});
+
+	it("should NOT normalize scale having gaps <= 0", (done: Function) => {
+
+		// Given
+		const scale: number[] = [0, 1, 3, 6, 5];
+		const data: number[] = [0, 10, 40, 60, 90];
+		const scaleRange = 3;
+
+		// When
+		const call = () => {
+			const splitCalculator = new SplitCalculator(scale, data);
+			splitCalculator.getBestSplit(scaleRange, true);
+		};
+
+		// Then
+		expect(call).toThrow(new Error("Scale should have gaps >=1"));
+
+		done();
+	});
 
 	it("should get best split with scale of 3", (done: Function) => {
 
@@ -47,7 +84,6 @@ describe("SplitCalculator", () => {
 
 		done();
 	});
-
 
 	it("should NOT get best split with scale range higher than scale", (done: Function) => {
 

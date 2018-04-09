@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import * as _ from "lodash";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 @Injectable()
 export class ActivityDao {

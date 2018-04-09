@@ -1,10 +1,10 @@
 import * as angular from "angular";
 import { IAnchorScrollService, ILocationService } from "angular";
 import * as _ from "lodash";
-import { ZoneModel } from "../../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { ChromeStorageService } from "../../services/ChromeStorageService";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
+import { ZoneModel } from "../../../../common/scripts/models/activity-data/zone.model";
 
 export class XtdZones {
 

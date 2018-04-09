@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 import { FitnessDataService, IFitnessActivity } from "../services/FitnessDataService";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 
 export class FitnessTrendController {
 

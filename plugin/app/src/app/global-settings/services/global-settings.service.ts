@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/user-settings/user-settings.model";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -41,7 +41,7 @@ export class GlobalSettingsService {
 		options: [{
 			key: "autoSyncMinutes",
 			type: "number",
-			title: "Auto sync every X minutes while browsing strava.com",
+			title: "Sync and scan your athlete history every X minutes",
 			labels: ["All"],
 			min: 10,
 			max: 43200, // 30 days

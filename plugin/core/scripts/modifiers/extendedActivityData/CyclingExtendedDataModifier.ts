@@ -1,5 +1,5 @@
 import { Helper } from "../../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../../interfaces/IAppResources";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
@@ -76,7 +76,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
-			let label = "Functional Threshold Power";
+			let label = "Best 20min Power";
 			let ftp = "-";
 			let ftpUnits = "";
 

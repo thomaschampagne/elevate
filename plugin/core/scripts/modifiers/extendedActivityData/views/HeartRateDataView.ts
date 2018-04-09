@@ -1,9 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { HeartRateDataModel } from "../../../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/user-settings/user-settings.model";
 import { StravistiX } from "../../../StravistiX";
 import { AbstractDataView } from "./AbstractDataView";
+import { HeartRateDataModel } from "../../../../../common/scripts/models/activity-data/heart-rate-data.model";
 
 export class HeartRateDataView extends AbstractDataView {
 

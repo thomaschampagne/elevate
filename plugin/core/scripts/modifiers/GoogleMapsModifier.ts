@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../interfaces/IAppResources";
 
 export class GoogleMapsModifier implements IModifier {

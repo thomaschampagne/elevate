@@ -1,15 +1,11 @@
 import * as Q from "q";
-import { SpeedUnitDataModel } from "./models/ActivityData";
 import { IStorageUsage } from "./modules/StorageManager";
+import { Messages } from "./Messages";
+import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
 
 export class Helper {
 
 	public static KPH_TO_MPH_RATIO = 0.621371; // TODO Unify with other public static var having value... 0.6213
-	public static getFromStorageMethod = "getFromStorage";
-	public static setToStorageMethod = "setToStorage";
-	public static removeFromStorageMethod = "removeFromStorage";
-	public static reloadBrowserTabMethod = "reloadBrowserTab";
-	public static getStorageUsageMethod = "getStorageUsage";
 
 	public static getSpeedUnitData(): SpeedUnitDataModel {
         const measurementPreference: string = window.currentAthlete.get("measurement_preference");
@@ -107,7 +103,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-            method: Helper.setToStorageMethod,
+			method: Messages.ON_SET_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -137,7 +133,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-            method: Helper.getFromStorageMethod,
+			method: Messages.ON_GET_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -158,7 +154,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-            method: Helper.removeFromStorageMethod,
+			method: Messages.ON_REMOVE_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -176,7 +172,7 @@ export class Helper {
     public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
 
         chrome.runtime.sendMessage(extensionId, {
-            method: Helper.reloadBrowserTabMethod,
+			method: Messages.ON_RELOAD_BROWSER_TAB,
             params: {
                 sourceTabId,
             },
@@ -191,7 +187,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-            method: Helper.getStorageUsageMethod,
+			method: Messages.ON_STORAGE_USAGE,
             params: {
                 storage: storageType,
             },

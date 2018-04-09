@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../interfaces/IAppResources";
 
 export interface EffortInfo {

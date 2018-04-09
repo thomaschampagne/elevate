@@ -1,5 +1,5 @@
-import { ZoneModel } from "../../../../common/scripts/models/ActivityData";
 import { IAvoidInputKeysService } from "../../services/AvoidInputKeysService";
+import { ZoneModel } from "../../../../common/scripts/models/activity-data/zone.model";
 
 export class XtdZone {
 

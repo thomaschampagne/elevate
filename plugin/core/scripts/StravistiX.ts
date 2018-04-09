@@ -1,8 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../common/scripts/Helper";
-import { ActivityBasicInfoModel } from "../../common/scripts/models/ActivityData";
-import { SyncNotifyModel } from "../../common/scripts/models/Sync";
-import { UserSettingsModel } from "../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
 import { StorageManager } from "../../common/scripts/modules/StorageManager";
 import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
 import { CoreEnv } from "../config/core-env";
@@ -39,8 +37,11 @@ import { ActivityProcessor } from "./processors/ActivityProcessor";
 import { BikeOdoProcessor } from "./processors/BikeOdoProcessor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
-import { ActivitiesSynchronizer, ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
-import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
+import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
+import * as Q from "q";
+import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
+import { Messages } from "../../common/scripts/Messages";
+import { ActivityBasicInfoModel } from "../../common/scripts/models/activity-data/activity-basic-info.model";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -181,7 +182,7 @@ export class StravistiX {
 		}
 
 		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
-			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "Stravistix v" + this.appResources.extVersion + " updated</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Stravistix v" + this.appResources.extVersion + " updated " + ((latestRelease.isPatch) ? " (patch)" : "") + "</strong></div>" +
 			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
 			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
 			"	<div>" +
@@ -1110,6 +1111,17 @@ export class StravistiX {
 
 	protected handleOnFlyActivitiesSync(): void {
 
+		function notifyBackgroundSyncDone(syncResult: SyncResultModel) {
+			chrome.runtime.sendMessage(this.extensionId, {
+				method: Messages.ON_EXTERNAL_SYNC_DONE,
+				params: {
+					syncResult: syncResult,
+				},
+			}, (response: any) => {
+				console.log(response);
+			});
+		}
+
 		if (window.location.pathname.match("login") || window.location.pathname.match("upload")) {
 			console.log("Login or upload page. Skip handleOnFlyActivitiesSync()");
 			return;
@@ -1127,63 +1139,50 @@ export class StravistiX {
 
 				const lastSyncDateTime: number = response.data;
 
-				if (lastSyncDateTime) {
+				if (_.isNumber(lastSyncDateTime)) {
 
 					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
 
-					if (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes)) {
+					// If last sync is has been done more than "autoSyncMinutes"
+					const hasNormalSyncToBeDone = (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes));
 
-						console.log("Last sync performed more than " + this.userSettings.autoSyncMinutes + " minutes. auto-sync now");
-
-						// Start sync
-						this.activitiesSynchronizer.sync().then((syncResult: ISyncResult) => {
-
-							console.log("Sync finished", syncResult);
-
-							// Remove auto-sync lock
-							StorageManager.setCookieSeconds("stravistix_auto_sync_locker", true, 0);
-
-						}, (err: any) => {
-
-							console.error("Sync error", err);
-
-							// Remove auto-sync lock
-							StorageManager.setCookieSeconds("stravistix_auto_sync_locker", true, 0);
-
-							const errorUpdate: any = {
-								stravaId: this.athleteId,
-								error: {path: window.location.href, date: new Date(), content: err},
-							};
-
-							const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
-
-							$.post({
-								url: endPoint,
-								data: JSON.stringify(errorUpdate),
-								dataType: "json",
-								contentType: "application/json",
-								success: (response: any) => {
-									console.log("Commited: ", response);
-								},
-								error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-									console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-								},
-							});
-
-						}, (progress: SyncNotifyModel) => {
-							// console.log(progress);
-						});
-
-					} else {
-						console.log("Do not auto-sync. Last sync done under than " + this.userSettings.autoSyncMinutes + " minute(s) ago");
+					// Then store that it has to be performed absolutely (but at later time)!
+					if (hasNormalSyncToBeDone) {
+						console.log("A normal sync will be done later");
+						StorageManager.setCookie("stravistix_normal_sync_tbd", true, 365);
 					}
+
+					// At first perform a fast sync to get the "just uploaded ride/run" ready
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(true);
+					fastSyncPromise.then((syncResult: SyncResultModel) => {
+
+						console.log("Fast sync finished", syncResult);
+						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
+
+						if (hasNormalSyncToBeDone || StorageManager.getCookie("stravistix_normal_sync_tbd")) {
+							return this.activitiesSynchronizer.sync();
+						} else {
+							return null;
+						}
+
+					}).then((syncResult: SyncResultModel) => {
+
+						if (syncResult) {
+							console.log("Normal sync finished", syncResult);
+							notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
+							StorageManager.removeCookie("stravistix_normal_sync_tbd");
+						}
+
+					}).catch((err: any) => {
+						console.warn(err);
+					});
 
 				} else {
 					console.log("No previous sync found. A first sync must be performed");
 				}
 			});
 
-		}, 1000 * 10); // Wait for 10s before starting the auto-sync
+		}, 1000 * 5); // Wait for 10s before starting the auto-sync
 
 	}
 

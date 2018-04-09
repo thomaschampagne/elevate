@@ -1,9 +1,9 @@
 import * as angular from "angular";
 import { ILocationService, ISCEService } from "angular";
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { ChromeStorageService } from "../services/ChromeStorageService";
 import { ICommonSettingsService, ISection, ISectionContent } from "../services/CommonSettingsService";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
 export class CommonSettingsController {
 
