@@ -21,7 +21,7 @@ _Variability Index_ is an indication of how your activity was paced. This indica
 
 # Functional Threshold Power (FTP)
 ---
-Represents your best average power over 20 minutes that can be assimilated to your highest physical intensity you can sustain for approximately one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf). 
+Represents your best average power you can sustain for one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf).
 
 # Intensity:
 ---

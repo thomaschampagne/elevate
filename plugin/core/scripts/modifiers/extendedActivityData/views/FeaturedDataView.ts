@@ -67,7 +67,7 @@ export class FeaturedDataView extends AbstractDataView {
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
 			if (_.isNumber(this.analysisData.powerData.ftp) && !this.isSegmentEffortView) {
-				let label = "FTP";
+				let label = "Best 20min Power";
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}
