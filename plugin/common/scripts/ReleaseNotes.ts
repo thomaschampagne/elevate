@@ -2,6 +2,7 @@ import { constants } from "./Constants";
 
 export interface IReleaseNote {
 	version: string; // SemVer 'x.x.x' http://semver.org/
+	date?: string;
 	message?: string;
 	hotFixes?: string[];
 	features: string[];
@@ -21,6 +22,7 @@ export interface IReleaseNote {
 export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.1.1",
+		date: "2018-04-09",
 		message: "Big 6.1.* update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTHR and Best 20min Power.",
 		hotFixes: [],
 		features: [],
@@ -35,6 +37,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "6.1.0",
+		date: "2018-04-02",
 		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTP and FTHR.",
 		hotFixes: [],
 		features: [
@@ -57,6 +60,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "6.0.3",
+		date: "2018-03-18",
 		message: "Third patch of <strong>NEW APP</strong> released in February. Mainly bugs fixes and improvements. Click \"show details\" for more info.",
 		hotFixes: [],
 		features: [
@@ -81,6 +85,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "6.0.2",
+		date: "2018-03-11",
 		message: "2nd big patch of the brand <strong>NEW APP</strong>!. Fitness trend look has been reworked along your feedbacks. And fitness graph is now linked to fitness table. And tons of other things...",
 		hotFixes: [],
 		features: [
@@ -107,6 +112,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "6.0.1",
+		date: "2018-02-25",
 		message: "First patch of the brand <strong>NEW app</strong>! Fitness trend, years progress & others features have been fully remade! A <strong>new start</strong> to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
 		hotFixes: [],
 		features: [
@@ -127,6 +133,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "6.0.0",
+		date: "2018-02-18",
 		message: "Brand <strong>NEW app</strong> released! Fitness trend, years progress & others features have been fully remade! This <strong>new start</strong> was required to go further! Why? <a href=\"" + constants.OPTIONS_URL + "#/welcome\" target=\"_blank\">Read explanations here</a>",
 		hotFixes: [],
 		features: [
@@ -143,6 +150,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.13.0",
+		date: "2018-01-28",
 		message: "Added Power estimation on <strong>your</strong> runs <span style='text-decoration: line-through;'>(beta)</span> " +
 		"<strong style='font-size: 16px'>+</strong> cycling \"Power Stress Score (PSS)\" estimation (when no running or cycling power meter available)!!. And few others things...",
 		hotFixes: [],
@@ -158,6 +166,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.12.1",
+		date: "2017-12-02",
 		message: "Some bug fixes <strong style='font-size: 16px'>+</strong> Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",
 		hotFixes: [],
 		features: [
@@ -175,6 +184,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.12.0",
+		date: "2017-11-01",
 		message: "Added cycling crank revolution distance stats <strong style='font-size: 16px'>+</strong> Running stride length (with total steps) <strong style='font-size: 16px'>+</strong> Running power estimation (Beta: must be enabled in beta settings section)",
 		hotFixes: [],
 		features: [
@@ -190,6 +200,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.11.1",
+		date: "2017-10-02",
 		message: "<i>Hot fixed year progress missing in strava \"My Profile\" page.</i> <strong>V5.11.0 note:</strong> Added cadence pace on climbs, flats & downhills sections. And max uphill & downhill grades. And more...",
 		hotFixes: [],
 		features: [
@@ -205,6 +216,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.11.0",
+		date: "2017-09-10",
 		message: "NEW: Added cadence pace on climbs, flats or downhills sections. And max uphill & downhill grades. And more...",
 		hotFixes: [],
 		features: [
@@ -220,6 +232,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.10.1",
+		date: "2017-08-08",
 		message: "NEW: Added TCX export to \"GPS Real Time Segments Efforts\": Challenge yourself outside against a ghost! Plugin's performance has been also greatly improved !!",
 		hotFixes: [
 			"Fixed TCX export as Course instead of Activity (feature: GPS Real Time Segments Efforts)",
@@ -236,6 +249,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.10.0",
+		date: "2017-08-06",
 		message: "NEW: Added TCX export to \"GPS Real Time Segments Efforts\": Challenge yourself outside against a ghost! Plugin's performance has been also greatly improved !!",
 		hotFixes: [],
 		features: [
@@ -250,6 +264,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.9.0",
+		date: "2017-07-20",
 		message: "NEW: Export segments efforts to your GPS device and challenge yourself outside against a virtual friend, a pro or your ghost!",
 		hotFixes: [],
 		features: [
@@ -264,6 +279,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.8.1",
+		date: "2017-06-30",
 		message: "Improvements on years progressions and \"Relive\" feature (Replay your Rides & Runs inside your activity pages with relive.cc)",
 		hotFixes: [],
 		features: [
@@ -284,6 +300,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.7.2",
+		date: "2017-04-06",
 		message: "New Year progressions improvements (Old version reactivated in Strava profile page) <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides",
 		hotFixes: [],
 		features: [
@@ -301,6 +318,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.7.1",
+		date: "2017-03-19",
 		message: "Added New Year progressions <strong>+</strong> Custom running power zones <strong>+</strong> Hide Virtual Rides",
 		hotFixes: [],
 		features: [
@@ -317,6 +335,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.6.1",
+		date: "2017-03-09",
 		message: "<i>(5.6.1: Fast fix on the new swimming fitness trend support)</i></br></br><strong>NEW:</strong> Swimming is now supported in multi-sport fitness trend!!</br></br><strong>Fitness trend</strong> is now completely <strong>ready</strong> for <strong>triathletes</strong> :)</br></br> It's also working with swimming activities entered manually :) No heart rate monitor is required for swimming! Your 10$ stopwatch should be good enough ;) !",
 		hotFixes: [
 			"Fixed a case where fitness trend feature was KO because of swimming activities having distance equals to 0.",
@@ -331,6 +350,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.6.0",
+		date: "2017-03-08",
 		message: "Swimming is now supported in multi-sport fitness trend!!</br></br><strong>Fitness trend</strong> is now completely <strong>ready</strong> for <strong>triathletes</strong> :)</br></br> It's also working with swimming activities entered manually :) No heart rate monitor is required for swimming! Your 10$ stopwatch should be good enough ;) !",
 		hotFixes: [],
 		features: [
@@ -345,6 +365,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.5.0",
+		date: "2017-02-22",
 		message: "At a glance...</br>Cycling Power Stress Score on your activities :)</br>" +
 		"Support of Running Power Meters :)</br>" +
 		"Please redo a full sync of your history if you \"pause\" your activities during lunch (See below fixed bugs)",
@@ -363,6 +384,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.4.2",
+		date: "2017-02-13",
 		message: "<i>Patch release: Now calculating TRIMP over elapsed time instead of moving time. TRIMP were not properly computed with activities without movements.<br/>You may need to perform a full sync of your synced history for the fitness trend feature. Memory management during synchronization of your history has been also improved.</i>",
 		hotFixes: [],
 		features: [
@@ -378,6 +400,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.4.1",
+		date: "2017-02-03",
 		message: "<strong>5.4.1:</strong> <i>Bug fix release</i></br></br><strong>5.4.0 features reminder:</strong> <a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.",
 		hotFixes: [],
 		features: [
@@ -392,6 +415,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.4.0",
+		date: "2017-01-26",
 		message: "<a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend</a> now use your cycling power meter to compute your fitness when available.</br></br>Swimming is not supported properly in fitness trend... Now taking care of swimmers ;) Still in Beta isn't it ?^^;)",
 		hotFixes: [],
 		features: [
@@ -404,6 +428,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.3.1",
+		date: "2017-01-17",
 		message: "<strong>5.3.1:</strong> <i>Strava premium additional goal has been delayed at the moment.</i></br></br><strong>5.3.0 features reminder:</strong> <i>New beta version of <a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend</a></br></br>- Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load. Prepare for the race day. Manage your rest with accuracy. Etc...</br>- On next update (5.4.0): cycling power meter will be also used to compute your fitness trend (if you have this sensor).</i>",
 		hotFixes: [],
 		features: [
@@ -418,6 +443,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.3.0",
+		date: "2017-01-10",
 		message: "</br>New beta version of <a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend</a></br></br>- Added form zones to fitness trend. Gives guidelines to train properly: Stay in the right training zone and avoid risky over load.</br>Prepare for the race day. Manage your rest with accuracy. Etc...</br></br>- On next update: cycling power meter will be also used to compute your fitness trend (if you have this sensor).",
 		hotFixes: [],
 		features: [
@@ -430,6 +456,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.2.0",
+		date: "2016-12-26",
 		message: "</br><a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend</a> in Beta for ALL!</br></br>",
 		hotFixes: [],
 		features: [
@@ -440,6 +467,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.1.1",
+		date: "2016-12-20",
 		message: "<a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend Alpha <strong>V5</strong></a> here. Sync process fully reworked!. Last alpha testing version optimistically.</br></br>" +
 		"/!\\ Your <u>history</u> have been <u>cleared</u> on this update if you had synced one... Just sync again... Sry :/",
 		hotFixes: [],
@@ -454,6 +482,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.1.0",
+		date: "2016-12-11",
 		message: "<a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">MultiSports Fitness Trend Alpha V4</a> live! Improvements + fixes. Short nights :D. Feature still in \"test\".</br>" +
 		"Your history have been cleared if you had synced one... just sync again.",
 		hotFixes: [],
@@ -472,6 +501,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.0.2",
+		date: "2016-12-07",
 		message: "<i>\"MultiSports Fitness Trend\"</i> Alpha <strong>V3</strong> fast released! Include fixes of Alpha V2+V1... Feature works with all activities where you held a heart rate monitor. Not only cycling... </br><a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">[You need to activate this alpha feature to use it]</a></br></br>Sticky note: <i>\"Premium additional goal progress tracking\"</i> disabled. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)",
 		hotFixes: [],
 		features: [],
@@ -482,6 +512,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.0.1",
+		date: "2016-12-06",
 		message: "<i>\"MultiSports Fitness Trend\"</i> Alpha V2 here! Mainly bugs fixed of Alpha V1... Thanks to testers! It works with all activities where you held a heart rate monitor. Not only cycling... </br><a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">[You need to activate this alpha feature to use it]</a></br></br>Also disabled <i>\"Premium additional goal progress tracking\"</i>. Still few bugs around to fix :/ Feature is available in common settings by the way (hidden section)",
 		hotFixes: [],
 		features: [
@@ -495,6 +526,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "5.0.0",
+		date: "2016-12-03",
 		message: "<i>MultiSports Fitness Trend released as Alpha !<br /><br />After long days of work, It's now live! Yeah! <br/><br/>Working with all activities where you held a heart rate monitor. Not only cycling...</i><br/><br/><a href=\"" + constants.OPTIONS_URL + "#/fitnessTrend\" target=\"_blank\">[Activate it here]</a>",
 		hotFixes: [],
 		features: [
@@ -505,6 +537,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "4.5.3",
+		date: "2016-11-24",
 		message: "Another release to fix latest small bug from 4.5.x. Sorry for inconvenience",
 		hotFixes: [],
 		features: [
@@ -519,6 +552,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "4.5.2",
+		date: "2016-11-18",
 		message: "NEW: Added monthly and weekly targets for strava premium annual goals",
 		hotFixes: [
 			"Hot fix monthly and weekly targets number format",
@@ -533,6 +567,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "4.5.0",
+		date: "2016-11-17",
 		message: "NEW: Added monthly and weekly targets for strava premium annual goals",
 		hotFixes: [],
 		features: [
@@ -545,6 +580,7 @@ export let releaseNotes: IReleaseNote[] = [
 	},
 	{
 		version: "4.4.0",
+		date: "2016-11-03",
 		message: "NEW: Segment time comparison on all activity types ! Yeah !",
 		hotFixes: [],
 		features: [
@@ -556,6 +592,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.3",
+		date: "2016-10-22",
 		message: "Fixing bugs from 4.2.2</br></br><strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
@@ -570,6 +607,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.3.2",
+		date: "2016-10-17",
 		message: "<strong>NEW as BETA:</strong> Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages. <div style=\"text-align: center;\"><a href=\"" + constants.OPTIONS_URL + "#/globalSettings\" target=\"_blank\">> Don't forget to activate beta/hidden feature at first <</a></div>",
 		hotFixes: [],
 		features: [
@@ -580,6 +618,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
 	}, {
 		version: "4.3.1",
+		date: "2016-10-15",
 		message: "NEW: Added running estimated paces & cycling estimated powers from your most painful effort on a segment. The feature visible on \"Your recent efforts\" graph displayed in segment pages.",
 		hotFixes: [],
 		features: [
@@ -590,6 +629,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
 	}, {
 		version: "4.2.3",
+		date: "2016-10-02",
 		message: "... Again... a hotfix for new v4.2.x ;)",
 		hotFixes: [
 			"Fixed a crash that could occur on several activities opened.",
@@ -601,6 +641,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: [],
 	}, {
 		version: "4.2.2",
+		date: "2016-09-28",
 		message: "Another hotfix for new v4.2.x",
 		hotFixes: [
 			"Fixed a crash that could occur in older version of chrome (under v53)",
@@ -612,6 +653,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: [],
 	}, {
 		version: "4.2.1",
+		date: "2016-09-26",
 		message: "Fast hotfix of new v4.2.0",
 		hotFixes: ["Fixed cycling PR/yPR on segment time comparaison: They were displayed as running"],
 		features: [
@@ -621,6 +663,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: [],
 	}, {
 		version: "4.2.0",
+		date: "2016-09-25",
 		hotFixes: [],
 		features: [
 			"Extended stats on Trainer Rides (where speed was not recorded)",
@@ -629,6 +672,7 @@ export let releaseNotes: IReleaseNote[] = [
 		fixes: [],
 	}, {
 		version: "4.1.0",
+		date: "2016-09-14",
 		message: "",
 		hotFixes: [],
 		features: [
@@ -640,6 +684,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "4.0.1",
+		date: "2016-09-04",
 		message: "NEW options user interface <a href=\"" + constants.OPTIONS_URL + "\" target=\"_blank\">(link)</a> ! A NEW perspective is open for upcoming big features (WIP) ;)",
 		hotFixes: [],
 		features: ["Re-made options UI <a href=\"" + constants.OPTIONS_URL + "\" target=\"_blank\">(link)</a> to prepare future of plugin! Google material design applied!"],
@@ -650,6 +695,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.10.1",
+		date: "2016-08-26",
 		message: "A bug fixing release of previous 3.10.0 here. Sry :/ ... Major update will be the next one ;)",
 		hotFixes: [],
 		isPatch: true,
@@ -662,17 +708,20 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.10.0",
+		date: "2016-08-15",
 		features: [
 			"Added Hidden/Beta feature section.",
 			"Added Relive.cc as Hidden/Beta feature.",
 		],
 	}, {
 		version: "3.9.1",
+		date: "2016-08-03",
 		features: [
 			"Fix pace display glitch in athlete summary",
 		],
 	}, {
 		version: "3.9.0",
+		date: "2016-07-17",
 		features: [
 			"Now up to 50 zones can be defined in zones settings for each data type: speed, pace, cadence, heartrate, power, grade, ...",
 			"Added full time average speed based on elapsed time.",
@@ -680,11 +729,13 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.8.1",
+		date: "2016-07-01",
 		features: [
 			"HotFixing best splits",
 		],
 	}, {
 		version: "3.8.0",
+		date: "2016-06-22",
 		features: [
 			"Added cycling/running distance target graph into year progression graph. Go to Common Settings and search for Year progression targets for 2016 to setup your targets.",
 			"Added Weighted Avg Power field in activity summary panel",
@@ -694,6 +745,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.7.0",
+		date: "2016-06-05",
 		features: [
 			"Strongly improved estimated ",
 			"weighted / normalized power for non power sensor users. Estimated weighted power is now accurate for moneyless cyclists :p.",
@@ -704,6 +756,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.6.0",
+		date: "2016-05-26",
 		features: [
 			"Added  %rank next to rank labels in segments list on cycling activity pages. Quick view on where you're ranked!",
 			"Added back jonathanokeeffe segment details on segment pages",
@@ -715,11 +768,13 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.5.1",
+		date: "2016-05-13",
 		features: [
 			"HotFixed disappearance of 'My year progressions to current month / day' (My Profile page)",
 		],
 	}, {
 		version: "3.5.0",
+		date: "2016-05-13",
 		features: [
 			"Globally improved segment time comparaison for cycling activities.",
 			"Fixed segment time comparaison '-0s' when activity beats year's record on a segment",
@@ -729,6 +784,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.4.0",
+		date: "2016-04-22",
 		features: [
 			"Updated colored  rank position in segments efforts list (on a cycling activity page)",
 			"Fixed rank percentage display problem on segment pages",
@@ -738,6 +794,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.3.1",
+		date: "2016-04-12",
 		features: [
 			"Introducing new year progressions charts: Distance last year and Distance last 30d (Go to My Profile)",
 			"Fix cadence time on segments efforts (global activity value was shown).",
@@ -746,23 +803,27 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.2.3",
+		date: "2016-03-26",
 		features: [
 			"Disable stravistix on new strava store",
 			"Minors improvements",
 		],
 	}, {
 		version: "3.2.2",
+		date: "2016-03-11",
 		features: [
 			"Hotfix Wrong running climbing pace on extended panel",
 		],
 	}, {
 		version: "3.2.1",
+		date: "2016-03-09",
 		features: [
 			"Hotfix Hide activities under distance errors on others languages than EN/FR",
 			"Hotfix Wrong climbing pace running on summary panel",
 		],
 	}, {
 		version: "3.2.0",
+		date: "2016-03-08",
 		features: [
 			"Improved performance on extended activity stats processing. The page should load faster since computation is now done through a separate thread/webworker.",
 			"Added extended stats for runners: climbing/descending distance (inside grade section of extended stats panel). Cyclists already have this...",
@@ -773,6 +834,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.1.1",
+		date: "2016-02-11",
 		features: [
 			"Added climb, flat & downhill distance for cyclists in extended stats (grade panel)",
 			"Added average W/Kg in power extended stats",
@@ -784,22 +846,26 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "3.0.1",
+		date: "2016-02-02",
 		features: [
 			"HotFix: Running cadence were mutiplied twice in graph/table on every segment effort stats button click (with both legs option enabled)",
 		],
 	}, {
 		version: "3.0.0",
+		date: "2016-01-18",
 		features: [
 			"Extended stats on segment efforts added !! Go to an cycling/running activity, click on a segment effort, then click show extended stats button",
 			"Extended stats panel relooking",
 		],
 	}, {
 		version: "2.2.2",
+		date: "2015-12-30",
 		features: [
 			"FIX: Javascript syntax error while processing activities extended stats.",
 		],
 	}, {
 		version: "2.2.1",
+		date: "2015-12-15",
 		features: [
 			"Added option to count Virtual Rides (e.g. Zwift rides) into athlete yearly progression.",
 			"Improving altitude smoothness for elevation and ascent speed extended stats, also in best splits",
@@ -809,11 +875,13 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "2.1.1",
+		date: "2015-12-02",
 		features: [
 			"FIX: Not getting extension stats on big ride (>300km)",
 		],
 	}, {
 		version: "2.1.0",
+		date: "2015-11-30",
 		features: [
 			"Added new extended statistics for cyclists: Ascent speed.",
 			"Best splits can be highlighted from the higher elevation gain or drop",
@@ -830,11 +898,13 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "2.0.1",
+		date: "2015-11-17",
 		features: [
 			"HotFix: Null powers are computed in power best splits. They were removed from computation before.",
 		],
 	}, {
 		version: "2.0.0",
+		date: "2015-11-15",
 		features: [
 			"Best splits on cycling activities. Load a cycling activities. Under elevation chart click Best Splits (Thanks Tomasz Terlecki for the feature)",
 			"Fix Pressing multiple times on the current tab adds ",
@@ -842,16 +912,19 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "1.2.1",
+		date: "2015-11-09",
 		features: [
 			"Fix Year progression chart icon which may invisible",
 		],
 	}, {
 		version: "1.2.0",
+		date: "2015-11-02",
 		features: [
 			"Added Year progression chart on Distance, Activity count, Elevation and Time (credit https://github.com/tazmanska)",
 		],
 	}, {
 		version: "1.1.0",
+		date: "2015-10-25",
 		features: [
 			"User preference for default Google Maps layer type",
 			"Search for options in common settings",
@@ -859,11 +932,13 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "1.0.2",
+		date: "2015-10-16",
 		features: [
 			"Fix map display problem while cropping ride. Google maps API was loaded twice.",
 		],
 	}, {
 		version: "1.0.1",
+		date: "2015-10-08",
 		features: [
 			"Google Maps revived inside activities pages",
 			"Add on/off extension settings for the segment time comparison on activities pages",
@@ -874,18 +949,21 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.8.0",
+		date: "2015-09-21",
 		features: [
 			"Add Ascent speed statistics to extended elevation data stats: Average, first quartile, median and third quartile ascent speed",
 			"Fixing bug when exporting another riders segment as a virtual partner.",
 		],
 	}, {
 		version: "0.7.9",
+		date: "2015-09-11",
 		features: [
 			"Fixing standard deviation cadence computed and displayed for cycling.",
 			"Add standard deviation cadence to extended data popup panel",
 		],
 	}, {
 		version: "0.7.8",
+		date: "2015-09-07",
 		features: [
 			"Add Pedaling time to summary panel",
 			"Add median cadence to summary panel",
@@ -893,6 +971,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.7.7",
+		date: "2015-08-07",
 		features: [
 			"Remove OSM remotes maps links on activities",
 			"Add flyby link in dashboard feed",
@@ -900,66 +979,78 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.7.6",
+		date: "2015-07-20",
 		features: [
 			"Fix (again) Year progress sometimes not visible if strava language is not english (tazmanska credits).",
 			"Segments time comparaison with KOM and previous PR inside activity page (tazmanska credits).",
 		],
 	}, {
 		version: "0.7.5",
+		date: "2015-07-02",
 		features: [
 			"Hotfix: Year progress sometimes not visible",
 		],
 	}, {
 		version: "0.7.4",
+		date: "2015-07-01",
 		features: [
 			"Year progressions to current month/day panel. See your progress for each beginning of year to current month and day. Go to My profile to see feature",
 			"Veloviewer Segments Comparaison remote link into activities",
 		],
 	}, {
 		version: "0.7.3",
+		date: "2015-06-21",
 		features: [
 			"NEW extended data: Elevation stats, graph and table. Elevation zones customizable in settings.",
 			"Bug fixes",
 		],
 	}, {
 		version: "0.7.2",
+		date: "2015-06-04",
 		features: [
 			"Improve weather accuracy",
 		],
 	}, {
 		version: "0.7.1",
+		date: "2015-05-29",
 		features: [
 			"Hotfix: Remove display stravistix chrome tab on update (http://thomaschampagne.github.io/stravistix)",
 		],
 	}, {
 		version: "0.7.0",
+		date: "2015-05-28",
 		features: [
 			"Added weather for cycling activities. Include wind, temp, clouds and humidity. Running coming soon.",
 			"Added 75% speed/pace and average climbing speed to summary panel (under 'show extended statistics' button)",
 		],
 	}, {
 		version: "0.6.4",
+		date: "2015-05-20",
 		features: [
 			"Provide average speed climbing, flat, downhill for extended grade data",
 			"New extended data summary panel in actitivies (below show extended statistics button)",
 		],
 	}, {
 		version: "0.6.3",
+		date: "2015-05-15",
 		features: [
 			"Bug fixes and improvements",
 		],
 	}, {
 		version: "0.6.2",
+		date: "2015-05-01",
 		features: [
 			"Exporting segment effort as Virtual Partner for your GPS through activity page.",
 		],
 	}, {
 		version: "0.6.1",
+		date: "2015-04-23",
 		features: [
 			"OpenStreetMap flipper for activities (from Veloviewer)",
 		],
 	}, {
 		version: "0.6.0",
+		date: "2015-04-15",
 		features: [
 			"Customized zones for each Xtended data",
 			"Add TRIMP/Hour",
@@ -968,6 +1059,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.5.5",
+		date: "2015-03-27",
 		features: [
 			"New extended data: Grade %",
 			"Running cadence for one or two legs (option)",
@@ -979,23 +1071,27 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.5.4",
+		date: "2015-03-19",
 		features: [
 			"Runners can view avanced pace data",
 			"Major bugs fixed from 0.5.3",
 		],
 	}, {
 		version: "0.5.3",
+		date: "2015-03-16",
 		features: [
 			"Fix clear cache on extension update/install. This caused extension crash when using old cache with new extension.",
 			"Add export of your activities as TCX.",
 		],
 	}, {
 		version: "0.5.2",
+		date: "2015-03-15",
 		features: [
 			"HotFix for 0.5.1: some dependencies could not be loaded resulting in extension crash.",
 		],
 	}, {
 		version: "0.5.1",
+		date: "2015-03-15",
 		features: [
 			"Add extended stats for running",
 			"Extended stats now includes: Speed, Power, HR and Cadence graph distribution + table result on 15 zones",
@@ -1003,16 +1099,19 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.4.10",
+		date: "2015-03-07",
 		features: [
 			"Add share extension links to twitter",
 		],
 	}, {
 		version: "0.4.9",
+		date: "2015-02-27",
 		features: [
 			"Add Segment Details remote link on segment page",
 		],
 	}, {
 		version: "0.4.8",
+		date: "2015-02-22",
 		features: [
 			"Add Surface Area of your activities (raceshape EREA)",
 			"Normalized Power (TrainingPeaks trademarked term) removed. Profit to Weighted Power data now",
@@ -1022,44 +1121,52 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.4.7",
+		date: "2015-02-19",
 		features: [
 			"Inform runners about: Running Extended Data Features(like current cycling features) will be very soon available in version 0.5.x",
 		],
 	}, {
 		version: "0.4.6",
+		date: "2015-02-15",
 		features: [
 			"Activity flash code in activities for Strava mobile App",
 			"Fix bug wheere miles displayed even if metrics chosen in activities",
 		],
 	}, {
 		version: "0.4.5",
+		date: "2015-02-08",
 		features: [
 			"Fast fix from version 0.4.4. Sry for this...",
 		],
 	}, {
 		version: "0.4.4",
+		date: "2015-02-08",
 		features: [
 			"Fix unable to remove FTP value in options page",
 			"Improving code to save time later... Invisible on your screen :)",
 		],
 	}, {
 		version: "0.4.3",
+		date: "2015-01-29",
 		features: [
 			"Minor fixes",
 		],
 	}, {
 		version: "0.4.2",
+		date: "2015-01-29",
 		features: [
 			"Minor fixes",
 		],
 	}, {
 		version: "0.4.1",
+		date: "2015-01-28",
 		features: [
 			"Options GUI look better especially on checkboxes",
 			"Minor fixes",
 		],
 	}, {
 		version: "0.4.0",
+		date: "2015-01-27",
 		features: [
 			"Heart Rate Reserve zones distribution now customizable",
 			"New options UI made with angularjs and bootstrap",
@@ -1068,16 +1175,19 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.3.9",
+		date: "2015-01-02",
 		features: [
 			"Fix kom-map to achievement-map",
 		],
 	}, {
 		version: "0.3.8",
+		date: "2014-12-16",
 		features: [
 			"Fix nearby segment icons away",
 		],
 	}, {
 		version: "0.3.7",
+		date: "2014-11-11",
 		features: [
 			"Add nearby cycling+running segments added on segment page",
 			"Add average pace in cycling activities",
@@ -1086,6 +1196,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.3.6",
+		date: "2014-11-07",
 		features: [
 			"Cadence/Cadence extended data is now computed while moving.",
 			"Fix wrong Harmonized Power for riders with power meter.",
@@ -1093,6 +1204,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.3.2 to 0.3.5",
+		date: "2014-11-02",
 		features: [
 			"Fixed display text glitches on some pages",
 			"StravistiX menu icon orange",
@@ -1100,6 +1212,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.3.1",
+		date: "2014-10-30",
 		features: [
 			"Big changes in extension core: Ext recoded from scratch in order to fix memory leaks from v0.2.0 and make new evolutions easier",
 			"Bike activities extended data new look. Possibility to get the activity extended data panel hidden on load",
@@ -1110,6 +1223,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.2.0",
+		date: null,
 		features: [
 			"Add TRIMP (TRaining IMPulse) value to cycling activities. The old stress score has been removed, not relevant any more now.",
 			"Add Heart Rate Reserve (%HRR) value to cycling activities.",
@@ -1119,12 +1233,14 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.13",
+		date: null,
 		features: [
 			"Add standard deviation speed data for cycling activities",
 			"Add Cadence data for cycling activities: cadence %, cadence Time and crank revolutions. A cadence meter needed to get that",
 		],
 	}, {
 		version: "0.1.12",
+		date: null,
 		features: [
 			"Add Lower Quartile, Median and Upper Quartile speed data for cycling activities",
 			"Add helpers when click on added data in cycling activities",
@@ -1132,24 +1248,28 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.11",
+		date: null,
 		features: [
 			"More Stable",
 			"Prepare future for big features...",
 		],
 	}, {
 		version: "0.1.10",
+		date: null,
 		features: [
 			"Add Watts/KG for cycling activities",
 			"Add VeloViewer Challenges Trophy Cabinet to StravistiX menu",
 		],
 	}, {
 		version: "0.1.9",
+		date: null,
 		features: [
 			"Bike odo on activities back",
 			"Weighted Power calculation adjusted for cycling activities",
 		],
 	}, {
 		version: "0.1.8",
+		date: null,
 		features: [
 			"Add Estimated Weighted Power for cycling activities",
 			"Add Estimated Variability Index for cycling activities",
@@ -1158,6 +1278,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.7",
+		date: null,
 		features: [
 			"Hide the challenges in dashboard feed",
 			"Hide the created routes in dashboard feed",
@@ -1166,6 +1287,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.6",
+		date: null,
 		features: [
 			"Add this about page",
 			"StravistiX placed first in header",
@@ -1175,6 +1297,7 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.5",
+		date: null,
 		features: [
 			"Segment Rank percentage now working on all leaderboards (Clubs, following, ...)",
 			"Add bike odo display or not as an option",
@@ -1183,12 +1306,14 @@ export let releaseNotes: IReleaseNote[] = [
 		],
 	}, {
 		version: "0.1.4",
+		date: null,
 		features: [
 			"Display bike odo on activity page",
 			"Bugs fixing",
 		],
 	}, {
 		version: "0.1.3",
+		date: null,
 		features: [
 			"Add Motivation Score for cycling activities",
 			"Add Stress Score for cycling activities",
