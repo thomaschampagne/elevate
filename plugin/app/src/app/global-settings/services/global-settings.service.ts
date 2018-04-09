@@ -41,7 +41,7 @@ export class GlobalSettingsService {
 		options: [{
 			key: "autoSyncMinutes",
 			type: "number",
-			title: "Auto sync every X minutes while browsing strava.com",
+			title: "Sync and scan your athlete history every X minutes",
 			labels: ["All"],
 			min: 10,
 			max: 43200, // 30 days

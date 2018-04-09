@@ -20,6 +20,20 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.1.1",
+		message: "Big 6.1.* update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTHR and Best 20min Power.",
+		hotFixes: [],
+		features: [],
+		isPatch: true,
+		fixes: [
+			"Improved background sync to avoid manual trigger. Now checking if you have just uploaded your last ride, run or whatever and will perform a \"fast sync\". \"Classic\" syncs are now performed every 24 hours (customizable value).",
+			"Improved app behaviour when a sync is done. If your last activity has been just synced then the app will react in realtime to handle the change without reloading the page.",
+			"Fixed a sync bug where user could be stuck at given sync percentage. Bug was introduced in the previous version by the new best split calculator.",
+			"Lowered max zones to 40 in zone settings to avoid chrome synced storage over quota.",
+			"Renamed \"FTP\" stat data-field to \"Best 20min Power\"."
+		]
+	},
+	{
 		version: "6.1.0",
 		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTP and FTHR.",
 		hotFixes: [],

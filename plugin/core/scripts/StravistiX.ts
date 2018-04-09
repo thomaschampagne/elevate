@@ -182,7 +182,7 @@ export class StravistiX {
 		}
 
 		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
-			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>" + ((latestRelease.isPatch) ? "[Patch] " : "") + "Stravistix v" + this.appResources.extVersion + " updated</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Stravistix v" + this.appResources.extVersion + " updated " + ((latestRelease.isPatch) ? " (patch)" : "") + "</strong></div>" +
 			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
 			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
 			"	<div>" +
