@@ -1,5 +1,6 @@
 import { Gender } from "../../../shared/enums/gender.enum";
-import { UserLactateThresholdModel, UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/user-settings/user-settings.model";
+import { UserLactateThresholdModel } from "../../../../../../common/scripts/models/user-settings/user-lactate-threshold.model";
 
 export class FitnessUserSettingsModel {
 

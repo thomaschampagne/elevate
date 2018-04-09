@@ -1,8 +1,8 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../interfaces/IAppResources";
-import { SpeedUnitDataModel } from "../../../common/scripts/models/ActivityData";
 import { Helper } from "../../../common/scripts/Helper";
+import { SpeedUnitDataModel } from "../../../common/scripts/models/activity-data/speed-unit-data.model";
 
 export class WindyTyModifier implements IModifier {
 	protected activityId: number;

@@ -37,6 +37,7 @@ import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
+import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
 
 @NgModule({
 	imports: [
@@ -99,7 +100,8 @@ import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component"
 		ZonesService,
 		ReleasesNotesResolverService,
 		SideNavService,
-		WindowService
+		WindowService,
+		ExternalUpdatesService
 	]
 })
 export class SharedModule {

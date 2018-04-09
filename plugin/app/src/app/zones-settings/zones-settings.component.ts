@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel, UserZonesModel } from "../../../../common/scripts/models/UserSettings";
-import { ZoneModel } from "../../../../common/scripts/models/ActivityData";
 import * as _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
@@ -10,6 +8,9 @@ import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs/Subscription";
+import { UserZonesModel } from "../../../../common/scripts/models/user-settings/user-zones.model";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
+import { ZoneModel } from "../../../../common/scripts/models/activity-data/zone.model";
 
 @Component({
 	selector: "app-zones-settings",

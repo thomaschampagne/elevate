@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 
 export class HideFeedModifier implements IModifier {
 
@@ -76,7 +76,6 @@ export class HideFeedModifier implements IModifier {
 
 					// Remove Run activities if distance lower than "minRunDistanceToHide", if minRunDistanceToHide equal 0, then keep all.
 					if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && activityType === HideFeedModifier.RUN) {
-						debugger;
 						$(element).remove();
 					}
 				});

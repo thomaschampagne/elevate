@@ -1,11 +1,13 @@
 import * as _ from "lodash";
-import { ActivityStatsMapModel, AnalysisDataModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { IAppResources } from "../interfaces/IAppResources";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { VacuumProcessor } from "./VacuumProcessor";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
 
 export class ActivityProcessor {
 
@@ -66,7 +68,7 @@ export class ActivityProcessor {
 		}
 
 		// Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-		this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
+		this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
 
 			// Compute data in a background thread to avoid UI locking
 			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
@@ -90,7 +92,7 @@ export class ActivityProcessor {
 	}
 
 	protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
-													activityStatsMap: ActivityStatsMapModel, activityStream: StreamsModel, bounds: number[],
+													activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, bounds: number[],
 													callback: (analysisData: AnalysisDataModel) => void): void {
 
 		// Create worker blob URL if not exist

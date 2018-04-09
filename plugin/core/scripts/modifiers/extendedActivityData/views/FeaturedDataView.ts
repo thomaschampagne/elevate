@@ -1,8 +1,10 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { ActivityBasicInfoModel, AnalysisDataModel, SpeedUnitDataModel } from "../../../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../common/scripts/models/user-settings/user-settings.model";
 import { AbstractDataView } from "./AbstractDataView";
+import { AnalysisDataModel } from "../../../../../common/scripts/models/activity-data/analysis-data.model";
+import { ActivityBasicInfoModel } from "../../../../../common/scripts/models/activity-data/activity-basic-info.model";
+import { SpeedUnitDataModel } from "../../../../../common/scripts/models/activity-data/speed-unit-data.model";
 
 export class FeaturedDataView extends AbstractDataView {
 
@@ -65,7 +67,7 @@ export class FeaturedDataView extends AbstractDataView {
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
 			if (_.isNumber(this.analysisData.powerData.ftp) && !this.isSegmentEffortView) {
-				let label = "FTP";
+				let label = "Best 20min Power";
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}

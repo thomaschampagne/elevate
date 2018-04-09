@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material";
 import * as _ from "lodash";
@@ -8,6 +7,7 @@ import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Subscription } from "rxjs/Subscription";
+import { ZoneModel } from "../../../../../common/scripts/models/activity-data/zone.model";
 
 @Component({
 	selector: "app-zone",

@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { UserSettingsDao } from "./user-settings.dao";
-import { UserSettingsModel } from "../../../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../../../common/scripts/models/user-settings/user-settings.model";
 import { userSettings } from "../../../../../../common/scripts/UserSettings";
 import * as _ from "lodash";
 

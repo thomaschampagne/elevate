@@ -1,6 +1,6 @@
-import { PowerDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
 import * as _ from "lodash";
+import { PowerDataModel } from "../../../../../common/scripts/models/activity-data/power-data.model";
 
 export class RunningPowerDataView extends AbstractDataView {
 
@@ -41,7 +41,7 @@ export class RunningPowerDataView extends AbstractDataView {
 
 		if (_.isNumber(this.powerData.ftp) && !this.isSegmentEffortView) {
 			this.insertContentAtGridPosition(1, 0, printEstimatedTildWhenRealPower + this.printNumber(this.powerData.ftp, 0),
-				printEstimatedWordWhenRealPower + " FTP <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
+				printEstimatedWordWhenRealPower + " Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "W", isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation");
 		}
 
 		if (isRealPower) {

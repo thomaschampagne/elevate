@@ -1,13 +1,14 @@
 import * as _ from "lodash";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserLactateThresholdModel, UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { GenderModel } from "./gender.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { FitnessService } from "../fitness-trend/shared/services/fitness.service";
 import { Gender } from "../shared/enums/gender.enum";
+import { UserLactateThresholdModel } from "../../../../common/scripts/models/user-settings/user-lactate-threshold.model";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 
 @Component({
 	selector: "app-athlete-settings",
