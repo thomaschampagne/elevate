@@ -26,9 +26,7 @@ import { NearbySegmentsModifier } from "./modifiers/NearbySegmentsModifier";
 import { ReliveCCModifier } from "./modifiers/ReliveCCModifier";
 import { RemoteLinksModifier } from "./modifiers/RemoteLinksModifier";
 import {
-	RunningCadenceModifier,
-	RunningGradeAdjustedPaceModifier,
-	RunningHeartRateModifier,
+	RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/RunningDataModifier";
 import { SegmentRankPercentageModifier } from "./modifiers/SegmentRankPercentageModifier";
@@ -1151,7 +1149,7 @@ export class StravistiX {
 					// Then store that it has to be performed absolutely (but at later time)!
 					if (hasNormalSyncToBeDone) {
 						console.log("A normal sync will be done later");
-						localStorage.setItem("stravistix_normal_sync_tdb", "true");
+						StorageManager.setCookie("stravistix_normal_sync_tbd", true, 365);
 					}
 
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
@@ -1161,7 +1159,7 @@ export class StravistiX {
 						console.log("Fast sync finished", syncResult);
 						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
 
-						if (hasNormalSyncToBeDone || localStorage.getItem("stravistix_normal_sync_tdb")) {
+						if (hasNormalSyncToBeDone || StorageManager.getCookie("stravistix_normal_sync_tbd")) {
 							return this.activitiesSynchronizer.sync();
 						} else {
 							return null;
@@ -1172,7 +1170,7 @@ export class StravistiX {
 						if (syncResult) {
 							console.log("Normal sync finished", syncResult);
 							notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
-							localStorage.removeItem("stravistix_normal_sync_tdb");
+							StorageManager.removeCookie("stravistix_normal_sync_tbd");
 						}
 
 					}).catch((err: any) => {
