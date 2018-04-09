@@ -76,7 +76,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
-			let label = "Functional Threshold Power";
+			let label = "Best 20min Power";
 			let ftp = "-";
 			let ftpUnits = "";
 
