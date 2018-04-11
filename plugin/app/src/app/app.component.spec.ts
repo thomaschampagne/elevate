@@ -10,7 +10,7 @@ import { ExternalUpdatesService } from "./shared/services/external-updates/exter
 
 describe("AppComponent", () => {
 
-	let pluginId: string = "c061d18abea0";
+	const pluginId = "c061d18abea0";
 	let component: AppComponent = null;
 	let fixture: ComponentFixture<AppComponent> = null;
 

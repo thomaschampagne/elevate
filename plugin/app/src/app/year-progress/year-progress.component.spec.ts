@@ -14,6 +14,7 @@ import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
 import { userSettings } from "../../../../common/scripts/UserSettings";
 import { SyncedActivityModel } from "../../../../common/scripts/models/sync/synced-activity.model";
+import { YearProgressModule } from "./year-progress.module";
 
 describe("YearProgressComponent", () => {
 
@@ -31,6 +32,7 @@ describe("YearProgressComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				YearProgressModule
 			],
 			providers: []
 		}).compileComponents();

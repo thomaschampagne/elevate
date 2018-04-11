@@ -17,7 +17,7 @@ import { UserLactateThresholdModel } from "../../../../common/scripts/models/use
 
 describe("FitnessTrendComponent", () => {
 
-	let pluginId: string = "c061d18abea0";
+	const pluginId = "c061d18abea0";
 	const gender = "men";
 	const userGender = Gender.MEN;
 	const maxHr = 200;

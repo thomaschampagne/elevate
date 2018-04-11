@@ -10,6 +10,7 @@ import { ProgressType } from "../shared/models/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { SyncedActivityModel } from "../../../../../common/scripts/models/sync/synced-activity.model";
+import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressGraphComponent", () => {
 
@@ -24,6 +25,7 @@ describe("YearProgressGraphComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				YearProgressModule
 			],
 			providers: [YearProgressService]
 		}).compileComponents();
