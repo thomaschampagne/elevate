@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
-import { ExternalUpdatesService } from './external-updates.service';
+import { TestBed } from "@angular/core/testing";
+import { ExternalUpdatesService } from "./external-updates.service";
 import { Messages } from "../../../../../../common/scripts/Messages";
 
-describe('ExternalUpdatesService', () => {
+describe("ExternalUpdatesService", () => {
 
-	let pluginId: string = "c061d18abea0";
+	const pluginId = "c061d18abea0";
 	let service: ExternalUpdatesService;
 
 	beforeEach((done: Function) => {
@@ -25,7 +25,7 @@ describe('ExternalUpdatesService', () => {
 		done();
 	});
 
-	it('should be created', (done: Function) => {
+	it("should be created", (done: Function) => {
 		expect(service).toBeTruthy();
 		expect(service.onSyncDone).not.toBeNull();
 		done();
@@ -59,7 +59,7 @@ describe('ExternalUpdatesService', () => {
 			message: Messages.ON_EXTERNAL_SYNC_DONE,
 			results: {}
 		};
-		const senderId: string = "fakeId";
+		const senderId = "fakeId";
 
 		// When
 		service.onExternalRequestReceived(message, senderId);

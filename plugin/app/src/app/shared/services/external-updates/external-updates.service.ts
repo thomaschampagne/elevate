@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 import { SyncResultModel } from "../../../../../../common/scripts/models/sync/sync-result.model";
 import { Messages } from "../../../../../../common/scripts/Messages";

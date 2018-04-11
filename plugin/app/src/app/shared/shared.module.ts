@@ -19,14 +19,10 @@ import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
 import { DonateComponent } from "../donate/donate.component";
 import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
-import { YearProgressComponent } from "../year-progress/year-progress.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { YearProgressGraphComponent } from "../year-progress/year-progress-graph/year-progress-graph.component";
-import { YearProgressTableComponent } from "../year-progress/year-progress-table/year-progress-table.component";
-import { YearProgressHelperDialogComponent } from "../year-progress/year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { AthleteHistoryDao } from "./dao/athlete-history/athlete-history.dao";
 import { AthleteHistoryService } from "./services/athlete-history/athlete-history.service";
 import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
@@ -60,9 +56,6 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 		SwimFtpHelperComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
-		YearProgressComponent,
-		YearProgressGraphComponent,
-		YearProgressTableComponent,
 		DonateComponent,
 		ReleasesNotesComponent,
 		ShareComponent,
@@ -75,16 +68,14 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		YearProgressHelperDialogComponent,
 		AboutDialogComponent,
-		AthleteHistoryImportDialogComponent,
+		AthleteHistoryImportDialogComponent
 	],
 	entryComponents: [
 		GotItDialogComponent,
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
-		YearProgressHelperDialogComponent,
 		AboutDialogComponent,
 		AthleteHistoryImportDialogComponent
 	],

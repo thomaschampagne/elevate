@@ -102,8 +102,8 @@
 			start measuring your heart rate until the end. When done, check your average heart rate on these last 20
 			minutes. This value is your LTHR.
 		</div>
-		<div fxLayout="column" layout-align="start center">
-			<mat-form-field fxFlex>
+		<div fxLayout="column" fxLayoutAlign="start center">
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="defaultLTHR"
@@ -115,7 +115,7 @@
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
-			<mat-form-field fxFlex>
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="cyclingLTHR"
@@ -125,7 +125,7 @@
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
-			<mat-form-field fxFlex>
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="runningLTHR"
@@ -180,7 +180,7 @@
 		Swimming Functional Threshold Pace
 	</mat-card-title>
 	<mat-card-content>
-		<div fxLayout="row" layout-align="center center">
+		<div fxLayout="row" fxLayoutAlign="center center">
 			<mat-form-field fxFlex>
 				<input
 					matInput
