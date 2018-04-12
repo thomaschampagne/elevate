@@ -36,6 +36,7 @@ describe("AboutDialogComponent", () => {
 
 		const version = "1.0.0";
 		spyOn(component, "getAppVersion").and.returnValue(version);
+		spyOn(component, "getProdAppVersion").and.returnValue(Promise.resolve(version));
 
 		const bytes = 1024;
 		const appUsage = new AppUsage(bytes, 4096);
