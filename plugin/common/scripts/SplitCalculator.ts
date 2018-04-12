@@ -31,8 +31,8 @@ export class SplitCalculator {
 
 				const nextScaleDiff = nextScaleValue - scaleValue;
 
-				if (nextScaleDiff <= 0) {
-					throw new Error("Scale should have gaps >=1");
+				if (nextScaleDiff < 0) {
+					throw new Error("Scale should have gaps >= 0");
 				}
 
 				if (nextScaleDiff > SplitCalculator.GAP_THRESHOLD) {

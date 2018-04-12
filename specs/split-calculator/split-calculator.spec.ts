@@ -49,7 +49,7 @@ describe("SplitCalculator", () => {
 		done();
 	});
 
-	it("should NOT normalize scale having gaps <= 0", (done: Function) => {
+	it("should NOT normalize scale having gaps < 0", (done: Function) => {
 
 		// Given
 		const scale: number[] = [0, 1, 3, 6, 5];
@@ -63,7 +63,7 @@ describe("SplitCalculator", () => {
 		};
 
 		// Then
-		expect(call).toThrow(new Error("Scale should have gaps >=1"));
+		expect(call).toThrow(new Error("Scale should have gaps >= 0"));
 
 		done();
 	});
