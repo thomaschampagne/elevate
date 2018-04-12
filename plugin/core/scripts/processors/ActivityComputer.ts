@@ -1,12 +1,25 @@
 import * as _ from "lodash";
 import { Helper } from "../../../common/scripts/Helper";
-import {
-	ActivityStatsMapModel, AnalysisDataModel, AscentSpeedDataModel, CadenceDataModel, ElevationDataModel, GradeDataModel,
-	HeartRateDataModel, MoveDataModel, PaceDataModel, PowerDataModel, SpeedDataModel, StreamsModel, UpFlatDownModel,
-	UpFlatDownSumCounterModel, UpFlatDownSumTotalModel, ZoneModel,
-} from "../../../common/scripts/models/ActivityData";
-import { UserLactateThresholdModel, UserSettingsModel } from "../../../common/scripts/models/UserSettings";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
+import { SplitCalculator } from "../../../common/scripts/SplitCalculator";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
+import { UserLactateThresholdModel } from "../../../common/scripts/models/user-settings/user-lactate-threshold.model";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
+import { MoveDataModel } from "../../../common/scripts/models/activity-data/move-data.model";
+import { SpeedDataModel } from "../../../common/scripts/models/activity-data/speed-data.model";
+import { PaceDataModel } from "../../../common/scripts/models/activity-data/pace-data.model";
+import { GradeDataModel } from "../../../common/scripts/models/activity-data/grade-data.model";
+import { PowerDataModel } from "../../../common/scripts/models/activity-data/power-data.model";
+import { HeartRateDataModel } from "../../../common/scripts/models/activity-data/heart-rate-data.model";
+import { CadenceDataModel } from "../../../common/scripts/models/activity-data/cadence-data.model";
+import { ElevationDataModel } from "../../../common/scripts/models/activity-data/elevation-data.model";
+import { ZoneModel } from "../../../common/scripts/models/activity-data/zone.model";
+import { UpFlatDownSumTotalModel } from "../../../common/scripts/models/activity-data/up-flat-down-sum-total.model";
+import { UpFlatDownModel } from "../../../common/scripts/models/activity-data/up-flat-down.model";
+import { UpFlatDownSumCounterModel } from "../../../common/scripts/models/activity-data/up-flat-down-sum-counter.model";
+import { AscentSpeedDataModel } from "../../../common/scripts/models/activity-data/ascent-speed-data.model";
 
 export class ActivityComputer {
 
@@ -29,7 +42,7 @@ export class ActivityComputer {
 	protected isActivityAuthor: boolean;
 	protected hasPowerMeter: boolean;
 	protected activityStatsMap: ActivityStatsMapModel;
-	protected activityStream: StreamsModel;
+	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
 
@@ -37,7 +50,7 @@ export class ActivityComputer {
 				isActivityAuthor: boolean,
 				hasPowerMeter: boolean,
 				activityStatsMap: ActivityStatsMapModel,
-				activityStream: StreamsModel,
+				activityStream: ActivityStreamsModel,
 				bounds: number[], returnZones: boolean) {
 
 		// Store activityType, isTrainer, input activity params and userSettings
@@ -71,7 +84,7 @@ export class ActivityComputer {
 			this.activityStatsMap, this.activityStream);
 	}
 
-	protected sliceStreamFromBounds(activityStream: StreamsModel, bounds: number[]): void {
+	protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
 
 		// Slices array if activity bounds given. It's mainly used for segment effort extended stats
 		if (bounds && bounds[0] && bounds[1]) {
@@ -126,14 +139,14 @@ export class ActivityComputer {
 		}
 	}
 
-	protected smoothAltitudeStream(activityStream: StreamsModel, activityStatsMap: ActivityStatsMapModel): any {
+	protected smoothAltitudeStream(activityStream: ActivityStreamsModel, activityStatsMap: ActivityStatsMapModel): any {
 		return this.smoothAltitude(activityStream, activityStatsMap.elevation);
 	}
 
 
 	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel,
 								  userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
-								  activityStream: StreamsModel): AnalysisDataModel {
+								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
 		this.movementData = null;
@@ -223,7 +236,7 @@ export class ActivityComputer {
 		return analysisData;
 	}
 
-	protected estimatedRunningPower(activityStream: StreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
+	protected estimatedRunningPower(activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
 
 		try {
 			console.log("Trying to estimate wattage of this run...");
@@ -445,23 +458,6 @@ export class ActivityComputer {
 		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
 	}
 
-	/*	/!**
-         * Compute Heart Rate Stress Score (HRSS)
-         * @param {Gender} userGender
-         * @param {number} userMaxHr
-         * @param {number} userMinHr
-         * @param {number} userLactateThreshold
-         * @param {number} activityTrainingImpulse
-         * @returns {number}
-         *!/
-        public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, userLactateThreshold: number, activityTrainingImpulse: number): number {
-            const lactateThreshold = (_.isNumber(userLactateThreshold) && userLactateThreshold > 0) ? userLactateThreshold : (userMinHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userMinHr));
-            const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
-            const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
-            const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
-            return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
-        }*/
-
 	/**
 	 * TODO Duplicated code of FitnessService.computeHeartRateStressScore. To be refactored
 	 * Compute Heart Rate Stress Score (HRSS)
@@ -621,11 +617,20 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
+		let ftp = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
+			ftp = splitCalculator.getBestSplit(60 * 20, true);
+		} catch (err) {
+			console.warn("No ftp available for this range");
+		}
+
 		const powerData: PowerDataModel = {
 			hasPowerMeter,
 			avgWatts,
 			avgWattsPerKg,
 			weightedPower,
+			ftp,
 			variabilityIndex,
 			punchFactor,
 			powerStressScore,
@@ -695,29 +700,33 @@ export class ActivityComputer {
 			}
 		}
 
-		const heartRateArraySorted: number[] = heartRateArray.sort(function (a, b) {
-			return a - b;
-		});
-
 		// Update zone distribution percentage
 		this.userSettings.zones.heartRate = this.finalizeDistributionComputationZones(this.userSettings.zones.heartRate);
-
-		const averageHeartRate: number = hrSum / hrrSecondsCount;
-		const maxHeartRate: number = heartRateArraySorted[heartRateArraySorted.length - 1];
 
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
 		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, userMaxHr, userRestHr, userLactateThresholdModel);
-
 		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
+
+		const averageHeartRate: number = hrSum / hrrSecondsCount;
+		const maxHeartRate: number = _.max(heartRateArray);
+
+		let fthr = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
+			fthr = splitCalculator.getBestSplit(60 * 20, true);
+		} catch (err) {
+			console.warn("No fthr available for this range");
+		}
 
 		return {
 			HRSS: heartRateStressScore,
 			HRSSPerHour: HRSSPerHour,
 			TRIMP: trainingImpulse,
 			TRIMPPerHour: TRIMPPerHour,
+			fthr: fthr,
 			heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
@@ -1042,7 +1051,7 @@ export class ActivityComputer {
 		return gradeData;
 	}
 
-	protected elevationData(activityStream: StreamsModel): ElevationDataModel {
+	protected elevationData(activityStream: ActivityStreamsModel): ElevationDataModel {
 
 		const distanceArray: any = activityStream.distance;
 		const timeArray: any = activityStream.time;
@@ -1166,7 +1175,7 @@ export class ActivityComputer {
 		return elevationData;
 	}
 
-	protected smoothAltitude(activityStream: StreamsModel, stravaElevation: number): number[] {
+	protected smoothAltitude(activityStream: ActivityStreamsModel, stravaElevation: number): number[] {
 
 		if (!activityStream || !activityStream.altitude) {
 			return null;

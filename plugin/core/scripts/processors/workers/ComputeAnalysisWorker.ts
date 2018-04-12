@@ -1,6 +1,6 @@
-import { AnalysisDataModel } from "../../../../common/scripts/models/ActivityData";
 import { IComputeActivityThreadMessage } from "../../interfaces/IComputeActivityThreadMessage";
 import { ActivityComputer } from "../ActivityComputer";
+import { AnalysisDataModel } from "../../../../common/scripts/models/activity-data/analysis-data.model";
 
 export function ComputeAnalysisWorker() {
 

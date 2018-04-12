@@ -108,7 +108,14 @@
 			<!-- Table/Legend -->
 			<div fxFlex fxFill>
 				<mat-card-title class="mat-title">
-					{{momentWatched.format("MMMM Do")}}
+					<div fxLayout="row" fxLayoutAlign="space-between start">
+						<span fxFlex="100">
+							{{momentWatched.format("MMMM Do")}}
+						</span>
+						<span fxFlex>
+							<button mat-button color="primary" (click)="onShowOverview()">Overview</button>
+						</span>
+					</div>
 				</mat-card-title>
 				<app-year-progress-table
 					[selectedYears]="selectedYears"

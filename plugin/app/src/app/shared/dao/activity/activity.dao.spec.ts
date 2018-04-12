@@ -3,8 +3,8 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/Sync";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
+import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
 
 describe("ActivityDao", () => {
 

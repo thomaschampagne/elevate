@@ -6,22 +6,24 @@ import { YearProgressModel } from "./shared/models/year-progress.model";
 import { YearProgressTypeModel } from "./shared/models/year-progress-type.model";
 import { ProgressType } from "./shared/models/progress-type.enum";
 import { ActivatedRoute } from "@angular/router";
-import { SyncedActivityModel } from "../../../../common/scripts/models/Sync";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
+import { SyncedActivityModel } from "../../../../common/scripts/models/sync/synced-activity.model";
+import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog/year-progress-overview-dialog.component";
+import { YearProgressForOverviewModel } from "./shared/models/year-progress-for-overview.model";
+
 
 @Component({
 	selector: "app-year-progress",
 	templateUrl: "./year-progress.component.html",
-	styleUrls: ["./year-progress.component.scss"],
-	providers: [YearProgressService]
+	styleUrls: ["./year-progress.component.scss"]
 })
 export class YearProgressComponent implements OnInit {
 
@@ -63,9 +65,6 @@ export class YearProgressComponent implements OnInit {
 				public dialog: MatDialog) {
 	}
 
-	/**
-	 *
-	 */
 	public ngOnInit(): void {
 
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
@@ -162,11 +161,9 @@ export class YearProgressComponent implements OnInit {
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
 		this.isProgressionInitialized = true;
+
 	}
 
-	/**
-	 *
-	 */
 	public progression(): void {
 		this.yearProgressModels = this.yearProgressService.progression(this.syncedActivityModels,
 			this.selectedActivityTypes,
@@ -184,9 +181,6 @@ export class YearProgressComponent implements OnInit {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 
-	/**
-	 *
-	 */
 	public onSelectedActivityTypesChange(): void {
 
 		if (this.selectedActivityTypes.length > 0) {
@@ -195,16 +189,10 @@ export class YearProgressComponent implements OnInit {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public onSelectedProgressTypeChange(): void {
 		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, this.selectedProgressType.type.toString());
 	}
 
-	/**
-	 *
-	 */
 	public onSelectedYearsChange(): void {
 		if (this.selectedYears.length > 0) {
 			this.progression();
@@ -212,17 +200,31 @@ export class YearProgressComponent implements OnInit {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public onIncludeCommuteRideToggle(): void {
 		this.progression();
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
 	}
 
-	/**
-	 *
-	 */
+	public onShowOverview(): void {
+
+		const data: YearProgressForOverviewModel = {
+			momentWatched: this.momentWatched,
+			selectedYears: this.selectedYears,
+			selectedActivityTypes: this.selectedActivityTypes,
+			progressTypes: this.progressTypes,
+			yearProgressModels: this.yearProgressModels,
+			yearProgressStyleModel: this.yearProgressStyleModel
+		};
+
+		this.dialog.open(YearProgressOverviewDialogComponent, {
+			minWidth: YearProgressOverviewDialogComponent.WIDTH,
+			maxWidth: YearProgressOverviewDialogComponent.WIDTH,
+			width: YearProgressOverviewDialogComponent.WIDTH,
+			data: data
+		});
+
+	}
+
 	public onHelperClick(): void {
 		this.dialog.open(YearProgressHelperDialogComponent, {
 			minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,

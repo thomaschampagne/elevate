@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { AthleteHistoryDao } from "./athlete-history.dao";
-import { AthleteProfileModel } from "../../../../../../common/scripts/models/AthleteProfile";
+import { AthleteProfileModel } from "../../../../../../common/scripts/models/athlete-profile.model";
 
 
 describe("AthleteHistoryDao", () => {

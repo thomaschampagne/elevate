@@ -37,7 +37,12 @@
 			D3js version: {{d3Version}}
 		</div>
 	</div>
-
+	<mat-divider></mat-divider>
+	<div>
+		<span *ngIf="this.prodVersion === this.appVersion">You are running the latest version</span>
+		<span *ngIf="this.prodVersion !== this.appVersion">You are not running the latest version.
+			Latest version is {{this.prodVersion}}. Rebooting your browser may trigger the update process.</span>
+	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
 	<button mat-button mat-dialog-close color="primary">Close</button>

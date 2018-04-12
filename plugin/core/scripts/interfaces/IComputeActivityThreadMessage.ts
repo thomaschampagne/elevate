@@ -1,6 +1,7 @@
-import { ActivityStatsMapModel, StreamsModel } from "../../../common/scripts/models/ActivityData";
-import { UserSettingsModel } from "../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "./IAppResources";
+import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
 
 export interface IComputeActivityThreadMessage {
 	activityType: string;
@@ -11,7 +12,7 @@ export interface IComputeActivityThreadMessage {
 	athleteWeight: number;
 	hasPowerMeter: boolean;
 	activityStatsMap: ActivityStatsMapModel;
-	activityStream: StreamsModel;
+	activityStream: ActivityStreamsModel;
 	bounds: number[];
 	returnZones: boolean;
 	systemJsConfig: SystemJSLoader.Config;

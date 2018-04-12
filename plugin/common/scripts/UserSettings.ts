@@ -1,7 +1,7 @@
-import { UserSettingsModel } from "./models/UserSettings";
+import { UserSettingsModel } from "./models/user-settings/user-settings.model";
 
 export const userSettings: UserSettingsModel = {
-	autoSyncMinutes: 60,
+	autoSyncMinutes: 1440,
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 	userGender: "men",
@@ -147,43 +147,28 @@ export const userSettings: UserSettingsModel = {
 			from: 2800,
 			to: 3000,
 		}, {from: 3000, to: 3500}, {from: 3500, to: 4000}, {from: 4000, to: 5000}],
-		ascent: [{from: 0, to: 100}, {from: 100, to: 200}, {from: 200, to: 300}, {
-			from: 300,
-			to: 400,
-		}, {from: 400, to: 500}, {from: 500, to: 600}, {from: 600, to: 700}, {
-			from: 700,
-			to: 800,
-		}, {from: 800, to: 900}, {from: 900, to: 1000}, {from: 1000, to: 1100}, {
-			from: 1100,
-			to: 1200,
-		}, {from: 1200, to: 1300}, {from: 1300, to: 1400}, {from: 1400, to: 1500}, {
-			from: 1500,
-			to: 1600,
-		}, {from: 1600, to: 1700}, {from: 1700, to: 1800}, {from: 1800, to: 1900}, {
-			from: 1900,
-			to: 2000,
-		}, {from: 2000, to: 2100}, {from: 2100, to: 2200}, {from: 2200, to: 2300}, {
-			from: 2300,
-			to: 2400,
-		}, {from: 2400, to: 2500}, {from: 2500, to: 2600}, {from: 2600, to: 2700}, {
-			from: 2700,
-			to: 2800,
-		}, {from: 2800, to: 2900}, {from: 2900, to: 3000}, {from: 3000, to: 3100}, {
-			from: 3100,
-			to: 3200,
-		}, {from: 3200, to: 3300}, {from: 3300, to: 3400}, {from: 3400, to: 3500}, {
-			from: 3500,
-			to: 3600,
-		}, {from: 3600, to: 3700}, {from: 3700, to: 3800}, {from: 3800, to: 3900}, {
-			from: 3900,
-			to: 4000,
-		}, {from: 4000, to: 4100}, {from: 4100, to: 4200}, {from: 4200, to: 4300}, {
-			from: 4300,
-			to: 4400,
-		}, {from: 4400, to: 4500}, {from: 4500, to: 4600}, {from: 4600, to: 4700}, {
-			from: 4700,
-			to: 5000,
-		}, {from: 5000, to: 5500}],
+		ascent: [{from: 0, to: 100}, {from: 100, to: 200}, {from: 200, to: 300}, {from: 300, to: 400}, {
+			from: 400,
+			to: 500
+		}, {
+			from: 500,
+			to: 600
+		}, {from: 600, to: 700}, {from: 700, to: 800}, {from: 800, to: 900}, {from: 900, to: 1000}, {
+			from: 1000,
+			to: 1200
+		}, {from: 1200, to: 1400}, {from: 1400, to: 1600}, {from: 1600, to: 1800}, {from: 1800, to: 2000}, {
+			from: 2000,
+			to: 2200
+		}, {from: 2200, to: 2400}, {from: 2400, to: 2600}, {from: 2600, to: 2800}, {from: 2800, to: 3000}, {
+			from: 3000,
+			to: 3200
+		}, {from: 3200, to: 3400}, {from: 3400, to: 3600}, {from: 3600, to: 3800}, {from: 3800, to: 4000}, {
+			from: 4000,
+			to: 4200
+		}, {from: 4200, to: 4400}, {from: 4400, to: 4600}, {from: 4600, to: 4800}, {from: 4800, to: 5000}, {
+			from: 5000,
+			to: 6000
+		}],
 	},
 	targetsYearRide: 5000,
 	targetsYearRun: 750,

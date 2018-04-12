@@ -2,8 +2,9 @@ import * as Chart from "chart.js";
 import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { SpeedUnitDataModel, ZoneModel } from "../../../../../common/scripts/models/ActivityData";
 import { IAppResources } from "../../../interfaces/IAppResources";
+import { SpeedUnitDataModel } from "../../../../../common/scripts/models/activity-data/speed-unit-data.model";
+import { ZoneModel } from "../../../../../common/scripts/models/activity-data/zone.model";
 
 export abstract class AbstractDataView {
 
@@ -43,7 +44,7 @@ export abstract class AbstractDataView {
 	}
 
 	public printNumber(value: number, decimals: number): string {
-		return (value) ? value.toFixed(decimals) : "-";
+		return (_.isNumber(value)) ? value.toFixed(decimals) : "-";
 	}
 
 	public setIsSegmentEffortView(bool: boolean): void {

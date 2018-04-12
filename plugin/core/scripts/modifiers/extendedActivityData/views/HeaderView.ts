@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../../../common/scripts/Helper";
-import { ActivityBasicInfoModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
+import { ActivityBasicInfoModel } from "../../../../../common/scripts/models/activity-data/activity-basic-info.model";
 
 export class HeaderView extends AbstractDataView {
 
@@ -26,7 +26,7 @@ export class HeaderView extends AbstractDataView {
 		this.content += "   <div style='display: inline;'><img style='width:100px' src='" + this.appResources.logoTextOnly + "'/></div>";
 		this.content += "   <div style='display: inline;'>EXTENDED STATS PANEL // " + detail + "</div>";
 		this.content += "   <div style='display: inline; margin-right: 10px;'>";
-		this.content += "       <a href='" + this.appResources.settingsLink + "#/donate' target='_blank' class=\"btn btn-sm btn-primary\" '>Do you like this stuff?</a>";
+		this.content += "       <a href='" + this.appResources.settingsLink + "#/donate' target='_blank' class=\"btn btn-sm btn-primary\" style='position: initial;' '>Do you like this stuff?</a>";
 		this.content += "   </div>";
 		this.content += "</div>";
 		this.content += "<hr style=\"margin: 10px 0;\"/>";

@@ -1,4 +1,4 @@
-import { ConstantsModel } from "./models/Constants";
+import { ConstantsModel } from "./models/constants.model";
 
 export const constants: ConstantsModel = {
 	VERSION: null,

@@ -3,8 +3,8 @@ import * as _ from "lodash";
 import * as Q from "q";
 import { CoreEnv } from "../config/core-env";
 import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
-import { ISyncResult } from "./synchronizer/ActivitiesSynchronizer";
 import { HerokuEndpoints } from "../../common/scripts/modules/HerokuEndpoint";
+import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
 
 const currentDate: any = new Date();
 (function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
@@ -74,7 +74,7 @@ export class AthleteUpdate { // TODO Refactor outside + rerun specs
 
 	public static commit(athleteUpdate: IAthleteUpdate): Q.IPromise<any> {
 
-		const deferred = Q.defer<ISyncResult>();
+		const deferred = Q.defer<SyncResultModel>();
 		const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/athlete/update";
 
 		$.post({

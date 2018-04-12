@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { MatDialogRef } from "@angular/material";
 
 @Component({
 	selector: "app-fitness-trend-welcome-dialog",
@@ -14,17 +15,16 @@ export class FitnessTrendWelcomeDialogComponent implements OnInit {
 
 	public hideMessage: boolean;
 
-	constructor() {
+	constructor(public dialogRef: MatDialogRef<FitnessTrendWelcomeDialogComponent>) {
 	}
 
 	public ngOnInit(): void {
 	}
 
-	public onShowMessageChange(): void {
+	public onGotIt(): void {
 		if (this.hideMessage) {
 			localStorage.setItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG, "true");
-		} else {
-			localStorage.removeItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG);
 		}
+		this.dialogRef.close();
 	}
 }

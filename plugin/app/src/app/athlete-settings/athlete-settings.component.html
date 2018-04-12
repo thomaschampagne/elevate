@@ -102,8 +102,8 @@
 			start measuring your heart rate until the end. When done, check your average heart rate on these last 20
 			minutes. This value is your LTHR.
 		</div>
-		<div fxLayout="column" layout-align="start center">
-			<mat-form-field fxFlex>
+		<div fxLayout="column" fxLayoutAlign="start center">
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="defaultLTHR"
@@ -115,7 +115,7 @@
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
-			<mat-form-field fxFlex>
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="cyclingLTHR"
@@ -125,7 +125,7 @@
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
-			<mat-form-field fxFlex>
+			<mat-form-field fxFill>
 				<input matInput
 					   type="number" min="1" max="999"
 					   [(ngModel)]="runningLTHR"
@@ -154,10 +154,13 @@
 			<a [routerLink]="" (click)="cyclingFtpHint.style.display = 'block'">How to setup cycling FTP</a>
 		</div>
 		<div class="hint" #cyclingFtpHint [style.display]="'none'">
-			The FTP is the constant average power you are able to maintain during 20 minutes. Give everything on your
-			bike during 20min and enter result below. If you're not aware of your cycling FTP or don't own a power
-			meter: open your last strava race activity (or last heavy training day) and use "StravistiX Best Split"
-			feature to find your best average power over 20 min.
+			The FTP is the constant average power you are able to maintain during 1 hour. To measure it you must perform
+			a full power test during 20min on your bike. Take the average power measured on the period and multiply it
+			by 0.95. This is your FTP.
+			Example: an average power of 200 watts will give a FTP of 190 watts. Measuring your FTP every 4 or 6 weeks
+			is a good practice.
+			To help you in this measurement process, you can use the "Best 20min Power" stat data-field on your strava
+			activities.
 		</div>
 		<div>
 			<mat-input-container fxFill>
@@ -177,7 +180,7 @@
 		Swimming Functional Threshold Pace
 	</mat-card-title>
 	<mat-card-content>
-		<div fxLayout="row" layout-align="center center">
+		<div fxLayout="row" fxLayoutAlign="center center">
 			<mat-form-field fxFlex>
 				<input
 					matInput

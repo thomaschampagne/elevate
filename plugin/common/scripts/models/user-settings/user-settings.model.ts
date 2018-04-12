@@ -1,25 +1,7 @@
-import { ZoneModel } from "./ActivityData";
+import { UserLactateThresholdModel } from "./user-lactate-threshold.model";
+import { UserZonesModel } from "./user-zones.model";
 
-export class UserLactateThresholdModel { // TODO Externalize in a file
-	public default: number;
-	public cycling: number;
-	public running: number;
-}
-
-export class UserZonesModel { // TODO Externalize in a file
-	public speed: ZoneModel[];
-	public pace: ZoneModel[];
-	public heartRate: ZoneModel[];
-	public power: ZoneModel[];
-	public runningPower: ZoneModel[];
-	public cyclingCadence: ZoneModel[];
-	public runningCadence: ZoneModel[];
-	public grade: ZoneModel[];
-	public elevation: ZoneModel[];
-	public ascent: ZoneModel[];
-}
-
-export class UserSettingsModel { // TODO Externalize in a file
+export class UserSettingsModel {
 
 	public static readonly SYSTEM_UNIT_METRIC_KEY = "metric";
 	public static readonly SYSTEM_UNIT_IMPERIAL_KEY = "imperial";

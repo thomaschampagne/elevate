@@ -4,7 +4,7 @@ import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
@@ -14,6 +14,8 @@ import { AppError } from "../shared/models/app-error.model";
 import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { SyncResultModel } from "../../../../common/scripts/models/sync/sync-result.model";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -139,12 +141,11 @@ export class FitnessTrendComponent implements OnInit {
 	constructor(public athleteHistoryService: AthleteHistoryService,
 				public userSettingsService: UserSettingsService,
 				public fitnessService: FitnessService,
+				public externalUpdatesService: ExternalUpdatesService,
 				public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
-
-		this.showFitnessWelcomeDialog();
 
 		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
 
@@ -187,6 +188,17 @@ export class FitnessTrendComponent implements OnInit {
 				key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
 			});
 			this.lastPeriodViewed = this.periodViewed;
+
+			// Listen for syncFinished update then reload graph if neccesary.
+			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+				if (syncResult.globalHistoryChanges.added.length > 0
+					|| syncResult.globalHistoryChanges.edited.length > 0
+					|| syncResult.globalHistoryChanges.deleted.length > 0) {
+					this.reloadFitnessTrend();
+				}
+			});
+
+			this.showFitnessWelcomeDialog();
 
 		}, (error: AppError) => {
 
@@ -305,7 +317,7 @@ export class FitnessTrendComponent implements OnInit {
 					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
 					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
 				});
-			});
+			}, 1000);
 
 		}
 	}
