@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { StreamsModel } from "./models/ActivityData";
+import { ActivityStreamsModel } from "./models/activity-data/activity-streams.model";
 
 export interface ICourseBounds {
     start: number;
@@ -13,7 +13,7 @@ export enum ExportTypes {
 
 export class CourseMaker {
 
-	public create(exportType: ExportTypes, courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
+	public create(exportType: ExportTypes, courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
         let courseData: string = null;
 
@@ -34,7 +34,7 @@ export class CourseMaker {
         return courseData;
     }
 
-	private createGpx(courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
+	private createGpx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
@@ -96,7 +96,7 @@ export class CourseMaker {
         return gpxString;
     }
 
-	private createTcx(courseName: string, activityStream: StreamsModel, bounds?: ICourseBounds): string {
+	private createTcx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
         if (bounds) {
             activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
@@ -162,7 +162,7 @@ export class CourseMaker {
         return tcxString;
     }
 
-	protected cutStreamsAlongBounds(activityStream: StreamsModel, bounds: ICourseBounds): StreamsModel {
+	protected cutStreamsAlongBounds(activityStream: ActivityStreamsModel, bounds: ICourseBounds): ActivityStreamsModel {
 
         if (!_.isEmpty(activityStream.velocity_smooth)) {
             activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds.start, bounds.end);

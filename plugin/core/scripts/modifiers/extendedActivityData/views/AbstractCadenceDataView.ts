@@ -1,5 +1,5 @@
-import { CadenceDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
+import { CadenceDataModel } from "../../../../../common/scripts/models/activity-data/cadence-data.model";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
 

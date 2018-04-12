@@ -1,5 +1,5 @@
 import { Helper } from "../../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../../common/scripts/models/UserSettings";
+import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
 import { IAppResources } from "../../interfaces/IAppResources";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
@@ -42,7 +42,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 			}
 
-			this.insertContentAtGridPosition(1, 2, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
+			this.insertContentAtGridPosition(1, 3, climbPaceDisplayed, "Avg climbing pace", "/" + this.speedUnitsData.units, "displayAdvancedGradeData");
 		}
 
 		if (this.userSettings.displayAdvancedPowerData) {
@@ -70,7 +70,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 			}
 
-			this.insertContentAtGridPosition(0, 3, averageWatts, averageWattsTitle, "w", userSettingKey);
+			this.insertContentAtGridPosition(0, 4, averageWatts, averageWattsTitle, "w", userSettingKey);
 		}
 
 		let weightedPower = "-";
@@ -81,13 +81,13 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				&& this.analysisData.powerData.hasPowerMeter
 			) {
 				weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
-				this.insertContentAtGridPosition(1, 3, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
+				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
-		this.makeSummaryGrid(2, 4);
+		this.makeSummaryGrid(2, 5);
 		super.placeSummaryPanel(panelAdded);
 	}
 

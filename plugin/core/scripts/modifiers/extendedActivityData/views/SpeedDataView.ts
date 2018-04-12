@@ -1,6 +1,6 @@
 import { Helper } from "../../../../../common/scripts/Helper";
-import { SpeedDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
+import { SpeedDataModel } from "../../../../../common/scripts/models/activity-data/speed-data.model";
 
 export class SpeedDataView extends AbstractDataView {
 

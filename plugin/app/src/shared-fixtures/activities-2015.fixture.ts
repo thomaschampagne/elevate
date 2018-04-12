@@ -1,4 +1,5 @@
-import { SyncedActivityModel } from "../../../common/scripts/models/Sync";
+import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
+
 
 /**
  * 2015-01-05 => 2015-11-15 fake data

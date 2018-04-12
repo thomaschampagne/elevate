@@ -4,7 +4,6 @@ import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { SyncedActivityModel } from "../../../../../common/scripts/models/Sync";
 import * as moment from "moment";
 import { ProgressType } from "../shared/models/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
@@ -13,6 +12,8 @@ import { ProgressionAtDayModel } from "../shared/models/progression-at-date.mode
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
+import { SyncedActivityModel } from "../../../../../common/scripts/models/sync/synced-activity.model";
+import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressTableComponent", () => {
 
@@ -26,6 +27,7 @@ describe("YearProgressTableComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				YearProgressModule
 			],
 			providers: [YearProgressService]
 		}).compileComponents();

@@ -5,8 +5,7 @@
 		(HRSS)</i></strong> method. They were previously processed using the <strong><i>Training Impulse
 		(TRIMP)</i></strong> method only.<br/><br/>
 
-		The <i>HRSS</i> method has been added over <i>TRIMP</i> because:
-
+		The <i>HRSS</i> method is recommended over <i>TRIMP</i> because:
 		<ul>
 			<li>
 				<i>HRSS</i> scores are scaled to be use with <i>Training Zones</i>. <i>TRIMP</i> had a scale missmatch
@@ -22,31 +21,42 @@
 			</li>
 		</ul>
 
-		<div>
-			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-			You should <strong>setup your own <i>Lactate Threshold Heart Rate (LTHR)</i></strong> in <a
-			routerLink="/athleteSettings">athlete settings</a>
-			for best results. (<i>LTHR</i> is basically the latest best average heart rate you can maintain for up to an
-			hour.)
-		</div>
-		<div>
-			However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation
-			method in the feature settings by clicking the
-			<mat-icon color="primary">settings</mat-icon>
-			icon.
-		</div>
-		<div>
-			And a new fitness trend guide is accessible from
-			<mat-icon color="primary">help_outline</mat-icon>
-			icon. Reading this guide is also strongly recommended.
-		</div>
+		With this change your <i>HRSS</i> scores will be ~40-30% lower than <i>TRIMP</i> scores. Fitness and fatigue
+		values will also drop in the same time. <strong>It's an expected and normal behaviour</strong>. Basically
+		just think that <i>TRIMP</i> scores
+		are on "another scale" and <i>HRSS</i> scores are on the scale to be compared with training zones and others
+		<i>PSS</i> and <i>SSS</i> scores.
+		And like <i>TRIMP</i>, <i>HRSS</i> also depends on exercise duration and intensity and provides a good
+		indicator to compare commitment between activities.
 	</div>
 	<div>
-		<mat-checkbox [(ngModel)]="hideMessage" (change)="onShowMessageChange()">
-			Don't show this message again
-		</mat-checkbox>
+		<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+		You should <strong>setup your own <i>Lactate Threshold Heart Rate (LTHR)</i></strong> in <a
+		routerLink="/athleteSettings">athlete settings</a>
+		for best results. (<i>LTHR</i> is basically the latest best average heart rate you can maintain for up to an
+		hour.)
+	</div>
+	<div>
+		However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation method in the
+		feature settings by clicking the
+		<mat-icon color="primary">settings</mat-icon>
+		icon.
+	</div>
+	<div>
+		And a new fitness trend guide is accessible from
+		<mat-icon color="primary">help_outline</mat-icon>
+		icon. Reading this guide is also strongly recommended.
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
-	<button mat-button mat-dialog-close color="primary">Got it</button>
+	<div fxLayout="column" fxLayoutAlign="start start">
+		<div fxFlex>
+			<mat-checkbox [(ngModel)]="hideMessage">
+				Don't show this message again
+			</mat-checkbox>
+		</div>
+		<div fxFlex>
+			<button mat-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
+		</div>
+	</div>
 </mat-dialog-actions>

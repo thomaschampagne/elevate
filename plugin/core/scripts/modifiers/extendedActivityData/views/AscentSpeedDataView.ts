@@ -1,5 +1,5 @@
-import { ElevationDataModel } from "../../../../../common/scripts/models/ActivityData";
 import { AbstractDataView } from "./AbstractDataView";
+import { ElevationDataModel } from "../../../../../common/scripts/models/activity-data/elevation-data.model";
 
 export class AscentSpeedDataView extends AbstractDataView {
 
