@@ -153,7 +153,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(0, 2, fthr, "Functional Threshold Heart Rate", fthrUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, fthr, "Best 20min Heart Rate", fthrUnit, "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
 
 		// ...

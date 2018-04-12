@@ -23,7 +23,7 @@ export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.1.1",
 		date: "2018-04-09",
-		message: "Big 6.1.* update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTHR and Best 20min Power.",
+		message: "Big 6.1.* update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, Best 20min Heart Rate and Best 20min Power.",
 		hotFixes: [],
 		features: [],
 		isPatch: true,
@@ -38,7 +38,7 @@ export let releaseNotes: IReleaseNote[] = [
 	{
 		version: "6.1.0",
 		date: "2018-04-02",
-		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, FTP and FTHR.",
+		message: "Big update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, Best 20min Power and Best 20min Heart Rate.",
 		hotFixes: [],
 		features: [
 			"Fitness Trend: increased fitness trend accuracy using a heart rate monitor. Heart rate based activities have their stress scores " +
@@ -47,7 +47,7 @@ export let releaseNotes: IReleaseNote[] = [
 
 			"Year progression: new delta comparison for each year with the current year.",
 			"Data-fields: added HRSS (Heart Rate Stress Score) and HRSS/Hour to activity stats.",
-			"Data-fields: added FTP (Functional Threshold Power) and FTHR (Functional Threshold Heart Rate) to activity stats.",
+			"Data-fields: added 'Best 20min Power' and 'Best 20min Heart Rate' to activity stats.",
 			"Added an \"Advanced Menu\" to manage plugin caches and reset settings."
 		],
 		isPatch: false,
