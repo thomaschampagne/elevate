@@ -1,5 +1,5 @@
-<h2 mat-dialog-title>Progressions overview - {{data.momentWatched.format("MMMM Do")}}</h2>
-<span mat-subheading-1>For {{data.selectedActivityTypes.join("s, ")}}</span>
+<h2 mat-dialog-title>Progressions overview on {{data.momentWatched.format("MMMM Do")}}</h2>
+<h4 class="mat-body-1">Activity types: <i>{{data.selectedActivityTypes.join(", ")}}</i></h4>
 <mat-dialog-content class="mat-body-1">
 	<div fxLayout="row" fxLayoutAlign="space-between center">
 		<ng-container *ngFor="let progressType of data.progressTypes; let index = index;">
