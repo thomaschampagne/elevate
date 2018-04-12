@@ -12,12 +12,13 @@
 	<div fxFlex="94">
 
 		<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewed-day-tooltip"
-			 [ngClass]='{"active-viewed-day": viewedDay.hasActivities()}'
+			 [ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'
 			 (document:mousemove)="onTooltipMouseMove($event)">
 
 			<!--Tooltip shown on mouse move over graph-->
 			<div #viewedDayTooltip>
-				<table cellspacing="0" cellpadding="0">
+
+				<table *ngIf="viewedDay" cellspacing="0" cellpadding="0">
 
 					<!--Date-->
 					<tr class="date">
