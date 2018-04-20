@@ -175,7 +175,7 @@ export class FitnessService {
 					const dailyActivity: DayStressModel[] = [];
 					const currentDay = moment(startDay).clone();
 
-					while (currentDay.isSameOrBefore(today)) {
+					while (currentDay.isSameOrBefore(today, "day")) {
 
 						// Compute athlete stress on that current day.
 						const dayStress: DayStressModel = this.dayStressOnDate(currentDay, fitnessPreparedActivities);
