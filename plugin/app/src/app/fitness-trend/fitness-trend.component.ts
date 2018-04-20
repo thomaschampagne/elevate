@@ -189,7 +189,7 @@ export class FitnessTrendComponent implements OnInit {
 			});
 			this.lastPeriodViewed = this.periodViewed;
 
-			// Listen for syncFinished update then reload graph if neccesary.
+			// Listen for syncFinished update then reload graph if necessary.
 			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 				if (syncResult.globalHistoryChanges.added.length > 0
 					|| syncResult.globalHistoryChanges.edited.length > 0
