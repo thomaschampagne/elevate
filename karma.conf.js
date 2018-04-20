@@ -77,7 +77,7 @@ module.exports = function (config) {
 					"d3": "npm@plugin:d3/d3.js",
 					"qrcode": "npm@plugin:qrcode/build/qrcode.min.js",
 					"file-saver": "npm@plugin:file-saver/FileSaver.min.js"
-				},
+				}
 			}
 		},
 		preprocessors: {

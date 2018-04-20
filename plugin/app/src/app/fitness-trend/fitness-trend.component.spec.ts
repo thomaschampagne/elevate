@@ -14,6 +14,7 @@ import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enu
 import { Gender } from "../shared/enums/gender.enum";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { UserLactateThresholdModel } from "../../../../common/scripts/models/user-settings/user-lactate-threshold.model";
+import * as _ from "lodash";
 
 describe("FitnessTrendComponent", () => {
 
@@ -63,7 +64,7 @@ describe("FitnessTrendComponent", () => {
 		// Mocking chrome storage
 		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
+				callback({computedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
 		});
 
@@ -75,6 +76,8 @@ describe("FitnessTrendComponent", () => {
 				callback();
 			}
 		});
+
+		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
 			gender,
