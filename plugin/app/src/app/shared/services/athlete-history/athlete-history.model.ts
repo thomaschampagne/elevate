@@ -1,5 +1,5 @@
-import { AthleteProfileModel } from "../../../../../../common/scripts/models/athlete-profile.model";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
+import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 export class AthleteHistoryModel {
 	public syncWithAthleteProfile: AthleteProfileModel;

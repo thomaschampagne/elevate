@@ -1,11 +1,11 @@
-import { AthleteUpdate } from "../../core/scripts/Follow";
-import { IAthleteUpdate } from "../../core/scripts/interfaces/IAthleteUpdate";
+import { AthleteUpdateModel } from "../../scripts/models/athlete-update.model";
+import { AthleteUpdate } from "../../scripts/AthleteUpdate";
 
 describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (free)", (done: Function) => {
 
-        const doe: IAthleteUpdate = AthleteUpdate.create(
+		const doe: AthleteUpdateModel = AthleteUpdate.create(
             123,
 			"John Doe",
 			"5.0.0",
@@ -29,7 +29,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (premium)", (done: Function) => {
 
-        const doe: IAthleteUpdate = AthleteUpdate.create(
+		const doe: AthleteUpdateModel = AthleteUpdate.create(
             777,
 			"My Self",
 			"5.0.0",
@@ -52,7 +52,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should return compliant AthleteUpdate (pro)", (done: Function) => {
 
-        const froom: IAthleteUpdate = AthleteUpdate.create(
+		const froom: AthleteUpdateModel = AthleteUpdate.create(
             999,
 			"Chris Froome",
 			"5.1.0",
@@ -70,7 +70,7 @@ describe("Generate Athlete Update", () => {
         expect(froom.locale).toEqual("United KingHome");
 
         // Another pro
-        const cavendish: IAthleteUpdate = AthleteUpdate.create(
+		const cavendish: AthleteUpdateModel = AthleteUpdate.create(
             888,
 			"Cavendish",
 			"5.1.0",
@@ -86,7 +86,7 @@ describe("Generate Athlete Update", () => {
 
 	it("should pass monkey tests", (done: Function) => {
 
-        const monkey_01: IAthleteUpdate = AthleteUpdate.create(
+		const monkey_01: AthleteUpdateModel = AthleteUpdate.create(
             888,
 			"",
 			"5.1.0",
@@ -98,7 +98,7 @@ describe("Generate Athlete Update", () => {
 
         //...
 
-        const monkey_02: IAthleteUpdate = AthleteUpdate.create(
+		const monkey_02: AthleteUpdateModel = AthleteUpdate.create(
             888,
 			"Monkey",
 			"",
@@ -108,7 +108,7 @@ describe("Generate Athlete Update", () => {
         );
         expect(monkey_02).toBeNull();
         //...
-        const monkey_03: IAthleteUpdate = AthleteUpdate.create(
+		const monkey_03: AthleteUpdateModel = AthleteUpdate.create(
             888,
             null,
             null,

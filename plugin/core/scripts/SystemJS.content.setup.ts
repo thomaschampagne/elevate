@@ -4,7 +4,7 @@ SystemJS.config({
 		"npm:": "core/node_modules/",
 	},
 	packages: {
-		"common/": {
+		"shared/": {
 			format: "cjs",
 		},
 		"core": {

@@ -1,6 +1,6 @@
-import { Helper } from "../../../../../common/scripts/Helper";
+import { Helper } from "../../../Helper";
 import { AbstractGradeDataView } from "./AbstractGradeDataView";
-import { GradeDataModel } from "../../../../../common/scripts/models/activity-data/grade-data.model";
+import { GradeDataModel } from "../../../../../shared/models/activity-data/grade-data.model";
 
 export class RunningGradeDataView extends AbstractGradeDataView {
 

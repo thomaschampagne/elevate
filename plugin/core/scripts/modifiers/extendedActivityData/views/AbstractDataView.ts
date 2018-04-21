@@ -1,10 +1,10 @@
 import * as Chart from "chart.js";
 import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
-import { Helper } from "../../../../../common/scripts/Helper";
-import { IAppResources } from "../../../interfaces/IAppResources";
-import { SpeedUnitDataModel } from "../../../../../common/scripts/models/activity-data/speed-unit-data.model";
-import { ZoneModel } from "../../../../../common/scripts/models/activity-data/zone.model";
+import { Helper } from "../../../Helper";
+import { AppResourcesModel } from "../../../models/app-resources.model";
+import { SpeedUnitDataModel } from "../../../../../shared/models/activity-data/speed-unit-data.model";
+import { ZoneModel } from "../../../../../shared/models/activity-data/zone.model";
 
 export abstract class AbstractDataView {
 
@@ -20,7 +20,7 @@ export abstract class AbstractDataView {
 	protected graphTitle: string;
 	protected mainColor: number[];
 	protected table: JQuery;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected isAuthorOfViewedActivity: boolean;
 	protected isSegmentEffortView: boolean;
 	protected activityType: string;
@@ -63,7 +63,7 @@ export abstract class AbstractDataView {
 		this.activityType = type;
 	}
 
-	public setAppResources(appResources: IAppResources): void {
+	public setAppResources(appResources: AppResourcesModel): void {
 		this.appResources = appResources;
 	}
 

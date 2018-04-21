@@ -26,9 +26,9 @@
 		}
 	],
 	"icons": {
-		"16": "common/icons/16.png",
-		"48": "common/icons/48.png",
-		"128": "common/icons/128.png"
+		"16": "core/icons/16.png",
+		"48": "core/icons/48.png",
+		"128": "core/icons/128.png"
 	},
 	"options_page": "app/index.html",
 	"content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
@@ -40,7 +40,7 @@
 	],
 	"web_accessible_resources": [
 		"core/node_modules/*",
-		"common/*",
+		"shared/*",
 		"core/modules/*",
 		"core/system.core.config.js",
 		"core/system.core.start.js",

@@ -1,12 +1,12 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
-import { Helper } from "../../../common/scripts/Helper";
-import { StorageManager } from "../../../common/scripts/modules/StorageManager";
-import { IAppResources } from "../interfaces/IAppResources";
+import { Helper } from "../Helper";
+import { StorageManager } from "../StorageManager";
+import { AppResourcesModel } from "../models/app-resources.model";
 
 export class AthleteStatsModifier implements IModifier {
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected cacheKey_: string;
 	protected distanceUnit: string;
 	protected distanceInKilometers: boolean;
@@ -18,7 +18,7 @@ export class AthleteStatsModifier implements IModifier {
 	public static metersTo1000thOfMileFactor = 0.621371192;
 	public static metersToFeetsFactor = 3.2808399;
 
-	constructor(appResources: IAppResources, yearTargets: any) {
+	constructor(appResources: AppResourcesModel, yearTargets: any) {
 
 		this.appResources = appResources;
 		this.cacheKey_ = "activitiesHistoryData";

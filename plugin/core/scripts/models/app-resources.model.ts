@@ -1,4 +1,4 @@
-export interface IAppResources {
+export class AppResourcesModel {
 	settingsLink: string;
 	logoStravistix: string;
 	menuIconBlack: string;

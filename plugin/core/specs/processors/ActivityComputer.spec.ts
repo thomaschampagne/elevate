@@ -1,8 +1,8 @@
 import { ActivityComputer } from "../../../core/scripts/processors/ActivityComputer";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
-import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
-import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 
 describe("ActivityComputer", () => {
 

@@ -1,12 +1,10 @@
 import * as _ from "lodash";
-import { Helper } from "../../common/scripts/Helper";
-import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
-import { StorageManager } from "../../common/scripts/modules/StorageManager";
-import { IReleaseNote, releaseNotes } from "../../common/scripts/ReleaseNotes";
+import { Helper } from "./Helper";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { StorageManager } from "./StorageManager";
 import { CoreEnv } from "../config/core-env";
-import { AthleteUpdate } from "./Follow";
-import { IAppResources } from "./interfaces/IAppResources";
-import { IAthleteUpdate } from "./interfaces/IAthleteUpdate";
+import { AppResourcesModel } from "./models/app-resources.model";
+import { AthleteUpdateModel } from "./models/athlete-update.model";
 import { ActivitiesSyncModifier } from "./modifiers/ActivitiesSyncModifier";
 import { ActivityBestSplitsModifier } from "./modifiers/ActivityBestSplitsModifier";
 import { ActivityBikeOdoModifier } from "./modifiers/ActivityBikeOdoModifier";
@@ -41,9 +39,12 @@ import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
 import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "../../common/scripts/models/sync/sync-result.model";
-import { Messages } from "../../common/scripts/Messages";
-import { ActivityBasicInfoModel } from "../../common/scripts/models/activity-data/activity-basic-info.model";
+import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
+import { MessagesModel } from "../../shared/models/messages.model";
+import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
+import { AthleteUpdate } from "./AthleteUpdate";
+import "./Follow";
+import { IReleaseNote, releaseNotes } from "../../shared/ReleaseNotes";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -59,12 +60,12 @@ export class StravistiX {
 	protected activityProcessor: ActivityProcessor;
 	protected isActivityAuthor: boolean;
 	protected extensionId: string;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected _userSettings: UserSettingsModel;
 	protected vacuumProcessor: VacuumProcessor;
 	protected activitiesSynchronizer: ActivitiesSynchronizer;
 
-	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
 
 		this._userSettings = userSettings;
 		this.appResources = appResources;
@@ -1115,7 +1116,7 @@ export class StravistiX {
 
 		function notifyBackgroundSyncDone(syncResult: SyncResultModel) {
 			chrome.runtime.sendMessage(this.extensionId, {
-				method: Messages.ON_EXTERNAL_SYNC_DONE,
+				method: MessagesModel.ON_EXTERNAL_SYNC_DONE,
 				params: {
 					syncResult: syncResult,
 				},
@@ -1209,7 +1210,7 @@ export class StravistiX {
 	}
 
 	protected commitAthleteUpdate(): Q.IPromise<any> {
-		const athleteUpdate: IAthleteUpdate = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
+		const athleteUpdate: AthleteUpdateModel = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
 		return AthleteUpdate.commit(athleteUpdate);
 	}
 }

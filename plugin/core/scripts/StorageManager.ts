@@ -1,4 +1,4 @@
-import { userSettings } from "../UserSettings";
+import { userSettings } from "../../shared/UserSettings";
 
 export interface IStorageUsage {
 	bytesInUse: number;

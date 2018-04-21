@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ExternalUpdatesService } from "./external-updates.service";
-import { Messages } from "../../../../../../common/scripts/Messages";
+import { MessagesModel } from "../../../../../../shared/models/messages.model";
 
 describe("ExternalUpdatesService", () => {
 
@@ -37,7 +37,7 @@ describe("ExternalUpdatesService", () => {
 		const expectedCallCount = 1;
 		const spy = spyOn(service.onSyncDone, "next");
 		const message: any = {
-			message: Messages.ON_EXTERNAL_SYNC_DONE,
+			message: MessagesModel.ON_EXTERNAL_SYNC_DONE,
 			results: {}
 		};
 		const senderId: string = pluginId;
@@ -56,7 +56,7 @@ describe("ExternalUpdatesService", () => {
 		// Given
 		const spy = spyOn(service.onSyncDone, "next");
 		const message: any = {
-			message: Messages.ON_EXTERNAL_SYNC_DONE,
+			message: MessagesModel.ON_EXTERNAL_SYNC_DONE,
 			results: {}
 		};
 		const senderId = "fakeId";

@@ -1,18 +1,18 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
-import { IAppResources } from "../interfaces/IAppResources";
+import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { VacuumProcessor } from "./VacuumProcessor";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
-import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
 
 export class ActivityProcessor {
 
 	public static cachePrefix = "stravistix_activity_";
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected vacuumProcessor: VacuumProcessor;
 	protected zones: any;
 	protected activityType: string;
@@ -22,7 +22,7 @@ export class ActivityProcessor {
 	protected computeAnalysisThread: Worker;
 	protected userSettings: UserSettingsModel;
 
-	constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: UserSettingsModel, isActivityAuthor: boolean) {
+	constructor(appResources: AppResourcesModel, vacuumProcessor: VacuumProcessor, userSettings: UserSettingsModel, isActivityAuthor: boolean) {
 		this.appResources = appResources;
 		this.vacuumProcessor = vacuumProcessor;
 		this.userSettings = userSettings;

@@ -1,6 +1,6 @@
 import { powerTimeData } from "./power_data_1480020375";
 import * as _ from "lodash";
-import { SplitCalculator } from "../../../common/scripts/SplitCalculator";
+import { SplitCalculator } from "../../scripts/processors/SplitCalculator";
 
 describe("SplitCalculator", () => {
 

@@ -1,16 +1,16 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { IAppResources } from "../interfaces/IAppResources";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../models/app-resources.model";
 
 export class GoogleMapsModifier implements IModifier {
 
 	protected activityId: number;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected pathArray: number[][];
 	protected map: google.maps.Map;
 
-	constructor(activityId: number, appResources: IAppResources, userSettings: UserSettingsModel) {
+	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
 		this.activityId = activityId;
 		this.appResources = appResources;
 		this.userSettings = userSettings;
