@@ -1,14 +1,4 @@
-import {
-	Component,
-	ElementRef,
-	HostListener,
-	Input,
-	OnChanges,
-	OnDestroy,
-	OnInit,
-	SimpleChanges,
-	ViewChild
-} from "@angular/core";
+import { Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";

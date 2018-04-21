@@ -7,8 +7,8 @@ import { GenderModel } from "./gender.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { FitnessService } from "../fitness-trend/shared/services/fitness.service";
 import { Gender } from "../shared/enums/gender.enum";
-import { UserLactateThresholdModel } from "../../../../common/scripts/models/user-settings/user-lactate-threshold.model";
-import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
+import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 
 @Component({
 	selector: "app-athlete-settings",

@@ -1,13 +1,13 @@
 import * as _ from "lodash";
-import { IAppResources } from "../interfaces/IAppResources";
+import { AppResourcesModel } from "../models/app-resources.model";
 import { ISegmentInfo } from "../processors/SegmentProcessor";
 
 export class NearbySegmentsModifier implements IModifier {
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected segments: ISegmentInfo[];
 
-	constructor(jsonSegments: ISegmentInfo[], appResources: IAppResources) {
+	constructor(jsonSegments: ISegmentInfo[], appResources: AppResourcesModel) {
 		this.segments = jsonSegments;
 		this.appResources = appResources;
 	}

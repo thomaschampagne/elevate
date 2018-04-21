@@ -1,9 +1,12 @@
 {
 	"extends": "./tsconfig.json",
 	"include": [
-		"specs/**/*.ts"
+		"plugin/core/specs/**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
 	],
 	"compilerOptions": {
-		"outDir": "./"
+		"outDir": "./plugin/"
 	}
 }

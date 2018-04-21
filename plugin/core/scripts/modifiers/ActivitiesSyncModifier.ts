@@ -1,13 +1,13 @@
 import * as _ from "lodash";
-import { Helper } from "../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { IStorageUsage, StorageManager } from "../../../common/scripts/modules/StorageManager";
+import { Helper } from "../Helper";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { IStorageUsage, StorageManager } from "../StorageManager";
 import { CoreEnv } from "../../config/core-env";
-import { IAppResources } from "../interfaces/IAppResources";
+import { AppResourcesModel } from "../models/app-resources.model";
 import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
-import { HerokuEndpoints } from "../../../common/scripts/modules/HerokuEndpoint";
-import { SyncResultModel } from "../../../common/scripts/models/sync/sync-result.model";
-import { SyncNotifyModel } from "../../../common/scripts/models/sync/sync-notify.model";
+import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
+import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
 
 export class ActivitiesSyncModifier implements IModifier {
 
@@ -16,11 +16,11 @@ export class ActivitiesSyncModifier implements IModifier {
 	protected sourceTabId: number;
 	protected forceSync: boolean;
 	protected userSettings: UserSettingsModel;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 
 	public closeWindowIntervalId = -1;
 
-	constructor(appResources: IAppResources, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
 		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
 		this.userSettings = userSettings;
 		this.appResources = appResources;

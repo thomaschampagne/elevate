@@ -4,7 +4,7 @@ import { GlobalSettingsComponent } from "./global-settings.component";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
-import { userSettings } from "../../../../common/scripts/UserSettings";
+import { userSettings } from "../../../../shared/UserSettings";
 import { CoreModule } from "../core/core.module";
 
 describe("GlobalSettingsComponent", () => {

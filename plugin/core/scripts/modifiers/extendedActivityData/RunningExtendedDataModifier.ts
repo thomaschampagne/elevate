@@ -1,6 +1,6 @@
-import { Helper } from "../../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
-import { IAppResources } from "../../interfaces/IAppResources";
+import { Helper } from "../../Helper";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";
 import { ElevationDataView } from "./views/ElevationDataView";
@@ -11,7 +11,7 @@ import { RunningPowerDataView } from "./views/RunningPowerDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
 		super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
 	}
