@@ -631,7 +631,7 @@ export class ActivityBestSplitsModifier implements IModifier {
 			removeSplitSelection();
 		});
 
-		$(document).on("click", "[data-activity-points]", {}, (eventObject: JQueryEventObject) => {
+		$(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
 
 			if (map) {
 
@@ -782,7 +782,7 @@ export class ActivityBestSplitsModifier implements IModifier {
 			});
 		};
 
-		$(document).on("click", ".best-split-remove", (event: JQueryEventObject) => {
+		$(document).on("click", ".best-split-remove", (event: any) => {
 
 			event.preventDefault();
 
