@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { ActivityStreamsModel } from "./models/activity-data/activity-streams.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
 
 export interface ICourseBounds {
     start: number;

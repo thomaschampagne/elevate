@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 import { ActivitiesSynchronizer } from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
-import { IAppResources } from "../../../core/scripts/interfaces/IAppResources";
+import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../../common/scripts/models/sync/strava-activity.model";
+import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
 import { HistoryChangesModel } from "../../scripts/synchronizer/history-changes.model";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 
 describe("ActivitiesSynchronizer", () => {
 
@@ -86,7 +86,7 @@ describe("ActivitiesSynchronizer", () => {
 	it("should append history of pages where activities added, modified and deleted ", (done: Function) => {
 
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/userSettings/2470979"]);
-		const appResourcesMock: IAppResources = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/appResources/appResources"]);
+		const appResourcesMock: AppResourcesModel = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/appResources/appResources"]);
 		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
 		// Append

@@ -1,4 +1,4 @@
-export class Messages {
+export class MessagesModel {
 	public static ON_GET_FROM_STORAGE = "onGetFromStorage";
 	public static ON_SET_FROM_STORAGE = "onSetToStorage";
 	public static ON_REMOVE_FROM_STORAGE = "onRemoveFromStorage";

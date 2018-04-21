@@ -31,7 +31,7 @@ module.exports = function (config) {
 			"plugin/core/node_modules/d3/d3.js",
 			"plugin/core/node_modules/file-saver/FileSaver.min.js",
 			"plugin/core/node_modules/qrcode/build/qrcode.min.js",
-			"plugin/common/**/*.js",
+			"plugin/shared/**/*.js",
 			"plugin/core/config/*.js",
 			"plugin/core/scripts/**/*.js",
 
@@ -41,7 +41,7 @@ module.exports = function (config) {
 
 		],
 		exclude: [
-			"plugin/common/scripts/Background.js",
+			"plugin/core/scripts/Background.js",
 			"plugin/core/scripts/SystemJS.*.js",
 			"plugin/core/scripts/InstallUpdateHandler.js",
 			"plugin/core/scripts/models/*.js",
@@ -54,7 +54,7 @@ module.exports = function (config) {
 			], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
 			config: { // SystemJS configuration
 				packages: {
-					"plugin/common/": {
+					"plugin/shared/": {
 						format: "cjs"
 					},
 					"plugin/core/": {

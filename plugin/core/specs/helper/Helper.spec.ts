@@ -1,4 +1,4 @@
-import { Helper } from "../scripts/Helper";
+import { Helper } from "../../scripts/Helper";
 
 describe("Helper", () => {
 

@@ -1,7 +1,7 @@
-import { IStorageUsage, StorageManager } from "./modules/StorageManager";
+import { IStorageUsage, StorageManager } from "./StorageManager";
 import * as _ from "lodash";
-import { SyncResultModel } from "./models/sync/sync-result.model";
-import { Messages } from "./Messages";
+import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
+import { MessagesModel } from "../../shared/models/messages.model";
 
 export class Background {
 
@@ -27,7 +27,7 @@ export class Background {
 				_.forEach(tabs, (tab: chrome.tabs.Tab) => {
 					if (!tab.url) {
 						const message = {
-							message: Messages.ON_EXTERNAL_SYNC_DONE,
+							message: MessagesModel.ON_EXTERNAL_SYNC_DONE,
 							results: syncResult
 						};
 						chrome.tabs.sendMessage(tab.id, message);
@@ -43,15 +43,15 @@ export class Background {
 
 			switch (request.method) {
 
-				case Messages.ON_EXTERNAL_SYNC_DONE:
+				case MessagesModel.ON_EXTERNAL_SYNC_DONE:
 					this.forwardOnExternalSyncFinished(request.params.syncResult);
 					break;
 
-				case Messages.ON_RELOAD_BROWSER_TAB:
+				case MessagesModel.ON_RELOAD_BROWSER_TAB:
 					this.reloadBrowserTab(request.params.sourceTabId);
 					break;
 
-				case Messages.ON_GET_FROM_STORAGE:
+				case MessagesModel.ON_GET_FROM_STORAGE:
 					this.storageManager.getFromStorage(request.params.storage, request.params.key, function (returnedValue: any) {
 						sendResponse({
 							data: returnedValue,
@@ -59,7 +59,7 @@ export class Background {
 					});
 					break;
 
-				case Messages.ON_SET_FROM_STORAGE:
+				case MessagesModel.ON_SET_FROM_STORAGE:
 					this.storageManager.setToStorage(request.params.storage, request.params.key, request.params.value, function (returnAllData: any) {
 						sendResponse({
 							data: returnAllData,
@@ -67,7 +67,7 @@ export class Background {
 					});
 					break;
 
-				case Messages.ON_REMOVE_FROM_STORAGE:
+				case MessagesModel.ON_REMOVE_FROM_STORAGE:
 					this.storageManager.removeFromStorage(request.params.storage, request.params.key, function (returnAllData: any) {
 						sendResponse({
 							data: returnAllData,
@@ -75,7 +75,7 @@ export class Background {
 					});
 					break;
 
-				case Messages.ON_STORAGE_USAGE:
+				case MessagesModel.ON_STORAGE_USAGE:
 					this.storageManager.getStorageUsage(request.params.storage, function (response: IStorageUsage) {
 						sendResponse({
 							data: response,

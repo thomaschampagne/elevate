@@ -8,6 +8,6 @@ package/
 chrome-win32/
 
 # Core karma testing
-plugin/common/**/*.js
+plugin/shared/**/*.js
 plugin/core/**/*.js
 specs.log

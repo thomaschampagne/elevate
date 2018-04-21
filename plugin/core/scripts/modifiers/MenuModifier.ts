@@ -1,14 +1,14 @@
 /**
  * Handles main burger menu
  */
-import { IAppResources } from "../interfaces/IAppResources";
+import { AppResourcesModel } from "../models/app-resources.model";
 
 export class MenuModifier implements IModifier {
 
 	private athleteId: number;
-	private appResources: IAppResources;
+	private appResources: AppResourcesModel;
 
-	constructor(athleteId: number, appResources: IAppResources) {
+	constructor(athleteId: number, appResources: AppResourcesModel) {
 		this.athleteId = athleteId;
 		this.appResources = appResources;
 	}

@@ -1,7 +1,7 @@
 import * as Q from "q";
-import { IStorageUsage } from "./modules/StorageManager";
-import { Messages } from "./Messages";
-import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
+import { IStorageUsage } from "./StorageManager";
+import { MessagesModel } from "../../shared/models/messages.model";
+import { SpeedUnitDataModel } from "../../shared/models/activity-data/speed-unit-data.model";
 
 export class Helper {
 
@@ -103,7 +103,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-			method: Messages.ON_SET_FROM_STORAGE,
+			method: MessagesModel.ON_SET_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -133,7 +133,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-			method: Messages.ON_GET_FROM_STORAGE,
+			method: MessagesModel.ON_GET_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -154,7 +154,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-			method: Messages.ON_REMOVE_FROM_STORAGE,
+			method: MessagesModel.ON_REMOVE_FROM_STORAGE,
             params: {
                 storage: storageType,
                 key,
@@ -172,7 +172,7 @@ export class Helper {
     public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
 
         chrome.runtime.sendMessage(extensionId, {
-			method: Messages.ON_RELOAD_BROWSER_TAB,
+			method: MessagesModel.ON_RELOAD_BROWSER_TAB,
             params: {
                 sourceTabId,
             },
@@ -187,7 +187,7 @@ export class Helper {
 
         // Sending message to background page
         chrome.runtime.sendMessage(extensionId, {
-			method: Messages.ON_STORAGE_USAGE,
+			method: MessagesModel.ON_STORAGE_USAGE,
             params: {
                 storage: storageType,
             },

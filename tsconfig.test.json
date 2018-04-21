@@ -1,7 +1,6 @@
 {
 	"extends": "./tsconfig.json",
 	"include": [
-		"plugin/common/specs/*.ts",
 		"plugin/core/specs/**/*.ts"
 	],
 	"exclude": [

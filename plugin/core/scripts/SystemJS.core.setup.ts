@@ -6,7 +6,7 @@ const _coreConfig: ICoreConfig = {
 			"modules:": "core/modules/",
 		},
 		packages: {
-			"common/": {
+			"shared/": {
 				format: "cjs",
 			},
 			"core": {
@@ -111,7 +111,7 @@ class CoreSetup {
 
 			const startCoreData /*: IStartCoreData*/ = eventReceived.detail;
 
-			this.setupSystemJsConfig(startCoreData.constants.EXTENSION_ID);
+			this.setupSystemJsConfig(startCoreData.extensionId);
 
 			const requiredNonEsModulesPromises: Array<Promise<any>> = Array<Promise<any>>();
 
@@ -136,14 +136,6 @@ class CoreSetup {
 
 			}).then(() => {
 
-				return SystemJS.import("common/scripts/Constants.js");
-
-			}, (err) => {
-				console.error(err);
-
-			}).then((module) => {
-
-				module.constants = startCoreData.constants;
 				return SystemJS.import("core/scripts/StravistiX.js");
 
 			}, (err) => {
@@ -151,7 +143,7 @@ class CoreSetup {
 
 			}).then((module) => {
 
-				new module.StravistiX(startCoreData.chromeSettings, startCoreData.appResources);
+				new module.StravistiX(startCoreData.userSettings, startCoreData.appResources);
 
 			}, (err) => {
 				console.error(err);

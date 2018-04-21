@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
-import { SyncResultModel } from "../../../../../../common/scripts/models/sync/sync-result.model";
-import { Messages } from "../../../../../../common/scripts/Messages";
+import { SyncResultModel } from "../../../../../../shared/models/sync/sync-result.model";
+import { MessagesModel } from "../../../../../../shared/models/messages.model";
 
 @Injectable()
 export class ExternalUpdatesService {
@@ -36,7 +36,7 @@ export class ExternalUpdatesService {
 		}
 
 		switch (request.message) {
-			case Messages.ON_EXTERNAL_SYNC_DONE:
+			case MessagesModel.ON_EXTERNAL_SYNC_DONE:
 				this.onSyncDone.next(request.results);
 				break;
 		}

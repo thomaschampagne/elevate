@@ -1,15 +1,13 @@
 import * as _ from "lodash";
-import { constants } from "../../common/scripts/Constants";
-import { ConstantsModel } from "../../common/scripts/models/constants.model";
-import { UserSettingsModel } from "../../common/scripts/models/user-settings/user-settings.model";
-import { userSettings } from "../../common/scripts/UserSettings";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { userSettings } from "../../shared/UserSettings";
 import { Loader } from "../modules/Loader";
-import { IAppResources } from "./interfaces/IAppResources";
+import { AppResourcesModel } from "./models/app-resources.model";
 
 interface IStartCoreData {
-	chromeSettings: any;
-	constants: any;
-	appResources: any;
+	extensionId: string;
+	userSettings: UserSettingsModel;
+	appResources: AppResourcesModel;
 }
 
 export class Content {
@@ -18,10 +16,10 @@ export class Content {
 
 	public static startCoreEvent = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 
-	constructor(userSettings: UserSettingsModel, appResources: IAppResources) {
+	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
 		this.userSettings = userSettings;
 		this.appResources = appResources;
 	}
@@ -74,12 +72,9 @@ export class Content {
 				_.defaults(chromeSettings, userSettings);
 			}
 
-			// Assign these constant value at "content script" runtime
-			this.assignConstantsValues(constants);
-
 			const startCoreData: IStartCoreData = {
-				chromeSettings,
-				constants,
+				extensionId: chrome.runtime.id,
+				userSettings: chromeSettings,
 				appResources: this.appResources,
 			};
 
@@ -99,12 +94,6 @@ export class Content {
 
 	}
 
-	protected assignConstantsValues(constants: ConstantsModel) {
-		constants.VERSION = chrome.runtime.getManifest().version;
-		constants.EXTENSION_ID = chrome.runtime.id;
-		constants.OPTIONS_URL = "chrome-extension://" + constants.EXTENSION_ID + "/app/index.html";
-	}
-
 	protected emitStartCoreEvent(startCoreData: any) {
 		const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
 		startCorePluginEvent.initCustomEvent(Content.startCoreEvent, true, true, startCoreData);
@@ -112,7 +101,7 @@ export class Content {
 	}
 }
 
-export let appResources: IAppResources = {
+export let appResources: AppResourcesModel = {
 	settingsLink: chrome.extension.getURL("/app/index.html"),
 	logoStravistix: chrome.extension.getURL("/core/icons/logo_stravistix_no_circle.svg"),
 	menuIconBlack: chrome.extension.getURL("/core/icons/ic_menu_24px_black.svg"),

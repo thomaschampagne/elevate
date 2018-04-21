@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { IReleaseNote } from "../../../../common/scripts/ReleaseNotes";
+import { IReleaseNote } from "../../../../shared/ReleaseNotes";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
