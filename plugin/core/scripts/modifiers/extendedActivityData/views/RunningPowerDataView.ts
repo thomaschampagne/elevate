@@ -1,6 +1,6 @@
 import { AbstractDataView } from "./AbstractDataView";
 import * as _ from "lodash";
-import { PowerDataModel } from "../../../../../common/scripts/models/activity-data/power-data.model";
+import { PowerDataModel } from "../../../../../shared/models/activity-data/power-data.model";
 
 export class RunningPowerDataView extends AbstractDataView {
 

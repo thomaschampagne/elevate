@@ -4,7 +4,7 @@ import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
@@ -15,7 +15,7 @@ import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../../common/scripts/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -189,7 +189,7 @@ export class FitnessTrendComponent implements OnInit {
 			});
 			this.lastPeriodViewed = this.periodViewed;
 
-			// Listen for syncFinished update then reload graph if neccesary.
+			// Listen for syncFinished update then reload graph if necessary.
 			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 				if (syncResult.globalHistoryChanges.added.length > 0
 					|| syncResult.globalHistoryChanges.edited.length > 0

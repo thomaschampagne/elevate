@@ -4,14 +4,13 @@
 	],
 	"include": [
 		// Common
-		"plugin/common/**/*.ts",
+		"plugin/shared/**/*.ts",
 		// Core
-		"plugin/core/**/*.ts",
-		// AngularJS application
-		"plugin/options/**/*.ts"
+		"plugin/core/**/*.ts"
 	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"plugin/core/specs/**/*.ts"
 	],
 	"compilerOptions": {
 		"outDir": "./dist/",

@@ -2,15 +2,15 @@
  *   RemoteLinksModifier is responsible of ...
  */
 import * as _ from "lodash";
-import { IAppResources } from "../interfaces/IAppResources";
+import { AppResourcesModel } from "../models/app-resources.model";
 
 export class RemoteLinksModifier implements IModifier {
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected authorOfActivity: boolean;
 	protected activityId: number;
 
-	constructor(appResources: IAppResources, authorOfActivity: boolean, activityId: number) {
+	constructor(appResources: AppResourcesModel, authorOfActivity: boolean, activityId: number) {
 		this.appResources = appResources;
 		this.authorOfActivity = authorOfActivity;
 		this.activityId = activityId;

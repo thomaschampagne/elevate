@@ -1,10 +1,10 @@
 SystemJS.config({
 	baseURL: "chrome-extension://" + chrome.runtime.id + "/",
 	paths: {
-		"npm:": "node_modules/",
+		"npm:": "core/node_modules/",
 	},
 	packages: {
-		"common/": {
+		"shared/": {
 			format: "cjs",
 		},
 		"core": {
@@ -17,7 +17,7 @@ SystemJS.config({
 	},
 });
 
-SystemJS.import("common/scripts/Background.js").then(() => {
+SystemJS.import("core/scripts/Background.js").then(() => {
 	console.debug("Background module loaded by SystemJS");
 }, (err) => {
 	console.error(err);

@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 
 import { UserSettingsDao } from "./user-settings.dao";
-import { UserSettingsModel } from "../../../../../../common/scripts/models/user-settings/user-settings.model";
-import { userSettings } from "../../../../../../common/scripts/UserSettings";
+import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
+import { userSettings } from "../../../../../../shared/UserSettings";
 import * as _ from "lodash";
 
 describe("UserSettingsDao", () => {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IReleaseNote, releaseNotes } from "../../../../common/scripts/ReleaseNotes";
+import { IReleaseNote, releaseNotes } from "../../../../shared/ReleaseNotes";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
 
 @Injectable()
