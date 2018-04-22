@@ -10,7 +10,7 @@
 
 	<!--Progress Type Value-->
 	<ng-container matColumnDef="progressTypeValue">
-		<mat-header-cell *matHeaderCellDef>{{selectedProgressType.label}}</mat-header-cell>
+		<mat-header-cell *matHeaderCellDef><strong>{{selectedProgressType.label}}</strong></mat-header-cell>
 		<mat-cell *matCellDef="let progressionAtDay">
 			<span [ngSwitch]="selectedProgressType.type">
 				<span *ngSwitchCase="ProgressType.TIME">

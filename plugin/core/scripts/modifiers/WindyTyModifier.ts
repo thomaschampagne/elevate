@@ -1,18 +1,18 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { IAppResources } from "../interfaces/IAppResources";
-import { Helper } from "../../../common/scripts/Helper";
-import { SpeedUnitDataModel } from "../../../common/scripts/models/activity-data/speed-unit-data.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../models/app-resources.model";
+import { Helper } from "../Helper";
+import { SpeedUnitDataModel } from "../../../shared/models/activity-data/speed-unit-data.model";
 
 export class WindyTyModifier implements IModifier {
 	protected activityId: number;
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected baryCenterPosition: LatLon;
 	protected speedUnitData: SpeedUnitDataModel;
 
-	constructor(activityId: number, appResources: IAppResources, userSettings: UserSettingsModel) {
+	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
 		this.activityId = activityId;
 		this.appResources = appResources;
 		this.userSettings = userSettings;

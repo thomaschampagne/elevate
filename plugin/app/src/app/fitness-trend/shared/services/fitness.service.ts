@@ -10,7 +10,7 @@ import { Gender } from "../../../shared/enums/gender.enum";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 @Injectable()
 export class FitnessService {
@@ -175,7 +175,7 @@ export class FitnessService {
 					const dailyActivity: DayStressModel[] = [];
 					const currentDay = moment(startDay).clone();
 
-					while (currentDay.isSameOrBefore(today)) {
+					while (currentDay.isSameOrBefore(today, "day")) {
 
 						// Compute athlete stress on that current day.
 						const dayStress: DayStressModel = this.dayStressOnDate(currentDay, fitnessPreparedActivities);

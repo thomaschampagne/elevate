@@ -1,25 +1,25 @@
 import * as _ from "lodash";
-import { Helper } from "../../../common/scripts/Helper";
+import { Helper } from "../Helper";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
-import { SplitCalculator } from "../../../common/scripts/SplitCalculator";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { UserLactateThresholdModel } from "../../../common/scripts/models/user-settings/user-lactate-threshold.model";
-import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../common/scripts/models/activity-data/analysis-data.model";
-import { MoveDataModel } from "../../../common/scripts/models/activity-data/move-data.model";
-import { SpeedDataModel } from "../../../common/scripts/models/activity-data/speed-data.model";
-import { PaceDataModel } from "../../../common/scripts/models/activity-data/pace-data.model";
-import { GradeDataModel } from "../../../common/scripts/models/activity-data/grade-data.model";
-import { PowerDataModel } from "../../../common/scripts/models/activity-data/power-data.model";
-import { HeartRateDataModel } from "../../../common/scripts/models/activity-data/heart-rate-data.model";
-import { CadenceDataModel } from "../../../common/scripts/models/activity-data/cadence-data.model";
-import { ElevationDataModel } from "../../../common/scripts/models/activity-data/elevation-data.model";
-import { ZoneModel } from "../../../common/scripts/models/activity-data/zone.model";
-import { UpFlatDownSumTotalModel } from "../../../common/scripts/models/activity-data/up-flat-down-sum-total.model";
-import { UpFlatDownModel } from "../../../common/scripts/models/activity-data/up-flat-down.model";
-import { UpFlatDownSumCounterModel } from "../../../common/scripts/models/activity-data/up-flat-down-sum-counter.model";
-import { AscentSpeedDataModel } from "../../../common/scripts/models/activity-data/ascent-speed-data.model";
+import { SplitCalculator } from "./SplitCalculator";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserLactateThresholdModel } from "../../../shared/models/user-settings/user-lactate-threshold.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { MoveDataModel } from "../../../shared/models/activity-data/move-data.model";
+import { SpeedDataModel } from "../../../shared/models/activity-data/speed-data.model";
+import { PaceDataModel } from "../../../shared/models/activity-data/pace-data.model";
+import { GradeDataModel } from "../../../shared/models/activity-data/grade-data.model";
+import { PowerDataModel } from "../../../shared/models/activity-data/power-data.model";
+import { HeartRateDataModel } from "../../../shared/models/activity-data/heart-rate-data.model";
+import { CadenceDataModel } from "../../../shared/models/activity-data/cadence-data.model";
+import { ElevationDataModel } from "../../../shared/models/activity-data/elevation-data.model";
+import { ZoneModel } from "../../../shared/models/activity-data/zone.model";
+import { UpFlatDownSumTotalModel } from "../../../shared/models/activity-data/up-flat-down-sum-total.model";
+import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-down.model";
+import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
+import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
 
 export class ActivityComputer {
 

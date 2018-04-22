@@ -22,11 +22,11 @@
 				"styles.scss",
 				"../node_modules/katex/dist/katex.css",
 				"../node_modules/github-markdown-css/github-markdown.css",
-				"../modules/metrics-graphics/metricsgraphics.css"
+				"../node_modules/metrics-graphics/dist/metricsgraphics.css"
 			],
 			"scripts": [
 				"../node_modules/d3/build/d3.js",
-				"../modules/metrics-graphics/metricsgraphics.js"
+				"../node_modules/metrics-graphics/dist/metricsgraphics.js"
 			],
 			"environmentSource": "environments/environment.ts",
 			"environments": {

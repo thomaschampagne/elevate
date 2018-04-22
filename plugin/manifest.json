@@ -3,11 +3,11 @@
 	"name": "StravistiX for Strava",
 	"short_name": "StravistiX",
 	"description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
-	"version": "6.1.1",
-	"version_name": "6.1.1 Stable",
+	"version": "6.1.2",
+	"version_name": "6.1.2 Stable",
 	"background": {
 		"scripts": [
-			"node_modules/systemjs/dist/system.js",
+			"core/node_modules/systemjs/dist/system.js",
 			"core/scripts/InstallUpdateHandler.js",
 			"core/scripts/SystemJS.background.setup.js"
 		]
@@ -15,7 +15,7 @@
 	"content_scripts": [
 		{
 			"js": [
-				"node_modules/systemjs/dist/system.js",
+				"core/node_modules/systemjs/dist/system.js",
 				"core/scripts/SystemJS.content.setup.js"
 			],
 			"run_at": "document_end",
@@ -26,9 +26,9 @@
 		}
 	],
 	"icons": {
-		"16": "common/icons/16.png",
-		"48": "common/icons/48.png",
-		"128": "common/icons/128.png"
+		"16": "core/icons/16.png",
+		"48": "core/icons/48.png",
+		"128": "core/icons/128.png"
 	},
 	"options_page": "app/index.html",
 	"content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
@@ -39,8 +39,8 @@
 		"unlimitedStorage"
 	],
 	"web_accessible_resources": [
-		"node_modules/*",
-		"common/*",
+		"core/node_modules/*",
+		"shared/*",
 		"core/modules/*",
 		"core/system.core.config.js",
 		"core/system.core.start.js",
@@ -50,7 +50,6 @@
 		"core/scripts/*",
 		"core/css/*",
 		"core/icons/*",
-		"options/*",
 		"app/*"
 	],
 	"externally_connectable": {

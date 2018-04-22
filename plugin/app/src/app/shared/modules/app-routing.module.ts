@@ -7,7 +7,6 @@ import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.comp
 import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
-import { YearProgressComponent } from "../../year-progress/year-progress.component";
 import { ShareComponent } from "../../share/share.component";
 import { WelcomeComponent } from "../../welcome/welcome.component";
 import { ReportComponent } from "../../report/report.component";
@@ -24,7 +23,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.yearProgressions,
-		component: YearProgressComponent
+		loadChildren: "../../year-progress/year-progress.module#YearProgressModule"
 	},
 	{
 		path: AppRoutesModel.globalSettings,

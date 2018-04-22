@@ -50,11 +50,6 @@ _HRSS_ is not scaled with _TRaining IMPulse (TRIMP)_ described in the previous s
 
 _HRSS_ is close to [_HrTSS&reg;_ from TrainingPeaks&trade;](https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained) and is correlated to _Strava Suffer Score_.
 
-# Functional Threshold Heart Rate (FTHR)
----
-
-Represents your best average heart rate over 20 minutes that can be assimilated to your highest physical intensity you can sustain for approximately one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf). 
-
 # Quartiles and median
 ---
 

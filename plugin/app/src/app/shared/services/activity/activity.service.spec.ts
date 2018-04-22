@@ -3,7 +3,7 @@ import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 describe("ActivityService", () => {
 
