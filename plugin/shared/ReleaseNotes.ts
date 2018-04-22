@@ -20,6 +20,22 @@ export interface IReleaseNote {
 
 export let releaseNotes: IReleaseNote[] = [
 	{
+		version: "6.1.2",
+		date: "2018-04-22",
+		message: "Added year progression global overview (click \"overview\" button in year progression). Release 6.1.* improves \"Fitness Trend\" accuracy with HRM. Adds  " + (new Date()).getFullYear() + " delta comparison in \"Year progressions\". Adds data-fields: HRSS, HRSS/Hour, Best 20min HR & Best 20min Power.",
+		hotFixes: [],
+		features: [
+			"Add year progression global overview including all progress types (distance, time, elevation and count): click \"overview\" button in year progression."
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed fitness trend graph not showing today date for athletes having UTC-3 timezone.",
+			"Fixed case where \"Best 20min power\" and \"Best 20min heart rate\" could not be computed from bkool rides.",
+			"Fixed case where some users could not close the fitness trend start notice.",
+			"Renamed \"FTHR\" stat data-field to \"Best 20min heart rate\"."
+		]
+	},
+	{
 		version: "6.1.1",
 		date: "2018-04-09",
 		message: "Big 6.1.* update! Strongly improved the \"Fitness Trend\" accuracy using a heart rate monitor. Added  " + (new Date()).getFullYear() + " delta comparison for each year of \"Year progressions\" feature. Added new data-fields: HRSS, HRSS/Hour, Best 20min Heart Rate and Best 20min Power.",
