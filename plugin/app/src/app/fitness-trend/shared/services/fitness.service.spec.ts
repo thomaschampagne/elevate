@@ -12,7 +12,7 @@ import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model"
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "../../../../../../common/scripts/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 

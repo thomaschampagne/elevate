@@ -2,15 +2,15 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
-import { AthleteProfileModel } from "../../../common/scripts/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
 import { TEST_SYNCED_ACTIVITIES } from "../shared-fixtures/activities-2015.fixture";
 import { RemoteAthleteMismatchComponent } from "./remote-athlete-mismatch/remote-athlete-mismatch.component";
-import { userSettings } from "../../../common/scripts/UserSettings";
+import { userSettings } from "../../../shared/UserSettings";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 
 describe("AppComponent", () => {
 
-	let pluginId: string = "c061d18abea0";
+	const pluginId = "c061d18abea0";
 	let component: AppComponent = null;
 	let fixture: ComponentFixture<AppComponent> = null;
 

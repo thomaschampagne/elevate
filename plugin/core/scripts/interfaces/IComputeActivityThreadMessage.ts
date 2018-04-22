@@ -1,12 +1,12 @@
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { IAppResources } from "./IAppResources";
-import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../models/app-resources.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
 
-export interface IComputeActivityThreadMessage {
+export interface IComputeActivityThreadMessage { // TODO Export as model
 	activityType: string;
 	isTrainer: boolean;
-	appResources: IAppResources;
+	appResources: AppResourcesModel;
 	userSettings: UserSettingsModel;
 	isActivityAuthor: boolean;
 	athleteWeight: number;

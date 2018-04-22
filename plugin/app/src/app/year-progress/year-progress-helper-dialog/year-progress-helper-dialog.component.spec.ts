@@ -4,6 +4,7 @@ import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog
 import { CoreModule } from "../../core/core.module";
 import { MatDialogRef } from "@angular/material";
 import { SharedModule } from "../../shared/shared.module";
+import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressHelperDialogComponent", () => {
 	let component: YearProgressHelperDialogComponent;
@@ -14,6 +15,7 @@ describe("YearProgressHelperDialogComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				YearProgressModule
 			],
 			declarations: [],
 			providers: [

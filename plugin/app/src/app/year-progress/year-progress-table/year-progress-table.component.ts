@@ -29,7 +29,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public static readonly DELTA_SIGN_NEGATIVE: string = "-";
 	public static readonly DELTA_SIGN_UNSIGNED: string = "";
 
-	public readonly displayedColumns: string[] = [
+	public displayedColumns: string[] = [
 		YearProgressTableComponent.COLUMN_YEAR,
 		YearProgressTableComponent.COLUMN_PROGRESS_TYPE_VALUE,
 		YearProgressTableComponent.COLUMN_DELTA_PREVIOUS_VALUE,
@@ -48,6 +48,9 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
 
 	public initialized = false;
+
+	@Input("hideYearsColumn")
+	public hideYearsColumn: boolean;
 
 	@Input("selectedYears")
 	public selectedYears: number[];
@@ -76,6 +79,12 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 		this.dataSource = new MatTableDataSource<ProgressionAtDayRow>();
 
 		this.update();
+
+		if (this.hideYearsColumn) {
+			this.displayedColumns = _.remove(this.displayedColumns, (column: string) => {
+				return (column !== YearProgressTableComponent.COLUMN_YEAR);
+			});
+		}
 
 		this.initialized = true;
 

@@ -1,17 +1,17 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { Helper } from "../../../common/scripts/Helper";
-import { AthleteProfileModel } from "../../../common/scripts/models/athlete-profile.model";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { StorageManager } from "../../../common/scripts/modules/StorageManager";
-import { IAppResources } from "../interfaces/IAppResources";
+import { Helper } from "../Helper";
+import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { StorageManager } from "../StorageManager";
+import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
-import { SyncResultModel } from "../../../common/scripts/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { HistoryChangesModel } from "./history-changes.model";
-import { SyncedActivityModel } from "../../../common/scripts/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../../common/scripts/models/sync/strava-activity.model";
-import { SyncNotifyModel } from "../../../common/scripts/models/sync/sync-notify.model";
-import { StreamActivityModel } from "../../../common/scripts/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
+import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
+import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
 
 export class ActivitiesSynchronizer {
 
@@ -19,7 +19,7 @@ export class ActivitiesSynchronizer {
 	public static computedActivities = "computedActivities";
 	public static syncWithAthleteProfile = "syncWithAthleteProfile";
 
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected extensionId: string;
 	protected totalRawActivityIds: number[] = [];
@@ -34,7 +34,7 @@ export class ActivitiesSynchronizer {
 		edited: [],
 	};
 
-	constructor(appResources: IAppResources, userSettings: UserSettingsModel) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.extensionId = this.appResources.extensionId;

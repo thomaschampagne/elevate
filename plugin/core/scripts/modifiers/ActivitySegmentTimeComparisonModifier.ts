@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import { Helper } from "../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
-import { IAppResources } from "../interfaces/IAppResources";
+import { Helper } from "../Helper";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../models/app-resources.model";
 
 export interface EffortInfo {
 	// values obtained from the HTTP request
@@ -37,7 +37,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 	protected showDifferenceToPR: boolean;
 	protected showDifferenceToCurrentYearPR: boolean;
 	protected displaySegmentTimeComparisonPosition: boolean;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected isBike: boolean;
 	protected isFemale: boolean;
 	protected firstAppearDone: boolean;
@@ -45,7 +45,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 	protected deltaPRLabel: string;
 	protected deltaKomLabel: string;
 
-	constructor(userSettings: UserSettingsModel, appResources: IAppResources, activityType: string, isMyOwn: boolean) {
+	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel, activityType: string, isMyOwn: boolean) {
 		this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
 		this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
 		this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;

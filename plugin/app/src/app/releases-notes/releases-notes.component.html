@@ -12,6 +12,9 @@
 		   href="https://github.com/thomaschampagne/stravistix/compare/{{releasesNotes[i + 1]?.version}}...{{note.version}}">Version
 			{{note.version}}</a>
 	</mat-card-title>
+	<mat-card-subtitle *ngIf="note.date">
+		Released on {{note.date}}
+	</mat-card-subtitle>
 	<mat-card-content>
 
 		<mat-list *ngIf="(note.hotFixes && note.hotFixes.length)">
@@ -19,7 +22,7 @@
 			<mat-list-item *ngFor="let hotfix of note.hotFixes;">▹&nbsp;&nbsp;&nbsp;{{hotfix}}</mat-list-item>
 		</mat-list>
 
-		<mat-list *ngIf="(note.features && note.features.length && !note.isPatch)">
+		<mat-list *ngIf="(note.features && note.features.length)">
 			<h3 class="mat-subheading-2">Features</h3>
 			<mat-list-item *ngFor="let feature of note.features;">▹&nbsp;&nbsp;&nbsp;{{feature}}</mat-list-item>
 		</mat-list>

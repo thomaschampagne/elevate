@@ -5,8 +5,8 @@
 declare let d3: any; // Injected by strava.com
 
 import * as _ from "lodash";
-import { Helper } from "../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../common/scripts/models/user-settings/user-settings.model";
+import { Helper } from "../Helper";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 
 declare let L: any; // Injected by strava.com
 
@@ -631,7 +631,7 @@ export class ActivityBestSplitsModifier implements IModifier {
 			removeSplitSelection();
 		});
 
-		$(document).on("click", "[data-activity-points]", {}, (eventObject: JQueryEventObject) => {
+		$(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
 
 			if (map) {
 
@@ -782,7 +782,7 @@ export class ActivityBestSplitsModifier implements IModifier {
 			});
 		};
 
-		$(document).on("click", ".best-split-remove", (event: JQueryEventObject) => {
+		$(document).on("click", ".best-split-remove", (event: any) => {
 
 			event.preventDefault();
 

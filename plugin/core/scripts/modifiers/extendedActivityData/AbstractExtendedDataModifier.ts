@@ -1,16 +1,16 @@
 import * as _ from "lodash";
-import { Helper } from "../../../../common/scripts/Helper";
-import { UserSettingsModel } from "../../../../common/scripts/models/user-settings/user-settings.model";
-import { StorageManager } from "../../../../common/scripts/modules/StorageManager";
-import { IAppResources } from "../../interfaces/IAppResources";
+import { Helper } from "../../Helper";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { StorageManager } from "../../StorageManager";
+import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractDataView } from "./views/AbstractDataView";
 import { FeaturedDataView } from "./views/FeaturedDataView";
 import { HeaderView } from "./views/HeaderView";
 import { HeartRateDataView } from "./views/HeartRateDataView";
-import { ActivityBasicInfoModel } from "../../../../common/scripts/models/activity-data/activity-basic-info.model";
-import { SpeedUnitDataModel } from "../../../../common/scripts/models/activity-data/speed-unit-data.model";
-import { AnalysisDataModel } from "../../../../common/scripts/models/activity-data/analysis-data.model";
+import { ActivityBasicInfoModel } from "../../../../shared/models/activity-data/activity-basic-info.model";
+import { SpeedUnitDataModel } from "../../../../shared/models/activity-data/speed-unit-data.model";
+import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
 
 export abstract class AbstractExtendedDataModifier {
 
@@ -20,7 +20,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected activityProcessor: ActivityProcessor;
 	protected activityId: number;
 	protected activityType: string;
-	protected appResources: IAppResources;
+	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected basicInfo: ActivityBasicInfoModel;
 	protected isAuthorOfViewedActivity: boolean;
@@ -32,7 +32,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected content: string;
 	protected dataViews: AbstractDataView[] = [];
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: IAppResources,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
 
 		this.activityProcessor = activityProcessor;
@@ -153,7 +153,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(0, 2, fthr, "Functional Threshold Heart Rate", fthrUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, fthr, "Best 20min Heart Rate", fthrUnit, "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
 
 		// ...

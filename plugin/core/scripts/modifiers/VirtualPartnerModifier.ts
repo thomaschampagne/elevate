@@ -1,9 +1,9 @@
 import { saveAs } from "file-saver";
 import * as _ from "lodash";
-import { CourseMaker, ExportTypes, ICourseBounds } from "../../../common/scripts/CourseMarker";
+import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/CourseMarker";
 import { VacuumProcessor } from "../processors/VacuumProcessor";
-import { ActivityStatsMapModel } from "../../../common/scripts/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../common/scripts/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
 
 export class VirtualPartnerModifier implements IModifier {
 
