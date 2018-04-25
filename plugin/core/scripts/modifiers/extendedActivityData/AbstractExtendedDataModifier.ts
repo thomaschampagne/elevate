@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import * as $ from "jquery";
 import { Helper } from "../../Helper";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "../../StorageManager";

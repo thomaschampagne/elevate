@@ -10,5 +10,7 @@ chrome-win32/
 # Core karma testing
 plugin/shared/**/*.js
 plugin/core/**/*.js
-!plugin/core/karma.conf.js
 specs.log
+
+!plugin/core/karma.conf.js
+!plugin/core/webpack.config.js

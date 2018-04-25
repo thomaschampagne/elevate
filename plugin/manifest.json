@@ -7,16 +7,14 @@
 	"version_name": "6.1.2 Stable",
 	"background": {
 		"scripts": [
-			"core/node_modules/systemjs/dist/system.js",
-			"core/scripts/InstallUpdateHandler.js",
-			"core/scripts/SystemJS.background.setup.js"
+			"core/updateHandler.js",
+			"core/background.js"
 		]
 	},
 	"content_scripts": [
 		{
 			"js": [
-				"core/node_modules/systemjs/dist/system.js",
-				"core/scripts/SystemJS.content.setup.js"
+				"core/contentScripts.js"
 			],
 			"run_at": "document_end",
 			"matches": [
