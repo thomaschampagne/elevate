@@ -2,17 +2,17 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AthleteProfileModel } from "../../shared/models/athlete-profile.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../shared/models/sync/strava-activity.model";
+import { StreamActivityModel } from "../../shared/models/sync/stream-activity.model";
+import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
+import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/MultipleActivityProcessor";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
+import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 

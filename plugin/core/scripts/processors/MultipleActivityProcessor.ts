@@ -1,14 +1,14 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { StreamActivityModel } from "../../shared/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
+import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
+import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
+import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
 
 export class MultipleActivityProcessor {
 

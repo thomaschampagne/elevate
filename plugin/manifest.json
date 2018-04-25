@@ -39,17 +39,7 @@
 		"unlimitedStorage"
 	],
 	"web_accessible_resources": [
-		"core/node_modules/*",
-		"shared/*",
-		"core/modules/*",
-		"core/system.core.config.js",
-		"core/system.core.start.js",
-		"core/config/*",
-		"core/scripts/processors/*",
-		"core/scripts/modifiers/*",
-		"core/scripts/*",
-		"core/css/*",
-		"core/icons/*",
+		"core/*",
 		"app/*"
 	],
 	"externally_connectable": {

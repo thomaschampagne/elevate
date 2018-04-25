@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { EffortInfo, LeaderBoardData } from "./ActivitySegmentTimeComparisonModifier";
 
 export class SegmentRecentEffortsHRATimeModifier implements IModifier {

@@ -3,9 +3,6 @@
 		"plugin/core/core.d.ts"
 	],
 	"include": [
-		// Common
-		"plugin/shared/**/*.ts",
-		// Core
 		"plugin/core/**/*.ts"
 	],
 	"exclude": [
@@ -13,7 +10,7 @@
 		"plugin/core/specs/**/*.ts"
 	],
 	"compilerOptions": {
-		"outDir": "./dist/",
+		"outDir": "./dist/core/",
 		"target": "es5",
 		"module": "commonjs",
 		"lib": [

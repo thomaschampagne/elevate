@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ZonesSettingsComponent } from "./zones-settings.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
-import { userSettings } from "../../../../shared/UserSettings";
+import { userSettings } from "../../../../core/shared/UserSettings";
 import * as _ from "lodash";
 
 describe("ZonesSettingsComponent", () => {

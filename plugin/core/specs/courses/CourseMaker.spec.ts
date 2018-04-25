@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../scripts/processors/CourseMarker";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStreamsModel } from "../../shared/models/activity-data/activity-streams.model";
 
 describe("CourseMaker", () => {
 

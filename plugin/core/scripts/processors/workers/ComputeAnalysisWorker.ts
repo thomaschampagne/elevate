@@ -1,6 +1,6 @@
 import { IComputeActivityThreadMessage } from "../../interfaces/IComputeActivityThreadMessage";
 import { ActivityComputer } from "../ActivityComputer";
-import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
 
 export function ComputeAnalysisWorker() {
 

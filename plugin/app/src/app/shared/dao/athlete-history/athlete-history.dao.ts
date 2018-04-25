@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../../../../core/shared/models/athlete-profile.model";
 import * as _ from "lodash";
 
 @Injectable()
