@@ -4,9 +4,9 @@ import { AthleteHistoryService } from "./athlete-history.service";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
-import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../../../../core/shared/models/athlete-profile.model";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { userSettings } from "../../../../../../core/shared/UserSettings";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../core/shared/models/sync/synced-activity.model";
 
 @Injectable()
 export class ActivityService {

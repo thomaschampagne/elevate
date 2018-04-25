@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { CoreEnv } from "../../config/core-env";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../shared/models/activity-data/activity-streams.model";
 
 export class VacuumProcessor {
 

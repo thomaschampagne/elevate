@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
 
 export interface EffortInfo {
