@@ -72,18 +72,18 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
-		userSettingsMock = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/userSettings/2470979"]);
-		appResourcesMock = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/appResources/appResources"]);
+		userSettingsMock = _.cloneDeep(window.__fixtures__["specs/fixtures/userSettings/2470979"]);
+		appResourcesMock = _.cloneDeep(window.__fixtures__["specs/fixtures/appResources/appResources"]);
 
 		// We have 7 pages
 		rawPagesOfActivities = [
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0120161213"]), // Page 01 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0220161213"]), // Page 02 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0320161213"]), // Page 03 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0420161213"]), // Page 04 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0520161213"]), // Page 05 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0620161213"]), // Page 06 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0720161213"]), // Page 07 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0120161213"]), // Page 01 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0220161213"]), // Page 02 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0320161213"]), // Page 03 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0420161213"]), // Page 04 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0520161213"]), // Page 05 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0620161213"]), // Page 06 - 20 ACT
+			_.cloneDeep(window.__fixtures__["specs/fixtures/sync/rawPage0720161213"]), // Page 07 - 20 ACT
 		];
 		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
@@ -106,7 +106,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		/**
 		 * Stubing activity stream promised, reduce @ 50 samples
 		 */
-		const stream: any = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/activities/723224273/stream"]);
+		const stream: any = _.cloneDeep(window.__fixtures__["specs/fixtures/activities/723224273/stream"]);
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		spyOn(activitiesSynchronizer, "fetchStreamByActivityId").and.callFake((activityId: number) => {

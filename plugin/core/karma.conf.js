@@ -24,50 +24,38 @@ module.exports = function (config) {
 			}
 		},
 		files: [
-			"plugin/core/node_modules/q/q.js",
-			"plugin/core/node_modules/jquery/dist/jquery.js",
-			"plugin/core/node_modules/lodash/lodash.min.js",
-			"plugin/core/node_modules/chart.js/dist/Chart.min.js",
-			"plugin/core/node_modules/d3/d3.js",
-			"plugin/core/node_modules/file-saver/FileSaver.min.js",
-			"plugin/core/node_modules/qrcode/build/qrcode.min.js",
-			"plugin/core/shared/**/*.js",
-			"plugin/core/config/*.js",
-			"plugin/core/scripts/**/*.js",
+			"node_modules/q/q.js",
+			"node_modules/jquery/dist/jquery.js",
+			"node_modules/lodash/lodash.min.js",
+			"node_modules/chart.js/dist/Chart.min.js",
+			"node_modules/d3/d3.js",
+			"node_modules/file-saver/FileSaver.min.js",
+			"node_modules/qrcode/build/qrcode.min.js",
+			"config/*.js",
+			"scripts/**/*.js",
+			"shared/**/*.js",
 
 			// Specs files
-			"plugin/core/specs/**/*.js",
-			"plugin/core/specs/fixtures/**/*.json"
+			"specs/**/*.js",
+			"specs/fixtures/**/*.json"
 
 		],
-		exclude: [
-			"plugin/core/scripts/Background.js",
-			"plugin/core/scripts/SystemJS.*.js",
-			"plugin/core/scripts/InstallUpdateHandler.js",
-			"plugin/core/scripts/models/*.js",
-			"plugin/core/scripts/Content.js",
-			"plugin/core/modules/jquery.appear.js"
-		],
+		exclude: [],
 		systemjs: {
 			serveFiles: [
 				"**/*.map"
 			], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
 			config: { // SystemJS configuration
+				baseURL: "./",
 				packages: {
-					"plugin/shared/": {
-						format: "cjs"
-					},
-					"plugin/core/": {
-						format: "cjs"
-					},
-					"specs/": {
+					"./": {
 						format: "cjs"
 					}
 				},
 				paths: {
 					"traceur": "./node_modules/traceur/dist/commonjs/traceur.js", // karma-systemjs required
 					"systemjs": "./node_modules/systemjs/dist/system.js", // karma-systemjs required
-					"npm@plugin:": "./base/plugin/core/node_modules/"
+					"npm@plugin:": "./base/node_modules/"
 				},
 				map: {
 					"q": "npm@plugin:q/q.js",
@@ -81,11 +69,11 @@ module.exports = function (config) {
 			}
 		},
 		preprocessors: {
-			"plugin/core/specs/fixtures/**/*.json": ["json_fixtures"]
+			"specs/fixtures/**/*.json": ["json_fixtures"]
 		},
 		jsonFixturesPreprocessor: {
 			// strip this from the file path \ fixture name
-			stripPrefix: "specs/",
+			stripPrefix: "/",
 			// strip this to the file path \ fixture name
 			prependPrefix: "",
 			// change the global fixtures variable name
@@ -100,7 +88,7 @@ module.exports = function (config) {
 		colors: true,
 		singleRun: true,
 		browserConsoleLogOptions: {
-			// path: "./specs.log",
+			path: "./plugin/core/specs.log",
 			terminal: false
 		}
 	});

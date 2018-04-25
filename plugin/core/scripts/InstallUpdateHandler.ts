@@ -16,7 +16,7 @@ class InstallUpdateHandler {
 
 	protected static getUserSettings(): Promise<any> {
 		return new Promise<any>((resolve, reject) => {
-			SystemJS.import("shared/UserSettings.js").then((module) => {
+			SystemJS.import("core/shared/UserSettings.js").then((module) => {
 				resolve(module.userSettings);
 			}, (err) => {
 				reject(err);
