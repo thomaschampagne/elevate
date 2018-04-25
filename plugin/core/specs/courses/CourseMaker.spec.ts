@@ -9,7 +9,7 @@ describe("CourseMaker", () => {
 	let activityStream: ActivityStreamsModel;
 
     beforeEach(() => {
-		activityStream = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/activities/829770999/stream"]);
+		activityStream = _.cloneDeep(window.__fixtures__["specs/fixtures/activities/829770999/stream"]);
     });
 
 	it("should export GPX stream with consistency data", (done: Function) => {

@@ -1,16 +1,16 @@
 {
 	"files": [
-		"plugin/core/core.d.ts"
+		"core.d.ts"
 	],
 	"include": [
-		"plugin/core/**/*.ts"
+		"**/*.ts"
 	],
 	"exclude": [
 		"node_modules",
-		"plugin/core/specs/**/*.ts"
+		"specs/**/*.ts"
 	],
 	"compilerOptions": {
-		"outDir": "./dist/core/",
+		"outDir": "../../dist/core/",
 		"target": "es5",
 		"module": "commonjs",
 		"lib": [
