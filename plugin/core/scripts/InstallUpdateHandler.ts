@@ -1,3 +1,7 @@
+import { userSettings } from "../shared/UserSettings";
+import { Helper } from "./Helper";
+import { StorageManager } from "./StorageManager";
+
 class InstallUpdateHandler {
 
 	protected static handleInstall() {
@@ -10,36 +14,6 @@ class InstallUpdateHandler {
 				url: chrome.extension.getURL("/app/index.html"), // TODO Get from config/constants
 			}, (tab: chrome.tabs.Tab) => {
 				console.log("First install. Display settings:", tab);
-			});
-		});
-	}
-
-	protected static getUserSettings(): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			SystemJS.import("core/shared/UserSettings.js").then((module) => {
-				resolve(module.userSettings);
-			}, (err) => {
-				reject(err);
-			});
-		});
-	}
-
-	protected static getHelper(): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			SystemJS.import("core/scripts/Helper.js").then((module) => {
-				resolve(module.Helper);
-			}, (err) => {
-				reject(err);
-			});
-		});
-	}
-
-	protected static getStorageManager(): Promise<any> {
-		return new Promise<any>((resolve, reject) => {
-			SystemJS.import("core/scripts/StorageManager.js").then((module) => {
-				resolve(module.StorageManager);
-			}, (err) => {
-				reject(err);
 			});
 		});
 	}
@@ -60,42 +34,26 @@ class InstallUpdateHandler {
 		const thisVersion: string = chrome.runtime.getManifest().version;
 
 		console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+		console.debug("UserSettings on update", userSettings);
 
-		Promise.all([
-			this.getUserSettings(),
-			this.getHelper(),
-			this.getStorageManager(),
-		]).then((modules) => {
+		// Clear local history if coming from version under 5.1.1
+		if (Helper.versionCompare("5.1.1", details.previousVersion) === 1) { // TODO Use semver package instead
+			this.clearSyncCache();
+		}
 
-			const userSettings = modules[0];
-			const Helper = modules[1];
-			const StorageManager = modules[2];
+		// Move & convert userHrrZones to generic heartrate zones
+		if (Helper.versionCompare("5.11.0", details.previousVersion) === 1 || true) {
+			migration_from_previous_version_under_5_11_0();
+		}
 
-			console.debug("UserSettings on update", userSettings);
-
-			// Clear local history if coming from version under 5.1.1
-			if (Helper.versionCompare("5.1.1", details.previousVersion) === 1) {
-				this.clearSyncCache(StorageManager);
-			}
-
-			// Move & convert userHrrZones to generic heartrate zones
-			if (Helper.versionCompare("5.11.0", details.previousVersion) === 1) {
-				migration_from_previous_version_under_5_11_0(Helper);
-			}
-
-		}, (err) => {
-			console.error(err);
-		});
 	}
 
-	protected static clearSyncCache(injectedStorageManagerModule: any): void {
+	protected static clearSyncCache(): void {
 
-		const storageManagerOnLocal = new injectedStorageManagerModule(); // typeof StorageManager
-		const storageType: string = injectedStorageManagerModule.storageLocalType;
-
-		storageManagerOnLocal.removeFromStorage(storageType, "computedActivities", () => {
-			storageManagerOnLocal.removeFromStorage(storageType, "lastSyncDateTime", () => {
-				storageManagerOnLocal.removeFromStorage(storageType, "syncWithAthleteProfile", () => {
+		const storageManagerOnLocal = new StorageManager(); // typeof StorageManager
+		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "computedActivities", () => {
+			storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "lastSyncDateTime", () => {
+				storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "syncWithAthleteProfile", () => {
 					console.log("Local History cleared");
 				});
 			});
@@ -108,7 +66,8 @@ InstallUpdateHandler.listen();
 /**
  * Migration from previous version under 5.11.0
  */
-let migration_from_previous_version_under_5_11_0 = function (Helper: any) {
+let migration_from_previous_version_under_5_11_0 = function () {
+
 	const removeDeprecatedHrrZonesKey = function (callback: Function): void {
 		chrome.storage.sync.remove(["userHrrZones"], () => {
 			callback();

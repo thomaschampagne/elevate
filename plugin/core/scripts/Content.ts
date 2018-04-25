@@ -3,18 +3,12 @@ import { UserSettingsModel } from "../shared/models/user-settings/user-settings.
 import { userSettings } from "../shared/UserSettings";
 import { Loader } from "../modules/Loader";
 import { AppResourcesModel } from "./models/app-resources.model";
-
-interface IStartCoreData {
-	extensionId: string;
-	userSettings: UserSettingsModel;
-	appResources: AppResourcesModel;
-}
+import { MessagesModel } from "../shared/models/messages.model";
+import { StartCoreDataModel } from "../shared/models/start-core-data.model";
 
 export class Content {
 
 	public static loader: Loader = new Loader();
-
-	public static startCoreEvent = "startCoreEvent"; // Same than CoreSetup.startCoreEvent
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
@@ -72,7 +66,7 @@ export class Content {
 				_.defaults(chromeSettings, userSettings);
 			}
 
-			const startCoreData: IStartCoreData = {
+			const startCoreData: StartCoreDataModel = {
 				extensionId: chrome.runtime.id,
 				userSettings: chromeSettings,
 				appResources: this.appResources,
@@ -82,21 +76,17 @@ export class Content {
 			Content.loader.injectJS("let $ = jQuery;");
 
 			Content.loader.require([
-				"core/node_modules/systemjs/dist/system.js", // Inject SystemJS module loader and start core app inner strava.com
+				"core/injectedScripts.js"
 			], () => {
-				Content.loader.require([
-					"core/scripts/SystemJS.core.setup.js", // Now load SystemJS core setup
-				], () => {
-					this.emitStartCoreEvent(startCoreData);
-				});
+				this.emitStartCoreEvent(startCoreData);
 			});
 		});
 
 	}
 
-	protected emitStartCoreEvent(startCoreData: any) {
+	protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
 		const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
-		startCorePluginEvent.initCustomEvent(Content.startCoreEvent, true, true, startCoreData);
+		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, startCoreData);
 		dispatchEvent(startCorePluginEvent);
 	}
 }

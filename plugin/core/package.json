@@ -46,6 +46,7 @@
 		"@types/file-saver": "0.0.1",
 		"@types/filesystem": "0.0.28",
 		"@types/filewriter": "0.0.28",
+		"@types/geodesy": "^1.2.0",
 		"@types/googlemaps": "^3.30.4",
 		"@types/jasmine": "^2.8.4",
 		"@types/jquery": "^3.2.18",
@@ -54,6 +55,9 @@
 		"@types/q": "^1.0.6",
 		"@types/qrcode": "^0.8.0",
 		"@types/systemjs": "^0.20.6",
+		"copy-webpack-plugin": "^4.5.1",
+		"css-loader": "^0.28.11",
+		"file-loader": "^1.1.11",
 		"jasmine": "^2.9.0",
 		"jasmine-core": "^2.9.0",
 		"karma": "~2.0.0",
@@ -66,9 +70,15 @@
 		"karma-systemjs": "^0.16.0",
 		"karma-typescript": "^2.1.7",
 		"lodash": "^4.17.4",
+		"style-loader": "^0.21.0",
 		"systemjs-plugin-babel": "0.0.25",
 		"traceur": "0.0.111",
+		"ts-loader": "^4.2.0",
 		"tslint": "^5.9.1",
-		"typescript": "~2.5.3"
+		"typescript": "~2.5.3",
+		"url-loader": "^1.0.1",
+		"webpack": "^4.6.0",
+		"webpack-cli": "^2.0.15",
+		"worker-loader": "^1.1.1"
 	}
 }
