@@ -1,6 +1,6 @@
-declare let Strava: any;
-
-declare let follow: any; // variable for Google Analytics
+declare const Strava: any;
+declare const follow: any; // variable for Google Analytics
+declare const d3: any;
 
 declare module "fancybox";
 
