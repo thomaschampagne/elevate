@@ -3,7 +3,7 @@ const copy = require("copy-webpack-plugin");
 const rootPath = path.join(__dirname, "../../");
 
 module.exports = {
-	mode: "development", // TODO Choose mode from CLI!
+	mode: "development",
 	entry: {
 		contentScripts: path.join(__dirname, "./scripts/Content.ts"),
 		injectedScripts: path.join(__dirname, "./scripts/Injector.ts"),

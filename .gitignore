@@ -13,4 +13,4 @@ plugin/core/**/*.js
 specs.log
 
 !plugin/core/karma.conf.js
-!plugin/core/webpack.config.js
+!plugin/core/core.webpack.config.js
