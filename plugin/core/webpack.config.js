@@ -21,6 +21,7 @@ module.exports = {
 		}
 	},
 	module: {
+		noParse: /lodash/,
 		rules: [
 			{
 				test: /\.ts?$/,

@@ -29,6 +29,8 @@
 		"tsc:core@prod": "npm run tsc:core-version && node ./plugin/core/node_modules/typescript/bin/tsc -p plugin/core/tsconfig.prod.json",
 		"tsc:core@test": "npm run tsc:core-version && node ./plugin/core/node_modules/typescript/bin/tsc -p plugin/core/tsconfig.test.json",
 		"tsc:core@watch": "npm run tsc:core -- --watch",
+		"tmp:webpack:core@watch": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./webpack.config.js --watch",
+		"tmp:test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
 		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts --fix",
 		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint --fix",
 		"start": "npm run watch",

@@ -2,13 +2,13 @@ module.exports = function (config) {
 	config.set({
 		basePath: "./",
 		browsers: ["ChromeHeadless"],
-		frameworks: ["systemjs", "jasmine", "promise"],
+		frameworks: ["jasmine", "promise"],
+		reporters: ["progress"],
 		plugins: [
+			"karma-webpack",
 			"karma-jasmine",
-			"karma-systemjs",
 			"karma-promise",
-			"karma-chrome-launcher",
-			"karma-json-fixtures-preprocessor"
+			"karma-chrome-launcher"
 		],
 		customLaunchers: {
 			ChromeHeadless: {
@@ -24,71 +24,38 @@ module.exports = function (config) {
 			}
 		},
 		files: [
-			"node_modules/q/q.js",
-			"node_modules/jquery/dist/jquery.js",
-			"node_modules/lodash/lodash.min.js",
-			"node_modules/chart.js/dist/Chart.min.js",
-			"node_modules/d3/d3.js",
-			"node_modules/file-saver/FileSaver.min.js",
-			"node_modules/qrcode/build/qrcode.min.js",
-			"config/*.js",
-			"scripts/**/*.js",
-			"shared/**/*.js",
-
-			// Specs files
-			"specs/**/*.js",
-			"specs/fixtures/**/*.json"
-
+			"specs/**/*.spec.ts"
 		],
-		exclude: [],
-		systemjs: {
-			serveFiles: [
-				"**/*.map"
-			], // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
-			config: { // SystemJS configuration
-				baseURL: "./",
-				packages: {
-					"./": {
-						format: "cjs"
-					}
-				},
-				paths: {
-					"traceur": "./node_modules/traceur/dist/commonjs/traceur.js", // karma-systemjs required
-					"systemjs": "./node_modules/systemjs/dist/system.js", // karma-systemjs required
-					"npm@plugin:": "./base/node_modules/"
-				},
-				map: {
-					"q": "npm@plugin:q/q.js",
-					"jquery": "npm@plugin:jquery/dist/jquery.js",
-					"lodash": "npm@plugin:lodash/lodash.min.js",
-					"chart.js": "npm@plugin:chart.js/dist/Chart.min.js",
-					"d3": "npm@plugin:d3/d3.js",
-					"qrcode": "npm@plugin:qrcode/build/qrcode.min.js",
-					"file-saver": "npm@plugin:file-saver/FileSaver.min.js"
-				}
-			}
-		},
 		preprocessors: {
-			"specs/fixtures/**/*.json": ["json_fixtures"]
+			"**/*.spec.ts": ["webpack"]
 		},
-		jsonFixturesPreprocessor: {
-			// strip this from the file path \ fixture name
-			stripPrefix: "/",
-			// strip this to the file path \ fixture name
-			prependPrefix: "",
-			// change the global fixtures variable name
-			variableName: "__fixtures__",
-			// camelize fixture filenames (e.g "fixtures/aa-bb_cc.json" becames __fixtures__["fixtures/aaBbCc"])
-			camelizeFilenames: true,
-			// transform the filename
-			transformPath: function (path) {
-				return path + ".js";
+		webpack: {
+			mode: "development",
+			resolve: {
+				extensions: [".ts"]
+			},
+			module: {
+				rules: [
+					{
+						exclude: [/node_modules/],
+						test: /\.ts$/,
+						use: {
+							loader: "ts-loader",
+							options: {
+								configFile: "tsconfig.spec.json"
+							}
+						}
+					}
+				]
 			}
+		},
+		mime: {
+			"text/x-typescript": ["ts", "tsx"]
 		},
 		colors: true,
 		singleRun: true,
 		browserConsoleLogOptions: {
-			path: "./plugin/core/specs.log",
+			// path: "./specs.log",
 			terminal: false
 		}
 	});

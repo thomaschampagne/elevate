@@ -123,7 +123,7 @@ describe("RunningPowerEstimator", () => {
 		// Given
 		const _expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
 		const athleteWeight = 54.32;
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/874762067/stream"]; // Mikala run sample 1/2 NCNR Run Club
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/874762067/stream.json")); // Mikala run sample 1/2 NCNR Run Club
 
 		// When
 		const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight,
@@ -143,7 +143,7 @@ describe("RunningPowerEstimator", () => {
 		// Given
 		const _expectedPower = 287;
 		const athleteWeight = 79.4;
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/852961332/stream"]; // Stryd 3/6 lap test .... brrr
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/852961332/stream.json")); // Stryd 3/6 lap test .... brrr
 
 		// When
 		const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
@@ -166,7 +166,7 @@ describe("RunningPowerEstimator", () => {
 		const athleteWeight = 79.4;
 
 		// Two shooting ranges and a road dedicated to the inventor of Velcro
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/878683797/stream"];
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/878683797/stream.json"));
 
 		// When
 		const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
@@ -188,7 +188,7 @@ describe("RunningPowerEstimator", () => {
 		const _expectedPower = 310;
 		const athleteWeight = 79.4;
 
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/833008371/stream"]; // Morning Run
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/833008371/stream.json")); // Morning Run
 
 		// When
 		const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
@@ -209,7 +209,7 @@ describe("RunningPowerEstimator", () => {
 		const _expectedPower = 151;
 		const athleteWeight = 54.32;
 
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/874762067/stream"];
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/874762067/stream.json"));
 
 		// When
 		const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, stream.distance,
@@ -235,9 +235,9 @@ describe("RunningPowerEstimator", () => {
 		const hasPowerMeter = false;
 		const bounds: number[] = null;
 		const returnZones = true;
-		const userSettingsMock: UserSettingsModel = window.__fixtures__["specs/fixtures/userSettings/2470979"]; // Thomas C user settings
-		const stream: ActivityStreamsModel = window.__fixtures__["specs/fixtures/activities/887284960/stream"];
-		const statsMap: ActivityStatsMapModel = window.__fixtures__["specs/fixtures/activities/887284960/statsMap"];
+		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));// Thomas C user settings
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/887284960/stream.json"));
+		const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../fixtures/activities/887284960/statsMap.json"));
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
