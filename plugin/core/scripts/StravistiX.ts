@@ -113,7 +113,7 @@ export class StravistiX {
 		}
 
 		// Init "stravistix bridge"
-		window.__stravistix_bridge__ = {};
+		window.__stravistix_bridge__ = {}; // TODO Find another solution
 
 		if (CoreEnv.debugMode) {
 			console.log("Handling " + window.location.pathname);
