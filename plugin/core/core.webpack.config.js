@@ -12,23 +12,13 @@ module.exports = {
 	},
 	output: {
 		path: path.join(rootPath, "dist", "core"),
-		filename: "[name].js"
+		filename: '[name].bundle.js',
+		chunkFilename: '[name].bundle.js'
 	},
 	resolve: {
-		extensions: [".ts", ".tsx", ".js", ".css"],
+		extensions: [".ts", ".js", ".css"],
 		alias: {
 			"fancyboxCss": path.join(__dirname, "./node_modules/fancybox/dist/css/jquery.fancybox.css")
-		}
-	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				commons: {
-					test: /[\\/]node_modules|modules[\\/]/,
-					name: "vendors",
-					chunks: "all"
-				}
-			}
 		}
 	},
 	module: {
