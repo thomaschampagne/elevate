@@ -84,14 +84,12 @@ export class StravistiX {
 		if (StravistiX.instance == null) {
 			StravistiX.instance = this;
 		}
-
-		this.init();
 	}
 
 	/**
 	 * Make the work...
 	 */
-	public init(): void {
+	public run(): void {
 
 		// Redirect app.strava.com/* to www.strava.com/*
 		if (this.handleForwardToWWW()) {

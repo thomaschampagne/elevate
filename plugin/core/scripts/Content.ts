@@ -76,7 +76,7 @@ export class Content {
 			Content.loader.injectJS("let $ = jQuery;");
 
 			Content.loader.require([
-				"core/injectedScripts.js"
+				"core/boot.js"
 			], () => {
 				this.emitStartCoreEvent(startCoreData);
 			});
