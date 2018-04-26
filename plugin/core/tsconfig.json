@@ -21,10 +21,7 @@
 			"node_modules/@types"
 		],
 		"noImplicitAny": true,
-		"preserveConstEnums": true,
-		"inlineSourceMap": true,
-		"inlineSources": true,
-		"skipLibCheck": true
+		"preserveConstEnums": true
 	},
 	"compileOnSave": false
 }
