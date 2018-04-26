@@ -7,14 +7,14 @@
 	"version_name": "6.1.2 Stable",
 	"background": {
 		"scripts": [
-			"core/updateHandler.js",
+			"core/installer.js",
 			"core/background.js"
 		]
 	},
 	"content_scripts": [
 		{
 			"js": [
-				"core/contentScripts.js"
+				"core/content.js"
 			],
 			"run_at": "document_end",
 			"matches": [

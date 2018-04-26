@@ -2,7 +2,19 @@ import { userSettings } from "../shared/UserSettings";
 import { Helper } from "./Helper";
 import { StorageManager } from "./StorageManager";
 
-class InstallUpdateHandler {
+class Installer {
+
+	public static listen() {
+
+		chrome.runtime.onInstalled.addListener((details) => {
+			if (details.reason === "install") {
+				this.handleInstall(); // Pop in tab application and plugin page
+			} else if (details.reason === "update") {
+				this.handleUpdate(details);
+			}
+		});
+	}
+
 
 	protected static handleInstall() {
 
@@ -15,17 +27,6 @@ class InstallUpdateHandler {
 			}, (tab: chrome.tabs.Tab) => {
 				console.log("First install. Display settings:", tab);
 			});
-		});
-	}
-
-	public static listen() {
-
-		chrome.runtime.onInstalled.addListener((details) => {
-			if (details.reason === "install") {
-				this.handleInstall(); // Pop in tab application and plugin page
-			} else if (details.reason === "update") {
-				this.handleUpdate(details);
-			}
 		});
 	}
 
@@ -61,7 +62,7 @@ class InstallUpdateHandler {
 	}
 }
 
-InstallUpdateHandler.listen();
+Installer.listen();
 
 /**
  * Migration from previous version under 5.11.0

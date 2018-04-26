@@ -5,10 +5,10 @@ const rootPath = path.join(__dirname, "../../");
 module.exports = {
 	mode: "development",
 	entry: {
-		contentScripts: path.join(__dirname, "./scripts/Content.ts"),
-		injectedScripts: path.join(__dirname, "./scripts/Injector.ts"),
+		content: path.join(__dirname, "./scripts/Content.ts"),
+		boot: path.join(__dirname, "./scripts/Boot.ts"),
 		background: path.join(__dirname, "./scripts/Background.ts"),
-		updateHandler: path.join(__dirname, "./scripts/InstallUpdateHandler.ts")
+		installer: path.join(__dirname, "./scripts/Installer.ts")
 	},
 	output: {
 		path: path.join(rootPath, "dist", "core"),

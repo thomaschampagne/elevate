@@ -6,15 +6,21 @@ import * as fancyboxBoot from "fancybox";
 import { MessagesModel } from "../shared/models/messages.model";
 import { StartCoreDataModel } from "../shared/models/start-core-data.model";
 
-fancyboxBoot($);
+class Boot {
 
-class Injector {
-	public static init(): void {
+	public static main(): void {
+
+		fancyboxBoot($);
+
 		addEventListener(MessagesModel.ON_START_CORE_EVENT, (event: any) => {
+
 			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
-			new StravistiX(initData.userSettings, initData.appResources);
+			const stravistiX = new StravistiX(initData.userSettings, initData.appResources);
+			stravistiX.run();
+
 		});
 	}
+
 }
 
-Injector.init();
+Boot.main();
