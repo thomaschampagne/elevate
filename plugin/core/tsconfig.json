@@ -10,13 +10,15 @@
 		"specs/**/*.ts"
 	],
 	"compilerOptions": {
-		"outDir": "../../dist/core/",
 		"target": "es5",
 		"module": "commonjs",
 		"lib": [
 			"dom",
-			"es6",
+			"es2017",
 			"webworker"
+		],
+		"typeRoots": [
+			"node_modules/@types"
 		],
 		"noImplicitAny": true,
 		"preserveConstEnums": true,
