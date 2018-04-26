@@ -20,6 +20,17 @@ module.exports = {
 			"fancyboxCss": path.join(__dirname, "./node_modules/fancybox/dist/css/jquery.fancybox.css")
 		}
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules|modules[\\/]/,
+					name: "vendors",
+					chunks: "all"
+				}
+			}
+		}
+	},
 	module: {
 		noParse: /lodash/,
 		rules: [
@@ -31,7 +42,7 @@ module.exports = {
 						configFile: "tsconfig.json"
 					}
 				},
-				exclude: [/node_modules/, /\.spec.ts?$/]
+				exclude: [/node_modules/, /specs/, /\.spec.ts?$/]
 			},
 			{
 				test: /\.css$/,
@@ -41,7 +52,7 @@ module.exports = {
 				test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
 				loader: "url-loader",
 				options: {
-					"limit": 10000
+					limit: 10000
 				}
 			}
 		]
@@ -49,8 +60,8 @@ module.exports = {
 	plugins: [
 		new copy([
 			{
-				"from": "./icons",
-				"to": "icons"
+				from: "./icons",
+				to: "icons"
 			}
 		])
 	]
