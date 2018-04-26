@@ -14,8 +14,8 @@ import * as $ from "jquery";
 
 const selectors: JQuery[] = [];
 
-let check_binded: boolean = false;
-let check_lock: boolean = false;
+let check_binded = false;
+let check_lock = false;
 const defaults: any = {
 	interval: 250,
 	force_process: false,
@@ -27,7 +27,7 @@ const $prior_appeared: JQuery[] = [];
 
 function process() {
 	check_lock = false;
-	for (let index: number = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
+	for (let index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
 		const $appeared = $(selectors[index]).filter(function () {
 			return $(this).is(":appeared");
 		});

@@ -20,7 +20,7 @@
 		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test",
 		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",
 		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
-		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts --fix",
+		"tslint-fix:core": "cd ./plugin/core/ && node ./node_modules/tslint/bin/tslint -c ./tslint.json ./**/*.ts --fix",
 		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint --fix",
 		"start": "npm run watch",
 		"watch": "npm run clean && npm-run-all res-copy:* && npm-run-all --print-label --parallel watch:*",

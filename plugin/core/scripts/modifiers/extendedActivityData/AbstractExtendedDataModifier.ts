@@ -138,8 +138,8 @@ export abstract class AbstractExtendedDataModifier {
 		let hrss = "-";
 		let fthr = "-";
 		let fthrUnit = "";
-		let activityHeartRateReserve: string = "-";
-		let activityHeartRateReserveUnit: string = "";
+		let activityHeartRateReserve = "-";
+		let activityHeartRateReserveUnit = "";
 
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
@@ -350,7 +350,7 @@ export abstract class AbstractExtendedDataModifier {
 
 	protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
 
-		let onClickHtmlBehaviour: string = "";
+		let onClickHtmlBehaviour = "";
 		if (userSettingKey) {
 			onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 		}
