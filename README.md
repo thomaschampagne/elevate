@@ -49,7 +49,7 @@ _Core_ and _embedded app_ have been developed using [TypeScript](https://www.typ
 ### At a glance...
 
 ### Core dependencies
-* [SystemJS](https://github.com/systemjs/systemjs) as dynamic EcmaScript module loader.
+* [Webpack](https://github.com/webpack/webpack) as packager and dynamic EcmaScript module loader.
 * [Q](http://documentup.com/kriskowal/q/) as promise library for JavaScript.
 * [Chart.js](http://www.chartjs.org/) for JavaScript charting.
 

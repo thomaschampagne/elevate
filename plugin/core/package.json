@@ -35,9 +35,7 @@
 		"jquery": "^3.2.1",
 		"lodash": "^4.17.4",
 		"q": "^1.5.0",
-		"qrcode": "^0.9.0",
-		"systemjs": "^0.19.0",
-		"systemjs-plugin-css": "^0.1.35"
+		"qrcode": "^0.9.0"
 	},
 	"devDependencies": {
 		"@types/chart.js": "^2.7.3",
@@ -54,7 +52,6 @@
 		"@types/nvd3": "^1.8.37",
 		"@types/q": "^1.0.6",
 		"@types/qrcode": "^0.8.0",
-		"@types/systemjs": "^0.20.6",
 		"copy-webpack-plugin": "^4.5.1",
 		"css-loader": "^0.28.11",
 		"file-loader": "^1.1.11",
@@ -66,11 +63,9 @@
 		"karma-jasmine": "^1.1.1",
 		"karma-opera-launcher": "^1.0.0",
 		"karma-promise": "^0.1.0",
-		"karma-systemjs": "^0.16.0",
 		"karma-typescript": "^2.1.7",
 		"karma-webpack": "^3.0.0",
 		"style-loader": "^0.21.0",
-		"systemjs-plugin-babel": "0.0.25",
 		"traceur": "0.0.111",
 		"ts-loader": "^4.2.0",
 		"tslint": "^5.9.1",
