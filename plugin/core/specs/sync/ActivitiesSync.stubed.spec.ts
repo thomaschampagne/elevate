@@ -2,17 +2,17 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AthleteProfileModel } from "../../shared/models/athlete-profile.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../shared/models/sync/strava-activity.model";
+import { StreamActivityModel } from "../../shared/models/sync/stream-activity.model";
+import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
+import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/MultipleActivityProcessor";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
+import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
 
 describe("ActivitiesSynchronizer syncing with stubs", () => {
 
@@ -72,18 +72,18 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
-		userSettingsMock = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/userSettings/2470979"]);
-		appResourcesMock = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/appResources/appResources"]);
+		userSettingsMock = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
+		appResourcesMock = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
 
 		// We have 7 pages
 		rawPagesOfActivities = [
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0120161213"]), // Page 01 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0220161213"]), // Page 02 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0320161213"]), // Page 03 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0420161213"]), // Page 04 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0520161213"]), // Page 05 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0620161213"]), // Page 06 - 20 ACT
-			_.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0720161213"]), // Page 07 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0120161213.json")), // Page 01 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0220161213.json")), // Page 02 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0320161213.json")), // Page 03 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0420161213.json")), // Page 04 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0520161213.json")), // Page 05 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0620161213.json")), // Page 06 - 20 ACT
+			_.cloneDeep(require("../fixtures/sync/rawPage0720161213.json")), // Page 07 - 20 ACT
 		];
 		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
@@ -106,7 +106,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		/**
 		 * Stubing activity stream promised, reduce @ 50 samples
 		 */
-		const stream: any = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/activities/723224273/stream"]);
+		const stream: any = _.cloneDeep(require("../fixtures/activities/723224273/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		spyOn(activitiesSynchronizer, "fetchStreamByActivityId").and.callFake((activityId: number) => {

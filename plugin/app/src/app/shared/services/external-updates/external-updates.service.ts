@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
-import { SyncResultModel } from "../../../../../../shared/models/sync/sync-result.model";
-import { MessagesModel } from "../../../../../../shared/models/messages.model";
+import { SyncResultModel } from "../../../../../../core/shared/models/sync/sync-result.model";
+import { MessagesModel } from "../../../../../../core/shared/models/messages.model";
 
 @Injectable()
 export class ExternalUpdatesService {

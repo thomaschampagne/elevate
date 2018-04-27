@@ -1,6 +1,7 @@
 import * as _ from "lodash";
+import * as $ from "jquery";
 import { Helper } from "../../Helper";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "../../StorageManager";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
@@ -8,9 +9,9 @@ import { AbstractDataView } from "./views/AbstractDataView";
 import { FeaturedDataView } from "./views/FeaturedDataView";
 import { HeaderView } from "./views/HeaderView";
 import { HeartRateDataView } from "./views/HeartRateDataView";
-import { ActivityBasicInfoModel } from "../../../../shared/models/activity-data/activity-basic-info.model";
-import { SpeedUnitDataModel } from "../../../../shared/models/activity-data/speed-unit-data.model";
-import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
+import { ActivityBasicInfoModel } from "../../../shared/models/activity-data/activity-basic-info.model";
+import { SpeedUnitDataModel } from "../../../shared/models/activity-data/speed-unit-data.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
 
 export abstract class AbstractExtendedDataModifier {
 
@@ -137,8 +138,8 @@ export abstract class AbstractExtendedDataModifier {
 		let hrss = "-";
 		let fthr = "-";
 		let fthrUnit = "";
-		let activityHeartRateReserve: string = "-";
-		let activityHeartRateReserveUnit: string = "";
+		let activityHeartRateReserve = "-";
+		let activityHeartRateReserveUnit = "";
 
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
@@ -349,7 +350,7 @@ export abstract class AbstractExtendedDataModifier {
 
 	protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
 
-		let onClickHtmlBehaviour: string = "";
+		let onClickHtmlBehaviour = "";
 		if (userSettingKey) {
 			onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
 		}

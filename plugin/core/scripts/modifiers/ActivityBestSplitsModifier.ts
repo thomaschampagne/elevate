@@ -1,12 +1,6 @@
-/*
- *  Use d3 version provided by strava.com
- *  And do not inject d3 as 'import * as d3 from "d3";'
- */
-declare let d3: any; // Injected by strava.com
-
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 
 declare let L: any; // Injected by strava.com
 

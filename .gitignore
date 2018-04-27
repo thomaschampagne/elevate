@@ -11,3 +11,6 @@ chrome-win32/
 plugin/shared/**/*.js
 plugin/core/**/*.js
 specs.log
+
+!plugin/core/karma.conf.js
+!plugin/core/core.webpack.config.js

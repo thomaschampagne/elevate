@@ -4,7 +4,7 @@ import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../core/shared/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
@@ -15,7 +15,7 @@ import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.
 import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../../core/shared/models/sync/sync-result.model";
 
 @Component({
 	selector: "app-fitness-trend",
