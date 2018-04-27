@@ -1,14 +1,15 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
-import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { StreamActivityModel } from "../../shared/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
+import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
+import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
+import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
+
+const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
 export class MultipleActivityProcessor {
 
@@ -124,9 +125,7 @@ export class MultipleActivityProcessor {
 		const deferred = Q.defer<AnalysisDataModel>();
 
 		// Lets create that worker/thread!
-		const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
-			type: "application/javascript",
-		})));
+		const computeAnalysisThread: Worker = new ComputeAnalysisWorker();
 
 		// Create activity stats map from given activity
 		const activityStatsMap: ActivityStatsMapModel = this.createActivityStatMap(activityWithStream);
@@ -142,8 +141,7 @@ export class MultipleActivityProcessor {
 			activityStatsMap,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false,
-			systemJsConfig: SystemJS.getConfig(),
+			returnZones: false
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);

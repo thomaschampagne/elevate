@@ -1,17 +1,17 @@
 import * as _ from "lodash";
-import { ActivitiesSynchronizer } from "../../../core/scripts/synchronizer/ActivitiesSynchronizer";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
+import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../shared/models/sync/strava-activity.model";
 import { HistoryChangesModel } from "../../scripts/synchronizer/history-changes.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
 
 describe("ActivitiesSynchronizer", () => {
 
 	it("should remove activity from array properly ", (done: Function) => {
 
-		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0120161213"].models);
+		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 		const sourceCount = rawPageOfActivities.length;
 
 		rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -24,7 +24,7 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should edit activity from array properly ", (done: Function) => {
 
-		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0120161213"].models);
+		let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 		const sourceCount = rawPageOfActivities.length;
 
 		rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
@@ -42,8 +42,8 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should detect activities added, modified and deleted ", (done: Function) => {
 
-		let computedActivities: Array<SyncedActivityModel> = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/computedActivities20161213"].computedActivities);
-		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/sync/rawPage0120161213"].models);
+		let computedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/computedActivities20161213.json").computedActivities);
+		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 
 		// Simulate Added in strava: consist to remove from computed activities...
 		computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -85,8 +85,8 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should append history of pages where activities added, modified and deleted ", (done: Function) => {
 
-		const userSettingsMock: UserSettingsModel = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/userSettings/2470979"]);
-		const appResourcesMock: AppResourcesModel = _.cloneDeep(window.__fixtures__["plugin/core/specs/fixtures/appResources/appResources"]);
+		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
+		const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
 		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
 		// Append

@@ -1,7 +1,7 @@
 import { Helper } from "../../../Helper";
 import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
 import * as _ from "lodash";
-import { CadenceDataModel } from "../../../../../shared/models/activity-data/cadence-data.model";
+import { CadenceDataModel } from "../../../../shared/models/activity-data/cadence-data.model";
 
 export class CyclingCadenceDataView extends AbstractCadenceDataView {
 

@@ -9,11 +9,11 @@ import { YearProgressModel } from "./shared/models/year-progress.model";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { AthleteProfileModel } from "../../../../shared/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../../core/shared/models/athlete-profile.model";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
-import { userSettings } from "../../../../shared/UserSettings";
-import { SyncedActivityModel } from "../../../../shared/models/sync/synced-activity.model";
+import { userSettings } from "../../../../core/shared/UserSettings";
+import { SyncedActivityModel } from "../../../../core/shared/models/sync/synced-activity.model";
 import { YearProgressModule } from "./year-progress.module";
 
 describe("YearProgressComponent", () => {

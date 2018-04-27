@@ -528,7 +528,7 @@ export class GoalsModifier implements IModifier {
 			formattedUnits = "";
 		}
 		return `${formattedValue}${formattedUnits}`;
-	};
+	}
 }
 
 /**

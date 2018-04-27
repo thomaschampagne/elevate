@@ -1,13 +1,14 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { VacuumProcessor } from "./VacuumProcessor";
-import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../shared/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
+
+const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
 export class ActivityProcessor {
 
@@ -18,7 +19,6 @@ export class ActivityProcessor {
 	protected activityType: string;
 	protected isTrainer: boolean;
 	protected isActivityAuthor: boolean;
-	protected computeAnalysisWorkerBlobURL: string;
 	protected computeAnalysisThread: Worker;
 	protected userSettings: UserSettingsModel;
 
@@ -95,18 +95,8 @@ export class ActivityProcessor {
 													activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, bounds: number[],
 													callback: (analysisData: AnalysisDataModel) => void): void {
 
-		// Create worker blob URL if not exist
-		if (!this.computeAnalysisWorkerBlobURL) {
-
-			// Create a blob from 'ComputeAnalysisWorker' function variable as a string
-			const blob: Blob = new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {type: "application/javascript"});
-
-			// Keep track of blob URL to reuse it
-			this.computeAnalysisWorkerBlobURL = URL.createObjectURL(blob);
-		}
-
 		// Lets create that worker/thread!
-		this.computeAnalysisThread = new Worker(this.computeAnalysisWorkerBlobURL);
+		this.computeAnalysisThread = new ComputeAnalysisWorker();
 
 		// Send user and activity data to the thread
 		// He will compute them in the background
@@ -121,8 +111,7 @@ export class ActivityProcessor {
 			activityStatsMap,
 			activityStream,
 			bounds,
-			returnZones: true,
-			systemJsConfig: SystemJS.getConfig(),
+			returnZones: true
 		};
 
 		this.computeAnalysisThread.postMessage(threadMessage);

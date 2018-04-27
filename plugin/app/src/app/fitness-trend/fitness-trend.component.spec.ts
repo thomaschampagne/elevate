@@ -5,15 +5,15 @@ import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { AthleteProfileModel } from "../../../../shared/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../../core/shared/models/athlete-profile.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { userSettings } from "../../../../shared/UserSettings";
+import { userSettings } from "../../../../core/shared/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { Gender } from "../shared/enums/gender.enum";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
+import { UserLactateThresholdModel } from "../../../../core/shared/models/user-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 
 describe("FitnessTrendComponent", () => {
