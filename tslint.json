@@ -1,7 +1,7 @@
 {
 	"defaultSeverity": "error",
 	"extends": [
-		"../app/tslint.json"
+		"./plugin/app/tslint.json"
 	],
 	"jsRules": {},
 	"rules": {},
