@@ -34,14 +34,6 @@ describe("Helper", () => {
 		done();
     });
 
-	it("should compare version", (done: Function) => {
-        expect(Helper.versionCompare("5.0.0", "5.0.0")).toEqual(0);
-        expect(Helper.versionCompare("5.0.0", "4.9.9")).toEqual(1);
-        expect(Helper.versionCompare("4.9.8", "4.9.9")).toEqual(-1);
-        expect(Helper.versionCompare("", "4.9.9")).toEqual(NaN);
-		done();
-    });
-
 	it("should convert meters per seconds tp KPH", (done: Function) => {
         expect(Helper.convertMetersPerSecondsToKph(10)).toEqual(36);
 		done();

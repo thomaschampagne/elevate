@@ -1,6 +1,7 @@
 import { userSettings } from "../../shared/UserSettings";
 import { Helper } from "./Helper";
 import { StorageManager } from "./StorageManager";
+import * as semver from "semver";
 
 class Installer {
 
@@ -38,12 +39,12 @@ class Installer {
 		console.debug("UserSettings on update", userSettings);
 
 		// Clear local history if coming from version under 5.1.1
-		if (Helper.versionCompare("5.1.1", details.previousVersion) === 1) { // TODO Use semver package instead
+		if (semver.gt("5.1.1", details.previousVersion)) {
 			this.clearSyncCache();
 		}
 
 		// Move & convert userHrrZones to generic heartrate zones
-		if (Helper.versionCompare("5.11.0", details.previousVersion) === 1 || true) {
+		if (semver.gt("5.11.0", details.previousVersion)) {
 			migration_from_previous_version_under_5_11_0();
 		}
 
