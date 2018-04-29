@@ -1,17 +1,17 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../Helper";
-import { AthleteProfileModel } from "../../shared/models/athlete-profile.model";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { HistoryChangesModel } from "./history-changes.model";
-import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../shared/models/sync/strava-activity.model";
-import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
-import { StreamActivityModel } from "../../shared/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
+import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
+import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
 
 export class ActivitiesSynchronizer {
 

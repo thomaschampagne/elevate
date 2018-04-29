@@ -1,7 +1,7 @@
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
-import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
-import { ActivityStreamsModel } from "../../shared/models/activity-data/activity-streams.model";
-import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityComputer } from "../../scripts/processors/ActivityComputer";
 
 describe("ActivityComputer", () => {

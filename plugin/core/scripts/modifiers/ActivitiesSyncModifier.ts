@@ -1,13 +1,13 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { IStorageUsage, StorageManager } from "../StorageManager";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { SyncNotifyModel } from "../../shared/models/sync/sync-notify.model";
-import { HerokuEndpoints } from "../../shared/HerokuEndpoint";
+import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
+import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
 
 export class ActivitiesSyncModifier implements IModifier {
 

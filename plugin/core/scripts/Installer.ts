@@ -1,4 +1,4 @@
-import { userSettings } from "../shared/UserSettings";
+import { userSettings } from "../../shared/UserSettings";
 import { Helper } from "./Helper";
 import { StorageManager } from "./StorageManager";
 

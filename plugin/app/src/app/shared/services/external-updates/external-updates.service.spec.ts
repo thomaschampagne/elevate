@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ExternalUpdatesService } from "./external-updates.service";
-import { MessagesModel } from "../../../../../../core/shared/models/messages.model";
+import { MessagesModel } from "../../../../../../shared/models/messages.model";
 
 describe("ExternalUpdatesService", () => {
 

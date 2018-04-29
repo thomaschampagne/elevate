@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { UserSettingsModel } from "../../../../../core/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
 
 @Injectable()
 export class GlobalSettingsService {

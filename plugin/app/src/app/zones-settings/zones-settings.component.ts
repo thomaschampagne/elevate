@@ -5,12 +5,12 @@ import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
-import { userSettings } from "../../../../core/shared/UserSettings";
+import { userSettings } from "../../../../shared/UserSettings";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs/Subscription";
-import { UserZonesModel } from "../../../../core/shared/models/user-settings/user-zones.model";
-import { UserSettingsModel } from "../../../../core/shared/models/user-settings/user-settings.model";
-import { ZoneModel } from "../../../../core/shared/models/activity-data/zone.model";
+import { UserZonesModel } from "../../../../shared/models/user-settings/user-zones.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { ZoneModel } from "../../../../shared/models/activity-data/zone.model";
 
 @Component({
 	selector: "app-zones-settings",

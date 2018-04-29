@@ -1,6 +1,6 @@
 import { Helper } from "../../../Helper";
 import { AbstractDataView } from "./AbstractDataView";
-import { SpeedDataModel } from "../../../../shared/models/activity-data/speed-data.model";
+import { SpeedDataModel } from "../../../../../shared/models/activity-data/speed-data.model";
 
 export class SpeedDataView extends AbstractDataView {
 

@@ -10,7 +10,7 @@ import { Gender } from "../../../shared/enums/gender.enum";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "../../../../../../core/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 @Injectable()
 export class FitnessService {
