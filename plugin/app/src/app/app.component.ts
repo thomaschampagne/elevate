@@ -157,8 +157,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.setupWindowResizeBroadcast();
 
-		// Show warn ribbon if athlete settings do not match with athlete settings used for history synchronization
-		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
 	public sideNavSetup(): void {

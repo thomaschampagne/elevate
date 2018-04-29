@@ -307,9 +307,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	public profileChanged() {
-
 		this.userSettingsService.markLocalStorageClear();
-		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
 	public saveSetting(key: string, value: any): void {

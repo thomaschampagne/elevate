@@ -5,7 +5,6 @@ import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { AthleteProfileModel } from "../../../../shared/models/athlete-profile.model";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../shared/UserSettings";
@@ -79,14 +78,6 @@ describe("FitnessTrendComponent", () => {
 
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
-		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
 

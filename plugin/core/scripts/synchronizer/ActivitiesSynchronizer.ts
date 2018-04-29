@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../Helper";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
@@ -17,7 +16,6 @@ export class ActivitiesSynchronizer {
 
 	public static lastSyncDateTime = "lastSyncDateTime";
 	public static computedActivities = "computedActivities";
-	public static syncWithAthleteProfile = "syncWithAthleteProfile";
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
@@ -430,9 +428,6 @@ export class ActivitiesSynchronizer {
 			return Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
-			return Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile);
-		}).then(() => {
-			console.log("syncWithAthleteProfile removed from local storage");
 		});
 
 		return promise;
@@ -729,27 +724,10 @@ export class ActivitiesSynchronizer {
 
 			console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
-			const syncedAthleteProfile: AthleteProfileModel = {
-				userGender: this.userSettings.userGender,
-				userMaxHr: this.userSettings.userMaxHr,
-				userRestHr: this.userSettings.userRestHr,
-				userWeight: this.userSettings.userWeight,
-				userFTP: this.userSettings.userFTP,
-				// userSwimFTP: this.userSettings.userSwimFTP
-			};
-
-			return this.saveSyncedAthleteProfile(syncedAthleteProfile);
-
-		}).then((saved: any) => {
-
-			// Synced Athlete Profile saved ...
-			console.log("Sync With Athlete Profile done");
-
 			const syncResult: SyncResultModel = {
 				globalHistoryChanges: this._globalHistoryChanges,
 				computedActivities: saved.data.computedActivities,
-				lastSyncDateTime: saved.data.lastSyncDateTime,
-				syncWithAthleteProfile: saved.data.syncWithAthleteProfile,
+				lastSyncDateTime: saved.data.lastSyncDateTime
 			};
 
 			deferred.resolve(syncResult); // Sync finish !!
@@ -790,10 +768,6 @@ export class ActivitiesSynchronizer {
 		};
 		this._endReached = false;
 		this.totalRawActivityIds = [];
-	}
-
-	public saveSyncedAthleteProfile(syncedAthleteProfile: AthleteProfileModel) {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
