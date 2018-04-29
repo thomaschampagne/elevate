@@ -2,7 +2,6 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
@@ -91,7 +90,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		 * Stubing http calls to strava training pages
 		 */
 		spyOn(activitiesSynchronizer, "httpPageGet").and.callFake((perPage: number, page: number) => {
-			debugger;
 			const defer = $.Deferred();
 			const rawPagesOfActivity = rawPagesOfActivities[page - 1];
 			if (rawPagesOfActivity) {
@@ -155,7 +153,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 		 * - saveLastSyncDateToLocal
 		 * - getLastSyncDateFromLocal
 		 * - clearSyncCache
-		 * - saveSyncedAthleteProfile
 		 */
 		spyOn(activitiesSynchronizer, "saveComputedActivitiesToLocal").and.callFake((computedActivities: Array<SyncedActivityModel>) => {
 			const defer = Q.defer();
@@ -198,14 +195,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "saveSyncedAthleteProfile").and.callFake((syncedAthleteProfile: AthleteProfileModel) => {
-			const defer = Q.defer();
-			CHROME_STORAGE_STUB.syncWithAthleteProfile = syncedAthleteProfile;
-			defer.resolve({
-				data: CHROME_STORAGE_STUB
-			});
-			return defer.promise;
-		});
 	});
 
 	it("should ensure ActivitiesSynchronizer:getRemoteActivitiesCount()", (done: Function) => {
@@ -406,7 +395,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(activitiesSynchronizer.saveComputedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
 			expect(activitiesSynchronizer.getLastSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
 			expect(activitiesSynchronizer.saveLastSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
-			expect(activitiesSynchronizer.saveSyncedAthleteProfile).toHaveBeenCalledTimes(1); // Ensure spy call
 
 			expect(syncResult.computedActivities).not.toBeNull();
 			expect(syncResult.computedActivities.length).toEqual(140);
@@ -433,14 +421,6 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(_.isNumber(CHROME_STORAGE_STUB.lastSyncDateTime)).toBeTruthy();
 			expect(savedLastSyncDateTime.data).not.toBeNull();
 			expect(_.isNumber(savedLastSyncDateTime.data)).toBeTruthy();
-
-			// Check sync athlete profile
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile).not.toBeNull();
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userGender).not.toBeNull();
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userMaxHr).not.toBeNull();
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userRestHr).not.toBeNull();
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userWeight).not.toBeNull();
-			expect(CHROME_STORAGE_STUB.syncWithAthleteProfile.userFTP).not.toBeNull();
 
 			done();
 

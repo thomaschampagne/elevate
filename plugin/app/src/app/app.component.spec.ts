@@ -2,9 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { CoreModule } from "./core/core.module";
 import { SharedModule } from "./shared/shared.module";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
 import { TEST_SYNCED_ACTIVITIES } from "../shared-fixtures/activities-2015.fixture";
-import { RemoteAthleteMismatchComponent } from "./remote-athlete-mismatch/remote-athlete-mismatch.component";
 import { userSettings } from "../../../shared/UserSettings";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 
@@ -18,8 +16,7 @@ describe("AppComponent", () => {
 
 		TestBed.configureTestingModule({
 			declarations: [
-				AppComponent,
-				RemoteAthleteMismatchComponent
+				AppComponent
 			],
 			imports: [
 				CoreModule,
@@ -42,19 +39,6 @@ describe("AppComponent", () => {
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;
 
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
-		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(component.athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
 		spyOn(component.athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(component.athleteHistoryService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 		spyOn(component.athleteHistoryService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));

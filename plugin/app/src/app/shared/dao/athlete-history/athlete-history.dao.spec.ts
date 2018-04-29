@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
 import { AthleteHistoryDao } from "./athlete-history.dao";
-import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
 
 
 describe("AthleteHistoryDao", () => {
@@ -21,43 +20,6 @@ describe("AthleteHistoryDao", () => {
 	it("should be created", (done: Function) => {
 		expect(athleteHistoryDao).toBeTruthy();
 		done();
-	});
-
-	it("should get synced athlete profile", (done: Function) => {
-
-		// Given
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
-		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncWithAthleteProfile: expectedAthleteProfileModel});
-			}
-		});
-
-		// When
-		const promise: Promise<AthleteProfileModel> = athleteHistoryDao.getProfile();
-
-		// Then
-		promise.then((profileModel: AthleteProfileModel) => {
-
-			expect(profileModel).not.toBeNull();
-			expect(profileModel).toEqual(expectedAthleteProfileModel);
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
 	});
 
 	it("should get last sync date of profile", (done: Function) => {
@@ -85,47 +47,6 @@ describe("AthleteHistoryDao", () => {
 			expect(error).toBeNull();
 			done();
 		});
-	});
-
-	it("should save athlete profile", (done: Function) => {
-
-		// Given
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
-		const athleteProfileModelToSave: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
-			set: (object: Object, callback: () => {}) => {
-				callback();
-			},
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncWithAthleteProfile: athleteProfileModelToSave});
-			}
-		});
-
-		// When
-		const promise: Promise<AthleteProfileModel> = athleteHistoryDao.saveProfile(athleteProfileModelToSave);
-
-		// Then
-		promise.then((savedAthleteProfileModel: AthleteProfileModel) => {
-
-			expect(savedAthleteProfileModel).not.toBeNull();
-			expect(savedAthleteProfileModel).toEqual(athleteProfileModelToSave);
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-
 	});
 
 	it("should save last sync date time", (done: Function) => {
@@ -156,75 +77,6 @@ describe("AthleteHistoryDao", () => {
 			expect(error).toBeNull();
 			done();
 		});
-	});
-
-	it("should remove athlete profile", (done: Function) => {
-
-		// Given
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
-			remove: (key: string, callback: () => {}) => {
-				callback();
-			},
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncWithAthleteProfile: null});
-			}
-		});
-
-		// When
-		const promise: Promise<AthleteProfileModel> = athleteHistoryDao.removeProfile();
-
-		// Then
-		promise.then((result: AthleteProfileModel) => {
-
-			expect(result).toBeNull();
-			expect(athleteHistoryDao.browserStorageLocal).toHaveBeenCalled();
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
-		});
-
-	});
-
-	it("should reject on remove athlete profile", (done: Function) => {
-
-		// Given
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
-		const athleteProfileModelToRemove: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
-			remove: (key: string, callback: () => {}) => {
-				callback();
-			},
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncWithAthleteProfile: athleteProfileModelToRemove});
-			}
-		});
-
-		// When
-		const promise: Promise<AthleteProfileModel> = athleteHistoryDao.removeProfile();
-
-		// Then
-		promise.then(() => {
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
-
-		}, error => {
-			expect(error).toEqual("Profile has not been deleted");
-			done();
-		});
-
 	});
 
 	it("should remove last sync date time", (done: Function) => {

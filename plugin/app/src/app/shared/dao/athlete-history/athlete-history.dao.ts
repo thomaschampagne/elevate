@@ -1,62 +1,13 @@
 import { Injectable } from "@angular/core";
-import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
 import * as _ from "lodash";
 
 @Injectable()
 export class AthleteHistoryDao {
 
-	// FIXME merge physical storage of "syncWithAthleteProfile" & "lastSyncDateTime" & "computedActivities" into a single local storage object "AthleteHistory" ?!
-	public static readonly ATHLETE_SYNCED_PROFILE_KEY: string = "syncWithAthleteProfile";
+	// FIXME merge physical storage of "lastSyncDateTime" & "computedActivities" into a single local storage object "AthleteHistory" ?!
 	public static readonly LAST_SYNCED_DATE_TIME_KEY: string = "lastSyncDateTime";
 
 	constructor() {
-	}
-
-	/**
-	 *
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public getProfile(): Promise<AthleteProfileModel> {
-
-		return new Promise<AthleteProfileModel>((resolve) => {
-			this.browserStorageLocal().get(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, (result: { syncWithAthleteProfile: AthleteProfileModel }) => {
-				resolve((result.syncWithAthleteProfile) ? result.syncWithAthleteProfile : null);
-			});
-		});
-	}
-
-	/**
-	 *
-	 * @param {AthleteProfileModel} athleteProfileModelToSave
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public saveProfile(athleteProfileModelToSave: AthleteProfileModel): Promise<AthleteProfileModel> {
-
-		return new Promise<AthleteProfileModel>((resolve) => {
-
-			const profileData: any = {};
-			profileData[AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY] = athleteProfileModelToSave;
-
-			this.browserStorageLocal().set(profileData, () => {
-				this.getProfile().then((athleteProfileModel: AthleteProfileModel) => {
-					resolve(athleteProfileModel);
-				});
-			});
-		});
-	}
-
-	/**
-	 *
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public removeProfile(): Promise<AthleteProfileModel> {
-		return new Promise<AthleteProfileModel>((resolve, reject) => {
-			this.browserStorageLocal().remove(AthleteHistoryDao.ATHLETE_SYNCED_PROFILE_KEY, () => {
-				this.getProfile().then((athleteProfileModel: AthleteProfileModel) => {
-					(_.isEmpty(athleteProfileModel)) ? resolve(athleteProfileModel) : reject("Profile has not been deleted");
-				});
-			});
-		});
 	}
 
 	/**

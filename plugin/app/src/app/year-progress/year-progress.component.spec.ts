@@ -9,7 +9,6 @@ import { YearProgressModel } from "./shared/models/year-progress.model";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { AthleteProfileModel } from "../../../../shared/models/athlete-profile.model";
 import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
 import { userSettings } from "../../../../shared/UserSettings";
@@ -42,20 +41,6 @@ describe("YearProgressComponent", () => {
 		userSettingsService = TestBed.get(UserSettingsService);
 		activityDao = TestBed.get(ActivityDao);
 
-		// Mocking athlete history
-		const gender = "men";
-		const maxHr = 200;
-		const restHr = 50;
-		const cyclingFtp = 150;
-		const weight = 75;
-		const athleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(athleteProfileModel));
 		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));

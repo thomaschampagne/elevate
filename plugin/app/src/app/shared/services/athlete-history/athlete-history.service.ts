@@ -1,15 +1,12 @@
 import { Injectable } from "@angular/core";
 import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import * as _ from "lodash";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
-import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
 import { environment } from "../../../../environments/environment";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
@@ -20,38 +17,10 @@ export class AthleteHistoryService {
 	public static readonly SYNC_WINDOW_WIDTH: number = 700;
 	public static readonly SYNC_WINDOW_HEIGHT: number = 675;
 
-	public localRemoteAthleteProfileSame: Subject<boolean>;
-
 	constructor(public athleteHistoryDao: AthleteHistoryDao,
 				public userSettingsService: UserSettingsService,
 				public activityDao: ActivityDao) {
 
-		this.localRemoteAthleteProfileSame = new Subject<boolean>();
-	}
-
-	/**
-	 *
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public getProfile(): Promise<AthleteProfileModel> {
-		return this.athleteHistoryDao.getProfile();
-	}
-
-	/**
-	 *
-	 * @param {AthleteProfileModel} athleteProfileModelToSave
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public saveProfile(athleteProfileModelToSave: AthleteProfileModel): Promise<AthleteProfileModel> {
-		return this.athleteHistoryDao.saveProfile(athleteProfileModelToSave);
-	}
-
-	/**
-	 *
-	 * @returns {Promise<AthleteProfileModel>}
-	 */
-	public removeProfile(): Promise<AthleteProfileModel> {
-		return this.athleteHistoryDao.removeProfile();
 	}
 
 	/**
@@ -88,10 +57,6 @@ export class AthleteHistoryService {
 
 		const installedVersion = this.getAppVersion();
 
-		if (_.isEmpty(athleteHistoryModel.syncWithAthleteProfile)) {
-			return Promise.reject("Athlete profile is not defined in provided backup file. Try to perform a clean full re-sync.");
-		}
-
 		if (_.isEmpty(athleteHistoryModel.computedActivities)) {
 			return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
 		}
@@ -110,18 +75,15 @@ export class AthleteHistoryService {
 
 			return Promise.all([
 				this.saveLastSyncDateTime(athleteHistoryModel.lastSyncDateTime),
-				this.saveProfile(athleteHistoryModel.syncWithAthleteProfile),
 				this.activityDao.save(athleteHistoryModel.computedActivities)
 			]);
 
 		}).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
-			const athleteProfileModel: AthleteProfileModel = result[1] as AthleteProfileModel;
-			const syncedActivityModels: SyncedActivityModel[] = result[2] as SyncedActivityModel[];
+			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 
 			const athleteHistoryModel: AthleteHistoryModel = {
-				syncWithAthleteProfile: athleteProfileModel,
 				lastSyncDateTime: lastSyncDateTime,
 				computedActivities: syncedActivityModels,
 				pluginVersion: installedVersion
@@ -159,25 +121,18 @@ export class AthleteHistoryService {
 		return Promise.all([
 
 			this.athleteHistoryDao.getLastSyncDateTime(),
-			this.athleteHistoryDao.getProfile(),
 			this.activityDao.fetch()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
-			const athleteProfileModel: AthleteProfileModel = result[1] as AthleteProfileModel;
-			const syncedActivityModels: SyncedActivityModel[] = result[2] as SyncedActivityModel[];
+			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 
 			if (!_.isNumber(lastSyncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
 			}
 
-			if (_.isEmpty(athleteProfileModel)) {
-				return Promise.reject("Cannot export. No athlete history profile saved.");
-			}
-
 			const athleteHistoryModel: AthleteHistoryModel = {
-				syncWithAthleteProfile: athleteProfileModel,
 				lastSyncDateTime: lastSyncDateTime,
 				computedActivities: syncedActivityModels,
 				pluginVersion: this.getAppVersion()
@@ -196,17 +151,14 @@ export class AthleteHistoryService {
 		return Promise.all([
 
 			this.removeLastSyncDateTime(),
-			this.removeProfile(),
 			this.activityDao.remove()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
-			const athleteProfileModel: AthleteProfileModel = result[1] as AthleteProfileModel;
-			const syncedActivityModels: SyncedActivityModel[] = result[2] as SyncedActivityModel[];
+			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 
 			if ((!_.isNull(lastSyncDateTime) && _.isNumber(lastSyncDateTime)) ||
-				!_.isEmpty(athleteProfileModel) ||
 				!_.isEmpty(syncedActivityModels)) {
 				return Promise.reject("Athlete history has not been deleted totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 			}
@@ -244,56 +196,6 @@ export class AthleteHistoryService {
 			}
 
 			return Promise.resolve(athleteHistoryState);
-		});
-	}
-
-	/**
-	 *
-	 * @param {AthleteProfileModel} remoteAthleteProfileModel
-	 * @returns {Promise<boolean>}
-	 */
-	public isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel: AthleteProfileModel): Promise<boolean> {
-
-		return this.getProfile().then((localAthleteProfile: AthleteProfileModel) => {
-
-			if (_.isEmpty(localAthleteProfile)) {
-				return Promise.reject("Local athlete history do not exist.");
-			}
-
-			let remoteEqualsLocal = true;
-
-			if (remoteAthleteProfileModel.userGender !== localAthleteProfile.userGender ||
-				remoteAthleteProfileModel.userMaxHr !== localAthleteProfile.userMaxHr ||
-				remoteAthleteProfileModel.userRestHr !== localAthleteProfile.userRestHr ||
-				remoteAthleteProfileModel.userFTP !== localAthleteProfile.userFTP ||
-				remoteAthleteProfileModel.userWeight !== localAthleteProfile.userWeight) {
-
-				remoteEqualsLocal = false;
-			}
-
-			return Promise.resolve(remoteEqualsLocal);
-		});
-	}
-
-	/**
-	 *
-	 */
-	public checkLocalRemoteAthleteProfileSame(): void {
-
-		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
-
-			const remoteAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(userSettings.userGender,
-				userSettings.userMaxHr,
-				userSettings.userRestHr,
-				userSettings.userFTP,
-				userSettings.userWeight);
-
-			return this.isLocalRemoteAthleteProfileSame(remoteAthleteProfileModel);
-
-		}).then((isSame: boolean) => {
-			this.localRemoteAthleteProfileSame.next(isSame);
-		}).catch(error => {
-			console.warn(error);
 		});
 	}
 

@@ -55,9 +55,7 @@ class Installer {
 		const storageManagerOnLocal = new StorageManager(); // typeof StorageManager
 		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "computedActivities", () => {
 			storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "lastSyncDateTime", () => {
-				storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "syncWithAthleteProfile", () => {
-					console.log("Local History cleared");
-				});
+				console.log("Local History cleared");
 			});
 		});
 	}
