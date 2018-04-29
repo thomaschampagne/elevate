@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { AthleteProfileModel } from "../../../../../../core/shared/models/athlete-profile.model";
+import { AthleteProfileModel } from "../../../../../../shared/models/athlete-profile.model";
 import { AthleteHistoryModel } from "./athlete-history.model";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
@@ -9,9 +9,9 @@ import * as _ from "lodash";
 import { AthleteHistoryState } from "./athlete-history-state.enum";
 import { Subject } from "rxjs/Subject";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../../../core/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
 import { environment } from "../../../../environments/environment";
-import { SyncedActivityModel } from "../../../../../../core/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 @Injectable()
 export class AthleteHistoryService {

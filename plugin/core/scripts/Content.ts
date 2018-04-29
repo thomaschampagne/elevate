@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
-import { userSettings } from "../shared/UserSettings";
 import { Loader } from "../modules/Loader";
 import { AppResourcesModel } from "./models/app-resources.model";
-import { MessagesModel } from "../shared/models/messages.model";
-import { StartCoreDataModel } from "../shared/models/start-core-data.model";
+import { MessagesModel } from "../../shared/models/messages.model";
+import { StartCoreDataModel } from "../../shared/models/start-core-data.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { userSettings } from "../../shared/UserSettings";
 
 export class Content {
 

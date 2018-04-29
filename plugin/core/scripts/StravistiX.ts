@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "./Helper";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "./StorageManager";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -39,12 +39,12 @@ import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
 import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "../shared/models/sync/sync-result.model";
-import { MessagesModel } from "../shared/models/messages.model";
-import { ActivityBasicInfoModel } from "../shared/models/activity-data/activity-basic-info.model";
+import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
+import { MessagesModel } from "../../shared/models/messages.model";
+import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./AthleteUpdate";
 import "./Follow";
-import { IReleaseNote, releaseNotes } from "../shared/ReleaseNotes";
+import { IReleaseNote, releaseNotes } from "../../shared/ReleaseNotes";
 
 export class StravistiX {
 	public static instance: StravistiX = null;

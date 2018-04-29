@@ -3,8 +3,8 @@ import "../css/core.css";
 import { StravistiX } from "./StravistiX";
 import * as $ from "jquery";
 import * as fancyboxBoot from "fancybox";
-import { MessagesModel } from "../shared/models/messages.model";
-import { StartCoreDataModel } from "../shared/models/start-core-data.model";
+import { MessagesModel } from "../../shared/models/messages.model";
+import { StartCoreDataModel } from "../../shared/models/start-core-data.model";
 
 class Boot {
 

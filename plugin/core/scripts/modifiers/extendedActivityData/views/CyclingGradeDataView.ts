@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { AbstractGradeDataView } from "./AbstractGradeDataView";
-import { GradeDataModel } from "../../../../shared/models/activity-data/grade-data.model";
+import { GradeDataModel } from "../../../../../shared/models/activity-data/grade-data.model";
 
 export class CyclingGradeDataView extends AbstractGradeDataView {
 

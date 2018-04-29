@@ -9,7 +9,7 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 import { ProgressType } from "../shared/models/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
-import { SyncedActivityModel } from "../../../../../core/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../shared/models/sync/synced-activity.model";
 import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressGraphComponent", () => {

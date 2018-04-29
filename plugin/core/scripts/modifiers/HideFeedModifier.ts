@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 
 export class HideFeedModifier implements IModifier {
 

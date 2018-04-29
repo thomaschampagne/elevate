@@ -1,4 +1,4 @@
-import { SyncedActivityModel } from "../../../core/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
 
 
 /**

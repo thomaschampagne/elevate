@@ -1,12 +1,12 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
 import { VacuumProcessor } from "./VacuumProcessor";
-import { ActivityStatsMapModel } from "../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../shared/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../shared/models/activity-data/analysis-data.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
