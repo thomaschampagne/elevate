@@ -34,7 +34,8 @@
 		"jquery": "^3.2.1",
 		"lodash": "^4.17.4",
 		"q": "^1.5.0",
-		"qrcode": "^0.9.0"
+		"qrcode": "^0.9.0",
+		"semver": "^5.5.0"
 	},
 	"devDependencies": {
 		"@types/chart.js": "^2.7.3",
@@ -50,6 +51,7 @@
 		"@types/nvd3": "^1.8.37",
 		"@types/q": "^1.0.6",
 		"@types/qrcode": "^0.8.0",
+		"@types/semver": "^5.5.0",
 		"copy-webpack-plugin": "^4.5.1",
 		"css-loader": "^0.28.11",
 		"file-loader": "^1.1.11",
