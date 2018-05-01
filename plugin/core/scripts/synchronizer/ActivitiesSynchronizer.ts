@@ -725,7 +725,7 @@ export class ActivitiesSynchronizer {
 			console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
 			const syncResult: SyncResultModel = {
-				globalHistoryChanges: this._activitiesChanges,
+				activitiesChangesModel: this._activitiesChanges,
 				syncedActivities: saved.data.syncedActivities,
 				lastSyncDateTime: saved.data.lastSyncDateTime
 			};

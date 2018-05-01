@@ -191,9 +191,9 @@ export class FitnessTrendComponent implements OnInit {
 
 			// Listen for syncFinished update then reload graph if necessary.
 			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-				if (syncResult.globalHistoryChanges.added.length > 0
-					|| syncResult.globalHistoryChanges.edited.length > 0
-					|| syncResult.globalHistoryChanges.deleted.length > 0) {
+				if (syncResult.activitiesChangesModel.added.length > 0
+					|| syncResult.activitiesChangesModel.edited.length > 0
+					|| syncResult.activitiesChangesModel.deleted.length > 0) {
 					this.reloadFitnessTrend();
 				}
 			});
