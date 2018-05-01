@@ -8,8 +8,8 @@ export interface IStorageUsage {
 
 export class StorageManager {
 
-	public static storageSyncType = "sync";
-	public static storageLocalType = "local";
+	public static TYPE_SYNC = "sync";
+	public static TYPE_LOCAL = "local";
 
 	public static setCookie(cname: string, cvalue: any, exdays: number): void {
 		const d: Date = new Date();

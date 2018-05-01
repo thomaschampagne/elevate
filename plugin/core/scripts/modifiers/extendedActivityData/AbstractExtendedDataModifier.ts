@@ -71,7 +71,7 @@ export abstract class AbstractExtendedDataModifier {
 							// Check is owner of activity
 							if (this.isAuthorOfViewedActivity) {
 								// Check if profileConfigured locally. Ask user to double check is athlete settings
-								Helper.getFromStorage(this.appResources.extensionId, StorageManager.storageLocalType, "profileConfigured")
+								Helper.getFromStorage(this.appResources.extensionId, StorageManager.TYPE_LOCAL, "profileConfigured")
 									.then((profileConfigured: any) => {
 										if (!profileConfigured || !profileConfigured.data) {
 											$("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'>Did you check your athlete settings before?</a>");

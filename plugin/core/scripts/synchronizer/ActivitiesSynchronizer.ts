@@ -423,9 +423,9 @@ export class ActivitiesSynchronizer {
 	 */
 	public clearSyncCache(): Q.IPromise<any> {
 
-		const promise = Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncedActivities).then(() => {
+		const promise = Helper.removeFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities).then(() => {
 			console.log("syncedActivities removed from local storage");
-			return Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
+			return Helper.removeFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
 		});
@@ -771,19 +771,19 @@ export class ActivitiesSynchronizer {
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
+		return Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
-		return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
+		return Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
 	}
 
 	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]): Q.Promise<any> {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncedActivities, syncedActivities);
+		return Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities, syncedActivities);
 	}
 
 	public getSyncedActivitiesFromLocal(): Q.Promise<any> {
-		return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncedActivities);
+		return Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities);
 	}
 
 	get multipleActivityProcessor(): MultipleActivityProcessor {

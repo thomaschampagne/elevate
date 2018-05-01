@@ -122,7 +122,7 @@ export class Helper {
     /**
      * Sending message to get key:value into storageType via background page
      * @param extensionId
-     * @param storageType StorageManager.storageLocalType || StorageManager.storageSyncType
+	 * @param storageType StorageManager.TYPE_LOCAL || StorageManager.TYPE_SYNC
      * @param key
      * @param callback
      * @return {Q.Promise<any>}
