@@ -1,8 +1,8 @@
 import { SyncedActivityModel } from "./synced-activity.model";
-import { HistoryChangesModel } from "../../../core/scripts/synchronizer/history-changes.model";
+import { ActivitiesChangesModel } from "../../../core/scripts/synchronizer/activities-changes.model";
 
 export class SyncResultModel {
-	public globalHistoryChanges: HistoryChangesModel;
+	public globalHistoryChanges: ActivitiesChangesModel;
 	public computedActivities: SyncedActivityModel[];
 	public lastSyncDateTime: number;
 }

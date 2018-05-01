@@ -3,7 +3,7 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { SyncService } from "../shared/services/sync/sync.service";
 
 @Component({
 	selector: "app-advanced-menu",
@@ -13,7 +13,7 @@ import { AthleteHistoryService } from "../shared/services/athlete-history/athlet
 export class AdvancedMenuComponent implements OnInit {
 
 	constructor(public userSettingsService: UserSettingsService,
-				public athleteHistoryService: AthleteHistoryService,
+				public syncService: SyncService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}
@@ -21,11 +21,11 @@ export class AdvancedMenuComponent implements OnInit {
 	public ngOnInit(): void {
 	}
 
-	public onAthleteHistoryClear(): void {
+	public onSyncedBackupClear(): void {
 
 		const data: ConfirmDialogDataModel = {
-			title: "Clear your athlete history",
-			content: "Are you sure to perform this action? You will be able to re-import history through backup file " +
+			title: "Clear your athlete synced data",
+			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
 			"or a new re-synchronization."
 		};
 
@@ -38,7 +38,7 @@ export class AdvancedMenuComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
 			if (confirm) {
-				this.athleteHistoryService.remove().then(() => {
+				this.syncService.clearSyncedData().then(() => {
 					afterClosedSubscription.unsubscribe();
 					location.reload();
 				}, error => {
@@ -53,7 +53,7 @@ export class AdvancedMenuComponent implements OnInit {
 
 		const data: ConfirmDialogDataModel = {
 			title: "Clear the plugin cache",
-			content: "This will remove caches of the plugin including display preferences (e.g. app theme chosen). You will not loose your history, athlete settings, zones settings or global settings."
+			content: "This will remove caches of the plugin including display preferences (e.g. app theme chosen). You will not loose your synced data, athlete settings, zones settings or global settings."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {

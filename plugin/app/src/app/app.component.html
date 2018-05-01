@@ -35,50 +35,50 @@
 
 			<ng-container>
 				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
-					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
+					<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
 						sync_disabled
 					</mat-icon>
-					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
+					<mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
 						sync_problem
 					</mat-icon>
-					<mat-icon *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+					<mat-icon *ngIf="(syncState === SyncState.SYNCED)">
 						sync
 					</mat-icon>
-					<span *ngIf="(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
-						History not synced
+					<span *ngIf="(syncState === SyncState.NOT_SYNCED)">
+						Activities not synced
 					</span>
-					<span *ngIf="(athleteHistoryState === AthleteHistoryState.PARTIALLY_SYNCED)">
-						History partially synced
+					<span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+						Activities partially synced
 					</span>
-					<span *ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+					<span *ngIf="(syncState === SyncState.SYNCED)">
 						Synced {{lastSyncDateMessage}}
 					</span>
 				</button>
 				<mat-menu #syncMenu="matMenu">
 					<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
 					<button mat-menu-item
-							(click)="onAthleteHistorySync(athleteHistoryState === AthleteHistoryState.NOT_SYNCED)">
+							(click)="onSync(syncState === SyncState.NOT_SYNCED)">
 						<mat-icon>sync</mat-icon>
 						Sync now
 					</button>
-					<button mat-menu-item (click)="onAthleteHistorySync(true)"
-							*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
+					<button mat-menu-item (click)="onSync(true)"
+							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
 						<mat-icon>redo</mat-icon>
 						Redo Full Sync
 					</button>
-					<button mat-menu-item (click)="onAthleteHistoryRemove()"
-							*ngIf="(athleteHistoryState !== AthleteHistoryState.NOT_SYNCED)">
+					<button mat-menu-item (click)="onClearSyncedData()"
+							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
 						<mat-icon>clear</mat-icon>
-						Clear Local History
+						Clear Local Activities
 					</button>
-					<button mat-menu-item (click)="onAthleteHistoryExport()"
-							*ngIf="(athleteHistoryState === AthleteHistoryState.SYNCED)">
+					<button mat-menu-item (click)="onSyncedBackupExport()"
+							*ngIf="(syncState === SyncState.SYNCED)">
 						<mat-icon>file_download</mat-icon>
-						Backup History
+						Backup Activities
 					</button>
-					<button mat-menu-item (click)="onAthleteHistoryImport()">
+					<button mat-menu-item (click)="onSyncedBackupImport()">
 						<mat-icon>file_upload</mat-icon>
-						Restore History
+						Restore Activities
 					</button>
 				</mat-menu>
 			</ng-container>

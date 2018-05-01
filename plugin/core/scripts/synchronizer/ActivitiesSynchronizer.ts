@@ -6,7 +6,7 @@ import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
-import { HistoryChangesModel } from "./history-changes.model";
+import { ActivitiesChangesModel } from "./activities-changes.model";
 import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
 import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
@@ -26,7 +26,7 @@ export class ActivitiesSynchronizer {
 	protected _multipleActivityProcessor: MultipleActivityProcessor;
 	protected _endReached = false;
 
-	private _globalHistoryChanges: HistoryChangesModel = {
+	private _activitiesChanges: ActivitiesChangesModel = {
 		added: [],
 		deleted: [],
 		edited: [],
@@ -39,21 +39,21 @@ export class ActivitiesSynchronizer {
 		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings);
 	}
 
-	public appendGlobalHistoryChanges(historyIn: HistoryChangesModel): void {
-		this._globalHistoryChanges.added = _.union(this._globalHistoryChanges.added, historyIn.added);
-		this._globalHistoryChanges.deleted = _.union(this._globalHistoryChanges.deleted, historyIn.deleted);
-		this._globalHistoryChanges.edited = _.union(this._globalHistoryChanges.edited, historyIn.edited);
+	public appendGlobalActivitiesChanges(activitiesChangesModel: ActivitiesChangesModel): void {
+		this._activitiesChanges.added = _.union(this._activitiesChanges.added, activitiesChangesModel.added);
+		this._activitiesChanges.deleted = _.union(this._activitiesChanges.deleted, activitiesChangesModel.deleted);
+		this._activitiesChanges.edited = _.union(this._activitiesChanges.edited, activitiesChangesModel.edited);
 	}
 
 	/**
 	 * Provides:
-	 * - activity IDs missing in the local history (added in strava.com and not computed/stored)
+	 * - activity IDs missing in the local activities (added in strava.com and not computed/stored)
 	 * - activity IDs to edit with their values (edited from strava.com)
-	 * @param activities Array<StravaActivityModel>
+	 * @param rawActivities Array<StravaActivityModel>
 	 * @param computedActivities Array<SyncedActivityModel>
-	 * @return HistoryChangesModel
+	 * @return ActivitiesChangesModel
 	 */
-	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
+	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], computedActivities: SyncedActivityModel[]): ActivitiesChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
@@ -67,7 +67,7 @@ export class ActivitiesSynchronizer {
 
 			_.forEach(rawActivities, (rawActivity: StravaActivityModel) => {
 
-				// Exist raw activity id in history?
+				// Exist raw activity id in activities?
 				// Seek for activity in just interrogated pages
 				const foundComputedActivity: SyncedActivityModel = _.find(computedActivities, {id: rawActivity.id});
 
@@ -90,23 +90,23 @@ export class ActivitiesSynchronizer {
 			});
 		}
 
-		const historyChanges: HistoryChangesModel = {
+		const activitiesChangesModel: ActivitiesChangesModel = {
 			added,
 			deleted,
 			edited,
 		};
 
-		return historyChanges;
+		return activitiesChangesModel;
 	}
 
 	/**
 	 * Provides:
-	 * - activity IDs to delete in the local history (removed from strava.com)
+	 * - activity IDs to delete in the local activities (removed from strava.com)
 	 * @param rawActivityIds
 	 * @param computedActivities
 	 * @returns {null}
 	 */
-	public static findDeletedActivities(rawActivityIds: number[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
+	public static findDeletedActivities(rawActivityIds: number[], computedActivities: SyncedActivityModel[]): ActivitiesChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
@@ -120,12 +120,12 @@ export class ActivitiesSynchronizer {
 			}
 		});
 
-		const historyChanges: HistoryChangesModel = {
+		const activitiesChangesModel: ActivitiesChangesModel = {
 			added,
 			deleted,
 			edited,
 		};
-		return historyChanges;
+		return activitiesChangesModel;
 	}
 
 	/**
@@ -148,11 +148,11 @@ export class ActivitiesSynchronizer {
 			this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
 
 				// Should find added and edited activities
-				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
-				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
+				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
+				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
-				_.forEach(historyChangesOnPagesRode.added, (activityId: number) => {
+				_.forEach(activitiesChangesModel.added, (activityId: number) => {
 					// Getting promise of stream for each activity...
 					promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
 				});
@@ -215,7 +215,7 @@ export class ActivitiesSynchronizer {
 				}, (notification: any) => {
 
 					// Progress...
-					fetchedActivitiesProgress = fetchedActivitiesStreamCount / historyChangesOnPagesRode.added.length * 100;
+					fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
 
 					const notify: SyncNotifyModel = {
 						step: "fetchedStreamsPercentage",
@@ -682,12 +682,12 @@ export class ActivitiesSynchronizer {
 			if (computedActivitiesStored && computedActivitiesStored.data) {
 
 				// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (computedActivitiesStored.data as SyncedActivityModel[]));
-				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
+				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (computedActivitiesStored.data as SyncedActivityModel[]));
+				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// Apply names/types changes
-				if (this._globalHistoryChanges.edited.length > 0) {
-					_.forEach(this._globalHistoryChanges.edited, (editData) => {
+				if (this._activitiesChanges.edited.length > 0) {
+					_.forEach(this._activitiesChanges.edited, (editData) => {
 						const activityToEdit: SyncedActivityModel = _.find((computedActivitiesStored.data as SyncedActivityModel[]), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
 						activityToEdit.name = editData.name;
 						activityToEdit.type = editData.type;
@@ -696,8 +696,8 @@ export class ActivitiesSynchronizer {
 				}
 
 				// Apply deletions
-				if (this._globalHistoryChanges.deleted.length > 0) {
-					_.forEach(this._globalHistoryChanges.deleted, (deleteId: number) => {
+				if (this._activitiesChanges.deleted.length > 0) {
+					_.forEach(this._activitiesChanges.deleted, (deleteId: number) => {
 						computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.find(computedActivitiesStored.data, {
 							id: deleteId,
 						}));
@@ -725,7 +725,7 @@ export class ActivitiesSynchronizer {
 			console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
 			const syncResult: SyncResultModel = {
-				globalHistoryChanges: this._globalHistoryChanges,
+				globalHistoryChanges: this._activitiesChanges,
 				computedActivities: saved.data.computedActivities,
 				lastSyncDateTime: saved.data.lastSyncDateTime
 			};
@@ -761,7 +761,7 @@ export class ActivitiesSynchronizer {
 
 	protected initializeForSync() {
 		this._hasBeenComputedActivities = null;
-		this._globalHistoryChanges = {
+		this._activitiesChanges = {
 			added: [],
 			deleted: [],
 			edited: [],
@@ -794,7 +794,7 @@ export class ActivitiesSynchronizer {
 		return this._hasBeenComputedActivities;
 	}
 
-	get globalHistoryChanges(): HistoryChangesModel {
-		return this._globalHistoryChanges;
+	get activitiesChanges(): ActivitiesChangesModel {
+		return this._activitiesChanges;
 	}
 }

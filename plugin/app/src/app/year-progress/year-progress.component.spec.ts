@@ -7,9 +7,9 @@ import { CoreModule } from "../core/core.module";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
 import { userSettings } from "../../../../shared/UserSettings";
 import { SyncedActivityModel } from "../../../../shared/models/sync/synced-activity.model";
@@ -20,7 +20,7 @@ describe("YearProgressComponent", () => {
 	let component: YearProgressComponent;
 	let fixture: ComponentFixture<YearProgressComponent>;
 
-	let athleteHistoryService: AthleteHistoryService;
+	let syncService: SyncService;
 	let userSettingsService: UserSettingsService;
 	let activityDao: ActivityDao;
 	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
@@ -37,12 +37,12 @@ describe("YearProgressComponent", () => {
 		}).compileComponents();
 
 		TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
-		athleteHistoryService = TestBed.get(AthleteHistoryService);
+		syncService = TestBed.get(SyncService);
 		userSettingsService = TestBed.get(UserSettingsService);
 		activityDao = TestBed.get(ActivityDao);
 
-		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
+		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
 		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 

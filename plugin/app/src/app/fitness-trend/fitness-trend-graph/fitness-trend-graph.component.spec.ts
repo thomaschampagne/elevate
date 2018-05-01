@@ -304,7 +304,7 @@ describe("FitnessTrendGraphComponent", () => {
 
 	});
 
-	it("should provide 'start' index of the first known activity when FROM don't matches athlete history", (done: Function) => {
+	it("should provide 'start' index of the first known activity when FROM don't matches athlete activities", (done: Function) => {
 
 		// Given
 		const period: PeriodModel = {

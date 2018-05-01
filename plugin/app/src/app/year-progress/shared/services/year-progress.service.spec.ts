@@ -474,7 +474,7 @@ describe("YearProgressService", () => {
 
 	});
 
-	it("should provide all available years from user history", (done: Function) => {
+	it("should provide all available years from user activities", (done: Function) => {
 
 		// Given
 		const expectedResult: number[] = [2018, 2017, 2016, 2015];

@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import * as _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
-import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { SyncService } from "../shared/services/sync/sync.service";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
@@ -136,9 +136,9 @@ export class FitnessTrendComponent implements OnInit {
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 	public skipActivityTypes: string[] = [];
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-	public isHistoryCompliant: boolean = null; // Can be null: don't know yet true/false status on load
+	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
 
-	constructor(public athleteHistoryService: AthleteHistoryService,
+	constructor(public syncService: SyncService,
 				public userSettingsService: UserSettingsService,
 				public fitnessService: FitnessService,
 				public externalUpdatesService: ExternalUpdatesService,
@@ -147,14 +147,14 @@ export class FitnessTrendComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
+		this.syncService.getSyncState().then((syncState: SyncState) => {
 
-			if (athleteHistoryState === AthleteHistoryState.SYNCED) {
+			if (syncState === SyncState.SYNCED) {
 				this.isSynced = true;
 				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
 			} else {
 				this.isSynced = false;
-				return Promise.reject("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString()) as PromiseLike<UserSettingsModel>;
+				return Promise.reject("Stopping here! SyncState is: " + SyncState[syncState].toString()) as PromiseLike<UserSettingsModel>;
 			}
 
 		}).then((userSettings: UserSettingsModel) => {
@@ -175,7 +175,7 @@ export class FitnessTrendComponent implements OnInit {
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.isHistoryCompliant = !_.isEmpty(this.fitnessTrend);
+			this.areSyncedActivitiesCompliant = !_.isEmpty(this.fitnessTrend);
 
 			// Provide min and max date to input component
 			this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
@@ -203,7 +203,7 @@ export class FitnessTrendComponent implements OnInit {
 		}, (error: AppError) => {
 
 			if (error.code === AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES) {
-				this.isHistoryCompliant = false;
+				this.areSyncedActivitiesCompliant = false;
 			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
 				console.warn(error);
 				this.resetUserPreferences();

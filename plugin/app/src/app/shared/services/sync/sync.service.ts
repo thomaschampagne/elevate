@@ -1,24 +1,22 @@
 import { Injectable } from "@angular/core";
-import { AthleteHistoryDao } from "../../dao/athlete-history/athlete-history.dao";
+import { SyncDao } from "../../dao/sync/sync.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { AthleteHistoryModel } from "./athlete-history.model";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import * as _ from "lodash";
-import { AthleteHistoryState } from "./athlete-history-state.enum";
-import { UserSettingsService } from "../user-settings/user-settings.service";
+import { SyncState } from "./sync-state.enum";
 import { environment } from "../../../../environments/environment";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedBackupModel } from "./synced-backup.model";
 
 @Injectable()
-export class AthleteHistoryService {
+export class SyncService {
 
 	public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
 	public static readonly SYNC_WINDOW_WIDTH: number = 700;
 	public static readonly SYNC_WINDOW_HEIGHT: number = 675;
 
-	constructor(public athleteHistoryDao: AthleteHistoryDao,
-				public userSettingsService: UserSettingsService,
+	constructor(public syncDao: SyncDao,
 				public activityDao: ActivityDao) {
 
 	}
@@ -28,7 +26,7 @@ export class AthleteHistoryService {
 	 * @returns {Promise<number>}
 	 */
 	public getLastSyncDateTime(): Promise<number> {
-		return this.athleteHistoryDao.getLastSyncDateTime();
+		return this.syncDao.getLastSyncDateTime();
 	}
 
 	/**
@@ -37,7 +35,7 @@ export class AthleteHistoryService {
 	 * @returns {Promise<number>}
 	 */
 	public saveLastSyncDateTime(lastSyncDateTime: number): Promise<number> {
-		return this.athleteHistoryDao.saveLastSyncDateTime(lastSyncDateTime);
+		return this.syncDao.saveLastSyncDateTime(lastSyncDateTime);
 	}
 
 	/**
@@ -45,37 +43,37 @@ export class AthleteHistoryService {
 	 * @returns {Promise<number>}
 	 */
 	public removeLastSyncDateTime(): Promise<number> {
-		return this.athleteHistoryDao.removeLastSyncDateTime();
+		return this.syncDao.removeLastSyncDateTime();
 	}
 
 	/**
 	 *
-	 * @param {AthleteHistoryModel} athleteHistoryModel
-	 * @returns {Promise<AthleteHistoryModel>}
+	 * @param {SyncedBackupModel} importedBackupModel
+	 * @returns {Promise<SyncedBackupModel>}
 	 */
-	public import(athleteHistoryModel: AthleteHistoryModel): Promise<AthleteHistoryModel> {
+	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
 
 		const installedVersion = this.getAppVersion();
 
-		if (_.isEmpty(athleteHistoryModel.computedActivities)) {
+		if (_.isEmpty(importedBackupModel.syncedActivities)) {
 			return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		if (_.isEmpty(athleteHistoryModel.pluginVersion)) {
+		if (_.isEmpty(importedBackupModel.pluginVersion)) {
 			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		if (!environment.skipRestoreHistoryCheck && installedVersion !== athleteHistoryModel.pluginVersion) {
-			return Promise.reject("Cannot import history because of plugin version mismatch. " +
+		if (!environment.skipRestoreSyncedBackupCheck && installedVersion !== importedBackupModel.pluginVersion) {
+			return Promise.reject("Cannot import activities because of plugin version mismatch. " +
 				"The installed plugin version is " + installedVersion + " and imported backup file is " +
-				"for a " + athleteHistoryModel.pluginVersion + " plugin version. Try perform a clean full sync.");
+				"for a " + importedBackupModel.pluginVersion + " plugin version. Try perform a clean full sync.");
 		}
 
-		return this.remove().then(() => {
+		return this.clearSyncedData().then(() => {
 
 			return Promise.all([
-				this.saveLastSyncDateTime(athleteHistoryModel.lastSyncDateTime),
-				this.activityDao.save(athleteHistoryModel.computedActivities)
+				this.saveLastSyncDateTime(importedBackupModel.lastSyncDateTime),
+				this.activityDao.save(importedBackupModel.syncedActivities)
 			]);
 
 		}).then((result: Object[]) => {
@@ -83,44 +81,43 @@ export class AthleteHistoryService {
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 
-			const athleteHistoryModel: AthleteHistoryModel = {
+			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
-				computedActivities: syncedActivityModels,
+				syncedActivities: syncedActivityModels,
 				pluginVersion: installedVersion
 			};
 
-			return Promise.resolve(athleteHistoryModel);
+			return Promise.resolve(backupModel);
 		});
 	}
 
 	/**
 	 *
-	 * @returns {Promise<any>} File info
+	 * @returns {Promise<{filename: string; size: number}>}
 	 */
-	public export(): Promise<any> {
+	public export(): Promise<{ filename: string, size: number }> {
 
-		return this.prepareForExport().then((athleteHistoryModel: AthleteHistoryModel) => {
+		return this.prepareForExport().then((backupModel: SyncedBackupModel) => {
 
-			const blob = new Blob([JSON.stringify(athleteHistoryModel)], {type: "application/json; charset=utf-8"});
-			const filename = moment().format("Y.M.D-H.mm") + "_v" + athleteHistoryModel.pluginVersion + ".history.json";
+			const blob = new Blob([JSON.stringify(backupModel)], {type: "application/json; charset=utf-8"});
+			const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
 			this.saveAs(blob, filename);
 			return Promise.resolve({filename: filename, size: blob.size});
 
 		}, error => {
-
 			return Promise.reject(error);
 		});
 	}
 
 	/**
 	 *
-	 * @returns {Promise<AthleteHistoryModel>}
+	 * @returns {Promise<SyncedBackupModel>}
 	 */
-	public prepareForExport(): Promise<AthleteHistoryModel> {
+	public prepareForExport(): Promise<SyncedBackupModel> {
 
 		return Promise.all([
 
-			this.athleteHistoryDao.getLastSyncDateTime(),
+			this.syncDao.getLastSyncDateTime(),
 			this.activityDao.fetch()
 
 		]).then((result: Object[]) => {
@@ -132,21 +129,21 @@ export class AthleteHistoryService {
 				return Promise.reject("Cannot export. No last synchronization date found.");
 			}
 
-			const athleteHistoryModel: AthleteHistoryModel = {
+			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
-				computedActivities: syncedActivityModels,
+				syncedActivities: syncedActivityModels,
 				pluginVersion: this.getAppVersion()
 			};
 
-			return Promise.resolve(athleteHistoryModel);
+			return Promise.resolve(backupModel);
 		});
 	}
 
 	/**
 	 *
-	 * @returns {Promise<AthleteHistoryModel>}
+	 * @returns {Promise<void>}
 	 */
-	public remove(): Promise<AthleteHistoryModel> {
+	public clearSyncedData(): Promise<void> {
 
 		return Promise.all([
 
@@ -160,18 +157,18 @@ export class AthleteHistoryService {
 
 			if ((!_.isNull(lastSyncDateTime) && _.isNumber(lastSyncDateTime)) ||
 				!_.isEmpty(syncedActivityModels)) {
-				return Promise.reject("Athlete history has not been deleted totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
+				return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 			}
 
-			return Promise.resolve(null);
+			return Promise.resolve();
 		});
 	}
 
 	/**
 	 *
-	 * @returns {Promise<AthleteHistoryState>}
+	 * @returns {Promise<SyncState>}
 	 */
-	public getSyncState(): Promise<AthleteHistoryState> {
+	public getSyncState(): Promise<SyncState> {
 
 		return Promise.all([
 
@@ -186,16 +183,16 @@ export class AthleteHistoryService {
 			const hasLastSyncDateTime: boolean = _.isNumber(lastSyncDateTime);
 			const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
 
-			let athleteHistoryState: AthleteHistoryState;
+			let syncState: SyncState;
 			if (!hasLastSyncDateTime && !hasSyncedActivityModels) {
-				athleteHistoryState = AthleteHistoryState.NOT_SYNCED;
+				syncState = SyncState.NOT_SYNCED;
 			} else if (!hasLastSyncDateTime && hasSyncedActivityModels) {
-				athleteHistoryState = AthleteHistoryState.PARTIALLY_SYNCED;
+				syncState = SyncState.PARTIALLY_SYNCED;
 			} else {
-				athleteHistoryState = AthleteHistoryState.SYNCED;
+				syncState = SyncState.SYNCED;
 			}
 
-			return Promise.resolve(athleteHistoryState);
+			return Promise.resolve(syncState);
 		});
 	}
 
@@ -206,8 +203,8 @@ export class AthleteHistoryService {
 	public sync(forceSync: boolean): void {
 		this.getCurrentTab((tab: chrome.tabs.Tab) => {
 			const params = "?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
-			const features = "width=" + AthleteHistoryService.SYNC_WINDOW_WIDTH + ", height=" + AthleteHistoryService.SYNC_WINDOW_HEIGHT + ", location=0";
-			window.open(AthleteHistoryService.SYNC_URL_BASE + params, "_blank", features);
+			const features = "width=" + SyncService.SYNC_WINDOW_WIDTH + ", height=" + SyncService.SYNC_WINDOW_HEIGHT + ", location=0";
+			window.open(SyncService.SYNC_URL_BASE + params, "_blank", features);
 		});
 	}
 

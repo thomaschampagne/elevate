@@ -1,24 +1,24 @@
 import { TestBed } from "@angular/core/testing";
 
-import { AthleteHistoryDao } from "./athlete-history.dao";
+import { SyncDao } from "./sync.dao";
 
 
-describe("AthleteHistoryDao", () => {
+describe("SyncDao", () => {
 
-	let athleteHistoryDao: AthleteHistoryDao = null;
+	let syncDao: SyncDao = null;
 
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [AthleteHistoryDao]
+			providers: [SyncDao]
 		});
 
 		// Retrieve injected service
-		athleteHistoryDao = TestBed.get(AthleteHistoryDao);
+		syncDao = TestBed.get(SyncDao);
 	});
 
 	it("should be created", (done: Function) => {
-		expect(athleteHistoryDao).toBeTruthy();
+		expect(syncDao).toBeTruthy();
 		done();
 	});
 
@@ -27,14 +27,14 @@ describe("AthleteHistoryDao", () => {
 		// Given
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
+		spyOn(syncDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({lastSyncDateTime: expectedLastSyncDateTime});
 			}
 		});
 
 		// When
-		const promise: Promise<number> = athleteHistoryDao.getLastSyncDateTime();
+		const promise: Promise<number> = syncDao.getLastSyncDateTime();
 
 		// Then
 		promise.then((lastSyncDateTime: number) => {
@@ -54,7 +54,7 @@ describe("AthleteHistoryDao", () => {
 		// Given
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
+		spyOn(syncDao, "browserStorageLocal").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -64,7 +64,7 @@ describe("AthleteHistoryDao", () => {
 		});
 
 		// When
-		const promise: Promise<number> = athleteHistoryDao.saveLastSyncDateTime(expectedLastSyncDateTime);
+		const promise: Promise<number> = syncDao.saveLastSyncDateTime(expectedLastSyncDateTime);
 
 		// Then
 		promise.then((lastSyncDateTime: number) => {
@@ -82,7 +82,7 @@ describe("AthleteHistoryDao", () => {
 	it("should remove last sync date time", (done: Function) => {
 
 		// Given
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
+		spyOn(syncDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -92,13 +92,13 @@ describe("AthleteHistoryDao", () => {
 		});
 
 		// When
-		const promise: Promise<number> = athleteHistoryDao.removeLastSyncDateTime();
+		const promise: Promise<number> = syncDao.removeLastSyncDateTime();
 
 		// Then
 		promise.then((lastSyncDateTime: number) => {
 
 			expect(lastSyncDateTime).toBeNull();
-			expect(athleteHistoryDao.browserStorageLocal).toHaveBeenCalled();
+			expect(syncDao.browserStorageLocal).toHaveBeenCalled();
 			done();
 
 		}, error => {
@@ -112,7 +112,7 @@ describe("AthleteHistoryDao", () => {
 
 		const expectedLastSyncDateTime = 9999;
 
-		spyOn(athleteHistoryDao, "browserStorageLocal").and.returnValue({
+		spyOn(syncDao, "browserStorageLocal").and.returnValue({
 			remove: (key: string, callback: () => {}) => {
 				callback();
 			},
@@ -122,7 +122,7 @@ describe("AthleteHistoryDao", () => {
 		});
 
 		// When
-		const promise: Promise<number> = athleteHistoryDao.removeLastSyncDateTime();
+		const promise: Promise<number> = syncDao.removeLastSyncDateTime();
 
 		// Then
 		promise.then((lastSyncDateTime: number) => {

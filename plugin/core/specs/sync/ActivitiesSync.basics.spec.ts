@@ -3,7 +3,7 @@ import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
 import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
 import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { HistoryChangesModel } from "../../scripts/synchronizer/history-changes.model";
+import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
 
@@ -55,7 +55,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		// Now find+test changes
 		// let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-		const changes: HistoryChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
+		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
 
 		expect(changes).not.toBeNull();
 		expect(changes.deleted).toEqual([]);
@@ -83,37 +83,37 @@ describe("ActivitiesSynchronizer", () => {
 
 	});
 
-	it("should append history of pages where activities added, modified and deleted ", (done: Function) => {
+	it("should append activities of pages where activities added, modified and deleted ", (done: Function) => {
 
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
 		const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
 		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 
 		// Append
-		activitiesSynchronizer.appendGlobalHistoryChanges({
+		activitiesSynchronizer.appendGlobalActivitiesChanges({
 			added: [1, 2],
 			deleted: [],
 			edited: []
 		});
 
-		expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
-		expect(activitiesSynchronizer.globalHistoryChanges.added).toEqual([1, 2]);
-		expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(0);
-		expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(0);
+		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronizer.activitiesChanges.added).toEqual([1, 2]);
+		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(0);
+		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(0);
 
 		// Append
-		activitiesSynchronizer.appendGlobalHistoryChanges({
+		activitiesSynchronizer.appendGlobalActivitiesChanges({
 			added: [4, 5],
 			deleted: [],
 			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}]
 		});
-		expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
-		expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(4);
-		expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(0);
-		expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(1);
+		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronizer.activitiesChanges.added.length).toEqual(4);
+		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(0);
+		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(1);
 
 		// Append
-		activitiesSynchronizer.appendGlobalHistoryChanges({
+		activitiesSynchronizer.appendGlobalActivitiesChanges({
 			added: [5, 10, 11],
 			deleted: [15, 16],
 			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}, {
@@ -123,10 +123,10 @@ describe("ActivitiesSynchronizer", () => {
 				display_type: "Run"
 			}]
 		});
-		expect(activitiesSynchronizer.globalHistoryChanges).not.toBeNull();
-		expect(activitiesSynchronizer.globalHistoryChanges.added.length).toEqual(6); // id:5 already added
-		expect(activitiesSynchronizer.globalHistoryChanges.deleted.length).toEqual(2);
-		expect(activitiesSynchronizer.globalHistoryChanges.edited.length).toEqual(3);
+		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronizer.activitiesChanges.added.length).toEqual(6); // id:5 already added
+		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(2);
+		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(3);
 
 		done();
 	});

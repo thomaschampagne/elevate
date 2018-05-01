@@ -1,15 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material";
-import { AthleteHistoryModel } from "../../services/athlete-history/athlete-history.model";
 import * as _ from "lodash";
+import { SyncedBackupModel } from "../../services/sync/synced-backup.model";
 
 @Component({
-	selector: "app-athlete-history-import-dialog",
-	templateUrl: "./athlete-history-import-dialog.component.html",
-	styleUrls: ["./athlete-history-import-dialog.component.scss"]
+	selector: "app-import-backup-dialog",
+	templateUrl: "./import-backup-dialog.component.html",
+	styleUrls: ["./import-backup-dialog.component.scss"]
 })
-export class AthleteHistoryImportDialogComponent implements OnInit {
+export class ImportBackupDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "80%";
 	public static readonly MIN_WIDTH: string = "40%";
@@ -33,8 +33,8 @@ export class AthleteHistoryImportDialogComponent implements OnInit {
 			const reader = new FileReader();
 			reader.readAsText(this.file);
 			reader.onload = (event: Event) => {
-				const athleteHistoryModel: AthleteHistoryModel = JSON.parse((event.target as IDBRequest).result) as AthleteHistoryModel;
-				this.dialogRef.close(athleteHistoryModel);
+				const syncedBackupModel: SyncedBackupModel = JSON.parse((event.target as IDBRequest).result) as SyncedBackupModel;
+				this.dialogRef.close(syncedBackupModel);
 			};
 		}
 	}
