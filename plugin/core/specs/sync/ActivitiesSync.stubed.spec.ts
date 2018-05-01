@@ -446,9 +446,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(140);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(syncResult.syncedActivities.length).toEqual(CHROME_STORAGE_STUB.syncedActivities.length);
 
@@ -470,9 +470,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 		}).then((syncResult: SyncResultModel) => {
 
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(3);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
@@ -498,9 +498,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(140);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(syncResult.syncedActivities.length).toEqual(CHROME_STORAGE_STUB.syncedActivities.length);
 
@@ -520,7 +520,7 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(1);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(1);
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 657225503})).toBeDefined();
 
 			// Now remove first activity and last...
@@ -541,9 +541,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(2); // must be 2
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(2); // must be 2
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 799672885})).toBeDefined(); // must be defined!
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 367463594})).toBeDefined(); // must be defined!
@@ -568,9 +568,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(140);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(editStravaActivity(9999999, rawPagesOfActivities[0], "FakeName", "FakeType")).toBeFalsy(); // Fake one, nothing should be edited
 			expect(editStravaActivity(707356065, rawPagesOfActivities[0], "Prends donc un velo!", "Ride")).toBeTruthy(); // Page 1, "Je suis un gros lent !"
@@ -587,9 +587,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(syncResult.syncedActivities).not.toBeNull();
 			expect(syncResult.syncedActivities.length).toEqual(140);
 
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(2);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(2);
 
 			// Check return
 			let ride: SyncedActivityModel = _.find(syncResult.syncedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
@@ -635,9 +635,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(140);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			expect(removeStravaActivity(9999999, rawPagesOfActivities[0])).toBeFalsy(); // Fake one, nothing should be deleted
 			expect(removeStravaActivity(707356065, rawPagesOfActivities[0])).toBeTruthy(); // Page 1, "Je suis un gros lent !"
@@ -656,9 +656,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(138); // -2 deleted
 			expect(syncResult.syncedActivities.length).toEqual(138); // -2 deleted
 
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(2);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(2);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			// Check returns
 			const ride: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.syncedActivities, {id: 707356065}); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
@@ -693,9 +693,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
 			expect(syncResult.syncedActivities.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(140);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(0);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(140);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(0);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(0);
 
 			/**
 			 * Add 3 on various pages
@@ -750,9 +750,9 @@ describe("ActivitiesSynchronizer syncing with stubs", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(135); // -5 deleted
 			expect(syncResult.syncedActivities.length).toEqual(135); // -5 deleted
 
-			expect(syncResult.globalHistoryChanges.added.length).toEqual(3);
-			expect(syncResult.globalHistoryChanges.deleted.length).toEqual(5);
-			expect(syncResult.globalHistoryChanges.edited.length).toEqual(4);
+			expect(syncResult.activitiesChangesModel.added.length).toEqual(3);
+			expect(syncResult.activitiesChangesModel.deleted.length).toEqual(5);
+			expect(syncResult.activitiesChangesModel.edited.length).toEqual(4);
 
 			// Check some edited
 			let activity: SyncedActivityModel = <SyncedActivityModel> _.find(CHROME_STORAGE_STUB.syncedActivities, {id: 707356065});
