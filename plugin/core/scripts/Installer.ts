@@ -53,7 +53,7 @@ class Installer {
 	protected static clearSyncCache(): void {
 
 		const storageManagerOnLocal = new StorageManager(); // typeof StorageManager
-		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "computedActivities", () => {
+		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "syncedActivities", () => {
 			storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "lastSyncDateTime", () => {
 				console.log("Local History cleared");
 			});

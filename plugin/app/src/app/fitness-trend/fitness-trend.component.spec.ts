@@ -63,7 +63,7 @@ describe("FitnessTrendComponent", () => {
 		// Mocking chrome storage
 		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
+				callback({syncedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
 		});
 
