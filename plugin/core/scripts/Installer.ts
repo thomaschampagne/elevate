@@ -16,6 +16,9 @@ class Installer {
 		});
 	}
 
+	public static isPreviousVersionLowerThanOrEqualsTo(oldVersion: string, upgradingVersion: string) {
+		return semver.gte(upgradingVersion, oldVersion);
+	}
 
 	protected static handleInstall() {
 
@@ -35,17 +38,22 @@ class Installer {
 
 		const thisVersion: string = chrome.runtime.getManifest().version;
 
-		console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+		console.log("Updated from " + details.previousVersion + " to " + thisVersion);
 		console.debug("UserSettings on update", userSettings);
 
-		// Clear local history if coming from version under 5.1.1
-		if (semver.gt("5.1.1", details.previousVersion)) {
+		// v <= v5.1.1 ?: Clear local history if coming from version under 5.1.1
+		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "5.1.1")) {
 			this.clearSyncCache();
 		}
 
-		// Move & convert userHrrZones to generic heartrate zones
-		if (semver.gt("5.11.0", details.previousVersion)) {
-			migration_from_previous_version_under_5_11_0();
+		// v <= v5.11. ?0: Move & convert userHrrZones to generic heartrate zones
+		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "5.11.0")) {
+			migration_from_version_below_than_5_11_0();
+		}
+
+		// v <= v6.1.2 ?: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities
+		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.1.2")) {
+			migration_from_version_below_than_6_1_2();
 		}
 
 	}
@@ -53,7 +61,7 @@ class Installer {
 	protected static clearSyncCache(): void {
 
 		const storageManagerOnLocal = new StorageManager(); // typeof StorageManager
-		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "syncedActivities", () => {
+		storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "computedActivities", () => {
 			storageManagerOnLocal.removeFromStorage(StorageManager.storageLocalType, "lastSyncDateTime", () => {
 				console.log("Local History cleared");
 			});
@@ -63,10 +71,44 @@ class Installer {
 
 Installer.listen();
 
+const migration_from_version_below_than_6_1_2 = function () {
+
+	console.log("Migrate from 6.1.2 or below");
+
+	// Remove syncWithAthleteProfile
+	chrome.storage.local.remove(["syncWithAthleteProfile"], () => {
+
+		console.log("syncWithAthleteProfile removed");
+
+		chrome.storage.local.get(["computedActivities"], result => {
+
+			if (result.computedActivities) {
+
+				chrome.storage.local.set({syncedActivities: result.computedActivities}, () => {
+
+					console.log("syncedActivities saved");
+
+					chrome.storage.local.remove(["computedActivities"], () => {
+
+						console.log("computedActivities removed");
+
+					});
+
+				});
+
+			} else {
+				console.log("No computedActivities key found");
+			}
+		});
+
+	});
+
+};
+
 /**
  * Migration from previous version under 5.11.0
  */
-const migration_from_previous_version_under_5_11_0 = function () {
+const migration_from_version_below_than_5_11_0 = function () {
 
 	const removeDeprecatedHrrZonesKey = function (callback: Function): void {
 		chrome.storage.sync.remove(["userHrrZones"], () => {
