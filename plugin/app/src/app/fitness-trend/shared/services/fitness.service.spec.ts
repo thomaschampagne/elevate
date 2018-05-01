@@ -472,7 +472,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should prepare fitness activities (only heart rate based history) w/ PM=OFF & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
+	it("should prepare fitness activities (only heart rate based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
 
 		// Given
 		const expectedFitnessPreparedActivitiesLength = 3;
@@ -885,7 +885,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should prepare fitness activities (only power based history) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+	it("should prepare fitness activities (only power based activities) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		const expectedFitnessPreparedActivitiesLength = 3;
@@ -1162,7 +1162,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should reject prepare fitness activities (only power based history) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+	it("should reject prepare fitness activities (only power based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		powerMeterEnable = false;
@@ -1403,7 +1403,7 @@ describe("FitnessService", () => {
 		});
 	});
 
-	it("should reject generate athlete daily activity without hr or power based history & HR_Mode=HRSS", (done: Function) => {
+	it("should reject generate athlete daily activity without hr or power based activities & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		const syncedActivityModels: SyncedActivityModel[] = [];

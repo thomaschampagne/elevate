@@ -41,7 +41,7 @@ export class GlobalSettingsService {
 		options: [{
 			key: "autoSyncMinutes",
 			type: "number",
-			title: "Sync and scan your athlete history every X minutes",
+			title: "Sync and scan your athlete activities every X minutes",
 			labels: ["All"],
 			min: 10,
 			max: 43200, // 30 days

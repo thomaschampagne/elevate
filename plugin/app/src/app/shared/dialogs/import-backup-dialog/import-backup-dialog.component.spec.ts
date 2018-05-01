@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AthleteHistoryImportDialogComponent } from "./athlete-history-import-dialog.component";
+import { ImportBackupDialogComponent } from "./import-backup-dialog.component";
 import { CoreModule } from "../../../core/core.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { SharedModule } from "../../shared.module";
 
-describe("AthleteHistoryImportDialogComponent", () => {
+describe("ImportBackupDialogComponent", () => {
 
-	let component: AthleteHistoryImportDialogComponent;
-	let fixture: ComponentFixture<AthleteHistoryImportDialogComponent>;
+	let component: ImportBackupDialogComponent;
+	let fixture: ComponentFixture<ImportBackupDialogComponent>;
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
@@ -31,7 +31,7 @@ describe("AthleteHistoryImportDialogComponent", () => {
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AthleteHistoryImportDialogComponent);
+		fixture = TestBed.createComponent(ImportBackupDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

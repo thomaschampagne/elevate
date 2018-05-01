@@ -9,19 +9,19 @@ import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs/Subscription";
 import { WindowService } from "./shared/services/window/window.service";
-import { AthleteHistoryService } from "./shared/services/athlete-history/athlete-history.service";
+import { SyncService } from "./shared/services/sync/sync.service";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import { AthleteHistoryImportDialogComponent } from "./shared/dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
-import { AthleteHistoryModel } from "./shared/services/athlete-history/athlete-history.model";
-import { AthleteHistoryState } from "./shared/services/athlete-history/athlete-history-state.enum";
+import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dialog/import-backup-dialog.component";
+import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
 // TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
@@ -52,8 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
 	public currentTheme: Theme;
 
 	public toolBarTitle: string;
-	public AthleteHistoryState = AthleteHistoryState;
-	public athleteHistoryState: AthleteHistoryState;
+	public SyncState = SyncState;
+	public syncState: SyncState;
 	public lastSyncDateMessage: string;
 	public routerEventsSubscription: Subscription;
 
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public router: Router,
-				public athleteHistoryService: AthleteHistoryService,
+				public syncService: SyncService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar,
 				public sideNavService: SideNavService,
@@ -202,9 +202,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public updateLastSyncDateStatus(): void {
-		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
-			this.athleteHistoryState = athleteHistoryState;
-			this.athleteHistoryService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+		this.syncService.getSyncState().then((syncState: SyncState) => {
+			this.syncState = syncState;
+			this.syncService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 				if (_.isNumber(lastSyncDateTime)) {
 					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
 				}
@@ -218,15 +218,15 @@ export class AppComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	public onAthleteHistorySync(forceSync: boolean): void {
-		this.athleteHistoryService.sync(forceSync);
+	public onSync(forceSync: boolean): void {
+		this.syncService.sync(forceSync);
 	}
 
-	public onAthleteHistoryRemove(): void {
+	public onClearSyncedData(): void {
 
 		const data: ConfirmDialogDataModel = {
-			title: "Clear your athlete history",
-			content: "Are you sure to perform this action? You will be able to re-import history through backup file " +
+			title: "Clear your athlete synced data",
+			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
 			"or a new re-synchronization."
 		};
 
@@ -239,7 +239,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
 			if (confirm) {
-				this.athleteHistoryService.remove().then(() => {
+				this.syncService.clearSyncedData().then(() => {
 					location.reload();
 				}, error => {
 					this.snackBar.open(error, "Close");
@@ -249,9 +249,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public onAthleteHistoryExport(): void {
+	public onSyncedBackupExport(): void {
 
-		this.athleteHistoryService.export().then((result: any) => {
+		this.syncService.export().then((result: any) => {
 
 			this.dialog.open(GotItDialogComponent, {
 				minWidth: GotItDialogComponent.MIN_WIDTH,
@@ -265,17 +265,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	}
 
-	public onAthleteHistoryImport(): void {
+	public onSyncedBackupImport(): void {
 
-		const dialogRef = this.dialog.open(AthleteHistoryImportDialogComponent, {
-			minWidth: AthleteHistoryImportDialogComponent.MIN_WIDTH,
-			maxWidth: AthleteHistoryImportDialogComponent.MAX_WIDTH,
+		const dialogRef = this.dialog.open(ImportBackupDialogComponent, {
+			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
+			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
 		});
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((athleteHistoryModel: AthleteHistoryModel) => {
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((backupModel: SyncedBackupModel) => {
 
-			if (athleteHistoryModel) {
-				this.athleteHistoryService.import(athleteHistoryModel).then(() => {
+			if (backupModel) {
+				this.syncService.import(backupModel).then(() => {
 					location.reload();
 				}, error => {
 					this.snackBar.open(error, "Close");

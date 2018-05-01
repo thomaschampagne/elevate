@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 
 @Injectable()
-export class AthleteHistoryDao {
+export class SyncDao {
 
-	// FIXME merge physical storage of "lastSyncDateTime" & "computedActivities" into a single local storage object "AthleteHistory" ?!
 	public static readonly LAST_SYNCED_DATE_TIME_KEY: string = "lastSyncDateTime";
 
 	constructor() {
@@ -16,7 +15,7 @@ export class AthleteHistoryDao {
 	 */
 	public getLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve) => {
-			this.browserStorageLocal().get(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
+			this.browserStorageLocal().get(SyncDao.LAST_SYNCED_DATE_TIME_KEY, (result: { lastSyncDateTime: number }) => {
 				resolve((_.isNumber(result.lastSyncDateTime)) ? result.lastSyncDateTime : null);
 			});
 		});
@@ -32,7 +31,7 @@ export class AthleteHistoryDao {
 		return new Promise<number>((resolve) => {
 
 			const lastSyncDateTimeData: any = {};
-			lastSyncDateTimeData[AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY] = lastSyncDateTime;
+			lastSyncDateTimeData[SyncDao.LAST_SYNCED_DATE_TIME_KEY] = lastSyncDateTime;
 
 			this.browserStorageLocal().set(lastSyncDateTimeData, () => {
 				this.getLastSyncDateTime().then((lastSyncDateTime: number) => {
@@ -49,7 +48,7 @@ export class AthleteHistoryDao {
 	 */
 	public removeLastSyncDateTime(): Promise<number> {
 		return new Promise<number>((resolve, reject) => {
-			this.browserStorageLocal().remove(AthleteHistoryDao.LAST_SYNCED_DATE_TIME_KEY, () => {
+			this.browserStorageLocal().remove(SyncDao.LAST_SYNCED_DATE_TIME_KEY, () => {
 				this.getLastSyncDateTime().then((lastSyncDateTime: number) => {
 					(_.isNumber(lastSyncDateTime)) ? reject("LastSyncDateTime has not been deleted") : resolve(null);
 				});

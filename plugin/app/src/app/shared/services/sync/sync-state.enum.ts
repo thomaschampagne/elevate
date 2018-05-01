@@ -1,4 +1,4 @@
-export enum AthleteHistoryState {
+export enum SyncState {
 	NOT_SYNCED,
 	PARTIALLY_SYNCED,
 	SYNCED
