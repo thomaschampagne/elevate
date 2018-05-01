@@ -3,6 +3,6 @@ import { ActivitiesChangesModel } from "../../../core/scripts/synchronizer/activ
 
 export class SyncResultModel {
 	public globalHistoryChanges: ActivitiesChangesModel;
-	public computedActivities: SyncedActivityModel[];
+	public syncedActivities: SyncedActivityModel[];
 	public lastSyncDateTime: number;
 }

@@ -174,10 +174,10 @@ export class ActivitiesSyncModifier implements IModifier {
 				case "fetchedStreamsPercentage":
 					stepMessage = "Fetching streams...";
 					break;
-				case "computedActivitiesPercentage":
+				case "syncedActivitiesPercentage":
 					stepMessage = "Computing extended statistics...";
 					break;
-				case "savedComputedActivities":
+				case "savedSyncedActivities":
 					stepMessage = "Saving results to local extension storage...";
 					this.updateStorageUsage();
 					break;

@@ -33,7 +33,7 @@ describe("ActivityDao", () => {
 		// Given
 		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: _TEST_SYNCED_ACTIVITIES_});
+				callback({syncedActivities: _TEST_SYNCED_ACTIVITIES_});
 			}
 		});
 
@@ -61,7 +61,7 @@ describe("ActivityDao", () => {
 		// Given
 		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: null});
+				callback({syncedActivities: null});
 			}
 		});
 
@@ -91,7 +91,7 @@ describe("ActivityDao", () => {
 				callback();
 			},
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: syncedActivityModelsToSave});
+				callback({syncedActivities: syncedActivityModelsToSave});
 			}
 		});
 
@@ -121,7 +121,7 @@ describe("ActivityDao", () => {
 				callback();
 			},
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: null});
+				callback({syncedActivities: null});
 			}
 		});
 
@@ -151,7 +151,7 @@ describe("ActivityDao", () => {
 				callback();
 			},
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: syncedActivityModelsToSave});
+				callback({syncedActivities: syncedActivityModelsToSave});
 			}
 		});
 

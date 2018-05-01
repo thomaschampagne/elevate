@@ -30,7 +30,7 @@ export class MultipleActivityProcessor {
 
 		const deferred = Q.defer<SyncedActivityModel[]>();
 
-		let computedActivitiesPercentageCount = 0;
+		let syncedActivitiesPercentageCount = 0;
 
 		let activitiesComputedResults: AnalysisDataModel[] = [];
 
@@ -43,15 +43,15 @@ export class MultipleActivityProcessor {
 					activitiesComputedResults.push(activityComputed);
 
 					const notify: SyncNotifyModel = {
-						step: "computedActivitiesPercentage",
-						progress: computedActivitiesPercentageCount / activitiesWithStream.length * 100,
+						step: "syncedActivitiesPercentage",
+						progress: syncedActivitiesPercentageCount / activitiesWithStream.length * 100,
 						index,
 						activityId: activityWithStream.id,
 					};
 
 					deferred.notify(notify);
 
-					computedActivitiesPercentageCount++;
+					syncedActivitiesPercentageCount++;
 
 				});
 
@@ -79,14 +79,14 @@ export class MultipleActivityProcessor {
 
 				});
 
-				// Sort computedActivities by start date ascending before resolve
+				// Sort syncedActivities by start date ascending before resolve
 				activitiesComputed = _.sortBy(activitiesComputed, (item: SyncedActivityModel) => {
 					return (new Date(item.start_time)).getTime();
 				});
 
 				// Finishing... force progress @ 100% for compute progress callback
 				const notify: SyncNotifyModel = {
-					step: "computedActivitiesPercentage",
+					step: "syncedActivitiesPercentage",
 					progress: 100,
 				};
 

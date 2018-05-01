@@ -42,12 +42,12 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should detect activities added, modified and deleted ", (done: Function) => {
 
-		let computedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/computedActivities20161213.json").computedActivities);
+		let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/syncedActivities20161213.json").syncedActivities);
 		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 
-		// Simulate Added in strava: consist to remove from computed activities...
-		computedActivities = removeActivityFromArray(723224273, computedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
-		computedActivities = removeActivityFromArray(707356065, computedActivities); // Remove Ride "Je suis un gros lent !"
+		// Simulate Added in strava: consist to remove from synced activities...
+		syncedActivities = removeActivityFromArray(723224273, syncedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
+		syncedActivities = removeActivityFromArray(707356065, syncedActivities); // Remove Ride "Je suis un gros lent !"
 
 		// Simulate Modify: consist to edit data in strava
 		rawPageOfActivities = editActivityFromArray(799672885, rawPageOfActivities, "Run comeback", "Run"); // Edit "Running back... Hard !"
@@ -55,7 +55,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		// Now find+test changes
 		// let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
-		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, computedActivities);
+		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
 
 		expect(changes).not.toBeNull();
 		expect(changes.deleted).toEqual([]);
