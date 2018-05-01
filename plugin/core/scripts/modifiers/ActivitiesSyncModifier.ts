@@ -83,7 +83,7 @@ export class ActivitiesSyncModifier implements IModifier {
 	}
 
 	protected updateStorageUsage() {
-		Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
+		Helper.getStorageUsage(this.extensionId, StorageManager.TYPE_LOCAL).then((storageUsage: IStorageUsage) => {
 			$("#storageUsage").html("Extension local storage occupation: <strong>" + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + "MB</strong>");
 		});
 	}
