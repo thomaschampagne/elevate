@@ -44,7 +44,8 @@ import { MessagesModel } from "../../shared/models/messages.model";
 import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./AthleteUpdate";
 import "./Follow";
-import { IReleaseNote, releaseNotes } from "../../shared/ReleaseNotes";
+import { releaseNotes } from "../../shared/ReleaseNotes";
+import { ReleaseNoteModel } from "../../shared/models/release-note.model";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -176,7 +177,7 @@ export class StravistiX {
 	 */
 	public showPluginInstallOrUpgradeRibbon(): void {
 
-		const latestRelease: IReleaseNote = _.first(releaseNotes);
+		const latestRelease: ReleaseNoteModel = _.first(releaseNotes);
 
 		if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
 			console.log("Silent update... skip update ribbon");
