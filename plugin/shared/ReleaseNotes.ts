@@ -1,24 +1,6 @@
+import { ReleaseNoteModel } from "./models/release-note.model";
 
-export interface IReleaseNote {
-	version: string; // SemVer 'x.x.x' http://semver.org/
-	date?: string;
-	message?: string;
-	hotFixes?: string[];
-	features: string[];
-	fixes?: string[];
-
-	/**
-	 * Say if we display again features. Eg. Fix or hotfix release. Default: false
-	 */
-	isPatch?: boolean;
-
-	/**
-	 * Make silent updates... no update ribbon displayed
-	 */
-	silent?: boolean;
-}
-
-export let releaseNotes: IReleaseNote[] = [
+export let releaseNotes: ReleaseNoteModel[] = [
 	{
 		version: "6.1.2",
 		date: "2018-04-22",
