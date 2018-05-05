@@ -152,7 +152,7 @@ export class ActivityComputer {
 		this.movementData = null;
 
 		if (activityStream.velocity_smooth) {
-			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time);
+			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_distance);
 		}
 
 		// Q1 Speed
@@ -343,7 +343,7 @@ export class ActivityComputer {
 		return currentValue * delta - ((currentValue - previousValue) * delta) / 2; // Discrete integral
 	}
 
-	protected moveData(velocityArray: number[], timeArray: number[]): MoveDataModel {
+	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedDistance?: number[]): MoveDataModel {
 
 		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -353,6 +353,7 @@ export class ActivityComputer {
 			genuineAvgSpeedSumCount = 0;
 		const speedsNonZero: number[] = [];
 		const speedsNonZeroDuration: number[] = [];
+		const gradeAdjSpeedsNonZero: number[] = [];
 		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
@@ -361,6 +362,8 @@ export class ActivityComputer {
 
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
+
+		const hasGradeAdjustedDistance: boolean = !_.isEmpty(gradeAdjustedDistance);
 
 		// End Preparing zone
 		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
@@ -373,9 +376,9 @@ export class ActivityComputer {
 				// Compute speed
 				currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
 
-				if (currentSpeed > 0) { // If moving...
+				movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-					movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+				if (currentSpeed > 0) { // If moving...
 
 					speedsNonZero.push(currentSpeed);
 					speedsNonZeroDuration.push(movingSeconds);
@@ -403,6 +406,15 @@ export class ActivityComputer {
 					}
 
 				}
+
+				if (hasGradeAdjustedDistance) {
+
+					const currentGradeAdjustedSpeed = ((gradeAdjustedDistance[i] - gradeAdjustedDistance[i - 1]) / movingSeconds) * 3.6;
+
+					if (currentGradeAdjustedSpeed > 0) {
+						gradeAdjSpeedsNonZero.push(currentGradeAdjustedSpeed)
+					}
+				}
 			}
 		}
 
@@ -416,24 +428,28 @@ export class ActivityComputer {
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
+		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjSpeedsNonZero) : null;
+
 		const speedData: SpeedDataModel = {
-			genuineAvgSpeed,
+			genuineAvgSpeed: genuineAvgSpeed,
 			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSumCount, elapsedSeconds),
-			avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
 			medianSpeed: percentiles[1],
 			upperQuartileSpeed: percentiles[2],
-			varianceSpeed,
-			standardDeviationSpeed,
+			varianceSpeed: varianceSpeed,
+			genuineGradeAdjustedAvgSpeed: genuineGradeAdjustedAvgSpeed,
+			standardDeviationSpeed: standardDeviationSpeed,
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
 		const paceData: PaceDataModel = {
-			avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			lowerQuartilePace: this.convertSpeedToPace(percentiles[0]),
 			medianPace: this.convertSpeedToPace(percentiles[1]),
 			upperQuartilePace: this.convertSpeedToPace(percentiles[2]),
 			variancePace: this.convertSpeedToPace(varianceSpeed),
+			genuineGradeAdjustedAvgPace: (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null,
 			paceZones: (this.returnZones) ? paceZones : null,
 		};
 
