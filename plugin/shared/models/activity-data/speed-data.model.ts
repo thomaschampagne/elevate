@@ -10,4 +10,5 @@ export class SpeedDataModel {
 	public varianceSpeed: number;
 	public standardDeviationSpeed: number;
 	public speedZones: ZoneModel[];
+	public genuineGradeAdjustedAvgSpeed: number;
 }

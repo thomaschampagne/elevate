@@ -7,4 +7,5 @@ export class PaceDataModel {
 	public upperQuartilePace: number;
 	public variancePace: number;
 	public paceZones: ZoneModel[];
+	public genuineGradeAdjustedAvgPace: number;
 }
