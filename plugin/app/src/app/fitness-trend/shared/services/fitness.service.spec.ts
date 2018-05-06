@@ -48,7 +48,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			HRSSPerHour: avgHr / 90,
 			TRIMP: avgHr * 2,
 			TRIMPPerHour: avgHr / 60,
-			fthr: avgHr * 1.5,
+			best20min: avgHr * 1.5,
 			activityHeartRateReserve: avgHr * 0.25,
 			activityHeartRateReserveMax: avgHr / 2,
 			averageHeartRate: avgHr,

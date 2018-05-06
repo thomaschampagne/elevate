@@ -5,7 +5,7 @@ export class HeartRateDataModel {
 	public HRSSPerHour: number;
 	public TRIMP: number;
 	public TRIMPPerHour: number;
-	public fthr: number;
+	public best20min: number;
 	public lowerQuartileHeartRate: number;
 	public medianHeartRate: number;
 	public upperQuartileHeartRate: number;
