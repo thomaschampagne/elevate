@@ -33,6 +33,7 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
+	public static readonly GRADE_ADJUSTED_PACE_WINDOWS = {time: 12, distance: 24};
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -353,7 +354,7 @@ export class ActivityComputer {
 			genuineAvgSpeedSumCount = 0;
 		const speedsNonZero: number[] = [];
 		const speedsNonZeroDuration: number[] = [];
-		const gradeAdjSpeedsNonZero: number[] = [];
+		const gradeAdjustedSpeedsNonZero: number[] = [];
 		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
@@ -364,6 +365,8 @@ export class ActivityComputer {
 		let elapsedSeconds = 0;
 
 		const hasGradeAdjustedDistance: boolean = !_.isEmpty(gradeAdjustedDistance);
+		let gradeAdjustedTimeWindow = 0;
+		let gradeAdjustedDistanceWindow = 0;
 
 		// End Preparing zone
 		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
@@ -409,10 +412,17 @@ export class ActivityComputer {
 
 				if (hasGradeAdjustedDistance) {
 
-					const currentGradeAdjustedSpeed = ((gradeAdjustedDistance[i] - gradeAdjustedDistance[i - 1]) / movingSeconds) * 3.6;
+					const gradeDistance = (gradeAdjustedDistance[i] - gradeAdjustedDistance[i - 1]);
+					gradeAdjustedTimeWindow += movingSeconds;
+					gradeAdjustedDistanceWindow += gradeDistance;
 
-					if (currentGradeAdjustedSpeed > 0) {
-						gradeAdjSpeedsNonZero.push(currentGradeAdjustedSpeed)
+					if (gradeAdjustedTimeWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.time
+						&& gradeAdjustedDistanceWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.distance) {
+						gradeAdjustedSpeedsNonZero.push(gradeAdjustedDistanceWindow / gradeAdjustedTimeWindow * 3.6);
+
+						// Reset windows
+						gradeAdjustedDistanceWindow = 0;
+						gradeAdjustedTimeWindow = 0;
 					}
 				}
 			}
@@ -428,7 +438,7 @@ export class ActivityComputer {
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
-		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjSpeedsNonZero) : null;
+		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
 
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: genuineAvgSpeed,
@@ -686,10 +696,10 @@ export class ActivityComputer {
 		for (let i = 0; i < heartRateArray.length; i++) { // Loop on samples
 
 			if (i > 0 && (
-					this.isTrainer || // can be cycling home trainer
-					!velocityArray || // OR Non movements activities
-					velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
-				)) {
+				this.isTrainer || // can be cycling home trainer
+				!velocityArray || // OR Non movements activities
+				velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
+			)) {
 
 				// Compute heartrate data while moving from now
 				durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
