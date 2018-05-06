@@ -19,7 +19,7 @@ const expectPace = (expectPaceString: string, toEqualPaceString: string, seconds
 
 };
 
-describe("ActivityComputer Grade Adjusted Pace", () => {
+describe("ActivityComputer Paces", () => {
 
 	const activityType = "Run";
 	const isTrainer = false;
@@ -30,7 +30,7 @@ describe("ActivityComputer Grade Adjusted Pace", () => {
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json"));// Thomas C user settings
 	const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../../fixtures/activities/887284960/statsMap.json"));
 
-	const PACE_SECONDS_TOLERANCE = 15;
+	const PACE_SECONDS_TOLERANCE = 20;
 
 	it("should compute grade adjusted pace of activity 887284960", (done: Function) => {
 
@@ -45,25 +45,6 @@ describe("ActivityComputer Grade Adjusted Pace", () => {
 		// Then
 		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
 		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:11", PACE_SECONDS_TOLERANCE);
-
-		done();
-
-	});
-
-
-	it("should compute grade adjusted pace of activity 852961332", (done: Function) => {
-
-		// Given
-		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/852961332/stream.json"));
-
-		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
-		const result: AnalysisDataModel = activityComputer.compute();
-
-		// Then
-		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
-		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:52", PACE_SECONDS_TOLERANCE);
 
 		done();
 
@@ -154,6 +135,78 @@ describe("ActivityComputer Grade Adjusted Pace", () => {
 		// Then
 		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
 		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:27", PACE_SECONDS_TOLERANCE);
+
+		done();
+
+	});
+
+	it("should compute grade adjusted pace of activity 1551720271", (done: Function) => {
+
+		// Given
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1551720271/stream.json"));
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:59", PACE_SECONDS_TOLERANCE);
+
+		done();
+
+	});
+
+	it("should compute grade adjusted pace of activity 1553538436", (done: Function) => {
+
+		// Given
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553538436/stream.json"));
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:02", PACE_SECONDS_TOLERANCE);
+
+		done();
+
+	});
+
+	it("should compute grade adjusted pace of activity 1553976435", (done: Function) => {
+
+		// Given
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553976435/stream.json"));
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:51", PACE_SECONDS_TOLERANCE);
+
+		done();
+
+	});
+
+	it("should compute grade adjusted pace of activity 1553069082", (done: Function) => {
+
+		// Given
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553069082/stream.json"));
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:12", PACE_SECONDS_TOLERANCE);
 
 		done();
 
