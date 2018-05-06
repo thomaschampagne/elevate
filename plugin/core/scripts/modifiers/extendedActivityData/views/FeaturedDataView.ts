@@ -67,12 +67,12 @@ export class FeaturedDataView extends AbstractDataView {
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
-			if (_.isNumber(this.analysisData.powerData.ftp) && !this.isSegmentEffortView) {
+			if (_.isNumber(this.analysisData.powerData.best20min) && !this.isSegmentEffortView) {
 				let label = "Best 20min Power";
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}
-				this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.powerData.ftp, 0), label + " <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "w", "displayAdvancedPowerData"); // Avg watt /kg
+				this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.powerData.best20min, 0), label + " <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "w", "displayAdvancedPowerData"); // Avg watt /kg
 			}
 
 			if (_.isNumber(this.analysisData.powerData.weightedWattsPerKg)) {

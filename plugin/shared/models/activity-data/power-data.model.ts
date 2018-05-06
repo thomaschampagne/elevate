@@ -5,7 +5,7 @@ export class PowerDataModel {
 	public avgWatts: number;
 	public avgWattsPerKg: number;
 	public weightedPower: number;
-	public ftp: number;
+	public best20min: number;
 	public variabilityIndex: number;
 	public punchFactor: number;
 	public powerStressScore: number;

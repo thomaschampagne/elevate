@@ -643,12 +643,12 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
-		let ftp = null;
+		let best20min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
-			ftp = splitCalculator.getBestSplit(60 * 20, true);
+			best20min = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("No ftp available for this range");
+			console.warn("No best 20min power available for this range");
 		}
 
 		const powerData: PowerDataModel = {
@@ -656,7 +656,7 @@ export class ActivityComputer {
 			avgWatts,
 			avgWattsPerKg,
 			weightedPower,
-			ftp,
+			best20min: best20min,
 			variabilityIndex,
 			punchFactor,
 			powerStressScore,
