@@ -136,8 +136,8 @@ export abstract class AbstractExtendedDataModifier {
 		// ...
 		let trainingImpulse = "-";
 		let hrss = "-";
-		let fthr = "-";
-		let fthrUnit = "";
+		let best20minHr = "-";
+		let best20minHrUnit = "";
 		let activityHeartRateReserve = "-";
 		let activityHeartRateReserveUnit = "";
 
@@ -145,16 +145,16 @@ export abstract class AbstractExtendedDataModifier {
 			trainingImpulse = this.analysisData.heartRateData.TRIMP.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.TRIMPPerHour.toFixed(1) + " / hour)</span>";
 			hrss = this.analysisData.heartRateData.HRSS.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.heartRateData.HRSSPerHour.toFixed(1) + " / hour)</span>";
 			activityHeartRateReserve = this.analysisData.heartRateData.activityHeartRateReserve.toFixed(0);
-			if (_.isNumber(this.analysisData.heartRateData.fthr)) {
-				fthr = this.analysisData.heartRateData.fthr.toFixed(0);
-				fthrUnit = "bpm";
+			if (_.isNumber(this.analysisData.heartRateData.best20min)) {
+				best20minHr = this.analysisData.heartRateData.best20min.toFixed(0);
+				best20minHrUnit = "bpm";
 			}
 			activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.analysisData.heartRateData.activityHeartRateReserveMax.toFixed(0) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
 		}
 
 		this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(0, 2, fthr, "Best 20min Heart Rate", fthrUnit, "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 2, best20minHr, "Best 20min Heart Rate", best20minHrUnit, "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
 
 		// ...

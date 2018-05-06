@@ -144,7 +144,7 @@ export class HeartRateDataView extends AbstractDataView {
 		// Trimp
 		this.insertContentAtGridPosition(0, 1, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(2, 1, this.printNumber(this.heartRateData.fthr, 0), "Best 20min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(2, 1, this.printNumber(this.heartRateData.best20min, 0), "Best 20min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "bpm", "displayAdvancedHrData");
 
 		// Quartiles
 		this.insertContentAtGridPosition(0, 2, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
