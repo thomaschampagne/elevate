@@ -652,16 +652,16 @@ export class ActivityComputer {
 		}
 
 		const powerData: PowerDataModel = {
-			hasPowerMeter,
-			avgWatts,
-			avgWattsPerKg,
-			weightedPower,
+			hasPowerMeter: hasPowerMeter,
+			avgWatts: avgWatts,
+			avgWattsPerKg: avgWattsPerKg,
+			weightedPower: weightedPower,
 			best20min: best20min,
-			variabilityIndex,
-			punchFactor,
-			powerStressScore,
-			powerStressScorePerHour,
-			weightedWattsPerKg,
+			variabilityIndex: variabilityIndex,
+			punchFactor: punchFactor,
+			powerStressScore: powerStressScore,
+			powerStressScorePerHour: powerStressScorePerHour,
+			weightedWattsPerKg: weightedWattsPerKg,
 			lowerQuartileWatts: percentiles[0],
 			medianWatts: percentiles[1],
 			upperQuartileWatts: percentiles[2],
@@ -757,8 +757,8 @@ export class ActivityComputer {
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
 			upperQuartileHeartRate: percentiles[2],
-			averageHeartRate,
-			maxHeartRate,
+			averageHeartRate: averageHeartRate,
+			maxHeartRate: maxHeartRate,
 			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
 			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
 		};
@@ -1056,7 +1056,7 @@ export class ActivityComputer {
 		avgMaxGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount)) : _.last(sortedGradeArray);
 
 		const gradeData: GradeDataModel = {
-			avgGrade,
+			avgGrade: avgGrade,
 			avgMaxGrade: avgMaxGrade,
 			avgMinGrade: avgMinGrade,
 			lowerQuartileGrade: percentiles[0],
