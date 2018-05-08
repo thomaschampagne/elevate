@@ -36,14 +36,14 @@ describe("ActivityComputer", () => {
 		expect(result.moveRatio.toString()).toMatch(/^0.99967362924/);
 		expect(result.speedData.genuineAvgSpeed.toString()).toMatch(/^33.0634084231/);
 		expect(result.speedData.totalAvgSpeed.toString()).toMatch(/^33.05261749347/);
-		expect(result.speedData.avgPace.toString()).toMatch(/^109/);
+		expect(result.speedData.avgPace.toString()).toMatch(/^108/);
 		expect(result.speedData.lowerQuartileSpeed.toString()).toMatch(/^27.36/);
 		expect(result.speedData.medianSpeed.toString()).toMatch(/^33.48000000000/);
 		expect(result.speedData.upperQuartileSpeed.toString()).toMatch(/^38.88/);
 		expect(result.speedData.varianceSpeed.toString()).toMatch(/^75.007731480/);
 		expect(result.speedData.standardDeviationSpeed.toString()).toMatch(/^8.6607004035/);
 
-		expect(result.paceData.avgPace.toString()).toMatch(/^109/);
+		expect(result.paceData.avgPace.toString()).toMatch(/^108/);
 		expect(result.paceData.lowerQuartilePace.toString()).toMatch(/^131.5789473684/);
 		expect(result.paceData.medianPace.toString()).toMatch(/^107.526881720/);
 		expect(result.paceData.upperQuartilePace.toString()).toMatch(/^92.592592592/);
