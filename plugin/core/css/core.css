@@ -192,7 +192,7 @@
 }
 
 #syncContainer progress {
-	height: 20px;
+	height: 7px;
 }
 
 .progressBarGroup {
@@ -210,7 +210,6 @@
 
 progress {
 	width: 75%;
-	height: 20px;
 	-webkit-appearance: none;
 	border: none;
 }
@@ -227,7 +226,7 @@ progress::-webkit-progress-value {
 	border-radius: 0px;
 	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
 	background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0)),
-	-webkit-linear-gradient(left, #e94e1b, #e94e1b);
+	-webkit-linear-gradient(left, #505050, #444444);
 
 	/* Looks great, now animating it */
 	background-size: 25px 14px, 100% 100%, 100% 100%;

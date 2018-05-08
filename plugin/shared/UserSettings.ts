@@ -1,7 +1,6 @@
 import { UserSettingsModel } from "./models/user-settings/user-settings.model";
 
 export const userSettings: UserSettingsModel = {
-	autoSyncMinutes: 360,
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 	userGender: "men",

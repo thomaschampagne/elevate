@@ -6,7 +6,6 @@ export class UserSettingsModel {
 	public static readonly SYSTEM_UNIT_METRIC_KEY = "metric";
 	public static readonly SYSTEM_UNIT_IMPERIAL_KEY = "imperial";
 
-	public autoSyncMinutes: number;
 	public localStorageMustBeCleared: boolean;
 	public systemUnit: string;
 	public userGender: string;

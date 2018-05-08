@@ -75,32 +75,26 @@ const migration_from_version_below_than_6_1_2 = function () {
 
 	console.log("Migrate from 6.1.2 or below");
 
-	// Remove syncWithAthleteProfile
+	// Remove local syncWithAthleteProfile
 	chrome.storage.local.remove(["syncWithAthleteProfile"], () => {
-
 		console.log("syncWithAthleteProfile removed");
-
 		chrome.storage.local.get(["computedActivities"], result => {
-
 			if (result.computedActivities) {
-
 				chrome.storage.local.set({syncedActivities: result.computedActivities}, () => {
-
 					console.log("syncedActivities saved");
-
 					chrome.storage.local.remove(["computedActivities"], () => {
-
 						console.log("computedActivities removed");
-
 					});
-
 				});
-
 			} else {
 				console.log("No computedActivities key found");
 			}
 		});
+	});
 
+	// Remove sync autoSyncMinutes
+	chrome.storage.sync.remove(["autoSyncMinutes"], () => {
+		console.log("autoSyncMinutes removed");
 	});
 
 };

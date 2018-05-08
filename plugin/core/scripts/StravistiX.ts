@@ -1146,15 +1146,6 @@ export class StravistiX {
 
 					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
 
-					// If last sync is has been done more than "autoSyncMinutes"
-					const hasNormalSyncToBeDone = (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes));
-
-					// Then store that it has to be performed absolutely (but at later time)!
-					if (hasNormalSyncToBeDone) {
-						console.log("A normal sync will be done later");
-						StorageManager.setCookie("stravistix_normal_sync_tbd", true, 365);
-					}
-
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
 					const fastSync = true;
 					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(fastSync);
@@ -1162,20 +1153,6 @@ export class StravistiX {
 
 						console.log("Fast sync finished", syncResult);
 						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
-
-						if (hasNormalSyncToBeDone || StorageManager.getCookie("stravistix_normal_sync_tbd")) {
-							return this.activitiesSynchronizer.sync();
-						} else {
-							return null;
-						}
-
-					}).then((syncResult: SyncResultModel) => {
-
-						if (syncResult) {
-							console.log("Normal sync finished", syncResult);
-							notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
-							StorageManager.removeCookie("stravistix_normal_sync_tbd");
-						}
 
 					}).catch((err: any) => {
 						console.warn(err);
