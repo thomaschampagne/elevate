@@ -1135,7 +1135,7 @@ export class StravistiX {
 			return;
 		}
 
-		setTimeout(() => { // Wait for 15s before starting the auto-sync
+		setTimeout(() => { // Wait for 5s before starting the auto-sync
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
 			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
@@ -1156,7 +1156,8 @@ export class StravistiX {
 					}
 
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
-					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(true);
+					const fastSync = true;
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(fastSync);
 					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
 						console.log("Fast sync finished", syncResult);
@@ -1185,7 +1186,7 @@ export class StravistiX {
 				}
 			});
 
-		}, 1000 * 5); // Wait for 10s before starting the auto-sync
+		}, 1000 * 5); // Wait for 5s before starting the auto-sync
 
 	}
 
