@@ -693,9 +693,14 @@ export class ActivitiesSynchronizer { // TODO Rename
 
 			if (syncedActivitiesStored && syncedActivitiesStored.data) {
 
-				if (fastSync && fastSync === true && fastSyncActivitiesChangesModel) {
+				if (fastSync && fastSync === true) {
 
-					this.applyEditedActivitiesChanges(syncedActivitiesStored.data, fastSyncActivitiesChangesModel.edited);
+					if (this._activitiesChanges.edited.length > 0) {
+
+						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, this._activitiesChanges.edited);
+						return this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data);
+
+					}
 
 				} else {
 
@@ -716,9 +721,9 @@ export class ActivitiesSynchronizer { // TODO Rename
 							}));
 						});
 					}
-				}
 
-				return this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data);
+					return this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data);
+				}
 
 			} else {
 				return null;

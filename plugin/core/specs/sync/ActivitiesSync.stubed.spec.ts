@@ -1024,6 +1024,32 @@ describe("ActivitiesSynchronizer", () => {
 
 			done();
 		});
+
+	});
+
+	it("should ensure fast sync with no changes", (done: Function) => {
+
+		// Given
+		const enableFastSync = true;
+		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+			return Q.resolve();
+		});
+
+		// When
+		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
+			return activitiesSynchronizer.sync(enableFastSync);
+		});
+
+		// Then
+		promiseFastSync.then((syncResultModel: SyncResultModel) => {
+			expect(syncResultModel.activitiesChangesModel.added.length).toEqual(0);
+			expect(syncResultModel.activitiesChangesModel.edited.length).toEqual(0);
+			expect(syncResultModel.activitiesChangesModel.deleted.length).toEqual(0);
+
+			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(140);
+
+			done();
+		});
 	});
 
 	afterEach(() => {
