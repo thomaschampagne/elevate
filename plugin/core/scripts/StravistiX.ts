@@ -1135,7 +1135,8 @@ export class StravistiX {
 			return;
 		}
 
-		setTimeout(() => { // Wait for 5s before starting the auto-sync
+		const waitBeforeFastSyncSeconds = 2;
+		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
 			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
@@ -1163,7 +1164,7 @@ export class StravistiX {
 				}
 			});
 
-		}, 1000 * 5); // Wait for 5s before starting the auto-sync
+		}, 1000 * waitBeforeFastSyncSeconds); // Wait for before starting the auto-sync
 
 	}
 
