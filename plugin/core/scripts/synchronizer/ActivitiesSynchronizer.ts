@@ -289,7 +289,17 @@ export class ActivitiesSynchronizer { // TODO Rename
 			const activitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
 				localSyncedActivityModels);
 
-			const hasAddedOrEditedActivitiesMisMatch = (activitiesChangesModel.added.length > 0 || activitiesChangesModel.edited.length > 0);
+			let remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
+				return stravaActivityModel.id;
+			});
+
+			activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(remoteFirstPageIds,
+				_.slice(localSyncedActivityModels, -1 * (remoteFirstPageIds.length - activitiesChangesModel.added.length))).deleted;
+
+			const hasAddedOrEditedActivitiesMisMatch = (activitiesChangesModel.added.length > 0
+				|| activitiesChangesModel.edited.length > 0
+				|| activitiesChangesModel.deleted.length > 0);
+
 			const result = {
 				hasMisMatch: hasAddedOrEditedActivitiesMisMatch,
 				activitiesChangesModel: activitiesChangesModel
@@ -648,7 +658,11 @@ export class ActivitiesSynchronizer { // TODO Rename
 		const deferred = Q.defer<SyncResultModel>();
 		let syncNotify: SyncNotifyModel = {};
 
-		let fastSyncActivitiesChangesModel = null;
+		let activitiesChangesModel: ActivitiesChangesModel = {
+			added: [],
+			edited: [],
+			deleted: []
+		};
 
 		// Reset values for a sync
 		this.initializeForSync();
@@ -666,7 +680,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 
 					if (result.hasMisMatch) {
 
-						fastSyncActivitiesChangesModel = result.activitiesChangesModel;
+						activitiesChangesModel = result.activitiesChangesModel;
 
 						console.log("Mismatch found between local and remote activities. Syncing first page only.");
 						const fromPage = 1;
@@ -695,34 +709,41 @@ export class ActivitiesSynchronizer { // TODO Rename
 
 				if (fastSync && fastSync === true) {
 
-					if (this._activitiesChanges.edited.length > 0) {
+					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
+					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
 
-						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, this._activitiesChanges.edited);
-						return this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data);
-
+					if (hasEditedChanges) {
+						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, activitiesChangesModel.edited);
 					}
+
+					if (hasDeletedChanges) {
+						this.applyDeletedActivitiesChanges(syncedActivitiesStored, activitiesChangesModel.deleted);
+					}
+
+					return (hasEditedChanges || hasDeletedChanges) ? this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data) : null;
 
 				} else {
 
+					activitiesChangesModel = this._activitiesChanges;
+
 					// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-					const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (syncedActivitiesStored.data as SyncedActivityModel[]));
-					this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
+					activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (syncedActivitiesStored.data as SyncedActivityModel[])).deleted;
+
+					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
+					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
 
 					// Apply names/types changes
-					if (this._activitiesChanges.edited.length > 0) {
-						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, this._activitiesChanges.edited);
+					if (hasEditedChanges) {
+						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, activitiesChangesModel.edited);
 					}
 
 					// Apply deletions
-					if (this._activitiesChanges.deleted.length > 0) {
-						_.forEach(this._activitiesChanges.deleted, (deleteId: number) => {
-							syncedActivitiesStored.data = _.without(syncedActivitiesStored.data, _.find(syncedActivitiesStored.data, {
-								id: deleteId,
-							}));
-						});
+					if (hasDeletedChanges) {
+						this.applyDeletedActivitiesChanges(syncedActivitiesStored, activitiesChangesModel.deleted);
 					}
 
-					return this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data);
+					return (hasEditedChanges || hasDeletedChanges) ? this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data) : null;
+
 				}
 
 			} else {
@@ -744,7 +765,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 			console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
 			const syncResult: SyncResultModel = {
-				activitiesChangesModel: this._activitiesChanges,
+				activitiesChangesModel: activitiesChangesModel,
 				syncedActivities: saved.data.syncedActivities,
 				lastSyncDateTime: saved.data.lastSyncDateTime
 			};
@@ -772,6 +793,14 @@ export class ActivitiesSynchronizer { // TODO Rename
 		});
 
 		return deferred.promise;
+	}
+
+	private applyDeletedActivitiesChanges(syncedActivitiesStored: { data: SyncedActivityModel[] }, deleted: number[]) {
+		_.forEach(deleted, (deleteId: number) => {
+			syncedActivitiesStored.data = _.without(syncedActivitiesStored.data, _.find(syncedActivitiesStored.data, {
+				id: deleteId,
+			}));
+		});
 	}
 
 	public applyEditedActivitiesChanges(syncedActivitiesStored: SyncedActivityModel[], edited: Array<{ id: number, name: string, type: string, display_type: string }>) {
