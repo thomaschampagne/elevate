@@ -1,7 +1,7 @@
 module.exports = function (config) {
 	config.set({
 		basePath: "./",
-		browsers: ["ChromeHeadless"],
+		browsers: ["Chrome"],
 		frameworks: ["jasmine", "promise"],
 		reporters: ["progress"],
 		plugins: [
@@ -53,7 +53,7 @@ module.exports = function (config) {
 			"text/x-typescript": ["ts", "tsx"]
 		},
 		colors: true,
-		singleRun: true,
+		singleRun: false,
 		browserConsoleLogOptions: {
 			// path: "./specs.log",
 			terminal: false
