@@ -41,7 +41,7 @@ export class ActivitiesSyncModifier implements IModifier {
 		html += "           <span style=\"font-size: 28px;\">Syncing activities to browser.</span><br/><br/>It can take several minutes on your first synchronisation. " +
 			"Keep that in background... Synced activities are locally saved in the storage allocated by the extension." +
 			"<br/><br/>On a daily use, your recent activities will be automatically pushed to the stravistix app when strava website is loaded." +
-			"<br/><br/>In specific cases like activities deletion or \"old\" added/edited activities, you have to launch synchronization by yourself.<br/><br/>" +
+			"<br/><br/>In specific cases like \"old\" activities added, edited or deleted from strava, you have to launch synchronization by yourself.<br/><br/>" +
 			"<i>Note: closing this window will stop the synchronization. Window will close itself when synchronization is done.</i>";
 		html += "       </div>";
 		html += "       <div class=\"progressBarGroup\">";
