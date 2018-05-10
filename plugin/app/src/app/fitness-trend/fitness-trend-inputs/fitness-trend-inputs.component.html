@@ -43,7 +43,7 @@
 
 	<span fxFlex="3"></span>
 
-	<button mat-icon-button color="primary" (click)="onSettingsClicked()">
+	<button mat-icon-button color="primary" (click)="onConfigClicked()">
 		<mat-icon>settings</mat-icon>
 	</button>
 
@@ -58,27 +58,27 @@
 <div fxFill fxLayout="row" fxLayoutAlign="space-between center" class="fromToPeriod">
 
 	<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
-					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onTrainingZonesToggle()"
-					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Training Zones are disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores are not optimized to be use with Training Zones. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
 					  'Display Training Zones on graph'}}">
 		<mat-icon>power_input</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
-					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onPowerMeterToggle()"
-					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Cycling Power Stress Scores (PSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to PSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
 					  'Use cycling power meter when available'}}">
 		<mat-icon>flash_on</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isSwimEnabled"
-					  [disabled]="(heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onSwimToggle()"
-					  matTooltip="{{(heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Swimming Stress Scores (SSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to SSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
 					  'Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)'}}">
 		<mat-icon>pool</mat-icon>
