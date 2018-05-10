@@ -109,7 +109,7 @@ describe("FitnessTrendComponent", () => {
 	it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", (done: Function) => {
 
 		// Given
-		component.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
 		component.isTrainingZonesEnabled = true;
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
@@ -134,7 +134,7 @@ describe("FitnessTrendComponent", () => {
 	it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", (done: Function) => {
 
 		// Given
-		component.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		component.isTrainingZonesEnabled = true;
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;

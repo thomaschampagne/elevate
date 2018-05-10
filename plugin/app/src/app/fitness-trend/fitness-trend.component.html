@@ -74,13 +74,13 @@
 									  [periodViewed]="periodViewed"
 									  [lastPeriodViewed]="lastPeriodViewed"
 									  [fitnessUserSettingsModel]="fitnessUserSettingsModel"
-									  [heartRateImpulseMode]="heartRateImpulseMode"
+									  [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 									  [isPowerMeterEnabled]="isPowerMeterEnabled"
 									  [isSwimEnabled]="isSwimEnabled"
 									  [isEBikeRidesEnabled]="isEBikeRidesEnabled"
 									  (periodViewedChange)="onPeriodViewedChange($event)"
-									  (heartRateImpulseModeChange)="onHeartRateImpulseModeChange($event)"
+									  (fitnessTrendConfigChange)="onFitnessTrendConfigChange($event)"
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
 									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
 									  (swimToggleChange)="onSwimToggleChange($event)"
@@ -108,7 +108,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<app-fitness-trend-table [fitnessTrend]="fitnessTrend"
-								 [heartRateImpulseMode]="heartRateImpulseMode"
+								 [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 								 [isPowerMeterEnabled]="isPowerMeterEnabled"
 								 [isSwimEnabled]="isSwimEnabled">
