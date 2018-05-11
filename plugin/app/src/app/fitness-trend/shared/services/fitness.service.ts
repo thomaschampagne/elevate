@@ -11,6 +11,7 @@ import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { InitializedFitnessTrendModel } from "../models/initialized-fitness-trend.model";
 
 @Injectable()
 export class FitnessService {
@@ -279,13 +280,15 @@ export class FitnessService {
 	 * @param {boolean} isPowerMeterEnabled
 	 * @param {boolean} isSwimEnabled
 	 * @param {string[]} skipActivityTypes
+	 * @param {InitializedFitnessTrendModel} initializedFitnessTrendModel
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
 	public computeTrend(fitnessUserSettingsModel: FitnessUserSettingsModel,
 						heartRateImpulseMode: HeartRateImpulseMode,
 						isPowerMeterEnabled: boolean,
 						isSwimEnabled: boolean,
-						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
+						skipActivityTypes?: string[],
+						initializedFitnessTrendModel?: InitializedFitnessTrendModel): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
@@ -293,17 +296,31 @@ export class FitnessService {
 			this.generateDailyStress(fitnessUserSettingsModel, heartRateImpulseMode, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
-					let ctl = 0;
-					let atl = 0;
-					let tsb = 0;
+					let ctl, atl, tsb;
 
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
-					_.forEach(dailyActivity, (dayStress: DayStressModel) => {
+					_.forEach(dailyActivity, (dayStress: DayStressModel, index: number) => {
 
-						ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
-						atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
-						tsb = ctl - atl;
+						const isPreStartDay = (index === 0);
+
+						if (isPreStartDay) {
+
+							if (initializedFitnessTrendModel) {
+
+								ctl = initializedFitnessTrendModel.ctl;
+								atl = initializedFitnessTrendModel.atl;
+								tsb = ctl - atl;
+
+							} else {
+								ctl = atl = tsb = 0;
+							}
+
+						} else {
+							ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
+							atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
+							tsb = ctl - atl;
+						}
 
 						const dayFitnessTrend: DayFitnessTrendModel = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
 

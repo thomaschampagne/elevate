@@ -1,22 +1,21 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FitnessTrendSettingsDialogComponent } from "./fitness-trend-settings-dialog.component";
+import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { FitnessTrendSettingsModel } from "../shared/models/fitness-trend-settings.model";
-import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
+import { FitnessTrendComponent } from "../fitness-trend.component";
 
-describe("FitnessTrendSettingsDialogComponent", () => {
-	let component: FitnessTrendSettingsDialogComponent;
-	let fixture: ComponentFixture<FitnessTrendSettingsDialogComponent>;
-	let fitnessTrendSettingsModel: FitnessTrendSettingsModel;
+describe("FitnessTrendConfigDialogComponent", () => {
+	let component: FitnessTrendConfigDialogComponent;
+	let fixture: ComponentFixture<FitnessTrendConfigDialogComponent>;
+	let fitnessTrendSettingsModel: FitnessTrendConfigModel;
 
 	beforeEach((done: Function) => {
 
-		fitnessTrendSettingsModel = new FitnessTrendSettingsModel();
-		fitnessTrendSettingsModel.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		fitnessTrendSettingsModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -37,7 +36,7 @@ describe("FitnessTrendSettingsDialogComponent", () => {
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(FitnessTrendSettingsDialogComponent);
+		fixture = TestBed.createComponent(FitnessTrendConfigDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

@@ -1,0 +1,70 @@
+<h2 mat-dialog-title>Fitness trend user configuration</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<div>
+		<h3 mat-dialog-title>Heart rate stress score calculation mode</h3>
+
+		<mat-radio-group (change)="onModeChange()" [(ngModel)]="fitnessTrendConfigModel.heartRateImpulseMode">
+			<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">HRSS: Heart Rate Stress Score (recommend)
+			</mat-radio-button>
+			<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">TRIMP: Training Impulse (not recommend)
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<div *ngIf="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
+		<span>
+			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+			When heart rate stress score calculation method is set to TRIMP (Training Impulse):
+			<ul>
+				<li>
+					Training Zones will be disabled because TRIMP has a scale missmatch with Training Zones.
+				</li>
+				<li>
+					Cycling Power Stress Scores (PSS) will not be taken into account because TRIMP scores are not scaled with PSS stress scores.
+				</li>
+				<li>
+					Swimming Stress Scores (SSS) will not be taken into account because TRIMP scores are not scaled with SSS stress scores.
+				</li>
+			</ul>
+		</span>
+		</div>
+	</div>
+
+	<div>
+		<h3 mat-dialog-title>Fitness and fatigue starting values</h3>
+
+		<i>Your fitness trend will start with the below values. Leaving a field empty equals to set a value of
+			<strong>0</strong></i>
+
+		<div fxLayout="column" fxLayoutAlign="start start">
+			<mat-form-field fxFill>
+				<input
+					matInput
+					type="number" min="1"
+					[(ngModel)]="fitnessTrendConfigModel.initializedFitnessTrendModel.ctl"
+					(change)="onInitialFitnessChange()"/>
+				<mat-placeholder>
+					Fitness starting value
+				</mat-placeholder>
+			</mat-form-field>
+
+			<mat-form-field fxFill>
+				<input
+					matInput
+					type="number" min="1"
+					[(ngModel)]="fitnessTrendConfigModel.initializedFitnessTrendModel.atl"
+					(change)="onInitialFatigueChange()"/>
+				<mat-placeholder>
+					Fatigue starting value
+				</mat-placeholder>
+			</mat-form-field>
+		</div>
+
+	</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary" (click)="onSave()">Save</button>
+	<button mat-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>
