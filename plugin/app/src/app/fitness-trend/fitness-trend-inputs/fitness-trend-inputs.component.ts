@@ -9,8 +9,8 @@ import { FitnessTrendComponent } from "../fitness-trend.component";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
-import { FitnessTrendSettingsModel } from "../shared/models/fitness-trend-settings.model";
-import { FitnessTrendSettingsDialogComponent } from "../fitness-trend-settings-dialog/fitness-trend-settings-dialog.component";
+import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
+import { FitnessTrendConfigDialogComponent } from "../fitness-trend-settings-dialog/fitness-trend-config-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend-inputs",
@@ -40,8 +40,8 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Input("fitnessUserSettingsModel")
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 
-	@Input("heartRateImpulseMode")
-	public heartRateImpulseMode: HeartRateImpulseMode;
+	@Input("fitnessTrendConfigModel")
+	public fitnessTrendConfigModel: FitnessTrendConfigModel;
 
 	@Input("isTrainingZonesEnabled")
 	public isTrainingZonesEnabled: boolean;
@@ -59,8 +59,8 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Output("periodViewedChange")
 	public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
 
-	@Output("heartRateImpulseModeChange")
-	public heartRateImpulseModeChange: EventEmitter<HeartRateImpulseMode> = new EventEmitter<HeartRateImpulseMode>();
+	@Output("fitnessTrendConfigChange")
+	public fitnessTrendConfigChange: EventEmitter<FitnessTrendConfigModel> = new EventEmitter<FitnessTrendConfigModel>();
 
 	@Output("trainingZonesToggleChange")
 	public trainingZonesToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -177,30 +177,30 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	}
 
-	public onSettingsClicked(): void {
+	public onConfigClicked(): void {
 
-		const fitnessTrendSettingsModel: FitnessTrendSettingsModel = {
-			heartRateImpulseMode: this.heartRateImpulseMode
-		};
-
-		const dialogRef = this.dialog.open(FitnessTrendSettingsDialogComponent, {
-			minWidth: FitnessTrendSettingsDialogComponent.MIN_WIDTH,
-			maxWidth: FitnessTrendSettingsDialogComponent.MAX_WIDTH,
-			data: fitnessTrendSettingsModel
+		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {
+			minWidth: FitnessTrendConfigDialogComponent.MIN_WIDTH,
+			maxWidth: FitnessTrendConfigDialogComponent.MAX_WIDTH,
+			data: _.cloneDeep(this.fitnessTrendConfigModel)
 		});
 
-		dialogRef.afterClosed().subscribe((settingsModel: FitnessTrendSettingsModel) => {
+		dialogRef.afterClosed().subscribe((fitnessTrendConfigModel: FitnessTrendConfigModel) => {
 
-			if (_.isEmpty(settingsModel)) {
+			if (_.isEmpty(fitnessTrendConfigModel)) {
 				return;
 			}
 
-			const heartRateImpulseModeSelected = Number(settingsModel.heartRateImpulseMode);
-			if (this.heartRateImpulseMode !== heartRateImpulseModeSelected) {
-				this.heartRateImpulseMode = heartRateImpulseModeSelected;
-				localStorage.setItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY, String(this.heartRateImpulseMode));
-				this.heartRateImpulseModeChange.emit(this.heartRateImpulseMode);
+			const hasConfigChanged = (this.fitnessTrendConfigModel.heartRateImpulseMode !== Number(fitnessTrendConfigModel.heartRateImpulseMode))
+				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl !== fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)
+				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
+
+			if (hasConfigChanged) {
+				this.fitnessTrendConfigModel = fitnessTrendConfigModel;
+				localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save local
+				this.fitnessTrendConfigChange.emit(this.fitnessTrendConfigModel);
 			}
+
 		});
 	}
 
