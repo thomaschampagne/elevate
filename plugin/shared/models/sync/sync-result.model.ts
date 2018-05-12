@@ -1,10 +1,8 @@
-import { AthleteProfileModel } from "../athlete-profile.model";
 import { SyncedActivityModel } from "./synced-activity.model";
-import { HistoryChangesModel } from "../../../core/scripts/synchronizer/history-changes.model";
+import { ActivitiesChangesModel } from "../../../core/scripts/synchronizer/activities-changes.model";
 
 export class SyncResultModel {
-	public globalHistoryChanges: HistoryChangesModel;
-	public computedActivities: SyncedActivityModel[];
+	public activitiesChangesModel: ActivitiesChangesModel;
+	public syncedActivities: SyncedActivityModel[];
 	public lastSyncDateTime: number;
-	public syncWithAthleteProfile: AthleteProfileModel;
 }

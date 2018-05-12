@@ -3,13 +3,14 @@ import { UserSettingsModel } from "../../../shared/models/user-settings/user-set
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../Helper";
 import { SpeedUnitDataModel } from "../../../shared/models/activity-data/speed-unit-data.model";
+import { LatLonSpherical } from "geodesy";
 
 export class WindyTyModifier implements IModifier {
 	protected activityId: number;
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
-	protected baryCenterPosition: LatLon;
+	protected baryCenterPosition: LatLonSpherical;
 	protected speedUnitData: SpeedUnitDataModel;
 
 	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
@@ -24,7 +25,7 @@ export class WindyTyModifier implements IModifier {
 			return;
 		}
 
-		this.getActivityBaryCenter((baryCenterPosition: LatLon) => {
+		this.getActivityBaryCenter((baryCenterPosition: LatLonSpherical) => {
 
 			if (!baryCenterPosition) {
 				console.log("Skipping WindyTyModifier execution, no baryCenterPosition available");
@@ -36,7 +37,7 @@ export class WindyTyModifier implements IModifier {
 		});
 	}
 
-	protected getActivityBaryCenter(callback: (latLon: LatLon) => void): void {
+	protected getActivityBaryCenter(callback: (latLon: LatLonSpherical) => void): void {
 
 		const url: string = "/activities/" + this.activityId + "/streams?stream_types[]=latlng";
 
@@ -70,7 +71,7 @@ export class WindyTyModifier implements IModifier {
 			baryCenterPoint[0] = (baryCenterPoint[0] + midPoint[0]) / 2;
 			baryCenterPoint[1] = (baryCenterPoint[1] + midPoint[1]) / 2;
 
-			callback(new LatLon(baryCenterPoint[0], baryCenterPoint[1]));
+			callback(new LatLonSpherical(baryCenterPoint[0], baryCenterPoint[1]));
 
 		});
 	}

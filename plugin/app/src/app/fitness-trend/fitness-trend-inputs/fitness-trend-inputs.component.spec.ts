@@ -4,6 +4,7 @@ import { FitnessTrendInputsComponent } from "./fitness-trend-inputs.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
+import { FitnessTrendComponent } from "../fitness-trend.component";
 
 describe("FitnessTrendInputsComponent", () => {
 
@@ -25,7 +26,10 @@ describe("FitnessTrendInputsComponent", () => {
 	beforeEach((done: Function) => {
 
 		fixture = TestBed.createComponent(FitnessTrendInputsComponent);
+
 		component = fixture.componentInstance;
+
+		component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
 		component.periodViewed = {
 			from: new Date(),

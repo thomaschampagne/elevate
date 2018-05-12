@@ -32,7 +32,7 @@ describe("FitnessTrendTableComponent", () => {
 		// Mocking chrome storage
 		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: TEST_SYNCED_ACTIVITIES});
+				callback({syncedActivities: TEST_SYNCED_ACTIVITIES});
 			}
 		});
 

@@ -1,5 +1,5 @@
 import Spy = jasmine.Spy;
-import { VacuumProcessor } from "../../../core/scripts/processors/VacuumProcessor";
+import { VacuumProcessor } from "../../scripts/processors/VacuumProcessor";
 
 describe("VacuumProcessor", () => {
 

@@ -1,5 +1,6 @@
 import { saveAs } from "file-saver";
 import * as _ from "lodash";
+import * as $ from "jquery";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/CourseMarker";
 import { VacuumProcessor } from "../processors/VacuumProcessor";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";

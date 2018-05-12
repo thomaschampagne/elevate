@@ -5,5 +5,5 @@
 
 export const environment = {
 	production: false,
-	skipRestoreHistoryCheck: false
+	skipRestoreSyncedBackupCheck: false
 };

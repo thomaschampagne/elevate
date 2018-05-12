@@ -3,6 +3,7 @@ import { ZoneModel } from "./zone.model";
 export class SpeedDataModel {
 	public genuineAvgSpeed: number;
 	public totalAvgSpeed: number;
+	public best20min: number;
 	public avgPace: number;
 	public lowerQuartileSpeed: number;
 	public medianSpeed: number;
@@ -10,4 +11,5 @@ export class SpeedDataModel {
 	public varianceSpeed: number;
 	public standardDeviationSpeed: number;
 	public speedZones: ZoneModel[];
+	public genuineGradeAdjustedAvgSpeed: number;
 }

@@ -10,9 +10,9 @@ import { YearProgressStyleModel } from "./year-progress-graph/models/year-progre
 import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
-import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { SyncedActivityModel } from "../../../../shared/models/sync/synced-activity.model";
@@ -59,7 +59,7 @@ export class YearProgressComponent implements OnInit {
 
 	constructor(public route: ActivatedRoute,
 				public userSettingsService: UserSettingsService,
-				public athleteHistoryService: AthleteHistoryService,
+				public syncService: SyncService,
 				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
 				public dialog: MatDialog) {
@@ -67,10 +67,10 @@ export class YearProgressComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
+		this.syncService.getSyncState().then((syncState: SyncState) => {
 
-			if (athleteHistoryState !== AthleteHistoryState.SYNCED) {
-				console.warn("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString());
+			if (syncState !== SyncState.SYNCED) {
+				console.warn("Stopping here! SyncState is: " + SyncState[syncState].toString());
 				this.hasActivityModels = false;
 				return;
 			}

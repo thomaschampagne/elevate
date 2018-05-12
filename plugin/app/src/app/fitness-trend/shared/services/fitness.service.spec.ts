@@ -13,6 +13,7 @@ import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { InitializedFitnessTrendModel } from "../models/initialized-fitness-trend.model";
 
 function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number) {
 
@@ -48,7 +49,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			HRSSPerHour: avgHr / 90,
 			TRIMP: avgHr * 2,
 			TRIMPPerHour: avgHr / 60,
-			fthr: avgHr * 1.5,
+			best20min: avgHr * 1.5,
 			activityHeartRateReserve: avgHr * 0.25,
 			activityHeartRateReserveMax: avgHr / 2,
 			averageHeartRate: avgHr,
@@ -75,7 +76,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			upperQuartileWatts: (avgWatts / 4) * 3,
 			variabilityIndex: 1,
 			weightedPower: avgWatts * 1.25,
-			ftp: avgWatts * 1.5,
+			best20min: avgWatts * 1.5,
 			weightedWattsPerKg: avgWatts * 1.25 / 70,
 		};
 		fakeActivity.hasPowerMeter = true;
@@ -472,7 +473,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should prepare fitness activities (only heart rate based history) w/ PM=OFF & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
+	it("should prepare fitness activities (only heart rate based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
 
 		// Given
 		const expectedFitnessPreparedActivitiesLength = 3;
@@ -885,7 +886,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should prepare fitness activities (only power based history) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+	it("should prepare fitness activities (only power based activities) w/ PM=ON & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		const expectedFitnessPreparedActivitiesLength = 3;
@@ -1162,7 +1163,7 @@ describe("FitnessService", () => {
 
 	});
 
-	it("should reject prepare fitness activities (only power based history) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+	it("should reject prepare fitness activities (only power based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		powerMeterEnable = false;
@@ -1403,7 +1404,7 @@ describe("FitnessService", () => {
 		});
 	});
 
-	it("should reject generate athlete daily activity without hr or power based history & HR_Mode=HRSS", (done: Function) => {
+	it("should reject generate athlete daily activity without hr or power based activities & HR_Mode=HRSS", (done: Function) => {
 
 		// Given
 		const syncedActivityModels: SyncedActivityModel[] = [];
@@ -1652,6 +1653,65 @@ describe("FitnessService", () => {
 
 			activity = _.find(fitnessTrend, {ids: [873446053, 294909522]});
 			expect(_.floor(activity.finalStressScore, 3)).toEqual(344.203);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+
+	});
+
+	it("should compute fitness trend with initial fitness and fatigue value", (done: Function) => {
+
+		// Given
+		const syncedActivityModels = [];
+
+		// Add some fakes EBikeRides
+		syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			"Super Bike Ride 01",
+			"Ride",
+			"2015-11-15",
+			150,
+			null));
+
+		syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			"Super Bike Ride 02",
+			"Ride",
+			"2015-11-20",
+			150,
+			null));
+
+		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			.and.returnValue(Promise.resolve(syncedActivityModels));
+
+
+		// When
+		const initializedFitnessTrendModel: InitializedFitnessTrendModel = {
+			atl: 100,
+			ctl: 50
+		};
+
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel,
+			heartRateImpulseMode, powerMeterEnable, swimEnable, null, initializedFitnessTrendModel);
+
+		// Then
+		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+			expect(fitnessTrend).not.toBeNull();
+			expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+
+			const firstDay = _.first(fitnessTrend);
+			expect(firstDay.ctl).toEqual(initializedFitnessTrendModel.ctl);
+			expect(firstDay.atl).toEqual(initializedFitnessTrendModel.atl);
+			expect(firstDay.tsb).toEqual(initializedFitnessTrendModel.ctl - initializedFitnessTrendModel.atl);
+
+			const secondDay = fitnessTrend[1];
+			expect(secondDay.ctl).toBeGreaterThan(initializedFitnessTrendModel.ctl);
+			expect(secondDay.atl).toBeGreaterThan(initializedFitnessTrendModel.atl);
+			expect(secondDay.tsb).toBeLessThan(initializedFitnessTrendModel.ctl - initializedFitnessTrendModel.atl);
 
 			done();
 

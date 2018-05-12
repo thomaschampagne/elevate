@@ -3,12 +3,13 @@ import * as Q from "q";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
-import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
 import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
 import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+
+const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
 export class MultipleActivityProcessor {
 
@@ -29,7 +30,7 @@ export class MultipleActivityProcessor {
 
 		const deferred = Q.defer<SyncedActivityModel[]>();
 
-		let computedActivitiesPercentageCount = 0;
+		let syncedActivitiesPercentageCount = 0;
 
 		let activitiesComputedResults: AnalysisDataModel[] = [];
 
@@ -42,15 +43,15 @@ export class MultipleActivityProcessor {
 					activitiesComputedResults.push(activityComputed);
 
 					const notify: SyncNotifyModel = {
-						step: "computedActivitiesPercentage",
-						progress: computedActivitiesPercentageCount / activitiesWithStream.length * 100,
+						step: "syncedActivitiesPercentage",
+						progress: syncedActivitiesPercentageCount / activitiesWithStream.length * 100,
 						index,
 						activityId: activityWithStream.id,
 					};
 
 					deferred.notify(notify);
 
-					computedActivitiesPercentageCount++;
+					syncedActivitiesPercentageCount++;
 
 				});
 
@@ -78,14 +79,14 @@ export class MultipleActivityProcessor {
 
 				});
 
-				// Sort computedActivities by start date ascending before resolve
+				// Sort syncedActivities by start date ascending before resolve
 				activitiesComputed = _.sortBy(activitiesComputed, (item: SyncedActivityModel) => {
 					return (new Date(item.start_time)).getTime();
 				});
 
 				// Finishing... force progress @ 100% for compute progress callback
 				const notify: SyncNotifyModel = {
-					step: "computedActivitiesPercentage",
+					step: "syncedActivitiesPercentage",
 					progress: 100,
 				};
 
@@ -124,9 +125,7 @@ export class MultipleActivityProcessor {
 		const deferred = Q.defer<AnalysisDataModel>();
 
 		// Lets create that worker/thread!
-		const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
-			type: "application/javascript",
-		})));
+		const computeAnalysisThread: Worker = new ComputeAnalysisWorker();
 
 		// Create activity stats map from given activity
 		const activityStatsMap: ActivityStatsMapModel = this.createActivityStatMap(activityWithStream);
@@ -142,8 +141,7 @@ export class MultipleActivityProcessor {
 			activityStatsMap,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false,
-			systemJsConfig: SystemJS.getConfig(),
+			returnZones: false
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);

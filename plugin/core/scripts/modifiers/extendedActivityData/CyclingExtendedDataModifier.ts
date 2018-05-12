@@ -77,21 +77,21 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
 			let label = "Best 20min Power";
-			let ftp = "-";
-			let ftpUnits = "";
+			let best20min = "-";
+			let best20minUnits = "";
 
-			if (_.isNumber(this.analysisData.powerData.ftp)) {
+			if (_.isNumber(this.analysisData.powerData.best20min)) {
 
-				ftp = this.analysisData.powerData.ftp.toFixed(0);
-				ftpUnits = "w";
+				best20min = this.analysisData.powerData.best20min.toFixed(0);
+				best20minUnits = "w";
 
 				if (!this.analysisData.powerData.hasPowerMeter) {
-					ftp = "<span style='font-size: 14px;'>~</span>" + ftp;
+					best20min = "<span style='font-size: 14px;'>~</span>" + best20min;
 					label = "Estimated " + label;
 				}
 			}
 
-			this.insertContentAtGridPosition(0, 6, ftp, label, ftpUnits, "displayAdvancedPowerData");
+			this.insertContentAtGridPosition(0, 6, best20min, label, best20minUnits, "displayAdvancedPowerData");
 		}
 
 		let powerStressScore = "-";

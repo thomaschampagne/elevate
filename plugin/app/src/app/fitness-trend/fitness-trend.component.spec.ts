@@ -4,9 +4,8 @@ import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { ActivityDao } from "../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
-import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
-import { AthleteProfileModel } from "../../../../shared/models/athlete-profile.model";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { userSettings } from "../../../../shared/UserSettings";
 import { FitnessTrendModule } from "./fitness-trend.module";
@@ -34,7 +33,7 @@ describe("FitnessTrendComponent", () => {
 
 	let activityDao: ActivityDao;
 	let userSettingsDao: UserSettingsDao;
-	let athleteHistoryService: AthleteHistoryService;
+	let syncService: SyncService;
 	let component: FitnessTrendComponent;
 	let fixture: ComponentFixture<FitnessTrendComponent>;
 
@@ -59,12 +58,12 @@ describe("FitnessTrendComponent", () => {
 		activityDao = TestBed.get(ActivityDao);
 		userSettingsDao = TestBed.get(UserSettingsDao);
 		userSettingsDao = TestBed.get(UserSettingsDao);
-		athleteHistoryService = TestBed.get(AthleteHistoryService);
+		syncService = TestBed.get(SyncService);
 
 		// Mocking chrome storage
 		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
+				callback({syncedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
 		});
 
@@ -79,16 +78,8 @@ describe("FitnessTrendComponent", () => {
 
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
-		const expectedAthleteProfileModel: AthleteProfileModel = new AthleteProfileModel(
-			gender,
-			maxHr,
-			restHr,
-			cyclingFtp,
-			weight);
-
-		spyOn(athleteHistoryService, "getProfile").and.returnValue(Promise.resolve(expectedAthleteProfileModel));
-		spyOn(athleteHistoryService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(athleteHistoryService, "getSyncState").and.returnValue(Promise.resolve(AthleteHistoryState.SYNCED));
+		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
 		done();
 	});
@@ -118,7 +109,7 @@ describe("FitnessTrendComponent", () => {
 	it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", (done: Function) => {
 
 		// Given
-		component.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
 		component.isTrainingZonesEnabled = true;
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
@@ -143,7 +134,7 @@ describe("FitnessTrendComponent", () => {
 	it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", (done: Function) => {
 
 		// Given
-		component.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		component.isTrainingZonesEnabled = true;
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;

@@ -1,17 +1,17 @@
 <!--History not synced-->
 <mat-card *ngIf="(isSynced === false)" class="no-data">
 	<mat-card-title>
-		Synchronise your history
+		Synchronise your activities
 	</mat-card-title>
 	<mat-card-content>
 		<div>
-			Please synchronize your history to turn on "Fitness Trend" feature.
+			Please synchronize your activities to turn on "Fitness Trend" feature.
 		</div>
 
 		<div>
 			You can synchronize by clicking on
 			<mat-icon>sync_disabled</mat-icon>
-			icon in the upper toolbar. The history will be locally saved in the storage allocated by the extension.
+			icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
 		</div>
 
 		<div>
@@ -35,12 +35,12 @@
 </mat-card>
 
 <!--History not compliant with the feature-->
-<mat-card *ngIf="(isHistoryCompliant === false && isSynced !== false)">
+<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)">
 	<mat-card-title>
-		Your history is not supported by this feature
+		Your synced activities are not supported by this feature
 	</mat-card-title>
 	<mat-card-content>
-		The fitness trend requires an athlete history with at least:
+		The fitness trend requires athlete activities with at least:
 		<ul>
 			<li>
 				Heart rate data coming from an heart rate monitor and regardless types of sports.
@@ -58,13 +58,13 @@
 </mat-card>
 
 <!--Loading-->
-<mat-card *ngIf="(isSynced !== false && isHistoryCompliant === null)">
+<mat-card *ngIf="(isSynced !== false && areSyncedActivitiesCompliant === null)">
 	<mat-card-content>
 		<mat-progress-bar mode="buffer"></mat-progress-bar>
 	</mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="(isHistoryCompliant === true)">
+<mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 			<app-fitness-trend-inputs fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
@@ -74,13 +74,13 @@
 									  [periodViewed]="periodViewed"
 									  [lastPeriodViewed]="lastPeriodViewed"
 									  [fitnessUserSettingsModel]="fitnessUserSettingsModel"
-									  [heartRateImpulseMode]="heartRateImpulseMode"
+									  [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 									  [isPowerMeterEnabled]="isPowerMeterEnabled"
 									  [isSwimEnabled]="isSwimEnabled"
 									  [isEBikeRidesEnabled]="isEBikeRidesEnabled"
 									  (periodViewedChange)="onPeriodViewedChange($event)"
-									  (heartRateImpulseModeChange)="onHeartRateImpulseModeChange($event)"
+									  (fitnessTrendConfigChange)="onFitnessTrendConfigChange($event)"
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
 									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
 									  (swimToggleChange)="onSwimToggleChange($event)"
@@ -102,13 +102,13 @@
 	</mat-card-content>
 </mat-card>
 
-<mat-card [style.visibility]="((isHistoryCompliant === true) ? 'visible' : 'hidden')">
+<mat-card [style.visibility]="((areSyncedActivitiesCompliant === true) ? 'visible' : 'hidden')">
 	<mat-card-title>
 		Fitness analysis table
 	</mat-card-title>
 	<mat-card-content>
 		<app-fitness-trend-table [fitnessTrend]="fitnessTrend"
-								 [heartRateImpulseMode]="heartRateImpulseMode"
+								 [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 								 [isPowerMeterEnabled]="isPowerMeterEnabled"
 								 [isSwimEnabled]="isSwimEnabled">

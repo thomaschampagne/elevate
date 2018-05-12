@@ -33,6 +33,7 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
+	public static readonly GRADE_ADJUSTED_PACE_WINDOWS = {time: 12, distance: 24};
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -152,7 +153,7 @@ export class ActivityComputer {
 		this.movementData = null;
 
 		if (activityStream.velocity_smooth) {
-			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time);
+			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_distance);
 		}
 
 		// Q1 Speed
@@ -343,7 +344,7 @@ export class ActivityComputer {
 		return currentValue * delta - ((currentValue - previousValue) * delta) / 2; // Discrete integral
 	}
 
-	protected moveData(velocityArray: number[], timeArray: number[]): MoveDataModel {
+	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedDistance?: number[]): MoveDataModel {
 
 		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -353,14 +354,20 @@ export class ActivityComputer {
 			genuineAvgSpeedSumCount = 0;
 		const speedsNonZero: number[] = [];
 		const speedsNonZeroDuration: number[] = [];
+		const gradeAdjustedSpeedsNonZero: number[] = [];
 		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
-		let speedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
-		let paceZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
+		let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
+		let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
+		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.gradeAdjustedPace);
 
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
+
+		const hasGradeAdjustedDistance: boolean = !_.isEmpty(gradeAdjustedDistance);
+		let gradeAdjustedTimeWindow = 0;
+		let gradeAdjustedDistanceWindow = 0;
 
 		// End Preparing zone
 		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
@@ -373,9 +380,9 @@ export class ActivityComputer {
 				// Compute speed
 				currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
 
-				if (currentSpeed > 0) { // If moving...
+				movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-					movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+				if (currentSpeed > 0) { // If moving...
 
 					speedsNonZero.push(currentSpeed);
 					speedsNonZeroDuration.push(movingSeconds);
@@ -403,12 +410,38 @@ export class ActivityComputer {
 					}
 
 				}
+
+				if (hasGradeAdjustedDistance) {
+
+					const gradeDistance = (gradeAdjustedDistance[i] - gradeAdjustedDistance[i - 1]);
+					gradeAdjustedTimeWindow += movingSeconds;
+					gradeAdjustedDistanceWindow += gradeDistance;
+
+					if (gradeAdjustedTimeWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.time
+						&& gradeAdjustedDistanceWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.distance) {
+
+						const gradeAdjustedSpeed = gradeAdjustedDistanceWindow / gradeAdjustedTimeWindow * 3.6;
+						gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
+
+						const gradeAdjustedPace = this.convertSpeedToPace(gradeAdjustedSpeed);
+
+						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.gradeAdjustedPace, (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
+						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
+							gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += gradeAdjustedTimeWindow;
+						}
+
+						// Reset windows
+						gradeAdjustedDistanceWindow = 0;
+						gradeAdjustedTimeWindow = 0;
+					}
+				}
 			}
 		}
 
 		// Update zone distribution percentage
 		speedZones = this.finalizeDistributionComputationZones(speedZones);
 		paceZones = this.finalizeDistributionComputationZones(paceZones);
+		gradeAdjustedPaceZones = this.finalizeDistributionComputationZones(gradeAdjustedPaceZones);
 
 		// Finalize compute of Speed
 		const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
@@ -416,25 +449,40 @@ export class ActivityComputer {
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
+		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
+
+		let best20min = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray));
+			best20min = splitCalculator.getBestSplit(60 * 20, true) * 3.6;
+		} catch (err) {
+			console.warn("No best 20min speed/pace available for this range");
+		}
+
 		const speedData: SpeedDataModel = {
-			genuineAvgSpeed,
+			genuineAvgSpeed: genuineAvgSpeed,
 			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSumCount, elapsedSeconds),
-			avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+			best20min: best20min,
+			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
 			medianSpeed: percentiles[1],
 			upperQuartileSpeed: percentiles[2],
-			varianceSpeed,
-			standardDeviationSpeed,
+			varianceSpeed: varianceSpeed,
+			genuineGradeAdjustedAvgSpeed: genuineGradeAdjustedAvgSpeed,
+			standardDeviationSpeed: standardDeviationSpeed,
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
 		const paceData: PaceDataModel = {
-			avgPace: parseInt(((1 / genuineAvgSpeed) * 60 * 60).toFixed(0)), // send in seconds
+			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
+			best20min: (best20min) ? Math.floor((1 / best20min) * 60 * 60) : null,
 			lowerQuartilePace: this.convertSpeedToPace(percentiles[0]),
 			medianPace: this.convertSpeedToPace(percentiles[1]),
 			upperQuartilePace: this.convertSpeedToPace(percentiles[2]),
 			variancePace: this.convertSpeedToPace(varianceSpeed),
+			genuineGradeAdjustedAvgPace: (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null,
 			paceZones: (this.returnZones) ? paceZones : null,
+			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedDistance) ? gradeAdjustedPaceZones : null,
 		};
 
 		const moveData: MoveDataModel = {
@@ -617,25 +665,25 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
-		let ftp = null;
+		let best20min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
-			ftp = splitCalculator.getBestSplit(60 * 20, true);
+			best20min = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("No ftp available for this range");
+			console.warn("No best 20min power available for this range");
 		}
 
 		const powerData: PowerDataModel = {
-			hasPowerMeter,
-			avgWatts,
-			avgWattsPerKg,
-			weightedPower,
-			ftp,
-			variabilityIndex,
-			punchFactor,
-			powerStressScore,
-			powerStressScorePerHour,
-			weightedWattsPerKg,
+			hasPowerMeter: hasPowerMeter,
+			avgWatts: avgWatts,
+			avgWattsPerKg: avgWattsPerKg,
+			weightedPower: weightedPower,
+			best20min: best20min,
+			variabilityIndex: variabilityIndex,
+			punchFactor: punchFactor,
+			powerStressScore: powerStressScore,
+			powerStressScorePerHour: powerStressScorePerHour,
+			weightedWattsPerKg: weightedWattsPerKg,
 			lowerQuartileWatts: percentiles[0],
 			medianWatts: percentiles[1],
 			upperQuartileWatts: percentiles[2],
@@ -670,10 +718,10 @@ export class ActivityComputer {
 		for (let i = 0; i < heartRateArray.length; i++) { // Loop on samples
 
 			if (i > 0 && (
-					this.isTrainer || // can be cycling home trainer
-					!velocityArray || // OR Non movements activities
-					velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
-				)) {
+				this.isTrainer || // can be cycling home trainer
+				!velocityArray || // OR Non movements activities
+				velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH  // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
+			)) {
 
 				// Compute heartrate data while moving from now
 				durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
@@ -713,12 +761,12 @@ export class ActivityComputer {
 		const averageHeartRate: number = hrSum / hrrSecondsCount;
 		const maxHeartRate: number = _.max(heartRateArray);
 
-		let fthr = null;
+		let best20minHr = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
-			fthr = splitCalculator.getBestSplit(60 * 20, true);
+			best20minHr = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("No fthr available for this range");
+			console.warn("No best 20min heart rate available for this range");
 		}
 
 		return {
@@ -726,13 +774,13 @@ export class ActivityComputer {
 			HRSSPerHour: HRSSPerHour,
 			TRIMP: trainingImpulse,
 			TRIMPPerHour: TRIMPPerHour,
-			fthr: fthr,
+			best20min: best20minHr,
 			heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
 			upperQuartileHeartRate: percentiles[2],
-			averageHeartRate,
-			maxHeartRate,
+			averageHeartRate: averageHeartRate,
+			maxHeartRate: maxHeartRate,
 			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
 			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
 		};
@@ -1030,7 +1078,7 @@ export class ActivityComputer {
 		avgMaxGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount)) : _.last(sortedGradeArray);
 
 		const gradeData: GradeDataModel = {
-			avgGrade,
+			avgGrade: avgGrade,
 			avgMaxGrade: avgMaxGrade,
 			avgMinGrade: avgMinGrade,
 			lowerQuartileGrade: percentiles[0],

@@ -23,9 +23,9 @@ import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { AthleteHistoryDao } from "./dao/athlete-history/athlete-history.dao";
-import { AthleteHistoryService } from "./services/athlete-history/athlete-history.service";
-import { AthleteHistoryImportDialogComponent } from "./dialogs/athlete-history-import-dialog/athlete-history-import-dialog.component";
+import { SyncDao } from "./dao/sync/sync.dao";
+import { SyncService } from "./services/sync/sync.service";
+import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { WelcomeComponent } from "../welcome/welcome.component";
 import { ReportComponent } from "../report/report.component";
@@ -69,7 +69,7 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
 		AboutDialogComponent,
-		AthleteHistoryImportDialogComponent
+		ImportBackupDialogComponent
 	],
 	entryComponents: [
 		GotItDialogComponent,
@@ -77,11 +77,11 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 		OptionHelperDialogComponent,
 		ZonesImportExportDialogComponent,
 		AboutDialogComponent,
-		AthleteHistoryImportDialogComponent
+		ImportBackupDialogComponent
 	],
 	providers: [
-		AthleteHistoryService,
-		AthleteHistoryDao,
+		SyncService,
+		SyncDao,
 		UserSettingsService,
 		UserSettingsDao,
 		ActivityService,

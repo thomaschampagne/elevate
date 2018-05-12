@@ -19,13 +19,30 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 	}, {
 		name: "Running Pace",
 		value: "pace",
-		units: "Seconds", // s/mi?!
+		units: "Seconds",
 		step: 1,
 		min: 0,
 		max: 3599,
 		customDisplay: {
 			name: "Pace format mm:ss/distance",
 			zoneValue: "pace",
+			output: (seconds: number) => {
+				const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
+				const paceImperial = moment().startOf("day").seconds(seconds / 0.621371192).format("mm:ss") + "/mi";
+				return paceMetric + "  | " + paceImperial;
+			}
+		}
+	},
+	{
+		name: "Grade Adjusted Running Pace",
+		value: "gradeAdjustedPace",
+		units: "Seconds",
+		step: 1,
+		min: 0,
+		max: 3599,
+		customDisplay: {
+			name: "Pace format mm:ss/distance",
+			zoneValue: "gradeAdjustedPace",
 			output: (seconds: number) => {
 				const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
 				const paceImperial = moment().startOf("day").seconds(seconds / 0.621371192).format("mm:ss") + "/mi";

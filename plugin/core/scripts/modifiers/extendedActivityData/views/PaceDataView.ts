@@ -34,16 +34,21 @@ export class PaceDataView extends AbstractDataView {
 
 	protected insertDataIntoGrid(): void {
 
-		const paceTimePerDistance: string = Helper.secondsToHHMMSS(this.paceData.avgPace / this.speedUnitsData.speedUnitFactor, true);
+		if (this.isSegmentEffortView) {
+			const paceTimePerDistance: string = Helper.secondsToHHMMSS(this.paceData.avgPace / this.speedUnitsData.speedUnitFactor, true);
+			this.insertContentAtGridPosition(0, 0, paceTimePerDistance, "Average pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
+		} else {
+			if (_.isNumber(this.paceData.best20min)) {
+				this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS(this.paceData.best20min / this.speedUnitsData.speedUnitFactor, true), "Best 20min Pace <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", this.units, "displayAdvancedSpeedData");
+			}
+		}
 
 		// Quartiles
-		this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor, true), "25% Quartile Pace", this.units, "displayAdvancedSpeedData");
-		this.insertContentAtGridPosition(1, 0, Helper.secondsToHHMMSS(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor, true), "50% Quartile Pace", this.units, "displayAdvancedSpeedData");
-		this.insertContentAtGridPosition(2, 0, Helper.secondsToHHMMSS(this.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true), "75% Quartile Pace", this.units, "displayAdvancedSpeedData");
+		this.insertContentAtGridPosition(0, 1, Helper.secondsToHHMMSS(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor, true), "25% Quartile Pace", this.units, "displayAdvancedSpeedData");
+		this.insertContentAtGridPosition(1, 1, Helper.secondsToHHMMSS(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor, true), "50% Quartile Pace", this.units, "displayAdvancedSpeedData");
+		this.insertContentAtGridPosition(2, 1, Helper.secondsToHHMMSS(this.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true), "75% Quartile Pace", this.units, "displayAdvancedSpeedData");
 
-		if (this.isSegmentEffortView) {
-			this.insertContentAtGridPosition(0, 1, paceTimePerDistance, "Average pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
-		}
+
 	}
 
 	protected setupDistributionTable(zones: ZoneModel[], ratio: number): void {
