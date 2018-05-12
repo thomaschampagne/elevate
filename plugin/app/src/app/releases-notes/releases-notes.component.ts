@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { IReleaseNote } from "../../../../shared/ReleaseNotes";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
+import { ReleaseNoteModel } from "../../../../shared/models/release-note.model";
 
 @Component({
 	selector: "app-releases-notes",
@@ -10,7 +10,7 @@ import { Subscription } from "rxjs/Subscription";
 })
 export class ReleasesNotesComponent implements OnInit, OnDestroy {
 
-	public releasesNotes: IReleaseNote[];
+	public releasesNotes: ReleaseNoteModel[];
 	public routeDataSubscription: Subscription;
 
 	constructor(public route: ActivatedRoute) {
@@ -18,7 +18,7 @@ export class ReleasesNotesComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
-		this.routeDataSubscription = this.route.data.subscribe((data: { releasesNotes: IReleaseNote[] }) => {
+		this.routeDataSubscription = this.route.data.subscribe((data: { releasesNotes: ReleaseNoteModel[] }) => {
 			this.releasesNotes = data.releasesNotes;
 		});
 	}

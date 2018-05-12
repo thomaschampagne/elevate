@@ -38,11 +38,11 @@ export class ActivitiesSyncModifier implements IModifier {
 		html += "<div>";
 		html += "    <div id=\"syncContainer\">";
 		html += "       <div id=\"syncMessage\">";
-		html += "           <span style=\"font-size: 28px;\">Syncing history to browser.</span><br/><br/>It can take several minutes on your first synchronisation. Keep that in background. The history is locally saved in the storage allocated by the extension." +
-			"<br/><br/>Once the first sync done, your history will be automatically synced every <strong>" + this.userSettings.autoSyncMinutes + " minute(s)</strong> while browsing strava.com. In other words, auto sync is triggered if " + this.userSettings.autoSyncMinutes + " minute(s) have been flow out since your last synchronisation" +
-			"<br/><br/><a href=\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId= autoSyncMinutes&searchText=auto%20sync\" target=\"_blank\" class=\"btn btn-sm btn-primary\">Configure Auto Sync</a>" +
-			"<br/><br/>Manual sync also works by clicking the same button.<br/><br/>" +
-			"Closing window stops synchronization. It will close itself when done.";
+		html += "           <span style=\"font-size: 28px;\">Syncing activities to browser.</span><br/><br/>It can take several minutes on your first synchronisation. " +
+			"Keep that in background... Synced activities are locally saved in the storage allocated by the extension." +
+			"<br/><br/>On a daily use, your recent activities will be automatically pushed to the stravistix app when strava website is loaded." +
+			"<br/><br/>In specific cases like \"old\" activities added, edited or deleted from strava, you have to launch synchronization by yourself.<br/><br/>" +
+			"<i>Note: closing this window will stop the synchronization. Window will close itself when synchronization is done.</i>";
 		html += "       </div>";
 		html += "       <div class=\"progressBarGroup\">";
 		html += "           <div id=\"totalProgress\">Global synchronisation progress</div>";
@@ -83,7 +83,7 @@ export class ActivitiesSyncModifier implements IModifier {
 	}
 
 	protected updateStorageUsage() {
-		Helper.getStorageUsage(this.extensionId, StorageManager.storageLocalType).then((storageUsage: IStorageUsage) => {
+		Helper.getStorageUsage(this.extensionId, StorageManager.TYPE_LOCAL).then((storageUsage: IStorageUsage) => {
 			$("#storageUsage").html("Extension local storage occupation: <strong>" + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + "MB</strong>");
 		});
 	}
@@ -117,7 +117,7 @@ export class ActivitiesSyncModifier implements IModifier {
 
 			let timer: number = 5 * 1000; // 5s for debug...
 			this.closeWindowIntervalId = window.setInterval(() => {
-				$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.globalHistoryChanges.added.length + ", Edited:" + syncResult.globalHistoryChanges.edited.length + ", Deleted:" + syncResult.globalHistoryChanges.deleted.length +
+				$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited:" + syncResult.activitiesChangesModel.edited.length + ", Deleted:" + syncResult.activitiesChangesModel.deleted.length +
 					". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
 				if (timer <= 0) {
 					window.close();
@@ -174,10 +174,10 @@ export class ActivitiesSyncModifier implements IModifier {
 				case "fetchedStreamsPercentage":
 					stepMessage = "Fetching streams...";
 					break;
-				case "computedActivitiesPercentage":
+				case "syncedActivitiesPercentage":
 					stepMessage = "Computing extended statistics...";
 					break;
-				case "savedComputedActivities":
+				case "savedSyncedActivities":
 					stepMessage = "Saving results to local extension storage...";
 					this.updateStorageUsage();
 					break;

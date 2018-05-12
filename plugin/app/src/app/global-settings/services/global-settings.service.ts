@@ -37,18 +37,6 @@ export class GlobalSettingsService {
 			title: "Temperature",
 		}],
 	}, {
-		title: "Athlete History Synchronisation",
-		options: [{
-			key: "autoSyncMinutes",
-			type: "number",
-			title: "Sync and scan your athlete history every X minutes",
-			labels: ["All"],
-			min: 10,
-			max: 43200, // 30 days
-			step: 1,
-			disableTooltip: true,
-		}],
-	}, {
 		title: "Activities Extended Statistics",
 		options: [{
 			key: "displayActivityRatio",

@@ -15,5 +15,4 @@ export interface IComputeActivityThreadMessage { // TODO Export as model
 	activityStream: ActivityStreamsModel;
 	bounds: number[];
 	returnZones: boolean;
-	systemJsConfig: SystemJSLoader.Config;
 }

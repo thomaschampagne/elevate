@@ -44,30 +44,31 @@ import { MessagesModel } from "../../shared/models/messages.model";
 import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./AthleteUpdate";
 import "./Follow";
-import { IReleaseNote, releaseNotes } from "../../shared/ReleaseNotes";
+import { releaseNotes } from "../../shared/ReleaseNotes";
+import { ReleaseNoteModel } from "../../shared/models/release-note.model";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
 
 	public static versionInstalledKey = "versionInstalled";
-	protected isPro: boolean;
+	public isPro: boolean;
 
-	protected isPremium: boolean;
-	protected athleteName: string;
-	protected activityAthleteId: number;
-	protected activityId: number;
-	protected athleteId: number;
-	protected activityProcessor: ActivityProcessor;
-	protected isActivityAuthor: boolean;
-	protected extensionId: string;
-	protected appResources: AppResourcesModel;
-	protected _userSettings: UserSettingsModel;
-	protected vacuumProcessor: VacuumProcessor;
-	protected activitiesSynchronizer: ActivitiesSynchronizer;
+	public isPremium: boolean;
+	public athleteName: string;
+	public activityAthleteId: number;
+	public activityId: number;
+	public athleteId: number;
+	public activityProcessor: ActivityProcessor;
+	public isActivityAuthor: boolean;
+	public extensionId: string;
+	public appResources: AppResourcesModel;
+	public userSettings: UserSettingsModel;
+	public vacuumProcessor: VacuumProcessor;
+	public activitiesSynchronizer: ActivitiesSynchronizer;
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
 
-		this._userSettings = userSettings;
+		this.userSettings = userSettings;
 		this.appResources = appResources;
 		this.extensionId = this.appResources.extensionId;
 		this.vacuumProcessor = new VacuumProcessor();
@@ -75,23 +76,21 @@ export class StravistiX {
 		this.athleteName = this.vacuumProcessor.getAthleteName();
 		this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
 		this.isActivityAuthor = (this.activityAthleteId == this.athleteId);
-		this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this._userSettings, this.isActivityAuthor);
+		this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this.userSettings, this.isActivityAuthor);
 		this.isPremium = this.vacuumProcessor.getPremiumStatus();
 		this.isPro = this.vacuumProcessor.getProStatus();
 		this.activityId = this.vacuumProcessor.getActivityId();
-		this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this._userSettings);
+		this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings);
 
 		if (StravistiX.instance == null) {
 			StravistiX.instance = this;
 		}
-
-		this.init();
 	}
 
 	/**
 	 * Make the work...
 	 */
-	public init(): void {
+	public run(): void {
 
 		// Redirect app.strava.com/* to www.strava.com/*
 		if (this.handleForwardToWWW()) {
@@ -105,15 +104,15 @@ export class StravistiX {
 			this.handlePreviewRibbon();
 		}
 
-		if (this._userSettings.localStorageMustBeCleared) {
+		if (this.userSettings.localStorageMustBeCleared) {
 			localStorage.clear();
-			Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, "localStorageMustBeCleared", false, (response: any) => {
+			Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "localStorageMustBeCleared", false, (response: any) => {
 				console.log("localStorageMustBeCleared is now " + response.data.localStorageMustBeCleared);
 			});
 		}
 
 		// Init "stravistix bridge"
-		window.__stravistix_bridge__ = {};
+		window.__stravistix_bridge__ = {}; // TODO Find another solution
 
 		if (CoreEnv.debugMode) {
 			console.log("Handling " + window.location.pathname);
@@ -156,13 +155,14 @@ export class StravistiX {
 		// Must be done at the end
 		this.handleTrackTodayIncomingConnection();
 		this.handleAthleteUpdate();
+		this.saveAthleteId();
 		this.handleGoogleMapsComeBackModifier();
 	}
 
 	/**
 	 *
 	 */
-	protected handleForwardToWWW(): boolean {
+	public handleForwardToWWW(): boolean {
 
 		if (_.isEqual(window.location.hostname, "app.strava.com")) {
 			const forwardUrl: string = window.location.protocol + "//www.strava.com" + window.location.pathname;
@@ -175,9 +175,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected showPluginInstallOrUpgradeRibbon(): void {
+	public showPluginInstallOrUpgradeRibbon(): void {
 
-		const latestRelease: IReleaseNote = _.first(releaseNotes);
+		const latestRelease: ReleaseNoteModel = _.first(releaseNotes);
 
 		if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
 			console.log("Silent update... skip update ribbon");
@@ -233,7 +233,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handlePluginInstallOrUpgrade(): void {
+	public handlePluginInstallOrUpgrade(): void {
 
 		if (!window.location.pathname.match(/^\/dashboard/)) {
 			return;
@@ -251,14 +251,14 @@ export class StravistiX {
 				on: Date.now(),
 			};
 
-			Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, toBeStored, () => {
+			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.versionInstalledKey, toBeStored, () => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, StravistiX.versionInstalledKey, (response: any) => {
+		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.versionInstalledKey, (response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -324,7 +324,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleAthletesStats(): void {
+	public handleAthletesStats(): void {
 
 		// If we are not on the athletes page then return...
 		if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
@@ -336,8 +336,8 @@ export class StravistiX {
 		}
 
 		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources, {
-			Run: this._userSettings.targetsYearRun,
-			Ride: this._userSettings.targetsYearRide,
+			Run: this.userSettings.targetsYearRun,
+			Ride: this.userSettings.targetsYearRide,
 		});
 		athleteStatsModifier.modify();
 	}
@@ -345,7 +345,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivitiesSummary(): void {
+	public handleActivitiesSummary(): void {
 
 		/* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
 
@@ -364,7 +364,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handlePreviewRibbon(): void {
+	public handlePreviewRibbon(): void {
 		const globalStyle = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
 		const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
 		$("body").before(html);
@@ -373,7 +373,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleMenu(): void {
+	public handleMenu(): void {
 
 		if (CoreEnv.debugMode) {
 			console.log("Execute handleMenu()");
@@ -386,14 +386,14 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleRemoteLinks(): void {
+	public handleRemoteLinks(): void {
 
 		// If we are not on a segment or activity page then return...
 		if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
 			return;
 		}
 
-		if (!this._userSettings.remoteLinks) {
+		if (!this.userSettings.remoteLinks) {
 			return;
 		}
 
@@ -405,7 +405,7 @@ export class StravistiX {
 		remoteLinksModifier.modify();
 	}
 
-	protected handleWindyTyModifier(): void {
+	public handleWindyTyModifier(): void {
 
 		// If we are not on a segment or activity page then return...
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -430,13 +430,13 @@ export class StravistiX {
 			console.log("Execute handleWindyTyModifier()");
 		}
 
-		const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this._userSettings);
+		const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this.userSettings);
 		windyTyModifier.modify();
 	}
 
-	protected handleReliveCCModifier(): void {
+	public handleReliveCCModifier(): void {
 
-		if (!this._userSettings.displayReliveCCLink) {
+		if (!this.userSettings.displayReliveCCLink) {
 			return;
 		}
 
@@ -472,7 +472,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleDefaultLeaderboardFilter(): void {
+	public handleDefaultLeaderboardFilter(): void {
 
 		// If we are not on a segment or activity page then return...
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -490,16 +490,16 @@ export class StravistiX {
 			console.log("Execute handleDefaultLeaderboardFilter()");
 		}
 
-		const defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this._userSettings.defaultLeaderBoardFilter);
+		const defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this.userSettings.defaultLeaderBoardFilter);
 		defaultLeaderBoardFilterModifier.modify();
 	}
 
 	/**
 	 *
 	 */
-	protected handleSegmentRankPercentage(): void {
+	public handleSegmentRankPercentage(): void {
 
-		if (!this._userSettings.displaySegmentRankPercentage) {
+		if (!this.userSettings.displaySegmentRankPercentage) {
 			return;
 		}
 
@@ -516,9 +516,9 @@ export class StravistiX {
 		segmentRankPercentage.modify();
 	}
 
-	protected handleSegmentHRAP() {
+	public handleSegmentHRAP() {
 
-		if (!this._userSettings.showHiddenBetaFeatures || !this.userSettings.displayRecentEffortsHRAdjustedPacePower) {
+		if (!this.userSettings.showHiddenBetaFeatures || !this.userSettings.displayRecentEffortsHRAdjustedPacePower) {
 			return;
 		}
 
@@ -540,7 +540,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivityStravaMapType(): void {
+	public handleActivityStravaMapType(): void {
 
 		// Test where are on an activity...
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -551,24 +551,24 @@ export class StravistiX {
 			console.log("Execute handleActivityStravaMapType()");
 		}
 
-		const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this._userSettings.activityStravaMapType);
+		const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings.activityStravaMapType);
 		activityStravaMapTypeModifier.modify();
 	}
 
-	protected handleHideFeed(): void {
+	public handleHideFeed(): void {
 
 		// Test if where are on dashboard page
 		if (!window.location.pathname.match(/^\/dashboard/)) {
 			return;
 		}
 
-		if (!this._userSettings.feedHideChallenges
-			&& !this._userSettings.feedHideCreatedRoutes
-			&& !this._userSettings.feedHidePosts
-			&& !this._userSettings.feedHideRideActivitiesUnderDistance
-			&& !this._userSettings.feedHideRunActivitiesUnderDistance
-			&& !this._userSettings.feedHideVirtualRides
-			&& !this._userSettings.feedHideSuggestedAthletes) {
+		if (!this.userSettings.feedHideChallenges
+			&& !this.userSettings.feedHideCreatedRoutes
+			&& !this.userSettings.feedHidePosts
+			&& !this.userSettings.feedHideRideActivitiesUnderDistance
+			&& !this.userSettings.feedHideRunActivitiesUnderDistance
+			&& !this.userSettings.feedHideVirtualRides
+			&& !this.userSettings.feedHideSuggestedAthletes) {
 			return;
 		}
 
@@ -576,11 +576,11 @@ export class StravistiX {
 			console.log("Execute handleHideFeed()");
 		}
 
-		const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this._userSettings);
+		const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this.userSettings);
 		hideFeedModifier.modify();
 	}
 
-	protected handleDisplayFlyByFeedModifier(): void {
+	public handleDisplayFlyByFeedModifier(): void {
 
 		// Test if where are on dashboard page
 		if (!window.location.pathname.match(/^\/dashboard/)) {
@@ -598,7 +598,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleExtendedActivityData(): void {
+	public handleExtendedActivityData(): void {
 
 		if (_.isUndefined(window.pageView)) {
 			return;
@@ -633,7 +633,7 @@ export class StravistiX {
 					this.activityId,
 					activityType,
 					this.appResources,
-					this._userSettings,
+					this.userSettings,
 					this.isActivityAuthor,
 					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
@@ -644,7 +644,7 @@ export class StravistiX {
 					this.activityId,
 					activityType,
 					this.appResources,
-					this._userSettings,
+					this.userSettings,
 					this.isActivityAuthor,
 					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
@@ -663,7 +663,7 @@ export class StravistiX {
 		follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 	}
 
-	protected handleExtendedSegmentEffortData(): void {
+	public handleExtendedSegmentEffortData(): void {
 
 		if (_.isUndefined(window.pageView)) {
 			return;
@@ -716,7 +716,7 @@ export class StravistiX {
 						that.activityId,
 						activityType,
 						that.appResources,
-						that._userSettings,
+						that.userSettings,
 						that.isActivityAuthor,
 						basicInfo,
 						AbstractExtendedDataModifier.TYPE_SEGMENT);
@@ -727,7 +727,7 @@ export class StravistiX {
 						that.activityId,
 						activityType,
 						that.appResources,
-						that._userSettings,
+						that.userSettings,
 						that.isActivityAuthor,
 						basicInfo,
 						AbstractExtendedDataModifier.TYPE_SEGMENT);
@@ -742,9 +742,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleNearbySegments(): void {
+	public handleNearbySegments(): void {
 
-		if (!this._userSettings.displayNearbySegments) {
+		if (!this.userSettings.displayNearbySegments) {
 			return;
 		}
 
@@ -777,9 +777,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivityBikeOdo(): void {
+	public handleActivityBikeOdo(): void {
 
-		if (!this._userSettings.displayBikeOdoInActivity) {
+		if (!this.userSettings.displayBikeOdoInActivity) {
 			return;
 		}
 
@@ -811,7 +811,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivitySegmentTimeComparison(): void {
+	public handleActivitySegmentTimeComparison(): void {
 
 		// Test where are on an activity page... (note this includes activities/XXX/segments)
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -830,7 +830,7 @@ export class StravistiX {
 			console.log("Execute handleActivitySegmentTimeComparison()");
 		}
 
-		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this._userSettings, this.appResources, activityType, isMyOwn);
+		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, isMyOwn);
 		activitySegmentTimeComparisonModifier.modify();
 
 	}
@@ -838,9 +838,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivityBestSplits(): void {
+	public handleActivityBestSplits(): void {
 
-		if (!this._userSettings.displayActivityBestSplits) {
+		if (!this.userSettings.displayActivityBestSplits) {
 			return;
 		}
 
@@ -865,10 +865,10 @@ export class StravistiX {
 		// TODO Implement cache here: get stream from cache if exist
 		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, hasPowerMeter: boolean) => {
 
-			Helper.getFromStorage(this.extensionId, StorageManager.storageSyncType, "bestSplitsConfiguration", (response: any) => {
+			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", (response: any) => {
 
-				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this._userSettings, jsonResponse, hasPowerMeter, response.data, (splitsConfiguration: any) => {
-					Helper.setToStorage(this.extensionId, StorageManager.storageSyncType, "bestSplitsConfiguration", splitsConfiguration);
+				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response.data, (splitsConfiguration: any) => {
+					Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", splitsConfiguration);
 				});
 
 				activityBestSplitsModifier.modify();
@@ -881,9 +881,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleRunningGradeAdjustedPace(): void {
+	public handleRunningGradeAdjustedPace(): void {
 
-		if (!this._userSettings.activateRunningGradeAdjustedPace) {
+		if (!this.userSettings.activateRunningGradeAdjustedPace) {
 			return;
 		}
 
@@ -911,9 +911,9 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleRunningHeartRate(): void {
+	public handleRunningHeartRate(): void {
 
-		if (!this._userSettings.activateRunningHeartRate) {
+		if (!this.userSettings.activateRunningHeartRate) {
 			return;
 		}
 
@@ -938,9 +938,9 @@ export class StravistiX {
 		runningHeartRateModifier.modify();
 	}
 
-	protected handleRunningCadence(): void {
+	public handleRunningCadence(): void {
 
-		if (!this._userSettings.activateRunningCadence) {
+		if (!this.userSettings.activateRunningCadence) {
 			return;
 		}
 
@@ -965,9 +965,9 @@ export class StravistiX {
 		runningCadenceModifier.modify();
 	}
 
-	protected handleRunningTemperature(): void {
+	public handleRunningTemperature(): void {
 
-		if (!this._userSettings.activateRunningTemperature) {
+		if (!this.userSettings.activateRunningTemperature) {
 			return;
 		}
 
@@ -995,7 +995,7 @@ export class StravistiX {
 	/**
 	 *
 	 */
-	protected handleActivityQRCodeDisplay(): void {
+	public handleActivityQRCodeDisplay(): void {
 
 		// Test where are on an activity...
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -1011,7 +1011,7 @@ export class StravistiX {
 
 	}
 
-	protected handleVirtualPartner(): void {
+	public handleVirtualPartner(): void {
 
 		// Test where are on an activity...
 		if (!window.location.pathname.match(/^\/activities/)) {
@@ -1022,13 +1022,13 @@ export class StravistiX {
 		virtualPartnerModifier.modify();
 	}
 
-	protected handleGoogleMapsComeBackModifier(): void {
+	public handleGoogleMapsComeBackModifier(): void {
 
 		if (window.location.pathname.match(/\/truncate/)) { // Skipping on activity cropping
 			return;
 		}
 
-		if (!this._userSettings.reviveGoogleMaps) {
+		if (!this.userSettings.reviveGoogleMaps) {
 			return;
 		}
 
@@ -1037,14 +1037,14 @@ export class StravistiX {
 			return;
 		}
 
-		const googleMapsModifier: GoogleMapsModifier = new GoogleMapsModifier(this.activityId, this.appResources, this._userSettings);
+		const googleMapsModifier: GoogleMapsModifier = new GoogleMapsModifier(this.activityId, this.appResources, this.userSettings);
 		googleMapsModifier.modify();
 	}
 
 	/**
 	 * Launch a track event once a day (is user use it once a day), to follow is account type
 	 */
-	protected handleTrackTodayIncomingConnection(): void {
+	public handleTrackTodayIncomingConnection(): void {
 
 		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
 
@@ -1097,7 +1097,7 @@ export class StravistiX {
 		}
 	}
 
-	protected handleAthleteUpdate(): void {
+	public handleAthleteUpdate(): void {
 		if (!StorageManager.getCookie("stravistix_athlete_update_done")) {
 			this.commitAthleteUpdate().then((response: any) => {
 				console.log("Updated", response);
@@ -1108,11 +1108,11 @@ export class StravistiX {
 		}
 	}
 
-	public get userSettings(): UserSettingsModel {
-		return this._userSettings;
+	public saveAthleteId(callback?: Function): void {
+		Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, "athleteId", this.athleteId, callback);
 	}
 
-	protected handleOnFlyActivitiesSync(): void {
+	public handleOnFlyActivitiesSync(): void {
 
 		function notifyBackgroundSyncDone(syncResult: SyncResultModel) {
 			chrome.runtime.sendMessage(this.extensionId, {
@@ -1135,10 +1135,11 @@ export class StravistiX {
 			return;
 		}
 
-		setTimeout(() => { // Wait for 15s before starting the auto-sync
+		const waitBeforeFastSyncSeconds = 2;
+		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
+			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
 
 				const lastSyncDateTime: number = response.data;
 
@@ -1146,35 +1147,13 @@ export class StravistiX {
 
 					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
 
-					// If last sync is has been done more than "autoSyncMinutes"
-					const hasNormalSyncToBeDone = (Date.now() > (lastSyncDateTime + 1000 * 60 * this.userSettings.autoSyncMinutes));
-
-					// Then store that it has to be performed absolutely (but at later time)!
-					if (hasNormalSyncToBeDone) {
-						console.log("A normal sync will be done later");
-						StorageManager.setCookie("stravistix_normal_sync_tbd", true, 365);
-					}
-
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
-					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(true);
+					const fastSync = true;
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(fastSync);
 					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
 						console.log("Fast sync finished", syncResult);
 						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
-
-						if (hasNormalSyncToBeDone || StorageManager.getCookie("stravistix_normal_sync_tbd")) {
-							return this.activitiesSynchronizer.sync();
-						} else {
-							return null;
-						}
-
-					}).then((syncResult: SyncResultModel) => {
-
-						if (syncResult) {
-							console.log("Normal sync finished", syncResult);
-							notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
-							StorageManager.removeCookie("stravistix_normal_sync_tbd");
-						}
 
 					}).catch((err: any) => {
 						console.warn(err);
@@ -1185,11 +1164,11 @@ export class StravistiX {
 				}
 			});
 
-		}, 1000 * 5); // Wait for 10s before starting the auto-sync
+		}, 1000 * waitBeforeFastSyncSeconds); // Wait for before starting the auto-sync
 
 	}
 
-	protected handleActivitiesSyncFromOutside() {
+	public handleActivitiesSyncFromOutside() {
 
 		if (!window.location.search.match("stravistixSync")) { // Skipping is we are not on sync popup
 			return;
@@ -1209,7 +1188,7 @@ export class StravistiX {
 		activitiesSyncModifier.modify();
 	}
 
-	protected commitAthleteUpdate(): Q.IPromise<any> {
+	public commitAthleteUpdate(): Q.IPromise<any> {
 		const athleteUpdate: AthleteUpdateModel = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
 		return AthleteUpdate.commit(athleteUpdate);
 	}

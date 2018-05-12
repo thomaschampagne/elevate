@@ -5,7 +5,7 @@ import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced
 @Injectable()
 export class ActivityDao {
 
-	public static readonly SYNCED_ACTIVITIES_KEY: string = "computedActivities";
+	public static readonly SYNCED_ACTIVITIES_KEY: string = "syncedActivities";
 
 	constructor() {
 	}
@@ -16,8 +16,8 @@ export class ActivityDao {
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve) => {
-			this.browserStorageLocal().get(ActivityDao.SYNCED_ACTIVITIES_KEY, (result: { computedActivities: SyncedActivityModel[] }) => {
-				const syncedActivityModels = (_.isEmpty(result.computedActivities)) ? null : result.computedActivities;
+			this.browserStorageLocal().get(ActivityDao.SYNCED_ACTIVITIES_KEY, (result: { syncedActivities: SyncedActivityModel[] }) => {
+				const syncedActivityModels = (_.isEmpty(result.syncedActivities)) ? null : result.syncedActivities;
 				resolve(syncedActivityModels);
 			});
 		});

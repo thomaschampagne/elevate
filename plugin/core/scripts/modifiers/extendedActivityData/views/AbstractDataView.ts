@@ -78,14 +78,7 @@ export abstract class AbstractDataView {
 			return;
 		}
 
-		let graphWidth: number = window.innerWidth * 0.4;
-		const screenRatio: number = window.innerWidth / window.innerHeight;
-
-		// Apply bigger graph width if screen over 4/3...
-		if (screenRatio - 0.1 > (4 / 3)) {
-			graphWidth = graphWidth * 1.3;
-		}
-
+		const graphWidth: number = window.innerWidth * 0.45;
 		let htmlCanvas = "";
 		htmlCanvas += "<div>";
 		htmlCanvas += "<div>";
@@ -131,9 +124,11 @@ export abstract class AbstractDataView {
 	 * Push grid, graph and table to content view
 	 */
 	protected injectToContent() {
+		this.content += "<div class='content'>";
 		this.content += this.grid.html();
 		this.content += this.graph.html();
 		this.content += this.table.html();
+		this.content += "</div>"
 	}
 
 	public displayGraph(): void {

@@ -4,7 +4,6 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { MatSnackBar } from "@angular/material";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { GenderModel } from "./gender.model";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
 import { FitnessService } from "../fitness-trend/shared/services/fitness.service";
 import { Gender } from "../shared/enums/gender.enum";
 import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
@@ -54,8 +53,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public isSwimFtpCalculatorEnabled = false;
 
-	constructor(public athleteHistoryService: AthleteHistoryService,
-				public userSettingsService: UserSettingsService,
+	constructor(public userSettingsService: UserSettingsService,
 				public snackBar: MatSnackBar) {
 	}
 
@@ -307,9 +305,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	public profileChanged() {
-
 		this.userSettingsService.markLocalStorageClear();
-		this.athleteHistoryService.checkLocalRemoteAthleteProfileSame();
 	}
 
 	public saveSetting(key: string, value: any): void {

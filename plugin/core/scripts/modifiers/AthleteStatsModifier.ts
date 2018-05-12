@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import * as $ from "jquery";
 import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { StorageManager } from "../StorageManager";
@@ -509,7 +509,7 @@ export class AthleteStatsModifier implements IModifier {
 				.domain([minValue, maxValue])
 				.range([h, 0]);
 
-			const yAxis: d3.svg.Axis = d3.svg.axis()
+			const yAxis = d3.svg.axis()
 				.scale(y)
 				.orient("left")
 				.tickFormat(function (d: any) {
@@ -522,7 +522,7 @@ export class AthleteStatsModifier implements IModifier {
 
 			const months: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-			const xAxis: d3.svg.Axis = d3.svg.axis()
+			const xAxis = d3.svg.axis()
 				.scale(x)
 				.orient("bottom")
 				.ticks(d3.time.months)

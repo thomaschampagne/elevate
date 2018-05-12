@@ -1,34 +1,32 @@
 import * as _ from "lodash";
 import * as Q from "q";
 import { Helper } from "../Helper";
-import { AthleteProfileModel } from "../../../shared/models/athlete-profile.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "../processors/MultipleActivityProcessor";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
-import { HistoryChangesModel } from "./history-changes.model";
+import { ActivitiesChangesModel } from "./activities-changes.model";
 import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
 import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
 
-export class ActivitiesSynchronizer {
+export class ActivitiesSynchronizer { // TODO Rename
 
 	public static lastSyncDateTime = "lastSyncDateTime";
-	public static computedActivities = "computedActivities";
-	public static syncWithAthleteProfile = "syncWithAthleteProfile";
+	public static syncedActivities = "syncedActivities";
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected extensionId: string;
 	protected totalRawActivityIds: number[] = [];
 	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
-	protected _hasBeenComputedActivities: SyncedActivityModel[] = null;
+	protected _hasBeenSyncedActivities: SyncedActivityModel[] = null;
 	protected _multipleActivityProcessor: MultipleActivityProcessor;
 	protected _endReached = false;
 
-	private _globalHistoryChanges: HistoryChangesModel = {
+	private _activitiesChanges: ActivitiesChangesModel = {
 		added: [],
 		deleted: [],
 		edited: [],
@@ -41,44 +39,44 @@ export class ActivitiesSynchronizer {
 		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings);
 	}
 
-	public appendGlobalHistoryChanges(historyIn: HistoryChangesModel): void {
-		this._globalHistoryChanges.added = _.union(this._globalHistoryChanges.added, historyIn.added);
-		this._globalHistoryChanges.deleted = _.union(this._globalHistoryChanges.deleted, historyIn.deleted);
-		this._globalHistoryChanges.edited = _.union(this._globalHistoryChanges.edited, historyIn.edited);
+	public appendGlobalActivitiesChanges(activitiesChangesModel: ActivitiesChangesModel): void {
+		this._activitiesChanges.added = _.union(this._activitiesChanges.added, activitiesChangesModel.added);
+		this._activitiesChanges.deleted = _.union(this._activitiesChanges.deleted, activitiesChangesModel.deleted);
+		this._activitiesChanges.edited = _.union(this._activitiesChanges.edited, activitiesChangesModel.edited);
 	}
 
 	/**
 	 * Provides:
-	 * - activity IDs missing in the local history (added in strava.com and not computed/stored)
+	 * - activity IDs missing in the local activities (added in strava.com and not computed/stored)
 	 * - activity IDs to edit with their values (edited from strava.com)
-	 * @param activities Array<StravaActivityModel>
-	 * @param computedActivities Array<SyncedActivityModel>
-	 * @return HistoryChangesModel
+	 * @param rawActivities Array<StravaActivityModel>
+	 * @param syncedActivities Array<SyncedActivityModel>
+	 * @return ActivitiesChangesModel
 	 */
-	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
+	public static findAddedAndEditedActivities(rawActivities: StravaActivityModel[], syncedActivities: SyncedActivityModel[]): ActivitiesChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
 		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
 
-		if (_.isNull(computedActivities) || _.isUndefined(computedActivities) || !computedActivities) {
-			computedActivities = [];
+		if (_.isNull(syncedActivities) || _.isUndefined(syncedActivities) || !syncedActivities) {
+			syncedActivities = [];
 		}
 
 		if (!_.isEmpty(rawActivities)) {
 
 			_.forEach(rawActivities, (rawActivity: StravaActivityModel) => {
 
-				// Exist raw activity id in history?
+				// Exist raw activity id in activities?
 				// Seek for activity in just interrogated pages
-				const foundComputedActivity: SyncedActivityModel = _.find(computedActivities, {id: rawActivity.id});
+				const foundSyncedActivity: SyncedActivityModel = _.find(syncedActivities, {id: rawActivity.id});
 
-				if (foundComputedActivity) { // Yes  => Check for an edit..
+				if (foundSyncedActivity) { // Yes  => Check for an edit..
 
-					if (foundComputedActivity.name !== rawActivity.name || foundComputedActivity.type !== rawActivity.type) {
-						// foundComputedActivity.name = rawActivity.name; // Update name
+					if (foundSyncedActivity.name !== rawActivity.name || foundSyncedActivity.type !== rawActivity.type) {
+						// foundSyncedActivity.name = rawActivity.name; // Update name
 						edited.push({
-							id: foundComputedActivity.id,
+							id: foundSyncedActivity.id,
 							name: rawActivity.name,
 							type: rawActivity.type,
 							display_type: rawActivity.display_type,
@@ -92,42 +90,39 @@ export class ActivitiesSynchronizer {
 			});
 		}
 
-		const historyChanges: HistoryChangesModel = {
-			added,
-			deleted,
-			edited,
+		return {
+			added: added,
+			deleted: deleted,
+			edited: edited
 		};
-
-		return historyChanges;
 	}
 
 	/**
 	 * Provides:
-	 * - activity IDs to delete in the local history (removed from strava.com)
+	 * - activity IDs to delete in the local activities (removed from strava.com)
 	 * @param rawActivityIds
-	 * @param computedActivities
+	 * @param syncedActivities
 	 * @returns {null}
 	 */
-	public static findDeletedActivities(rawActivityIds: number[], computedActivities: SyncedActivityModel[]): HistoryChangesModel {
+	public static findDeletedActivities(rawActivityIds: number[], syncedActivities: SyncedActivityModel[]): ActivitiesChangesModel {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
 		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
 
-		_.forEach(computedActivities, (computedActivity: SyncedActivityModel) => {
+		_.forEach(syncedActivities, (syncedActivityModel: SyncedActivityModel) => {
 			// Seek for activity in just interrogated pages
-			const notFound: boolean = (_.indexOf(rawActivityIds, computedActivity.id) == -1);
+			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) == -1);
 			if (notFound) {
-				deleted.push(computedActivity.id);
+				deleted.push(syncedActivityModel.id);
 			}
 		});
 
-		const historyChanges: HistoryChangesModel = {
-			added,
-			deleted,
-			edited,
+		return {
+			added: added,
+			deleted: deleted,
+			edited: edited,
 		};
-		return historyChanges;
 	}
 
 	/**
@@ -147,14 +142,14 @@ export class ActivitiesSynchronizer {
 			let fetchedActivitiesProgress = 0;
 			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
 
-			this.getComputedActivitiesFromLocal().then((computedActivitiesStored: any) => {
+			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
 
 				// Should find added and edited activities
-				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (computedActivitiesStored.data) ? computedActivitiesStored.data : []);
-				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
+				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored.data) ? syncedActivitiesStored.data : []);
+				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
-				_.forEach(historyChangesOnPagesRode.added, (activityId: number) => {
+				_.forEach(activitiesChangesModel.added, (activityId: number) => {
 					// Getting promise of stream for each activity...
 					promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
 				});
@@ -217,7 +212,7 @@ export class ActivitiesSynchronizer {
 				}, (notification: any) => {
 
 					// Progress...
-					fetchedActivitiesProgress = fetchedActivitiesStreamCount / historyChangesOnPagesRode.added.length * 100;
+					fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
 
 					const notify: SyncNotifyModel = {
 						step: "fetchedStreamsPercentage",
@@ -246,22 +241,19 @@ export class ActivitiesSynchronizer {
 		return $.ajax("/athlete/training_activities?new_activity_only=false&per_page=" + perPage + "&page=" + page);
 	}
 
-	/**
-	 *
-	 * @returns {Q.Promise<number>}
-	 */
-	public getRemoteActivitiesCount(): Q.Promise<number> {
 
-		const deferred = Q.defer<number>();
+	public getFirstPageRemoteActivities(): Q.Promise<{ activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }> {
+
+		const deferred = Q.defer<{ activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }>();
 
 		const perPage = 1;
 		const page = 1;
 		const promise: JQueryXHR = this.httpPageGet(perPage, page);
 
-		promise.then((data: { models: Array<StravaActivityModel>, total: number }, textStatus: string, jqXHR: JQueryXHR) => {
+		promise.then((data: { models: StravaActivityModel[], total: number }, textStatus: string, jqXHR: JQueryXHR) => {
 
 			if (data && _.isNumber(data.total)) {
-				deferred.resolve(data.total);
+				deferred.resolve({activitiesCountAllPages: data.total, firstPageModels: data.models});
 			} else {
 				deferred.reject("No remote total activities available");
 			}
@@ -270,23 +262,51 @@ export class ActivitiesSynchronizer {
 		return deferred.promise;
 	}
 
-	public hasRemoteLocalActivitiesCountMissmatch(): Q.Promise<boolean> {
+	/**
+	 * Tell if remote first page has added or edited mismatch activities compared to local
+	 * @returns {Q.Promise<{hasMisMatch: boolean; activitiesChangesModel: ActivitiesChangesModel}>}
+	 */
+	public hasRemoteFirstPageActivitiesMismatch(): Q.Promise<{ hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }> {
 
-		const deferred = Q.defer<boolean>();
+		const deferred = Q.defer<{ hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }>();
 
-		let localSyncedActivitiesLength: number = null;
+		let localSyncedActivityModels: SyncedActivityModel[] = null;
 
-		this.getComputedActivitiesFromLocal().then((result: { data: SyncedActivityModel[] }) => {
+		this.getSyncedActivitiesFromLocal().then((result: { data: SyncedActivityModel[] }) => {
 
 			if (result && result.data && _.isNumber(result.data.length)) {
-				localSyncedActivitiesLength = result.data.length;
-				return this.getRemoteActivitiesCount();
+
+				localSyncedActivityModels = result.data;
+				return this.getFirstPageRemoteActivities();
+
 			} else {
-				deferred.reject("No local computed activities");
+				deferred.reject("No local synced activities");
 				return;
 			}
-		}).then((remoteCount: number) => {
-			deferred.resolve((remoteCount !== localSyncedActivitiesLength));
+
+		}).then((remoteFirstPage: { activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }) => {
+
+			const activitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
+				localSyncedActivityModels);
+
+			let remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
+				return stravaActivityModel.id;
+			});
+
+			activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(remoteFirstPageIds,
+				_.slice(localSyncedActivityModels, -1 * (remoteFirstPageIds.length - activitiesChangesModel.added.length))).deleted;
+
+			const hasAddedOrEditedActivitiesMisMatch = (activitiesChangesModel.added.length > 0
+				|| activitiesChangesModel.edited.length > 0
+				|| activitiesChangesModel.deleted.length > 0);
+
+			const result = {
+				hasMisMatch: hasAddedOrEditedActivitiesMisMatch,
+				activitiesChangesModel: activitiesChangesModel
+			};
+
+			deferred.resolve(result);
+
 		});
 
 		return deferred.promise;
@@ -420,19 +440,16 @@ export class ActivitiesSynchronizer {
 	}
 
 	/**
-	 * Erase stored last sync date and computed activities
+	 * Erase stored last sync date and synced activities
 	 * @return {Q.Promise<U>}
 	 */
 	public clearSyncCache(): Q.IPromise<any> {
 
-		const promise = Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities).then(() => {
-			console.log("computedActivities removed from local storage");
-			return Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
+		const promise = Helper.removeFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities).then(() => {
+			console.log("syncedActivities removed from local storage");
+			return Helper.removeFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
-			return Helper.removeFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile);
-		}).then(() => {
-			console.log("syncWithAthleteProfile removed from local storage");
 		});
 
 		return promise;
@@ -440,7 +457,7 @@ export class ActivitiesSynchronizer {
 
 	/**
 	 * Trigger the fetch of activities (Along last sync date), their stream and the compute of each activities.
-	 * @returns {Q.Promise<Array<SyncedActivityModel>>} Promising an array of computed activities along the last sync date
+	 * @returns {Q.Promise<Array<SyncedActivityModel>>} Promising an array of synced activities along the last sync date
 	 */
 	public fetchAndComputeGroupOfPages(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<SyncedActivityModel[]> {
 
@@ -464,10 +481,10 @@ export class ActivitiesSynchronizer {
 				deferred.notify(progress);
 			}
 
-		}).then((computedActivities: SyncedActivityModel[]) => {
+		}).then((syncedActivities: SyncedActivityModel[]) => {
 
 			// computeSuccess...
-			deferred.resolve(computedActivities);
+			deferred.resolve(syncedActivities);
 
 		}, (err: any) => {
 
@@ -518,61 +535,61 @@ export class ActivitiesSynchronizer {
 			deferred = Q.defer<SyncedActivityModel[]>();
 		}
 
-		let computedActivitiesInGroup: SyncedActivityModel[] = null;
+		let syncedActivitiesInGroup: SyncedActivityModel[] = null;
 
 		if (this._endReached) {
 
-			deferred.resolve(this._hasBeenComputedActivities);
+			deferred.resolve(this._hasBeenSyncedActivities);
 
 		} else {
 
-			this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((computedActivitiesPromised: SyncedActivityModel[]) => {
+			this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((syncedActivitiesPromised: SyncedActivityModel[]) => {
 
 				handledGroupCount++;
 
-				computedActivitiesInGroup = computedActivitiesPromised;
-				computedActivitiesPromised = null; // Free mem !
+				syncedActivitiesInGroup = syncedActivitiesPromised;
+				syncedActivitiesPromised = null; // Free mem !
 				console.log("Group handled count: " + handledGroupCount);
 
 				// Retrieve previous saved activities
-				return this.getComputedActivitiesFromLocal();
+				return this.getSyncedActivitiesFromLocal();
 
-			}).then((computedActivitiesStored: any) => {
+			}).then((syncedActivitiesStored: any) => {
 
 				// Success getting previous stored activities. Now merging with new...
-				if (computedActivitiesInGroup !== null && computedActivitiesInGroup.length > 0) {
+				if (syncedActivitiesInGroup !== null && syncedActivitiesInGroup.length > 0) {
 
 					// There's new activities to save
-					if (_.isEmpty(computedActivitiesStored) || _.isEmpty(computedActivitiesStored.data)) {
-						computedActivitiesStored = {};
-						computedActivitiesStored.data = [] as SyncedActivityModel[];
+					if (_.isEmpty(syncedActivitiesStored) || _.isEmpty(syncedActivitiesStored.data)) {
+						syncedActivitiesStored = {};
+						syncedActivitiesStored.data = [] as SyncedActivityModel[];
 					}
 
-					this._hasBeenComputedActivities = _.flatten(_.union(computedActivitiesInGroup, computedActivitiesStored.data));
+					this._hasBeenSyncedActivities = _.flatten(_.union(syncedActivitiesInGroup, syncedActivitiesStored.data));
 
 					// Sort this.mergedActivities ascending before save
-					this._hasBeenComputedActivities = _.sortBy(this._hasBeenComputedActivities, (item) => {
+					this._hasBeenSyncedActivities = _.sortBy(this._hasBeenSyncedActivities, (item) => {
 						return (new Date(item.start_time)).getTime();
 					});
 
 					// Ensure activity unicity
-					this._hasBeenComputedActivities = _.uniqBy(this._hasBeenComputedActivities, (item: SyncedActivityModel) => {
+					this._hasBeenSyncedActivities = _.uniqBy(this._hasBeenSyncedActivities, (item: SyncedActivityModel) => {
 						return item.id;
 					});
 
-					console.log("Updating computed activities to extension local storage.");
+					console.log("Updating synced activities to extension local storage.");
 
 					// Save activities to local storage
-					this.saveComputedActivitiesToLocal(this._hasBeenComputedActivities).then((pagesGroupSaved: any) => {
+					this.saveSyncedActivitiesToLocal(this._hasBeenSyncedActivities).then((pagesGroupSaved: any) => {
 
 						// Current group have been saved with previously stored activities...
-						// console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.computedActivities.length + ' data: ', pagesGroupSaved);
+						// console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.syncedActivities.length + ' data: ', pagesGroupSaved);
 
 						const notify: SyncNotifyModel = {
-							step: "savedComputedActivities",
+							step: "savedSyncedActivities",
 							progress: 100,
 							pageGroupId: handledGroupCount + 1,
-							browsedActivitiesCount: this.totalRawActivityIds.length, //pagesGroupSaved.data.computedActivities.length,
+							browsedActivitiesCount: this.totalRawActivityIds.length, //pagesGroupSaved.data.syncedActivities.length,
 						};
 
 						deferred.notify(notify);
@@ -586,8 +603,8 @@ export class ActivitiesSynchronizer {
 						}
 
 						// Free mem !
-						computedActivitiesInGroup = null;
-						computedActivitiesStored = null;
+						syncedActivitiesInGroup = null;
+						syncedActivitiesStored = null;
 					});
 				} else {
 
@@ -595,7 +612,7 @@ export class ActivitiesSynchronizer {
 					console.log("Group " + this.printGroupLimits(fromPage, pagesPerGroupToRead) + " handled");
 
 					const notify: SyncNotifyModel = {
-						step: "savedComputedActivities",
+						step: "savedSyncedActivities",
 						progress: 100,
 						pageGroupId: handledGroupCount + 1,
 						browsedActivitiesCount: this.totalRawActivityIds.length,
@@ -612,8 +629,8 @@ export class ActivitiesSynchronizer {
 					}
 
 					// Free mem !
-					computedActivitiesInGroup = null;
-					computedActivitiesStored = null;
+					syncedActivitiesInGroup = null;
+					syncedActivitiesStored = null;
 				}
 
 			}, (err: any) => {
@@ -641,6 +658,12 @@ export class ActivitiesSynchronizer {
 		const deferred = Q.defer<SyncResultModel>();
 		let syncNotify: SyncNotifyModel = {};
 
+		let activitiesChangesModel: ActivitiesChangesModel = {
+			added: [],
+			edited: [],
+			deleted: []
+		};
+
 		// Reset values for a sync
 		this.initializeForSync();
 
@@ -653,10 +676,13 @@ export class ActivitiesSynchronizer {
 
 				console.log("Fast sync mode enabled");
 
-				return this.hasRemoteLocalActivitiesCountMissmatch().then((missMatch: boolean) => {
+				return this.hasRemoteFirstPageActivitiesMismatch().then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 
-					if (missMatch) {
-						console.log("Miss match found between local and remote activities. Syncing first page only.");
+					if (result.hasMisMatch) {
+
+						activitiesChangesModel = result.activitiesChangesModel;
+
+						console.log("Mismatch found between local and remote activities. Syncing first page only.");
 						const fromPage = 1;
 						const pagesPerGroupToRead = 1;
 						const maxGroupCount = 1;
@@ -674,46 +700,55 @@ export class ActivitiesSynchronizer {
 
 		}).then(() => {
 
-			if (fastSync) { // Skip edit/delete from scanned ids. We dont crawled the whole history to do it.
-				console.log("Skipping HistoryChanges analisys");
+			// Let's check for deletion + apply edits
+			return this.getSyncedActivitiesFromLocal();
+
+		}).then((syncedActivitiesStored: any) => {
+
+			if (syncedActivitiesStored && syncedActivitiesStored.data) {
+
+				if (fastSync && fastSync === true) {
+
+					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
+					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
+
+					if (hasEditedChanges) {
+						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, activitiesChangesModel.edited);
+					}
+
+					if (hasDeletedChanges) {
+						this.applyDeletedActivitiesChanges(syncedActivitiesStored, activitiesChangesModel.deleted);
+					}
+
+					return (hasEditedChanges || hasDeletedChanges) ? this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data) : null;
+
+				} else {
+
+					activitiesChangesModel = this._activitiesChanges;
+
+					// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
+					activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (syncedActivitiesStored.data as SyncedActivityModel[])).deleted;
+
+					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
+					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
+
+					// Apply names/types changes
+					if (hasEditedChanges) {
+						this.applyEditedActivitiesChanges(syncedActivitiesStored.data, activitiesChangesModel.edited);
+					}
+
+					// Apply deletions
+					if (hasDeletedChanges) {
+						this.applyDeletedActivitiesChanges(syncedActivitiesStored, activitiesChangesModel.deleted);
+					}
+
+					return (hasEditedChanges || hasDeletedChanges) ? this.saveSyncedActivitiesToLocal(syncedActivitiesStored.data) : null;
+
+				}
+
+			} else {
 				return null;
 			}
-
-			// Let's check for deletion + apply edits
-			return this.getComputedActivitiesFromLocal();
-
-		}).then((computedActivitiesStored: any) => {
-
-			if (computedActivitiesStored && computedActivitiesStored.data) {
-
-				// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-				const historyChangesOnPagesRode: HistoryChangesModel = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, (computedActivitiesStored.data as SyncedActivityModel[]));
-				this.appendGlobalHistoryChanges(historyChangesOnPagesRode); // Update global history
-
-				// Apply names/types changes
-				if (this._globalHistoryChanges.edited.length > 0) {
-					_.forEach(this._globalHistoryChanges.edited, (editData) => {
-						const activityToEdit: SyncedActivityModel = _.find((computedActivitiesStored.data as SyncedActivityModel[]), {id: editData.id}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
-						activityToEdit.name = editData.name;
-						activityToEdit.type = editData.type;
-						activityToEdit.display_type = editData.display_type;
-					});
-				}
-
-				// Apply deletions
-				if (this._globalHistoryChanges.deleted.length > 0) {
-					_.forEach(this._globalHistoryChanges.deleted, (deleteId: number) => {
-						computedActivitiesStored.data = _.without(computedActivitiesStored.data, _.find(computedActivitiesStored.data, {
-							id: deleteId,
-						}));
-					});
-				}
-
-				return this.saveComputedActivitiesToLocal(computedActivitiesStored.data);
-
-			}
-
-			return null;
 
 		}).then(() => {
 
@@ -729,27 +764,10 @@ export class ActivitiesSynchronizer {
 
 			console.log("Last sync date time saved: ", new Date(saved.data.lastSyncDateTime));
 
-			const syncedAthleteProfile: AthleteProfileModel = {
-				userGender: this.userSettings.userGender,
-				userMaxHr: this.userSettings.userMaxHr,
-				userRestHr: this.userSettings.userRestHr,
-				userWeight: this.userSettings.userWeight,
-				userFTP: this.userSettings.userFTP,
-				// userSwimFTP: this.userSettings.userSwimFTP
-			};
-
-			return this.saveSyncedAthleteProfile(syncedAthleteProfile);
-
-		}).then((saved: any) => {
-
-			// Synced Athlete Profile saved ...
-			console.log("Sync With Athlete Profile done");
-
 			const syncResult: SyncResultModel = {
-				globalHistoryChanges: this._globalHistoryChanges,
-				computedActivities: saved.data.computedActivities,
-				lastSyncDateTime: saved.data.lastSyncDateTime,
-				syncWithAthleteProfile: saved.data.syncWithAthleteProfile,
+				activitiesChangesModel: activitiesChangesModel,
+				syncedActivities: saved.data.syncedActivities,
+				lastSyncDateTime: saved.data.lastSyncDateTime
 			};
 
 			deferred.resolve(syncResult); // Sync finish !!
@@ -777,13 +795,30 @@ export class ActivitiesSynchronizer {
 		return deferred.promise;
 	}
 
+	private applyDeletedActivitiesChanges(syncedActivitiesStored: { data: SyncedActivityModel[] }, deleted: number[]) {
+		_.forEach(deleted, (deleteId: number) => {
+			syncedActivitiesStored.data = _.without(syncedActivitiesStored.data, _.find(syncedActivitiesStored.data, {
+				id: deleteId,
+			}));
+		});
+	}
+
+	public applyEditedActivitiesChanges(syncedActivitiesStored: SyncedActivityModel[], edited: Array<{ id: number, name: string, type: string, display_type: string }>) {
+		_.forEach(edited, (editData) => {
+			const activityToEdit: SyncedActivityModel = _.find((syncedActivitiesStored), {id: editData.id});
+			activityToEdit.name = editData.name;
+			activityToEdit.type = editData.type;
+			activityToEdit.display_type = editData.display_type;
+		});
+	}
+
 	public updateLastSyncDateToNow() {
 		return this.saveLastSyncDateToLocal((new Date()).getTime());
 	}
 
 	protected initializeForSync() {
-		this._hasBeenComputedActivities = null;
-		this._globalHistoryChanges = {
+		this._hasBeenSyncedActivities = null;
+		this._activitiesChanges = {
 			added: [],
 			deleted: [],
 			edited: [],
@@ -792,35 +827,31 @@ export class ActivitiesSynchronizer {
 		this.totalRawActivityIds = [];
 	}
 
-	public saveSyncedAthleteProfile(syncedAthleteProfile: AthleteProfileModel) {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.syncWithAthleteProfile, syncedAthleteProfile);
-	}
-
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
+		return Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
-		return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.lastSyncDateTime);
+		return Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
 	}
 
-	public saveComputedActivitiesToLocal(computedActivities: SyncedActivityModel[]): Q.Promise<any> {
-		return Helper.setToStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities, computedActivities);
+	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]): Q.Promise<any> {
+		return Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities, syncedActivities);
 	}
 
-	public getComputedActivitiesFromLocal(): Q.Promise<any> {
-		return Helper.getFromStorage(this.extensionId, StorageManager.storageLocalType, ActivitiesSynchronizer.computedActivities);
+	public getSyncedActivitiesFromLocal(): Q.Promise<any> {
+		return Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.syncedActivities);
 	}
 
 	get multipleActivityProcessor(): MultipleActivityProcessor {
 		return this._multipleActivityProcessor;
 	}
 
-	get hasBeenComputedActivities(): SyncedActivityModel[] {
-		return this._hasBeenComputedActivities;
+	get hasBeenSyncedActivities(): SyncedActivityModel[] {
+		return this._hasBeenSyncedActivities;
 	}
 
-	get globalHistoryChanges(): HistoryChangesModel {
-		return this._globalHistoryChanges;
+	get activitiesChanges(): ActivitiesChangesModel {
+		return this._activitiesChanges;
 	}
 }

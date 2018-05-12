@@ -53,7 +53,7 @@ describe("FitnessTrendGraphComponent", () => {
 		// Mocking chrome storage
 		spyOn(activityDao, "browserStorageLocal").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({computedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
+				callback({syncedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
 		});
 
@@ -304,7 +304,7 @@ describe("FitnessTrendGraphComponent", () => {
 
 	});
 
-	it("should provide 'start' index of the first known activity when FROM don't matches athlete history", (done: Function) => {
+	it("should provide 'start' index of the first known activity when FROM don't matches athlete activities", (done: Function) => {
 
 		// Given
 		const period: PeriodModel = {

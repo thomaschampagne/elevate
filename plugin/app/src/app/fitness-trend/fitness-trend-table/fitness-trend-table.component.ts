@@ -7,6 +7,7 @@ import * as moment from "moment";
 import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -124,8 +125,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("fitnessTrend")
 	public fitnessTrend: DayFitnessTrendModel[];
 
-	@Input("heartRateImpulseMode")
-	public heartRateImpulseMode: HeartRateImpulseMode;
+	@Input("fitnessTrendConfigModel")
+	public fitnessTrendConfigModel: FitnessTrendConfigModel;
 
 	@Input("isTrainingZonesEnabled")
 	public isTrainingZonesEnabled;
@@ -161,8 +162,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 				if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
 					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
 					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
+					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
 					return false;
 				}
 				return true;

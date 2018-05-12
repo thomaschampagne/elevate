@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
 import { VacuumProcessor } from "./VacuumProcessor";
+import { LatLonSpherical } from "geodesy";
 
 export interface ISegmentInfo {
 	id: number;
@@ -41,7 +42,7 @@ export class SegmentProcessor {
 		}
 
 		// Find search point of segment first
-		this.getSegmentAroundSearchPoint((searchPoint: LatLon) => {
+		this.getSegmentAroundSearchPoint((searchPoint: LatLonSpherical) => {
 
 			// Prepare Bounding box 2 km around search point
 			const boundingBox: number[] = this.getBoundingBox(searchPoint, 2000);
@@ -63,7 +64,7 @@ export class SegmentProcessor {
 		});
 	}
 
-	public getBoundingBox(point: LatLon, distance: number): number[] {
+	public getBoundingBox(point: LatLonSpherical, distance: number): number[] {
 
 		return [
 			point.destinationPoint(distance, 180).lat,
@@ -102,7 +103,7 @@ export class SegmentProcessor {
 		);
 	}
 
-	public getSegmentAroundSearchPoint(callback: (latLon: LatLon) => void) {
+	public getSegmentAroundSearchPoint(callback: (latLon: LatLonSpherical) => void) {
 
 		this.vacuumProcessor.getSegmentStream(this.segmentId, (stream: any) => {
 
@@ -120,7 +121,7 @@ export class SegmentProcessor {
 			approximateSearchPoint[0] = (approximateSearchPoint[0] + midPoint[0]) / 2;
 			approximateSearchPoint[1] = (approximateSearchPoint[1] + midPoint[1]) / 2;
 
-			callback(new LatLon(approximateSearchPoint[0], approximateSearchPoint[1]));
+			callback(new LatLonSpherical(approximateSearchPoint[0], approximateSearchPoint[1]));
 		});
 	}
 }

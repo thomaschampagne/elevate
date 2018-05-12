@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import * as _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { AthleteHistoryService } from "../shared/services/athlete-history/athlete-history.service";
-import { AthleteHistoryState } from "../shared/services/athlete-history/athlete-history-state.enum";
+import { SyncService } from "../shared/services/sync/sync.service";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
@@ -16,6 +16,7 @@ import { MatDialog } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
+import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -24,16 +25,20 @@ import { SyncResultModel } from "../../../../shared/models/sync/sync-result.mode
 })
 export class FitnessTrendComponent implements OnInit {
 
-	public static readonly DEFAULT_HEART_RATE_IMPULSE_MODE: HeartRateImpulseMode = HeartRateImpulseMode.HRSS;
+	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
+		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
+		initializedFitnessTrendModel: {ctl: null, atl: null}
+	};
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
 	public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
 	public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
-	public static readonly LS_HEART_RATE_IMPULSE_MODE_KEY: string = "fitnessTrend_heartRateImpulseMode";
+	public static readonly LS_CONFIG_FITNESS_TREND_KEY: string = "fitnessTrend_config";
 	public static readonly LS_TRAINING_ZONES_ENABLED_KEY: string = "fitnessTrend_trainingZonesEnabled";
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
+
 
 	public static provideLastPeriods(minDate: Date): LastPeriodModel[] {
 
@@ -128,7 +133,7 @@ export class FitnessTrendComponent implements OnInit {
 	public lastPeriodViewed: PeriodModel;
 	public dateMin: Date;
 	public dateMax: Date;
-	public heartRateImpulseMode: HeartRateImpulseMode;
+	public fitnessTrendConfigModel: FitnessTrendConfigModel;
 	public isTrainingZonesEnabled: boolean;
 	public isPowerMeterEnabled: boolean;
 	public isSwimEnabled: boolean;
@@ -136,9 +141,9 @@ export class FitnessTrendComponent implements OnInit {
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 	public skipActivityTypes: string[] = [];
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-	public isHistoryCompliant: boolean = null; // Can be null: don't know yet true/false status on load
+	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
 
-	constructor(public athleteHistoryService: AthleteHistoryService,
+	constructor(public syncService: SyncService,
 				public userSettingsService: UserSettingsService,
 				public fitnessService: FitnessService,
 				public externalUpdatesService: ExternalUpdatesService,
@@ -147,35 +152,44 @@ export class FitnessTrendComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.athleteHistoryService.getSyncState().then((athleteHistoryState: AthleteHistoryState) => {
+		this.syncService.getSyncState().then((syncState: SyncState) => {
 
-			if (athleteHistoryState === AthleteHistoryState.SYNCED) {
+			if (syncState === SyncState.SYNCED) {
 				this.isSynced = true;
 				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
 			} else {
 				this.isSynced = false;
-				return Promise.reject("Stopping here! AthleteHistoryState is: " + AthleteHistoryState[athleteHistoryState].toString()) as PromiseLike<UserSettingsModel>;
+				return Promise.reject("Stopping here! SyncState is: " + SyncState[syncState].toString()) as PromiseLike<UserSettingsModel>;
 			}
 
 		}).then((userSettings: UserSettingsModel) => {
 
+			// Init fitness trend user settings
 			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
 
-			this.heartRateImpulseMode = FitnessTrendComponent.DEFAULT_HEART_RATE_IMPULSE_MODE;
-			if (HeartRateImpulseMode.TRIMP === Number(localStorage.getItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY))) {
-				this.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+			// Init fitness trend config
+			this.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
+
+			const savedConfig = localStorage.getItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
+			if (!_.isEmpty(savedConfig)) {
+				this.fitnessTrendConfigModel = JSON.parse(savedConfig) as FitnessTrendConfigModel;
 			}
+
 			this.verifyTogglesStatesAlongHrMode();
 
+
+			// Check for activity types to skip (e.g. EBikeRide)
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
-			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
+			// Then compute fitness trend
+			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel.heartRateImpulseMode,
+				this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes, this.fitnessTrendConfigModel.initializedFitnessTrendModel);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fitnessTrend;
-			this.isHistoryCompliant = !_.isEmpty(this.fitnessTrend);
+			this.areSyncedActivitiesCompliant = !_.isEmpty(this.fitnessTrend);
 
 			// Provide min and max date to input component
 			this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
@@ -191,9 +205,9 @@ export class FitnessTrendComponent implements OnInit {
 
 			// Listen for syncFinished update then reload graph if necessary.
 			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-				if (syncResult.globalHistoryChanges.added.length > 0
-					|| syncResult.globalHistoryChanges.edited.length > 0
-					|| syncResult.globalHistoryChanges.deleted.length > 0) {
+				if (syncResult.activitiesChangesModel.added.length > 0
+					|| syncResult.activitiesChangesModel.edited.length > 0
+					|| syncResult.activitiesChangesModel.deleted.length > 0) {
 					this.reloadFitnessTrend();
 				}
 			});
@@ -203,7 +217,7 @@ export class FitnessTrendComponent implements OnInit {
 		}, (error: AppError) => {
 
 			if (error.code === AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES) {
-				this.isHistoryCompliant = false;
+				this.areSyncedActivitiesCompliant = false;
 			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
 				console.warn(error);
 				this.resetUserPreferences();
@@ -217,8 +231,8 @@ export class FitnessTrendComponent implements OnInit {
 		this.periodViewed = periodViewed;
 	}
 
-	public onHeartRateImpulseModeChange(heartRateImpulseMode: HeartRateImpulseMode): void {
-		this.heartRateImpulseMode = heartRateImpulseMode;
+	public onFitnessTrendConfigChange(configModel: FitnessTrendConfigModel): void {
+		this.fitnessTrendConfigModel = configModel;
 		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
@@ -248,7 +262,7 @@ export class FitnessTrendComponent implements OnInit {
 
 	public verifyTogglesStatesAlongHrMode(): void {
 
-		if (this.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
+		if (this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
 			this.isTrainingZonesEnabled = false;
 			this.isPowerMeterEnabled = false;
 			this.isSwimEnabled = false;
@@ -260,9 +274,9 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.heartRateImpulseMode, this.isPowerMeterEnabled,
+		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel.heartRateImpulseMode, this.isPowerMeterEnabled,
 
-			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
+			this.isSwimEnabled, this.skipActivityTypes, this.fitnessTrendConfigModel.initializedFitnessTrendModel).then((fitnessTrend: DayFitnessTrendModel[]) => {
 			this.fitnessTrend = fitnessTrend;
 
 		}, (error: AppError) => {
@@ -298,7 +312,7 @@ export class FitnessTrendComponent implements OnInit {
 	public resetUserPreferences(): void {
 		alert("Whoops! We got a little problem while computing your fitness trend. Your graph inputs preferences will be reset.");
 		localStorage.removeItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_HEART_RATE_IMPULSE_MODE_KEY);
+		localStorage.removeItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
 		localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
 		localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
 		localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
