@@ -2,6 +2,7 @@ import { ZoneModel } from "./zone.model";
 
 export class PaceDataModel {
 	public avgPace: number;
+	public best20min: number;
 	public lowerQuartilePace: number;
 	public medianPace: number;
 	public upperQuartilePace: number;
