@@ -8,6 +8,7 @@ import { PaceDataView } from "./views/PaceDataView";
 import { RunningCadenceDataView } from "./views/RunningCadenceDataView";
 import { RunningGradeDataView } from "./views/RunningGradeDataView";
 import { RunningPowerDataView } from "./views/RunningPowerDataView";
+import { GradeAdjustedPaceDataView } from "./views/GradeAdjustedPaceDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -123,6 +124,19 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
 			paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(paceDataView);
+		}
+
+		// Grade Adjusted Pace view
+		if (this.analysisData.paceData && this.analysisData.paceData.gradeAdjustedPaceZones && this.userSettings.displayAdvancedSpeedData) {
+
+			const measurementPreference: string = window.currentAthlete.get("measurement_preference");
+			const units: string = (measurementPreference == "meters") ? "/km" : "/mi";
+
+			const gradeAdjustedPaceDataView: GradeAdjustedPaceDataView = new GradeAdjustedPaceDataView(this.analysisData.paceData, units);
+			gradeAdjustedPaceDataView.setAppResources(this.appResources);
+			gradeAdjustedPaceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			gradeAdjustedPaceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+			this.dataViews.push(gradeAdjustedPaceDataView);
 		}
 
 		// Power data

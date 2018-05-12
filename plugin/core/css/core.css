@@ -50,6 +50,7 @@
 .stravistiXExtendedData .grid {
 	font-size: 22px;
 	padding-left: 10px;
+	min-width: 300px;
 }
 
 .stravistiXExtendedData .grid td {
