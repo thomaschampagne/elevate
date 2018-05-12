@@ -2,6 +2,23 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
+		version: "6.2.0",
+		date: "2018-05-12",
+		message: "Added \"best 20 min cycling speed\" and \"best 20 min running pace\" data-fields on your activities. Also added an option to define your own starting fitness and fatigue values on your fitness trend. Rest of the update focuses mainly on noticeable optimizations.",
+		hotFixes: [],
+		features: [
+			"Added \"best 20 min cycling speed\" data field on your activities.",
+			"Added \"best 20 min running pace\" data field on your activities.",
+			"Added an option to define starting fitness and fatigue values on your fitness trend. Available in fitness trend configuration (cog icon).",
+		],
+		isPatch: false,
+		fixes: [
+			"Optimization of the synchronisation: stravistix can now fully track your \"recent\" activities (addition, edition and deletion) when you load a strava website page. The app content will be refreshed in real time. Some users experienced some crashes and memories issues with the background sync: this should be fixed now. The auto-sync delay setting has been also removed in that optimization: goal is that user focuses less on synchronization aspects by simplifying it.",
+			"Optimized the rendering and styling of \"extended stats panel\". Should now scale properly whatever the resolution being used.",
+			"[Technical] Big work on the switch from SystemJS to Webpack (v4) as javascript module bundler and loader. This was a required step to accelerate portability of stravistix to Firefox.",
+		]
+	},
+	{
 		version: "6.1.2",
 		date: "2018-04-22",
 		message: "Added year progression global overview (click \"overview\" button in year progression). Release 6.1.* improves \"Fitness Trend\" accuracy with HRM. Adds  " + (new Date()).getFullYear() + " delta comparison in \"Year progressions\". Adds data-fields: HRSS, HRSS/Hour, Best 20min HR & Best 20min Power.",
