@@ -41,6 +41,19 @@ export const userSettings: UserSettingsModel = {
 			from: 540,
 			to: 570,
 		}, {from: 570, to: 720}, {from: 720, to: 900}],
+		gradeAdjustedPace: [{from: 60, to: 90}, {from: 90, to: 120}, {from: 120, to: 150}, {
+			from: 150,
+			to: 180,
+		}, {from: 180, to: 210}, {from: 210, to: 240}, {from: 240, to: 270}, {
+			from: 270,
+			to: 300,
+		}, {from: 300, to: 330}, {from: 330, to: 360}, {from: 360, to: 390}, {
+			from: 390,
+			to: 420,
+		}, {from: 420, to: 450}, {from: 450, to: 480}, {from: 480, to: 540}, {
+			from: 540,
+			to: 570,
+		}, {from: 570, to: 720}, {from: 720, to: 900}],
 		heartRate: [{from: 120, to: 140}, {from: 140, to: 150}, {from: 150, to: 160}, {from: 160, to: 170}, {
 			from: 170,
 			to: 180,

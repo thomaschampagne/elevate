@@ -3,6 +3,7 @@ import { ZoneModel } from "../activity-data/zone.model";
 export class UserZonesModel {
 	public speed: ZoneModel[];
 	public pace: ZoneModel[];
+	public gradeAdjustedPace: ZoneModel[];
 	public heartRate: ZoneModel[];
 	public power: ZoneModel[];
 	public runningPower: ZoneModel[];

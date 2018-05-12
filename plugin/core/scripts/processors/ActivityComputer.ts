@@ -358,8 +358,9 @@ export class ActivityComputer {
 		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
-		let speedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
-		let paceZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
+		let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
+		let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
+		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.gradeAdjustedPace);
 
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
@@ -418,7 +419,16 @@ export class ActivityComputer {
 
 					if (gradeAdjustedTimeWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.time
 						&& gradeAdjustedDistanceWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.distance) {
-						gradeAdjustedSpeedsNonZero.push(gradeAdjustedDistanceWindow / gradeAdjustedTimeWindow * 3.6);
+
+						const gradeAdjustedSpeed = gradeAdjustedDistanceWindow / gradeAdjustedTimeWindow * 3.6;
+						gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
+
+						const gradeAdjustedPace = this.convertSpeedToPace(gradeAdjustedSpeed);
+
+						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.gradeAdjustedPace, (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
+						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
+							gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += gradeAdjustedTimeWindow;
+						}
 
 						// Reset windows
 						gradeAdjustedDistanceWindow = 0;
@@ -431,6 +441,7 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		speedZones = this.finalizeDistributionComputationZones(speedZones);
 		paceZones = this.finalizeDistributionComputationZones(paceZones);
+		gradeAdjustedPaceZones = this.finalizeDistributionComputationZones(gradeAdjustedPaceZones);
 
 		// Finalize compute of Speed
 		const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
@@ -461,6 +472,7 @@ export class ActivityComputer {
 			variancePace: this.convertSpeedToPace(varianceSpeed),
 			genuineGradeAdjustedAvgPace: (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null,
 			paceZones: (this.returnZones) ? paceZones : null,
+			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedDistance) ? gradeAdjustedPaceZones : null,
 		};
 
 		const moveData: MoveDataModel = {
