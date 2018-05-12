@@ -451,9 +451,18 @@ export class ActivityComputer {
 
 		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
 
+		let best20min = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray));
+			best20min = splitCalculator.getBestSplit(60 * 20, true) * 3.6;
+		} catch (err) {
+			console.warn("No best 20min speed/pace available for this range");
+		}
+
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: genuineAvgSpeed,
 			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSumCount, elapsedSeconds),
+			best20min: best20min,
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
 			medianSpeed: percentiles[1],
@@ -466,6 +475,7 @@ export class ActivityComputer {
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
+			best20min: (best20min) ? Math.floor((1 / best20min) * 60 * 60) : null,
 			lowerQuartilePace: this.convertSpeedToPace(percentiles[0]),
 			medianPace: this.convertSpeedToPace(percentiles[1]),
 			upperQuartilePace: this.convertSpeedToPace(percentiles[2]),
@@ -756,7 +766,7 @@ export class ActivityComputer {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
 			best20minHr = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("No best20min available for this range");
+			console.warn("No best 20min heart rate available for this range");
 		}
 
 		return {
