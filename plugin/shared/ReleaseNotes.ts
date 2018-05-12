@@ -2,7 +2,7 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
-		version: "6.2.0",
+		version: "6.2.1",
 		date: "2018-05-12",
 		message: "Added \"best 20 min cycling speed\" and \"best 20 min running pace\" data-fields on your activities. Also added an option to define your own starting fitness and fatigue values on your fitness trend. Rest of the update focuses mainly on noticeable optimizations.",
 		hotFixes: [],
