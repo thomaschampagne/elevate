@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { userSettings } from "../../../../../shared/UserSettings";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";

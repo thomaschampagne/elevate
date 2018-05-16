@@ -8,7 +8,7 @@ import { ProgressionModel } from "../models/progression.model";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 @Injectable()
