@@ -183,8 +183,7 @@ export class FitnessTrendComponent implements OnInit {
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
 			// Then compute fitness trend
-			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel.heartRateImpulseMode,
-				this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes, this.fitnessTrendConfigModel.initializedFitnessTrendModel);
+			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -274,9 +273,7 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel.heartRateImpulseMode, this.isPowerMeterEnabled,
-
-			this.isSwimEnabled, this.skipActivityTypes, this.fitnessTrendConfigModel.initializedFitnessTrendModel).then((fitnessTrend: DayFitnessTrendModel[]) => {
+		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
 			this.fitnessTrend = fitnessTrend;
 
 		}, (error: AppError) => {
