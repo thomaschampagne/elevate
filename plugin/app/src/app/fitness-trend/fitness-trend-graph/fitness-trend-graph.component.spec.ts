@@ -90,6 +90,7 @@ describe("FitnessTrendGraphComponent", () => {
 				running: null
 			},
 			cyclingFtp: 150,
+			runningFtp: null,
 			swimFtp: 31,
 		};
 

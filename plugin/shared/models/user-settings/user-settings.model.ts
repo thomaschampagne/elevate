@@ -12,7 +12,8 @@ export class UserSettingsModel {
 	public userMaxHr: number;
 	public userRestHr: number;
 	public userLTHR: UserLactateThresholdModel;
-	public userFTP: number;
+	public userFTP: number; // TODO Refactor userCyclingFTP
+	public userRunningFTP: number;
 	public userSwimFTP: number;
 	public userWeight: number;
 	public zones: UserZonesModel;
