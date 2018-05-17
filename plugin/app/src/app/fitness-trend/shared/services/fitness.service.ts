@@ -11,7 +11,7 @@ import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../models/fitness-user-settings.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
-import { InitializedFitnessTrendModel } from "../models/initialized-fitness-trend.model";
+import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 
 @Injectable()
 export class FitnessService {
@@ -276,24 +276,22 @@ export class FitnessService {
 	/**
 	 * ComputeTrend the fitness trend
 	 * @param {FitnessUserSettingsModel} fitnessUserSettingsModel
-	 * @param {HeartRateImpulseMode} heartRateImpulseMode
+	 * @param {FitnessTrendConfigModel} fitnessTrendConfigModel
 	 * @param {boolean} isPowerMeterEnabled
 	 * @param {boolean} isSwimEnabled
 	 * @param {string[]} skipActivityTypes
-	 * @param {InitializedFitnessTrendModel} initializedFitnessTrendModel
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
 	public computeTrend(fitnessUserSettingsModel: FitnessUserSettingsModel,
-						heartRateImpulseMode: HeartRateImpulseMode,
+						fitnessTrendConfigModel: FitnessTrendConfigModel,
 						isPowerMeterEnabled: boolean,
 						isSwimEnabled: boolean,
-						skipActivityTypes?: string[],
-						initializedFitnessTrendModel?: InitializedFitnessTrendModel): Promise<DayFitnessTrendModel[]> {
+						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
-			this.generateDailyStress(fitnessUserSettingsModel, heartRateImpulseMode, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
+			this.generateDailyStress(fitnessUserSettingsModel, fitnessTrendConfigModel.heartRateImpulseMode, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl, atl, tsb;
@@ -306,10 +304,10 @@ export class FitnessService {
 
 						if (isPreStartDay) {
 
-							if (initializedFitnessTrendModel) {
+							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
 
-								ctl = initializedFitnessTrendModel.ctl;
-								atl = initializedFitnessTrendModel.atl;
+								ctl = fitnessTrendConfigModel.initializedFitnessTrendModel.ctl;
+								atl = fitnessTrendConfigModel.initializedFitnessTrendModel.atl;
 								tsb = ctl - atl;
 
 							} else {
