@@ -25,6 +25,7 @@ export class AthleteSettingsComponent implements OnInit {
 	public static readonly SETTINGS_KEY_USER_CYCLING_LTHR: string = "userLTHR.cycling";
 	public static readonly SETTINGS_KEY_USER_RUNNING_LTHR: string = "userLTHR.running";
 	public static readonly SETTINGS_KEY_USER_CYCLING_FTP: string = "userFTP";
+	public static readonly SETTINGS_KEY_USER_RUNNING_FTP: string = "userRunningFTP";
 	public static readonly SETTINGS_KEY_USER_SWIMMING_FTP: string = "userSwimFTP";
 
 	public readonly GENDER_LIST: GenderModel[] = [{
@@ -42,13 +43,14 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public gender: Gender;
 	public weight: number;
-	public swimFtp: number;
 	public restHr: number;
 	public maxHr: number;
 	public defaultLTHR: number;
 	public cyclingLTHR: number;
 	public runningLTHR: number;
-	public ftp: number;
+	public cyclingFtp: number;
+	public runningFtp: number;
+	public swimFtp: number;
 	public swimFtp100m: string;
 
 	public isSwimFtpCalculatorEnabled = false;
@@ -71,7 +73,8 @@ export class AthleteSettingsComponent implements OnInit {
 			this.defaultLTHR = userSettings.userLTHR.default;
 			this.cyclingLTHR = userSettings.userLTHR.cycling;
 			this.runningLTHR = userSettings.userLTHR.running;
-			this.ftp = userSettings.userFTP;
+			this.cyclingFtp = userSettings.userFTP;
+			this.runningFtp = userSettings.userRunningFTP;
 			this.swimFtp = userSettings.userSwimFTP;
 			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.swimFtp);
 
@@ -208,18 +211,34 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public onCyclingFtpChanged() {
 
-		if (_.isNumber(this.ftp) && this.ftp < 0) {
+		if (_.isNumber(this.cyclingFtp) && this.cyclingFtp < 0) {
 
 			// Wrong value...
 			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP).then(
-				saved => this.ftp = saved,
+				saved => this.cyclingFtp = saved,
 				error => this.popError("Error: " + error)
 			);
 			this.popError();
 
 		} else {
 			// Ok...
-			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP, this.ftp);
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_CYCLING_FTP, this.cyclingFtp);
+		}
+	}
+
+	public onRunningFtpChanged() {
+		if (_.isNumber(this.runningFtp) && this.runningFtp < 0) {
+
+			// Wrong value...
+			this.getSavedSetting<number>(AthleteSettingsComponent.SETTINGS_KEY_USER_RUNNING_FTP).then(
+				saved => this.runningFtp = saved,
+				error => this.popError("Error: " + error)
+			);
+			this.popError();
+
+		} else {
+			// Ok...
+			this.saveSetting(AthleteSettingsComponent.SETTINGS_KEY_USER_RUNNING_FTP, this.runningFtp);
 		}
 	}
 

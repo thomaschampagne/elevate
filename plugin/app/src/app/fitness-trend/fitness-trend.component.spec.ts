@@ -94,6 +94,7 @@ describe("FitnessTrendComponent", () => {
 			userRestHr: restHr,
 			userLactateThreshold: userLactateThreshold,
 			cyclingFtp: cyclingFtp,
+			runningFtp: null,
 			swimFtp: swimFtp,
 		};
 

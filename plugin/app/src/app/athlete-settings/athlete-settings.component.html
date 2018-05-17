@@ -168,8 +168,33 @@
 					matInput
 					type="number" min="1" max="999"
 					placeholder="Your cycling FTP in watts"
-					[(ngModel)]="ftp"
+					[(ngModel)]="cyclingFtp"
 					(change)="onCyclingFtpChanged()"/>
+			</mat-input-container>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-title>
+		Running Functional Threshold Pace
+	</mat-card-title>
+	<mat-card-content>
+		<div class="howTo">
+			<a [routerLink]="" (click)="runningFtpHint.style.display = 'block'">How to setup running FTP</a>
+		</div>
+		<div class="hint" #runningFtpHint [style.display]="'none'">
+			TODO !! The Runing FTP is the constant average pace you are able to maintain during 1 hour.
+			https://www.trainingpeaks.com/blog/determining-functional-threshold-pace-ftp/
+		</div>
+		<div>
+			<mat-input-container fxFill>
+				<input
+					matInput
+					type="number" min="1" max="999"
+					placeholder="Your running FTP in seconds"
+					[(ngModel)]="runningFtp"
+					(change)="onRunningFtpChanged()"/>
 			</mat-input-container>
 		</div>
 	</mat-card-content>
