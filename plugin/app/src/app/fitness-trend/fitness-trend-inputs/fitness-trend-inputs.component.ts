@@ -193,7 +193,10 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 			const hasConfigChanged = (this.fitnessTrendConfigModel.heartRateImpulseMode !== Number(fitnessTrendConfigModel.heartRateImpulseMode))
 				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl !== fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)
-				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
+				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl)
+				|| (this.fitnessTrendConfigModel.allowEstimatedPowerStressScore !== fitnessTrendConfigModel.allowEstimatedPowerStressScore)
+				|| (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== fitnessTrendConfigModel.allowEstimatedRunningStressScore);
+
 
 			if (hasConfigChanged) {
 				this.fitnessTrendConfigModel = fitnessTrendConfigModel;

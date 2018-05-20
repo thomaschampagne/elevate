@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Fitness trend user configuration</h2>
+<h2 mat-dialog-title>Fitness trend configuration</h2>
 <mat-dialog-content class="mat-body-1">
 
 	<div>
@@ -29,7 +29,21 @@
 		</span>
 		</div>
 	</div>
-
+	<mat-divider></mat-divider>
+	<div>
+		<h3 mat-dialog-title>Allow stress scores estimation without sensor</h3>
+		<mat-slide-toggle [(ngModel)]="fitnessTrendConfigModel.allowEstimatedPowerStressScore"
+						  matTooltip="">
+			Enable Cycling Power Stress Score (PSS) Estimation. <i>Athlete cycling FTP must be set + Power meter
+			toggle</i>
+		</mat-slide-toggle>
+		<br/>
+		<mat-slide-toggle [(ngModel)]="fitnessTrendConfigModel.allowEstimatedRunningStressScore"
+						  matTooltip="">
+			Enable Running Stress Score (RSS) Estimation. <i>Athlete running FTP must be set</i>
+		</mat-slide-toggle>
+	</div>
+	<mat-divider></mat-divider>
 	<div>
 		<h3 mat-dialog-title>Fitness and fatigue starting values</h3>
 

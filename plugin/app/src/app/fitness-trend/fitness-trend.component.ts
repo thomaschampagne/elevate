@@ -27,7 +27,9 @@ export class FitnessTrendComponent implements OnInit {
 
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
 		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
-		initializedFitnessTrendModel: {ctl: null, atl: null}
+		initializedFitnessTrendModel: {ctl: null, atl: null},
+		allowEstimatedPowerStressScore: false,
+		allowEstimatedRunningStressScore: false
 	};
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
@@ -176,7 +178,6 @@ export class FitnessTrendComponent implements OnInit {
 			}
 
 			this.verifyTogglesStatesAlongHrMode();
-
 
 			// Check for activity types to skip (e.g. EBikeRide)
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
