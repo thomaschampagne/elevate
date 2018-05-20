@@ -149,7 +149,9 @@ describe("FitnessService", () => {
 			initializedFitnessTrendModel: {
 				atl: null,
 				ctl: null
-			}
+			},
+			allowEstimatedPowerStressScore: false,
+			allowEstimatedRunningStressScore: false
 		};
 
 		// Enable PSS and SSS by default
@@ -1641,7 +1643,7 @@ describe("FitnessService", () => {
 		fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
 		powerMeterEnable = false;
 
-		const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+		spyOn(activityService.activityDao, "fetch")
 			.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 		// When
@@ -2511,8 +2513,8 @@ describe("FitnessService", () => {
 	it("should compute fitness trend w/ Est.PSS=ON & Est.RSS=ON", (done: Function) => {
 
 		// Given
-		const allowEstimatedPowerStressScore = true;
-		const allowEstimatedRunningStressScore = true;
+		fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
+		fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
 		const expectedLength = 346;
 		const skipActivitiesTypes = null;
 		const syncedActivityModels = _TEST_SYNCED_ACTIVITIES_;
@@ -2542,8 +2544,7 @@ describe("FitnessService", () => {
 
 		// When
 		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel,
-			fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivitiesTypes,
-			allowEstimatedPowerStressScore, allowEstimatedRunningStressScore);
+			fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivitiesTypes);
 
 		// Then
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {

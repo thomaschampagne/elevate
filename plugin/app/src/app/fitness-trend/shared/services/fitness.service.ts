@@ -312,23 +312,19 @@ export class FitnessService {
 	 * @param {boolean} isPowerMeterEnabled
 	 * @param {boolean} isSwimEnabled
 	 * @param {string[]} skipActivityTypes
-	 * @param {boolean} allowEstimatedPowerStressScore
-	 * @param {boolean} allowEstimatedRunningStressScore
 	 * @returns {Promise<DayFitnessTrendModel[]>}
 	 */
 	public computeTrend(fitnessUserSettingsModel: FitnessUserSettingsModel,
 						fitnessTrendConfigModel: FitnessTrendConfigModel,
 						isPowerMeterEnabled: boolean,
 						isSwimEnabled: boolean,
-						skipActivityTypes?: string[],
-						allowEstimatedPowerStressScore?: boolean,
-						allowEstimatedRunningStressScore?: boolean): Promise<DayFitnessTrendModel[]> {
+						skipActivityTypes?: string[]): Promise<DayFitnessTrendModel[]> {
 
 		return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void,
 							reject: (error: string) => void) => {
 
 			this.generateDailyStress(fitnessUserSettingsModel, fitnessTrendConfigModel.heartRateImpulseMode, isPowerMeterEnabled,
-				isSwimEnabled, skipActivityTypes, allowEstimatedPowerStressScore, allowEstimatedRunningStressScore)
+				isSwimEnabled, skipActivityTypes, fitnessTrendConfigModel.allowEstimatedPowerStressScore, fitnessTrendConfigModel.allowEstimatedRunningStressScore)
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl, atl, tsb;
