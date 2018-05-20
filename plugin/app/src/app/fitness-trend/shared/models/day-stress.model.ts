@@ -9,6 +9,7 @@ export class DayStressModel {
 	public heartRateStressScore?: number = null;
 	public trainingImpulseScore?: number = null;
 	public powerStressScore?: number = null;
+	public runningStressScore?: number = null;
 	public swimStressScore?: number = null;
 
 	public finalStressScore: number = null;
