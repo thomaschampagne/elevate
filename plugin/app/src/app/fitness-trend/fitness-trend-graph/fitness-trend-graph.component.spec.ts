@@ -76,7 +76,8 @@ describe("FitnessTrendGraphComponent", () => {
 				ctl: null
 			},
 			allowEstimatedPowerStressScore: false,
-			allowEstimatedRunningStressScore: false
+			allowEstimatedRunningStressScore: false,
+			ignoreBeforeDate: null
 		};
 
 		const powerMeterEnable = true;
