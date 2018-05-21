@@ -29,7 +29,8 @@ export class FitnessTrendComponent implements OnInit {
 		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
 		initializedFitnessTrendModel: {ctl: null, atl: null},
 		allowEstimatedPowerStressScore: false,
-		allowEstimatedRunningStressScore: false
+		allowEstimatedRunningStressScore: false,
+		ignoreBeforeDate: null
 	};
 
 	public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
