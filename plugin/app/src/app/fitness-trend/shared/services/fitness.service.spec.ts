@@ -152,7 +152,8 @@ describe("FitnessService", () => {
 			},
 			allowEstimatedPowerStressScore: false,
 			allowEstimatedRunningStressScore: false,
-			ignoreBeforeDate: null
+			ignoreBeforeDate: null,
+			ignoreActivityNamePatterns: null
 		};
 
 		// Enable PSS and SSS by default
@@ -1633,6 +1634,174 @@ describe("FitnessService", () => {
 				const firstActivity = _.first(result);
 				expect(firstActivity).not.toBeNull();
 				expect(firstActivity.id).toEqual(activityShouldExistsId);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should ignore activities matching exclusion pattern", (done: Function) => {
+
+			// Given
+			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
+			const expectedFitnessPreparedActivitiesLength = 3;
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+				"Ride 01",
+				"Ride",
+				"2018-01-01",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+				"Ride 02 #MTBDH",
+				"Ride",
+				"2018-01-15",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"Ride 03 #MTBDH",
+				"Ride",
+				"2018-01-16",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+				"Ride 04",
+				"Ride",
+				"2018-01-17",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+				"Ride 05 @skipMe",
+				"Ride",
+				"2018-01-18",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+				"Run 01",
+				"Run",
+				"2018-01-19",
+				150,
+				null));
+
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+				.and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+				let activity: FitnessPreparedActivityModel = _.find(result, {id: 1});
+				expect(activity).not.toBeNull();
+				expect(activity.name).toEqual("Ride 01");
+
+				activity = _.find(result, {id: 4});
+				expect(activity).not.toBeNull();
+				expect(activity.name).toEqual("Ride 04");
+
+				activity = _.find(result, {id: 6});
+				expect(activity).not.toBeNull();
+				expect(activity.name).toEqual("Run 01");
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should ignore activities matching exclusion pattern & defined before date", (done: Function) => {
+
+			// Given
+			const ignoreActivitiesBefore = "2018-01-17";
+
+			fitnessTrendConfigModel.ignoreBeforeDate = moment(ignoreActivitiesBefore, "YYYY-MM-DD").startOf("day");
+			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
+
+			const expectedFitnessPreparedActivitiesLength = 2;
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+				"Ride 01",
+				"Ride",
+				"2018-01-01",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+				"Ride 02 #MTBDH",
+				"Ride",
+				"2018-01-15",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"Ride 03 #MTBDH",
+				"Ride",
+				"2018-01-16",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+				"Ride 04",
+				"Ride",
+				"2018-01-17",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+				"Ride 05 @skipMe",
+				"Ride",
+				"2018-01-18",
+				150,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+				"Run 01",
+				"Run",
+				"2018-01-19",
+				150,
+				null));
+
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+				.and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+				let activity = _.find(result, {id: 4});
+				expect(activity).not.toBeNull();
+				expect(activity.name).toEqual("Ride 04");
+
+				activity = _.find(result, {id: 6});
+				expect(activity).not.toBeNull();
+				expect(activity.name).toEqual("Run 01");
 
 				done();
 

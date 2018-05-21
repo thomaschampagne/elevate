@@ -8,4 +8,5 @@ export class FitnessTrendConfigModel {
 	public allowEstimatedPowerStressScore: boolean;
 	public allowEstimatedRunningStressScore: boolean;
 	public ignoreBeforeDate: Moment;
+	public ignoreActivityNamePatterns: string[];
 }

@@ -57,14 +57,11 @@ export class FitnessService {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
+				activities = this.filterActivities(activities, fitnessTrendConfigModel.ignoreBeforeDate,
+					fitnessTrendConfigModel.ignoreActivityNamePatterns);
+
 				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
 				let hasMinimumFitnessRequiredData = false;
-
-				if (fitnessTrendConfigModel.ignoreBeforeDate) {
-					activities = _.filter(activities, (activity: SyncedActivityModel) => {
-						return moment(activity.start_time).startOf("day").isSameOrAfter(fitnessTrendConfigModel.ignoreBeforeDate)
-					});
-				}
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
@@ -104,7 +101,7 @@ export class FitnessService {
 						year: momentStartTime.year(),
 						type: activity.type,
 						hasPowerMeter: (activity.extendedStats && activity.extendedStats.powerData && activity.extendedStats.powerData.hasPowerMeter),
-						activityName: activity.name,
+						name: activity.name
 					};
 
 					if (hasHeartRateData) {
@@ -429,7 +426,7 @@ export class FitnessService {
 			_.forEach(foundActivitiesThatDay, (activity: FitnessPreparedActivityModel) => {
 
 				dayActivity.ids.push(activity.id);
-				dayActivity.activitiesName.push(activity.activityName);
+				dayActivity.activitiesName.push(activity.name);
 				dayActivity.types.push(activity.type);
 
 				const hasPowerStressScore = _.isNumber(activity.powerStressScore);
@@ -503,6 +500,52 @@ export class FitnessService {
 		}
 
 		return dayActivity;
+	}
+
+	/**
+	 *
+	 * @param {SyncedActivityModel[]} activities
+	 * @param {moment.Moment} ignoreBeforeDate
+	 * @param {string[]} ignoreActivityNamePatterns
+	 * @returns {SyncedActivityModel[]}
+	 */
+	public filterActivities(activities: SyncedActivityModel[], ignoreBeforeDate: Moment, ignoreActivityNamePatterns: string[]): SyncedActivityModel[] {
+
+		const hasIgnoreBeforeDate = !_.isEmpty(ignoreBeforeDate);
+		const hasIgnoreActivityNamePatterns = ignoreActivityNamePatterns && ignoreActivityNamePatterns.length > 0;
+
+		if (hasIgnoreBeforeDate || hasIgnoreActivityNamePatterns) {
+
+			activities = _.filter(activities, (activity: SyncedActivityModel) => {
+
+				if (hasIgnoreBeforeDate) {
+					const isActivityAfterIgnoreDate = moment(activity.start_time).startOf("day").isSameOrAfter(ignoreBeforeDate);
+					if (!isActivityAfterIgnoreDate) {
+						return false;
+					}
+				}
+
+				if (hasIgnoreActivityNamePatterns) {
+
+					let ignoreActivityFromPattern = false;
+					_.forEach(ignoreActivityNamePatterns, (ignorePattern: string) => {
+						const hasPattern = activity.name.indexOf(ignorePattern) !== -1;
+						if (hasPattern) {
+							ignoreActivityFromPattern = true;
+							return;
+						}
+					});
+
+					if (ignoreActivityFromPattern) {
+						return false;
+					}
+				}
+
+				return true;
+			});
+		}
+
+		return activities;
 	}
 
 	public getTodayMoment(): Moment {
