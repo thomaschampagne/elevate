@@ -1615,7 +1615,7 @@ describe("FitnessService", () => {
 			const activityShouldExistsId = 284737783;
 			const expectedFitnessPreparedActivitiesLength = 118;
 			const ignoreActivitiesBefore = "2015-04-13";
-			fitnessTrendConfigModel.ignoreBeforeDate = moment(ignoreActivitiesBefore, "YYYY-MM-DD").startOf("day");
+			fitnessTrendConfigModel.ignoreBeforeDate = moment(ignoreActivitiesBefore, "YYYY-MM-DD").startOf("day").toISOString();
 
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
@@ -1734,7 +1734,7 @@ describe("FitnessService", () => {
 			// Given
 			const ignoreActivitiesBefore = "2018-01-17";
 
-			fitnessTrendConfigModel.ignoreBeforeDate = moment(ignoreActivitiesBefore, "YYYY-MM-DD").startOf("day");
+			fitnessTrendConfigModel.ignoreBeforeDate = moment(ignoreActivitiesBefore, "YYYY-MM-DD").startOf("day").toISOString();
 			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
 
 			const expectedFitnessPreparedActivitiesLength = 2;

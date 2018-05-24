@@ -18,6 +18,11 @@ import { ExternalUpdatesService } from "../shared/services/external-updates/exte
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 
+// TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
+// TODO 341: Fitness Config UI and explains
+// TODO 341: Athlete Settings RFTP display pace metric/imperial
+// TODO 341: Take care of unit system when computing RSS
+
 @Component({
 	selector: "app-fitness-trend",
 	templateUrl: "./fitness-trend.component.html",
@@ -42,7 +47,6 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
-
 
 	public static provideLastPeriods(minDate: Date): LastPeriodModel[] {
 
@@ -137,6 +141,7 @@ export class FitnessTrendComponent implements OnInit {
 	public lastPeriodViewed: PeriodModel;
 	public dateMin: Date;
 	public dateMax: Date;
+	public lastFitnessActiveDate: Date;
 	public fitnessTrendConfigModel: FitnessTrendConfigModel;
 	public isTrainingZonesEnabled: boolean;
 	public isPowerMeterEnabled: boolean;
@@ -193,28 +198,27 @@ export class FitnessTrendComponent implements OnInit {
 			this.fitnessTrend = fitnessTrend;
 			this.areSyncedActivitiesCompliant = !_.isEmpty(this.fitnessTrend);
 
-			// Provide min and max date to input component
-			this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
-			this.dateMax = moment(_.last(this.fitnessTrend).date).startOf("day").toDate();
+			if (this.areSyncedActivitiesCompliant) {
 
-			// Find default period viewed
-			const lastPeriodViewedSaved = localStorage.getItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
-			this.lastPeriods = FitnessTrendComponent.provideLastPeriods(this.dateMin);
-			this.periodViewed = _.find(this.lastPeriods, {
-				key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
-			});
-			this.lastPeriodViewed = this.periodViewed;
+				this.updateDateRangeAndPeriods();
 
-			// Listen for syncFinished update then reload graph if necessary.
-			this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-				if (syncResult.activitiesChangesModel.added.length > 0
-					|| syncResult.activitiesChangesModel.edited.length > 0
-					|| syncResult.activitiesChangesModel.deleted.length > 0) {
-					this.reloadFitnessTrend();
-				}
-			});
+				const lastDayFitnessTrendModel = _.findLast(this.fitnessTrend, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+					return dayFitnessTrendModel.hasActivities();
+				});
 
-			this.showFitnessWelcomeDialog();
+				this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
+
+				// Listen for syncFinished update then reload graph if necessary.
+				this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+					if (syncResult.activitiesChangesModel.added.length > 0
+						|| syncResult.activitiesChangesModel.edited.length > 0
+						|| syncResult.activitiesChangesModel.deleted.length > 0) {
+						this.reloadFitnessTrend();
+					}
+				});
+
+				this.showFitnessWelcomeDialog();
+			}
 
 		}, (error: AppError) => {
 
@@ -276,8 +280,12 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public reloadFitnessTrend(): void {
-		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
+
+		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled,
+			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
+
 			this.fitnessTrend = fitnessTrend;
+			this.updateDateRangeAndPeriods();
 
 		}, (error: AppError) => {
 
@@ -296,6 +304,21 @@ export class FitnessTrendComponent implements OnInit {
 		} else {
 			this.skipActivityTypes = [];
 		}
+	}
+
+	public updateDateRangeAndPeriods(): void {
+
+		// Provide min and max date to input component
+		this.dateMin = moment(_.first(this.fitnessTrend).date).startOf("day").toDate();
+		this.dateMax = moment(_.last(this.fitnessTrend).date).startOf("day").toDate();
+
+		// Find default period viewed
+		const lastPeriodViewedSaved = localStorage.getItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
+		this.lastPeriods = FitnessTrendComponent.provideLastPeriods(this.dateMin);
+		this.periodViewed = _.find(this.lastPeriods, {
+			key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
+		});
+		this.lastPeriodViewed = this.periodViewed;
 	}
 
 	public static openActivities(ids: number[]) {

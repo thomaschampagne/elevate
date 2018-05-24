@@ -11,6 +11,7 @@ import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 import { FitnessTrendConfigDialogComponent } from "../fitness-trend-settings-dialog/fitness-trend-config-dialog.component";
+import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
 
 @Component({
 	selector: "app-fitness-trend-inputs",
@@ -36,6 +37,9 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	@Input("periodViewed")
 	public periodViewed: PeriodModel;
+
+	@Input("lastFitnessActiveDate")
+	public lastFitnessActiveDate: Date;
 
 	@Input("fitnessUserSettingsModel")
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
@@ -179,10 +183,15 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public onConfigClicked(): void {
 
+		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
+			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
+			lastFitnessActiveDate: this.lastFitnessActiveDate
+		};
+
 		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {
 			minWidth: FitnessTrendConfigDialogComponent.MIN_WIDTH,
 			maxWidth: FitnessTrendConfigDialogComponent.MAX_WIDTH,
-			data: _.cloneDeep(this.fitnessTrendConfigModel)
+			data: fitnessTrendConfigDialogData
 		});
 
 		dialogRef.afterClosed().subscribe((fitnessTrendConfigModel: FitnessTrendConfigModel) => {
@@ -195,8 +204,9 @@ export class FitnessTrendInputsComponent implements OnInit {
 				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl !== fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)
 				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl)
 				|| (this.fitnessTrendConfigModel.allowEstimatedPowerStressScore !== fitnessTrendConfigModel.allowEstimatedPowerStressScore)
-				|| (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== fitnessTrendConfigModel.allowEstimatedRunningStressScore);
-
+				|| (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== fitnessTrendConfigModel.allowEstimatedRunningStressScore)
+				|| (this.fitnessTrendConfigModel.ignoreBeforeDate !== fitnessTrendConfigModel.ignoreBeforeDate)
+				|| (this.fitnessTrendConfigModel.ignoreActivityNamePatterns !== fitnessTrendConfigModel.ignoreActivityNamePatterns);
 
 			if (hasConfigChanged) {
 				this.fitnessTrendConfigModel = fitnessTrendConfigModel;
