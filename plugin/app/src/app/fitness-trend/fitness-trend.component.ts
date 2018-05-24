@@ -20,7 +20,6 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 
 // TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
 // TODO 341: Fitness Config UI and explains
-// TODO 341: Athlete Settings RFTP display pace metric/imperial
 // TODO 341: Take care of unit system when computing RSS
 
 @Component({
