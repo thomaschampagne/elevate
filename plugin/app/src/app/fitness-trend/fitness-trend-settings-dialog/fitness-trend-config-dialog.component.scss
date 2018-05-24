@@ -1,3 +1,5 @@
+@import "../../../assets/styles/constant";
+
 mat-radio-group {
 	display: inline-flex;
 	flex-direction: column;
@@ -7,13 +9,18 @@ mat-radio-button {
 	padding-bottom: 10px;
 }
 
-div {
-	padding-top: 20px;
-	padding-bottom: 5px;
+section {
+	padding-bottom: 35px;
 }
 
-mat-dialog-content {
-	overflow: initial;
+.hint {
+	font-style: italic;
+	padding-top: 5px;
+	padding-bottom: 20px;
+}
+
+textarea {
+	border: 1px solid $light-grey;
 }
 
 ul {

@@ -333,6 +333,15 @@ export class FitnessService {
 
 							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
 
+								if (_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) {
+
+									fitnessTrendConfigModel.initializedFitnessTrendModel.ctl = 0;
+								}
+								if (_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) {
+
+									fitnessTrendConfigModel.initializedFitnessTrendModel.atl = 0;
+								}
+
 								ctl = fitnessTrendConfigModel.initializedFitnessTrendModel.ctl;
 								atl = fitnessTrendConfigModel.initializedFitnessTrendModel.atl;
 								tsb = ctl - atl;
@@ -505,11 +514,11 @@ export class FitnessService {
 	/**
 	 *
 	 * @param {SyncedActivityModel[]} activities
-	 * @param {moment.Moment} ignoreBeforeDate
+	 * @param {string} ignoreBeforeDate
 	 * @param {string[]} ignoreActivityNamePatterns
 	 * @returns {SyncedActivityModel[]}
 	 */
-	public filterActivities(activities: SyncedActivityModel[], ignoreBeforeDate: Moment, ignoreActivityNamePatterns: string[]): SyncedActivityModel[] {
+	public filterActivities(activities: SyncedActivityModel[], ignoreBeforeDate: string, ignoreActivityNamePatterns: string[]): SyncedActivityModel[] {
 
 		const hasIgnoreBeforeDate = !_.isEmpty(ignoreBeforeDate);
 		const hasIgnoreActivityNamePatterns = ignoreActivityNamePatterns && ignoreActivityNamePatterns.length > 0;
