@@ -184,18 +184,41 @@
 			<a [routerLink]="" (click)="runningFtpHint.style.display = 'block'">How to setup running FTP</a>
 		</div>
 		<div class="hint" #runningFtpHint [style.display]="'none'">
-			TODO !! The Runing FTP is the constant average pace you are able to maintain during 1 hour.
-			https://www.trainingpeaks.com/blog/determining-functional-threshold-pace-ftp/
+			The Running Functional Threshold Pace is the maximal running pace an athlete can hold during an effort of
+			approximately 45-60min. To measure your running FTP, choose your latest recent race or hard training run of
+			10-15km. If 10km time was greater than 45 min, then use average pace held on 10km. However, if 10km time
+			was less than 45min, then use average pace held on 15km or half marathon. Learn
+			more about determining running functional threshold pace <a
+			href="https://www.trainingpeaks.com/blog/determining-functional-threshold-pace-ftp/"
+			target="_blank">here</a>.
 		</div>
 		<div>
-			<mat-input-container fxFill>
-				<input
-					matInput
-					type="number" min="1" max="999"
-					placeholder="Your running FTP in seconds"
-					[(ngModel)]="runningFtp"
-					(change)="onRunningFtpChanged()"/>
-			</mat-input-container>
+			<div fxLayout="row" fxLayoutAlign="start center">
+				<mat-input-container fxFlex="75">
+					<input
+						matInput
+						type="number" min="1" max="999"
+						placeholder="Your running FTP in seconds"
+						[(ngModel)]="runningFtp"
+						(change)="onRunningFtpChanged()"/>
+				</mat-input-container>
+				<span fxFlex="1"></span>
+				<mat-input-container fxFlex>
+					<input
+						matInput
+						placeholder="Metric pace"
+						[disabled]="true"
+						[value]="convertToPace('metric')"/>
+				</mat-input-container>
+				<span fxFlex="1"></span>
+				<mat-input-container fxFlex>
+					<input
+						matInput
+						placeholder="Imperial pace"
+						[disabled]="true"
+						[value]="convertToPace('imperial')"/>
+				</mat-input-container>
+			</div>
 		</div>
 	</mat-card-content>
 </mat-card>

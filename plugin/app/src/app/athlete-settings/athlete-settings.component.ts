@@ -8,6 +8,8 @@ import { FitnessService } from "../fitness-trend/shared/services/fitness.service
 import { Gender } from "../shared/enums/gender.enum";
 import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { Helper } from "../../../../core/scripts/Helper";
+import { Constant } from "../shared/Constant";
 
 @Component({
 	selector: "app-athlete-settings",
@@ -366,4 +368,19 @@ export class AthleteSettingsComponent implements OnInit {
 		this.popError("Invalid value entered: Max HR is lower than Rest HR. Reset to previous value");
 	}
 
+	public convertToPace(systemUnit: string): string {
+
+		let speedFactor: number;
+
+		if (systemUnit === "metric") {
+			speedFactor = 1;
+		} else if (systemUnit === "imperial") {
+			speedFactor = Constant.KM_TO_MILE_FACTOR;
+		} else {
+			throw new Error("System unit unknown");
+		}
+
+		return (_.isNumber(this.runningFtp)) ? Helper.secondsToHHMMSS(this.runningFtp * speedFactor) + ((systemUnit === "metric") ? "/km" : "/mi") : null;
+
+	}
 }
