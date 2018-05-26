@@ -3,6 +3,7 @@ import { Helper } from "../Helper";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { Constant } from "../../../shared/Constant";
 
 export class VacuumProcessor {
 
@@ -201,7 +202,7 @@ export class VacuumProcessor {
 			averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
 
 			const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-			const speedFactor: number = (measurementPreference == "meters") ? 1 : 0.62137;
+			const speedFactor: number = (measurementPreference == "meters") ? 1 : Constant.KM_TO_MILE_FACTOR;
 			averageSpeed = averageSpeed / speedFactor; // Always give PKH here
 		}
 
