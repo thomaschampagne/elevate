@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 
 @Component({
 	selector: "app-fitness-trend-legend",

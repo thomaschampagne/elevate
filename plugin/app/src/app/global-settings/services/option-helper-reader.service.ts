@@ -10,12 +10,10 @@ export class OptionHelperReaderService {
 	public get(markdownTemplate: string): Promise<string> {
 
 		return new Promise<string>((resolve, reject) => {
-			const httpGetSubscription = this.http.get(markdownTemplate, {responseType: "text"}).subscribe(markdownData => {
+			this.http.get(markdownTemplate, {responseType: "text"}).subscribe(markdownData => {
 				resolve(markdownData);
 			}, error => {
 				reject(error);
-			}, () => {
-				httpGetSubscription.unsubscribe();
 			});
 		});
 

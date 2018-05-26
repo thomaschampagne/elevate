@@ -7,9 +7,9 @@
 
 		<mat-radio-group (change)="onModeChange()"
 						 [(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode">
-			<mat-radio-button value="{{HeartRateImpulseMode.HRSS}}">HRSS: Heart Rate Stress Score (recommend)
+			<mat-radio-button [value]="HeartRateImpulseMode.HRSS">HRSS: Heart Rate Stress Score (recommend)
 			</mat-radio-button>
-			<mat-radio-button value="{{HeartRateImpulseMode.TRIMP}}">TRIMP: Training Impulse (not recommend)
+			<mat-radio-button [value]="HeartRateImpulseMode.TRIMP">TRIMP: Training Impulse (not recommend)
 			</mat-radio-button>
 		</mat-radio-group>
 
