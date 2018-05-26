@@ -147,6 +147,8 @@ export class FitnessTrendComponent implements OnInit {
 	public isSwimEnabled: boolean;
 	public isEBikeRidesEnabled: boolean;
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
+	public hasCyclingFtp: boolean;
+	public hasRunningFtp: boolean;
 	public skipActivityTypes: string[] = [];
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
 	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
@@ -174,6 +176,9 @@ export class FitnessTrendComponent implements OnInit {
 
 			// Init fitness trend user settings
 			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
+
+			this.hasCyclingFtp = _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
+			this.hasRunningFtp = _.isNumber(this.fitnessUserSettingsModel.runningFtp);
 
 			// Init fitness trend config
 			this.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;

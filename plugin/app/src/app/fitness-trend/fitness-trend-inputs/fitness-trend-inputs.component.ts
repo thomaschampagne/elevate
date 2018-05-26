@@ -59,6 +59,12 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Input("isEBikeRidesEnabled")
 	public isEBikeRidesEnabled: boolean;
 
+	@Input("hasCyclingFtp")
+	public hasCyclingFtp: boolean;
+
+	@Input("hasRunningFtp")
+	public hasRunningFtp: boolean;
+
 	// Outputs
 	@Output("periodViewedChange")
 	public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
@@ -185,7 +191,10 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
-			lastFitnessActiveDate: this.lastFitnessActiveDate
+			lastFitnessActiveDate: this.lastFitnessActiveDate,
+			hasCyclingFtp: this.hasCyclingFtp,
+			hasRunningFtp: this.hasRunningFtp,
+			isPowerMeterEnabled: this.isPowerMeterEnabled
 		};
 
 		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {

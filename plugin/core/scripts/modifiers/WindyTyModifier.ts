@@ -18,7 +18,7 @@ export class WindyTyModifier implements IModifier {
 		this.activityId = activityId;
 		this.appResources = appResources;
 		this.userSettings = userSettings;
-		this.speedUnitData = Helper.getSpeedUnitData();
+		this.speedUnitData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 	}
 
 	public modify(): void {

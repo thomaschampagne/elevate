@@ -333,17 +333,8 @@ export class FitnessService {
 
 							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
 
-								if (_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) {
-
-									fitnessTrendConfigModel.initializedFitnessTrendModel.ctl = 0;
-								}
-								if (_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) {
-
-									fitnessTrendConfigModel.initializedFitnessTrendModel.atl = 0;
-								}
-
-								ctl = fitnessTrendConfigModel.initializedFitnessTrendModel.ctl;
-								atl = fitnessTrendConfigModel.initializedFitnessTrendModel.atl;
+								ctl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.ctl : 0;
+								atl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.atl : 0;
 								tsb = ctl - atl;
 
 							} else {
