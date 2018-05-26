@@ -20,6 +20,7 @@ import { UpFlatDownSumTotalModel } from "../../../shared/models/activity-data/up
 import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-down.model";
 import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
 import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
+import { LowPassFilter } from "../utils/LowPassFilter";
 
 export class ActivityComputer {
 
@@ -34,6 +35,7 @@ export class ActivityComputer {
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly GRADE_ADJUSTED_PACE_WINDOWS = {time: 12, distance: 24};
+	public static readonly POWER_LOW_PASS_FILTER_SMOOTHING_FACTOR: number = 0.01;
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -570,6 +572,11 @@ export class ActivityComputer {
 
 		if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
 			return null;
+		}
+
+		if (!hasPowerMeter) {
+			const lowPassFilter = new LowPassFilter(ActivityComputer.POWER_LOW_PASS_FILTER_SMOOTHING_FACTOR);
+			powerArray = lowPassFilter.smoothArray(powerArray);
 		}
 
 		let powerZonesAlongActivityType: ZoneModel[];

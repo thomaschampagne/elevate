@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { userSettings } from "../../../../shared/UserSettings";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { UserZonesModel } from "../../../../shared/models/user-settings/user-zones.model";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { ZoneModel } from "../../../../shared/models/activity-data/zone.model";
