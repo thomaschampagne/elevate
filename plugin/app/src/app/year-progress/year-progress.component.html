@@ -31,7 +31,7 @@
 				<div fxLayout="row" fxLayoutAlign="start start">
 					<mat-form-field fxFlex="150px">
 						<mat-select placeholder="Progress Type"
-									(change)="onSelectedProgressTypeChange()"
+									(selectionChange)="onSelectedProgressTypeChange()"
 									[(ngModel)]="selectedProgressType">
 							<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
 								{{progressType.label}}
@@ -41,7 +41,7 @@
 					<span fxFlex="1"></span>
 					<mat-form-field fxFlex>
 						<mat-select placeholder="Activity Types"
-									(change)="onSelectedActivityTypesChange()"
+									(selectionChange)="onSelectedActivityTypesChange()"
 									[(ngModel)]="selectedActivityTypes"
 									multiple>
 							<mat-option *ngFor="let type of availableActivityTypes"
@@ -69,7 +69,7 @@
 					<mat-form-field fxFlex>
 						<mat-select placeholder="Years"
 									[(ngModel)]="selectedYears"
-									(change)="onSelectedYearsChange()"
+									(selectionChange)="onSelectedYearsChange()"
 									multiple>
 							<mat-option *ngFor="let year of availableYears"
 										[value]="year"

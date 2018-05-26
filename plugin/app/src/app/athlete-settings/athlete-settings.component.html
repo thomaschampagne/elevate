@@ -8,7 +8,7 @@
 				<mat-form-field fxFill>
 					<mat-select
 						aria-label="Gender"
-						(change)="onGenderChanged()"
+						(selectionChange)="onGenderChanged()"
 						[(ngModel)]="gender">
 						<mat-option
 							*ngFor="let gender of GENDER_LIST;"
