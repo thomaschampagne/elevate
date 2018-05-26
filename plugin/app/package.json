@@ -31,7 +31,7 @@
     "github-markdown-css": "^2.10.0",
     "hammerjs": "^2.0.8",
     "markdown-it": "^8.4.1",
-    "metrics-graphics": "github:thomaschampagne/metrics-graphics-fastring#master",
+    "metrics-graphics": "^2.15.1",
     "moment": "^2.20.0",
     "ngx-pipes": "^2.1.0",
     "rxjs": "^6.0.0",
