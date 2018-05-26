@@ -13,7 +13,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
 		this.gradeData = gradeData;
 		this.setupDistributionGraph(this.gradeData.gradeZones);
 		this.setupDistributionTable(this.gradeData.gradeZones);
-		this.speedUnitsData = Helper.getSpeedUnitData();
+		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 	}
 
 	public render(): void {

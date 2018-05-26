@@ -1,4 +1,5 @@
 <h2 class="mat-display-1">Fitness trend configuration</h2>
+
 <mat-dialog-content class="mat-body-1">
 
 	<section>
@@ -34,37 +35,57 @@
 
 	<section>
 		<h3 class="mat-headline">Estimate stress scores for activities without heart rate or power data</h3>
-		<mat-slide-toggle
-			[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
-			matTooltip="">
-			Enable Cycling Power Stress Score (PSS) Estimation.
-		</mat-slide-toggle>
 
-		<div class="hint">
-			Athlete cycling FTP must be set + Power meter toggle
+		<div class="stressScoreEstimationToggle">
+			<mat-slide-toggle
+				[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
+				[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)"
+				matTooltip="TODO">
+				Enable Cycling Power Stress Score (PSS) Estimation.
+			</mat-slide-toggle>
+
+			<div
+				*ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+
+				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+				PSS Estimation is currently disabled.
+				You have to set your Cycling Functional Threshold Power in athlete settings and enable power meter
+				toggle (
+				<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+				) in fitness trend before.
+			</div>
 		</div>
 
-		<mat-slide-toggle
-			[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
-			matTooltip="">
-			Enable Running Stress Score (RSS) Estimation.
-		</mat-slide-toggle>
-		<div class="hint">
-			Athlete running FTP must be set
+		<div class="stressScoreEstimationToggle">
+			<mat-slide-toggle
+				[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
+				[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp"
+				matTooltip="TODO">
+				Enable Running Stress Score (RSS) Estimation.
+			</mat-slide-toggle>
+
+			<div *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
+				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+				RSS Estimation is currently disabled.
+				You have to set your Running Functional Threshold Pace in athlete settings before.
+			</div>
 		</div>
+
 	</section>
 
 	<section>
 		<h3 class="mat-headline">Exclude activities from fitness trend</h3>
 
 		<div class="hint">
-			Here you can exclude some unwanted activities in the fitness trend based on their name and exclusion
-			patterns. For example, you have performed several downhill mountain bike activities where you took the ski
-			lift many times. If stress scores are estimated, they gonna to be huge and not relevant
-			of your efforts. Assuming you put the tag "#MTBDH" in all these activities, you just need to set a new line
-			with "#MTBDH" in the below input to exclude them. Note: you may need to change some activities name directly
-			in
-			strava and launch a manual sync from that app to see changes in fitness trend.
+			Here you can exclude unwanted activities from the fitness trend based on their names and exclusion
+			patterns. Example use case: you performed some "Mountain Bike Downhill" activities without a heart rate
+			monitor or power meter. You took the ski lift many times. If you enable the "Cycling Power Stress Score
+			(PSS)
+			Estimation", stress scores are gonna to be huge and not relevant of your efforts due to the important total
+			ascent coming from ski lifts. And so the fitness trend could be impacted by unwanted stress scores. Assuming
+			you put the tag "#MTBDH" in all these activities, you just need to append a line "#MTBDH" in the below input
+			to exclude them. Note: you may need to change some activities name directly in strava and launch a manual
+			sync from that app to see changes in fitness trend.
 		</div>
 
 		<textarea matInput
@@ -75,12 +96,12 @@
 	</section>
 
 	<section>
-		<h3 class="mat-headline">Ignore activities before date</h3>
+		<h3 class="mat-headline">Ignore activities before a date</h3>
 
 		<div class="hint">
-			You can ignore activities in your fitness trend until a specific date. The starting date will be defined on
-			the first activity you have performed from the date entered. Leaving a field empty means that you don't
-			ignore activities.
+			You can exclude activities from your fitness trend under a specific date. You can set that date in the below
+			input. Leaving a field empty means no exclusion. Note: The starting date will be set on the first activity
+			available after that date.
 		</div>
 
 		<mat-form-field>
@@ -89,7 +110,7 @@
 				   [max]="ignoreBeforeMaxDate"
 				   [matDatepicker]="datePickerTo"
 				   (dateChange)="onIgnoreBeforeDateChange()"
-				   placeholder="Enter a date">
+				   placeholder="Ignore activities before">
 			<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
 			<mat-datepicker #datePickerTo></mat-datepicker>
 		</mat-form-field>
@@ -102,8 +123,8 @@
 			Your fitness trend will start with the below values. Leaving a field empty equals to set a value of <strong>0</strong>
 		</div>
 
-		<div fxLayout="column" fxLayoutAlign="start start">
-			<mat-form-field>
+		<div fxLayout="row" fxLayoutAlign="start start">
+			<mat-form-field fxFlex>
 				<input
 					matInput
 					type="number" min="1"
@@ -113,8 +134,8 @@
 					Fitness starting value
 				</mat-placeholder>
 			</mat-form-field>
-
-			<mat-form-field>
+			<span fxFlex="1"></span>
+			<mat-form-field fxFlex>
 				<input
 					matInput
 					type="number" min="1"
@@ -127,6 +148,9 @@
 		</div>
 
 	</section>
+
+	<i>Note: the fitness trend configuration is saved locally only and is not synced between browsers where plugin is
+		installed.</i>
 
 </mat-dialog-content>
 

@@ -9,7 +9,7 @@ import { Gender } from "../shared/enums/gender.enum";
 import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { Helper } from "../../../../core/scripts/Helper";
-import { Constant } from "../shared/Constant";
+import { Constant } from "../../../../shared/Constant";
 
 @Component({
 	selector: "app-athlete-settings",

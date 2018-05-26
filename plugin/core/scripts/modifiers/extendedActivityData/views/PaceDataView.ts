@@ -13,7 +13,7 @@ export class PaceDataView extends AbstractDataView {
 		this.mainColor = [9, 123, 219];
 		this.setGraphTitleFromUnits();
 		this.paceData = paceData;
-		this.speedUnitsData = Helper.getSpeedUnitData();
+		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
 		this.setupDistributionGraph(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);
 		this.setupDistributionTable(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);

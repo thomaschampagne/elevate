@@ -50,7 +50,7 @@ export class FeaturedDataView extends AbstractDataView {
 
 	protected insertDataIntoGrid(): void {
 
-		const speedUnitsData: SpeedUnitDataModel = Helper.getSpeedUnitData();
+		const speedUnitsData: SpeedUnitDataModel = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
 		if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfo.segmentEffort)) {
 			this.insertContentAtGridPosition(0, 0, this.printNumber(this.analysisData.moveRatio, 2), "Move Ratio", "", "displayActivityRatio"); // Move ratio
