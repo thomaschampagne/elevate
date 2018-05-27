@@ -9,8 +9,18 @@ mat-radio-button {
 	padding-bottom: 10px;
 }
 
-section {
-	padding-bottom: 35px;
+mat-accordion .mat-expansion-panel-header-title,
+mat-accordion .mat-expansion-panel-header-description {
+	flex-basis: 0;
+}
+
+mat-accordion .mat-expansion-panel-header-description {
+	justify-content: space-between;
+	align-items: center;
+}
+
+textarea {
+	border: 1px solid $light-grey;
 }
 
 .hint {
@@ -19,18 +29,11 @@ section {
 	padding-bottom: 20px;
 }
 
-.stressScoreEstimationToggle {
+.PSSEstimation {
 	padding-bottom: 20px;
 }
 
-textarea {
-	border: 1px solid $light-grey;
-}
-
-ul {
-	list-style-type: square;
-}
-
-li {
-	margin-bottom: 10px;
+.note {
+	margin-top: 30px;
+	font-style: italic;
 }
