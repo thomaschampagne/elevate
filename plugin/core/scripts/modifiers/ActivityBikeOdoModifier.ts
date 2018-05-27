@@ -15,7 +15,7 @@ export class ActivityBikeOdoModifier implements IModifier {
 		// Get odo from map
 		let activityBikeOdo = "No bike declared";
 		try {
-			activityBikeOdo = this.bikeOdoArray[btoa(bikeDisplayedOnActivityPage)];
+			activityBikeOdo = this.bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeDisplayedOnActivityPage)))] || activityBikeOdo;
 		} catch (err) {
 			console.warn("Unable to find bike odo for this Activity");
 		}
