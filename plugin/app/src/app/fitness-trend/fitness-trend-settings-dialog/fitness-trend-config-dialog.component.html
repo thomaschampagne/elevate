@@ -2,155 +2,196 @@
 
 <mat-dialog-content class="mat-body-1">
 
-	<section>
-		<h3 class="mat-headline">Heart rate stress score calculation mode</h3>
+	<mat-accordion>
 
-		<mat-radio-group (change)="onModeChange()"
-						 [(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode">
-			<mat-radio-button [value]="HeartRateImpulseMode.HRSS">HRSS: Heart Rate Stress Score (recommend)
-			</mat-radio-button>
-			<mat-radio-button [value]="HeartRateImpulseMode.TRIMP">TRIMP: Training Impulse (not recommend)
-			</mat-radio-button>
-		</mat-radio-group>
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					Estimate running and cycling stress scores without sensors
+				</mat-panel-title>
+				<mat-panel-description>
+					In case you don't have (or missed) your heart rate monitor or cycling power sensor
+				</mat-panel-description>
+			</mat-expansion-panel-header>
 
-		<div
-			*ngIf="(fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
-		<span>
-			<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-			When heart rate stress score calculation method is set to TRIMP (Training Impulse):
-			<ul>
-				<li>
-					Training Zones will be disabled because TRIMP has a scale missmatch with Training Zones.
-				</li>
-				<li>
-					Cycling Power Stress Scores (PSS) will not be taken into account because TRIMP scores are not scaled with PSS stress scores.
-				</li>
-				<li>
-					Swimming Stress Scores (SSS) will not be taken into account because TRIMP scores are not scaled with SSS stress scores.
-				</li>
-			</ul>
-		</span>
-		</div>
-	</section>
+			<div class="PSSEstimation">
+				<mat-slide-toggle
+					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
+					[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+					Enable Cycling Power Stress Score (PSS) Estimation.
+				</mat-slide-toggle>
 
-	<section>
-		<h3 class="mat-headline">Estimate stress scores for activities without heart rate or power data</h3>
+				<div class="hint"
+					 *ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
 
-		<div class="stressScoreEstimationToggle">
-			<mat-slide-toggle
-				[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
-				[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)"
-				matTooltip="TODO">
-				Enable Cycling Power Stress Score (PSS) Estimation.
-			</mat-slide-toggle>
+					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+					PSS Estimation is currently disabled. Make sure you set your <strong>Cycling Functional Threshold
+					Power</strong> in
+					<a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a> and you
+					enabled power meter
+					toggle (
+					<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+					) in fitness trend before.
+				</div>
+			</div>
+
+			<div>
+				<mat-slide-toggle
+					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
+					[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp">
+					Enable Running Stress Score (RSS) Estimation.
+				</mat-slide-toggle>
+
+				<div class="hint" *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
+					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+					RSS Estimation is currently disabled. Make sure you set your <strong>Running Functional Threshold
+					Pace</strong> in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete
+					settings</a> before.
+				</div>
+			</div>
+
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>Exclude activities from fitness trend</mat-panel-title>
+				<mat-panel-description>Ignore activities from their name</mat-panel-description>
+			</mat-expansion-panel-header>
+
+			<div class="hint">
+				Here you can exclude unwanted activities from the fitness trend based on their names and exclusion
+				patterns. Example use case: you performed some "Mountain Bike Downhill" activities without a heart rate
+				monitor or power meter. You took the ski lift many times. If you enable the "Cycling Power Stress Score
+				(PSS) Estimation", stress scores are gonna to be huge and not relevant of your efforts due to the
+				important total ascent coming from ski lifts. And so the fitness trend could be impacted by unwanted
+				stress scores. Assuming you put the tag "#MTBDH" in all these activities, you just need to append a line
+				"#MTBDH" in the below input to exclude them. Note: you may need to change some activities name directly
+				in strava and launch a manual sync to see the exclusion.
+			</div>
+
+			<textarea matInput
+					  [(ngModel)]="ignoreActivityNamePatterns"
+					  (change)="onIgnoreActivityNamePatternsChange()"
+					  rows="5"
+					  placeholder="Enter activity name patterns exclusion (1 per line, case sensitive)"></textarea>
+
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					Exclude activities until a date
+				</mat-panel-title>
+				<mat-panel-description>
+					Can be useful to ignore previous seasons for example
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+
+			<div class="hint">
+				You can exclude activities from your fitness trend if they are before a specific date. You can set that
+				date in the below input. Leaving a field empty means no exclusion. Note: The starting date will be set
+				on the first activity available after that date.
+			</div>
+
+			<mat-form-field>
+				<input matInput
+					   [(ngModel)]="ignoreBeforeDate"
+					   [max]="ignoreBeforeMaxDate"
+					   [matDatepicker]="datePickerTo"
+					   (dateChange)="onIgnoreBeforeDateChange()"
+					   placeholder="Ignore activities before">
+				<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerTo></mat-datepicker>
+			</mat-form-field>
+
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					Start with existing fitness and fatigue values
+				</mat-panel-title>
+				<mat-panel-description>
+					Fitness trend will start with these values.
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+
+			<div class="hint">
+				Your fitness trend will start with the below values. Leaving a field empty equals to set a value of
+				<strong>0</strong>
+			</div>
+
+			<div fxLayout="column" fxLayoutAlign="start start">
+				<mat-form-field fxFlex>
+					<input
+						matInput
+						type="number" min="1"
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl"
+						(change)="onInitialFitnessChange()"/>
+					<mat-placeholder>
+						Fitness starting value
+					</mat-placeholder>
+				</mat-form-field>
+				<span fxFlex="1"></span>
+				<mat-form-field fxFlex>
+					<input
+						matInput
+						type="number" min="1"
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl"
+						(change)="onInitialFatigueChange()"/>
+					<mat-placeholder>
+						Fatigue starting value
+					</mat-placeholder>
+				</mat-form-field>
+			</div>
+
+		</mat-expansion-panel>
+
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					Heart rate stress score calculation mode
+				</mat-panel-title>
+				<mat-panel-description>
+					Choose how stress scores is being computed from heart rate data
+				</mat-panel-description>
+			</mat-expansion-panel-header>
+
+			<mat-radio-group (change)="onModeChange()"
+							 [(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode">
+				<mat-radio-button [value]="HeartRateImpulseMode.HRSS">HRSS: Heart Rate Stress Score (recommend)
+				</mat-radio-button>
+				<mat-radio-button [value]="HeartRateImpulseMode.TRIMP">TRIMP: Training Impulse (not recommend)
+				</mat-radio-button>
+			</mat-radio-group>
 
 			<div
-				*ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
-
-				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-				PSS Estimation is currently disabled.
-				You have to set your Cycling Functional Threshold Power in athlete settings and enable power meter
-				toggle (
-				<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
-				) in fitness trend before.
+				*ngIf="(fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
+				<span>
+					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+					When heart rate stress score calculation method is set to TRIMP (Training Impulse):
+					<ul>
+						<li>
+							Training Zones will be disabled because TRIMP has a scale missmatch with Training Zones.
+						</li>
+						<li>
+							Cycling Power Stress Scores (PSS) will not be taken into account because TRIMP scores are not scaled with PSS stress scores.
+						</li>
+						<li>
+							Swimming Stress Scores (SSS) will not be taken into account because TRIMP scores are not scaled with SSS stress scores.
+						</li>
+					</ul>
+				</span>
 			</div>
-		</div>
 
-		<div class="stressScoreEstimationToggle">
-			<mat-slide-toggle
-				[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
-				[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp"
-				matTooltip="TODO">
-				Enable Running Stress Score (RSS) Estimation.
-			</mat-slide-toggle>
+		</mat-expansion-panel>
 
-			<div *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
-				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-				RSS Estimation is currently disabled.
-				You have to set your Running Functional Threshold Pace in athlete settings before.
-			</div>
-		</div>
+	</mat-accordion>
 
-	</section>
-
-	<section>
-		<h3 class="mat-headline">Exclude activities from fitness trend</h3>
-
-		<div class="hint">
-			Here you can exclude unwanted activities from the fitness trend based on their names and exclusion
-			patterns. Example use case: you performed some "Mountain Bike Downhill" activities without a heart rate
-			monitor or power meter. You took the ski lift many times. If you enable the "Cycling Power Stress Score
-			(PSS)
-			Estimation", stress scores are gonna to be huge and not relevant of your efforts due to the important total
-			ascent coming from ski lifts. And so the fitness trend could be impacted by unwanted stress scores. Assuming
-			you put the tag "#MTBDH" in all these activities, you just need to append a line "#MTBDH" in the below input
-			to exclude them. Note: you may need to change some activities name directly in strava and launch a manual
-			sync from that app to see changes in fitness trend.
-		</div>
-
-		<textarea matInput
-				  [(ngModel)]="ignoreActivityNamePatterns"
-				  (change)="onIgnoreActivityNamePatternsChange()"
-				  rows="5"
-				  placeholder="Enter activity name patterns exclusion (1 per line, case sensitive)"></textarea>
-	</section>
-
-	<section>
-		<h3 class="mat-headline">Ignore activities before a date</h3>
-
-		<div class="hint">
-			You can exclude activities from your fitness trend under a specific date. You can set that date in the below
-			input. Leaving a field empty means no exclusion. Note: The starting date will be set on the first activity
-			available after that date.
-		</div>
-
-		<mat-form-field>
-			<input matInput
-				   [(ngModel)]="ignoreBeforeDate"
-				   [max]="ignoreBeforeMaxDate"
-				   [matDatepicker]="datePickerTo"
-				   (dateChange)="onIgnoreBeforeDateChange()"
-				   placeholder="Ignore activities before">
-			<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-			<mat-datepicker #datePickerTo></mat-datepicker>
-		</mat-form-field>
-	</section>
-
-	<section>
-		<h3 class="mat-headline">Fitness and fatigue starting values</h3>
-
-		<div class="hint">
-			Your fitness trend will start with the below values. Leaving a field empty equals to set a value of <strong>0</strong>
-		</div>
-
-		<div fxLayout="row" fxLayoutAlign="start start">
-			<mat-form-field fxFlex>
-				<input
-					matInput
-					type="number" min="1"
-					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl"
-					(change)="onInitialFitnessChange()"/>
-				<mat-placeholder>
-					Fitness starting value
-				</mat-placeholder>
-			</mat-form-field>
-			<span fxFlex="1"></span>
-			<mat-form-field fxFlex>
-				<input
-					matInput
-					type="number" min="1"
-					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl"
-					(change)="onInitialFatigueChange()"/>
-				<mat-placeholder>
-					Fatigue starting value
-				</mat-placeholder>
-			</mat-form-field>
-		</div>
-
-	</section>
-
-	<i>Note: the fitness trend configuration is saved locally only and is not synced between browsers where plugin is
-		installed.</i>
+	<div class="note">
+		Note: the fitness trend configuration is saved locally only. She's not synced between browsers where plugin is
+		installed.
+	</div>
 
 </mat-dialog-content>
 

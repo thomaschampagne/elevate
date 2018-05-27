@@ -1,9 +1,30 @@
 import { NgModule } from "@angular/core";
 import {
-	MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule, MatDialogModule, MatGridListModule, MatIconModule,
-	MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatOptionModule, MatPaginatorModule, MatProgressBarModule,
-	MatRadioModule, MatSelectModule, MatSidenavModule, MatSlideToggleModule, MatSnackBarModule, MatSortModule, MatTableModule,
-	MatTabsModule, MatToolbarModule, MatTooltipModule
+	MatButtonModule,
+	MatCardModule,
+	MatCheckboxModule,
+	MatDatepickerModule,
+	MatDialogModule,
+	MatExpansionModule,
+	MatGridListModule,
+	MatIconModule,
+	MatInputModule,
+	MatListModule,
+	MatMenuModule,
+	MatNativeDateModule,
+	MatOptionModule,
+	MatPaginatorModule,
+	MatProgressBarModule,
+	MatRadioModule,
+	MatSelectModule,
+	MatSidenavModule,
+	MatSlideToggleModule,
+	MatSnackBarModule,
+	MatSortModule,
+	MatTableModule,
+	MatTabsModule,
+	MatToolbarModule,
+	MatTooltipModule
 } from "@angular/material";
 import { CdkTableModule } from "@angular/cdk/table";
 
@@ -33,7 +54,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatNativeDateModule,
 		MatTabsModule,
 		MatProgressBarModule,
-		MatRadioModule
+		MatRadioModule,
+		MatExpansionModule
 	],
 	exports: [
 		MatButtonModule,
@@ -60,7 +82,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatNativeDateModule,
 		MatTabsModule,
 		MatProgressBarModule,
-		MatRadioModule
+		MatRadioModule,
+		MatExpansionModule
 	],
 	declarations: []
 })
