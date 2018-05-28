@@ -57,4 +57,60 @@ describe("LowPassFilter", () => {
 
 	});
 
+	describe("adaptiveSmoothArray()", () => {
+
+		it("should return same array", () => {
+			// Given
+			lowPassFilter.smoothing = 1;
+			const values = [0, 4, 8, 12, 16, 8, 64, 0, 4, 4, 4];
+			const scale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			const variationTrigger = 16;
+			const negativeVariationTrigger = 16;
+			const expected = [0, 4, 8, 12, 16, 8, 64, 0, 4, 4, 4];
+
+			// When
+			const actual = lowPassFilter.adaptiveSmoothArray(values, scale,
+				variationTrigger, negativeVariationTrigger);
+
+			// Then
+			expect(actual).toEqual(expected);
+		});
+
+		it("should return smoothed array", () => {
+
+			// Given
+			lowPassFilter.smoothing = 0.5;
+			const values = [0, 4, 8, 12, 16, 8, 64, 0, 4, 4, 4];
+			const scale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			const variationTrigger = 16;
+			const negativeVariationTrigger = 16;
+			const expected = [0, 4, 8, 12, 16, 8, 36, 18, 4, 4, 4];
+
+			// When
+			const actual = lowPassFilter.adaptiveSmoothArray(values, scale,
+				variationTrigger, negativeVariationTrigger);
+
+			// Then
+			expect(actual).toEqual(expected);
+		});
+
+		it("should return smoothed array (1)", () => {
+
+			// Given
+			lowPassFilter.smoothing = 0.5;
+			const values = [0, 4, 8, 12, 16, 8, 64, 0, 4, 4, 4];
+			const scale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			const variationTrigger = 16;
+			const negativeVariationTrigger = null;
+			const expected = [0, 4, 8, 12, 16, 8, 36, 0, 4, 4, 4];
+
+			// When
+			const actual = lowPassFilter.adaptiveSmoothArray(values, scale,
+				variationTrigger, negativeVariationTrigger);
+
+			// Then
+			expect(actual).toEqual(expected);
+		});
+	});
+
 });
