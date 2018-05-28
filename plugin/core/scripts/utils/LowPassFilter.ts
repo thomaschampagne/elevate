@@ -67,6 +67,35 @@ export class LowPassFilter {
 		return values;
 	}
 
+	public adaptiveSmoothArray(values: number[], scale: number[],
+							   positiveVariationTrigger?: number, negativeVariationTrigger?: number): number[] {
+
+		let value = values[0];
+
+		for (let i = 1; i < values.length; i++) {
+
+			const deltaValue = (values[i] - values[i - 1]);
+			const deltaScale = (scale[i] - scale[i - 1]);
+			const variation = deltaValue / deltaScale;
+
+			if (positiveVariationTrigger && variation >= 0 && Math.abs(variation) >= positiveVariationTrigger) {
+
+				value += (values[i] - value) * this._smoothing;
+
+			} else if (negativeVariationTrigger && variation < 0 && Math.abs(variation) >= negativeVariationTrigger) {
+
+				value += (values[i] - value) * this._smoothing;
+
+			} else {
+				value = values[i];
+			}
+
+			values[i] = Math.round(value);
+		}
+
+		return values;
+	}
+
 	get bufferMaxSize(): number {
 		return this._bufferMaxSize;
 	}
