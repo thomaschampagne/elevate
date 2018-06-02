@@ -15,9 +15,21 @@
 		</div>
 
 		<div>
-			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
-			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
-			the Strava™ premium one, not a duplicate!
+			This fitness trend is "Multi-sports" oriented. Whatever the sport, it's strongly recommended that you hold a
+			<i>heart rate monitor</i>, and/or a <i>power meter</i> for cycling. These sensors will provide accurate
+			stress scores and thus an accurate fitness trend.
+		</div>
+
+		<div>
+			What if you don't have sensors? If you don't have sensors (e.g. smart-phone only) or you missed them for
+			some activities, your fitness trend can still be approximated from estimated running and cycling stress
+			scores. For this you have to setup your own <strong>Running Functional Threshold Pace</strong> as a runner
+			in athlete settings. And as a cyclist, your <strong>Cycling Functional Threshold Power</strong> (always in
+			athlete settings).
+		</div>
+
+		<div>
+			This fitness trend is an improved feature of the Strava™ premium one, not a duplicate!
 		</div>
 
 		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
@@ -40,18 +52,15 @@
 		Your synced activities are not supported by this feature
 	</mat-card-title>
 	<mat-card-content>
-		The fitness trend requires athlete activities with at least:
 		<ul>
 			<li>
-				Heart rate data coming from an heart rate monitor and regardless types of sports. // TODO !!
+				Any running or cycling activities with or without sensors.
 			</li>
 			<li>
-				Or power data coming a cycling power meter (or emulated power data such as "ZWIFT" sessions).
+				Any sports activities with a heart rate monitor.
 			</li>
 			<li>
-				Or any swimming activities having distance & time (no sensors required). For this make sure you have set
-				your <strong>Swimming Functional Threshold Pace</strong> in <a routerLink="/athleteSettings">athlete
-				settings</a>.
+				Any swimming activities having distance & time (no sensors required).
 			</li>
 		</ul>
 	</mat-card-content>
