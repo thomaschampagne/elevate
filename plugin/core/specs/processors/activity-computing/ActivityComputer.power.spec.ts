@@ -34,7 +34,7 @@ describe("ActivityComputer Cycling Power", () => {
 	let TOLERANCE;
 
 	beforeEach(() => {
-		TOLERANCE = 35;
+		TOLERANCE = 25;
 	});
 
 	it("should compute REAL power data as ESTIMATED of activity 1109968202 (IM Canada Bike)", (done: Function) => {
@@ -43,7 +43,6 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// Given
 		const hasPowerMeter = false;
-		const pssTolerance = 40;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1109968202/stream.json"));
 		userSettingsMock.userFTP = 288; // ~FTP in July 2017 (Christophe B)
 
@@ -59,25 +58,19 @@ describe("ActivityComputer Cycling Power", () => {
 		expectBetween(_.floor(result.powerData.upperQuartileWatts), 222, TOLERANCE);
 		expectBetween(_.floor(result.powerData.weightedPower), 196, TOLERANCE);
 		expectBetween(_.floor(result.powerData.best20min), 223, TOLERANCE);
-		expectBetween(_.floor(result.powerData.powerStressScore), 261, pssTolerance);
+		expectBetween(_.floor(result.powerData.powerStressScore), 261, TOLERANCE);
 
 		done();
-
 	});
 
-	it("should compute ESTIMATED power data of activity 187311473 (Aug MTS Done, Chamrousse, Brouillard..) having to much total ascent", (done: Function) => {
+	it("should compute REAL power data as ESTIMATED of activity 1302129959 (20-minute FTP test. First time ever!, result not bad!)", (done: Function) => {
 
-		/**
-		 * Equivalent to activity 1599443850 which contains garmin smoothed elevation (https://connect.garmin.com/modern/activity/578359544)
-		 */
+		// Power stream is actually from real power sensor. We just said it's estimated to test to test the smoothing.
+
 		// Given
-		TOLERANCE = 75;
 		const hasPowerMeter = false;
-		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/187311473/stream.json"));
-		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 250; // ~FTP in August 2014 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 205; // in August 2014 (Thomas Champagne)
-		userSettingsMock.userRestHr = 55; // in August 2014 (Thomas Champagne)
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1302129959/stream.json"));
+		userSettingsMock.userFTP = 380; // ~FTP in December 2017 (Jasper Verkuijl)
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
@@ -85,14 +78,13 @@ describe("ActivityComputer Cycling Power", () => {
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
-		expectBetween(_.floor(result.powerData.avgWatts), 220, TOLERANCE);
-		// expectBetween(_.floor(result.powerData.lowerQuartileWatts), 30, TOLERANCE); // Impossible to calculate atm because of smoothing
-		// expectBetween(_.floor(result.powerData.medianWatts), 123, TOLERANCE); // Impossible to calculate atm because of smoothing
-		// expectBetween(_.floor(result.powerData.upperQuartileWatts), 314, TOLERANCE); // Impossible to calculate atm because of smoothing
-		expectBetween(_.floor(result.powerData.weightedPower), 249, TOLERANCE);
-		expectBetween(_.floor(result.powerData.best20min), 258, TOLERANCE);
-		// expectBetween(_.floor(result.powerData.powerStressScore), 261, pssTolerance);
-		// expectBetween(_.floor(result.powerData.powerStressScore), _.floor(result.heartRateData.HRSS), TOLERANCE); // PSS should equals ~HRSS
+		expectBetween(result.powerData.avgWatts, 208, TOLERANCE);
+		expectBetween(_.floor(result.powerData.lowerQuartileWatts), 145, TOLERANCE);
+		expectBetween(_.floor(result.powerData.medianWatts), 195, TOLERANCE);
+		expectBetween(_.floor(result.powerData.upperQuartileWatts), 247, TOLERANCE);
+		expectBetween(_.floor(result.powerData.weightedPower), 258, TOLERANCE);
+		expectBetween(_.floor(result.powerData.best20min), 380, TOLERANCE);
+		expectBetween(_.floor(result.powerData.powerStressScore), 108, TOLERANCE);
 
 		done();
 
@@ -101,13 +93,12 @@ describe("ActivityComputer Cycling Power", () => {
 	it("should compute ESTIMATED power data of activity 343080886 (Alpe d'Huez)", (done: Function) => {
 
 		// Given
-		TOLERANCE = 35;
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/343080886/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 250; // ~FTP in July 2015 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 200; // in July 2015 (Thomas Champagne)
-		userSettingsMock.userRestHr = 60; // in July 2015 (Thomas Champagne)
+		userSettingsMock.userFTP = 223; // ~FTP in July 2015 (Thomas Champagne)
+		userSettingsMock.userMaxHr = 205; // in July 2015 (Thomas Champagne)
+		userSettingsMock.userRestHr = 55; // in July 2015 (Thomas Champagne)
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
@@ -116,12 +107,91 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// Then
 		expectBetween(_.floor(result.powerData.avgWatts), 175, TOLERANCE);
-		// expectBetween(_.floor(result.powerData.lowerQuartileWatts), 0, TOLERANCE); // Impossible to calculate atm because of smoothing
+		expectBetween(_.floor(result.powerData.lowerQuartileWatts), 0, TOLERANCE);
 		expectBetween(_.floor(result.powerData.medianWatts), 146, TOLERANCE);
 		expectBetween(_.floor(result.powerData.upperQuartileWatts), 238, 45);
-		expectBetween(_.floor(result.powerData.weightedPower), 203, TOLERANCE);
 		expectBetween(_.floor(result.powerData.best20min), 253, TOLERANCE);
-		expectBetween(_.floor(result.powerData.powerStressScore), result.heartRateData.HRSS, TOLERANCE); // PSS should equals ~HRSS
+		expectBetween(_.floor(result.powerData.powerStressScore), _.floor(result.heartRateData.HRSS), TOLERANCE); // PSS should equals ~HRSS
+
+		done();
+	});
+
+	it("should compute ESTIMATED power data of activity 600329531 (Sheep Ride)", (done: Function) => {
+
+		// Given
+		const hasPowerMeter = false;
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/600329531/stream.json"));
+		stream.watts = stream.watts_calc; // because powerMeter is false
+		userSettingsMock.userFTP = 239; // ~FTP in July 2016 (Thomas Champagne)
+		userSettingsMock.userMaxHr = 205; // in July 2016 (Thomas Champagne)
+		userSettingsMock.userRestHr = 55; // in July 2016 (Thomas Champagne)
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expectBetween(_.floor(result.powerData.avgWatts), 178, TOLERANCE);
+		expectBetween(_.floor(result.powerData.lowerQuartileWatts), 38, TOLERANCE);
+		expectBetween(_.floor(result.powerData.medianWatts), 168, TOLERANCE);
+		expectBetween(_.floor(result.powerData.upperQuartileWatts), 238, TOLERANCE);
+		expectBetween(_.floor(result.powerData.best20min), 224, TOLERANCE);
+		expectBetween(_.floor(result.powerData.powerStressScore), _.floor(result.heartRateData.HRSS), TOLERANCE); // PSS should equals ~HRSS
+
+		done();
+
+	});
+
+	it("should compute ESTIMATED power data of activity 597999523 (4 Seigneurs x Vik + Murianette x Philippe)", (done: Function) => {
+
+		// Given
+		const hasPowerMeter = false;
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/597999523/stream.json"));
+		stream.watts = stream.watts_calc; // because powerMeter is false
+		userSettingsMock.userFTP = 239; // ~FTP in July 2016 (Thomas Champagne)
+		userSettingsMock.userMaxHr = 205; // in July 2016 (Thomas Champagne)
+		userSettingsMock.userRestHr = 55; // in July 2016 (Thomas Champagne)
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expectBetween(_.floor(result.powerData.avgWatts), 142, TOLERANCE);
+		expectBetween(_.floor(result.powerData.lowerQuartileWatts), 0, TOLERANCE);
+		expectBetween(_.floor(result.powerData.medianWatts), 119, TOLERANCE);
+		expectBetween(_.floor(result.powerData.upperQuartileWatts), 185, TOLERANCE);
+		expectBetween(_.floor(result.powerData.best20min), 200, TOLERANCE);
+		expectBetween(_.floor(result.powerData.powerStressScore), _.floor(result.heartRateData.HRSS), TOLERANCE); // PSS should equals ~HRSS
+
+		done();
+
+	});
+
+	it("should compute ESTIMATED power data of activity 1610385844 (#ComeBack - 10 / 43km / 96min / 142HrSS)", (done: Function) => {
+
+		// Given
+		const hasPowerMeter = false;
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1610385844/stream.json"));
+		stream.watts = stream.watts_calc; // because powerMeter is false
+		userSettingsMock.userFTP = 130; // ~FTP in May 2018 (Thomas Champagne)
+		userSettingsMock.userMaxHr = 190; // in May 2018 (Thomas Champagne)
+		userSettingsMock.userRestHr = 55; // in May 2018 (Thomas Champagne)
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expectBetween(_.floor(result.powerData.avgWatts), 118, TOLERANCE);
+		expectBetween(_.floor(result.powerData.lowerQuartileWatts), 62, TOLERANCE);
+		expectBetween(_.floor(result.powerData.medianWatts), 113, TOLERANCE);
+		expectBetween(_.floor(result.powerData.upperQuartileWatts), 161, TOLERANCE);
+		expectBetween(_.floor(result.powerData.best20min), 145, TOLERANCE);
+		expectBetween(_.floor(result.powerData.powerStressScore), _.floor(result.heartRateData.HRSS), TOLERANCE); // PSS should equals ~HRSS
 
 		done();
 
