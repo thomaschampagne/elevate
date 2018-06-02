@@ -23,6 +23,7 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 // TODO 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
 // TODO 341: Take care of unit system when computing RSS
 // TODO 341: Update explains cards matching no data !
+// TODO 341: Test cases when user has no HRM / power meter: What is displayed
 
 @Component({
 	selector: "app-fitness-trend",
