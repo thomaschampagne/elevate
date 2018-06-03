@@ -81,7 +81,7 @@ export class FitnessService {
 						&& (activity.extendedStats.powerData.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore)
 						&& _.isNumber(activity.extendedStats.powerData.weightedPower);
 
-					const hasRunningData: boolean = (activity.type === "Run" || activity.type === "Hike" || activity.type === "Walk")
+					const hasRunningData: boolean = activity.type === "Run"
 						&& _.isNumber(fitnessUserSettingsModel.runningFtp)
 						&& activity.extendedStats && activity.extendedStats.paceData && _.isNumber(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace)
 						&& fitnessTrendConfigModel.allowEstimatedRunningStressScore;
@@ -126,7 +126,7 @@ export class FitnessService {
 
 					if (hasPowerData) {
 						const movingTime = activity.moving_time_raw;
-						const weightedPower = activity.extendedStats.powerData.weightedPower;
+						const weightedPower = activity.extendedStats.powerData.weightedPower; // TODO activity.extendedStats.powerData.bestEightyPercent?! if estimated?!
 						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
 						hasMinimumFitnessRequiredData = true;
 					}
