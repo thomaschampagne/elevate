@@ -36,6 +36,10 @@ export class DayStressModel {
 		return (this.powerStressScore) ? Math.floor(this.powerStressScore).toString() : "-";
 	}
 
+	public printRunningStressScore(): string {
+		return (this.runningStressScore) ? Math.floor(this.runningStressScore).toString() : "-";
+	}
+
 	public printSwimStressScore(): string {
 		return (this.swimStressScore) ? Math.floor(this.swimStressScore).toString() : "-";
 	}
