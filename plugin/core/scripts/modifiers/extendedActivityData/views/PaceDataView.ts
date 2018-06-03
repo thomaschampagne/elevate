@@ -43,6 +43,11 @@ export class PaceDataView extends AbstractDataView {
 			}
 		}
 
+		if (_.isNumber(this.paceData.runningStressScore)) {
+			this.insertContentAtGridPosition(1, 0, this.printNumber(this.paceData.runningStressScore, 0), "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
+			this.insertContentAtGridPosition(2, 0, this.printNumber(this.paceData.runningStressScorePerHour, 1), "RSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
+		}
+
 		// Quartiles
 		this.insertContentAtGridPosition(0, 1, Helper.secondsToHHMMSS(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor, true), "25% Quartile Pace", this.units, "displayAdvancedSpeedData");
 		this.insertContentAtGridPosition(1, 1, Helper.secondsToHHMMSS(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor, true), "50% Quartile Pace", this.units, "displayAdvancedSpeedData");

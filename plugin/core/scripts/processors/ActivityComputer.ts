@@ -354,7 +354,7 @@ export class ActivityComputer {
 		}
 
 		let genuineAvgSpeedSum = 0,
-			genuineAvgSpeedSumCount = 0;
+			genuineAvgSpeedSecondsSum = 0;
 		const speedsNonZero: number[] = [];
 		const speedsNonZeroDuration: number[] = [];
 		const gradeAdjustedSpeedsNonZero: number[] = [];
@@ -396,7 +396,7 @@ export class ActivityComputer {
 					// distance
 					genuineAvgSpeedSum += this.discreteValueBetween(velocityArray[i] * 3.6, velocityArray[i - 1] * 3.6, movingSeconds);
 					// time
-					genuineAvgSpeedSumCount += movingSeconds;
+					genuineAvgSpeedSecondsSum += movingSeconds;
 
 					// Find speed zone id
 					const speedZoneId: number = this.getZoneId(this.userSettings.zones.speed, currentSpeed);
@@ -447,7 +447,7 @@ export class ActivityComputer {
 		gradeAdjustedPaceZones = this.finalizeDistributionComputationZones(gradeAdjustedPaceZones);
 
 		// Finalize compute of Speed
-		const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSumCount;
+		const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSecondsSum;
 		const varianceSpeed: number = (speedVarianceSum / speedsNonZero.length) - Math.pow(genuineAvgSpeed, 2);
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
@@ -464,7 +464,7 @@ export class ActivityComputer {
 
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: genuineAvgSpeed,
-			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSumCount, elapsedSeconds),
+			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSecondsSum, elapsedSeconds),
 			best20min: best20min,
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
@@ -476,6 +476,11 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
+
+		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.userSettings.userRunningFTP)
+			? this.computeRunningStressScore(genuineAvgSpeedSecondsSum, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
+
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
 			best20min: (best20min) ? Math.floor((1 / best20min) * 60 * 60) : null,
@@ -483,13 +488,15 @@ export class ActivityComputer {
 			medianPace: this.convertSpeedToPace(percentiles[1]),
 			upperQuartilePace: this.convertSpeedToPace(percentiles[2]),
 			variancePace: this.convertSpeedToPace(varianceSpeed),
-			genuineGradeAdjustedAvgPace: (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null,
+			genuineGradeAdjustedAvgPace: genuineGradeAdjustedAvgPace,
 			paceZones: (this.returnZones) ? paceZones : null,
 			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedDistance) ? gradeAdjustedPaceZones : null,
+			runningStressScore: runningStressScore,
+			runningStressScorePerHour: (runningStressScore) ? runningStressScore / genuineAvgSpeedSecondsSum * 60 * 60 : null
 		};
 
 		const moveData: MoveDataModel = {
-			movingTime: genuineAvgSpeedSumCount,
+			movingTime: genuineAvgSpeedSecondsSum,
 			elapsedTime: elapsedSeconds,
 			speed: speedData,
 			pace: paceData,
@@ -524,6 +531,17 @@ export class ActivityComputer {
 		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
 		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 * TODO Duplicated code of FitnessService.computeRunningStressScore. To be refactored
+	 * @param {number} movingTime
+	 * @param {number} gradeAdjustedAvgPace
+	 * @param {number} runningThresholdPace
+	 * @returns {number}
+	 */
+	public computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
+		return (movingTime * gradeAdjustedAvgPace * (gradeAdjustedAvgPace / runningThresholdPace) / (runningThresholdPace * 3600) * 100);
 	}
 
 	/**
