@@ -85,10 +85,22 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
+
+		let runningStressScore = "-";
+		if (this.userSettings.displayAdvancedSpeedData) {
+			if (this.analysisData.paceData
+				&& this.analysisData.paceData.runningStressScore) {
+				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";
+			} else {
+				runningStressScore = "<span class=\"summarySubGridTitle\"><i>Configure Running FTP in athlete settings</i></span>";
+			}
+
+			this.insertContentAtGridPosition(0, 5, runningStressScore, "Running Stress Score", "", "displayAdvancedSpeedData");
+		}
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
-		this.makeSummaryGrid(2, 5);
+		this.makeSummaryGrid(2, 6);
 		super.placeSummaryPanel(panelAdded);
 	}
 
