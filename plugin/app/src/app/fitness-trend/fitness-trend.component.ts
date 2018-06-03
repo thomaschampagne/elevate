@@ -20,6 +20,7 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 
 // DONE 341: Add RSS legend
 // TODO 341: Check RSS vs HRSS consistency
+// TODO 341: Hide RSS data-field if not author of act
 // TODO 341: Test cases when user has no HRM / power meter: What is displayed
 // TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
 // TODO 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
