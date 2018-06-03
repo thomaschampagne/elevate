@@ -132,6 +132,7 @@ export class MultipleActivityProcessor {
 
 		const threadMessage: IComputeActivityThreadMessage = {
 			activityType: activityWithStream.type,
+			supportsGap: (activityWithStream.type === "Run"),
 			isTrainer: activityWithStream.trainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,

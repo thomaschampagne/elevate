@@ -605,6 +605,7 @@ export class StravistiX {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
+		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
@@ -613,6 +614,7 @@ export class StravistiX {
 		}
 
 		this.activityProcessor.setActivityType(activityType);
+		this.activityProcessor.setSupportsGap(supportsGap);
 		this.activityProcessor.setTrainer(isTrainer);
 
 		if (CoreEnv.debugMode) {
@@ -632,6 +634,7 @@ export class StravistiX {
 					this.activityProcessor,
 					this.activityId,
 					activityType,
+					supportsGap,
 					this.appResources,
 					this.userSettings,
 					this.isActivityAuthor,
@@ -643,6 +646,7 @@ export class StravistiX {
 					this.activityProcessor,
 					this.activityId,
 					activityType,
+					supportsGap,
 					this.appResources,
 					this.userSettings,
 					this.isActivityAuthor,
@@ -674,6 +678,7 @@ export class StravistiX {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
+		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
@@ -682,6 +687,7 @@ export class StravistiX {
 		}
 
 		this.activityProcessor.setActivityType(activityType);
+		this.activityProcessor.setSupportsGap(supportsGap);
 		this.activityProcessor.setTrainer(isTrainer);
 
 		let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
@@ -715,6 +721,7 @@ export class StravistiX {
 						that.activityProcessor,
 						that.activityId,
 						activityType,
+						supportsGap,
 						that.appResources,
 						that.userSettings,
 						that.isActivityAuthor,
@@ -726,6 +733,7 @@ export class StravistiX {
 						that.activityProcessor,
 						that.activityId,
 						activityType,
+						supportsGap,
 						that.appResources,
 						that.userSettings,
 						that.isActivityAuthor,

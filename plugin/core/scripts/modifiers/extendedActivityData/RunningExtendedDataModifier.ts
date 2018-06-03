@@ -12,9 +12,9 @@ import { GradeAdjustedPaceDataView } from "./views/GradeAdjustedPaceDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResourcesModel,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
-		super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
+		super(activityProcessor, activityId, activityType, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {
@@ -87,7 +87,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		}
 
 		let runningStressScore = "-";
-		if (this.userSettings.displayAdvancedSpeedData) {
+		if (this.userSettings.displayAdvancedSpeedData && this.supportsGap) {
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";
@@ -132,6 +132,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			const units: string = (measurementPreference == "meters") ? "/km" : "/mi";
 
 			const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
+			paceDataView.setSupportsGap(this.supportsGap);
 			paceDataView.setAppResources(this.appResources);
 			paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
 			paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
