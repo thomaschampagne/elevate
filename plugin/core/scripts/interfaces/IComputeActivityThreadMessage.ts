@@ -5,6 +5,7 @@ import { ActivityStreamsModel } from "../../../shared/models/activity-data/activ
 
 export interface IComputeActivityThreadMessage { // TODO Export as model
 	activityType: string;
+	supportsGap: boolean;
 	isTrainer: boolean;
 	appResources: AppResourcesModel;
 	userSettings: UserSettingsModel;

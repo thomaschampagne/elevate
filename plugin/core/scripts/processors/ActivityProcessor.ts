@@ -17,6 +17,7 @@ export class ActivityProcessor {
 	protected vacuumProcessor: VacuumProcessor;
 	protected zones: any;
 	protected activityType: string;
+	protected supportsGap: boolean;
 	protected isTrainer: boolean;
 	protected isActivityAuthor: boolean;
 	protected computeAnalysisThread: Worker;
@@ -32,6 +33,10 @@ export class ActivityProcessor {
 
 	public setActivityType(activityType: string): void {
 		this.activityType = activityType;
+	}
+
+	public setSupportsGap(supportsGap: boolean): void {
+		this.supportsGap = supportsGap;
 	}
 
 	public setTrainer(isTrainer: boolean): void {
@@ -102,6 +107,7 @@ export class ActivityProcessor {
 		// He will compute them in the background
 		const threadMessage: IComputeActivityThreadMessage = {
 			activityType: this.activityType,
+			supportsGap: this.supportsGap,
 			isTrainer: this.isTrainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,
