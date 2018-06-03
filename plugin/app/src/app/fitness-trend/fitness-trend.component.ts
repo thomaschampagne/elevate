@@ -18,12 +18,15 @@ import { ExternalUpdatesService } from "../shared/services/external-updates/exte
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 
-// TODO 341: Unit tests of power data smoothing function on activity with power and without !!
+// DONE 341: Add RSS legend
+// TODO 341: Check RSS vs HRSS consistency
+// TODO 341: Test cases when user has no HRM / power meter: What is displayed
 // TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
 // TODO 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
 // TODO 341: Take care of unit system when computing RSS
+// TODO 341: Use best 80% power as weigthed power when no power meter? should be yes
 // TODO 341: Update explains cards matching no data !
-// TODO 341: Test cases when user has no HRM / power meter: What is displayed
+// TODO 341: Add RSS column in fitness data table
 
 @Component({
 	selector: "app-fitness-trend",
