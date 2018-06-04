@@ -22,6 +22,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
 	public static readonly COLUMN_HEART_RATE_STRESS_SCORE: string = "heartRateStressScore";
 	public static readonly COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
+	public static readonly COLUMN_RUNNING_STRESS_SCORE: string = "runningStressScore";
 	public static readonly COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
 	public static readonly COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
 	public static readonly COLUMN_CTL: string = "ctl";
@@ -69,6 +70,13 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			toolTip: "Power Stress Score",
 			type: FitnessTrendColumnType.TEXT,
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE,
+			header: "RSS",
+			toolTip: "Running Stress Score",
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
@@ -137,6 +145,12 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("isSwimEnabled")
 	public isSwimEnabled;
 
+	@Input("hasCyclingFtp")
+	public hasCyclingFtp: boolean;
+
+	@Input("hasRunningFtp")
+	public hasRunningFtp: boolean;
+
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
@@ -157,19 +171,19 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			return;
 		}
 
-		if (changes.isPowerMeterEnabled || changes.isSwimEnabled || changes.isTrainingZonesEnabled) {
-			this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
-				if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
-					return false;
-				}
-				return true;
-			});
-			this.displayedColumns = this.columns.map(column => column.columnDef);
-		}
+		this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
+			if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.hasRunningFtp)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
+				return false;
+			}
+			return true;
+		});
+		this.displayedColumns = this.columns.map(column => column.columnDef);
 
 		if (changes.fitnessTrend && changes.fitnessTrend.currentValue) {
 			this.dataSource.data = this.prepareFitnessTrendModels(changes.fitnessTrend.currentValue);
@@ -201,6 +215,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 				case FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE:
 					return dayFitnessTrendModel.powerStressScore;
+
+				case FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE:
+					return dayFitnessTrendModel.runningStressScore;
 
 				case FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE:
 					return dayFitnessTrendModel.swimStressScore;
