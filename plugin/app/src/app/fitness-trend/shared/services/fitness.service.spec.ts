@@ -94,7 +94,9 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			variancePace: null,
 			genuineGradeAdjustedAvgPace: avgPace,
 			paceZones: null,
-			gradeAdjustedPaceZones: null
+			gradeAdjustedPaceZones: null,
+			runningStressScore: null,
+			runningStressScorePerHour: null,
 		};
 	}
 
@@ -459,7 +461,7 @@ describe("FitnessService", () => {
 		});
 
 		// Compute Running Stress Score (RSS)
-		it("should compute RSS", (done: Function) => {
+		it("should compute RSS (1)", (done: Function) => {
 
 			// Given
 			const expectedStressScore = 100;
@@ -472,6 +474,22 @@ describe("FitnessService", () => {
 
 			// Then
 			expect(Math.floor(runningStressScore)).toEqual(expectedStressScore);
+			done();
+		});
+
+		it("should compute RSS (2)", (done: Function) => {
+
+			// Given
+			const expectedStressScore = 100;
+			const movingTime = 3600; // 1 hours
+			const gradeAdjustedPace = 300; // 300sec or 00:05:00/dist.
+			const runningThresholdPace = 600; // 600sec or 00:10:00/dist.
+
+			// When
+			const runningStressScore = fitnessService.computeRunningStressScore(movingTime, gradeAdjustedPace, runningThresholdPace);
+
+			// Then
+			expect(Math.floor(runningStressScore)).toBeGreaterThan(expectedStressScore);
 			done();
 		});
 	});

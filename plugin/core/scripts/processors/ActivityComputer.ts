@@ -536,12 +536,16 @@ export class ActivityComputer {
 	/**
 	 * TODO Duplicated code of FitnessService.computeRunningStressScore. To be refactored
 	 * @param {number} movingTime
-	 * @param {number} gradeAdjustedAvgPace
+	 * @param {number} gradeAdjustedAvgPace in s/km
 	 * @param {number} runningThresholdPace
 	 * @returns {number}
 	 */
 	public computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
-		return (movingTime * gradeAdjustedAvgPace * (gradeAdjustedAvgPace / runningThresholdPace) / (runningThresholdPace * 3600) * 100);
+		// Convert pace to speed (km/s)
+		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
+		const runningThresholdSpeed = 1 / runningThresholdPace;
+		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
+		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
 	}
 
 	/**

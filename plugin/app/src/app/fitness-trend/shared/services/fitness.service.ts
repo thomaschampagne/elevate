@@ -225,18 +225,23 @@ export class FitnessService {
 	 * @returns {number}
 	 */
 	public computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
-		return (movingTime * weightedPower * (weightedPower / cyclingFtp) / (cyclingFtp * 3600) * 100);
+		const intensityFactor = (weightedPower / cyclingFtp); // TODO Move changes to ActivityComputer
+		return (movingTime * weightedPower * intensityFactor) / (cyclingFtp * 3600) * 100;
 	}
 
 	/**
 	 *
 	 * @param {number} movingTime
-	 * @param {number} gradeAdjustedAvgPace
+	 * @param {number} gradeAdjustedAvgPace in s/km
 	 * @param {number} runningThresholdPace
 	 * @returns {number}
 	 */
 	public computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
-		return (movingTime * gradeAdjustedAvgPace * (gradeAdjustedAvgPace / runningThresholdPace) / (runningThresholdPace * 3600) * 100);
+		// Convert pace to speed (km/s)
+		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
+		const runningThresholdSpeed = 1 / runningThresholdPace;
+		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
+		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
 	}
 
 	/**
