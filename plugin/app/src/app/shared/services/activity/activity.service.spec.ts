@@ -84,14 +84,14 @@ describe("ActivityService", () => {
 		});
 	});
 
-	it("should remove SyncedActivityModels", (done: Function) => {
+	it("should clear SyncedActivityModels", (done: Function) => {
 
 		// Given
-		const removeDaoSpy = spyOn(activityService.activityDao, "remove")
+		const removeDaoSpy = spyOn(activityService.activityDao, "clear")
 			.and.returnValue(Promise.resolve(null));
 
 		// When
-		const promise: Promise<SyncedActivityModel[]> = activityService.remove();
+		const promise: Promise<SyncedActivityModel[]> = activityService.clear();
 
 		// Then
 		promise.then((result: SyncedActivityModel[]) => {
