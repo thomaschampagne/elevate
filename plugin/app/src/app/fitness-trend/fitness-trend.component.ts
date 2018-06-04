@@ -19,10 +19,7 @@ import { SyncResultModel } from "../../../../shared/models/sync/sync-result.mode
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 
 // DONE 341: Add RSS legend
-// TODO Bug: Graphs resize don't work anymore when click burger menu (on that branch)
-// TODO 341: Re-check RSS computation: strange results with low RFTP (ex 200)
-// TODO 341: Take care of unit system when computing RSS
-// TODO 341: Check RSS vs HRSS consistency
+// TODO 341: Check RSS vs HRSS consistency (improve GAP for this !)
 // TODO 341: Hide RSS data-field if not author of act
 // TODO 341: Test cases when user has no HRM / power meter: What is displayed
 // TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
