@@ -22,7 +22,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
-	// Inputs
 	@Input("dateMin")
 	public dateMin: Date;
 
@@ -65,7 +64,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Input("hasRunningFtp")
 	public hasRunningFtp: boolean;
 
-	// Outputs
 	@Output("periodViewedChange")
 	public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
 
