@@ -171,7 +171,7 @@ describe("ActivityDao", () => {
 
 	});
 
-	it("should remove SyncedActivityModel by strava activity id", (done: Function) => {
+	it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
 
 		// Given
 		let storage: any = {syncedActivities: _.clone(_TEST_SYNCED_ACTIVITIES_)};

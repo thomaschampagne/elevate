@@ -29,9 +29,7 @@ export class ActivityDao {
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-
 		return new Promise<SyncedActivityModel[]>((resolve) => {
-
 			const syncedActivityData: any = {};
 			syncedActivityData[ActivityDao.SYNCED_ACTIVITIES_KEY] = syncedActivityModels;
 			this.browserStorageLocal().set(syncedActivityData, () => {
@@ -70,15 +68,11 @@ export class ActivityDao {
 	 * @returns {Promise<SyncedActivityModel[]>}
 	 */
 	public removeByIds(activitiesToDelete: number[]): Promise<SyncedActivityModel[]> {
-
-		// return new Promise<SyncedActivityModel[]>((resolve, reject) => {
 		return this.fetch().then((models: SyncedActivityModel[]) => {
 			const modelsToBeSaved = _.filter(models, (syncedActivityModel: SyncedActivityModel) => {
 				return (_.indexOf(activitiesToDelete, syncedActivityModel.id) === -1);
 			});
 			return this.save(modelsToBeSaved);
-
 		});
-		// });
 	}
 }
