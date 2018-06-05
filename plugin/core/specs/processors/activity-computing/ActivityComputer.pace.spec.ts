@@ -27,7 +27,7 @@ describe("ActivityComputer Paces", () => {
 	const hasPowerMeter = false;
 	const bounds: number[] = null;
 	const returnZones = false;
-	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json"));// Thomas C user settings
+	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json")); // Thomas C user settings
 	const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../../fixtures/activities/887284960/statsMap.json"));
 
 	const PACE_SECONDS_TOLERANCE = 20;

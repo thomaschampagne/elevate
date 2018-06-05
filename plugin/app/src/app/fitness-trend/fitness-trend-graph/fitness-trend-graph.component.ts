@@ -21,7 +21,7 @@ import { MatDialog } from "@angular/material";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 

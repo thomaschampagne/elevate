@@ -86,7 +86,7 @@ describe("SyncService", () => {
 
 	});
 
-	it("should remove last sync date time (for activities remove)", (done: Function) => {
+	it("should remove last sync date time (for activities clear)", (done: Function) => {
 
 		// Given
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
@@ -214,7 +214,7 @@ describe("SyncService", () => {
 		spyOn(syncService, "getAppVersion").and.returnValue(version);
 
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
-		spyOn(syncService.activityDao, "remove").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
 		const spy = spyOn(syncService, "clearSyncedData").and.callThrough();
 
@@ -438,7 +438,7 @@ describe("SyncService", () => {
 
 		// Given
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
-		spyOn(syncService.activityDao, "remove").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<void> = syncService.clearSyncedData();
@@ -458,7 +458,7 @@ describe("SyncService", () => {
 
 		// Given
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(99));
-		spyOn(syncService.activityDao, "remove").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<void> = syncService.clearSyncedData();

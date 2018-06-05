@@ -77,6 +77,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			variabilityIndex: 1,
 			weightedPower: avgWatts * 1.25,
 			best20min: avgWatts * 1.5,
+			bestEightyPercent: avgWatts * 1.2,
 			weightedWattsPerKg: avgWatts * 1.25 / 70,
 		};
 		fakeActivity.hasPowerMeter = true;

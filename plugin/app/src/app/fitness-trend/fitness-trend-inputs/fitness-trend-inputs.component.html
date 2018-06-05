@@ -3,7 +3,7 @@
 	<mat-form-field fxFlex="25" fxFlex.lt-lg="47">
 		<mat-select
 			[(ngModel)]="lastPeriodViewed"
-			(change)="onLastPeriodSelected()"
+			(selectionChange)="onLastPeriodSelected()"
 			placeholder="Last">
 			<mat-option
 				*ngFor="let lastPeriod of lastPeriods;"
