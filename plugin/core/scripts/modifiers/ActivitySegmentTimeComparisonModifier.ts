@@ -177,7 +177,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 					const komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")).toString(),
 						elapsedTime = segmentEffortInfo.elapsed_time_raw,
 						komDiffTime = (elapsedTime - parseInt(komSeconds)),
-						komPercentTime = (((elapsedTime/parseInt(komSeconds))-1)*100);
+						komPercentTime = (((elapsedTime / parseInt(komSeconds)) - 1) * 100);
 
 					if (komSeconds == "NaN") {
 
@@ -190,8 +190,8 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 							+ this.crTitle()
 							+ " (" + Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true)
 							+ ")\" style='font-size:11px; color:" + (komDiffTime > 0 ? "#FF5555" : "#2EB92E") + ";'>"
-							+ sign + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) 
-							+ "<br/>" + ((Math.sign(komPercentTime) == 1) ? "+" : "") + komPercentTime.toFixed(1)+"%</span>");
+							+ sign + Helper.secondsToHHMMSS(Math.abs(komDiffTime), true)
+							+ "<br/>" + ((Math.sign(komPercentTime) == 1) ? "+" : "") + komPercentTime.toFixed(1) + "%</span>");
 					}
 
 					if (!this.showDifferenceToPR && !this.showDifferenceToCurrentYearPR) {
@@ -315,8 +315,8 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
 			if (previousPersonalSeconds) {
 				deltaTime = (elapsedTime - previousPersonalSeconds);
-				percentTime = (((elapsedTime/previousPersonalSeconds)-1)*100);
-				deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1)+"%</span>");
+				percentTime = (((elapsedTime / previousPersonalSeconds) - 1) * 100);
+				deltaPRCell.html("<span title='Time difference with your previous PR time (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1) + "%</span>");
 			} else {
 				deltaPRCell.html("<span title='First cross' style='font-size:11px; color: grey;'>1X</span>");
 			}
@@ -365,8 +365,8 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 					// Current Year activity beat PR
 					if (previousBestResultThisYear) {
 						deltaTime = currentActivityResult.elapsed_time_raw - previousBestResultThisYear.elapsed_time_raw;
-						percentTime = (((currentActivityResult.elapsed_time_raw/previousBestResultThisYear.elapsed_time_raw)-1)*100);
-						deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1)+"%</span>");
+						percentTime = (((currentActivityResult.elapsed_time_raw / previousBestResultThisYear.elapsed_time_raw) - 1) * 100);
+						deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1) + "%</span>");
 					} else {
 						// NEW PR This ride of Current Year
 						deltaYearPRCell.html("<span title='This time beats previous PR. Time difference with your previous PR time  (" + Helper.secondsToHHMMSS(previousPersonalSeconds, true) + " on " + previousPersonalDate + ")' style='font-size:11px; color: grey;'>&#9733;</span>");
@@ -376,8 +376,8 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 
 					if (previousBestResultThisYear) {
 						deltaTime = currentActivityResult.elapsed_time_raw - previousBestResultThisYear.elapsed_time_raw;
-						percentTime = (((currentActivityResult.elapsed_time_raw/previousBestResultThisYear.elapsed_time_raw)-1)*100);
-						deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1)+"%</span>");
+						percentTime = (((currentActivityResult.elapsed_time_raw / previousBestResultThisYear.elapsed_time_raw) - 1) * 100);
+						deltaYearPRCell.html("<span title='Time difference with your previous best result this year (" + Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) + " on " + previousBestResultThisYear.start_date_local + ")' style='font-size:11px; color:" + (deltaTime > 0 ? "#FF5555" : "#2EB92E") + ";'>" + ((Math.sign(deltaTime) == 1) ? "+" : "-") + Helper.secondsToHHMMSS(Math.abs(deltaTime), true) + "<br/>" + ((Math.sign(percentTime) == 1) ? "+" : "") + percentTime.toFixed(1) + "%</span>");
 					} else {
 
 						deltaTime = (elapsedTime - currentYearPRSeconds);

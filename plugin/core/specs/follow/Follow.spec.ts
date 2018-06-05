@@ -96,7 +96,7 @@ describe("Generate Athlete Update", () => {
         );
         expect(monkey_01).toBeNull();
 
-        //...
+		// ...
 
 		const monkey_02: AthleteUpdateModel = AthleteUpdate.create(
             888,
@@ -107,7 +107,7 @@ describe("Generate Athlete Update", () => {
 			"" // empty test
         );
         expect(monkey_02).toBeNull();
-        //...
+		// ...
 		const monkey_03: AthleteUpdateModel = AthleteUpdate.create(
             888,
             null,
