@@ -148,7 +148,7 @@ export class SyncService {
 		return Promise.all([
 
 			this.removeLastSyncDateTime(),
-			this.activityDao.remove()
+			this.activityDao.clear()
 
 		]).then((result: Object[]) => {
 

@@ -6,7 +6,7 @@ import { ZoneChangeOrderModel } from "../shared/zone-change-order.model";
 import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { ZoneModel } from "../../../../../shared/models/activity-data/zone.model";
 
 @Component({

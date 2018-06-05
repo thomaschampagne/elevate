@@ -11,7 +11,7 @@ import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-gr
 import { ProgressType } from "../shared/models/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { YearProgressService } from "../shared/services/year-progress.service";

@@ -4,7 +4,7 @@
 			<mat-select
 				aria-label="Zone selection"
 				id="zoneDefinitionSelection"
-				(change)="onZoneDefinitionSelected()"
+				(selectionChange)="onZoneDefinitionSelected()"
 				[(ngModel)]="zoneDefinitionSelected">
 				<mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
 					{{zoneDef.name}}

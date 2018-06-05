@@ -10,7 +10,7 @@ import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.en
 import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
-import { FitnessTrendConfigDialogComponent } from "../fitness-trend-settings-dialog/fitness-trend-config-dialog.component";
+import { FitnessTrendConfigDialogComponent } from "../fitness-trend-config-dialog/fitness-trend-config-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend-inputs",

@@ -5,10 +5,10 @@
 				Gender
 			</mat-card-title>
 			<mat-card-content>
-				<mat-input-container fxFill>
+				<mat-form-field fxFill>
 					<mat-select
 						aria-label="Gender"
-						(change)="onGenderChanged()"
+						(selectionChange)="onGenderChanged()"
 						[(ngModel)]="gender">
 						<mat-option
 							*ngFor="let gender of GENDER_LIST;"
@@ -16,7 +16,7 @@
 							{{gender.display}}
 						</mat-option>
 					</mat-select>
-				</mat-input-container>
+				</mat-form-field>
 			</mat-card-content>
 		</mat-card>
 	</div>
@@ -27,14 +27,14 @@
 				Weight
 			</mat-card-title>
 			<mat-card-content>
-				<mat-input-container fxFill>
+				<mat-form-field fxFill>
 					<input
 						matInput
 						type="number" min="1" max="999"
 						[(ngModel)]="weight"
 						(change)="onWeightChanged()"
 						placeholder="Weight in kilograms"/>
-				</mat-input-container>
+				</mat-form-field>
 			</mat-card-content>
 		</mat-card>
 	</div>
@@ -163,14 +163,14 @@
 			activities.
 		</div>
 		<div>
-			<mat-input-container fxFill>
+			<mat-form-field fxFill>
 				<input
 					matInput
 					type="number" min="1" max="999"
 					placeholder="Your cycling FTP in watts"
 					[(ngModel)]="ftp"
 					(change)="onCyclingFtpChanged()"/>
-			</mat-input-container>
+			</mat-form-field>
 		</div>
 	</mat-card-content>
 </mat-card>

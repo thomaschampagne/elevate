@@ -289,7 +289,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 			const activitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
 				localSyncedActivityModels);
 
-			let remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
+			const remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
 				return stravaActivityModel.id;
 			});
 
@@ -589,7 +589,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 							step: "savedSyncedActivities",
 							progress: 100,
 							pageGroupId: handledGroupCount + 1,
-							browsedActivitiesCount: this.totalRawActivityIds.length, //pagesGroupSaved.data.syncedActivities.length,
+							browsedActivitiesCount: this.totalRawActivityIds.length, // pagesGroupSaved.data.syncedActivities.length,
 						};
 
 						deferred.notify(notify);

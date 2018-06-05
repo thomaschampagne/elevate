@@ -50,15 +50,15 @@ describe("ActivityComputer", () => {
 		expect(result.paceData.variancePace.toString()).toMatch(/^47.995052362/);
 
 		expect(result.powerData.hasPowerMeter).toEqual(false);
-		expect(result.powerData.avgWatts.toString()).toMatch(/^210.685980088/);
-		expect(result.powerData.avgWattsPerKg.toString()).toMatch(/^2.9302639789/);
-		expect(result.powerData.weightedPower.toString()).toMatch(/^245.18579465/);
-		expect(result.powerData.variabilityIndex.toString()).toMatch(/^1.16374993034/);
-		expect(result.powerData.punchFactor.toString()).toMatch(/^1.021607477/);
-		expect(result.powerData.weightedWattsPerKg.toString()).toMatch(/^3.4100945014/);
-		expect(result.powerData.lowerQuartileWatts.toString()).toMatch(/^92/);
-		expect(result.powerData.medianWatts.toString()).toMatch(/^204/);
-		expect(result.powerData.upperQuartileWatts.toString()).toMatch(/^304/);
+		expect(result.powerData.avgWatts.toString()).toMatch(/^192.45/);
+		expect(result.powerData.avgWattsPerKg.toString()).toMatch(/^2.67/);
+		expect(result.powerData.weightedPower.toString()).toMatch(/^225.30/);
+		expect(result.powerData.variabilityIndex.toString()).toMatch(/^1.17/);
+		expect(result.powerData.punchFactor.toString()).toMatch(/^0.93/);
+		expect(result.powerData.weightedWattsPerKg.toString()).toMatch(/^3.13/);
+		expect(result.powerData.lowerQuartileWatts.toString()).toMatch(/^82/);
+		expect(result.powerData.medianWatts.toString()).toMatch(/^189/);
+		expect(result.powerData.upperQuartileWatts.toString()).toMatch(/^282/);
 
 		expect(result.heartRateData.TRIMP.toString()).toMatch(/^228.48086657/);
 		expect(result.heartRateData.TRIMPPerHour.toString()).toMatch(/^134.2688736/);

@@ -31,7 +31,7 @@
 				<div fxLayout="row" fxLayoutAlign="start start">
 					<mat-form-field fxFlex="150px">
 						<mat-select placeholder="Progress Type"
-									(change)="onSelectedProgressTypeChange()"
+									(selectionChange)="onSelectedProgressTypeChange()"
 									[(ngModel)]="selectedProgressType">
 							<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
 								{{progressType.label}}
@@ -41,7 +41,7 @@
 					<span fxFlex="1"></span>
 					<mat-form-field fxFlex>
 						<mat-select placeholder="Activity Types"
-									(change)="onSelectedActivityTypesChange()"
+									(selectionChange)="onSelectedActivityTypesChange()"
 									[(ngModel)]="selectedActivityTypes"
 									multiple>
 							<mat-option *ngFor="let type of availableActivityTypes"
@@ -56,8 +56,16 @@
 						fxFlexAlign="center"
 						[(ngModel)]="includeCommuteRide"
 						(change)="onIncludeCommuteRideToggle()"
-						matTooltip="When enabled, activities flagged as commute are integrated into your progression.">
-						Commute activities
+						matTooltip="Include commute activities in your progression.">
+						<mat-icon>work</mat-icon>
+					</mat-slide-toggle>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeIndoorRide"
+						(change)="onIncludeIndoorRideToggle()"
+						matTooltip="Include indoor activities in your progression.">
+						<mat-icon>home</mat-icon>
 					</mat-slide-toggle>
 				</div>
 			</div>
@@ -69,7 +77,7 @@
 					<mat-form-field fxFlex>
 						<mat-select placeholder="Years"
 									[(ngModel)]="selectedYears"
-									(change)="onSelectedYearsChange()"
+									(selectionChange)="onSelectedYearsChange()"
 									multiple>
 							<mat-option *ngFor="let year of availableYears"
 										[value]="year"

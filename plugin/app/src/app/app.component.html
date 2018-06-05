@@ -2,8 +2,8 @@
 	<mat-sidenav-container>
 		<mat-sidenav #sidenav
 					 [mode]="sideNavMode"
-					 (open)="onSideNavOpened()"
-					 (close)="onSideNavClosed()">
+					 (opened)="onSideNavOpened()"
+					 (closed)="onSideNavClosed()">
 			<mat-nav-list>
 				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
 							   routerLinkActive="{{item.routerLinkActive}}">
