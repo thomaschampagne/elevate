@@ -1,11 +1,23 @@
 <div fxLayout="row" fxLayoutAlign="start center">
 
 	<div fxFlex="3">
-		<button mat-icon-button matTooltip="(Left key press) Move Backward 2 weeks"
+		<button mat-icon-button matTooltip="Zoom In (UP key press)"
+				color="primary"
+				[disabled]="!canZoomInPeriodViewed"
+				(click)="onPeriodViewedZoomIn()">
+			<mat-icon>add</mat-icon>
+		</button>
+		<button mat-icon-button matTooltip="Move Backward (LEFT key)"
 				color="primary"
 				[disabled]="!canPeriodViewedBackward"
 				(click)="onPeriodViewedBackward()">
 			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<button mat-icon-button matTooltip="Zoom Out (DOWN key)"
+				color="primary"
+				[disabled]="!canZoomOutPeriodViewed"
+				(click)="onPeriodViewedZoomOut()">
+			<mat-icon>remove</mat-icon>
 		</button>
 	</div>
 
@@ -77,7 +89,7 @@
 	</div>
 
 	<div fxFlex="3">
-		<button mat-icon-button matTooltip="(Right key press) Move Forward 2 weeks"
+		<button mat-icon-button matTooltip="Move Forward (RIGHT key)"
 				color="primary"
 				[disabled]="!canPeriodViewedForward"
 				(click)="onPeriodViewedForward()">
