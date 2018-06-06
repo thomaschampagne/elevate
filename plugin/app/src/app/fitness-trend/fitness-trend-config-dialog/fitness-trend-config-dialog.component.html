@@ -14,7 +14,7 @@
 				</mat-panel-description>
 			</mat-expansion-panel-header>
 
-			<div class="PSSEstimation">
+			<div>
 				<mat-slide-toggle
 					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
 					[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
@@ -25,13 +25,17 @@
 					 *ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
 
 					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-					PSS Estimation is currently disabled. Make sure you set your <strong>Cycling Functional Threshold
-					Power</strong> in
-					<a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a> and you
-					enabled power meter
-					toggle (
-					<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
-					) in fitness trend before.
+					PSS Estimation is currently disabled. To enable it, make sure that:
+					<ul>
+						<li>You set your <strong>Cycling Functional Threshold Power</strong> in <a
+							[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+						</li>
+						<li>You switch <strong>ON</strong> the power meter data toggle in the fitness trend feature
+							identified by the icon
+							<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+							.
+						</li>
+					</ul>
 				</div>
 			</div>
 
@@ -44,9 +48,10 @@
 
 				<div class="hint" *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
 					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-					RSS Estimation is currently disabled. Make sure you set your <strong>Running Functional Threshold
+					RSS Estimation is currently disabled. To enable it, make sure that you set your <strong>Running
+					Functional Threshold
 					Pace</strong> in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete
-					settings</a> before.
+					settings</a> and go back here.
 				</div>
 			</div>
 

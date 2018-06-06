@@ -111,6 +111,13 @@
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
 
+		<div class="notes">
+			<span
+				matTooltip="Power Stress Score estimation. Click on config (cog icon) to enable/disable it">PSS Est. <strong>{{(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore) ? "ON": "OFF"}}</strong></span>
+			;&nbsp;&nbsp;
+			<span matTooltip="Running Stress Score estimation. Click on config (cog icon) to enable/disable it">RSS Est. <strong>{{(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore) ? "ON": "OFF"}}</strong></span>
+		</div>
+
 	</mat-card-content>
 </mat-card>
 

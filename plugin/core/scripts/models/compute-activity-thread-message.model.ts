@@ -1,9 +1,9 @@
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { AppResourcesModel } from "../models/app-resources.model";
+import { AppResourcesModel } from "./app-resources.model";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
 
-export interface IComputeActivityThreadMessage { // TODO Export as model
+export class ComputeActivityThreadMessageModel {
 	activityType: string;
 	supportsGap: boolean;
 	isTrainer: boolean;
