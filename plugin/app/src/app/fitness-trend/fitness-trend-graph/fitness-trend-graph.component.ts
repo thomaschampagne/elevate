@@ -459,7 +459,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public onKeyDown(event: KeyboardEvent): void {
 
 		event.preventDefault();
-		event.stopPropagation();
 
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.RIGHT_ARROW) {
 			this.onPeriodViewedForward();
