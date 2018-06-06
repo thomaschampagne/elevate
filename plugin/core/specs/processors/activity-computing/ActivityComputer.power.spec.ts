@@ -23,7 +23,7 @@ describe("ActivityComputer Cycling Power", () => {
 	const isActivityAuthor = true;
 	const bounds: number[] = null;
 	const returnZones = false;
-	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json"));// Thomas C user settings
+	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json")); // Thomas C user settings
 	const statsMap: ActivityStatsMapModel = {
 		distance: -1,
 		averageSpeed: -1,

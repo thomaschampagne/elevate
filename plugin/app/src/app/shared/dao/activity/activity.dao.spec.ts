@@ -113,7 +113,7 @@ describe("ActivityDao", () => {
 		});
 	});
 
-	it("should remove SyncedActivityModels", (done: Function) => {
+	it("should clear SyncedActivityModels", (done: Function) => {
 
 		// Given
 		const browserStorageLocalSpy = spyOn(activityDao, "browserStorageLocal").and.returnValue({
@@ -126,7 +126,7 @@ describe("ActivityDao", () => {
 		});
 
 		// When
-		const promise: Promise<SyncedActivityModel[]> = activityDao.remove();
+		const promise: Promise<SyncedActivityModel[]> = activityDao.clear();
 
 		// Then
 		promise.then((result: SyncedActivityModel[]) => {
@@ -142,7 +142,7 @@ describe("ActivityDao", () => {
 		});
 	});
 
-	it("should reject remove SyncedActivityModels", (done: Function) => {
+	it("should reject clear SyncedActivityModels", (done: Function) => {
 
 		// Given
 		const syncedActivityModelsToSave = _TEST_SYNCED_ACTIVITIES_;
@@ -156,7 +156,7 @@ describe("ActivityDao", () => {
 		});
 
 		// When
-		const promise: Promise<SyncedActivityModel[]> = activityDao.remove();
+		const promise: Promise<SyncedActivityModel[]> = activityDao.clear();
 
 		// Then
 		promise.then((syncedActivityModels: SyncedActivityModel[]) => {
@@ -169,6 +169,55 @@ describe("ActivityDao", () => {
 			done();
 		});
 
+	});
+
+	it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
+
+		// Given
+		let storage: any = {syncedActivities: _.clone(_TEST_SYNCED_ACTIVITIES_)};
+		spyOn(activityDao, "browserStorageLocal").and.returnValue({
+			set: (object: Object, callback: () => {}) => {
+				storage = object;
+				callback();
+			},
+			remove: (key: string, callback: () => {}) => {
+				callback();
+			},
+			get: (keys: any, callback: (item: Object) => {}) => {
+				callback(storage);
+			}
+		});
+
+		const activitiesToDelete = [
+			302537043, // Chamrousse 1750
+			296692980, // Fondo 100
+		];
+
+		const expectedExistingActivity = 353633586; // Venon PR 01
+
+		// When
+		const promise: Promise<SyncedActivityModel[]> = activityDao.removeByIds(activitiesToDelete);
+
+		// Then
+		promise.then((result: SyncedActivityModel[]) => {
+
+			expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length - activitiesToDelete.length);
+
+			let activity = _.find(result, {id: activitiesToDelete[0]});
+			expect(_.isEmpty(activity)).toBeTruthy();
+
+			activity = _.find(result, {id: activitiesToDelete[1]});
+			expect(_.isEmpty(activity)).toBeTruthy();
+
+			activity = _.find(result, {id: expectedExistingActivity});
+			expect(_.isEmpty(activity)).toBeFalsy();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
 	});
 
 });

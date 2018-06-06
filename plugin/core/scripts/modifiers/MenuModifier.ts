@@ -19,7 +19,7 @@ export class MenuModifier implements IModifier {
 		const globalNav: JQuery = $(".global-nav");
 		let html = "<li class='drop-down-menu'>";
 
-		const menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; //TODO Globalize colors;
+		const menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; // TODO Globalize colors;
 		const menuIcon: string = this.appResources.menuIconOrange;
 
 		const styleSideRight = "display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;";

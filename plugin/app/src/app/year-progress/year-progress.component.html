@@ -56,8 +56,16 @@
 						fxFlexAlign="center"
 						[(ngModel)]="includeCommuteRide"
 						(change)="onIncludeCommuteRideToggle()"
-						matTooltip="When enabled, activities flagged as commute are integrated into your progression.">
-						Commute activities
+						matTooltip="Include commute activities in your progression.">
+						<mat-icon>work</mat-icon>
+					</mat-slide-toggle>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeIndoorRide"
+						(change)="onIncludeIndoorRideToggle()"
+						matTooltip="Include indoor activities in your progression.">
+						<mat-icon>home</mat-icon>
 					</mat-slide-toggle>
 				</div>
 			</div>

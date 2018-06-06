@@ -26,7 +26,9 @@ import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 
 enum FITNESS_TRENDS_KEY_CODES {
+	DOWN_ARROW = 40,
 	RIGHT_ARROW = 39,
+	UP_ARROW = 38,
 	LEFT_ARROW = 37
 }
 
@@ -38,6 +40,7 @@ enum FITNESS_TRENDS_KEY_CODES {
 export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy {
 
 	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 14; // Days
+	public static readonly ZOOM_PERIOD_VIEWED_DAYS: number = 14; // Days
 	public static readonly TODAY_MARKER_LABEL: string = "Today";
 
 	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.685;
@@ -49,8 +52,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public graphConfig: any;
 	public viewableFitnessDataModel: ViewableFitnessDataModel;
 	public viewedDay: DayFitnessTrendModel;
+
 	public canPeriodViewedForward: boolean;
 	public canPeriodViewedBackward: boolean;
+	public canZoomInPeriodViewed: boolean;
+	public canZoomOutPeriodViewed: boolean;
 
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
@@ -261,6 +267,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Can we slide forward/backward the period viewed?
 		this.canPeriodViewedBackward = this.canBackwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
 		this.canPeriodViewedForward = this.canForwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
+		this.canZoomInPeriodViewed = this.canZoomInPeriodViewedOf(FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS);
+		this.canZoomOutPeriodViewed = this.canZoomOutPeriodViewedOf(FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS);
 
 		const lines: GraphPointModel[][] = [];
 		const indexes = this.indexesOf(this.periodViewed);
@@ -332,7 +340,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 		const daysToRewind: number = FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS;
 
-		if (!this.canBackwardPeriodViewedOf(daysToRewind)) {
+		if (!this.canBackwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS)) {
 			return;
 		}
 
@@ -346,6 +354,40 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public canBackwardPeriodViewedOf(days: number): boolean {
+		return !moment(this.periodViewed.from).subtract(days, "days").isBefore(this.dateMin);
+	}
+
+	public onPeriodViewedZoomIn(): void {
+
+		this.PERFORMANCE_MARKER = performance.now();
+
+		const daysToCrop = FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS;
+		if (!this.canZoomInPeriodViewedOf(daysToCrop)) {
+			return;
+		}
+
+		this.periodViewed.from = moment(this.periodViewed.from).add(daysToCrop, "days").toDate();
+		this.updateGraph();
+	}
+
+	public onPeriodViewedZoomOut(): void {
+
+		this.PERFORMANCE_MARKER = performance.now();
+
+		const daysToCrop = FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS;
+		if (!this.canZoomOutPeriodViewedOf(daysToCrop)) {
+			return;
+		}
+
+		this.periodViewed.from = moment(this.periodViewed.from).subtract(daysToCrop, "days").toDate();
+		this.updateGraph();
+	}
+
+	public canZoomInPeriodViewedOf(days: number): boolean {
+		return !moment(this.periodViewed.from).add(days, "days").isSameOrAfter(this.periodViewed.to);
+	}
+
+	public canZoomOutPeriodViewedOf(days: number): boolean {
 		return !moment(this.periodViewed.from).subtract(days, "days").isBefore(this.dateMin);
 	}
 
@@ -416,12 +458,23 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@HostListener("window:keydown", ["$event"])
 	public onKeyDown(event: KeyboardEvent): void {
 
+		event.preventDefault();
+		event.stopPropagation();
+
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.RIGHT_ARROW) {
 			this.onPeriodViewedForward();
 		}
 
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.LEFT_ARROW) {
 			this.onPeriodViewedBackward();
+		}
+
+		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.UP_ARROW) {
+			this.onPeriodViewedZoomIn();
+		}
+
+		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.DOWN_ARROW) {
+			this.onPeriodViewedZoomOut();
 		}
 	}
 

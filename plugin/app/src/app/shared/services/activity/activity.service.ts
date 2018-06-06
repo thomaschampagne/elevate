@@ -27,10 +27,19 @@ export class ActivityService {
 
 	/**
 	 *
-	 * @returns {Promise<SyncedActivityModel[]>} removed SyncedActivityModels
+	 * @returns {Promise<SyncedActivityModel[]>} cleared SyncedActivityModels
 	 */
-	public remove(): Promise<SyncedActivityModel[]> {
-		return this.activityDao.remove();
+	public clear(): Promise<SyncedActivityModel[]> {
+		return this.activityDao.clear();
+	}
+
+	/**
+	 *
+	 * @param {number[]} activitiesToDelete
+	 * @returns {Promise<SyncedActivityModel[]>}
+	 */
+	public removeByIds(activitiesToDelete: number[]): Promise<SyncedActivityModel[]> {
+		return this.activityDao.removeByIds(activitiesToDelete);
 	}
 }
 

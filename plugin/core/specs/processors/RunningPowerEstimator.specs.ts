@@ -235,7 +235,7 @@ describe("RunningPowerEstimator", () => {
 		const hasPowerMeter = false;
 		const bounds: number[] = null;
 		const returnZones = true;
-		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));// Thomas C user settings
+		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json")); // Thomas C user settings
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/887284960/stream.json"));
 		const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../fixtures/activities/887284960/statsMap.json"));
 

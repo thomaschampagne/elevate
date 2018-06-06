@@ -46,13 +46,15 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -80,13 +82,15 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		// When
 		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		const yearProgressModel_2018 = progression[3];
@@ -108,6 +112,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		const fakeWalkActivity = new SyncedActivityModel();
 		fakeWalkActivity.id = 99;
@@ -128,7 +133,8 @@ describe("YearProgressService", () => {
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -155,6 +161,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		const expectedFirstDay2015 = new ProgressionModel(2015,
 			1,
@@ -209,7 +216,8 @@ describe("YearProgressService", () => {
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -240,6 +248,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = false;
+		const includeIndoorRide = true;
 
 		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
@@ -269,7 +278,8 @@ describe("YearProgressService", () => {
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -286,7 +296,7 @@ describe("YearProgressService", () => {
 		done();
 
 	});
-
+	
 	it("should compute progression with imperial system unit", (done: Function) => {
 
 		// Given
@@ -294,6 +304,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = false;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
@@ -324,7 +335,8 @@ describe("YearProgressService", () => {
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -349,6 +361,7 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = [2015, 2017]; // Skip 2016
 		const isMetric = true;
 		const includeCommuteRide = false;
+		const includeIndoorRide = false;
 
 		const expectedLastDay2015 = new ProgressionModel(2015,
 			365,
@@ -371,7 +384,8 @@ describe("YearProgressService", () => {
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Then
 		expect(progression).not.toBeNull();
@@ -394,12 +408,14 @@ describe("YearProgressService", () => {
 		const syncedActivityModels = [];
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 
 		const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 
 		// When, Then
@@ -416,11 +432,13 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 		const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// When, Then
 		expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_TYPES_FILTER);
@@ -435,12 +453,14 @@ describe("YearProgressService", () => {
 		const typesFilter: string[] = ["FakeType"];
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 		const yearsFilter: number[] = []; // All
 		const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// When, Then
 		expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
@@ -498,11 +518,13 @@ describe("YearProgressService", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 		const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		const selectedYears: number[] = [2018, 2017, 2016, 2015];
 

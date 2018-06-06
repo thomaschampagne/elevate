@@ -1,6 +1,6 @@
 {
 	"name": "stravistix",
-	"version": "6.2.1",
+	"version": "6.3.0",
 	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
@@ -21,8 +21,8 @@
 		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",
 		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js",
 		"test:core-headless": "npm run test:core -- --browsers ChromeHeadless --single-run",
-		"tslint-fix:core": "cd ./plugin/core/ && node ./node_modules/tslint/bin/tslint -c ./tslint.json ./**/*.ts --fix",
-		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint --fix",
+		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/shared/**/*.ts --fix",
+		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
 		"start": "npm run watch",
 		"watch": "npm run clean && npm-run-all res-copy:* && npm-run-all --print-label --parallel watch:*",
 		"watch:app": "npm run build-project:app -- --watch",

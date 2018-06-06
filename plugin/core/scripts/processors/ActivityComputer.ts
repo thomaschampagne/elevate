@@ -779,7 +779,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
@@ -1117,7 +1117,7 @@ export class ActivityComputer {
 		const sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
 			return grade;
 		});
-		const minMaxGradeSamplePercentage = 0.25; //%
+		const minMaxGradeSamplePercentage = 0.25; // %
 		const gradeSamplesReadCount = Math.floor(sortedGradeArray.length * minMaxGradeSamplePercentage / 100);
 		avgMinGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, 0, gradeSamplesReadCount)) : _.first(sortedGradeArray);
 		avgMaxGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount)) : _.last(sortedGradeArray);
