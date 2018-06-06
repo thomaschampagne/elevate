@@ -1,8 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { Constant } from "../../../shared/Constant";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class ActivitiesSummaryModifier implements IModifier {
+export class ActivitiesSummaryModifier extends AbstractModifier {
 
 	protected averageSpeedOrPace(pace: number, distance: number, time: number) {
 		time /= 60;

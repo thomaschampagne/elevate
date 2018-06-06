@@ -5,14 +5,16 @@ import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/CourseMar
 import { VacuumProcessor } from "../processors/VacuumProcessor";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class VirtualPartnerModifier implements IModifier {
+export class VirtualPartnerModifier extends AbstractModifier {
 
 	protected vacuumProcessor: VacuumProcessor;
 	protected activityId: number;
 	protected courseMaker: CourseMaker;
 
 	constructor(activityId: number, vacuumProcessor: VacuumProcessor) {
+		super();
 		this.activityId = activityId;
 		this.vacuumProcessor = vacuumProcessor;
 		this.courseMaker = new CourseMaker();

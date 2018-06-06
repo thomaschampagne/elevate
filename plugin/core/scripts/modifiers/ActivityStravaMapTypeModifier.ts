@@ -1,8 +1,11 @@
-export class ActivityStravaMapTypeModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
+
+export class ActivityStravaMapTypeModifier extends AbstractModifier {
 
 	protected mapType: string;
 
 	constructor(mapType: string) {
+		super();
 		this.mapType = mapType;
 	}
 

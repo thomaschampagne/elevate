@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class HideFeedModifier implements IModifier {
+export class HideFeedModifier extends AbstractModifier {
 
 	private static VIRTUAL_RIDE = "virtualride";
 	private static RIDE = "ride";
@@ -10,6 +11,7 @@ export class HideFeedModifier implements IModifier {
 	protected userSettings: UserSettingsModel;
 
 	constructor(userSettings: UserSettingsModel) {
+		super();
 		this.userSettings = userSettings;
 	}
 

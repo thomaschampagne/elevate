@@ -1,3 +1,3 @@
-interface IModifier {
-	modify(): void;
+export abstract class AbstractModifier {
+	abstract modify(): void;
 }
