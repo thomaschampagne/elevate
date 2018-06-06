@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { IStorageUsage, StorageManager } from "../StorageManager";
@@ -8,6 +7,7 @@ import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
+import _ = require("lodash");
 
 export class ActivitiesSyncModifier implements IModifier {
 
@@ -15,18 +15,20 @@ export class ActivitiesSyncModifier implements IModifier {
 	protected extensionId: string;
 	protected sourceTabId: number;
 	protected forceSync: boolean;
+	protected fastSync: boolean;
 	protected userSettings: UserSettingsModel;
 	protected appResources: AppResourcesModel;
 
 	public closeWindowIntervalId = -1;
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, forceSync: boolean, sourceTabId?: number) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
 		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
 		this.userSettings = userSettings;
 		this.appResources = appResources;
 		this.extensionId = appResources.extensionId;
 		this.sourceTabId = sourceTabId;
 		this.forceSync = forceSync;
+		this.fastSync = fastSync;
 	}
 
 	public modify(): void {
@@ -96,34 +98,41 @@ export class ActivitiesSyncModifier implements IModifier {
 	protected sync(): void {
 
 		// Start sync..
-		this.activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		this.activitiesSynchronizer.sync(this.fastSync).then((syncResult: SyncResultModel) => {
 
 			console.log("Sync finished", syncResult);
-
-			// Reloading source tab if exist
-			if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
-				console.log("Reloading source tab with id " + this.sourceTabId);
-				Helper.reloadBrowserTab(this.extensionId, this.sourceTabId); // Sending message to reload source tab which asked for a sync
-			} else {
-				console.log("no source tab id given: no reload of source.");
-			}
 
 			// Global progress
 			$("#syncProgressBar").val(100);
 			$("#totalProgressText").html("100%");
 
-			// Register instance on the bridge
-			window.__stravistix_bridge__.activitiesSyncModifierInstance = this;
-
-			let timer: number = 5 * 1000; // 5s for debug...
-			this.closeWindowIntervalId = window.setInterval(() => {
-				$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited:" + syncResult.activitiesChangesModel.edited.length + ", Deleted:" + syncResult.activitiesChangesModel.deleted.length +
-					". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
-				if (timer <= 0) {
+			if (this.fastSync) {
+				ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
+				setTimeout(() => {
 					window.close();
+				}, 200);
+			} else {
+				// Reloading source tab if exist
+				if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
+					console.log("Reloading source tab with id " + this.sourceTabId);
+					Helper.reloadBrowserTab(this.extensionId, this.sourceTabId); // Sending message to reload source tab which asked for a sync
+				} else {
+					console.log("no source tab id given: no reload of source.");
 				}
-				timer = timer - 1000; // 1s countdown
-			}, 1000);
+
+				// Register instance on the bridge
+				window.__stravistix_bridge__.activitiesSyncModifierInstance = this;
+
+				let timer: number = 5 * 1000; // 5s for debug...
+				this.closeWindowIntervalId = window.setInterval(() => {
+					$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited:" + syncResult.activitiesChangesModel.edited.length + ", Deleted:" + syncResult.activitiesChangesModel.deleted.length +
+						". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
+					if (timer <= 0) {
+						window.close();
+					}
+					timer = timer - 1000; // 1s countdown
+				});
+			}
 
 		}, (err: any) => {
 

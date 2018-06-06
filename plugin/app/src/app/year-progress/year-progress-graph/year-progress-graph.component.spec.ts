@@ -50,11 +50,13 @@ describe("YearProgressGraphComponent", () => {
 		const yearsFilter: number[] = []; // All
 		const isMetric = true;
 		const includeCommuteRide = true;
+		const includeIndoorRide = true;
 		component.yearProgressModels = yearProgressService.progression(syncedActivityModels,
 			typesFilter,
 			yearsFilter,
 			isMetric,
-			includeCommuteRide);
+			includeCommuteRide,
+			includeIndoorRide);
 
 		// Inject selected years (here all from syncedActivityModels)
 		component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
