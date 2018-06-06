@@ -69,10 +69,6 @@ export class YearProgressComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.activityService.removeByIds([1618420994, 1610385844]).then(() => {
-			console.log("DEL")
-		});
-
 		this.syncService.getSyncState().then((syncState: SyncState) => {
 
 			if (syncState !== SyncState.SYNCED) {
