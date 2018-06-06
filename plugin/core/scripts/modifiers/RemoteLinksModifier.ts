@@ -3,14 +3,16 @@
  */
 import * as _ from "lodash";
 import { AppResourcesModel } from "../models/app-resources.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class RemoteLinksModifier implements IModifier {
+export class RemoteLinksModifier extends AbstractModifier {
 
 	protected appResources: AppResourcesModel;
 	protected authorOfActivity: boolean;
 	protected activityId: number;
 
 	constructor(appResources: AppResourcesModel, authorOfActivity: boolean, activityId: number) {
+		super();
 		this.appResources = appResources;
 		this.authorOfActivity = authorOfActivity;
 		this.activityId = activityId;

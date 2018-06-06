@@ -5,8 +5,9 @@ import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../Helper";
 import { SpeedUnitDataModel } from "../../../shared/models/activity-data/speed-unit-data.model";
 import { LatLonSpherical } from "geodesy";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class WindyTyModifier implements IModifier {
+export class WindyTyModifier extends AbstractModifier {
 	protected activityId: number;
 
 	protected appResources: AppResourcesModel;
@@ -15,6 +16,7 @@ export class WindyTyModifier implements IModifier {
 	protected speedUnitData: SpeedUnitDataModel;
 
 	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+		super();
 		this.activityId = activityId;
 		this.appResources = appResources;
 		this.userSettings = userSettings;

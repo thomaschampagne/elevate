@@ -1,4 +1,6 @@
-export class DisplayFlyByFeedModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
+
+export class DisplayFlyByFeedModifier extends AbstractModifier {
 
 	public modify(): void {
 		// Add flyby button in dashboard

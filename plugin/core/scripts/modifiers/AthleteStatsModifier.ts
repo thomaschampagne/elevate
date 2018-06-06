@@ -4,8 +4,9 @@ import { Helper } from "../Helper";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Constant } from "../../../shared/Constant";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class AthleteStatsModifier implements IModifier {
+export class AthleteStatsModifier extends AbstractModifier {
 
 	protected appResources: AppResourcesModel;
 	protected cacheKey_: string;
@@ -17,7 +18,7 @@ export class AthleteStatsModifier implements IModifier {
 	protected progressThisYear: JQuery;
 
 	constructor(appResources: AppResourcesModel, yearTargets: any) {
-
+		super();
 		this.appResources = appResources;
 		this.cacheKey_ = "activitiesHistoryData";
 		this.distanceUnit = "km";

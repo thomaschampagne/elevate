@@ -3,6 +3,7 @@ import $ from "../../modules/jquery.appear";
 import { Helper } from "../Helper";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
+import { AbstractModifier } from "./AbstractModifier";
 
 export interface EffortInfo {
 	// values obtained from the HTTP request
@@ -32,7 +33,7 @@ export interface LeaderBoardData {
 	top_results: EffortInfo[];
 }
 
-export class ActivitySegmentTimeComparisonModifier implements IModifier {
+export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 
 	protected showDifferenceToKOM: boolean;
 	protected showDifferenceToPR: boolean;
@@ -47,6 +48,7 @@ export class ActivitySegmentTimeComparisonModifier implements IModifier {
 	protected deltaKomLabel: string;
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel, activityType: string, isMyOwn: boolean) {
+		super();
 		this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
 		this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;
 		this.showDifferenceToCurrentYearPR = isMyOwn && userSettings.displaySegmentTimeComparisonToCurrentYearPR;

@@ -1,13 +1,15 @@
 import * as _ from "lodash";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ISegmentInfo } from "../processors/SegmentProcessor";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class NearbySegmentsModifier implements IModifier {
+export class NearbySegmentsModifier extends AbstractModifier {
 
 	protected appResources: AppResourcesModel;
 	protected segments: ISegmentInfo[];
 
 	constructor(jsonSegments: ISegmentInfo[], appResources: AppResourcesModel) {
+		super();
 		this.segments = jsonSegments;
 		this.appResources = appResources;
 	}

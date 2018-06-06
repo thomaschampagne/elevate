@@ -7,9 +7,10 @@ import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
+import { AbstractModifier } from "./AbstractModifier";
 import _ = require("lodash");
 
-export class ActivitiesSyncModifier implements IModifier {
+export class ActivitiesSyncModifier extends AbstractModifier {
 
 	protected activitiesSynchronizer: ActivitiesSynchronizer;
 	protected extensionId: string;
@@ -22,6 +23,7 @@ export class ActivitiesSyncModifier implements IModifier {
 	public closeWindowIntervalId = -1;
 
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
+		super();
 		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
 		this.userSettings = userSettings;
 		this.appResources = appResources;
