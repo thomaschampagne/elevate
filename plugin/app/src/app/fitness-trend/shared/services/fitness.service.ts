@@ -125,10 +125,24 @@ export class FitnessService {
 					}
 
 					if (hasPowerData) {
+
 						const movingTime = activity.moving_time_raw;
-						const weightedPower = activity.extendedStats.powerData.weightedPower; // TODO activity.extendedStats.powerData.bestEightyPercent?! if estimated?!
-						fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
-						hasMinimumFitnessRequiredData = true;
+
+						let weightedPower = null;
+
+						if (activity.extendedStats.powerData.hasPowerMeter) {
+							weightedPower = activity.extendedStats.powerData.weightedPower;
+						} else {
+
+							if (activity.extendedStats.powerData.bestEightyPercent) {
+								weightedPower = activity.extendedStats.powerData.bestEightyPercent;
+							}
+						}
+
+						if (weightedPower) {
+							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
+							hasMinimumFitnessRequiredData = true;
+						}
 					}
 
 					if (hasRunningData) {
@@ -225,7 +239,7 @@ export class FitnessService {
 	 * @returns {number}
 	 */
 	public computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
-		const intensityFactor = (weightedPower / cyclingFtp); // TODO Move changes to ActivityComputer
+		const intensityFactor = (weightedPower / cyclingFtp);
 		return (movingTime * weightedPower * intensityFactor) / (cyclingFtp * 3600) * 100;
 	}
 

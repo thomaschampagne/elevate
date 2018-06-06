@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
-import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
+import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./VacuumProcessor";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
@@ -105,7 +105,7 @@ export class ActivityProcessor {
 
 		// Send user and activity data to the thread
 		// He will compute them in the background
-		const threadMessage: IComputeActivityThreadMessage = {
+		const threadMessage: ComputeActivityThreadMessageModel = {
 			activityType: this.activityType,
 			supportsGap: this.supportsGap,
 			isTrainer: this.isTrainer,

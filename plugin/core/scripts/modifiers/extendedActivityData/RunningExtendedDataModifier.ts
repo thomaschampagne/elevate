@@ -87,7 +87,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		}
 
 		let runningStressScore = "-";
-		if (this.userSettings.displayAdvancedSpeedData && this.supportsGap) {
+		if (this.userSettings.displayAdvancedSpeedData && this.isAuthorOfViewedActivity && this.supportsGap) {
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";

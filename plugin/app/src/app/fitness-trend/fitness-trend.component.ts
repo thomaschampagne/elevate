@@ -20,12 +20,13 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 
 // DONE 341: Add RSS legend
 // TODO 341: Check RSS vs HRSS consistency (improve GAP for this !)
-// TODO 341: Hide RSS data-field if not author of act
-// TODO 341: Test cases when user has no HRM / power meter: What is displayed
-// TODO 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
-// TODO 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
+// DONE 341: Hide RSS data-field if not author of act
+// TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
+// DONE 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
+// DONE 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
 // TODO 341: Use best 80% power as weigthed power when no power meter? should be yes
 // TODO 341: Update explains cards matching no data !
+// TODO 341: Clear and resync back?
 // DONE 341: Add RSS column in fitness data table
 
 @Component({
