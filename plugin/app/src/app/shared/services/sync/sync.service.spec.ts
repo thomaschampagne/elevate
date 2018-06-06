@@ -478,11 +478,12 @@ describe("SyncService", () => {
 	it("should open sync window", (done: Function) => {
 
 		// Given
+		const fastSync = false;
 		const forceSync = false;
 		const expectedUrl = "https://www.strava.com/dashboard?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tabId;
 
 		// When
-		syncService.sync(forceSync);
+		syncService.sync(fastSync, forceSync);
 
 		// Then
 		expect(syncService.getCurrentTab).toHaveBeenCalled();
