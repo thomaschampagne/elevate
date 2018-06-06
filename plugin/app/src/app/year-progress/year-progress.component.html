@@ -67,6 +67,14 @@
 						matTooltip="Include indoor activities in your progression.">
 						<mat-icon>home</mat-icon>
 					</mat-slide-toggle>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeIndoorRide"
+						(change)="onIncludeIndoorRideToggle()"
+						matTooltip="When enabled, activities flagged as indoor are integrated into your progression.">
+						Indoor activities
+					</mat-slide-toggle>
 				</div>
 			</div>
 
