@@ -137,6 +137,7 @@ $config: mat-typography-config();
 	.viewed-day-tooltip {
 		text-decoration: none;
 		position: relative;
+		z-index: 999;
 	}
 
 	.viewed-day-tooltip div {

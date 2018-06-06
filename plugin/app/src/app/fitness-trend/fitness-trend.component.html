@@ -111,12 +111,29 @@
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
 
-		<div class="notes">
-			<span
-				matTooltip="Power Stress Score estimation. Click on config (cog icon) to enable/disable it">PSS Est. <strong>{{(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore) ? "ON": "OFF"}}</strong></span>
-			;&nbsp;&nbsp;
-			<span matTooltip="Running Stress Score estimation. Click on config (cog icon) to enable/disable it">RSS Est. <strong>{{(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore) ? "ON": "OFF"}}</strong></span>
-		</div>
+		<mat-chip-list>
+			<mat-chip
+				*ngIf="(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
+				color="accent" selected="true" class="mat-caption"
+				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (cog icon).">
+				PSS Est. ON
+			</mat-chip>
+			<mat-chip
+				*ngIf="!(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
+				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (cog icon).">
+				PSS Est. OFF
+			</mat-chip>
+
+			<mat-chip *ngIf="(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
+					  color="accent" selected="true"
+					  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (cog icon).">
+				RSS Est. ON
+			</mat-chip>
+			<mat-chip *ngIf="!(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
+					  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (cog icon).">
+				RSS Est. OFF
+			</mat-chip>
+		</mat-chip-list>
 
 	</mat-card-content>
 </mat-card>

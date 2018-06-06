@@ -3,6 +3,7 @@ import {
 	MatButtonModule,
 	MatCardModule,
 	MatCheckboxModule,
+	MatChipsModule,
 	MatDatepickerModule,
 	MatDialogModule,
 	MatExpansionModule,
@@ -55,7 +56,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatTabsModule,
 		MatProgressBarModule,
 		MatRadioModule,
-		MatExpansionModule
+		MatExpansionModule,
+		MatChipsModule
 	],
 	exports: [
 		MatButtonModule,
@@ -83,7 +85,8 @@ import { CdkTableModule } from "@angular/cdk/table";
 		MatTabsModule,
 		MatProgressBarModule,
 		MatRadioModule,
-		MatExpansionModule
+		MatExpansionModule,
+		MatChipsModule
 	],
 	declarations: []
 })
