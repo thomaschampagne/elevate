@@ -139,7 +139,7 @@ export class FitnessService {
 							}
 						}
 
-						if (weightedPower) {
+						if (_.isNumber(weightedPower)) {
 							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
 							hasMinimumFitnessRequiredData = true;
 						}

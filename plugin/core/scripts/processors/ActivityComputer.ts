@@ -680,7 +680,6 @@ export class ActivityComputer {
 		}, 0) / sum4thPower.length));
 
 		const variabilityIndex: number = weightedPower / avgWatts;
-		const punchFactor: number = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
 		const weightedWattsPerKg: number = weightedPower / athleteWeight;
 		const avgWattsPerKg: number = avgWatts / athleteWeight;
 
@@ -713,8 +712,9 @@ export class ActivityComputer {
 		}
 
 		// If athlete don't have power meter we use his best 80% split power as weightedPower
-		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercent);
-		const powerStressScore = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * pssWeightedPowerUsed * punchFactor) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
+		const pssWeightedPowerUsed: number = ((hasPowerMeter) ? weightedPower : bestEightyPercent);
+		const intensity: number = (_.isNumber(userFTP) && userFTP > 0) ? (pssWeightedPowerUsed / userFTP) : null;
+		const powerStressScore: number = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * pssWeightedPowerUsed * intensity) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
 		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
 
 		const powerData: PowerDataModel = {
@@ -725,7 +725,7 @@ export class ActivityComputer {
 			best20min: best20min,
 			bestEightyPercent: bestEightyPercent,
 			variabilityIndex: variabilityIndex,
-			punchFactor: punchFactor,
+			punchFactor: intensity,
 			powerStressScore: powerStressScore,
 			powerStressScorePerHour: powerStressScorePerHour,
 			weightedWattsPerKg: weightedWattsPerKg,
