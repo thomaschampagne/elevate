@@ -12,6 +12,11 @@ ul, li {
 	margin-bottom: 10px;
 }
 
+.notes {
+	padding-top: 15px;
+	font-size: mat-font-size($config, caption);
+}
+
 .estimationEnabled {
 	color: #21bb4a;
 }
@@ -20,6 +25,4 @@ ul, li {
 	color: #ff5b5b;
 }
 
-mat-chip {
-	font-size: mat-font-size($config, caption);
-}
+

@@ -14,47 +14,49 @@
 				</mat-panel-description>
 			</mat-expansion-panel-header>
 
-			<div>
-				<mat-slide-toggle
-					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
-					[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
-					Enable Cycling Power Stress Score (PSS) Estimation.
-				</mat-slide-toggle>
 
-				<div class="hint"
-					 *ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+			<div fxLayout="column" fxLayoutAlign="start start">
+				<div fxFlex>
+					<mat-slide-toggle
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
+						[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+						Enable Cycling Power Stress Score (PSS) Estimation.
+					</mat-slide-toggle>
 
-					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-					PSS Estimation is currently disabled. To enable it, make sure that:
-					<ul>
-						<li>You set your <strong>Cycling Functional Threshold Power</strong> in <a
-							[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
-						</li>
-						<li>You switch <strong>ON</strong> the power meter data toggle in the fitness trend feature
-							identified by the icon
-							<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
-							.
-						</li>
-					</ul>
+					<div class="hint"
+						 *ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+
+						<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+						PSS Estimation is currently disabled. To enable it, make sure that:
+						<ul>
+							<li>You set your <strong>Cycling Functional Threshold Power</strong> in <a
+								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+							</li>
+							<li>You switch <strong>ON</strong> the power meter data toggle in the fitness trend feature
+								identified by the icon
+								<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+								.
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div fxFlex="10px"></div>
+				<div fxFlex>
+					<mat-slide-toggle
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
+						[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp">
+						Enable Running Stress Score (RSS) Estimation.
+					</mat-slide-toggle>
+
+					<div class="hint" *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
+						<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
+						RSS Estimation is currently disabled. To enable it, make sure that you set your <strong>Running
+						Functional Threshold
+						Pace</strong> in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete
+						settings</a> and go back here.
+					</div>
 				</div>
 			</div>
-
-			<div>
-				<mat-slide-toggle
-					[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
-					[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp">
-					Enable Running Stress Score (RSS) Estimation.
-				</mat-slide-toggle>
-
-				<div class="hint" *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
-					<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-					RSS Estimation is currently disabled. To enable it, make sure that you set your <strong>Running
-					Functional Threshold
-					Pace</strong> in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete
-					settings</a> and go back here.
-				</div>
-			</div>
-
 		</mat-expansion-panel>
 
 		<mat-expansion-panel>
