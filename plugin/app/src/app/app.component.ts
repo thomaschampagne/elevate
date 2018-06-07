@@ -218,8 +218,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	public onSync(forceSync: boolean): void {
-		this.syncService.sync(forceSync);
+	public onSync(fastSync: boolean, forceSync: boolean): void {
+		this.syncService.sync(fastSync, forceSync);
 	}
 
 	public onClearSyncedData(): void {

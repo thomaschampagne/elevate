@@ -198,11 +198,12 @@ export class SyncService {
 
 	/**
 	 *
+	 * @param {boolean} fastSync
 	 * @param {boolean} forceSync
 	 */
-	public sync(forceSync: boolean): void {
+	public sync(fastSync: boolean, forceSync: boolean): void {
 		this.getCurrentTab((tab: chrome.tabs.Tab) => {
-			const params = "?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
+			const params = "?stravistixSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
 			const features = "width=" + SyncService.SYNC_WINDOW_WIDTH + ", height=" + SyncService.SYNC_WINDOW_HEIGHT + ", location=0";
 			window.open(SyncService.SYNC_URL_BASE + params, "_blank", features);
 		});

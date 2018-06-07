@@ -42,7 +42,7 @@ export class YearProgressComponent implements OnInit {
 	public static readonly LS_SELECTED_PROGRESS_TYPE_KEY: string = "yearProgress_selectedProgressType";
 	public static readonly LS_INCLUDE_COMMUTE_RIDES_KEY: string = "yearProgress_includeCommuteRide";
 	public static readonly LS_INCLUDE_INDOOR_RIDES_KEY: string = "yearProgress_includeIndoorRide";
-	
+
 	public progressTypes: YearProgressTypeModel[];
 	public availableActivityTypes: string[] = [];
 	public selectedActivityTypes: string[] = [];
@@ -68,6 +68,10 @@ export class YearProgressComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
+
+		this.activityService.removeByIds([1618420994, 1610385844]).then(() => {
+			console.log("DEL")
+		});
 
 		this.syncService.getSyncState().then((syncState: SyncState) => {
 
@@ -128,10 +132,10 @@ export class YearProgressComponent implements OnInit {
 
 		// Keep commute rides in stats by default
 		this.includeCommuteRide = (localStorage.getItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY) !== "false");
-		
+
 		// Keep indoor rides in stats by default
 		this.includeIndoorRide = (localStorage.getItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY) !== "false");
-		
+
 		// Find all unique sport types
 		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
 		this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
@@ -210,12 +214,12 @@ export class YearProgressComponent implements OnInit {
 		this.progression();
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
 	}
-	
+
 	public onIncludeIndoorRideToggle(): void {
 		this.progression();
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(this.includeIndoorRide));
 	}
-	
+
 
 	public onShowOverview(): void {
 

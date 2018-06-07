@@ -11,11 +11,23 @@ import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity
 import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
+import { MessagesModel } from "../../../shared/models/messages.model";
 
 export class ActivitiesSynchronizer { // TODO Rename
 
 	public static lastSyncDateTime = "lastSyncDateTime";
 	public static syncedActivities = "syncedActivities";
+
+	public static notifyBackgroundSyncDone(extensionId: string, syncResult: SyncResultModel): void {
+		chrome.runtime.sendMessage(extensionId, {
+			method: MessagesModel.ON_EXTERNAL_SYNC_DONE,
+			params: {
+				syncResult: syncResult,
+			},
+		}, (response: any) => {
+			console.log(response);
+		});
+	}
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;

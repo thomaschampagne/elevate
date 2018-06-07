@@ -56,10 +56,16 @@
 				</button>
 				<mat-menu #syncMenu="matMenu">
 					<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
+					<button mat-menu-item (click)="onSync(true, false)"
+							*ngIf="(syncState === SyncState.SYNCED)">
+						<mat-icon>update</mat-icon>
+						Sync recent activities
+					</button>
 					<button mat-menu-item
-							(click)="onSync(syncState === SyncState.NOT_SYNCED)">
+							(click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
 						<mat-icon>sync</mat-icon>
-						Manual sync
+						<span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
+						<span *ngIf="(syncState !== SyncState.NOT_SYNCED)">Sync all activities</span>
 					</button>
 					<button mat-menu-item (click)="onClearSyncedData()"
 							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
