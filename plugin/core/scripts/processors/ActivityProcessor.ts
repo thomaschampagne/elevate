@@ -112,11 +112,11 @@ export class ActivityProcessor {
 			appResources: this.appResources,
 			userSettings: this.userSettings,
 			isActivityAuthor: this.isActivityAuthor,
-			athleteWeight,
-			hasPowerMeter,
-			activityStatsMap,
-			activityStream,
-			bounds,
+			athleteWeight: athleteWeight,
+			hasPowerMeter: hasPowerMeter,
+			activityStatsMap: activityStatsMap,
+			activityStream: activityStream,
+			bounds: bounds,
 			returnZones: true
 		};
 

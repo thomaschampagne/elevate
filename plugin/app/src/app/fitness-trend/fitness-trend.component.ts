@@ -24,7 +24,7 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 // TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
 // DONE 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
 // DONE 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
-// TODO 341: Use best 80% power as weigthed power when no power meter? should be yes
+// DONE 341: Use best 80% power as weigthed power when no power meter? should be yes
 // TODO 341: Update explains cards matching no data !
 // TODO 341: Clear and resync back?
 // TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
