@@ -27,6 +27,7 @@ describe("ActivityComputer Cycling Power", () => {
 	const statsMap: ActivityStatsMapModel = {
 		distance: -1,
 		averageSpeed: -1,
+		movingTime: -1,
 		avgPower: -1,
 		elevation: -1
 	};

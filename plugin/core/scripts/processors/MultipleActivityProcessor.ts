@@ -113,6 +113,7 @@ export class MultipleActivityProcessor {
 		const statsMap: ActivityStatsMapModel = {
 			distance: parseInt(activityWithStream.distance),
 			elevation: parseInt(activityWithStream.elevation_gain),
+			movingTime: activityWithStream.moving_time_raw,
 			avgPower: null, // Toughness Score will not be computed
 			averageSpeed: null, // Toughness Score will not be computed
 		};
@@ -139,7 +140,7 @@ export class MultipleActivityProcessor {
 			isActivityAuthor: true, // While syncing and processing activities, stravistix user is always author of the activity
 			athleteWeight: this.userSettings.userWeight,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
-			activityStatsMap,
+			activityStatsMap: activityStatsMap,
 			activityStream: activityWithStream.stream,
 			bounds: null,
 			returnZones: false

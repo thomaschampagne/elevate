@@ -479,7 +479,7 @@ export class ActivityComputer {
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
 
 		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.userSettings.userRunningFTP)
-			? this.computeRunningStressScore(genuineAvgSpeedSecondsSum, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
+			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
