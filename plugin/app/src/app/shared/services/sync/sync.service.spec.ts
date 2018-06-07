@@ -480,7 +480,7 @@ describe("SyncService", () => {
 		// Given
 		const fastSync = false;
 		const forceSync = false;
-		const expectedUrl = "https://www.strava.com/dashboard?stravistixSync=true&forceSync=" + forceSync + "&sourceTabId=" + tabId;
+		const expectedUrl = "https://www.strava.com/dashboard?stravistixSync=true&fastSync=" + forceSync + "&forceSync=" + forceSync + "&sourceTabId=" + tabId;
 
 		// When
 		syncService.sync(fastSync, forceSync);
