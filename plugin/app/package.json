@@ -1,6 +1,5 @@
 {
   "name": "stravistix-app",
-  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
