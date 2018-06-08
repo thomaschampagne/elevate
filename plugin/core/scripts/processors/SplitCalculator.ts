@@ -68,7 +68,7 @@ export class SplitCalculator {
 
 		if (scaleRange > 1) {
 
-			let index: number = 0;
+			let index = 0;
 			currentMaxSum = _.sum(this.data.slice(index, scaleRange));
 			maxSumFound = currentMaxSum;
 

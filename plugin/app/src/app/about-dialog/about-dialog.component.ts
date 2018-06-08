@@ -53,7 +53,7 @@ export class AboutDialogComponent implements OnInit {
 		return this.httpClient.get<any>(AboutDialogComponent.MANIFEST_PRODUCTION).toPromise().then((response: any) => {
 			return Promise.resolve(response.version_name);
 		}, err => {
-			return Promise.reject(err)
+			return Promise.reject(err);
 		});
 	}
 }

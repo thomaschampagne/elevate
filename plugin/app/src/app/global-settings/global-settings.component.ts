@@ -12,7 +12,7 @@ import { PlatformLocation } from "@angular/common";
 import { SectionModel } from "./models/section.model";
 import { OptionModel } from "./models/option.model";
 import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data.model";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 
 @Component({
 	selector: "app-global-settings",

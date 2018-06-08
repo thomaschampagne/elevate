@@ -28,6 +28,7 @@ describe("FitnessTrendGraphComponent", () => {
 	let component: FitnessTrendGraphComponent;
 	let fixture: ComponentFixture<FitnessTrendGraphComponent>;
 	let todayMoment: Moment;
+	let updateGraphSpy: jasmine.Spy;
 
 	const todayDate = "2015-12-01 12:00";
 	const momentDatePattern = "YYYY-MM-DD hh:mm";
@@ -111,7 +112,7 @@ describe("FitnessTrendGraphComponent", () => {
 		};
 
 		spyOn(component, "getTodayViewedDay").and.returnValue(component.getDayFitnessTrendFromDate(todayMoment.toDate()));
-		spyOn(component, "updateGraph").and.stub(); // Do not try to draw the graph
+		updateGraphSpy = spyOn(component, "updateGraph").and.stub(); // Do not try to draw the graph
 
 		fixture.detectChanges();
 
@@ -146,6 +147,7 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(2);
 		done();
 	});
 
@@ -171,6 +173,7 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(1);
 		done();
 
 	});
@@ -197,6 +200,7 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.toDateString()).toBe(expectedPeriodFrom.toDateString());
 		expect(component.periodViewed.to.toDateString()).toBe(expectedPeriodTo.toDateString());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(2);
 		done();
 	});
 
@@ -222,6 +226,111 @@ describe("FitnessTrendGraphComponent", () => {
 		// Then
 		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
 		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(1);
+		done();
+	});
+
+	it("should allow zoom in period viewed", (done: Function) => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-06-01";
+		const periodTo = "2015-12-31";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment("2015-06-15", "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedZoomIn();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(2);
+		done();
+	});
+
+	it("should NOT allow zoom in period viewed", (done: Function) => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-06-20";
+		const periodTo = "2015-06-30";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedZoomIn();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(1);
+		done();
+	});
+
+	it("should allow zoom out period viewed", (done: Function) => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-05-15";
+		const periodTo = "2015-12-31";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment("2015-05-01", "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedZoomOut();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(2);
+		done();
+	});
+
+	it("should NOT allow zoom out period viewed", (done: Function) => {
+
+		// Given
+		component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
+		component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
+
+		const periodFrom = "2015-01-10";
+		const periodTo = "2015-10-31";
+
+		component.periodViewed = {
+			from: moment(periodFrom, "YYYY-MM-DD").toDate(),
+			to: moment(periodTo, "YYYY-MM-DD").toDate()
+		};
+		const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
+		const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
+
+		// When
+		component.onPeriodViewedZoomOut();
+
+		// Then
+		expect(component.periodViewed.from.getTime()).toBe(expectedPeriodFrom.getTime());
+		expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
+		expect(updateGraphSpy).toHaveBeenCalledTimes(1);
 		done();
 	});
 
