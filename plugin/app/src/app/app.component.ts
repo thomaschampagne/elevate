@@ -7,7 +7,7 @@ import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/ma
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { WindowService } from "./shared/services/window/window.service";
 import { SyncService } from "./shared/services/sync/sync.service";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -218,8 +218,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	public onSync(forceSync: boolean): void {
-		this.syncService.sync(forceSync);
+	public onSync(fastSync: boolean, forceSync: boolean): void {
+		this.syncService.sync(fastSync, forceSync);
 	}
 
 	public onClearSyncedData(): void {

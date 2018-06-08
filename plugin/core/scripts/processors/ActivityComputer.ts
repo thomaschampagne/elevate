@@ -20,6 +20,7 @@ import { UpFlatDownSumTotalModel } from "../../../shared/models/activity-data/up
 import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-down.model";
 import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
 import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
+import { LowPassFilter } from "../utils/LowPassFilter";
 
 export class ActivityComputer {
 
@@ -34,6 +35,8 @@ export class ActivityComputer {
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly GRADE_ADJUSTED_PACE_WINDOWS = {time: 12, distance: 24};
+	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
+	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -572,6 +575,12 @@ export class ActivityComputer {
 			return null;
 		}
 
+		if (!hasPowerMeter) {
+			const lowPassFilter = new LowPassFilter(ActivityComputer.POWER_IMPULSE_SMOOTHING_FACTOR);
+			powerArray = lowPassFilter.adaptiveSmoothArray(powerArray, timeArray,
+				ActivityComputer.POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING);
+		}
+
 		let powerZonesAlongActivityType: ZoneModel[];
 		if (this.activityType === "Ride") {
 			powerZonesAlongActivityType = this.userSettings.zones.power;
@@ -644,34 +653,47 @@ export class ActivityComputer {
 		// Finalize compute of Power
 		const avgWatts: number = _.mean(powerArray);
 
-		const weightedPower: number = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, function (a, b) { // The reduce function and implementation return the sum of array
-			return (a as number) + (b as number);
+		const weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, (a: number, b: number) => { // The reduce function and implementation return the sum of array
+			return (a + b);
 		}, 0) / sum4thPower.length));
-
-		/*
-         // If user has a power meters we prefer use the value given by strava
-         if (hasPowerMeter) {
-         weightedPower = activityStatsMap.weightedPower;
-         }*/
 
 		const variabilityIndex: number = weightedPower / avgWatts;
 		const punchFactor: number = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
 		const weightedWattsPerKg: number = weightedPower / athleteWeight;
 		const avgWattsPerKg: number = avgWatts / athleteWeight;
-		const powerStressScore = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * weightedPower * punchFactor) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
-		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
+
 		const percentiles: number[] = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
+		// Find Best 20min and best 80% of time power splits
+		let splitCalculator: SplitCalculator = null;
 		let best20min = null;
+		let bestEightyPercent = null;
+
 		try {
-			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
-			best20min = splitCalculator.getBestSplit(60 * 20, true);
+			splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
+			try {
+				best20min = splitCalculator.getBestSplit(60 * 20, true);
+			} catch (err) {
+				console.warn("No best 20min power available for this range");
+			}
+
+			try {
+				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
+			} catch (err) {
+				console.warn("No best 80% power available for this range");
+			}
+
 		} catch (err) {
-			console.warn("No best 20min power available for this range");
+			console.warn("Cannot use split calculator on this activity");
 		}
+
+		// If athlete don't have power meter we use his best 80% split power as weightedPower
+		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercent);
+		const powerStressScore = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * pssWeightedPowerUsed * punchFactor) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
+		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
 
 		const powerData: PowerDataModel = {
 			hasPowerMeter: hasPowerMeter,
@@ -679,6 +701,7 @@ export class ActivityComputer {
 			avgWattsPerKg: avgWattsPerKg,
 			weightedPower: weightedPower,
 			best20min: best20min,
+			bestEightyPercent: bestEightyPercent,
 			variabilityIndex: variabilityIndex,
 			punchFactor: punchFactor,
 			powerStressScore: powerStressScore,
@@ -734,7 +757,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); //(hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
@@ -1072,7 +1095,7 @@ export class ActivityComputer {
 		const sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
 			return grade;
 		});
-		const minMaxGradeSamplePercentage = 0.25; //%
+		const minMaxGradeSamplePercentage = 0.25; // %
 		const gradeSamplesReadCount = Math.floor(sortedGradeArray.length * minMaxGradeSamplePercentage / 100);
 		avgMinGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, 0, gradeSamplesReadCount)) : _.first(sortedGradeArray);
 		avgMaxGrade = (gradeSamplesReadCount >= 1) ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount)) : _.last(sortedGradeArray);

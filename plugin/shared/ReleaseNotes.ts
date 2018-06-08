@@ -2,6 +2,27 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
+		version: "6.3.0",
+		date: "2018-06-08", //smoothing by adaptive low-pass filter     smooth adaptive low pass filter
+		message: "Added zoom in/out actions on fitness trend graph. Added indoor activity filter on year progressions. New \"adaptive low-pass filter\" to improve accuracy of estimated power data: estimated \"Power Stress Score\" accuracy is also positively impacted. And more in the release note...",
+		hotFixes: [],
+		features: [
+			"Fitness Trend: added Zoom IN/OUT buttons & shortcuts for fitness trend graph.",
+			"Year Progressions: added \"Indoor activities\" toggle filter.",
+			"Activity segments: added percentage difference to segment time comparison for delta KOM, delta PR and delta Year PR."
+		],
+		isPatch: false,
+		fixes: [
+			"Activity Power Data: implemented a new adaptive low-pass filter to smooth estimated power data streams if no cycling power meter available. This new filter will remove any non real power jump or drop before computing your stats.",
+			"Estimated Power Stress Score: improved reliability and precision of PSS when power data is estimated (no cycling power meter). Required by the upcoming fitness trend estimation without sensors.",
+			"Activity stats panel: replaced \"75% quartile speed\" by \"Best 20min speed\"",
+			"Activity: Fixed ODO distance for bikes with unicode names on the ride page.",
+			"Synchronization: you can now trigger the fastest \"sync recent activities\" directly from the stravistix app.",
+			"Technical: Upgraded angular version from v5 to v6. Also upgraded other libs.",
+			"Other: various improvements and minors bugs fixed."
+		]
+	},
+	{
 		version: "6.2.1",
 		date: "2018-05-12",
 		message: "Added \"best 20 min cycling speed\" and \"best 20 min running pace\" data-fields on your activities. Also added an option to define your own starting fitness and fatigue values on your fitness trend. Rest of the update focuses mainly on noticeable optimizations.",

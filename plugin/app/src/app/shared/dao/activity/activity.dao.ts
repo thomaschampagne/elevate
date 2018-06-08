@@ -29,25 +29,22 @@ export class ActivityDao {
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-
 		return new Promise<SyncedActivityModel[]>((resolve) => {
-
 			const syncedActivityData: any = {};
 			syncedActivityData[ActivityDao.SYNCED_ACTIVITIES_KEY] = syncedActivityModels;
 			this.browserStorageLocal().set(syncedActivityData, () => {
-				this.fetch().then((athleteProfileModel: SyncedActivityModel[]) => {
-					resolve(athleteProfileModel);
+				this.fetch().then((models: SyncedActivityModel[]) => {
+					resolve(models);
 				});
 			});
-
 		});
 	}
 
 	/**
 	 *
-	 * @returns {Promise<SyncedActivityModel[]>} removed SyncedActivityModels
+	 * @returns {Promise<SyncedActivityModel[]>} cleared SyncedActivityModels
 	 */
-	public remove(): Promise<SyncedActivityModel[]> {
+	public clear(): Promise<SyncedActivityModel[]> {
 		return new Promise<SyncedActivityModel[]>((resolve, reject) => {
 			this.browserStorageLocal().remove(ActivityDao.SYNCED_ACTIVITIES_KEY, () => {
 				this.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
@@ -63,5 +60,19 @@ export class ActivityDao {
 	 */
 	public browserStorageLocal(): chrome.storage.LocalStorageArea {
 		return chrome.storage.local;
+	}
+
+	/**
+	 *
+	 * @param {number[]} activitiesToDelete
+	 * @returns {Promise<SyncedActivityModel[]>}
+	 */
+	public removeByIds(activitiesToDelete: number[]): Promise<SyncedActivityModel[]> {
+		return this.fetch().then((models: SyncedActivityModel[]) => {
+			const modelsToBeSaved = _.filter(models, (syncedActivityModel: SyncedActivityModel) => {
+				return (_.indexOf(activitiesToDelete, syncedActivityModel.id) === -1);
+			});
+			return this.save(modelsToBeSaved);
+		});
 	}
 }

@@ -40,7 +40,6 @@ import { VacuumProcessor } from "./processors/VacuumProcessor";
 import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
 import * as Q from "q";
 import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { MessagesModel } from "../../shared/models/messages.model";
 import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./AthleteUpdate";
 import "./Follow";
@@ -1114,15 +1113,9 @@ export class StravistiX {
 
 	public handleOnFlyActivitiesSync(): void {
 
-		function notifyBackgroundSyncDone(syncResult: SyncResultModel) {
-			chrome.runtime.sendMessage(this.extensionId, {
-				method: MessagesModel.ON_EXTERNAL_SYNC_DONE,
-				params: {
-					syncResult: syncResult,
-				},
-			}, (response: any) => {
-				console.log(response);
-			});
+		// Skipping on fly sync because a dedicated sync has been asked by user
+		if (window.location.search.match("stravistixSync")) {
+			return;
 		}
 
 		if (window.location.pathname.match("login") || window.location.pathname.match("upload")) {
@@ -1153,7 +1146,7 @@ export class StravistiX {
 					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
 						console.log("Fast sync finished", syncResult);
-						notifyBackgroundSyncDone.call(this, syncResult); // Notify background page that sync is finished
+						ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult); // Notify background page that sync is finished
 
 					}).catch((err: any) => {
 						console.warn(err);
@@ -1176,15 +1169,16 @@ export class StravistiX {
 
 		const urlParams = Helper.params(window.location);
 
-		const allowSync = (urlParams.stravistixSync === "true") ? true : false;
-		if (!allowSync) {
+		const syncingAllowed = (urlParams.stravistixSync === "true");
+		if (!syncingAllowed) {
 			return;
 		}
 
+		const forceSync = (urlParams.forceSync === "true");
+		const fastSync = (urlParams.fastSync === "true" && !forceSync);
 		const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId) : -1;
-		const forceSync = (urlParams.forceSync === "true") ? true : false;
 
-		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.appResources, this.userSettings, forceSync, sourceTabId);
+		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.appResources, this.userSettings, fastSync, forceSync, sourceTabId);
 		activitiesSyncModifier.modify();
 	}
 

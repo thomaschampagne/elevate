@@ -8,7 +8,7 @@ import { ProgressionModel } from "../models/progression.model";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 
 @Injectable()
@@ -37,10 +37,11 @@ export class YearProgressService {
 	 * @param {number[]} yearsFilter
 	 * @param {boolean} isMetric
 	 * @param {boolean} includeCommuteRide
+	 * @param {boolean} includeIndoorRide
 	 * @returns {YearProgressModel[]}
 	 */
 	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
-					   isMetric: boolean, includeCommuteRide: boolean): YearProgressModel[] {
+					   isMetric: boolean, includeCommuteRide: boolean, includeIndoorRide: boolean): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -138,7 +139,7 @@ export class YearProgressService {
 
 				for (let i = 0; i < activitiesFound.length; i++) {
 
-					if (!includeCommuteRide && activitiesFound[i].commute) {
+					if ((!includeCommuteRide && activitiesFound[i].commute)||(!includeIndoorRide && activitiesFound[i].trainer)) {
 						continue;
 					}
 

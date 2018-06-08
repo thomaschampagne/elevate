@@ -128,7 +128,7 @@ export abstract class AbstractDataView {
 		this.content += this.grid.html();
 		this.content += this.graph.html();
 		this.content += this.table.html();
-		this.content += "</div>"
+		this.content += "</div>";
 	}
 
 	public displayGraph(): void {

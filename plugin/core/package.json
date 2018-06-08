@@ -18,7 +18,6 @@
 		"type": "git",
 		"url": "https://github.com/thomaschampagne/stravistix"
 	},
-	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -69,7 +68,7 @@
 		"traceur": "0.0.111",
 		"ts-loader": "^4.2.0",
 		"tslint": "^5.9.1",
-		"typescript": "~2.5.3",
+		"typescript": "~2.7.2",
 		"url-loader": "^1.0.1",
 		"webpack": "^4.6.0",
 		"webpack-cli": "^2.0.15",
