@@ -2,8 +2,17 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
-		version: "6.3.0",
+		version: "6.4.0",
 		date: "2018-06-08", //smoothing by adaptive low-pass filter     smooth adaptive low pass filter
+		message: "",
+		hotFixes: [],
+		features: [],
+		isPatch: false,
+		fixes: []
+	},
+	{
+		version: "6.3.0",
+		date: "2018-06-08",
 		message: "Added zoom in/out actions on fitness trend graph. Added indoor activity filter on year progressions. New \"adaptive low-pass filter\" to improve accuracy of estimated power data: estimated \"Power Stress Score\" accuracy is also positively impacted. And more in the release note...",
 		hotFixes: [],
 		features: [

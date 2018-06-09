@@ -56,6 +56,11 @@ class Installer {
 			migration_from_version_below_than_6_1_2();
 		}
 
+		// v <= v6.1.2 ?: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities
+		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.4.0")) {
+			migration_from_version_below_than_6_4_0();
+		}
+
 	}
 
 	protected static clearSyncCache(): void {
@@ -71,7 +76,18 @@ class Installer {
 
 Installer.listen();
 
-const migration_from_version_below_than_6_1_2 = function () {
+const migration_from_version_below_than_6_4_0 = () => {
+
+	console.log("Migrate from 6.4.0 or below");
+
+	// Remove sync displayMotivationScore
+	chrome.storage.sync.remove(["displayMotivationScore"], () => {
+		console.log("displayMotivationScore removed");
+	});
+
+};
+
+const migration_from_version_below_than_6_1_2 = () => {
 
 	console.log("Migrate from 6.1.2 or below");
 
@@ -102,9 +118,9 @@ const migration_from_version_below_than_6_1_2 = function () {
 /**
  * Migration from previous version under 5.11.0
  */
-const migration_from_version_below_than_5_11_0 = function () {
+const migration_from_version_below_than_5_11_0 = () => {
 
-	const removeDeprecatedHrrZonesKey = function (callback: Function): void {
+	const removeDeprecatedHrrZonesKey = (callback: Function) => {
 		chrome.storage.sync.remove(["userHrrZones"], () => {
 			callback();
 		});

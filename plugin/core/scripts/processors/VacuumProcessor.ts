@@ -1,9 +1,7 @@
 import * as _ from "lodash";
-import { Helper } from "../Helper";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
-import { Constant } from "../../../shared/Constant";
 
 export class VacuumProcessor {
 
@@ -139,67 +137,14 @@ export class VacuumProcessor {
 
 		// Create activityData Map
 		const movingTime = window.pageView.activity().get('moving_time');
-		const distance = window.pageView.activity().get('distance') / 1000;
 		const elevGain = window.pageView.activity().get('elev_gain');
-		const avgWatts = window.pageView.activity().get('avgWatts');
-
-		const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-		const speedFactor: number = (measurementPreference == "meters") ? 1 : Constant.KM_TO_MILE_FACTOR;
-		const averageSpeed: number = (_.isNumber(distance) && _.isNumber(movingTime)) ? ((distance / movingTime * 60 * 60) / speedFactor) : null;
 
 		const activityCommonStats: ActivityStatsMapModel = {
 			movingTime: (movingTime) ? movingTime : null,
-			distance: (distance) ? distance : null,
 			elevation: (elevGain) ? elevGain : null,
-			avgPower: (avgWatts) ? avgWatts : null,
-			averageSpeed: averageSpeed
 		};
 
 		return activityCommonStats;
-	}
-
-	protected formatActivityDataValue(dataIn: string, parsingTime: boolean, parsingElevation: boolean, parsingDistance: boolean, parsingEnergy: boolean): number {
-
-		if (dataIn === "") {
-			return null;
-		}
-
-		// Common clean
-		let cleanData: string = dataIn.toLowerCase();
-		cleanData = cleanData.replace(new RegExp(/\s/g), "");
-		cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), "");
-		cleanData = cleanData.replace(new RegExp(/æ/g), "");
-		cleanData = cleanData.replace(new RegExp(/ç/g), "");
-		cleanData = cleanData.replace(new RegExp(/[èéêë]/g), "");
-		cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), "");
-		cleanData = cleanData.replace(new RegExp(/ñ/g), "");
-		cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), "");
-		cleanData = cleanData.replace(new RegExp(/œ/g), "o");
-		cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), "");
-		cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), "");
-		cleanData = cleanData.replace(/\s/g, "").trim();
-		cleanData = cleanData.replace(/[\n\r]/g, "");
-		cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, "").trim();
-
-		if (parsingTime) {
-			// Remove text from date, format time to hh:mm:ss
-			cleanData = Helper.HHMMSStoSeconds(cleanData).toString();
-
-			if (_.isNaN(cleanData)) {
-				return null;
-			}
-
-		} else if (parsingElevation) {
-			cleanData = cleanData.replace(" ", "").replace(",", "");
-		} else if (parsingDistance) {
-			cleanData = cleanData.replace(",", ".");
-		} else if (parsingEnergy) {
-			cleanData = cleanData.replace(",", ".").replace(".", "");
-		} else {
-			cleanData = cleanData.replace(",", ".");
-		}
-
-		return parseFloat(cleanData);
 	}
 
 	/**

@@ -111,11 +111,8 @@ export class MultipleActivityProcessor {
 	protected createActivityStatMap(activityWithStream: StreamActivityModel): ActivityStatsMapModel {
 
 		const statsMap: ActivityStatsMapModel = {
-			distance: parseInt(activityWithStream.distance),
 			elevation: parseInt(activityWithStream.elevation_gain),
 			movingTime: activityWithStream.moving_time_raw,
-			avgPower: null, // Toughness Score will not be computed
-			averageSpeed: null, // Toughness Score will not be computed
 		};
 
 		return statsMap;
