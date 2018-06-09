@@ -66,14 +66,20 @@
 			</mat-expansion-panel-header>
 
 			<div class="hint">
-				Here you can exclude unwanted activities from the fitness trend based on their names and exclusion
-				patterns. Example use case: you performed some "Mountain Bike Downhill" activities without a heart rate
-				monitor or power meter. You took the ski lift many times. If you enable the "Cycling Power Stress Score
-				(PSS) Estimation", stress scores are gonna to be huge and not relevant of your efforts due to the
-				important total ascent coming from ski lifts. And so the fitness trend could be impacted by unwanted
-				stress scores. Assuming you put the tag "#MTBDH" in all these activities, you just need to append a line
-				"#MTBDH" in the below input to exclude them. Note: you may need to change some activities name directly
-				in strava and launch a manual sync to see the exclusion.
+				Unwanted activities can be excluded from the fitness trend based on their names and patterns.<br/><br/>
+
+				A use case could be "Mountain Bike Downhill" activities without a heart rate monitor or power meter.
+				Athlete took the ski lift many times. If athlete enables the "Cycling Power Stress Score
+				(PSS) Estimation", stress scores are gonna to be huge and not relevant of athlete efforts due to the
+				important total ascent coming from ski lifts. And so the fitness trend could be impacted by these
+				unwanted
+				stress scores. Assuming athlete had put the tag <strong>"#MTBDH"</strong> on all his mountain bike
+				downhill activities,
+				appending a line with <strong>"#MTBDH"</strong> in the below input will exclude mountain bike downhill
+				activities from fitness trend.<br/><br/>
+
+				Note: You may need to change some activities name directly in strava and launch a <strong>"Sync all
+				activities"</strong> to view changes.
 			</div>
 
 			<textarea matInput
@@ -95,9 +101,9 @@
 			</mat-expansion-panel-header>
 
 			<div class="hint">
-				You can exclude activities from your fitness trend if they are before a specific date. You can set that
-				date in the below input. Leaving a field empty means no exclusion. Note: The starting date will be set
-				on the first activity available after that date.
+				You can exclude activities from fitness trend before a specific date.<br/><br/>
+				Leaving an empty field means no exclusion.<br/><br/>
+				Note: The starting date will be set on the first activity available after that date.
 			</div>
 
 			<mat-form-field>
@@ -124,8 +130,8 @@
 			</mat-expansion-panel-header>
 
 			<div class="hint">
-				Your fitness trend will start with the below values. Leaving a field empty equals to set a value of
-				<strong>0</strong>
+				Fitness trend will start with the below values.<br/><br/>
+				Leaving an empty field equals to set a value of <strong>0</strong>
 			</div>
 
 			<div fxLayout="column" fxLayoutAlign="start start">
