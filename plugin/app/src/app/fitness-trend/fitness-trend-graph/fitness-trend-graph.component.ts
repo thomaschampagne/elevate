@@ -468,10 +468,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.UP_ARROW) {
 			this.onPeriodViewedZoomIn();
+			event.preventDefault();
 		}
 
 		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.DOWN_ARROW) {
 			this.onPeriodViewedZoomOut();
+			event.preventDefault();
 		}
 	}
 
