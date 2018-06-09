@@ -33,7 +33,6 @@ export class FeaturedDataView extends AbstractDataView {
 	public render(): void {
 
 		if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio ||
-			this.analysisData.toughnessScore && this.userSettings.displayMotivationScore ||
 			this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData ||
 			this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData ||
 			this.analysisData.powerData && this.userSettings.displayAdvancedPowerData ||

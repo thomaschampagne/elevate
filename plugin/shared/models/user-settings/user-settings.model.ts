@@ -28,7 +28,6 @@ export class UserSettingsModel {
 	public activityStravaMapType: string;
 	public displaySegmentRankPercentage: boolean;
 	public displayNearbySegments: boolean;
-	public displayMotivationScore: boolean;
 	public displayActivityRatio: boolean;
 	public displayAdvancedPowerData: boolean;
 	public displayAdvancedSpeedData: boolean;

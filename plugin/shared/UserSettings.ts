@@ -194,7 +194,6 @@ export const userSettings: UserSettingsModel = {
 	activityStravaMapType: "terrain",
 	displaySegmentRankPercentage: true,
 	displayNearbySegments: true,
-	displayMotivationScore: true,
 	displayActivityRatio: true,
 	displayAdvancedPowerData: true,
 	displayAdvancedSpeedData: true,

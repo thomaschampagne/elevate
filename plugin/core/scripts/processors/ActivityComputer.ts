@@ -173,9 +173,6 @@ export class ActivityComputer {
 
 		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(this.movementData.movingTime, this.movementData.elapsedTime);
 
-		// Toughness score
-		const toughnessScore: number = this.toughnessScore(activityStatsMap, moveRatio);
-
 		// Estimated Normalized power
 		// Estimated Variability index
 		// Estimated Intensity factor
@@ -226,15 +223,14 @@ export class ActivityComputer {
 
 		// Return an array with all that shit...
 		const analysisData: AnalysisDataModel = {
-			moveRatio,
-			toughnessScore,
-			speedData,
-			paceData,
-			powerData,
-			heartRateData,
-			cadenceData,
-			gradeData,
-			elevationData,
+			moveRatio: moveRatio,
+			speedData: speedData,
+			paceData: paceData,
+			powerData: powerData,
+			heartRateData: heartRateData,
+			cadenceData: cadenceData,
+			gradeData: gradeData,
+			elevationData: elevationData
 		};
 
 		return analysisData;
@@ -271,23 +267,6 @@ export class ActivityComputer {
 		}
 
 		return ratio;
-	}
-
-	protected toughnessScore(activityStatsMap: ActivityStatsMapModel, moveRatio: number): number {
-
-		if (_.isNull(activityStatsMap.elevation) || _.isNull(activityStatsMap.avgPower) || _.isNull(activityStatsMap.averageSpeed) || _.isNull(activityStatsMap.distance)) {
-			return null;
-		}
-
-		return Math.sqrt(
-			Math.sqrt(
-				Math.pow(activityStatsMap.elevation, 2) *
-				activityStatsMap.avgPower *
-				Math.pow(activityStatsMap.averageSpeed, 2) *
-				Math.pow(activityStatsMap.distance, 2) *
-				moveRatio,
-			),
-		) / 20;
 	}
 
 	//noinspection JSUnusedGlobalSymbols

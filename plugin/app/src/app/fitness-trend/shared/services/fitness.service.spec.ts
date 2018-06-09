@@ -36,7 +36,6 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 		heartRateData: null,
 		paceData: null,
 		speedData: null,
-		toughnessScore: null,
 		powerData: null
 	};
 
