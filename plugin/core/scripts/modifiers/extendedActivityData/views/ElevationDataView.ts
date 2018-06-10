@@ -6,7 +6,7 @@ export class ElevationDataView extends AbstractDataView {
 
 	constructor(elevationData: ElevationDataModel, units: string) {
 		super(units);
-		this.mainColor = [216, 212, 38];
+		this.mainColor = [255, 185, 0];
 		this.elevationData = elevationData;
 		this.setGraphTitleFromUnits();
 		this.setupDistributionGraph(this.elevationData.elevationZones);
@@ -16,7 +16,7 @@ export class ElevationDataView extends AbstractDataView {
 	public render(): void {
 
 		// Add a title
-		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.logArrowUpIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> ELEVATION <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/elevation\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
+		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.areaChartIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> ELEVATION <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/elevation\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
 		// Creates a grid
 		this.makeGrid(3, 2); // (col, row)
