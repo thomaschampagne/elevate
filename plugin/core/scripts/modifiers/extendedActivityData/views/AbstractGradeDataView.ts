@@ -8,7 +8,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
 
 	constructor(gradeData: GradeDataModel, units: string) {
 		super(units);
-		this.mainColor = [0, 128, 0];
+		this.mainColor = [3, 167, 97];
 		this.setGraphTitleFromUnits();
 		this.gradeData = gradeData;
 		this.setupDistributionGraph(this.gradeData.gradeZones);

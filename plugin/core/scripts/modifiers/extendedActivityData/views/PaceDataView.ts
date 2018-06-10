@@ -10,7 +10,7 @@ export class PaceDataView extends AbstractDataView {
 
 	constructor(paceData: PaceDataModel, units: string) {
 		super(units);
-		this.mainColor = [9, 123, 219];
+		this.mainColor = [9, 183, 219];
 		this.setGraphTitleFromUnits();
 		this.paceData = paceData;
 		this.speedUnitsData = Helper.getSpeedUnitData();
