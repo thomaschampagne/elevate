@@ -21,7 +21,7 @@ const defaults: any = {
 	force_process: false,
 };
 
-const $window: JQuery = $(window);
+const $window: JQuery<Window> = $(window);
 
 const $prior_appeared: JQuery[] = [];
 

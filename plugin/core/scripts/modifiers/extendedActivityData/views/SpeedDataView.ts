@@ -9,7 +9,7 @@ export class SpeedDataView extends AbstractDataView {
 
 	constructor(speedData: SpeedDataModel, units: string) {
 		super(units);
-		this.mainColor = [9, 123, 219];
+		this.mainColor = [36, 130, 210];
 		this.setGraphTitleFromUnits();
 		this.speedData = speedData;
 		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
