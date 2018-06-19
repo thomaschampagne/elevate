@@ -21,6 +21,7 @@ import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-do
 import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
 import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
 import { LowPassFilter } from "../utils/LowPassFilter";
+import { StreamVariationSplit } from "../models/stream-variation-split.model";
 
 export class ActivityComputer {
 
@@ -68,6 +69,46 @@ export class ActivityComputer {
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
+	}
+
+	public static streamVariationsSplits(trackedStream: number[], timeScale: number[], distanceScale: number[]): StreamVariationSplit[] {
+
+		const streamVariations = [];
+		let previousVariationSign = null;
+		let lastNonVariationIndex = null;
+
+		for (let i = 0; i < trackedStream.length; i++) {
+
+			const currentValue = trackedStream[i];
+			const nextValue = trackedStream[i + 1];
+			const hasNextValue = _.isNumber(nextValue);
+			const variationSign = Math.sign(nextValue - currentValue);
+
+			if (_.isNull(previousVariationSign)) {
+				previousVariationSign = variationSign;
+			}
+			if (_.isNull(lastNonVariationIndex)) {
+				lastNonVariationIndex = i;
+			}
+
+			const streamVariation: StreamVariationSplit = {
+				variation: (trackedStream[i] - trackedStream[lastNonVariationIndex]),
+				time: (timeScale[i] - timeScale[lastNonVariationIndex]),
+				distance: (distanceScale[i] - distanceScale[lastNonVariationIndex])
+			};
+
+			if (variationSign !== 0 && previousVariationSign !== variationSign && hasNextValue) { // Sign change
+
+				streamVariations.push(streamVariation);
+				previousVariationSign = variationSign;
+				lastNonVariationIndex = i;
+
+			} else if (!hasNextValue) { // negative
+				streamVariations.push(streamVariation);
+			}
+		}
+
+		return streamVariations;
 	}
 
 	public compute(): AnalysisDataModel {
@@ -1306,4 +1347,5 @@ export class ActivityComputer {
 		}
 		return result;
 	}
+
 }
