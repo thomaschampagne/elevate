@@ -85,7 +85,7 @@ export class HideFeedModifier extends AbstractModifier {
 
 			// Cleaning time container with no activites
 			$("div.feed>.time-header").each((index: number, element: Element) => {
-				const timeHeaderElement: JQuery = $(element);
+				const timeHeaderElement = $(element);
 				if (timeHeaderElement.nextUntil(".time-header").not("script").length === 0) {
 					timeHeaderElement.remove();
 				}

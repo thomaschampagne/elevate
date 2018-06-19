@@ -120,8 +120,8 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 
 			$items.each(() => {
 
-				let $row: JQuery = $(event.currentTarget),
-					$timeCell: JQuery = $row.find("td.time-col"),
+				let $row = $(event.currentTarget),
+					$timeCell = $row.find("td.time-col"),
 					segmentEffortId: number = $row.data("segment-effort-id"),
 					segmentEffortInfoUrl: string = "/segment_efforts/" + segmentEffortId,
 					positionCell: JQuery,

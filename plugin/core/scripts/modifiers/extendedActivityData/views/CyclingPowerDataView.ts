@@ -8,7 +8,7 @@ export class CyclingPowerDataView extends AbstractDataView {
 
 	constructor(powerData: PowerDataModel, units: string) {
 		super(units);
-		this.mainColor = [96, 96, 96];
+		this.mainColor = [63, 64, 72];
 		this.setGraphTitleFromUnits();
 		this.powerData = powerData;
 		this.setupDistributionGraph(this.powerData.powerZones);

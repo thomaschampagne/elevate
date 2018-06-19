@@ -13,7 +13,7 @@ export class HeartRateDataView extends AbstractDataView {
 
 	constructor(heartRateData: HeartRateDataModel, units: string, userSettings: UserSettingsModel) {
 		super(units);
-		this.mainColor = [255, 43, 66];
+		this.mainColor = [228, 76, 92];
 		this.heartRateData = heartRateData;
 		this.setGraphTitleFromUnits();
 		this.userSettings = userSettings;
