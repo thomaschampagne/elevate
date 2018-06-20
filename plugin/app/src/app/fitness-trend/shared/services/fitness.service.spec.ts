@@ -76,7 +76,7 @@ function createFakeSyncedActivityModel(id: number, name: string, type: string, d
 			variabilityIndex: 1,
 			weightedPower: avgWatts,
 			best20min: avgWatts * 1.5,
-			bestEightyPercent: avgWatts * 1.2,
+			bestEightyPercent: avgWatts,
 			weightedWattsPerKg: avgWatts * 1.25 / 70,
 		};
 

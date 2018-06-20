@@ -127,20 +127,13 @@ export class FitnessService {
 					if (hasPowerData) {
 
 						const movingTime = activity.moving_time_raw;
+						const hasPowerMeter = activity.extendedStats.powerData.hasPowerMeter;
+						const weightedPower = activity.extendedStats.powerData.weightedPower;
+						const bestEightyPercentPower = activity.extendedStats.powerData.bestEightyPercent;
 
-						let weightedPower = null;
-
-						if (activity.extendedStats.powerData.hasPowerMeter) {
-							weightedPower = activity.extendedStats.powerData.weightedPower;
-						} else {
-
-							if (activity.extendedStats.powerData.bestEightyPercent) {
-								weightedPower = activity.extendedStats.powerData.bestEightyPercent;
-							}
-						}
-
-						if (_.isNumber(weightedPower)) {
-							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(movingTime, weightedPower, fitnessUserSettingsModel.cyclingFtp);
+						if ((hasPowerMeter && _.isNumber(weightedPower)) || (!hasPowerMeter && _.isNumber(weightedPower) && _.isNumber(bestEightyPercentPower))) {
+							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(hasPowerMeter, movingTime,
+								weightedPower, bestEightyPercentPower, fitnessUserSettingsModel.cyclingFtp);
 							hasMinimumFitnessRequiredData = true;
 						}
 					}
@@ -233,14 +226,18 @@ export class FitnessService {
 
 	/**
 	 *
+	 * @param {boolean} hasPowerMeter
 	 * @param {number} movingTime
 	 * @param {number} weightedPower
+	 * @param {number} bestEightyPercentPower
 	 * @param {number} cyclingFtp
 	 * @returns {number}
 	 */
-	public computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
-		const intensityFactor = (weightedPower / cyclingFtp);
-		return (movingTime * weightedPower * intensityFactor) / (cyclingFtp * 3600) * 100;
+	public computePowerStressScore(hasPowerMeter: boolean, movingTime: number, weightedPower: number,
+								   bestEightyPercentPower: number, cyclingFtp: number): number {
+		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercentPower);
+		const intensity = (weightedPower / cyclingFtp);
+		return (movingTime * pssWeightedPowerUsed * intensity) / (cyclingFtp * 3600) * 100;
 	}
 
 	/**
