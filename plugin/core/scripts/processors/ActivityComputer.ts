@@ -35,7 +35,6 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
-	public static readonly GRADE_ADJUSTED_PACE_WINDOWS = {time: 12, distance: 24};
 	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
 	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
 
@@ -178,8 +177,8 @@ export class ActivityComputer {
 				activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
 			}
 
-			if (!_.isEmpty(activityStream.grade_adjusted_distance)) {
-				activityStream.grade_adjusted_distance = activityStream.grade_adjusted_distance.slice(bounds[0], bounds[1]);
+			if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
+				activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds[0], bounds[1]);
 			}
 		}
 	}
@@ -197,7 +196,7 @@ export class ActivityComputer {
 		this.movementData = null;
 
 		if (activityStream.velocity_smooth) {
-			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_distance);
+			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
 		}
 
 		// Q1 Speed
@@ -367,7 +366,14 @@ export class ActivityComputer {
 		return currentValue * delta - ((currentValue - previousValue) * delta) / 2; // Discrete integral
 	}
 
-	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedDistance?: number[]): MoveDataModel {
+	/**
+	 *
+	 * @param {number[]} velocityArray
+	 * @param {number[]} timeArray
+	 * @param {number[]} gradeAdjustedSpeedArray
+	 * @returns {MoveDataModel}
+	 */
+	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedSpeedArray?: number[]): MoveDataModel {
 
 		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -388,9 +394,7 @@ export class ActivityComputer {
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
 
-		const hasGradeAdjustedDistance: boolean = !_.isEmpty(gradeAdjustedDistance);
-		let gradeAdjustedTimeWindow = 0;
-		let gradeAdjustedDistanceWindow = 0;
+		const hasGradeAdjustedSpeed: boolean = !_.isEmpty(gradeAdjustedSpeedArray);
 
 		// End Preparing zone
 		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
@@ -434,28 +438,10 @@ export class ActivityComputer {
 
 				}
 
-				if (hasGradeAdjustedDistance) {
-
-					const gradeDistance = (gradeAdjustedDistance[i] - gradeAdjustedDistance[i - 1]);
-					gradeAdjustedTimeWindow += movingSeconds;
-					gradeAdjustedDistanceWindow += gradeDistance;
-
-					if (gradeAdjustedTimeWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.time
-						&& gradeAdjustedDistanceWindow >= ActivityComputer.GRADE_ADJUSTED_PACE_WINDOWS.distance) {
-
-						const gradeAdjustedSpeed = gradeAdjustedDistanceWindow / gradeAdjustedTimeWindow * 3.6;
+				if (hasGradeAdjustedSpeed) {
+					const gradeAdjustedSpeed = gradeAdjustedSpeedArray[i] * 3.6;
+					if (gradeAdjustedSpeed > 0) {
 						gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
-
-						const gradeAdjustedPace = this.convertSpeedToPace(gradeAdjustedSpeed);
-
-						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.gradeAdjustedPace, (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
-						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
-							gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += gradeAdjustedTimeWindow;
-						}
-
-						// Reset windows
-						gradeAdjustedDistanceWindow = 0;
-						gradeAdjustedTimeWindow = 0;
 					}
 				}
 			}
@@ -472,7 +458,7 @@ export class ActivityComputer {
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
-		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedDistance) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
+		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedSpeed) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
 
 		let best20min = null;
 		try {
@@ -496,7 +482,7 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
-		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedDistance) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
 
 		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.userSettings.userRunningFTP)
 			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
@@ -510,7 +496,7 @@ export class ActivityComputer {
 			variancePace: this.convertSpeedToPace(varianceSpeed),
 			genuineGradeAdjustedAvgPace: genuineGradeAdjustedAvgPace,
 			paceZones: (this.returnZones) ? paceZones : null,
-			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedDistance) ? gradeAdjustedPaceZones : null,
+			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedSpeed) ? gradeAdjustedPaceZones : null,
 			runningStressScore: runningStressScore,
 			runningStressScorePerHour: (runningStressScore) ? runningStressScore / genuineAvgSpeedSecondsSum * 60 * 60 : null
 		};

@@ -69,6 +69,14 @@ export class LowPassFilter {
 		return values;
 	}
 
+	/**
+	 *
+	 * @param {number[]} values
+	 * @param {number[]} scale
+	 * @param {number} positiveVariationTrigger
+	 * @param {number} negativeVariationTrigger
+	 * @returns {number[]}
+	 */
 	public adaptiveSmoothArray(values: number[], scale: number[],
 							   positiveVariationTrigger?: number, negativeVariationTrigger?: number): number[] {
 
