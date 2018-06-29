@@ -295,9 +295,12 @@ export class ActivityComputer {
 		return ((value - minValue) / distributionStep);
 	}
 
-	protected getZoneId(zones: ZoneModel[], value: number): number {
+	protected getZoneId(zones: ZoneModel[], value: number, ascending = true): number {
 		for (let zoneId = 0; zoneId < zones.length; zoneId++) {
-			if (value <= zones[zoneId].to) {
+			if (ascending && value <= zones[zoneId].to) {
+				return zoneId;
+			}
+			if (!ascending && value > zones[zoneId].from) {
 				return zoneId;
 			}
 		}
@@ -407,7 +410,7 @@ export class ActivityComputer {
 					// Find pace zone
 					const pace: number = this.convertSpeedToPace(currentSpeed);
 
-					const paceZoneId: number = this.getZoneId(this.userSettings.zones.pace, (pace === -1) ? 0 : pace);
+					const paceZoneId: number = this.getZoneId(this.userSettings.zones.pace, (pace === -1) ? 0 : pace, false);
 					if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
 						paceZones[paceZoneId].s += movingSeconds;
 					}
@@ -428,7 +431,7 @@ export class ActivityComputer {
 
 						const gradeAdjustedPace = this.convertSpeedToPace(gradeAdjustedSpeed);
 
-						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.gradeAdjustedPace, (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
+						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.gradeAdjustedPace, (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace, false);
 						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
 							gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += gradeAdjustedTimeWindow;
 						}

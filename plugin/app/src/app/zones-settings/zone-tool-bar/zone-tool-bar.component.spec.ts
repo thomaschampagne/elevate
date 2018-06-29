@@ -21,6 +21,7 @@ describe("ZoneToolBarComponent", () => {
 		step: 0.1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Heart Rate",
@@ -29,6 +30,7 @@ describe("ZoneToolBarComponent", () => {
 		step: 1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}];
 

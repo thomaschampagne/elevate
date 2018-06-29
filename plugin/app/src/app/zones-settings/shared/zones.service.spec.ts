@@ -14,6 +14,12 @@ describe("ZonesService", () => {
 
 	let zonesService: ZonesService;
 
+    const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
+        {
+            value: "speed"
+        }
+    );
+
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
@@ -36,6 +42,8 @@ describe("ZonesService", () => {
 			{from: 80, to: 90},
 			{from: 90, to: 100}
 		];
+
+		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
 	});
 
 	it("should be created", inject([ZonesService], (zoneService: ZonesService) => {
@@ -597,6 +605,86 @@ describe("ZonesService", () => {
 
 	});
 
+	it("should return not compliant zones were zone marked descending wrongly", (done: Function) => {
+
+		// Given
+		const ZONES = [ // Set 10 fake zones
+			{from: 0, to: 10},
+			{from: 10, to: 20},
+			{from: 20, to: 30},
+			{from: 30, to: 40},
+			{from: 40, to: 50},
+			{from: 50, to: 60},
+			{from: 60, to: 70},
+			{from: 70, to: 80},
+			{from: 80, to: 90},
+			{from: 90, to: 100}
+		];
+
+		// When
+		const error: string = zonesService.isZonesCompliant(ZONES, false);
+
+		// Then
+		expect(error).not.toBeNull();
+		expect(error).toEqual("Not compliant zones provided: pattern is not respected.");
+
+		done();
+
+	});
+
+	it("should return compliant zones if descending", (done: Function) => {
+
+		// Given
+		const ZONES = [ // Set 10 fake zones
+			{from: 90, to: 100},
+			{from: 80, to: 90},
+			{from: 70, to: 80},
+			{from: 60, to: 70},
+			{from: 50, to: 60},
+			{from: 40, to: 50},
+			{from: 30, to: 40},
+			{from: 20, to: 30},
+			{from: 10, to: 20},
+			{from: 0, to: 10}
+		];
+
+		// When
+		const error: string = zonesService.isZonesCompliant(ZONES, false);
+
+		// Then
+		expect(error).toBeNull();
+
+		done();
+
+	});
+
+	it("should return not compliant zones with error on a \"TO\" when descending", (done: Function) => {
+
+		// Given
+		const FAKE_WRONG_ZONES = [ // Set 10 fake zones
+			{from: 90, to: 100},
+			{from: 80, to: 90},
+			{from: 70, to: 80},
+			{from: 60, to: 70},
+			{from: 50, to: 61}, // Mistake here (to: 61)!
+			{from: 40, to: 50},
+			{from: 30, to: 40},
+			{from: 20, to: 30},
+			{from: 10, to: 20},
+			{from: 0, to: 10}
+		];
+
+		// When
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES, false);
+
+		// Then
+		expect(error).not.toBeNull();
+		expect(error).toEqual("Not compliant zones provided: pattern is not respected.");
+
+		done();
+
+	});
+
 	it("should reset zones to default", (done: Function) => {
 
 		// Given
@@ -613,14 +701,7 @@ describe("ZonesService", () => {
 			{from: 910, to: 1100},
 		];
 
-		const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
-			{
-				value: "speed"
-			}
-		);
-
 		zonesService.currentZones = FAKE_EXISTING_ZONES;
-		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");

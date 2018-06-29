@@ -206,7 +206,7 @@ export class ZonesService {
 	 *
 	 * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public isZonesCompliant(zones: ZoneModel[]): string {
+	public isZonesCompliant(zones: ZoneModel[], ascending = true): string {
 
 		const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
@@ -222,26 +222,46 @@ export class ZonesService {
 			return "Not compliant zones provided: expected at least " + this.getMinZoneCount() + " zones";
 		}
 
-		for (let i = 0; i < zones.length; i++) {
+        if (zones.length > 1 ) {
+            for (let i = 0; i < zones.length; i++) {
 
+                if (i === 0) { // First zone
+                    if (ascending) {
+                        if (zones[i].to !== zones[i + 1].from) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    } else {
+                        if (zones[i + 1].to !== zones[i].from) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    }
 
-			if (i === 0) { // First zone
-				if (zones[i].to !== zones[i + 1].from) {
-					return NOT_COMPLIANT_ZONE;
-				}
+                } else if (i < (zones.length - 1)) { // Middle zone
 
-			} else if (i < (zones.length - 1)) { // Middle zone
+                    if (ascending) {
+                        if (zones[i].to !== zones[i + 1].from || zones[i].from !== zones[i - 1].to) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    } else {
+                        if (zones[i + 1].to !== zones[i].from || zones[i - 1].from !== zones[i].to) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    }
 
-				if (zones[i].to !== zones[i + 1].from || zones[i].from !== zones[i - 1].to) {
-					return NOT_COMPLIANT_ZONE;
-				}
+                } else { // Last zone
+                    if (ascending) {
+                        if (zones[i].from !== zones[i - 1].to) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    } else {
+                        if (zones[i - 1].from !== zones[i].to) {
+                            return NOT_COMPLIANT_ZONE;
+                        }
+                    }
+                }
+            }
+        }
 
-			} else { // Last zone
-				if (zones[i].from !== zones[i - 1].to) {
-					return NOT_COMPLIANT_ZONE;
-				}
-			}
-		}
 		return null;
 	}
 
@@ -254,7 +274,8 @@ export class ZonesService {
 		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
-			const complianceError = this.isZonesCompliant(this.currentZones);
+			const complianceError = this.isZonesCompliant(
+			    this.currentZones, this.zoneDefinition.ascending);
 
 			if (_.isNull(complianceError)) {
 				this.userSettingsService.updateZones(

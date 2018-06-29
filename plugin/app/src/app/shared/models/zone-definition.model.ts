@@ -7,5 +7,6 @@ export class ZoneDefinitionModel {
 	public step: number;
 	public min: number;
 	public max: number;
+	public ascending: boolean;
 	public customDisplay: ZoneCustomDisplayModel;
 }

@@ -9,6 +9,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 0.1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: {
 			name: "Miles Conversion",
 			zoneValue: "speed",
@@ -23,6 +24,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 3599,
+		ascending: false,
 		customDisplay: {
 			name: "Pace format mm:ss/distance",
 			zoneValue: "pace",
@@ -40,6 +42,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 3599,
+		ascending: false,
 		customDisplay: {
 			name: "Pace format mm:ss/distance",
 			zoneValue: "gradeAdjustedPace",
@@ -56,6 +59,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Cycling Power",
@@ -64,6 +68,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Running Power",
@@ -72,6 +77,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Cycling Cadence",
@@ -80,6 +86,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Running Cadence",
@@ -88,6 +95,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 0.1,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Grade",
@@ -96,6 +104,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 0.1,
 		min: -9999,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Elevation",
@@ -104,6 +113,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 5,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}, {
 		name: "Ascent speed",
@@ -112,6 +122,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 		step: 5,
 		min: 0,
 		max: 9999,
+		ascending: true,
 		customDisplay: null
 	}
 ];
