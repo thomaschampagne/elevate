@@ -250,33 +250,65 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public onPeriodViewedChange(periodViewed: PeriodModel): void {
+		if (periodViewed instanceof LastPeriodModel) {
+			localStorage.setItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY, (periodViewed as LastPeriodModel).key);
+		}
 		this.periodViewed = periodViewed;
 	}
 
 	public onFitnessTrendConfigChange(configModel: FitnessTrendConfigModel): void {
 		this.fitnessTrendConfigModel = configModel;
+		localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save local
 		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onTrainingZonesToggleChange(enabled: boolean): void {
+
+		if (enabled) {
+			localStorage.setItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY, "true");
+		} else {
+			localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
+		}
+
 		this.isTrainingZonesEnabled = enabled;
 		this.verifyTogglesStatesAlongHrMode();
 	}
 
 	public onPowerMeterToggleChange(enabled: boolean): void {
+
+		if (enabled) {
+			localStorage.setItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY, "true");
+		} else {
+			localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
+		}
+
 		this.isPowerMeterEnabled = enabled;
 		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onSwimToggleChange(enabled: boolean): void {
+
+		if (enabled) {
+			localStorage.setItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY, "true");
+		} else {
+			localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
+		}
+
 		this.isSwimEnabled = enabled;
 		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
 	public onEBikeRidesToggleChange(enabled: boolean): void {
+
+		if (enabled) {
+			localStorage.setItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY, "true");
+		} else {
+			localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
+		}
+
 		this.isEBikeRidesEnabled = enabled;
 		this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 		this.reloadFitnessTrend();

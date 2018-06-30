@@ -5,7 +5,6 @@ import * as _ from "lodash";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { MatDialog } from "@angular/material";
-import { FitnessTrendComponent } from "../fitness-trend.component";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
@@ -89,22 +88,15 @@ export class FitnessTrendInputsComponent implements OnInit {
 	}
 
 	public onLastPeriodSelected(): void {
-		localStorage.setItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY, this.lastPeriodViewed.key);
-		this.updatePeriodViewedTo(this.lastPeriodViewed);
+		this.updatePeriodViewedTo(new LastPeriodModel(this.lastPeriodViewed.from, this.lastPeriodViewed.to,
+			this.lastPeriodViewed.key, this.lastPeriodViewed.label));
 	}
 
 	public onDateToDateChange(): void {
-		this.updatePeriodViewedTo(this.periodViewed);
+		this.updatePeriodViewedTo(new PeriodModel(this.periodViewed.from, this.periodViewed.to));
 	}
 
 	public onTrainingZonesToggle(): void {
-
-		if (this.isTrainingZonesEnabled) {
-			localStorage.setItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY, "true");
-		} else {
-			localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
-		}
-
 		this.trainingZonesToggleChange.emit(this.isTrainingZonesEnabled);
 	}
 
@@ -129,13 +121,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 			});
 
 		} else {
-
-			if (this.isPowerMeterEnabled) {
-				localStorage.setItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY, "true");
-			} else {
-				localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
-			}
-
 			this.powerMeterToggleChange.emit(this.isPowerMeterEnabled);
 		}
 
@@ -162,27 +147,12 @@ export class FitnessTrendInputsComponent implements OnInit {
 			});
 
 		} else {
-
-			if (this.isSwimEnabled) {
-				localStorage.setItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY, "true");
-			} else {
-				localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
-			}
-
 			this.swimToggleChange.emit(this.isSwimEnabled);
 		}
 	}
 
 	public onEBikeRidesEnabledToggle(): void {
-
-		if (this.isEBikeRidesEnabled) {
-			localStorage.setItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY, "true");
-		} else {
-			localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
-		}
-
 		this.eBikeRidesToggleChange.emit(this.isEBikeRidesEnabled);
-
 	}
 
 	public onConfigClicked(expandEstimatedStressScorePanel?: boolean): void {
@@ -218,7 +188,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 			if (hasConfigChanged) {
 				this.fitnessTrendConfigModel = fitnessTrendConfigModel;
-				localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save local
 				this.fitnessTrendConfigChange.emit(this.fitnessTrendConfigModel);
 			}
 
@@ -234,11 +203,8 @@ export class FitnessTrendInputsComponent implements OnInit {
 	}
 
 	public updatePeriodViewedTo(periodViewed: PeriodModel): void {
-		this.periodViewed = {
-			from: periodViewed.from,
-			to: periodViewed.to
-		};
-		this.periodViewedChange.emit(this.periodViewed);
+		this.periodViewed = periodViewed;
+		this.periodViewedChange.emit(periodViewed);
 	}
 
 }
