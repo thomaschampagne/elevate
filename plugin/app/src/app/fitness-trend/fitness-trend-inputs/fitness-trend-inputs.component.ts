@@ -185,14 +185,15 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	}
 
-	public onConfigClicked(): void {
+	public onConfigClicked(expandEstimatedStressScorePanel?: boolean): void {
 
 		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
 			lastFitnessActiveDate: this.lastFitnessActiveDate,
 			hasCyclingFtp: this.hasCyclingFtp,
 			hasRunningFtp: this.hasRunningFtp,
-			isPowerMeterEnabled: this.isPowerMeterEnabled
+			isPowerMeterEnabled: this.isPowerMeterEnabled,
+			expandEstimatedStressScorePanel: _.isBoolean(expandEstimatedStressScorePanel) ? expandEstimatedStressScorePanel : false
 		};
 
 		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {

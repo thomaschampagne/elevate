@@ -6,7 +6,7 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
-import { FitnessTrendConfigDialogComponent } from "../fitness-trend-config-dialog/fitness-trend-config-dialog.component";
+import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog.component";
 
 describe("FitnessTrendConfigDialogComponent", () => {
 	let component: FitnessTrendConfigDialogComponent;
@@ -20,7 +20,8 @@ describe("FitnessTrendConfigDialogComponent", () => {
 			lastFitnessActiveDate: new Date(),
 			hasCyclingFtp: true,
 			hasRunningFtp: true,
-			isPowerMeterEnabled: true
+			isPowerMeterEnabled: true,
+			expandEstimatedStressScorePanel: false
 		};
 
 		TestBed.configureTestingModule({

@@ -77,7 +77,8 @@
 <mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-			<app-fitness-trend-inputs fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
+			<app-fitness-trend-inputs #fitnessTrendInputs
+									  fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
 									  [dateMin]="dateMin"
 									  [dateMax]="dateMax"
 									  [lastPeriods]="lastPeriods"
@@ -111,19 +112,17 @@
 								 [periodViewed]="periodViewed"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
-		<!--<mat-divider></mat-divider>-->
 
-
-		<div class="notes">
+		<div class="notes" (click)="openFitnessConfig()">
 			<span
 				*ngIf="(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
-				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (cog icon above).">
+				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
 				Power Stress Scores Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
 			<span
 				*ngIf="!(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
-				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (cog icon above).
+				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
 				Note: A Cycling Functional Threshold Power (FTP) is required in athlete settings. Also the power meter
 				data toggle (thunderbolt icon just above) must be switched ON.">
 				Power Stress Scores Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
@@ -131,12 +130,12 @@
 			</span>
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<span *ngIf="(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
-				  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (cog icon above).">
+				  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
 				Running Stress Score Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
 			<span *ngIf="!(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
-				  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (cog icon above).
+				  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
 					Note: A Running Functional Threshold Pace is required in athlete settings.">
 				Running Stress Score Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>

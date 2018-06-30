@@ -6,4 +6,5 @@ export class FitnessTrendConfigDialogData {
 	public hasCyclingFtp: boolean;
 	public hasRunningFtp: boolean;
 	public isPowerMeterEnabled: boolean;
+	public expandEstimatedStressScorePanel: boolean;
 }

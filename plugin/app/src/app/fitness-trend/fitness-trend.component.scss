@@ -15,6 +15,7 @@ ul, li {
 .notes {
 	padding-top: 15px;
 	font-size: mat-font-size($config, caption);
+	cursor: pointer;
 }
 
 .estimationEnabled {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import * as _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -17,9 +17,10 @@ import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dial
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
+import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 
 // DONE 341: Add RSS legend
-// TODO 341: Check RSS vs HRSS consistency (improve GAP for this !)
+// DONE 341: Check RSS vs HRSS consistency (improve GAP for this !)
 // DONE 341: Hide RSS data-field if not author of act
 // TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
 // DONE 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
@@ -141,6 +142,9 @@ export class FitnessTrendComponent implements OnInit {
 			label: "Since beginning"
 		}];
 	}
+
+	@ViewChild(FitnessTrendInputsComponent)
+	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
 
 	public fitnessTrend: DayFitnessTrendModel[];
 	public lastPeriods: LastPeriodModel[];
@@ -371,5 +375,9 @@ export class FitnessTrendComponent implements OnInit {
 		}
 	}
 
+	public openFitnessConfig(): void {
+		const expandEstimatedStressScorePanel = true;
+		this.fitnessTrendInputsComponent.onConfigClicked(expandEstimatedStressScorePanel);
+	}
 }
 
