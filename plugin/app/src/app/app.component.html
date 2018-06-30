@@ -59,7 +59,7 @@
 					<button mat-menu-item (click)="onSync(true, false)"
 							*ngIf="(syncState === SyncState.SYNCED)">
 						<mat-icon>update</mat-icon>
-						Sync recent activities
+						<span>Sync recent activities</span>
 					</button>
 					<button mat-menu-item
 							(click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
@@ -67,19 +67,24 @@
 						<span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
 						<span *ngIf="(syncState !== SyncState.NOT_SYNCED)">Sync all activities</span>
 					</button>
+					<button mat-menu-item (click)="onSync(false, true)"
+							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
+						<mat-icon>redo</mat-icon>
+						<span>Clear and re-sync activities</span>
+					</button>
 					<button mat-menu-item (click)="onClearSyncedData()"
 							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
 						<mat-icon>clear</mat-icon>
-						Clear synced activities
+						<span>Clear synced activities</span>
 					</button>
 					<button mat-menu-item (click)="onSyncedBackupExport()"
 							*ngIf="(syncState === SyncState.SYNCED)">
 						<mat-icon>file_download</mat-icon>
-						Backup activities
+						<span>Backup activities</span>
 					</button>
 					<button mat-menu-item (click)="onSyncedBackupImport()">
 						<mat-icon>file_upload</mat-icon>
-						Restore activities
+						<span>Restore activities</span>
 					</button>
 				</mat-menu>
 			</ng-container>
