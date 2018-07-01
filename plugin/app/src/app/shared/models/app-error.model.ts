@@ -3,12 +3,12 @@ import * as _ from "lodash";
 export class AppError {
 
 	// List of errors that must to be registered in below method
-	public static readonly FT_NO_MINIMUM_REQUIRED_ACTIVITIES: string = "FT_1";
+	public static readonly FT_NO_ACTIVITIES: string = "FT_1";
 	public static readonly FT_PSS_USED_WITH_TRIMP_CALC_METHOD: string = "FT_2";
 	public static readonly FT_SSS_USED_WITH_TRIMP_CALC_METHOD: string = "FT_3";
 
 	public registerCodes(): void {
-		this._codes.push(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
+		this._codes.push(AppError.FT_NO_ACTIVITIES);
 		this._codes.push(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD);
 		this._codes.push(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD);
 	}
