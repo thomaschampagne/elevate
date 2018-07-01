@@ -57,11 +57,15 @@ export class FitnessService {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
+				if (_.isEmpty(activities) || activities.length === 0) {
+					reject(new AppError(AppError.FT_NO_ACTIVITIES,
+						"No activities available to generate the fitness trend"));
+				}
+
 				activities = this.filterActivities(activities, fitnessTrendConfigModel.ignoreBeforeDate,
 					fitnessTrendConfigModel.ignoreActivityNamePatterns);
 
 				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
-				let hasMinimumFitnessRequiredData = false;
 
 				_.forEach(activities, (activity: SyncedActivityModel) => {
 
@@ -120,8 +124,6 @@ export class FitnessService {
 								userLthrAlongActivityType,
 								activity.extendedStats.heartRateData.TRIMP);
 						}
-
-						hasMinimumFitnessRequiredData = true;
 					}
 
 					if (hasPowerData) {
@@ -134,7 +136,6 @@ export class FitnessService {
 						if ((hasPowerMeter && _.isNumber(weightedPower)) || (!hasPowerMeter && _.isNumber(weightedPower) && _.isNumber(bestEightyPercentPower))) {
 							fitnessReadyActivity.powerStressScore = this.computePowerStressScore(hasPowerMeter, movingTime,
 								weightedPower, bestEightyPercentPower, fitnessUserSettingsModel.cyclingFtp);
-							hasMinimumFitnessRequiredData = true;
 						}
 					}
 
@@ -142,7 +143,6 @@ export class FitnessService {
 						const movingTime = activity.moving_time_raw;
 						const gradeAdjustedAvgPace = activity.extendedStats.paceData.genuineGradeAdjustedAvgPace;
 						fitnessReadyActivity.runningStressScore = this.computeRunningStressScore(movingTime, gradeAdjustedAvgPace, fitnessUserSettingsModel.runningFtp);
-						hasMinimumFitnessRequiredData = true;
 					}
 
 					if (hasSwimmingData) {
@@ -150,16 +150,10 @@ export class FitnessService {
 							activity.moving_time_raw,
 							activity.elapsed_time_raw,
 							fitnessUserSettingsModel.swimFtp);
-						hasMinimumFitnessRequiredData = true;
 					}
 
 					fitnessPreparedActivities.push(fitnessReadyActivity);
 				});
-
-				if (!hasMinimumFitnessRequiredData) {
-					reject(new AppError(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES,
-						"No activities has minimum required data to generate a fitness trend"));
-				}
 
 				resolve(fitnessPreparedActivities);
 			});

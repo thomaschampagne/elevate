@@ -15,10 +15,9 @@ import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 
-function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number, hasPowerMeter?: boolean, avgPace?: number) {
+export function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number, hasPowerMeter?: boolean, avgPace?: number) {
 
 	const fakeActivity = new SyncedActivityModel();
-	fakeActivity.id = id;
 	fakeActivity.id = id;
 	fakeActivity.name = name;
 	fakeActivity.type = type;
@@ -1475,6 +1474,89 @@ describe("FitnessService", () => {
 			});
 		});
 
+		it("should prepare fitness activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS & Est.PSS=OFF & Est.RSS=OFF", (done: Function) => {
+
+			// Given
+			fitnessTrendConfigModel.allowEstimatedPowerStressScore = false;
+			fitnessTrendConfigModel.allowEstimatedRunningStressScore = false;
+			const expectedFitnessPreparedActivitiesLength = 4;
+			const expectedTrimpScoredActivitiesLength = 0;
+			const expectedPowerScoredActivitiesLength = 0;
+			const expectedRunningScoredActivitiesLength = 0;
+			const expectedSwimScoredActivitiesLength = 0;
+			const skipActivityTypes = null;
+			powerMeterEnable = false;
+			swimEnable = false;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"No sensor Ride", // PSS Scored (estimated)
+				"Ride",
+				"2018-01-30",
+				null,
+				150,
+				false));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+				"No sensor Run", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+				"No sensor Run 2", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+				"Swimming", // SSS Scored
+				"Swim",
+				"2018-02-09",
+				null,
+				null));
+
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+				.and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivityTypes);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+				const heartRateStressScoredActivities = _.filter(result, "heartRateStressScore");
+				const powerScoredActivities = _.filter(result, "powerStressScore");
+				const runningScoredActivities = _.filter(result, "runningStressScore");
+				const swimScored = _.filter(result, "swimStressScore");
+
+				expect(heartRateStressScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+				expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+				expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
+				expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
 		it("should skip activities types 'Run & 'EBikeRide' on prepare fitness w/ PM=OFF & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
 
 			// Given
@@ -1831,6 +1913,175 @@ describe("FitnessService", () => {
 
 		});
 
+		it("should prepare fitness activities (only power based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+
+			// Given
+			const expectedCount = 3;
+			powerMeterEnable = false;
+			swimEnable = false;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+				"SuperPoweredRide 01",
+				"Ride",
+				"2018-01-01",
+				null,
+				250));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+				"SuperPoweredRide 02",
+				"Ride",
+				"2018-01-15",
+				null,
+				275));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"SuperPoweredRide 03",
+				"Ride",
+				"2018-01-30",
+				null,
+				190));
+
+			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedCount);
+				done();
+
+			}, (error: AppError) => {
+				expect(error).toBeNull();
+				done();
+
+			});
+		});
+
+		it("should prepare fitness WITHOUT HR/POWERED/SWIM activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+
+			// Given
+			const expectedCount = 3;
+			powerMeterEnable = false;
+			swimEnable = false;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+				"SuperHeartRateRide 01",
+				"Ride",
+				"2018-01-01",
+				null,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+				"SuperHeartRateRide 02",
+				"Ride",
+				"2018-01-15",
+				null,
+				null));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"SuperHeartRateRide 03",
+				"Ride",
+				"2018-01-30",
+				null,
+				null));
+
+			spyOn(activityService.activityDao, "fetch")
+				.and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedCount);
+				done();
+
+			}, (error: AppError) => {
+				expect(error).toBeNull();
+				done();
+			});
+		});
+
+		it("should prepare fitness activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS & Est.PSS=OFF & Est.RSS=OFF", (done: Function) => {
+
+			// Given
+			const skipActivityTypes = null;
+			fitnessTrendConfigModel.allowEstimatedPowerStressScore = false;
+			fitnessTrendConfigModel.allowEstimatedRunningStressScore = false;
+			powerMeterEnable = false;
+			swimEnable = false;
+			const expectedCount = 5;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+				"Power Ride", // PSS Scored
+				"Ride",
+				"2018-01-01",
+				null,
+				250));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+				"No sensor Ride", // PSS Scored (estimated)
+				"Ride",
+				"2018-01-30",
+				null,
+				150,
+				false));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+				"No sensor Run", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+				"No sensor Run 2", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+				"Swimming", // SSS Scored
+				"Swim",
+				"2018-02-09",
+				null,
+				null));
+
+			spyOn(activityService.activityDao, "fetch")
+				.and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivityTypes);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedCount);
+				done();
+
+			}, (error: AppError) => {
+				expect(error).toBeNull();
+				done();
+			});
+		});
+
 		it("should reject prepare fitness activities w/ PM=ON & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
 
 			// Given
@@ -1891,160 +2142,21 @@ describe("FitnessService", () => {
 
 		});
 
-		it("should reject prepare fitness activities (only power based activities) w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
+		it("should reject no activities provided", (done: Function) => {
 
 			// Given
-			powerMeterEnable = false;
-			swimEnable = false;
-
-			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
-				"SuperPoweredRide 01",
-				"Ride",
-				"2018-01-01",
-				null,
-				250));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
-				"SuperPoweredRide 02",
-				"Ride",
-				"2018-01-15",
-				null,
-				275));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
-				"SuperPoweredRide 03",
-				"Ride",
-				"2018-01-30",
-				null,
-				190));
-
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
-
-			// When
-			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
-				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
-
-			// Then
-			promise.then((result: FitnessPreparedActivityModel[]) => {
-
-				expect(result).toBeNull();
-				done();
-
-			}, (error: AppError) => {
-				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
-				expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
-				done();
-
-			});
-		});
-
-		it("should reject prepare fitness WITHOUT HR/POWERED/SWIM activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS", (done: Function) => {
-
-			// Given
-			powerMeterEnable = false;
-			swimEnable = false;
-
-			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
-				"SuperHeartRateRide 01",
-				"Ride",
-				"2018-01-01",
-				null,
-				null));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
-				"SuperHeartRateRide 02",
-				"Ride",
-				"2018-01-15",
-				null,
-				null));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
-				"SuperHeartRateRide 03",
-				"Ride",
-				"2018-01-30",
-				null,
-				null));
-
-			spyOn(activityService.activityDao, "fetch")
-				.and.returnValue(Promise.resolve(syncedActivityModels));
-
-			// When
-			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
-				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
-
-			// Then
-			promise.then((result: FitnessPreparedActivityModel[]) => {
-
-				expect(result).toBeNull();
-				done();
-
-			}, (error: AppError) => {
-				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
-				expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
-				done();
-			});
-		});
-
-		it("should reject prepare fitness activities w/ PM=OFF & SWIM=OFF & HR_Mode=HRSS & Est.PSS=OFF & Est.RSS=OFF", (done: Function) => {
-
-			// Given
-			const skipActivityTypes = null;
 			fitnessTrendConfigModel.allowEstimatedPowerStressScore = false;
 			fitnessTrendConfigModel.allowEstimatedRunningStressScore = false;
 			powerMeterEnable = false;
 			swimEnable = false;
 
-			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
-				"Power Ride", // PSS Scored
-				"Ride",
-				"2018-01-01",
-				null,
-				250));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
-				"No sensor Ride", // PSS Scored (estimated)
-				"Ride",
-				"2018-01-30",
-				null,
-				150,
-				false));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
-				"No sensor Run", // RSS Scored
-				"Run",
-				"2018-02-08",
-				null,
-				null,
-				false,
-				300));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
-				"No sensor Run 2", // RSS Scored
-				"Run",
-				"2018-02-08",
-				null,
-				null,
-				false,
-				300));
-
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
-				"Swimming", // SSS Scored
-				"Swim",
-				"2018-02-09",
-				null,
-				null));
-
+			const emptyModels: SyncedActivityModel[] = [];
 			spyOn(activityService.activityDao, "fetch")
-				.and.returnValue(Promise.resolve(syncedActivityModels));
+				.and.returnValue(Promise.resolve(emptyModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
-				fitnessTrendConfigModel, powerMeterEnable, swimEnable, skipActivityTypes);
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
 
 			// Then
 			promise.then((result: FitnessPreparedActivityModel[]) => {
@@ -2054,8 +2166,8 @@ describe("FitnessService", () => {
 
 			}, (error: AppError) => {
 				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
-				expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
+				expect(error.code).toBe(AppError.FT_NO_ACTIVITIES);
+				expect(error.message).toBe("No activities available to generate the fitness trend");
 				done();
 			});
 		});
@@ -2448,7 +2560,6 @@ describe("FitnessService", () => {
 				expect(_.isNumber(activity.finalStressScore)).toBeTruthy();
 
 				activity = _.find(dailyActivity, {ids: [9, 10]});
-				// console.log(activity);
 				expect(_.floor(activity.heartRateStressScore)).toEqual(545);
 				expect(_.floor(activity.powerStressScore)).toEqual(100);
 				expect(_.floor(activity.runningStressScore)).toEqual(100);
@@ -2458,7 +2569,6 @@ describe("FitnessService", () => {
 				expect(_.floor(activity.heartRateStressScore)).toEqual(272);
 				expect(_.floor(activity.runningStressScore)).toEqual(200);
 				expect(_.floor(activity.finalStressScore)).toEqual(372);
-				// expect(_.floor(activity.powerStressScore)).toEqual(100);
 
 				activity = _.find(dailyActivity, {ids: [13, 14, 15, 16]});
 				expect(_.floor(activity.heartRateStressScore)).toEqual(545);
@@ -2476,10 +2586,12 @@ describe("FitnessService", () => {
 			});
 		});
 
-		it("should reject generate athlete daily activities without hr or power based activities & HR_Mode=HRSS", (done: Function) => {
+		it("should generate athlete daily activities without hr or power based activities & HR_Mode=HRSS", (done: Function) => {
 
 			// Given
+			const expectedDailyActivityLength = 61;
 			const syncedActivityModels: SyncedActivityModel[] = [];
+			getTodayMomentSpy.and.returnValue(moment("2018-02-15 12:00", momentDatePattern));
 			syncedActivityModels.push(createFakeSyncedActivityModel(1,
 				"SuperHeartRateRide 01",
 				"Ride",
@@ -2508,13 +2620,33 @@ describe("FitnessService", () => {
 
 			// Then
 			promise.then((dailyActivity: DayStressModel[]) => {
-				expect(dailyActivity).toBeNull();
+				expect(dailyActivity).not.toBeNull();
+				expect(dailyActivity.length).toEqual(expectedDailyActivityLength);
+
+				let activity: DayStressModel;
+
+				activity = _.find(dailyActivity, {ids: [1]});
+				expect(_.floor(activity.powerStressScore)).toEqual(0);
+				expect(_.floor(activity.heartRateStressScore)).toEqual(0);
+				expect(_.floor(activity.runningStressScore)).toEqual(0);
+				expect(_.floor(activity.finalStressScore)).toEqual(0);
+
+				activity = _.find(dailyActivity, {ids: [2]});
+				expect(_.floor(activity.powerStressScore)).toEqual(0);
+				expect(_.floor(activity.heartRateStressScore)).toEqual(0);
+				expect(_.floor(activity.runningStressScore)).toEqual(0);
+				expect(_.floor(activity.finalStressScore)).toEqual(0);
+
+				activity = _.find(dailyActivity, {ids: [3]});
+				expect(_.floor(activity.powerStressScore)).toEqual(0);
+				expect(_.floor(activity.heartRateStressScore)).toEqual(0);
+				expect(_.floor(activity.runningStressScore)).toEqual(0);
+				expect(_.floor(activity.finalStressScore)).toEqual(0);
+
 				done();
 
 			}, (error: AppError) => {
-				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES);
-				expect(error.message).toBe("No activities has minimum required data to generate a fitness trend");
+				expect(error).toBeNull();
 				done();
 			});
 

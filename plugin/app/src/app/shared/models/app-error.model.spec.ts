@@ -5,7 +5,7 @@ describe("AppError", () => {
 	it("should have been registered to be used", (done: Function) => {
 
 		// Given
-		const genuineErrorCode = AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES;
+		const genuineErrorCode = AppError.FT_NO_ACTIVITIES;
 		const genuineErrorMessage = "No minimum required activities!";
 
 		// When
@@ -38,13 +38,13 @@ describe("AppError", () => {
 	it("should not be used if duplicate", (done: Function) => {
 
 		// Given a fakeAppError with duplicate codes
-		const genuineErrorCode = AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES;
+		const genuineErrorCode = AppError.FT_NO_ACTIVITIES;
 		const genuineErrorMessage = "No minimum required activities!";
 		const fakeAppError = new AppError(genuineErrorCode, genuineErrorMessage);
 
 		const duplicateErrorCode = "FAKE_DUPLICATE";
 		fakeAppError._codes = [
-			AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES,
+			AppError.FT_NO_ACTIVITIES,
 			AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD,
 			AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD,
 			duplicateErrorCode,

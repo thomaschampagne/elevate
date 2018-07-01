@@ -19,16 +19,18 @@ import { SyncResultModel } from "../../../../shared/models/sync/sync-result.mode
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 
+
+// TODO 341: Update explains cards matching no data !
+// TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
+// TODO 341: Behaviour if activities filtered? Date and/or Pattern ? Make that solid !
+// TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
 // DONE 341: Add RSS legend
 // DONE 341: Check RSS vs HRSS consistency (improve GAP for this !)
 // DONE 341: Hide RSS data-field if not author of act
-// TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
 // DONE 341: Stress score estimate: disable toggle if FTP and/or required toggle not set + display warning message
 // DONE 341: Show below graph if: estimated stress scores are on/off; number of activities excluded; starting date
 // DONE 341: Use best 80% power as weigthed power when no power meter? should be yes
-// TODO 341: Update explains cards matching no data !
-// TODO 341: Clear and resync back?
-// TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
+// DONE 341: Clear and resync back?
 // DONE 341: Add RSS column in fitness data table
 
 @Component({
@@ -173,8 +175,14 @@ export class FitnessTrendComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
+		this.initialize().then(() => {
+			console.debug("FitnessTrend root component initialized");
+		});
+	}
 
-		this.syncService.getSyncState().then((syncState: SyncState) => {
+	public initialize(): Promise<void> {
+
+		return this.syncService.getSyncState().then((syncState: SyncState) => {
 
 			if (syncState === SyncState.SYNCED) {
 				this.isSynced = true;
@@ -238,8 +246,9 @@ export class FitnessTrendComponent implements OnInit {
 
 		}, (error: AppError) => {
 
-			if (error.code === AppError.FT_NO_MINIMUM_REQUIRED_ACTIVITIES) {
+			if (error.code === AppError.FT_NO_ACTIVITIES) {
 				this.areSyncedActivitiesCompliant = false;
+				console.warn(error);
 			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
 				console.warn(error);
 				this.resetUserPreferences();
