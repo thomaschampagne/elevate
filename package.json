@@ -18,6 +18,7 @@
 		"res-copy:install-guide": "node ./node_modules/cpy-cli/cli.js ./plugin/INSTALL.txt ./dist/",
 		"test": "npm-run-all clean test:core-headless test:app-headless",
 		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test",
+		"test:app:no-source-map": "npm run test:app -- --source-map=false",
 		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",
 		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js",
 		"test:core-headless": "npm run test:core -- --browsers ChromeHeadless --single-run",
