@@ -47,23 +47,38 @@
 </mat-card>
 
 <!--History not compliant with the feature-->
-<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)">
+<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">
 	<mat-card-title>
-		Your synced activities are not supported by this feature
+		Unable to generate your fitness trend from synced activities and feature configuration
+		<!--Your synced activities are not supported by this feature-->
 	</mat-card-title>
 	<mat-card-content>
-		Make sure you have at least:
-		<ul>
-			<li>
-				Any running or cycling activities with or without sensors.
-			</li>
-			<li>
-				Any sports activities with a heart rate monitor.
-			</li>
-			<li>
-				Any swimming activities having distance & time (no sensor required).
-			</li>
-		</ul>
+
+		<div>
+			Please verify that your synced activities have at least:
+			<ul>
+				<li>
+					A running or cycling activity with or without sensors.
+				</li>
+				<li>
+					An activity recorded with a heart rate monitor (no matter the sport type).
+				</li>
+				<li>
+					A swimming activity having distance & time data.
+				</li>
+			</ul>
+		</div>
+
+		<div>
+			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
+			You may also changed the fitness trend configuration with exclusion patterns and date that are probably too
+			restrictive.
+			<button mat-icon-button color="primary" (click)="onOpenFitnessTrendConfig()">
+				<mat-icon>settings</mat-icon>
+				Verify your fitness trend configuration
+			</button>
+		</div>
+
 	</mat-card-content>
 </mat-card>
 
@@ -94,7 +109,7 @@
 									  [hasCyclingFtp]="hasCyclingFtp"
 									  [hasRunningFtp]="hasRunningFtp"
 									  (periodViewedChange)="onPeriodViewedChange($event)"
-									  (fitnessTrendConfigChange)="onFitnessTrendConfigChange($event)"
+									  (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
 									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
 									  (swimToggleChange)="onSwimToggleChange($event)"
@@ -113,7 +128,7 @@
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
 
-		<div class="notes" (click)="openFitnessConfig()">
+		<div class="notes" (click)="onOpenFitnessTrendConfig(true)">
 			<span
 				*ngIf="(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
 				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
