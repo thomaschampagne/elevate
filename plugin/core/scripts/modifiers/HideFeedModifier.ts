@@ -61,7 +61,7 @@ export class HideFeedModifier extends AbstractModifier {
 						.replace("icon-", "");
 
 					const distanceElement = _.filter($(element).find("ul.list-stats").find("[class=unit]"), (item) => {
-						return ($(item).html() == "km" || $(item).html() == "mi");
+						return ($(item).html().trim() == "km" || $(item).html().trim() == "mi");
 					});
 
 					const distance: number = parseFloat($(distanceElement).parent().text().replace(",", "."));
