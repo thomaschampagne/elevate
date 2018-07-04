@@ -18,12 +18,15 @@ import { ExternalUpdatesService } from "../shared/services/external-updates/exte
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
+import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
+import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
 
 
 // DONE 341: Update explains cards matching no data !
 // DONE 341: Test cases when user has no HRM / power meter: What is displayed?!
 // TODO 341: Behaviour if activities filtered? Date and/or Pattern ? Make that solid !
 // TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
+// TODO 341: Disable RSS estimation if HR mode is TRIMP
 // DONE 341: Add RSS legend
 // DONE 341: Check RSS vs HRSS consistency (improve GAP for this !)
 // DONE 341: Hide RSS data-field if not author of act
@@ -176,7 +179,7 @@ export class FitnessTrendComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.initialize().then(() => {
-			console.debug("FitnessTrend root component initialized");
+			console.debug("FitnessTrend component initialized");
 		});
 	}
 
@@ -189,6 +192,7 @@ export class FitnessTrendComponent implements OnInit {
 				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
 			} else {
 				this.isSynced = false;
+				// TODO Add SyncState error in AppError
 				return Promise.reject("Stopping here! SyncState is: " + SyncState[syncState].toString()) as PromiseLike<UserSettingsModel>;
 			}
 
@@ -203,9 +207,9 @@ export class FitnessTrendComponent implements OnInit {
 			// Init fitness trend config
 			this.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
-			const savedConfig = localStorage.getItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
-			if (!_.isEmpty(savedConfig)) {
-				this.fitnessTrendConfigModel = JSON.parse(savedConfig) as FitnessTrendConfigModel;
+			const savedFitnessTrendConfig = localStorage.getItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
+			if (!_.isEmpty(savedFitnessTrendConfig)) {
+				this.fitnessTrendConfigModel = JSON.parse(savedFitnessTrendConfig) as FitnessTrendConfigModel;
 			}
 
 			this.verifyTogglesStatesAlongHrMode();
@@ -244,17 +248,19 @@ export class FitnessTrendComponent implements OnInit {
 				this.showFitnessWelcomeDialog();
 			}
 
-		}, (error: AppError) => {
+		}, (appError: AppError) => {
 
-			if (error.code === AppError.FT_NO_ACTIVITIES) {
+			if (appError.code === AppError.FT_NO_ACTIVITIES || appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED) {
+
 				this.areSyncedActivitiesCompliant = false;
-				console.warn(error);
-			} else if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
-				console.warn(error);
+
+			} else if (appError.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD
+				|| appError.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
+
 				this.resetUserPreferences();
-			} else {
-				console.error(error);
 			}
+
+			console.error(appError.toString());
 		});
 	}
 
@@ -263,13 +269,6 @@ export class FitnessTrendComponent implements OnInit {
 			localStorage.setItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY, (periodViewed as LastPeriodModel).key);
 		}
 		this.periodViewed = periodViewed;
-	}
-
-	public onFitnessTrendConfigChange(configModel: FitnessTrendConfigModel): void {
-		this.fitnessTrendConfigModel = configModel;
-		localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save local
-		this.verifyTogglesStatesAlongHrMode();
-		this.reloadFitnessTrend();
 	}
 
 	public onTrainingZonesToggleChange(enabled: boolean): void {
@@ -321,6 +320,47 @@ export class FitnessTrendComponent implements OnInit {
 		this.isEBikeRidesEnabled = enabled;
 		this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 		this.reloadFitnessTrend();
+	}
+
+	public onOpenFitnessTrendConfig(expandEstimatedStressScorePanel?: boolean): void {
+
+		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
+			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
+			lastFitnessActiveDate: this.lastFitnessActiveDate,
+			hasCyclingFtp: this.hasCyclingFtp,
+			hasRunningFtp: this.hasRunningFtp,
+			isPowerMeterEnabled: this.isPowerMeterEnabled,
+			expandEstimatedStressScorePanel: _.isBoolean(expandEstimatedStressScorePanel) ? expandEstimatedStressScorePanel : false
+		};
+
+		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {
+			minWidth: FitnessTrendConfigDialogComponent.MIN_WIDTH,
+			maxWidth: FitnessTrendConfigDialogComponent.MAX_WIDTH,
+			data: fitnessTrendConfigDialogData
+		});
+
+		dialogRef.afterClosed().subscribe((fitnessTrendConfigModel: FitnessTrendConfigModel) => {
+
+			if (_.isEmpty(fitnessTrendConfigModel)) {
+				return;
+			}
+
+			const hasConfigChanged = (this.fitnessTrendConfigModel.heartRateImpulseMode !== Number(fitnessTrendConfigModel.heartRateImpulseMode))
+				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl !== fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)
+				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl)
+				|| (this.fitnessTrendConfigModel.allowEstimatedPowerStressScore !== fitnessTrendConfigModel.allowEstimatedPowerStressScore)
+				|| (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== fitnessTrendConfigModel.allowEstimatedRunningStressScore)
+				|| (this.fitnessTrendConfigModel.ignoreBeforeDate !== fitnessTrendConfigModel.ignoreBeforeDate)
+				|| (this.fitnessTrendConfigModel.ignoreActivityNamePatterns !== fitnessTrendConfigModel.ignoreActivityNamePatterns);
+
+			if (hasConfigChanged) {
+				this.fitnessTrendConfigModel = fitnessTrendConfigModel;
+				localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save config local
+				this.initialize().then(() => {
+					console.debug("FitnessTrend component re-initialized");
+				});
+			}
+		});
 	}
 
 	public verifyTogglesStatesAlongHrMode(): void {
@@ -414,11 +454,6 @@ export class FitnessTrendComponent implements OnInit {
 			}, 1000);
 
 		}
-	}
-
-	public openFitnessConfig(): void {
-		const expandEstimatedStressScorePanel = true;
-		this.fitnessTrendInputsComponent.onConfigClicked(expandEstimatedStressScorePanel);
 	}
 }
 

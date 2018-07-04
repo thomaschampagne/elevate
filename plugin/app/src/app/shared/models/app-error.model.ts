@@ -45,4 +45,8 @@ export class AppError {
 		}
 	}
 
+	public toString(): string {
+		return "ERROR " + this.code + ": " + this.message;
+	}
+
 }
