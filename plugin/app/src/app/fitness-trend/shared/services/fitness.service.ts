@@ -57,6 +57,7 @@ export class FitnessService {
 
 			return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
 
+				// Check if provided activities are not empty
 				if (_.isEmpty(activities) || activities.length === 0) {
 					reject(new AppError(AppError.FT_NO_ACTIVITIES,
 						"No activities available to generate the fitness trend"));
@@ -64,6 +65,12 @@ export class FitnessService {
 
 				activities = this.filterActivities(activities, fitnessTrendConfigModel.ignoreBeforeDate,
 					fitnessTrendConfigModel.ignoreActivityNamePatterns);
+
+				// Check if activities filtered are not empty
+				if (_.isEmpty(activities) || activities.length === 0) {
+					reject(new AppError(AppError.FT_ALL_ACTIVITIES_FILTERED,
+						"No activities available. They all have been filtered. Unable to generate the fitness trend."));
+				}
 
 				const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
 

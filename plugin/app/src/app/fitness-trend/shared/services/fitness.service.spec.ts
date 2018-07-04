@@ -14,92 +14,7 @@ import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
-
-export function createFakeSyncedActivityModel(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number, hasPowerMeter?: boolean, avgPace?: number) {
-
-	const fakeActivity = new SyncedActivityModel();
-	fakeActivity.id = id;
-	fakeActivity.name = name;
-	fakeActivity.type = type;
-	fakeActivity.display_type = type;
-	fakeActivity.start_time = moment(dateStr, "YYYY-MM-DD").toISOString();
-	fakeActivity.distance_raw = 30000;
-	fakeActivity.moving_time_raw = 3600;
-	fakeActivity.elapsed_time_raw = 3600;
-	fakeActivity.elevation_gain_raw = 0;
-	fakeActivity.extendedStats = {
-		moveRatio: 1,
-		cadenceData: null,
-		elevationData: null,
-		gradeData: null,
-		heartRateData: null,
-		paceData: null,
-		speedData: null,
-		powerData: null
-	};
-
-	fakeActivity.hasPowerMeter = false;
-
-	// If avgHr given? Generate fake stats
-	if (_.isNumber(avgHr)) {
-		fakeActivity.extendedStats.heartRateData = {
-			HRSS: avgHr,
-			HRSSPerHour: avgHr / 90,
-			TRIMP: avgHr * 2,
-			TRIMPPerHour: avgHr / 60,
-			best20min: avgHr * 1.5,
-			activityHeartRateReserve: avgHr * 0.25,
-			activityHeartRateReserveMax: avgHr / 2,
-			averageHeartRate: avgHr,
-			heartRateZones: null,
-			lowerQuartileHeartRate: avgHr / 4,
-			maxHeartRate: avgHr * 1.5,
-			medianHeartRate: avgHr / 2,
-			upperQuartileHeartRate: (avgHr / 4) * 3
-		};
-	}
-
-	// If power given? Generate fake stats
-	if (_.isNumber(avgWatts)) {
-		fakeActivity.extendedStats.powerData = {
-			avgWatts: avgWatts,
-			avgWattsPerKg: avgWatts / 70,
-			hasPowerMeter: (_.isBoolean(hasPowerMeter)) ? hasPowerMeter : true,
-			lowerQuartileWatts: avgWatts / 4,
-			medianWatts: avgWatts / 2,
-			powerStressScore: avgWatts * 3,
-			powerStressScorePerHour: avgWatts * 3,
-			powerZones: null,
-			punchFactor: avgWatts * 4,
-			upperQuartileWatts: (avgWatts / 4) * 3,
-			variabilityIndex: 1,
-			weightedPower: avgWatts,
-			best20min: avgWatts * 1.5,
-			bestEightyPercent: avgWatts,
-			weightedWattsPerKg: avgWatts * 1.25 / 70,
-		};
-
-		fakeActivity.hasPowerMeter = (_.isBoolean(hasPowerMeter)) ? hasPowerMeter : true;
-	}
-
-	if (_.isNumber(avgPace)) {
-		fakeActivity.extendedStats.paceData = {
-			avgPace: avgPace * 100,
-			best20min: avgPace * 150,
-			lowerQuartilePace: null,
-			medianPace: null,
-			upperQuartilePace: null,
-			variancePace: null,
-			genuineGradeAdjustedAvgPace: avgPace,
-			paceZones: null,
-			gradeAdjustedPaceZones: null,
-			runningStressScore: null,
-			runningStressScorePerHour: null,
-		};
-	}
-
-	return fakeActivity;
-}
+import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper";
 
 describe("FitnessService", () => {
 
@@ -555,21 +470,21 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
 				180,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -966,21 +881,21 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
 				null,
 				275));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1032,14 +947,14 @@ describe("FitnessService", () => {
 			const expectedSwimScoredActivitiesLength = 1;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"HR Ride", // HR Scored + Est PSS Scored
 				"Ride",
 				"2018-01-15",
@@ -1047,7 +962,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1055,7 +970,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -1064,7 +979,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -1073,7 +988,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1082,7 +997,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1091,7 +1006,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1145,14 +1060,14 @@ describe("FitnessService", () => {
 			const skipActivityTypes = null;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -1160,7 +1075,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1168,7 +1083,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"HR Run", // HR Scored
 				"Run",
 				"2018-02-02",
@@ -1177,7 +1092,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"HR Run", // HR Scored
 				"Run",
 				"2018-02-03",
@@ -1186,7 +1101,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1195,7 +1110,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1204,7 +1119,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1259,14 +1174,14 @@ describe("FitnessService", () => {
 			powerMeterEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -1274,7 +1189,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1282,7 +1197,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -1291,7 +1206,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -1300,7 +1215,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1309,7 +1224,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1318,7 +1233,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1374,14 +1289,14 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"HR Ride", // HR Scored + Est PSS Scored
 				"Ride",
 				"2018-01-15",
@@ -1389,7 +1304,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1397,7 +1312,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -1406,7 +1321,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -1415,7 +1330,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1424,7 +1339,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1433,7 +1348,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1490,7 +1405,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1498,7 +1413,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1507,7 +1422,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1516,7 +1431,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1572,28 +1487,28 @@ describe("FitnessService", () => {
 			const skipActivitiesTypes: string[] = ["Run", "EBikeRide"];
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(151,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(151,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(235,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(235,
 				"Super E-Bike Ride",
 				"EBikeRide",
 				"2018-01-15",
 				90,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(666,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(666,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-30",
 				135,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(999,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(999,
 				"SuperHeartRateRun 01",
 				"Run",
 				"2018-01-30",
@@ -1646,28 +1561,28 @@ describe("FitnessService", () => {
 			const skipActivitiesTypes: string[] = ["Ride", "Run"];
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(151,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(151,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
 				150,
 				230));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(235,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(235,
 				"Super E-Bike Ride",
 				"EBikeRide",
 				"2018-01-15",
 				90,
 				210));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(666,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(666,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-30",
 				135,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(999,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(999,
 				"SuperHeartRateRun 01",
 				"Run",
 				"2018-01-30",
@@ -1751,42 +1666,42 @@ describe("FitnessService", () => {
 			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
 			const expectedFitnessPreparedActivitiesLength = 3;
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"Ride 02 #MTBDH",
 				"Ride",
 				"2018-01-15",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"Ride 03 #MTBDH",
 				"Ride",
 				"2018-01-16",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"Ride 05 @skipMe",
 				"Ride",
 				"2018-01-18",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"Run 01",
 				"Run",
 				"2018-01-19",
@@ -1839,42 +1754,42 @@ describe("FitnessService", () => {
 
 			const expectedFitnessPreparedActivitiesLength = 2;
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"Ride 02 #MTBDH",
 				"Ride",
 				"2018-01-15",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"Ride 03 #MTBDH",
 				"Ride",
 				"2018-01-16",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"Ride 05 @skipMe",
 				"Ride",
 				"2018-01-18",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"Run 01",
 				"Run",
 				"2018-01-19",
@@ -1921,21 +1836,21 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
 				null,
 				275));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1970,21 +1885,21 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
 				null,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -2022,14 +1937,14 @@ describe("FitnessService", () => {
 			const expectedCount = 5;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
 				null,
 				250));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -2037,7 +1952,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -2046,7 +1961,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -2055,7 +1970,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -2170,6 +2085,60 @@ describe("FitnessService", () => {
 				expect(error.message).toBe("No activities available to generate the fitness trend");
 				done();
 			});
+		});
+
+		it("should reject all activities filtered", (done: Function) => {
+
+			// Given
+			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["Ride"];
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
+				"Ride 01",
+				"Ride",
+				"2018-01-01",
+				150,
+				null));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
+				"Ride 02 #MTBDH",
+				"Ride",
+				"2018-01-15",
+				150,
+				null));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
+				"Ride 03 #MTBDH",
+				"Ride",
+				"2018-01-16",
+				150,
+				null));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
+				"Ride 04",
+				"Ride",
+				"2018-01-17",
+				150,
+				null));
+
+			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+
+			// When
+			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
+				fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+
+			// Then
+			promise.then((result: FitnessPreparedActivityModel[]) => {
+
+				expect(result).toBeNull();
+				done();
+
+			}, (error: AppError) => {
+				expect(error).not.toBeNull();
+				expect(error.code).toBe(AppError.FT_ALL_ACTIVITIES_FILTERED);
+				expect(error.message).toBe("No activities available. They all have been filtered. Unable to generate the fitness trend.");
+				done();
+			});
+
 		});
 	});
 
@@ -2332,21 +2301,21 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(0,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(0,
 				"Power Ride + HR", // PSS Scored + HRSS Scored
 				"Ride",
 				"2018-01-01",
 				190,
 				150));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-02",
 				null,
 				150));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -2354,7 +2323,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"No sensor Ride 2", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -2362,7 +2331,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(4,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -2371,7 +2340,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(5,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
 				"HR Run 2",  // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -2380,7 +2349,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(6,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
 				"No sensor Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-07",
@@ -2389,7 +2358,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(7,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
 				"No sensor Run 2", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-08",
@@ -2398,7 +2367,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(8,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -2406,7 +2375,7 @@ describe("FitnessService", () => {
 				null));
 
 			// ... Grouped activities 2018-02-12; Final SS => 545
-			syncedActivityModels.push(createFakeSyncedActivityModel(9,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
 				"HR Run 3", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-12",
@@ -2415,7 +2384,7 @@ describe("FitnessService", () => {
 				false,
 				300)); // => RSS: 100
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(10,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(10,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-12",
@@ -2423,7 +2392,7 @@ describe("FitnessService", () => {
 				150, false)); // => Est PSS: 100
 
 			// ... Grouped activities 2018-02-13; Final SS => 372
-			syncedActivityModels.push(createFakeSyncedActivityModel(11,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(11,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2432,7 +2401,7 @@ describe("FitnessService", () => {
 				false,
 				300));  // => RSS: 100
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(12,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(12,
 				"No sensor Run 3", // Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2442,21 +2411,21 @@ describe("FitnessService", () => {
 				300)); // => RSS: 100 (priority)
 
 			// ... Grouped activities 2018-02-14; Final SS => 100 + 272 * 2 + 419 => 1064
-			syncedActivityModels.push(createFakeSyncedActivityModel(13,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(13,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-02-14",
 				null,
 				150)); // => PSS: 100 (priority)
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(14,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(14,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-14",
 				190, // => HRSS: 272 (priority)
 				150, false)); // => Est PSS: 100
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(15,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(15,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-14",
@@ -2465,7 +2434,7 @@ describe("FitnessService", () => {
 				false,
 				300));  // => RSS: 100
 
-			const swimActivity = createFakeSyncedActivityModel(16,
+			const swimActivity = FakeSyncedActivityHelper.create(16,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-14",
@@ -2592,21 +2561,21 @@ describe("FitnessService", () => {
 			const expectedDailyActivityLength = 61;
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			getTodayMomentSpy.and.returnValue(moment("2018-02-15 12:00", momentDatePattern));
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
 				null,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(3,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -2793,14 +2762,14 @@ describe("FitnessService", () => {
 			const syncedActivityModels = _TEST_SYNCED_ACTIVITIES_;
 
 			// Add some fakes EBikeRides
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Super E-Bike Ride 01",
 				"EBikeRide",
 				"2015-08-15",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"Super E-Bike Ride 02",
 				"EBikeRide",
 				"2015-09-15",
@@ -2882,7 +2851,7 @@ describe("FitnessService", () => {
 
 			// Add some fakes no sensor activities
 			const expectedRideName = "No sensor Ride";
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				expectedRideName, // PSS Scored (estimated)
 				"Ride",
 				"2015-08-15",
@@ -2891,7 +2860,7 @@ describe("FitnessService", () => {
 				false));
 
 			const expectedRunName = "No sensor Run";
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				expectedRunName, // RSS Scored
 				"Run",
 				"2015-09-15",
@@ -2963,14 +2932,14 @@ describe("FitnessService", () => {
 			const syncedActivityModels = [];
 
 			// Add some fakes EBikeRides
-			syncedActivityModels.push(createFakeSyncedActivityModel(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				"Super Bike Ride 01",
 				"Ride",
 				"2015-11-15",
 				150,
 				null));
 
-			syncedActivityModels.push(createFakeSyncedActivityModel(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				"Super Bike Ride 02",
 				"Ride",
 				"2015-11-20",

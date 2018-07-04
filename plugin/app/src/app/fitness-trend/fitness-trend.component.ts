@@ -20,8 +20,8 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 
 
-// TODO 341: Update explains cards matching no data !
-// TODO 341: Test cases when user has no HRM / power meter: What is displayed?!
+// DONE 341: Update explains cards matching no data !
+// DONE 341: Test cases when user has no HRM / power meter: What is displayed?!
 // TODO 341: Behaviour if activities filtered? Date and/or Pattern ? Make that solid !
 // TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
 // DONE 341: Add RSS legend
