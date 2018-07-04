@@ -192,8 +192,7 @@ export class FitnessTrendComponent implements OnInit {
 				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
 			} else {
 				this.isSynced = false;
-				// TODO Add SyncState error in AppError
-				return Promise.reject("Stopping here! SyncState is: " + SyncState[syncState].toString()) as PromiseLike<UserSettingsModel>;
+				return Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString()));
 			}
 
 		}).then((userSettings: UserSettingsModel) => {

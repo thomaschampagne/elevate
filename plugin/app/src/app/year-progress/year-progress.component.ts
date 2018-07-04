@@ -18,6 +18,7 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { SyncedActivityModel } from "../../../../shared/models/sync/synced-activity.model";
 import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog/year-progress-overview-dialog.component";
 import { YearProgressForOverviewModel } from "./shared/models/year-progress-for-overview.model";
+import { AppError } from "../shared/models/app-error.model";
 
 
 @Component({
@@ -72,45 +73,41 @@ export class YearProgressComponent implements OnInit {
 		this.syncService.getSyncState().then((syncState: SyncState) => {
 
 			if (syncState !== SyncState.SYNCED) {
-				console.warn("Stopping here! SyncState is: " + SyncState[syncState].toString());
 				this.hasActivityModels = false;
-				return;
+				return Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString()));
 			}
 
-			Promise.all([
-
+			return Promise.all([
 				this.userSettingsService.fetch(),
 				this.activityService.fetch()
+			]);
 
-			]).then((results: Object[]) => {
+		}).then((results: Object[]) => {
 
-				const userSettingsModel = _.first(results) as UserSettingsModel;
-				const syncedActivityModels = _.last(results) as SyncedActivityModel[];
-				const isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+			const userSettingsModel = _.first(results) as UserSettingsModel;
+			const syncedActivityModels = _.last(results) as SyncedActivityModel[];
+			const isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
 
-				this.hasActivityModels = !_.isEmpty(syncedActivityModels);
+			this.hasActivityModels = !_.isEmpty(syncedActivityModels);
 
-				if (this.hasActivityModels) {
-					this.setup(
-						isMetric,
-						syncedActivityModels
-					);
-				}
+			if (this.hasActivityModels) {
+				this.setup(
+					isMetric,
+					syncedActivityModels
+				);
+			}
 
-				// Use default moment provided by service on init (should be today on first load)
-				this.momentWatched = this.yearProgressService.momentWatched;
+			// Use default moment provided by service on init (should be today on first load)
+			this.momentWatched = this.yearProgressService.momentWatched;
 
-				// When user mouse moves on graph, listen for moment watched and update title
-				this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
-					this.momentWatched = momentWatched;
-				});
-
-
-			}, error => {
-				console.error(error);
+			// When user mouse moves on graph, listen for moment watched and update title
+			this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+				this.momentWatched = momentWatched;
 			});
 
 
+		}, (appError: AppError) => {
+			console.error(appError.toString());
 		});
 
 	}
