@@ -3,12 +3,14 @@ import * as _ from "lodash";
 export class AppError {
 
 	// List of errors that must to be registered in below method
+	public static readonly SYNC_NOT_SYNCED: string = "SYNC_1";
 	public static readonly FT_NO_ACTIVITIES: string = "FT_1";
 	public static readonly FT_ALL_ACTIVITIES_FILTERED: string = "FT_2";
 	public static readonly FT_PSS_USED_WITH_TRIMP_CALC_METHOD: string = "FT_3";
 	public static readonly FT_SSS_USED_WITH_TRIMP_CALC_METHOD: string = "FT_4";
 
 	public registerCodes(): void {
+		this._codes.push(AppError.SYNC_NOT_SYNCED);
 		this._codes.push(AppError.FT_NO_ACTIVITIES);
 		this._codes.push(AppError.FT_ALL_ACTIVITIES_FILTERED);
 		this._codes.push(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD);
