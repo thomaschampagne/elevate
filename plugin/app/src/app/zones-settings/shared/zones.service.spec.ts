@@ -20,6 +20,12 @@ describe("ZonesService", () => {
         }
     );
 
+    const PACE_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
+        {
+            value: "pace"
+        }
+    );
+
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
@@ -622,7 +628,8 @@ describe("ZonesService", () => {
 		];
 
 		// When
-		const error: string = zonesService.isZonesCompliant(ZONES, false);
+		zonesService.zoneDefinition = PACE_ZONE_DEFINITION_MOCKED;
+		const error: string = zonesService.isZonesCompliant(ZONES);
 
 		// Then
 		expect(error).not.toBeNull();
@@ -649,7 +656,8 @@ describe("ZonesService", () => {
 		];
 
 		// When
-		const error: string = zonesService.isZonesCompliant(ZONES, false);
+		zonesService.zoneDefinition = PACE_ZONE_DEFINITION_MOCKED;
+		const error: string = zonesService.isZonesCompliant(ZONES);
 
 		// Then
 		expect(error).toBeNull();
@@ -675,7 +683,8 @@ describe("ZonesService", () => {
 		];
 
 		// When
-		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES, false);
+		zonesService.zoneDefinition = PACE_ZONE_DEFINITION_MOCKED;
+		const error: string = zonesService.isZonesCompliant(FAKE_WRONG_ZONES);
 
 		// Then
 		expect(error).not.toBeNull();

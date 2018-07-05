@@ -266,7 +266,7 @@ export class ZonesService {
 	 *
 	 * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
 	 */
-	public isZonesCompliant(zones: ZoneModel[], ascending = true): string {
+	public isZonesCompliant(zones: ZoneModel[]): string {
 
 		const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
@@ -286,7 +286,7 @@ export class ZonesService {
             for (let i = 0; i < zones.length; i++) {
 
                 if (i === 0) { // First zone
-                    if (ascending) {
+                    if (this.zoneDefinition.ascending) {
                         if (zones[i].to !== zones[i + 1].from) {
                             return NOT_COMPLIANT_ZONE;
                         }
@@ -298,7 +298,7 @@ export class ZonesService {
 
                 } else if (i < (zones.length - 1)) { // Middle zone
 
-                    if (ascending) {
+                    if (this.zoneDefinition.ascending) {
                         if (zones[i].to !== zones[i + 1].from || zones[i].from !== zones[i - 1].to) {
                             return NOT_COMPLIANT_ZONE;
                         }
@@ -309,7 +309,7 @@ export class ZonesService {
                     }
 
                 } else { // Last zone
-                    if (ascending) {
+                    if (this.zoneDefinition.ascending) {
                         if (zones[i].from !== zones[i - 1].to) {
                             return NOT_COMPLIANT_ZONE;
                         }
@@ -334,8 +334,7 @@ export class ZonesService {
 		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
-			const complianceError = this.isZonesCompliant(
-			    this.currentZones, this.zoneDefinition.ascending);
+			const complianceError = this.isZonesCompliant(this.currentZones);
 
 			if (_.isNull(complianceError)) {
 				this.userSettingsService.updateZones(
