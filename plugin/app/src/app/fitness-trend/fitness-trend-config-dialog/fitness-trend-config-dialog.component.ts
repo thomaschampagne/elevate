@@ -20,6 +20,8 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 	public ignoreActivityNamePatterns: string = null;
 	public ignoreBeforeDate: Date = null;
 	public ignoreBeforeMaxDate: Date = null;
+	public isEstimatedPowerStressScoreToggleEnabled: boolean;
+	public isEstimatedRunningStressScoreToggleEnabled: boolean;
 
 	constructor(public dialogRef: MatDialogRef<FitnessTrendConfigDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public fitnessTrendConfigDialogData: FitnessTrendConfigDialogData,
@@ -35,9 +37,23 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 		if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreBeforeDate) {
 			this.ignoreBeforeDate = moment(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreBeforeDate).toDate();
 		}
+
 		if (this.fitnessTrendConfigDialogData.lastFitnessActiveDate) {
 			this.ignoreBeforeMaxDate = this.fitnessTrendConfigDialogData.lastFitnessActiveDate;
 		}
+
+		this.updateEstimatedStressScoresToggles();
+	}
+
+	public updateEstimatedStressScoresToggles(): void {
+
+		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasCyclingFtp
+			&& this.fitnessTrendConfigDialogData.isPowerMeterEnabled
+			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
+		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasRunningFtp
+			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
 	}
 
 	public onSave(): void {
@@ -50,6 +66,7 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 
 	public onModeChange(): void {
 		this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode = Number(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode);
+		this.updateEstimatedStressScoresToggles();
 	}
 
 	public onInitialFitnessChange(): void {

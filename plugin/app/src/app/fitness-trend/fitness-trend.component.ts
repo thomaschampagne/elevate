@@ -24,9 +24,9 @@ import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog
 
 // DONE 341: Update explains cards matching no data !
 // DONE 341: Test cases when user has no HRM / power meter: What is displayed?!
-// TODO 341: Behaviour if activities filtered? Date and/or Pattern ? Make that solid !
+// DONE 341: Behaviour if activities filtered? Date and/or Pattern ? Make that solid !
 // TODO 341: Change fitness welcome popup content to explain: "Should resync to get estimation working"
-// TODO 341: Disable RSS estimation if HR mode is TRIMP
+// DONE 341: Disable RSS estimation if HR mode is TRIMP
 // DONE 341: Add RSS legend
 // DONE 341: Check RSS vs HRSS consistency (improve GAP for this !)
 // DONE 341: Hide RSS data-field if not author of act
@@ -166,6 +166,8 @@ export class FitnessTrendComponent implements OnInit {
 	public fitnessUserSettingsModel: FitnessUserSettingsModel;
 	public hasCyclingFtp: boolean;
 	public hasRunningFtp: boolean;
+	public isEstimatedPowerStressScoreEnabled: boolean;
+	public isEstimatedRunningStressScoreEnabled: boolean;
 	public skipActivityTypes: string[] = [];
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
 	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
@@ -211,7 +213,11 @@ export class FitnessTrendComponent implements OnInit {
 				this.fitnessTrendConfigModel = JSON.parse(savedFitnessTrendConfig) as FitnessTrendConfigModel;
 			}
 
-			this.verifyTogglesStatesAlongHrMode();
+			// Change toggle state along HRSS/TRIMP heart rate mode
+			this.updateTogglesStatesAlongHrMode();
+
+			// Change estimated stress score status along (R)FTP, power meter and HRSS/TRIMP heart rate mode
+			this.updateEstimatedStressScoresNotes();
 
 			// Check for activity types to skip (e.g. EBikeRide)
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
@@ -250,13 +256,7 @@ export class FitnessTrendComponent implements OnInit {
 		}, (appError: AppError) => {
 
 			if (appError.code === AppError.FT_NO_ACTIVITIES || appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED) {
-
 				this.areSyncedActivitiesCompliant = false;
-
-			} else if (appError.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD
-				|| appError.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
-
-				this.resetUserPreferences();
 			}
 
 			console.error(appError.toString());
@@ -279,7 +279,6 @@ export class FitnessTrendComponent implements OnInit {
 		}
 
 		this.isTrainingZonesEnabled = enabled;
-		this.verifyTogglesStatesAlongHrMode();
 	}
 
 	public onPowerMeterToggleChange(enabled: boolean): void {
@@ -291,7 +290,6 @@ export class FitnessTrendComponent implements OnInit {
 		}
 
 		this.isPowerMeterEnabled = enabled;
-		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
@@ -304,7 +302,6 @@ export class FitnessTrendComponent implements OnInit {
 		}
 
 		this.isSwimEnabled = enabled;
-		this.verifyTogglesStatesAlongHrMode();
 		this.reloadFitnessTrend();
 	}
 
@@ -362,7 +359,10 @@ export class FitnessTrendComponent implements OnInit {
 		});
 	}
 
-	public verifyTogglesStatesAlongHrMode(): void {
+	/**
+	 * Update TrainingZones, PowerMeter, Swim toggles value along HR mode TRIMP/HRSS
+	 */
+	public updateTogglesStatesAlongHrMode(): void {
 
 		if (this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
 			this.isTrainingZonesEnabled = false;
@@ -375,6 +375,19 @@ export class FitnessTrendComponent implements OnInit {
 		}
 	}
 
+	public updateEstimatedStressScoresNotes(): void {
+
+		this.isEstimatedPowerStressScoreEnabled = this.hasCyclingFtp
+			&& this.isPowerMeterEnabled
+			&& this.fitnessTrendConfigModel.allowEstimatedPowerStressScore
+			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
+		this.isEstimatedRunningStressScoreEnabled = this.hasRunningFtp
+			&& this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
+			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
+	}
+
 	public reloadFitnessTrend(): void {
 
 		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled,
@@ -383,14 +396,8 @@ export class FitnessTrendComponent implements OnInit {
 			this.fitnessTrend = fitnessTrend;
 			this.updateDateRangeAndPeriods();
 
-		}, (error: AppError) => {
-
-			if (error.code === AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD || error.code === AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD) {
-				console.warn(error);
-				this.resetUserPreferences();
-			} else {
-				console.error(error);
-			}
+		}, (appError: AppError) => {
+			console.error(appError.toString());
 		});
 	}
 
@@ -426,18 +433,6 @@ export class FitnessTrendComponent implements OnInit {
 		} else {
 			console.warn("No activities found");
 		}
-	}
-
-	public resetUserPreferences(): void {
-		alert("Whoops! We got a little problem while computing your fitness trend. Your graph inputs preferences will be reset.");
-		localStorage.removeItem(FitnessTrendComponent.LS_LAST_PERIOD_VIEWED_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
-		localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
-		console.warn("User stored fitness prefs have been cleared");
-		window.location.reload();
 	}
 
 	public showFitnessWelcomeDialog(): void {

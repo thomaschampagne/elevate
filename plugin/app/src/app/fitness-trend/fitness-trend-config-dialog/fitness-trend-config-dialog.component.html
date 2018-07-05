@@ -19,12 +19,11 @@
 				<div fxFlex>
 					<mat-slide-toggle
 						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
-						[disabled]="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+						[disabled]="!isEstimatedPowerStressScoreToggleEnabled">
 						Enable Cycling Power Stress Score (PSS) Estimation.
 					</mat-slide-toggle>
 
-					<div class="hint"
-						 *ngIf="!(fitnessTrendConfigDialogData.hasCyclingFtp && fitnessTrendConfigDialogData.isPowerMeterEnabled)">
+					<div class="hint" *ngIf="!isEstimatedPowerStressScoreToggleEnabled">
 
 						<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
 						PSS Estimation is currently disabled. To enable it, make sure that:
@@ -32,12 +31,11 @@
 							<li>You set your <strong>Cycling Functional Threshold Power</strong> in <a
 								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
 							</li>
-							<li>You switch <strong>ON</strong> the power meter data toggle in the fitness trend feature
-								identified by the icon
+							<li>You switch <strong>ON</strong> the power meter data toggle identified by the icon
 								<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
 								.
 							</li>
-							<li>Heart rate stress score calculation mode is set to <strong>HRSS</strong></li>
+							<li>You set the "Heart Rate Stress Score" calculation mode to <strong>HRSS</strong></li>
 						</ul>
 					</div>
 				</div>
@@ -45,16 +43,19 @@
 				<div fxFlex>
 					<mat-slide-toggle
 						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
-						[disabled]="!fitnessTrendConfigDialogData.hasRunningFtp">
+						[disabled]="!isEstimatedRunningStressScoreToggleEnabled">
 						Enable Running Stress Score (RSS) Estimation.
 					</mat-slide-toggle>
 
-					<div class="hint" *ngIf="!fitnessTrendConfigDialogData.hasRunningFtp">
+					<div class="hint" *ngIf="!isEstimatedRunningStressScoreToggleEnabled">
 						<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-						RSS Estimation is currently disabled. To enable it, make sure that you set your <strong>Running
-						Functional Threshold
-						Pace</strong> in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete
-						settings</a> and go back here.
+						RSS Estimation is currently disabled. To enable it, make sure that:
+						<ul>
+							<li>You set your <strong>Running Functional Threshold Pace</strong> in <a
+								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+							</li>
+							<li>You set the "Heart Rate Stress Score" calculation mode to <strong>HRSS</strong></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -190,6 +191,9 @@
 						</li>
 						<li>
 							Cycling Power Stress Scores (PSS) will not be taken into account because TRIMP scores are not scaled with PSS stress scores.
+						</li>
+						<li>
+							Running Stress Scores (RSS) will not be taken into account because TRIMP scores are not scaled with RSS stress scores.
 						</li>
 						<li>
 							Swimming Stress Scores (SSS) will not be taken into account because TRIMP scores are not scaled with SSS stress scores.

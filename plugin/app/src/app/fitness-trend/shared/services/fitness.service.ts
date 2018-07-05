@@ -37,21 +37,6 @@ export class FitnessService {
 				   swimEnable: boolean,
 				   skipActivityTypes?: string[]): Promise<FitnessPreparedActivityModel[]> {
 
-
-		if (fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
-
-			if (powerMeterEnable) {
-				const reason = "'Power Stress Score' calculation method cannot work with " +
-					"'TRIMP (Training Impulse)' calculation method.";
-				return Promise.reject(new AppError(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD, reason));
-			}
-
-			if (swimEnable) {
-				const reason = "'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
-				return Promise.reject(new AppError(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD, reason));
-			}
-		}
-
 		return new Promise((resolve: (result: FitnessPreparedActivityModel[]) => void,
 							reject: (error: AppError) => void) => {
 
@@ -87,18 +72,21 @@ export class FitnessService {
 
 					const hasPowerData: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
 						&& powerMeterEnable
+						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(fitnessUserSettingsModel.cyclingFtp)
 						&& activity.extendedStats && activity.extendedStats.powerData
 						&& (activity.extendedStats.powerData.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore)
 						&& _.isNumber(activity.extendedStats.powerData.weightedPower);
 
 					const hasRunningData: boolean = activity.type === "Run"
+						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(fitnessUserSettingsModel.runningFtp)
 						&& activity.extendedStats && activity.extendedStats.paceData && _.isNumber(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace)
 						&& fitnessTrendConfigModel.allowEstimatedRunningStressScore;
 
 					const hasSwimmingData: boolean = (swimEnable && _.isNumber(fitnessUserSettingsModel.swimFtp) && fitnessUserSettingsModel.swimFtp > 0
 						&& activity.type === "Swim"
+						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
 						&& activity.moving_time_raw > 0);
 
