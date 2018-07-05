@@ -57,17 +57,31 @@ export class ZonesService {
 				// Computed middle value between oldLastZone.from and oldLastZone.to
 				const intermediateZoneValue: number = Math.floor((oldLastZone.from + oldLastZone.to) / 2);
 
-				// Creating new Zone
-				const lastZone: ZoneModel = {
-					from: intermediateZoneValue,
-					to: oldLastZone.to,
-				};
+                if (this.zoneDefinition.ascending) {
+                    // Creating new Zone
+                    const lastZone: ZoneModel = {
+                        from: intermediateZoneValue,
+                        to: oldLastZone.to,
+                    };
 
-				// Apply middle value computed to previous last zone (to)
-				this.currentZones[this.currentZones.length - 1].to = intermediateZoneValue;
+                    // Apply middle value computed to previous last zone (to)
+                    this.currentZones[this.currentZones.length - 1].to = intermediateZoneValue;
 
-				// Add the new last zone
-				this.currentZones.push(lastZone);
+                    // Add the new last zone
+                    this.currentZones.push(lastZone);
+                } else {
+                    // Creating new Zone
+                    const lastZone: ZoneModel = {
+                        from: oldLastZone.from,
+                        to: intermediateZoneValue,
+                    };
+
+                    // Apply middle value computed to previous last zone (from)
+                    this.currentZones[this.currentZones.length - 1].from = intermediateZoneValue;
+
+                    // Add the new last zone
+                    this.currentZones.push(lastZone);
+                }
 
 				resolve("Zone <" + this.currentZones.length + "> has been added.");
 			}
@@ -121,8 +135,13 @@ export class ZonesService {
 
 				} else {
 
-					// Update next from zone with previous zone to
-					this.currentZones[index + 1].from = this.currentZones[index - 1].to;
+                    if (this.zoneDefinition.ascending) {
+                        // Update next from zone with previous zone to
+                        this.currentZones[index + 1].from = this.currentZones[index - 1].to;
+                    } else {
+                        // Update next to zone with previous zone from
+                        this.currentZones[index + 1].to = this.currentZones[index - 1].from;
+                    }
 
 					// Remove zone middle zone id here...
 					this.currentZones.splice(index, 1);
@@ -160,44 +179,85 @@ export class ZonesService {
 			value: zoneChange.value,
 		};
 
-		if (!isFirstZoneChange && !isLastZoneChange) {
+        if (this.zoneDefinition.ascending) {
+            if (!isFirstZoneChange && !isLastZoneChange) {
 
-			if (zoneChange.from) {
-				instruction.destinationId = zoneChange.sourceId - 1;
-				instruction.from = false;
-				instruction.to = true;
-			}
+                if (zoneChange.from) {
+                    instruction.destinationId = zoneChange.sourceId - 1;
+                    instruction.from = false;
+                    instruction.to = true;
+                }
 
-			if (zoneChange.to) {
-				instruction.destinationId = zoneChange.sourceId + 1;
-				instruction.from = true;
-				instruction.to = false;
-			}
+                if (zoneChange.to) {
+                    instruction.destinationId = zoneChange.sourceId + 1;
+                    instruction.from = true;
+                    instruction.to = false;
+                }
 
-		} else if (isFirstZoneChange) {
+            } else if (isFirstZoneChange) {
 
-			if (zoneChange.to) {
-				instruction.destinationId = zoneChange.sourceId + 1;
-				instruction.from = true;
-				instruction.to = false;
-			}
+                if (zoneChange.to) {
+                    instruction.destinationId = zoneChange.sourceId + 1;
+                    instruction.from = true;
+                    instruction.to = false;
+                }
 
-			if (zoneChange.from) {
-				instruction = null;
-			}
+                if (zoneChange.from) {
+                    instruction = null;
+                }
 
-		} else if (isLastZoneChange) {
+            } else if (isLastZoneChange) {
 
-			if (zoneChange.to) {
-				instruction = null;
-			}
+                if (zoneChange.to) {
+                    instruction = null;
+                }
 
-			if (zoneChange.from) {
-				instruction.destinationId = zoneChange.sourceId - 1;
-				instruction.from = false;
-				instruction.to = true;
-			}
-		}
+                if (zoneChange.from) {
+                    instruction.destinationId = zoneChange.sourceId - 1;
+                    instruction.from = false;
+                    instruction.to = true;
+                }
+            }
+        } else {
+            if (!isFirstZoneChange && !isLastZoneChange) {
+
+                if (zoneChange.from) {
+                    instruction.destinationId = zoneChange.sourceId + 1;
+                    instruction.from = false;
+                    instruction.to = true;
+                }
+
+                if (zoneChange.to) {
+                    instruction.destinationId = zoneChange.sourceId - 1;
+                    instruction.from = true;
+                    instruction.to = false;
+                }
+
+            } else if (isFirstZoneChange) {
+
+                if (zoneChange.to) {
+                    instruction = null;
+                }
+
+                if (zoneChange.from) {
+                    instruction.destinationId = zoneChange.sourceId + 1;
+                    instruction.from = false;
+                    instruction.to = true;
+                }
+
+            } else if (isLastZoneChange) {
+
+                if (zoneChange.to) {
+                    instruction.destinationId = zoneChange.sourceId - 1;
+                    instruction.from = true;
+                    instruction.to = false;
+                }
+
+                if (zoneChange.from) {
+                    instruction = null;
+                }
+            }
+        }
 
 		this.zoneChangeOrderUpdates.next(instruction);
 	}

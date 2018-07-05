@@ -9,9 +9,9 @@
 		<span fxFlex="5"></span>
 
 		<!--FROM FIELD-->
-		<div fxFlex="40" [ngSwitch]="isFirstZone"> <!-- FIRST ZONE ??? -->
-			<mat-form-field *ngSwitchCase="true" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
-				<!-- IS FIRST ZONE -->
+		<div fxFlex="40"> <!-- FIRST ZONE ??? -->
+			<mat-form-field *ngIf="isFirstZone && zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS FIRST ZONE && ASCENDING ZONES -->
 				<input
 					matInput
 					placeholder="From {{zoneDefinition.units}}"
@@ -25,8 +25,38 @@
 					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
-			<mat-form-field *ngSwitchCase="false" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
-				<!-- IS NOT FIRST ZONE -->
+			<mat-form-field *ngIf="!isFirstZone && zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT FIRST ZONE && ASCENDING -->
+				<input
+					matInput
+					placeholder="From {{zoneDefinition.units}}"
+					type="number"
+					min="{{prevZoneFrom}}"
+					max="{{zone.to}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngIf="isLastZone && !zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS LAST ZONE && DESCENDING ZONES -->
+				<input
+					matInput
+					placeholder="From {{zoneDefinition.units}}"
+					type="number"
+					min="{{zoneDefinition.min}}"
+					max="{{zone.to}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: true, to: false})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.from"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngIf="!isLastZone && !zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT LAST ZONE && DESCENDING -->
 				<input
 					matInput
 					placeholder="From {{zoneDefinition.units}}"
@@ -51,9 +81,9 @@
 		<span fxFlex="5"></span>
 
 		<!--TO FIELD-->
-		<div fxFlex="40" [ngSwitch]="isLastZone"> <!-- FIRST ZONE ??? -->
-			<mat-form-field *ngSwitchCase="true" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
-				<!-- IS LAST ZONE -->
+		<div fxFlex="40"> <!-- FIRST ZONE ??? -->
+			<mat-form-field *ngIf="isLastZone && zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS LAST ZONE && ASCENDING -->
 				<input
 					matInput
 					placeholder="To {{zoneDefinition.units}}"
@@ -67,8 +97,38 @@
 					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
 				/>
 			</mat-form-field>
-			<mat-form-field *ngSwitchCase="false" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
-				<!-- IS NOT LAST ZONE -->
+			<mat-form-field *ngIf="!isLastZone && zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT LAST ZONE && ASCENDING -->
+				<input
+					matInput
+					placeholder="To {{zoneDefinition.units}}"
+					type="number"
+					min="{{zone.from}}"
+					max="{{nextZoneTo}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngIf="isFirstZone && !zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS FIRST ZONE && DESCENDING -->
+				<input
+					matInput
+					placeholder="To {{zoneDefinition.units}}"
+					type="number"
+					min="{{zone.from}}"
+					max="{{zoneDefinition.max}}"
+					step="{{zoneDefinition.step}}"
+					(change)="onZoneChange({from: false, to: true})"
+					(keydown)="onKeyDown($event)"
+					[(ngModel)]="zone.to"
+					matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
+				/>
+			</mat-form-field>
+			<mat-form-field *ngIf="!isFirstZone && !zoneDefinition.ascending" fxFlex="(zoneDefinition.customDisplay ? 35 : 75)">
+				<!-- IS NOT FIRST ZONE && DESCENDING -->
 				<input
 					matInput
 					placeholder="To {{zoneDefinition.units}}"
