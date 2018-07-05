@@ -45,8 +45,6 @@ describe("AppError", () => {
 		const duplicateErrorCode = "FAKE_DUPLICATE";
 		fakeAppError._codes = [
 			AppError.FT_NO_ACTIVITIES,
-			AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD,
-			AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD,
 			duplicateErrorCode,
 			duplicateErrorCode,
 		];
