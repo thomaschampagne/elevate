@@ -63,11 +63,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
-			icon: "home",
-			routerLink: AppRoutesModel.welcome,
-			routerLinkActive: true
-		},
-		{
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
 			routerLinkActive: true
