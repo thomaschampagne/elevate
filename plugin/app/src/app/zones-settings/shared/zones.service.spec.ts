@@ -14,17 +14,17 @@ describe("ZonesService", () => {
 
 	let zonesService: ZonesService;
 
-    const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
-        {
-            value: "speed"
-        }
-    );
+	const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
+		{
+			value: "speed"
+		}
+	);
 
-    const PACE_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
-        {
-            value: "pace"
-        }
-    );
+	const PACE_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS,
+		{
+			value: "pace"
+		}
+	);
 
 	beforeEach(() => {
 
