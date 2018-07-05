@@ -134,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.toolBarTitle = AppComponent.convertRouteToTitle(routerEvent.url);
+				this.toolBarTitle = AppComponent.convertRouteToTitle((<NavigationEnd> routerEvent).urlAfterRedirects);
 			}
 		});
 
