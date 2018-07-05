@@ -1,51 +1,79 @@
-<h2 mat-dialog-title>Notice: improved fitness trend accuracy with a heart rate monitor.</h2>
+<h2 mat-dialog-title>New feature important notice: "Estimated Fitness Trend" </h2>
 <mat-dialog-content class="mat-body-1">
-	<div>
-		From now, heart rate based activities have their stress scores processed with <strong><i>Heart Rate Stress Score
-		(HRSS)</i></strong> method. They were previously processed using the <strong><i>Training Impulse
-		(TRIMP)</i></strong> method only.<br/><br/>
 
-		The <i>HRSS</i> method is recommended over <i>TRIMP</i> because:
+	<div>
+		From now, if you don't own (or sometimes missed) your sensors, your fitness trend can be nevertheless estimated.
+		Extensively a "typical" iPhone or Android mobile user who runs the strava mobile app can now access the fitness
+		trend feature without buying any external sensors 👍. Nevertheless sensors are highly recommended if you need a
+		more accurate trend.
+	</div>
+
+	<div>
+		Since the fitness trend is calculated on activities' stress scores, this implies that stress scores of your
+		activities without sensors have to be estimated too. Currently only cycling, running and swimming activities can
+		have their stress scores estimated.
+	</div>
+
+	<div>
+		Estimating stress scores on cycling and running implies the below prerequisites:
 		<ul>
 			<li>
-				<i>HRSS</i> scores are scaled to be use with <i>Training Zones</i>. <i>TRIMP</i> had a scale missmatch
-				with <i>Training Zones</i>.
+				Estimated <i>Cycling Power Stress Score (PSS)</i>:
+				<ul>
+					<li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
+						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+					</li>
+					<li>The power meter data toggle
+						<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+						must be switched <strong>ON</strong> (on screen behind).
+					</li>
+					<li>
+						Your weight must be set in <a href="https://www.strava.com/settings/profile" target="_blank">strava
+						profile</a>. (If not set strava can't estimate the power data on your cycling activities
+						required to compute <i>PSS</i>.
+					</li>
+				</ul>
 			</li>
 			<li>
-				<i>HRSS</i> scores can be directly compared to <i>Cycling Power Stress Scores (PSS)</i>. They use same
-				referential or scale.
-			</li>
-			<li>
-				<i>HRSS</i> scores can be directly compared to <i>Swimming Stress Scores (SSS)</i>. They also use same
-				referential or scale.
+				<i>Estimated Running Stress Score (RSS)</i>:
+				<ul>
+					<li>Your <i>Running Functional Threshold Pace</i> must be set in <a
+						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+					</li>
+				</ul>
 			</li>
 		</ul>
-
-		With this change your <i>HRSS</i> scores will be ~40-30% lower than <i>TRIMP</i> scores. Fitness and fatigue
-		values will also drop in the same time. <strong>It's an expected and normal behaviour</strong>. Basically
-		just think that <i>TRIMP</i> scores
-		are on "another scale" and <i>HRSS</i> scores are on the scale to be compared with training zones and others
-		<i>PSS</i> and <i>SSS</i> scores.
-		And like <i>TRIMP</i>, <i>HRSS</i> also depends on exercise duration and intensity and provides a good
-		indicator to compare commitment between activities.
 	</div>
+
 	<div>
 		<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-		You should <strong>setup your own <i>Lactate Threshold Heart Rate (LTHR)</i></strong> in <a
-		routerLink="/athleteSettings">athlete settings</a>
-		for best results. (<i>LTHR</i> is basically the latest best average heart rate you can maintain for up to an
-		hour.)
-	</div>
-	<div>
-		However you can still enable back <i>TRIMP</i> as default heart rate stress score calculation method in the
-		feature settings by clicking the
-		<mat-icon color="primary">settings</mat-icon>
-		icon.
-	</div>
-	<div>
-		And a new fitness trend guide is accessible from
-		<mat-icon color="primary">help_outline</mat-icon>
-		icon. Reading this guide is also strongly recommended.
+		The "Estimated Fitness Trend" <strong>may not work properly on existing synced activities</strong> because some
+		added stats (required to estimate stress scores and fitness trend) are missing on your currently
+		synced activities. If you need to estimate stress scores on some of your activities and you have already synced
+		your activities in the past, you may do this:
+
+		<ul>
+			<li>
+				Perform a backup of your synced activities for security before. Just click
+				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+				icon then
+				<i>
+					<mat-icon [style.vertical-align]="'bottom'">file_download</mat-icon>
+					Backup activities</i>
+			</li>
+			<li>
+				Make sure you properly configured all your <a [routerLink]="'/athleteSettings'"
+															  (click)="dialogRef.close()">athlete settings</a>.
+			</li>
+			<li>
+				Clear and synchronize again your activities. Click
+				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+				icon then
+				<i>
+					<mat-icon [style.vertical-align]="'bottom'">redo</mat-icon>
+					Clear and re-sync activities</i>
+			</li>
+		</ul>
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
