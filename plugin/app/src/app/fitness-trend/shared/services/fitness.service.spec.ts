@@ -1977,8 +1977,7 @@ describe("FitnessService", () => {
 				null,
 				null));
 
-			spyOn(activityService.activityDao, "fetch")
-				.and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
@@ -1997,15 +1996,67 @@ describe("FitnessService", () => {
 			});
 		});
 
-		it("should reject prepare fitness activities w/ PM=ON & SWIM=OFF & HR_Mode=TRIMP", (done: Function) => {
+		it("should prepare fitness activities w/ PM=ON & SWIM=ON & HR_Mode=TRIMP & Est.PSS=ON & Est.RSS=ON", (done: Function) => {
 
 			// Given
-			const expectedErrorMessage = "'Power Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
-
 			fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
-			swimEnable = false;
+			fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
+			fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
+			powerMeterEnable = true;
+			swimEnable = true;
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+			const expectedCount = 6;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
+				"Power Ride", // PSS Scored
+				"Ride",
+				"2018-01-01",
+				null,
+				250));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
+				"No sensor Ride", // PSS Scored (estimated)
+				"Ride",
+				"2018-01-30",
+				null,
+				150,
+				false));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
+				"No sensor Run", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
+				"No sensor Run 2", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
+				"Swimming", // SSS Scored
+				"Swim",
+				"2018-02-09",
+				null,
+				null));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
+				"HR Ride", // Trimp Scored
+				"Ride",
+				"2018-02-11",
+				165,
+				150,
+				false));
+
+			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
@@ -2014,28 +2065,106 @@ describe("FitnessService", () => {
 			// Then
 			promise.then((result: FitnessPreparedActivityModel[]) => {
 
-				expect(result).toBeNull();
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedCount);
+
+				let activity: FitnessPreparedActivityModel = _.find(result, {id: 1});
+				expect(activity).not.toBeNull();
+				expect(activity.powerStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 2});
+				expect(activity).not.toBeNull();
+				expect(activity.powerStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 3});
+				expect(activity).not.toBeNull();
+				expect(activity.runningStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 4});
+				expect(activity).not.toBeNull();
+				expect(activity.runningStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 5});
+				expect(activity).not.toBeNull();
+				expect(activity.swimStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 6});
+				expect(activity).not.toBeNull();
+				expect(activity.heartRateStressScore).toBeUndefined();
+				expect(activity.powerStressScore).toBeUndefined();
+				expect(_.isNumber(activity.trainingImpulseScore)).toBeTruthy();
+
 				done();
 
 			}, (error: AppError) => {
-				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_PSS_USED_WITH_TRIMP_CALC_METHOD);
-				expect(error.message).toBe(expectedErrorMessage);
+				expect(error).toBeNull();
 				done();
-
 			});
 
+			done();
 		});
 
-		it("should reject prepare fitness activities w/ PM=OFF & SWIM=ON & HR_Mode=TRIMP", (done: Function) => {
+		it("should prepare fitness activities w/ PM=ON & SWIM=ON & HR_Mode=TRIMP & Est.PSS=ON & Est.RSS=ON", (done: Function) => {
 
 			// Given
-			const expectedErrorMessage = "'Swim Stress Score' calculation method cannot work with 'TRIMP (Training Impulse)' calculation method.";
 			fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
-			powerMeterEnable = false;
+			fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
+			fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
+			powerMeterEnable = true;
+			swimEnable = true;
 
-			spyOn(activityService.activityDao, "fetch")
-				.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
+			const expectedCount = 6;
+
+			const syncedActivityModels: SyncedActivityModel[] = [];
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
+				"Power Ride", // PSS Scored
+				"Ride",
+				"2018-01-01",
+				null,
+				250));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
+				"No sensor Ride", // PSS Scored (estimated)
+				"Ride",
+				"2018-01-30",
+				null,
+				150,
+				false));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
+				"No sensor Run", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
+				"No sensor Run 2", // RSS Scored
+				"Run",
+				"2018-02-08",
+				null,
+				null,
+				false,
+				300));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
+				"Swimming", // SSS Scored
+				"Swim",
+				"2018-02-09",
+				null,
+				null));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
+				"HR Ride", // Trimp Scored
+				"Ride",
+				"2018-02-11",
+				165,
+				150,
+				false));
+
+			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessUserSettingsModel,
@@ -2044,17 +2173,43 @@ describe("FitnessService", () => {
 			// Then
 			promise.then((result: FitnessPreparedActivityModel[]) => {
 
-				expect(result).toBeNull();
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(expectedCount);
+
+				let activity: FitnessPreparedActivityModel = _.find(result, {id: 1});
+				expect(activity).not.toBeNull();
+				expect(activity.powerStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 2});
+				expect(activity).not.toBeNull();
+				expect(activity.powerStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 3});
+				expect(activity).not.toBeNull();
+				expect(activity.runningStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 4});
+				expect(activity).not.toBeNull();
+				expect(activity.runningStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 5});
+				expect(activity).not.toBeNull();
+				expect(activity.swimStressScore).toBeUndefined();
+
+				activity = _.find(result, {id: 6});
+				expect(activity).not.toBeNull();
+				expect(activity.heartRateStressScore).toBeUndefined();
+				expect(activity.powerStressScore).toBeUndefined();
+				expect(_.isNumber(activity.trainingImpulseScore)).toBeTruthy();
+
 				done();
 
 			}, (error: AppError) => {
-				expect(error).not.toBeNull();
-				expect(error.code).toBe(AppError.FT_SSS_USED_WITH_TRIMP_CALC_METHOD);
-				expect(error.message).toBe(expectedErrorMessage);
+				expect(error).toBeNull();
 				done();
-
 			});
 
+			done();
 		});
 
 		it("should reject no activities provided", (done: Function) => {

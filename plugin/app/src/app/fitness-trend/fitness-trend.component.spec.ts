@@ -119,7 +119,7 @@ describe("FitnessTrendComponent", () => {
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
 
 		// When
-		component.verifyTogglesStatesAlongHrMode();
+		component.updateTogglesStatesAlongHrMode();
 
 		// Then
 		expect(component.isTrainingZonesEnabled).toEqual(true);
@@ -144,7 +144,7 @@ describe("FitnessTrendComponent", () => {
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
 
 		// When
-		component.verifyTogglesStatesAlongHrMode();
+		component.updateTogglesStatesAlongHrMode();
 
 		// Then
 		expect(component.isTrainingZonesEnabled).toEqual(false);

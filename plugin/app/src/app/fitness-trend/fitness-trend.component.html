@@ -49,31 +49,31 @@
 <!--History not compliant with the feature-->
 <mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">
 	<mat-card-title>
-		Unable to generate your fitness trend from synced activities and feature configuration
-		<!--Your synced activities are not supported by this feature-->
+		Unable to generate fitness trend 😢
 	</mat-card-title>
 	<mat-card-content>
 
 		<div>
-			Please verify that your synced activities have at least:
+			Stravistix can't generate your fitness trend using your synced activities and fitness trend configuration.
+			Please check that your synced activities have at least:
 			<ul>
 				<li>
-					A running or cycling activity with or without sensors.
+					A running or cycling activity recorded with or without sensors.
 				</li>
 				<li>
-					An activity recorded with a heart rate monitor (no matter the sport type).
+					Or an activity recorded with a heart rate monitor (no matter the sport type).
 				</li>
 				<li>
-					A swimming activity having distance & time data.
+					Or a swimming activity having distance & time data.
 				</li>
 			</ul>
 		</div>
 
 		<div>
 			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
-			You may also changed the fitness trend configuration with exclusion patterns and date that are probably too
-			restrictive.
-			<button mat-icon-button color="primary" (click)="onOpenFitnessTrendConfig()">
+			Your fitness trend configuration may also have exclusion patterns and date that are probably too
+			restrictive &nbsp;&nbsp;➔
+			<button mat-button color="primary" (click)="onOpenFitnessTrendConfig()">
 				<mat-icon>settings</mat-icon>
 				Verify your fitness trend configuration
 			</button>
@@ -128,30 +128,30 @@
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
 
-		<div class="notes" (click)="onOpenFitnessTrendConfig(true)">
+		<div class="estimatedStressScoresNotes" (click)="onOpenFitnessTrendConfig(true)">
 			<span
-				*ngIf="(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
+				*ngIf="isEstimatedPowerStressScoreEnabled"
 				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
 				Power Stress Scores Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
 			<span
-				*ngIf="!(hasCyclingFtp && isPowerMeterEnabled && fitnessTrendConfigModel.allowEstimatedPowerStressScore)"
+				*ngIf="!isEstimatedPowerStressScoreEnabled"
 				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
-				Note: A Cycling Functional Threshold Power (FTP) is required in athlete settings. Also the power meter
-				data toggle (thunderbolt icon just above) must be switched ON.">
+				Note: A Cycling Functional Threshold Power (FTP) is required in athlete settings. The Power Meter
+				data toggle (thunderbolt icon) must be switched ON. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
 				Power Stress Scores Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<span *ngIf="(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
+			<span *ngIf="isEstimatedRunningStressScoreEnabled"
 				  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
 				Running Stress Score Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
-			<span *ngIf="!(hasRunningFtp && fitnessTrendConfigModel.allowEstimatedRunningStressScore)"
+			<span *ngIf="!isEstimatedRunningStressScoreEnabled"
 				  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
-					Note: A Running Functional Threshold Pace is required in athlete settings.">
+					Note: A Running Functional Threshold Pace is required in athlete settings. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
 				Running Stress Score Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
 				[inline]="true">info</mat-icon>
 			</span>
