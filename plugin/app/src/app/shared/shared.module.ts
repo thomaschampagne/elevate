@@ -27,7 +27,6 @@ import { SyncDao } from "./dao/sync/sync.dao";
 import { SyncService } from "./services/sync/sync.service";
 import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
-import { WelcomeComponent } from "../welcome/welcome.component";
 import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -50,7 +49,6 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 	],
 	declarations: [
 		// Components
-		WelcomeComponent,
 		AthleteSettingsComponent,
 		GlobalSettingsComponent,
 		SwimFtpHelperComponent,
