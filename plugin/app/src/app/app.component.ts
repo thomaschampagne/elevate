@@ -1,8 +1,8 @@
+import * as _ from "lodash";
+import * as moment from "moment";
 import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
-import * as _ from "lodash";
-import * as moment from "moment";
 import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
