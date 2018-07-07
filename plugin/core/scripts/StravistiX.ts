@@ -45,7 +45,6 @@ import { AthleteUpdate } from "./AthleteUpdate";
 import "./Follow";
 import { releaseNotes } from "../../shared/ReleaseNotes";
 import { ReleaseNoteModel } from "../../shared/models/release-note.model";
-import { GenericExtendedDataModifier } from "./modifiers/extendedActivityData/GenericExtendedDataModifier";
 
 export class StravistiX {
 	public static instance: StravistiX = null;
@@ -649,7 +648,7 @@ export class StravistiX {
 					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
-			default:
+			/*default:
 				extendedDataModifier = new GenericExtendedDataModifier(
 					this.activityProcessor,
 					this.activityId,
@@ -659,7 +658,7 @@ export class StravistiX {
 					this.isActivityAuthor,
 					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
-				break;
+				break;*/
 		}
 
 		// Send opened activity type to ga for stats
