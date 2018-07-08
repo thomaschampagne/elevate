@@ -11,6 +11,7 @@ import { SyncedBackupModel } from "./synced-backup.model";
 describe("SyncService", () => {
 
 	const tabId = 101;
+	const installedVersion = "2.0.0";
 	let syncService: SyncService;
 	let syncDao: SyncDao;
 
@@ -29,6 +30,8 @@ describe("SyncService", () => {
 			};
 			callback(tab as chrome.tabs.Tab);
 		});
+
+		spyOn(syncService, "getAppVersion").and.returnValue(installedVersion);
 
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
@@ -115,9 +118,6 @@ describe("SyncService", () => {
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version = "1.0.0";
-		spyOn(syncService, "getAppVersion").and.returnValue(version);
-
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.prepareForExport();
 
@@ -125,7 +125,7 @@ describe("SyncService", () => {
 		promise.then((syncedBackupModel: SyncedBackupModel) => {
 
 			expect(syncedBackupModel).not.toBeNull();
-			expect(syncedBackupModel.pluginVersion).toEqual(version);
+			expect(syncedBackupModel.pluginVersion).toEqual(installedVersion);
 			expect(syncedBackupModel.lastSyncDateTime).toEqual(lastSyncDateTime);
 			expect(syncedBackupModel.syncedActivities).toEqual(TEST_SYNCED_ACTIVITIES);
 			done();
@@ -144,8 +144,6 @@ describe("SyncService", () => {
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version = "1.0.0";
-		spyOn(syncService, "getAppVersion").and.returnValue(version);
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
 		const saveAsSpy = spyOn(syncService, "saveAs").and.stub();
@@ -173,8 +171,6 @@ describe("SyncService", () => {
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(null);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
-		const version = "1.0.0";
-		spyOn(syncService, "getAppVersion").and.returnValue(version);
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
 		const saveAsSpy = spyOn(syncService, "saveAs").and.stub();
@@ -197,21 +193,22 @@ describe("SyncService", () => {
 
 	});
 
-	it("should import athlete activities", (done: Function) => {
+	it("should import athlete activities with a 1.0.0 backup and 1.0.0 compatible backup version threshold", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const version = "1.0.0";
+		const importedBackupVersion = "1.0.0";
+		const compatibleBackupVersionThreshold = "1.0.0";
+		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			lastSyncDateTime: lastSyncDateTime,
-			pluginVersion: version
+			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(version);
 
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
@@ -238,25 +235,65 @@ describe("SyncService", () => {
 
 	});
 
-	it("should not import athlete activities with mismatch version", (done: Function) => {
+	it("should import athlete activities with a 1.5.1 backup and 1.2.3 compatible backup version threshold", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
-		const importedVersion = "6.6.6";
-		const expectedErrorMessage = "Cannot import activities because of plugin version mismatch. " +
-			"The installed plugin version is " + currentInstalledVersion + " and imported backup file is " +
-			"for a " + importedVersion + " plugin version. Try perform a clean full sync.";
+		const importedBackupVersion = "1.5.1";
+		const compatibleBackupVersionThreshold = "1.2.3";
+		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			lastSyncDateTime: lastSyncDateTime,
-			pluginVersion: importedVersion
+			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
+
+		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
+
+		const spy = spyOn(syncService, "clearSyncedData").and.callThrough();
+
+		// When
+		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
+		// Then
+		promise.then((syncedBackupModel: SyncedBackupModel) => {
+
+			expect(spy).toHaveBeenCalledTimes(1);
+
+			expect(syncedBackupModel).not.toBeNull();
+			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
+			expect(syncedBackupModel.lastSyncDateTime).toEqual(importedSyncedBackupModel.lastSyncDateTime);
+			expect(syncedBackupModel.syncedActivities).toEqual(importedSyncedBackupModel.syncedActivities);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+
+	});
+
+	it("should not import athlete activities with a 1.4.7 backup and 1.5.0 compatible backup version threshold", (done: Function) => {
+
+		// Given
+		const lastSyncDateTime = 99;
+		const importedBackupVersion = "1.4.7";
+		const compatibleBackupVersionThreshold = "1.5.0";
+		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
+		const expectedErrorMessage = "Imported backup version " + importedBackupVersion + " is not compatible with current installed version " + installedVersion + ".";
+
+		const importedSyncedBackupModel: SyncedBackupModel = {
+			syncedActivities: TEST_SYNCED_ACTIVITIES,
+			lastSyncDateTime: lastSyncDateTime,
+			pluginVersion: importedBackupVersion
+		};
+
+		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
+		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -267,6 +304,7 @@ describe("SyncService", () => {
 			done();
 
 		}, error => {
+			expect(error).not.toBeNull();
 			expect(error).toEqual(expectedErrorMessage);
 			done();
 		});
@@ -277,7 +315,6 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
@@ -288,7 +325,6 @@ describe("SyncService", () => {
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -309,7 +345,6 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
 		const syncedBackupModelPartial: Partial<SyncedBackupModel> = {
@@ -319,7 +354,6 @@ describe("SyncService", () => {
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(syncedBackupModelPartial.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(syncedBackupModelPartial.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(syncedBackupModelPartial as SyncedBackupModel);
@@ -340,19 +374,17 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
-		const importedVersion = "1.0.0";
+		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: null,
 			lastSyncDateTime: lastSyncDateTime,
-			pluginVersion: importedVersion
+			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -374,17 +406,15 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
-		const importedVersion = "1.0.0";
+		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const importedSyncedBackupModelPartial: Partial<SyncedBackupModel> = {
 			lastSyncDateTime: lastSyncDateTime,
-			pluginVersion: importedVersion
+			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModelPartial.lastSyncDateTime));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModelPartial as SyncedBackupModel);
@@ -405,19 +435,17 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
-		const currentInstalledVersion = "1.0.0";
-		const importedVersion = "1.0.0";
+		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: [],
 			lastSyncDateTime: lastSyncDateTime,
-			pluginVersion: importedVersion
+			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService, "getAppVersion").and.returnValue(currentInstalledVersion);
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
