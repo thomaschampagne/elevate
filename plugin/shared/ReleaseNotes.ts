@@ -4,7 +4,7 @@ export let releaseNotes: ReleaseNoteModel[] = [
 	{
 		version: "6.4.0",
 		date: "2018-07-07",
-		message: "Added \"Fitness Trend Estimation\" for NO SENSORS users!!. Added \"Running Stress Score (RSS)\" to strava activities and fitness trend. Added \"Fitness Trend\" options to exclude activities from the trend. Added a \"Fitness Trend Spreadsheet Export\" feature. And others improvements...",
+		message: "Added \"Fitness Trend Estimation\" for users WITHOUT SENSORS!!. Added \"Running Stress Score (RSS)\" to activities and fitness trend. Added \"Fitness Trend\" options to exclude activities from the trend. Added a \"Fitness Trend Spreadsheet Export\" feature. And more improvements.",
 		hotFixes: [],
 		features: [
 			"Added \"Estimated Fitness Trend\" option for cyclists and runners who don't own sensors (or forgot them sometimes). Now a \"typical\" iPhone or Android mobile user who runs the strava mobile app can now access the fitness trend feature without buying any external sensors.",
