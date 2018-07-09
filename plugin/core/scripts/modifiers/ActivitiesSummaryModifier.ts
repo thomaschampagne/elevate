@@ -1,7 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
+import { Constant } from "../../../shared/Constant";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class ActivitiesSummaryModifier implements IModifier {
+export class ActivitiesSummaryModifier extends AbstractModifier {
 
 	protected averageSpeedOrPace(pace: number, distance: number, time: number) {
 		time /= 60;
@@ -45,7 +47,7 @@ export class ActivitiesSummaryModifier implements IModifier {
 			elevationUnit = "ft";
 			speedUnit = "mph";
 			paceUnit = "/mi";
-			speedUnitRatio = 0.62137;
+			speedUnitRatio = Constant.KM_TO_MILE_FACTOR;
 			elevationUnitRatio = 3.281;
 		}
 

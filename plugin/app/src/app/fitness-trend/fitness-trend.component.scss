@@ -1,3 +1,7 @@
+@import "~@angular/material/theming";
+
+$config: mat-typography-config();
+
 .no-data div {
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -7,3 +11,19 @@ ul, li {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+
+.estimatedStressScoresNotes {
+	padding-top: 15px;
+	font-size: mat-font-size($config, caption);
+	cursor: pointer;
+}
+
+.estimationEnabled {
+	color: #21bb4a;
+}
+
+.estimationDisabled {
+	color: #ff5b5b;
+}
+
+

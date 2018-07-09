@@ -43,7 +43,8 @@
 
 	<span fxFlex="3"></span>
 
-	<button mat-icon-button color="primary" (click)="onConfigClicked()">
+	<button mat-icon-button color="primary" (click)="onConfigClicked()"
+			matTooltip="Configure Fitness Trend">
 		<mat-icon>settings</mat-icon>
 	</button>
 
@@ -71,7 +72,7 @@
 					  (change)="onPowerMeterToggle()"
 					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Cycling Power Stress Scores (PSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to PSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
-					  'Use cycling power meter when available'}}">
+					  'Use cycling power data when available'}}">
 		<mat-icon>flash_on</mat-icon>
 	</mat-slide-toggle>
 

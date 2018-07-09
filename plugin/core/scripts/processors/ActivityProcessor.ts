@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
-import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
+import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./VacuumProcessor";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
@@ -17,6 +17,7 @@ export class ActivityProcessor {
 	protected vacuumProcessor: VacuumProcessor;
 	protected zones: any;
 	protected activityType: string;
+	protected supportsGap: boolean;
 	protected isTrainer: boolean;
 	protected isActivityAuthor: boolean;
 	protected computeAnalysisThread: Worker;
@@ -32,6 +33,10 @@ export class ActivityProcessor {
 
 	public setActivityType(activityType: string): void {
 		this.activityType = activityType;
+	}
+
+	public setSupportsGap(supportsGap: boolean): void {
+		this.supportsGap = supportsGap;
 	}
 
 	public setTrainer(isTrainer: boolean): void {
@@ -100,17 +105,18 @@ export class ActivityProcessor {
 
 		// Send user and activity data to the thread
 		// He will compute them in the background
-		const threadMessage: IComputeActivityThreadMessage = {
+		const threadMessage: ComputeActivityThreadMessageModel = {
 			activityType: this.activityType,
+			supportsGap: this.supportsGap,
 			isTrainer: this.isTrainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,
 			isActivityAuthor: this.isActivityAuthor,
-			athleteWeight,
-			hasPowerMeter,
-			activityStatsMap,
-			activityStream,
-			bounds,
+			athleteWeight: athleteWeight,
+			hasPowerMeter: hasPowerMeter,
+			activityStatsMap: activityStatsMap,
+			activityStream: activityStream,
+			bounds: bounds,
 			returnZones: true
 		};
 

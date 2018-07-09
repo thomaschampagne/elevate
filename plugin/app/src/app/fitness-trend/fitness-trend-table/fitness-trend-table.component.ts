@@ -8,6 +8,8 @@ import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
+import { Parser as Json2CsvParser } from "json2csv";
+import { saveAs } from "file-saver";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -22,6 +24,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_TRAINING_IMPULSE_SCORE: string = "trainingImpulseScore";
 	public static readonly COLUMN_HEART_RATE_STRESS_SCORE: string = "heartRateStressScore";
 	public static readonly COLUMN_POWER_STRESS_SCORE: string = "powerStressScore";
+	public static readonly COLUMN_RUNNING_STRESS_SCORE: string = "runningStressScore";
 	public static readonly COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
 	public static readonly COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
 	public static readonly COLUMN_CTL: string = "ctl";
@@ -69,6 +72,13 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			toolTip: "Power Stress Score",
 			type: FitnessTrendColumnType.TEXT,
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+		},
+		{
+			columnDef: FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE,
+			header: "RSS",
+			toolTip: "Running Stress Score",
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScore()}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
@@ -137,6 +147,12 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("isSwimEnabled")
 	public isSwimEnabled;
 
+	@Input("hasCyclingFtp")
+	public hasCyclingFtp: boolean;
+
+	@Input("hasRunningFtp")
+	public hasRunningFtp: boolean;
+
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
@@ -157,19 +173,20 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			return;
 		}
 
-		if (changes.isPowerMeterEnabled || changes.isSwimEnabled || changes.isTrainingZonesEnabled) {
-			this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
-				if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
-					|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
-					return false;
-				}
-				return true;
-			});
-			this.displayedColumns = this.columns.map(column => column.columnDef);
-		}
+		this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
+			if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.hasRunningFtp)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
+				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
+				return false;
+			}
+			return true;
+		});
+		this.displayedColumns = this.columns.map(column => column.columnDef);
 
 		if (changes.fitnessTrend && changes.fitnessTrend.currentValue) {
 			this.dataSource.data = this.prepareFitnessTrendModels(changes.fitnessTrend.currentValue);
@@ -201,6 +218,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 				case FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE:
 					return dayFitnessTrendModel.powerStressScore;
+
+				case FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE:
+					return dayFitnessTrendModel.runningStressScore;
 
 				case FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE:
 					return dayFitnessTrendModel.swimStressScore;
@@ -256,7 +276,50 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 		this.dataSource.sort = this.matSort;
 	}
 
+	private generateSpreadSheetExportData(): any[] {
+
+		const exportedFitnessTrend = [];
+
+		_.forEach(this.fitnessTrend, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+
+			const exportedFitnessDay: any = _.clone(dayFitnessTrendModel);
+
+			exportedFitnessDay[FitnessTrendTableComponent.COLUMN_ACTIVITIES] = dayFitnessTrendModel.printActivities();
+			exportedFitnessDay[FitnessTrendTableComponent.COLUMN_TYPES] = dayFitnessTrendModel.printTypes();
+
+			exportedFitnessDay.atl = _.floor(dayFitnessTrendModel.atl, 2);
+			exportedFitnessDay.ctl = _.floor(dayFitnessTrendModel.ctl, 2);
+			exportedFitnessDay.tsb = _.floor(dayFitnessTrendModel.tsb, 2);
+			exportedFitnessDay.zone = dayFitnessTrendModel.printTrainingZone();
+
+			exportedFitnessDay.trainingImpulseScore = (dayFitnessTrendModel.trainingImpulseScore) ? _.floor(dayFitnessTrendModel.trainingImpulseScore, 2) : "";
+			exportedFitnessDay.heartRateStressScore = (dayFitnessTrendModel.heartRateStressScore) ? _.floor(dayFitnessTrendModel.heartRateStressScore, 2) : "";
+			exportedFitnessDay.runningStressScore = (dayFitnessTrendModel.runningStressScore) ? _.floor(dayFitnessTrendModel.runningStressScore, 2) : "";
+			exportedFitnessDay.powerStressScore = (dayFitnessTrendModel.powerStressScore) ? _.floor(dayFitnessTrendModel.powerStressScore, 2) : "";
+			exportedFitnessDay.finalStressScore = (dayFitnessTrendModel.finalStressScore) ? _.floor(dayFitnessTrendModel.finalStressScore, 2) : "";
+
+			exportedFitnessTrend.push(exportedFitnessDay);
+		});
+
+		return exportedFitnessTrend;
+	}
+
 	public onOpenActivities(ids: number[]): void {
 		FitnessTrendComponent.openActivities(ids);
+	}
+
+	public onSpreadSheetExport(): void {
+
+		try {
+			const exportedFields = _.without(this.displayedColumns, FitnessTrendTableComponent.COLUMN_STRAVA_LINK);
+			const parser = new Json2CsvParser({fields: exportedFields});
+			const csvData = parser.parse(this.generateSpreadSheetExportData());
+			const blob = new Blob([csvData], {type: "application/csv; charset=utf-8"});
+			const filename = "fitness_trend_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
+			saveAs(blob, filename);
+		} catch (err) {
+			console.error(err);
+		}
+
 	}
 }

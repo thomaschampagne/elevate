@@ -70,7 +70,18 @@ describe("FitnessTrendGraphComponent", () => {
 		todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
 
-		const heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+		const fitnessTrendConfigModel = {
+			heartRateImpulseMode: HeartRateImpulseMode.HRSS,
+			initializedFitnessTrendModel: {
+				atl: null,
+				ctl: null
+			},
+			allowEstimatedPowerStressScore: false,
+			allowEstimatedRunningStressScore: false,
+			ignoreBeforeDate: null,
+			ignoreActivityNamePatterns: null
+		};
+
 		const powerMeterEnable = true;
 		const swimEnable = true;
 
@@ -84,10 +95,11 @@ describe("FitnessTrendGraphComponent", () => {
 				running: null
 			},
 			cyclingFtp: 150,
+			runningFtp: null,
 			swimFtp: 31,
 		};
 
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel, heartRateImpulseMode, powerMeterEnable, swimEnable);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel, fitnessTrendConfigModel, powerMeterEnable, swimEnable);
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 			FITNESS_TREND = fitnessTrend;
 			done();

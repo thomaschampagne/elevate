@@ -15,9 +15,21 @@
 		</div>
 
 		<div>
-			This fitness trend is "Multi-sports" oriented as long as you hold a <i>heart rate monitor</i> and/or <i>cycling
-			power meter</i> and/or <i>swimming activities having distance & time</i>. It's an improved feature of
-			the Strava™ premium one, not a duplicate!
+			This fitness trend is "Multi-sports" oriented. Whatever the sport, it's strongly recommended that you hold a
+			<i>heart rate monitor</i>, and/or a <i>power meter</i> for cycling. These sensors will provide accurate
+			stress scores and thus an accurate fitness trend.
+		</div>
+
+		<div>
+			What if you don't have sensors? If you don't have sensors (e.g. smart-phone only) or you forgot them for
+			some activities, your fitness trend can still be approximated from estimated running and cycling stress
+			scores. For this you have to setup your own <strong>Running Functional Threshold Pace</strong> as a runner
+			in athlete settings. And as a cyclist, your <strong>Cycling Functional Threshold Power</strong> (always in
+			athlete settings).
+		</div>
+
+		<div>
+			This fitness trend is an improved feature of the Strava™ premium one, not a duplicate!
 		</div>
 
 		<div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
@@ -35,25 +47,38 @@
 </mat-card>
 
 <!--History not compliant with the feature-->
-<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)">
+<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">
 	<mat-card-title>
-		Your synced activities are not supported by this feature
+		Unable to generate fitness trend 😢
 	</mat-card-title>
 	<mat-card-content>
-		The fitness trend requires athlete activities with at least:
-		<ul>
-			<li>
-				Heart rate data coming from an heart rate monitor and regardless types of sports.
-			</li>
-			<li>
-				Or power data coming a cycling power meter (or emulated power data such as "ZWIFT" sessions).
-			</li>
-			<li>
-				Or any swimming activities having distance & time (no sensors required). For this make sure you have set
-				your <strong>Swimming Functional Threshold Pace</strong> in <a routerLink="/athleteSettings">athlete
-				settings</a>.
-			</li>
-		</ul>
+
+		<div>
+			Stravistix can't generate your fitness trend using your synced activities and fitness trend configuration.
+			Please check that your synced activities have at least:
+			<ul>
+				<li>
+					A running or cycling activity recorded with or without sensors.
+				</li>
+				<li>
+					Or an activity recorded with a heart rate monitor (no matter the sport type).
+				</li>
+				<li>
+					Or a swimming activity having distance & time data.
+				</li>
+			</ul>
+		</div>
+
+		<div>
+			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
+			Your fitness trend configuration may also have exclusion patterns and date that are probably too
+			restrictive &nbsp;&nbsp;➔
+			<button mat-button color="primary" (click)="onOpenFitnessTrendConfig()">
+				<mat-icon>settings</mat-icon>
+				Verify your fitness trend configuration
+			</button>
+		</div>
+
 	</mat-card-content>
 </mat-card>
 
@@ -67,20 +92,24 @@
 <mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-			<app-fitness-trend-inputs fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
+			<app-fitness-trend-inputs #fitnessTrendInputs
+									  fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
 									  [dateMin]="dateMin"
 									  [dateMax]="dateMax"
 									  [lastPeriods]="lastPeriods"
 									  [periodViewed]="periodViewed"
 									  [lastPeriodViewed]="lastPeriodViewed"
+									  [lastFitnessActiveDate]="lastFitnessActiveDate"
 									  [fitnessUserSettingsModel]="fitnessUserSettingsModel"
 									  [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 									  [isPowerMeterEnabled]="isPowerMeterEnabled"
 									  [isSwimEnabled]="isSwimEnabled"
 									  [isEBikeRidesEnabled]="isEBikeRidesEnabled"
+									  [hasCyclingFtp]="hasCyclingFtp"
+									  [hasRunningFtp]="hasRunningFtp"
 									  (periodViewedChange)="onPeriodViewedChange($event)"
-									  (fitnessTrendConfigChange)="onFitnessTrendConfigChange($event)"
+									  (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
 									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
 									  (swimToggleChange)="onSwimToggleChange($event)"
@@ -99,6 +128,35 @@
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
 
+		<div class="estimatedStressScoresNotes" (click)="onOpenFitnessTrendConfig(true)">
+			<span
+				*ngIf="isEstimatedPowerStressScoreEnabled"
+				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
+				Power Stress Scores Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
+				[inline]="true">info</mat-icon>
+			</span>
+			<span
+				*ngIf="!isEstimatedPowerStressScoreEnabled"
+				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
+				Note: A Cycling Functional Threshold Power (FTP) is required in athlete settings. The Power Meter
+				data toggle (thunderbolt icon) must be switched ON. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
+				Power Stress Scores Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
+				[inline]="true">info</mat-icon>
+			</span>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<span *ngIf="isEstimatedRunningStressScoreEnabled"
+				  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
+				Running Stress Score Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
+				[inline]="true">info</mat-icon>
+			</span>
+			<span *ngIf="!isEstimatedRunningStressScoreEnabled"
+				  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
+					Note: A Running Functional Threshold Pace is required in athlete settings. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
+				Running Stress Score Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
+				[inline]="true">info</mat-icon>
+			</span>
+		</div>
+
 	</mat-card-content>
 </mat-card>
 
@@ -111,7 +169,9 @@
 								 [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 								 [isPowerMeterEnabled]="isPowerMeterEnabled"
-								 [isSwimEnabled]="isSwimEnabled">
+								 [isSwimEnabled]="isSwimEnabled"
+								 [hasCyclingFtp]="hasCyclingFtp"
+								 [hasRunningFtp]="hasRunningFtp">
 		</app-fitness-trend-table>
 	</mat-card-content>
 </mat-card>

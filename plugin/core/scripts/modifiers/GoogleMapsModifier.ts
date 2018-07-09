@@ -2,8 +2,9 @@ import * as _ from "lodash";
 import * as $ from "jquery";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class GoogleMapsModifier implements IModifier {
+export class GoogleMapsModifier extends AbstractModifier {
 
 	protected activityId: number;
 	protected appResources: AppResourcesModel;
@@ -12,6 +13,7 @@ export class GoogleMapsModifier implements IModifier {
 	protected map: google.maps.Map;
 
 	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+		super();
 		this.activityId = activityId;
 		this.appResources = appResources;
 		this.userSettings = userSettings;

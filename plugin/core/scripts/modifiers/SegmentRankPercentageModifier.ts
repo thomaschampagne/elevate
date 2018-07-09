@@ -1,11 +1,9 @@
 import * as _ from "lodash";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class SegmentRankPercentageModifier implements IModifier {
+export class SegmentRankPercentageModifier extends AbstractModifier {
 
 	protected intervalId: number;
-
-	constructor() {
-	}
 
 	modify(): void {
 		this.intervalId = window.setInterval(() => this.addPercentageRanking(), 750);
