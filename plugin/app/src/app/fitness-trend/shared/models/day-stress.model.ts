@@ -9,6 +9,7 @@ export class DayStressModel {
 	public heartRateStressScore?: number = null;
 	public trainingImpulseScore?: number = null;
 	public powerStressScore?: number = null;
+	public runningStressScore?: number = null;
 	public swimStressScore?: number = null;
 
 	public finalStressScore: number = null;
@@ -33,6 +34,10 @@ export class DayStressModel {
 
 	public printPowerStressScore(): string {
 		return (this.powerStressScore) ? Math.floor(this.powerStressScore).toString() : "-";
+	}
+
+	public printRunningStressScore(): string {
+		return (this.runningStressScore) ? Math.floor(this.runningStressScore).toString() : "-";
 	}
 
 	public printSwimStressScore(): string {

@@ -1,10 +1,10 @@
-import { IComputeActivityThreadMessage } from "../../interfaces/IComputeActivityThreadMessage";
+import { ComputeActivityThreadMessageModel } from "../../models/compute-activity-thread-message.model";
 import { ActivityComputer } from "../ActivityComputer";
 import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
 
 onmessage = (mainThreadEvent: MessageEvent) => {
 
-	const threadMessage: IComputeActivityThreadMessage = mainThreadEvent.data;
+	const threadMessage: ComputeActivityThreadMessageModel = mainThreadEvent.data;
 
 	const analysisComputer: ActivityComputer = new ActivityComputer(
 		threadMessage.activityType,

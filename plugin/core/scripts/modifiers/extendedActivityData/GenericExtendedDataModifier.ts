@@ -5,8 +5,17 @@ import { AscentSpeedDataView } from "./views/AscentSpeedDataView";
 import { ElevationDataView } from "./views/ElevationDataView";
 import { PaceDataView } from "./views/PaceDataView";
 import { RunningCadenceDataView } from "./views/RunningCadenceDataView";
+import { ActivityProcessor } from "../../processors/ActivityProcessor";
+import { AppResourcesModel } from "../../models/app-resources.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
+
+
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean,
+				appResources: AppResourcesModel, userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
+		super(activityProcessor, activityId, activityType, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfo, type);
+	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
 		this.makeSummaryGrid(2, 7);

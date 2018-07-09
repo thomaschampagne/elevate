@@ -50,10 +50,9 @@ describe("AppComponent", () => {
 		done();
 	});
 
-
 	it("should have main menu items", (done: Function) => {
 		const app = fixture.debugElement.componentInstance;
-		expect(app.mainMenuItems.length).toEqual(6);
+		expect(app.mainMenuItems.length).toEqual(5);
 		done();
 	});
 

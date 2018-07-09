@@ -12,9 +12,9 @@ import { GradeAdjustedPaceDataView } from "./views/GradeAdjustedPaceDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResourcesModel,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
-		super(activityProcessor, activityId, activityType, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
+		super(activityProcessor, activityId, activityType, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {
@@ -85,10 +85,22 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
+
+		let runningStressScore = "-";
+		if (this.userSettings.displayAdvancedSpeedData && this.isAuthorOfViewedActivity && this.supportsGap) {
+			if (this.analysisData.paceData
+				&& this.analysisData.paceData.runningStressScore) {
+				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";
+			} else {
+				runningStressScore = "<span class=\"summarySubGridTitle\"><i>Configure Running FTP in athlete settings</i></span>";
+			}
+
+			this.insertContentAtGridPosition(0, 5, runningStressScore, "Running Stress Score", "", "displayAdvancedSpeedData");
+		}
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
-		this.makeSummaryGrid(2, 5);
+		this.makeSummaryGrid(2, 6);
 		super.placeSummaryPanel(panelAdded);
 	}
 
@@ -120,6 +132,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			const units: string = (measurementPreference == "meters") ? "/km" : "/mi";
 
 			const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
+			paceDataView.setSupportsGap(this.supportsGap);
 			paceDataView.setAppResources(this.appResources);
 			paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
 			paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);

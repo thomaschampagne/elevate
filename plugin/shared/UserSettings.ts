@@ -12,6 +12,7 @@ export const userSettings: UserSettingsModel = {
 		running: null
 	},
 	userFTP: null,
+	userRunningFTP: null,
 	userSwimFTP: null,
 	userWeight: 70,
 	zones: {
@@ -193,7 +194,6 @@ export const userSettings: UserSettingsModel = {
 	activityStravaMapType: "terrain",
 	displaySegmentRankPercentage: true,
 	displayNearbySegments: true,
-	displayMotivationScore: true,
 	displayActivityRatio: true,
 	displayAdvancedPowerData: true,
 	displayAdvancedSpeedData: true,

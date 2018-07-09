@@ -8,6 +8,6 @@ ul {
 	list-style-type: square;
 }
 
-ul > li {
+li, ul > li {
 	margin-bottom: 10px;
 }

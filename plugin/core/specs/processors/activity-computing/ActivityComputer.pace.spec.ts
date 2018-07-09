@@ -30,7 +30,7 @@ describe("ActivityComputer Paces", () => {
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json")); // Thomas C user settings
 	const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../../fixtures/activities/887284960/statsMap.json"));
 
-	const PACE_SECONDS_TOLERANCE = 20;
+	const PACE_SECONDS_TOLERANCE = 10;
 
 	it("should compute grade adjusted pace of activity 887284960", (done: Function) => {
 
@@ -134,7 +134,7 @@ describe("ActivityComputer Paces", () => {
 
 		// Then
 		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
-		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:27", PACE_SECONDS_TOLERANCE);
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:57", PACE_SECONDS_TOLERANCE);
 
 		done();
 
@@ -188,7 +188,7 @@ describe("ActivityComputer Paces", () => {
 
 		// Then
 		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
-		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:51", PACE_SECONDS_TOLERANCE);
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:05", PACE_SECONDS_TOLERANCE);
 
 		done();
 
@@ -212,6 +212,23 @@ describe("ActivityComputer Paces", () => {
 
 	});
 
+	it("should compute grade adjusted pace of activity 1654295114", (done: Function) => {
+
+		// Given
+		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1654295114/stream.json"));
+
+		// When
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+		const result: AnalysisDataModel = activityComputer.compute();
+
+		// Then
+		expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
+		expectPace(Helper.secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:32", PACE_SECONDS_TOLERANCE);
+
+		done();
+
+	});
 
 });
 
