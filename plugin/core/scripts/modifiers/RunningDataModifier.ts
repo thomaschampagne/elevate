@@ -1,10 +1,13 @@
-abstract class AbstractRunningDataModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
+
+abstract class AbstractRunningDataModifier extends AbstractModifier {
 
 	public static INTERVAL_DELAY = 750;
 	protected intervalId: number;
 	protected dataWatch: string;
 
 	constructor(dataWatch: string) {
+		super();
 		this.dataWatch = dataWatch;
 	}
 

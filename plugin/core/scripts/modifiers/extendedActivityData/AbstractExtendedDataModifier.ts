@@ -21,6 +21,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected activityProcessor: ActivityProcessor;
 	protected activityId: number;
 	protected activityType: string;
+	protected supportsGap: boolean;
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected basicInfo: ActivityBasicInfoModel;
@@ -33,17 +34,18 @@ export abstract class AbstractExtendedDataModifier {
 	protected content: string;
 	protected dataViews: AbstractDataView[] = [];
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, appResources: AppResourcesModel,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
 
 		this.activityProcessor = activityProcessor;
 		this.activityId = activityId;
 		this.activityType = activityType;
+		this.supportsGap = supportsGap;
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.basicInfo = basicInfo;
 		this.isAuthorOfViewedActivity = isAuthorOfViewedActivity;
-		this.speedUnitsData = Helper.getSpeedUnitData();
+		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 		this.type = type;
 
 		if (_.isNull(this.type)) {

@@ -8,15 +8,10 @@ import { DonateComponent } from "../../donate/donate.component";
 import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
 import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 import { ShareComponent } from "../../share/share.component";
-import { WelcomeComponent } from "../../welcome/welcome.component";
 import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
 
 const routes: Routes = [
-	{
-		path: AppRoutesModel.welcome,
-		component: WelcomeComponent
-	},
 	{
 		path: AppRoutesModel.fitnessTrend,
 		loadChildren: "../../fitness-trend/fitness-trend.module#FitnessTrendModule"
@@ -65,7 +60,7 @@ const routes: Routes = [
 		component: AdvancedMenuComponent
 	},
 	{
-		path: "", redirectTo: AppRoutesModel.welcome, pathMatch: "full"
+		path: "", redirectTo: AppRoutesModel.fitnessTrend, pathMatch: "full"
 	},
 ];
 

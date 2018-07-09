@@ -3,8 +3,10 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
+import { Constant } from "../../../shared/Constant";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class AthleteStatsModifier implements IModifier {
+export class AthleteStatsModifier extends AbstractModifier {
 
 	protected appResources: AppResourcesModel;
 	protected cacheKey_: string;
@@ -15,11 +17,8 @@ export class AthleteStatsModifier implements IModifier {
 	protected yearTargets: any;
 	protected progressThisYear: JQuery;
 
-	public static metersTo1000thOfMileFactor = 0.621371192;
-	public static metersToFeetsFactor = 3.2808399;
-
 	constructor(appResources: AppResourcesModel, yearTargets: any) {
-
+		super();
 		this.appResources = appResources;
 		this.cacheKey_ = "activitiesHistoryData";
 		this.distanceUnit = "km";
@@ -157,10 +156,10 @@ export class AthleteStatsModifier implements IModifier {
 
 			years.forEach((item: any) => {
 				if (!distanceInKilometers) {
-					item.distance = item.distance * AthleteStatsModifier.metersTo1000thOfMileFactor;
+					item.distance = item.distance * Constant.KM_TO_MILE_FACTOR;
 				}
 				if (!elevationInMeters) {
-					item.elevation = item.elevation * AthleteStatsModifier.metersToFeetsFactor;
+					item.elevation = item.elevation * Constant.METER_TO_FEET_FACTOR;
 				}
 				yearsList.push(item);
 			});
@@ -313,13 +312,13 @@ export class AthleteStatsModifier implements IModifier {
 						case 4:
 						case 5:
 							if (!self.distanceInKilometers) {
-								value *= AthleteStatsModifier.metersTo1000thOfMileFactor;
+								value *= Constant.KM_TO_MILE_FACTOR;
 							}
 							return Helper.formatNumber(value / 1000, 0) + " " + self.distanceUnit;
 
 						case 2:
 							if (!self.elevationInMeters) {
-								value *= AthleteStatsModifier.metersToFeetsFactor;
+								value *= Constant.METER_TO_FEET_FACTOR;
 							}
 							return Helper.formatNumber(value, 0) + " " + self.elevationUnit;
 
@@ -447,7 +446,7 @@ export class AthleteStatsModifier implements IModifier {
 										data[currentYear + 1].values[0] = 0;
 										data[currentYear + 1].values[1] = data[currentYear + 1].target;
 										if (!self.distanceInKilometers) {
-											data[currentYear + 1].values[1] /= AthleteStatsModifier.metersTo1000thOfMileFactor;
+											data[currentYear + 1].values[1] /= Constant.KM_TO_MILE_FACTOR;
 										}
 										break;
 									// 30 Day sliding distance
@@ -456,8 +455,8 @@ export class AthleteStatsModifier implements IModifier {
 										data[currentYear + 1].values[0] = avg30DayDistance;
 										data[currentYear + 1].values[1] = avg30DayDistance;
 										if (!self.distanceInKilometers) {
-											data[currentYear + 1].values[0] /= AthleteStatsModifier.metersTo1000thOfMileFactor;
-											data[currentYear + 1].values[1] /= AthleteStatsModifier.metersTo1000thOfMileFactor;
+											data[currentYear + 1].values[0] /= Constant.KM_TO_MILE_FACTOR;
+											data[currentYear + 1].values[1] /= Constant.KM_TO_MILE_FACTOR;
 										}
 										break;
 								}

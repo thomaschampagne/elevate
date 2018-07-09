@@ -8,6 +8,8 @@ import { SyncState } from "./sync-state.enum";
 import { environment } from "../../../../environments/environment";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { SyncedBackupModel } from "./synced-backup.model";
+import * as semver from "semver";
+import { Constant } from "../../../../../../shared/Constant";
 
 @Injectable()
 export class SyncService {
@@ -53,8 +55,6 @@ export class SyncService {
 	 */
 	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
 
-		const installedVersion = this.getAppVersion();
-
 		if (_.isEmpty(importedBackupModel.syncedActivities)) {
 			return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
 		}
@@ -63,10 +63,11 @@ export class SyncService {
 			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		if (!environment.skipRestoreSyncedBackupCheck && installedVersion !== importedBackupModel.pluginVersion) {
-			return Promise.reject("Cannot import activities because of plugin version mismatch. " +
-				"The installed plugin version is " + installedVersion + " and imported backup file is " +
-				"for a " + importedBackupModel.pluginVersion + " plugin version. Try perform a clean full sync.");
+		if (!environment.skipRestoreSyncedBackupCheck) {
+			// Check if imported backup is compatible with current code
+			if (semver.lt(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold())) {
+				return Promise.reject("Imported backup version " + importedBackupModel.pluginVersion + " is not compatible with current installed version " + this.getAppVersion() + ".");
+			}
 		}
 
 		return this.clearSyncedData().then(() => {
@@ -84,7 +85,7 @@ export class SyncService {
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
-				pluginVersion: installedVersion
+				pluginVersion: importedBackupModel.pluginVersion
 			};
 
 			return Promise.resolve(backupModel);
@@ -225,6 +226,13 @@ export class SyncService {
 	 */
 	public getAppVersion(): string {
 		return chrome.runtime.getManifest().version;
+	}
+
+	/**
+	 * @returns {string} Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
+	 */
+	public getCompatibleBackupVersionThreshold(): string {
+		return Constant.COMPATIBLE_BACKUP_VERSION_THRESHOLD;
 	}
 
 	/**

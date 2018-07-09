@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AbstractModifier } from "./AbstractModifier";
 
 declare let L: any; // Injected by strava.com
 
@@ -380,7 +381,7 @@ function BestSplitWorker() {
 	};
 }
 
-export class ActivityBestSplitsModifier implements IModifier {
+export class ActivityBestSplitsModifier extends AbstractModifier {
 
 	public static Units = {
 
@@ -424,6 +425,7 @@ export class ActivityBestSplitsModifier implements IModifier {
 	private cacheKeyPrefix: string;
 
 	constructor(activityId: number, userSettings: UserSettingsModel, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
+		super();
 		this.activityId = activityId;
 		this.userSettings = userSettings;
 		this.activityJson = activityJson;

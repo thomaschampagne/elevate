@@ -1,10 +1,12 @@
 import * as $ from "jquery";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class ReliveCCModifier implements IModifier {
+export class ReliveCCModifier extends AbstractModifier {
 
 	private activityId: number;
 
 	constructor(activityId: number) {
+		super();
 		this.activityId = activityId;
 	}
 

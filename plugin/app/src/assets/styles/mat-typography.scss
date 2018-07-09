@@ -18,6 +18,10 @@ $app-style-config: mat-typography-config(// Define a typography config that will
 	$button: mat-typography-level(
 			mat-font-size($base-style-config, button),
 			mat-line-height($base-style-config, button),
+			300),
+	$caption: mat-typography-level(
+			mat-font-size($base-style-config, caption),
+			mat-line-height($base-style-config, caption),
 			300)
 );
 
