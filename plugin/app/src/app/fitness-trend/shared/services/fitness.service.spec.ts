@@ -3006,7 +3006,7 @@ describe("FitnessService", () => {
 
 			// Add some fakes no sensor activities
 			const expectedRideName = "No sensor Ride";
-			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(111,
 				expectedRideName, // PSS Scored (estimated)
 				"Ride",
 				"2015-08-15",
@@ -3015,7 +3015,7 @@ describe("FitnessService", () => {
 				false));
 
 			const expectedRunName = "No sensor Run";
-			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(222,
 				expectedRunName, // RSS Scored
 				"Run",
 				"2015-09-15",
@@ -3041,13 +3041,13 @@ describe("FitnessService", () => {
 
 				let dayTrend: DayFitnessTrendModel;
 
-				dayTrend = _.find(fitnessTrend, {ids: [1]});
+				dayTrend = _.find(fitnessTrend, {ids: [111]});
 				expect(dayTrend).not.toBeNull();
 				expect(dayTrend.activitiesName[0]).toEqual(expectedRideName);
 				expect(dayTrend.powerStressScore).toEqual(100);
 				expect(dayTrend.finalStressScore).toEqual(100);
 
-				dayTrend = _.find(fitnessTrend, {ids: [2]});
+				dayTrend = _.find(fitnessTrend, {ids: [222]});
 				expect(dayTrend).not.toBeNull();
 				expect(dayTrend.activitiesName[0]).toEqual(expectedRunName);
 				expect(dayTrend.runningStressScore).toEqual(100);
