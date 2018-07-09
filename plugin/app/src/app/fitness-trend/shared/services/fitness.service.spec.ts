@@ -3049,7 +3049,7 @@ describe("FitnessService", () => {
 
 				dayTrend = _.find(fitnessTrend, ['ids', [222]]);
 				expect(dayTrend).not.toBeNull();
-				expect(dayTrend.activitiesName[0]).toEqual(expectedRunName);
+				expect(_.indexOf(dayTrend.activitiesName, expectedRunName)).not.toEqual(-1);
 				expect(dayTrend.runningStressScore).toEqual(100);
 				expect(dayTrend.finalStressScore).toEqual(100);
 
