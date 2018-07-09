@@ -14,6 +14,7 @@ export class FitnessUserSettingsModel {
 				running: userSettingsModel.userLTHR.running
 			},
 			userSettingsModel.userFTP,
+			userSettingsModel.userRunningFTP,
 			userSettingsModel.userSwimFTP);
 	}
 
@@ -22,14 +23,17 @@ export class FitnessUserSettingsModel {
 	public userRestHr: number;
 	public userLactateThreshold: UserLactateThresholdModel;
 	public cyclingFtp: number;
+	public runningFtp: number;
 	public swimFtp: number;
 
-	constructor(userGender: Gender, userMaxHr: number, userRestHr: number, userLactateThreshold: UserLactateThresholdModel, cyclingFtp: number, swimFtp: number) {
+	constructor(userGender: Gender, userMaxHr: number, userRestHr: number, userLactateThreshold: UserLactateThresholdModel,
+				cyclingFtp: number, runningFtp: number, swimFtp: number) {
 		this.userGender = userGender;
 		this.userMaxHr = userMaxHr;
 		this.userRestHr = userRestHr;
 		this.userLactateThreshold = userLactateThreshold;
 		this.cyclingFtp = cyclingFtp;
+		this.runningFtp = runningFtp;
 		this.swimFtp = swimFtp;
 	}
 }

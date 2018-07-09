@@ -8,7 +8,7 @@ import { MatDialogRef } from "@angular/material";
 })
 export class FitnessTrendWelcomeDialogComponent implements OnInit {
 
-	public static readonly LS_HIDE_FITNESS_WELCOME_DIALOG: string = "fitnessTrend_hideWelcomeDialog"; // TODO To be removed in future
+	public static readonly LS_HIDE_FITNESS_WELCOME_DIALOG: string = "fitnessTrend_hideWelcomeInfoDialog"; // TODO To be removed in future
 
 	public static readonly MAX_WIDTH: string = "40%";
 	public static readonly MIN_WIDTH: string = "60%";

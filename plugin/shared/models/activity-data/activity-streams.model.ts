@@ -10,5 +10,5 @@ export class ActivityStreamsModel {
 	public distance: number[];
 	public altitude: number[];
 	public altitude_smooth?: number[];
-	public grade_adjusted_distance: Array<number>;
+	public grade_adjusted_speed: Array<number>;
 }

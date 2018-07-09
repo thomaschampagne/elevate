@@ -7,7 +7,7 @@ export class AscentSpeedDataView extends AbstractDataView {
 
 	constructor(elevationData: ElevationDataModel, units: string) {
 		super(units);
-		this.mainColor = [44, 0, 204];
+		this.mainColor = [77, 51, 173];
 		this.setGraphTitleFromUnits();
 		this.elevationData = elevationData;
 		this.setupDistributionGraph(this.elevationData.ascentSpeedZones);

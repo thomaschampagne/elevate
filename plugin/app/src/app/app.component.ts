@@ -1,8 +1,8 @@
+import * as _ from "lodash";
+import * as moment from "moment";
 import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
-import * as _ from "lodash";
-import * as moment from "moment";
 import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/material";
 import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
@@ -62,11 +62,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	public sideNavMode: string;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
-		{
-			icon: "home",
-			routerLink: AppRoutesModel.welcome,
-			routerLinkActive: true
-		},
 		{
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
@@ -139,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.toolBarTitle = AppComponent.convertRouteToTitle(routerEvent.url);
+				this.toolBarTitle = AppComponent.convertRouteToTitle((<NavigationEnd> routerEvent).urlAfterRedirects);
 			}
 		});
 

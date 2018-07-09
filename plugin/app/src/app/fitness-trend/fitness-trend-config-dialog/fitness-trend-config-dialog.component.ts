@@ -1,7 +1,9 @@
+import * as _ from "lodash"
+import * as moment from "moment";
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
-import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
 
 @Component({
 	selector: "app-fitness-trend-config-dialog",
@@ -15,16 +17,47 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 
 	public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
+	public ignoreActivityNamePatterns: string = null;
+	public ignoreBeforeDate: Date = null;
+	public ignoreBeforeMaxDate: Date = null;
+	public isEstimatedPowerStressScoreToggleEnabled: boolean;
+	public isEstimatedRunningStressScoreToggleEnabled: boolean;
+
 	constructor(public dialogRef: MatDialogRef<FitnessTrendConfigDialogComponent>,
-				@Inject(MAT_DIALOG_DATA) public fitnessTrendConfigModel: FitnessTrendConfigModel,
+				@Inject(MAT_DIALOG_DATA) public fitnessTrendConfigDialogData: FitnessTrendConfigDialogData,
 				public snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
+
+		if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreActivityNamePatterns) {
+			this.ignoreActivityNamePatterns = this.formatPatternsForDisplay(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreActivityNamePatterns);
+		}
+
+		if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreBeforeDate) {
+			this.ignoreBeforeDate = moment(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreBeforeDate).toDate();
+		}
+
+		if (this.fitnessTrendConfigDialogData.lastFitnessActiveDate) {
+			this.ignoreBeforeMaxDate = this.fitnessTrendConfigDialogData.lastFitnessActiveDate;
+		}
+
+		this.updateEstimatedStressScoresToggles();
+	}
+
+	public updateEstimatedStressScoresToggles(): void {
+
+		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasCyclingFtp
+			&& this.fitnessTrendConfigDialogData.isPowerMeterEnabled
+			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
+		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasRunningFtp
+			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+
 	}
 
 	public onSave(): void {
-		this.dialogRef.close(this.fitnessTrendConfigModel);
+		this.dialogRef.close(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel);
 	}
 
 	public onCancel(): void {
@@ -32,13 +65,14 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 	}
 
 	public onModeChange(): void {
-		this.fitnessTrendConfigModel.heartRateImpulseMode = Number(this.fitnessTrendConfigModel.heartRateImpulseMode);
+		this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode = Number(this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode);
+		this.updateEstimatedStressScoresToggles();
 	}
 
 	public onInitialFitnessChange(): void {
 
-		if (this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl < 0) {
-			this.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl = null;
+		if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl < 0) {
+			this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl = null;
 			this.snackBar.open("Invalid value entered. Reset to default value.", "Close", {
 				duration: 2500
 			});
@@ -47,12 +81,42 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 	}
 
 	public onInitialFatigueChange(): void {
-		if (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl < 0) {
-			this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl = null;
+		if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl < 0) {
+			this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl = null;
 			this.snackBar.open("Invalid value entered. Reset to default value.", "Close", {
 				duration: 2500
 			});
 		}
 	}
 
+	public onIgnoreActivityNamePatternsChange(): void {
+		this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreActivityNamePatterns = this.formatPatternsForStorage(this.ignoreActivityNamePatterns);
+	}
+
+	public onIgnoreBeforeDateChange(): void {
+		this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreBeforeDate = (this.ignoreBeforeDate) ? this.ignoreBeforeDate.toISOString() : null;
+	}
+
+	public formatPatternsForStorage(userInputPatterns: string): string[] {
+
+		// Split with carriage return
+		let patternsList: string[] = userInputPatterns.split(/\r?\n/);
+
+		// Remove spaces
+		patternsList = _.map(patternsList, (pattern: string) => {
+			return pattern.trim();
+		});
+
+		// Remove empty patterns
+		patternsList = _.compact(patternsList);
+
+		// Remove duplicate patterns
+		patternsList = _.uniq(patternsList);
+
+		return (patternsList.length > 0) ? patternsList : null;
+	}
+
+	public formatPatternsForDisplay(patterns: string[]): string {
+		return patterns.join("\n");
+	}
 }

@@ -45,16 +45,27 @@
 					{{viewedDay.printPowerStressScore()}} <i>PowerSS</i>
 				</span>
 
+				<!--RSS-->
+				<span *ngIf="viewedDay.runningStressScore">
+					<span
+						*ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
+						&nbsp;&&nbsp;
+					</span>
+					{{viewedDay.printRunningStressScore()}} <i>RSS</i>
+				</span>
+
 				<!--SwimSS-->
 				<span *ngIf="viewedDay.swimStressScore">
-					<span *ngIf="viewedDay.trainingImpulseScore">
+					<span
+						*ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
 						&nbsp;&&nbsp;
 					</span>
 					{{viewedDay.printSwimStressScore()}} <i>SwimSS</i>
 				</span>
+
 				<!--Final-->
 				<span>
-					&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong> <i>Stress score</i>
+					&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>&nbsp;<i>Stress score</i>
 				</span>
 			</span>
 		</span>

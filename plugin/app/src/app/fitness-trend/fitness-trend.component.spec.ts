@@ -18,13 +18,11 @@ import * as _ from "lodash";
 describe("FitnessTrendComponent", () => {
 
 	const pluginId = "c061d18abea0";
-	const gender = "men";
 	const userGender = Gender.MEN;
 	const maxHr = 200;
 	const restHr = 50;
 	const cyclingFtp = 150;
 	const swimFtp = 31;
-	const weight = 75;
 	const userLactateThreshold: UserLactateThresholdModel = {
 		default: 175,
 		cycling: null,
@@ -32,6 +30,7 @@ describe("FitnessTrendComponent", () => {
 	};
 
 	let activityDao: ActivityDao;
+	let activityDaoStorageSpy: jasmine.Spy;
 	let userSettingsDao: UserSettingsDao;
 	let syncService: SyncService;
 	let component: FitnessTrendComponent;
@@ -61,7 +60,8 @@ describe("FitnessTrendComponent", () => {
 		syncService = TestBed.get(SyncService);
 
 		// Mocking chrome storage
-		spyOn(activityDao, "browserStorageLocal").and.returnValue({
+		activityDaoStorageSpy = spyOn(activityDao, "browserStorageLocal");
+		activityDaoStorageSpy.and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback({syncedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
 			}
@@ -81,10 +81,6 @@ describe("FitnessTrendComponent", () => {
 		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
-		done();
-	});
-
-	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(FitnessTrendComponent);
 		component = fixture.componentInstance;
 
@@ -94,10 +90,14 @@ describe("FitnessTrendComponent", () => {
 			userRestHr: restHr,
 			userLactateThreshold: userLactateThreshold,
 			cyclingFtp: cyclingFtp,
+			runningFtp: null,
 			swimFtp: swimFtp,
 		};
 
+		component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
+
 		fixture.detectChanges();
+
 		done();
 	});
 
@@ -119,7 +119,7 @@ describe("FitnessTrendComponent", () => {
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
 
 		// When
-		component.verifyTogglesStatesAlongHrMode();
+		component.updateTogglesStatesAlongHrMode();
 
 		// Then
 		expect(component.isTrainingZonesEnabled).toEqual(true);
@@ -144,7 +144,7 @@ describe("FitnessTrendComponent", () => {
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
 
 		// When
-		component.verifyTogglesStatesAlongHrMode();
+		component.updateTogglesStatesAlongHrMode();
 
 		// Then
 		expect(component.isTrainingZonesEnabled).toEqual(false);
@@ -155,4 +155,5 @@ describe("FitnessTrendComponent", () => {
 
 		done();
 	});
+
 });

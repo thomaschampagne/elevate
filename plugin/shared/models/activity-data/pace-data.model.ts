@@ -10,4 +10,6 @@ export class PaceDataModel {
 	public genuineGradeAdjustedAvgPace: number;
 	public paceZones: ZoneModel[];
 	public gradeAdjustedPaceZones: ZoneModel[];
+	public runningStressScore: number;
+	public runningStressScorePerHour: number;
 }

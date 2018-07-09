@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import { Helper } from "../Helper";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
@@ -136,142 +135,16 @@ export class VacuumProcessor {
 	 */
 	protected getActivityStatsMap(): ActivityStatsMapModel {
 
-		const actStatsContainer: JQuery = $(".activity-summary-container");
-
-		// Get Distance
-		const distance: number = this.formatActivityDataValue(
-			actStatsContainer.find(".inline-stats.section").children().first().text(),
-			false, false, true, false);
-
-		// Get Moving Time
-		let movingTime: number = this.formatActivityDataValue(
-			actStatsContainer.find(".inline-stats.section").children().first().next().text(),
-			true, false, false, false);
-
-		// Get Elevation
-		const elevation: number = this.formatActivityDataValue(
-			actStatsContainer.find(".inline-stats.section").children().first().next().next().text(),
-			false, true, false, false);
-
-		// Get Estimated Average Power
-		const avgPower: number = this.formatActivityDataValue(
-			$("[data-glossary-term*=definition-average-power]").parent().parent().children().first().text(),
-			false, false, false, false);
-
-		const weightedPower: number = this.formatActivityDataValue(
-			$("[data-glossary-term*=definition-weighted-average-power]").parent().parent().children().first().text(),
-			false, false, false, false);
-
-		// Get Energy Output
-		const energyOutput: number = this.formatActivityDataValue(
-			actStatsContainer.find(".inline-stats.section.secondary-stats").children().first().next().children().first().text(),
-			false, false, false, true);
-
-		// Get Elapsed Time
-		let elapsedTime: number = this.formatActivityDataValue(
-			$("[data-glossary-term*=definition-elapsed-time]").parent().parent().children().last().text(),
-			true, false, false, false);
-
-		// Try to get it another way. (Running races)
-		if (!elapsedTime) {
-			elapsedTime = this.formatActivityDataValue(
-				$(".section.more-stats").children().last().text(),
-				true, false, false, false);
-		}
-
-		// Invert movingTime and elapsedTime. Theses values seems to be inverted in running races (https://www.strava.com/activities/391338398)
-		if (elapsedTime - movingTime < 0) {
-			const elapsedTimeCopy: number = elapsedTime;
-			elapsedTime = movingTime;
-			movingTime = elapsedTimeCopy;
-		}
-
-		// Get Average speed
-		let averageSpeed: number = this.formatActivityDataValue(
-			actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().children().first().children().first().next().text(),
-			false, false, false, false);
-
-		// If no average speed found, try to get pace instead.
-		if (!averageSpeed) {
-			averageSpeed = this.formatActivityDataValue(
-				$("[data-glossary-term*=definition-moving-time]").parent().parent().first().next().children().first().text(),
-				true, false, false, false);
-
-			averageSpeed = 1 / averageSpeed; // invert to km per seconds
-			averageSpeed = averageSpeed * 60 * 60; // We are in KPH here
-
-			const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-			const speedFactor: number = (measurementPreference == "meters") ? 1 : 0.62137;
-			averageSpeed = averageSpeed / speedFactor; // Always give PKH here
-		}
-
-		const averageHeartRate: number = this.formatActivityDataValue(
-			actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().next().children().first().children().first().next().has("abbr").text(),
-			false, false, false, false);
-
-		const maxHeartRate: number = this.formatActivityDataValue(
-			actStatsContainer.find(".section.more-stats").find(".unstyled").children().first().next().next().children().first().children().first().next().next().text(),
-			false, false, false, false);
-
 		// Create activityData Map
+		const movingTime = window.pageView.activity().get('moving_time');
+		const elevGain = window.pageView.activity().get('elev_gain');
+
 		const activityCommonStats: ActivityStatsMapModel = {
-			distance,
-			// movingTime: movingTime,
-			elevation,
-			avgPower,
-			// weightedPower: weightedPower,
-			// energyOutput: energyOutput,
-			// elapsedTime: elapsedTime,
-			averageSpeed,
-			// averageHeartRate: averageHeartRate
-			// maxHeartRate: maxHeartRate
+			movingTime: (movingTime) ? movingTime : null,
+			elevation: (elevGain) ? elevGain : null,
 		};
 
 		return activityCommonStats;
-	}
-
-	protected formatActivityDataValue(dataIn: string, parsingTime: boolean, parsingElevation: boolean, parsingDistance: boolean, parsingEnergy: boolean): number {
-
-		if (dataIn === "") {
-			return null;
-		}
-
-		// Common clean
-		let cleanData: string = dataIn.toLowerCase();
-		cleanData = cleanData.replace(new RegExp(/\s/g), "");
-		cleanData = cleanData.replace(new RegExp(/[àáâãäå]/g), "");
-		cleanData = cleanData.replace(new RegExp(/æ/g), "");
-		cleanData = cleanData.replace(new RegExp(/ç/g), "");
-		cleanData = cleanData.replace(new RegExp(/[èéêë]/g), "");
-		cleanData = cleanData.replace(new RegExp(/[ìíîï]/g), "");
-		cleanData = cleanData.replace(new RegExp(/ñ/g), "");
-		cleanData = cleanData.replace(new RegExp(/[òóôõö]/g), "");
-		cleanData = cleanData.replace(new RegExp(/œ/g), "o");
-		cleanData = cleanData.replace(new RegExp(/[ùúûü]/g), "");
-		cleanData = cleanData.replace(new RegExp(/[ýÿ]/g), "");
-		cleanData = cleanData.replace(/\s/g, "").trim();
-		cleanData = cleanData.replace(/[\n\r]/g, "");
-		cleanData = cleanData.replace(/([a-z]|[A-Z])+/g, "").trim();
-
-		if (parsingTime) {
-			// Remove text from date, format time to hh:mm:ss
-			cleanData = Helper.HHMMSStoSeconds(cleanData).toString();
-
-			if (_.isNaN(cleanData)) {
-				return null;
-			}
-
-		} else if (parsingElevation) {
-			cleanData = cleanData.replace(" ", "").replace(",", "");
-		} else if (parsingDistance) {
-			cleanData = cleanData.replace(",", ".");
-		} else if (parsingEnergy) {
-			cleanData = cleanData.replace(",", ".").replace(".", "");
-		} else {
-			cleanData = cleanData.replace(",", ".");
-		}
-
-		return parseFloat(cleanData);
 	}
 
 	/**
@@ -287,7 +160,7 @@ export class VacuumProcessor {
 			return;
 		}
 
-		const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_distance";
+		const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
 
 		$.ajax(url).done((activityStream: ActivityStreamsModel) => {
 

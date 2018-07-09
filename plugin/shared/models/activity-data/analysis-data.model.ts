@@ -8,7 +8,6 @@ import { ElevationDataModel } from "./elevation-data.model";
 
 export class AnalysisDataModel {
 	public moveRatio: number;
-	public toughnessScore: number; // TODO Still used?! Remove?
 	public speedData: SpeedDataModel;
 	public paceData: PaceDataModel;
 	public powerData: PowerDataModel;

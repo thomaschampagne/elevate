@@ -2,13 +2,15 @@
  * Handles main burger menu
  */
 import { AppResourcesModel } from "../models/app-resources.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class MenuModifier implements IModifier {
+export class MenuModifier extends AbstractModifier {
 
 	private athleteId: number;
 	private appResources: AppResourcesModel;
 
 	constructor(athleteId: number, appResources: AppResourcesModel) {
+		super();
 		this.athleteId = athleteId;
 		this.appResources = appResources;
 	}

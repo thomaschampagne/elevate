@@ -2,8 +2,28 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
+		version: "6.4.0",
+		date: "2018-07-07",
+		message: "Added \"Fitness Trend Estimation\" for users WITHOUT SENSORS!!. Added \"Running Stress Score (RSS)\" to activities and fitness trend. Added \"Fitness Trend\" options to exclude activities from the trend. Added a \"Fitness Trend Spreadsheet Export\" feature. And more improvements.",
+		hotFixes: [],
+		features: [
+			"Added \"Estimated Fitness Trend\" option for cyclists and runners who don't own sensors (or forgot them sometimes). Now a \"typical\" iPhone or Android mobile user who runs the strava mobile app can now access the fitness trend feature without buying any external sensors.",
+			"Added \"Estimated Running Stress Score (RSS)\" to strava running activities and fitness trend feature.",
+			"Added \"Running Functional Threshold Pace\" field in athlete settings required to compute \"Running Stress Score (RSS)\".",
+			"Added \"Fitness Trend\" option to exclude activities from the trend based on name patterns. Case where you want to ignore your \"#TAGGED\" activities.",
+			"Added \"Fitness Trend\" option to exclude activities until a date. Can be useful to ignore previous seasons for example.",
+			"Added \"Fitness Trend\" export to spreadsheet feature in the fitness trend table. So you can see you fitness trend in excel or other spreadsheet editor.",
+		],
+		isPatch: false,
+		fixes: [
+			"Improved running \"Grade Adjusted Pace\" calculation for more accurate \"Estimated Running Stress Score (RSS)\" results.",
+			"Improved cycling estimated power data for more accurate \"Estimated Power Stress Score (PSS)\" results (removing and smoothing power when power behaviour were not human)",
+			"Global plugin improvements"
+		]
+	},
+	{
 		version: "6.3.0",
-		date: "2018-06-08", //smoothing by adaptive low-pass filter     smooth adaptive low pass filter
+		date: "2018-06-08",
 		message: "Added zoom in/out actions on fitness trend graph. Added indoor activity filter on year progressions. New \"adaptive low-pass filter\" to improve accuracy of estimated power data: estimated \"Power Stress Score\" accuracy is also positively impacted. And more in the release note...",
 		hotFixes: [],
 		features: [
