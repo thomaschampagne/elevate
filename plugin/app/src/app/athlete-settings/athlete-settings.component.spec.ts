@@ -46,4 +46,32 @@ describe("AthleteSettingsComponent", () => {
 		expect(component).toBeTruthy();
 		done();
 	});
+
+	it("should convert runningFtp in seconds to pace using imperial system", (done: Function) => {
+
+		// Given
+		component.runningFtp = 5 * 60; // 5 Minutes
+		const expectedPace = "00:08:03/mi";
+
+		// When
+		const pace = component.convertToPace("imperial");
+
+		// Then
+		expect(pace).toEqual(expectedPace);
+		done();
+	});
+
+	it("should convert runningFtp in seconds to pace using metric system", (done: Function) => {
+
+		// Given
+		component.runningFtp = 5 * 60; // 5 Minutes
+		const expectedPace = "00:05:00/km";
+
+		// When
+		const pace = component.convertToPace("metric");
+
+		// Then
+		expect(pace).toEqual(expectedPace);
+		done();
+	});
 });
