@@ -380,7 +380,7 @@ export class AthleteSettingsComponent implements OnInit {
 			throw new Error("System unit unknown");
 		}
 
-		return (_.isNumber(this.runningFtp)) ? Helper.secondsToHHMMSS(this.runningFtp * speedFactor) + ((systemUnit === "metric") ? "/km" : "/mi") : null;
+		return (_.isNumber(this.runningFtp)) ? Helper.secondsToHHMMSS(this.runningFtp / speedFactor) + ((systemUnit === "metric") ? "/km" : "/mi") : null;
 
 	}
 }
