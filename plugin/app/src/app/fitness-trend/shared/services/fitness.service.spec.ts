@@ -3041,13 +3041,13 @@ describe("FitnessService", () => {
 
 				let dayTrend: DayFitnessTrendModel;
 
-				dayTrend = _.find(fitnessTrend, {ids: [111]});
+				dayTrend = _.find(fitnessTrend, ['ids', [111]]);
 				expect(dayTrend).not.toBeNull();
 				expect(dayTrend.activitiesName[0]).toEqual(expectedRideName);
 				expect(dayTrend.powerStressScore).toEqual(100);
 				expect(dayTrend.finalStressScore).toEqual(100);
 
-				dayTrend = _.find(fitnessTrend, {ids: [222]});
+				dayTrend = _.find(fitnessTrend, ['ids', [222]]);
 				expect(dayTrend).not.toBeNull();
 				expect(dayTrend.activitiesName[0]).toEqual(expectedRunName);
 				expect(dayTrend.runningStressScore).toEqual(100);
