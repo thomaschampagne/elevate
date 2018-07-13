@@ -13,8 +13,8 @@ class Boot {
 		fancyboxBoot($);
 
 		addEventListener(MessagesModel.ON_START_CORE_EVENT, (event: any) => {
-
-			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
+			var data = JSON.parse(event.detail);
+			const initData: StartCoreDataModel = data as StartCoreDataModel;
 			const stravistiX = new StravistiX(initData.userSettings, initData.appResources);
 			stravistiX.run();
 

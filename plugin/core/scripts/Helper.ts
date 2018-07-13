@@ -105,20 +105,15 @@ export class Helper {
 		const deferred: Q.Deferred<any> = Q.defer();
 
 		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
+		window.postMessage( {
 			method: MessagesModel.ON_SET_FROM_STORAGE,
 			params: {
 				storage: storageType,
 				key,
 				value,
 			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
+		}, "*");
+		deferred.resolve();
 		return deferred.promise;
 	}
 
@@ -135,19 +130,14 @@ export class Helper {
 		const deferred: Q.Deferred<any> = Q.defer();
 
 		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
+		window.postMessage( {
 			method: MessagesModel.ON_GET_FROM_STORAGE,
 			params: {
 				storage: storageType,
 				key,
 			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
+		},"*");
+		deferred.resolve();
 		return deferred.promise;
 	}
 
@@ -156,50 +146,35 @@ export class Helper {
 		const deferred: Q.Deferred<any> = Q.defer();
 
 		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
+		window.postMessage({
 			method: MessagesModel.ON_REMOVE_FROM_STORAGE,
 			params: {
 				storage: storageType,
-				key,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
+				key}}
+				,"*");
+		deferred.resolve();
 		return deferred.promise;
 	}
 
 	public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
-
-		chrome.runtime.sendMessage(extensionId, {
+		window.postMessage({
 			method: MessagesModel.ON_RELOAD_BROWSER_TAB,
 			params: {
 				sourceTabId,
-			},
-		}, (response: any) => {
-			console.log(response);
-		});
+			}
+		},"*");
 	}
 
 	public static getStorageUsage(extensionId: string, storageType: string, callback?: Function): Q.IPromise<IStorageUsage> {
 
 		const deferred: Q.Deferred<any> = Q.defer();
-
 		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
+		window.postMessage({
 			method: MessagesModel.ON_STORAGE_USAGE,
 			params: {
 				storage: storageType,
 			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response.data);
-			}
-			deferred.resolve(response.data);
-		});
+		},"*");
 
 		return deferred.promise;
 	}

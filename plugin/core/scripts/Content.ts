@@ -86,7 +86,7 @@ export class Content {
 
 	protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
 		const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
-		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, startCoreData);
+		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, JSON.stringify(startCoreData));
 		dispatchEvent(startCorePluginEvent);
 	}
 }

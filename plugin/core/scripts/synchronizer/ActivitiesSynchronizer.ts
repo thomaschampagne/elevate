@@ -681,8 +681,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 
 		// Check for lastSyncDateTime
 		this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
-
-			const lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
+			const lastSyncDateTime: Date = (savedLastSyncDateTime && (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) )? new Date(savedLastSyncDateTime.data) : null;
 
 			if (fastSync && fastSync === true) {
 
