@@ -44,14 +44,15 @@ export class StorageManager {
 		StorageManager.setCookieSeconds(cname, null, 0);
 	}
 
-	public getFromStorage(storageType: string, key: string, callback: (result: any) => void): void {
+	public getFromStorage(storageType: string, key: string, callback): void {
 
 		const accessMethod = "[getFromStorage<" + storageType + ">]";
 
 		console.debug(accessMethod + " with key <" + key + ">");
 
-		this.hasChromeLastError();
-
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError.message);
+		}
 		if (storageType === "sync") {
 
 			chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
@@ -77,11 +78,13 @@ export class StorageManager {
 		}
 	}
 
-	public setToStorage(storageType: string, key: string, value: any, callback: (userSettingsResponseData: any) => void): void {
+	public setToStorage(storageType: string, key: string, value: any, callback): void {
 
 		console.debug("setToStorage: " + key + "=" + value);
 
-		this.hasChromeLastError();
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError.message);
+		}
 
 		if (storageType === "sync") {
 
@@ -102,7 +105,6 @@ export class StorageManager {
 			});
 
 		} else if (storageType === "local") {
-
 			chrome.storage.local.get(null, function (allData) {
 				allData[key] = value;
 				chrome.storage.local.set(allData);
@@ -113,9 +115,11 @@ export class StorageManager {
 		}
 	}
 
-	public removeFromStorage(storageType: string, key: string, callback: (chromeRuntimeError: chrome.runtime.LastError) => void): void {
+	public removeFromStorage(storageType: string, key: string, callback): void {
 
-		this.hasChromeLastError();
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError.message);
+		}
 
 		if (storageType === "sync") {
 			chrome.storage.sync.remove([key], () => {
@@ -132,18 +136,21 @@ export class StorageManager {
 
 	}
 
-	public getStorageUsage(storageType: string, callback: (response: IStorageUsage) => void) {
-
-		this.hasChromeLastError();
+	public getStorageUsage(storageType: string, callback) {
+		console.log("StorageManager getStorageUsage");
+		if (chrome.runtime.lastError) {
+			console.error(chrome.runtime.lastError.message);
+		}
 
 		if (storageType === "local") {
 			chrome.storage.local.getBytesInUse((bytesInUse: number) => {
-
-				callback({
+				var usage= {
 					bytesInUse,
 					quotaBytes: chrome.storage.local.QUOTA_BYTES,
 					percentUsage: bytesInUse / chrome.storage.local.QUOTA_BYTES * 100,
-				} as IStorageUsage);
+				} as IStorageUsage;
+				console.log(usage);
+				callback(usage);
 			});
 		} else if (storageType === "sync") {
 			chrome.storage.sync.getBytesInUse((bytesInUse: number) => {
@@ -158,12 +165,6 @@ export class StorageManager {
 			console.error("Storage type not available");
 		}
 
-	}
-
-	protected hasChromeLastError() {
-		if (chrome.runtime.lastError) {
-			console.error(chrome.runtime.lastError.message);
-		}
 	}
 
 	public printStorage(storageType: string): void {
