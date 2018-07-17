@@ -36,7 +36,7 @@
 		"storage",
 		"unlimitedStorage",
 		"webRequest",
-		"geolocation", "idle", "notifications",
+		"idle", "notifications",
 		"activeTab", "tabs", "tabHide"
 	],
 	"web_accessible_resources": [

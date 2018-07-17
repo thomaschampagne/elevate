@@ -104,7 +104,7 @@ export class Content {
 							direction: "from-content-script",
 							method: event.data.message.method + postambel,
 								message: {
-									value: {params:response}}
+									value: {data:response}}
 							},
 							"*");
 					});

@@ -155,7 +155,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
 
 			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
-
+debugger;
 				// Should find added and edited activities
 				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored.data) ? syncedActivitiesStored.data : []);
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history

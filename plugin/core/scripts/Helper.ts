@@ -220,6 +220,7 @@ export class Helper {
 		if(window['chrome'])
 			chrome.runtime.sendMessage(data.message,
 				(response: any) => {
+				debugger;
 				if (callback) {
 					callback(response.data);
 				}
