@@ -1,57 +1,61 @@
 import * as _ from "lodash";
-import { env } from "../../config/env";
+import { CoreEnv } from "../../config/core-env";
 import { VacuumProcessor } from "./VacuumProcessor";
 
 export class BikeOdoProcessor {
 
-    protected cacheKey: string;
-    protected vacuumProcessor: VacuumProcessor;
-    protected cacheAgingTime: number;
-    protected athleteId: number;
+	protected cacheKey: string;
+	protected vacuumProcessor: VacuumProcessor;
+	protected cacheAgingTime: number;
+	protected athleteId: number;
 
-    constructor(vacuumProcessor: VacuumProcessor, athleteId: number) {
-        this.vacuumProcessor = vacuumProcessor;
-        this.cacheAgingTime = 120 * 60; // 2 hours
-        this.athleteId = athleteId;
-        this.cacheKey = "stravistix_bikeOdo_" + athleteId + "_cache";
-    }
+	constructor(vacuumProcessor: VacuumProcessor, athleteId: number) {
+		this.vacuumProcessor = vacuumProcessor;
+		this.cacheAgingTime = 120 * 60; // 2 hours
+		this.athleteId = athleteId;
+		this.cacheKey = "stravistix_bikeOdo_" + athleteId + "_cache";
+	}
 
-    public getBikeOdoOfAthlete(callback: (bikeOdoArray: string[]) => void): void {
+	public getBikeOdoOfAthlete(callback: (bikeOdoArray: string[]) => void): void {
 
-        const cache: string = localStorage.getItem(this.cacheKey);
-        const storedOdos: any = JSON.parse(localStorage.getItem(this.cacheKey));
+		const cache: string = localStorage.getItem(this.cacheKey);
+		const storedOdos: any = JSON.parse(localStorage.getItem(this.cacheKey));
 
-        // Test if cache is still valid
-        let cacheDeprecated: boolean = false;
-        const now: number = Math.floor(Date.now() / 1000);
-        if (storedOdos && (now > storedOdos.cachedOnTimeStamp + this.cacheAgingTime)) {
-            console.log("bike ode cache is deprecated");
-            cacheDeprecated = true;
-        }
+		// Test if cache is still valid
+		let cacheDeprecated = false;
+		const now: number = Math.floor(Date.now() / 1000);
+		if (storedOdos && (now > storedOdos.cachedOnTimeStamp + this.cacheAgingTime)) {
+			console.log("bike ode cache is deprecated");
+			cacheDeprecated = true;
+		}
 
-        if (!_.isNull(cache) && !_.isEqual(cache, "null") && !cacheDeprecated) {
-            if (env.debugMode) console.log("Using bike odo cache: " + cache);
-            callback(storedOdos);
-            return;
-        }
+		if (!_.isNull(cache) && !_.isEqual(cache, "null") && !cacheDeprecated) {
+			if (CoreEnv.debugMode) {
+				console.log("Using bike odo cache: " + cache);
+			}
+			callback(storedOdos);
+			return;
+		}
 
-        this.vacuumProcessor.getBikeOdoOfAthlete(this.athleteId, (bikeOdoArray: any) => {
+		this.vacuumProcessor.getBikeOdoOfAthlete(this.athleteId, (bikeOdoArray: any) => {
 
-            bikeOdoArray.cachedOnTimeStamp = Math.floor(Date.now() / 1000);
+			bikeOdoArray.cachedOnTimeStamp = Math.floor(Date.now() / 1000);
 
-            // Cache result
-            if (env.debugMode) console.log("Creating bike odo cache inside cookie " + this.cacheKey);
-            try {
-                localStorage.setItem(this.cacheKey, JSON.stringify(bikeOdoArray));
-            } catch (err) {
-                console.warn(err);
-                localStorage.clear();
-            }
-            callback(bikeOdoArray);
-        });
-    }
+			// Cache result
+			if (CoreEnv.debugMode) {
+				console.log("Creating bike odo cache inside cookie " + this.cacheKey);
+			}
+			try {
+				localStorage.setItem(this.cacheKey, JSON.stringify(bikeOdoArray));
+			} catch (err) {
+				console.warn(err);
+				localStorage.clear();
+			}
+			callback(bikeOdoArray);
+		});
+	}
 
-    public getCacheKey(): string {
-        return this.cacheKey;
-    }
+	public getCacheKey(): string {
+		return this.cacheKey;
+	}
 }

@@ -1,135 +1,132 @@
 import * as _ from "lodash";
-import { IActivityStatsMap, IActivityStream, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
-import { env } from "../../config/env";
-import { IAppResources } from "../interfaces/IAppResources";
-import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { CoreEnv } from "../../config/core-env";
+import { AppResourcesModel } from "../models/app-resources.model";
+import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./VacuumProcessor";
-import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+
+const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
 export class ActivityProcessor {
 
-    public static cachePrefix: string = "stravistix_activity_";
-    protected appResources: IAppResources;
-    protected vacuumProcessor: VacuumProcessor;
-    protected zones: any;
-    protected activityType: string;
-    protected isTrainer: boolean;
-    protected isActivityAuthor: boolean;
-    protected computeAnalysisWorkerBlobURL: string;
-    protected computeAnalysisThread: Worker;
-    protected userSettings: IUserSettings;
+	public static cachePrefix = "stravistix_activity_";
+	protected appResources: AppResourcesModel;
+	protected vacuumProcessor: VacuumProcessor;
+	protected zones: any;
+	protected activityType: string;
+	protected supportsGap: boolean;
+	protected isTrainer: boolean;
+	protected isActivityAuthor: boolean;
+	protected computeAnalysisThread: Worker;
+	protected userSettings: UserSettingsModel;
 
-    constructor(appResources: IAppResources, vacuumProcessor: VacuumProcessor, userSettings: IUserSettings, isActivityAuthor: boolean) {
-        this.appResources = appResources;
-        this.vacuumProcessor = vacuumProcessor;
-        this.userSettings = userSettings;
-        this.zones = this.userSettings.zones;
-        this.isActivityAuthor = isActivityAuthor;
-    }
+	constructor(appResources: AppResourcesModel, vacuumProcessor: VacuumProcessor, userSettings: UserSettingsModel, isActivityAuthor: boolean) {
+		this.appResources = appResources;
+		this.vacuumProcessor = vacuumProcessor;
+		this.userSettings = userSettings;
+		this.zones = this.userSettings.zones;
+		this.isActivityAuthor = isActivityAuthor;
+	}
 
-    public setActivityType(activityType: string): void {
-        this.activityType = activityType;
-    }
+	public setActivityType(activityType: string): void {
+		this.activityType = activityType;
+	}
 
-    public setTrainer(isTrainer: boolean): void {
-        if (isTrainer) {
-            if (_.isBoolean(isTrainer)) {
-                this.isTrainer = isTrainer;
-            } else {
-                console.error("isTrainer(boolean): required boolean param");
-            }
-        }
-    }
+	public setSupportsGap(supportsGap: boolean): void {
+		this.supportsGap = supportsGap;
+	}
 
-    public getAnalysisData(activityId: number, bounds: number[], callback: (analysisData: IAnalysisData) => void): void {
+	public setTrainer(isTrainer: boolean): void {
+		if (isTrainer) {
+			if (_.isBoolean(isTrainer)) {
+				this.isTrainer = isTrainer;
+			} else {
+				console.error("isTrainer(boolean): required boolean param");
+			}
+		}
+	}
 
-        if (!this.activityType) {
-            console.error("No activity type set for ActivityProcessor");
-        }
+	public getAnalysisData(activityId: number, bounds: number[], callback: (analysisData: AnalysisDataModel) => void): void {
 
-        // We are not using cache when bounds are given
-        let useCache: boolean = true;
-        if (!_.isEmpty(bounds)) {
-            useCache = false;
-        }
+		if (!this.activityType) {
+			console.error("No activity type set for ActivityProcessor");
+		}
 
-        if (useCache) {
-            // Find in cache first is data exist
-            const cacheResult: IAnalysisData = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as IAnalysisData;
+		// We are not using cache when bounds are given
+		let useCache = true;
+		if (!_.isEmpty(bounds)) {
+			useCache = false;
+		}
 
-            if (!_.isNull(cacheResult) && env.useActivityStreamCache) {
-                console.log("Using existing activity cache mode");
-                callback(cacheResult);
-                return;
-            }
-        }
+		if (useCache) {
+			// Find in cache first is data exist
+			const cacheResult: AnalysisDataModel = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as AnalysisDataModel;
 
-        // Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-        this.vacuumProcessor.getActivityStream((activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
+			if (!_.isNull(cacheResult) && CoreEnv.useActivityStreamCache) {
+				console.log("Using existing activity cache mode");
+				callback(cacheResult);
+				return;
+			}
+		}
 
-            // Compute data in a background thread to avoid UI locking
-            this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: IAnalysisData) => {
+		// Else no cache... then call VacuumProcessor for getting data, compute them and cache them
+		this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean) => { // Get stream on page
 
-                callback(resultFromThread);
+			// Compute data in a background thread to avoid UI locking
+			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteWeight, activityStatsMap, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
 
-                // Cache the result from thread to localStorage
-                if (useCache) {
-                    console.log("Creating activity cache");
-                    try {
-                        localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(resultFromThread)); // Cache the result to local storage
-                    } catch (err) {
-                        console.warn(err);
-                        localStorage.clear();
-                    }
-                }
+				callback(resultFromThread);
 
-            });
+				// Cache the result from thread to localStorage
+				if (useCache) {
+					console.log("Creating activity cache");
+					try {
+						localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(resultFromThread)); // Cache the result to local storage
+					} catch (err) {
+						console.warn(err);
+						localStorage.clear();
+					}
+				}
 
-        });
-    }
+			});
 
-    protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
-                                                    activityStatsMap: IActivityStatsMap, activityStream: IActivityStream, bounds: number[],
-                                                    callback: (analysisData: IAnalysisData) => void): void {
+		});
+	}
 
-        // Create worker blob URL if not exist
-        if (!this.computeAnalysisWorkerBlobURL) {
+	protected computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteWeight: number,
+													activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, bounds: number[],
+													callback: (analysisData: AnalysisDataModel) => void): void {
 
-            // Create a blob from 'ComputeAnalysisWorker' function variable as a string
-            const blob: Blob = new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {type: "application/javascript"});
+		// Lets create that worker/thread!
+		this.computeAnalysisThread = new ComputeAnalysisWorker();
 
-            // Keep track of blob URL to reuse it
-            this.computeAnalysisWorkerBlobURL = URL.createObjectURL(blob);
-        }
+		// Send user and activity data to the thread
+		// He will compute them in the background
+		const threadMessage: ComputeActivityThreadMessageModel = {
+			activityType: this.activityType,
+			supportsGap: this.supportsGap,
+			isTrainer: this.isTrainer,
+			appResources: this.appResources,
+			userSettings: this.userSettings,
+			isActivityAuthor: this.isActivityAuthor,
+			athleteWeight: athleteWeight,
+			hasPowerMeter: hasPowerMeter,
+			activityStatsMap: activityStatsMap,
+			activityStream: activityStream,
+			bounds: bounds,
+			returnZones: true
+		};
 
-        // Lets create that worker/thread!
-        this.computeAnalysisThread = new Worker(this.computeAnalysisWorkerBlobURL);
+		this.computeAnalysisThread.postMessage(threadMessage);
 
-        // Send user and activity data to the thread
-        // He will compute them in the background
-        const threadMessage: IComputeActivityThreadMessage = {
-            activityType: this.activityType,
-            isTrainer: this.isTrainer,
-            appResources: this.appResources,
-            userSettings: this.userSettings,
-            isActivityAuthor: this.isActivityAuthor,
-            athleteWeight,
-            hasPowerMeter,
-            activityStatsMap,
-            activityStream,
-            bounds,
-            returnZones: true,
-            systemJsConfig: SystemJS.getConfig(),
-        };
-
-        this.computeAnalysisThread.postMessage(threadMessage);
-
-        // Listen messages from thread. Thread will send to us the result of computation
-        this.computeAnalysisThread.onmessage = (messageFromThread: MessageEvent) => {
-            callback(messageFromThread.data);
-            // Finish and kill thread
-            this.computeAnalysisThread.terminate();
-        };
-    }
+		// Listen messages from thread. Thread will send to us the result of computation
+		this.computeAnalysisThread.onmessage = (messageFromThread: MessageEvent) => {
+			callback(messageFromThread.data);
+			// Finish and kill thread
+			this.computeAnalysisThread.terminate();
+		};
+	}
 }

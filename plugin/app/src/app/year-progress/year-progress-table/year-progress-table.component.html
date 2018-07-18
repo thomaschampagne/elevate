@@ -1,0 +1,100 @@
+<mat-table #table [dataSource]="dataSource">
+
+	<!--Date per years-->
+	<ng-container matColumnDef="year">
+		<mat-header-cell *matHeaderCellDef>Year</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+			<span class="mat-title" [style.color]="progressionAtDay.color">{{progressionAtDay.year}}</span>
+		</mat-cell>
+	</ng-container>
+
+	<!--Progress Type Value-->
+	<ng-container matColumnDef="progressTypeValue">
+		<mat-header-cell *matHeaderCellDef><strong>{{selectedProgressType.label}}</strong></mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+			<span [ngSwitch]="selectedProgressType.type">
+				<span *ngSwitchCase="ProgressType.TIME">
+					{{yearProgressService.readableTimeProgress(progressionAtDay.currentValue)}}
+				</span>
+				<span *ngSwitchDefault>
+					{{progressionAtDay.currentValue.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+				</span>
+			</span>
+
+		</mat-cell>
+	</ng-container>
+
+	<!--Progress Type Value-->
+	<ng-container matColumnDef="deltaPrevious">
+		<mat-header-cell *matHeaderCellDef>&Delta; Prev. Year</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+
+			<!--Test ProgressType-->
+			<span [ngSwitch]="selectedProgressType.type"
+				  [ngClass]="progressionAtDay.deltaPreviousYear.class"
+				  matTooltip="{{(progressionAtDay.deltaPreviousYear.date) ? 'Compared to ' + progressionAtDay.deltaPreviousYear.date: ''}}">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaPreviousYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaPreviousYear.value)}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+				<!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaPreviousYear.signSymbol + " " + progressionAtDay.deltaPreviousYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+		</mat-cell>
+	</ng-container>
+
+	<ng-container matColumnDef="deltaCurrent">
+		<mat-header-cell *matHeaderCellDef>&Delta; With {{currentYear}}</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+
+			<!--Test ProgressType-->
+			<span [ngSwitch]="selectedProgressType.type"
+				  [ngClass]="progressionAtDay.deltaCurrentYear.class"
+				  matTooltip="{{(progressionAtDay.deltaCurrentYear.date) ? 'Compared to ' + progressionAtDay.deltaCurrentYear.date: ''}}">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaCurrentYear.value)}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+				<!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + progressionAtDay.deltaCurrentYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+		</mat-cell>
+	</ng-container>
+
+	<!--Columns-->
+	<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+	<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>

@@ -1,0 +1,157 @@
+<div id="app-container" class="mat-body-1">
+	<mat-sidenav-container>
+		<mat-sidenav #sidenav
+					 [mode]="sideNavMode"
+					 (opened)="onSideNavOpened()"
+					 (closed)="onSideNavClosed()">
+			<mat-nav-list>
+				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+							   routerLinkActive="{{item.routerLinkActive}}">
+					<mat-icon>{{item.icon}}</mat-icon>
+					<span class="mat-body-1">{{item.name}}</span>
+				</mat-list-item>
+				<mat-list-item (click)="onOpenLink('https://www.strava.com/athlete/training')">
+					<mat-icon svgIcon="strava"></mat-icon>
+					<span class="mat-body-1">Strava Activities</span>
+				</mat-list-item>
+				<mat-list-item routerLink="/donate">
+					<mat-icon>favorite</mat-icon>
+					<span class="mat-body-1">Donate</span>
+				</mat-list-item>
+			</mat-nav-list>
+
+			<div id="logo"></div>
+
+		</mat-sidenav>
+		<mat-toolbar>
+
+			<button mat-icon-button id="toolBarMenu" (click)="onSideNavToggle()">
+				<mat-icon>menu</mat-icon>
+			</button>
+
+			<span>{{toolBarTitle}}</span>
+
+			<span class="toolbar-spacer"></span>
+
+			<ng-container>
+				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
+					<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
+						sync_disabled
+					</mat-icon>
+					<mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+						sync_problem
+					</mat-icon>
+					<mat-icon *ngIf="(syncState === SyncState.SYNCED)">
+						sync
+					</mat-icon>
+					<span *ngIf="(syncState === SyncState.NOT_SYNCED)">
+						Activities not synced
+					</span>
+					<span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+						Activities partially synced
+					</span>
+					<span *ngIf="(syncState === SyncState.SYNCED)">
+						Synced {{lastSyncDateMessage}}
+					</span>
+				</button>
+				<mat-menu #syncMenu="matMenu">
+					<!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
+					<button mat-menu-item (click)="onSync(true, false)"
+							*ngIf="(syncState === SyncState.SYNCED)">
+						<mat-icon>update</mat-icon>
+						<span>Sync recent activities</span>
+					</button>
+					<button mat-menu-item
+							(click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
+						<mat-icon>sync</mat-icon>
+						<span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
+						<span *ngIf="(syncState !== SyncState.NOT_SYNCED)">Sync all activities</span>
+					</button>
+					<button mat-menu-item (click)="onSync(false, true)"
+							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
+						<mat-icon>redo</mat-icon>
+						<span>Clear and re-sync activities</span>
+					</button>
+					<button mat-menu-item (click)="onClearSyncedData()"
+							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
+						<mat-icon>clear</mat-icon>
+						<span>Clear synced activities</span>
+					</button>
+					<button mat-menu-item (click)="onSyncedBackupExport()"
+							*ngIf="(syncState === SyncState.SYNCED)">
+						<mat-icon>file_download</mat-icon>
+						<span>Backup activities</span>
+					</button>
+					<button mat-menu-item (click)="onSyncedBackupImport()">
+						<mat-icon>file_upload</mat-icon>
+						<span>Restore activities</span>
+					</button>
+				</mat-menu>
+			</ng-container>
+
+			<button mat-icon-button (click)="onThemeToggle()">
+				<mat-icon *ngIf="currentTheme === Theme.LIGHT"
+						  style="transform: rotate(-35deg) scaleX(-1);">
+					brightness_3 <!--Moon icon rotate by -35deg-->
+				</mat-icon>
+				<mat-icon *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon><!--Sun icon-->
+			</button>
+
+			<button mat-icon-button [matMenuTriggerFor]="moreMenu">
+				<mat-icon>more_vert</mat-icon>
+			</button>
+
+			<mat-menu #moreMenu="matMenu">
+
+				<button mat-menu-item
+						(click)="onOpenLink('https://twitter.com/champagnethomas')">
+					<mat-icon>announcement</mat-icon>
+					App updates
+				</button>
+
+				<button mat-menu-item (click)="onShowReleaseNotes()">
+					<mat-icon>system_update</mat-icon>
+					Release notes
+				</button>
+
+				<button mat-menu-item (click)="onShowShare()">
+					<mat-icon>share</mat-icon>
+					Share plugin
+				</button>
+
+				<button mat-menu-item (click)="onOpenLink('https://www.strava.com/clubs/stravistix')">
+					<mat-icon>group</mat-icon>
+					Strava Club
+				</button>
+
+				<button mat-menu-item (click)="onOpenLink('http://thomaschampagne.github.io/stravistix/')">
+					<mat-icon>public</mat-icon>
+					Plugin page
+				</button>
+
+				<button mat-menu-item (click)="onShowReport()">
+					<mat-icon>bug_report</mat-icon>
+					Report a bug
+				</button>
+
+				<button mat-menu-item
+						(click)="onOpenLink('https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions')">
+					<mat-icon>help</mat-icon>
+					FAQ
+				</button>
+				<button mat-menu-item (click)="onAdvanceMenu()">
+					<mat-icon>build</mat-icon>
+					Advanced
+				</button>
+				<button mat-menu-item (click)="onShowAbout()">
+					<mat-icon>info</mat-icon>
+					About
+				</button>
+			</mat-menu>
+		</mat-toolbar>
+
+		<div>
+			<router-outlet></router-outlet>
+		</div>
+	</mat-sidenav-container>
+</div>

@@ -1,0 +1,29 @@
+<div class="hint">
+	Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required
+	parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically
+	calculated. <a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn
+	more from TrainingPeaks.</a>
+</div>
+
+<div *ngFor="let method of calculationMethods;">
+
+	<mat-slide-toggle
+		aria-label="method.name"
+		[(ngModel)]="method.active"
+		(change)="onMethodChanged(method)">
+		{{method.name}}
+	</mat-slide-toggle>
+
+	<div *ngFor="let param of method.params;">
+		<mat-form-field fxFill>
+			<input
+				matInput
+				type="number"
+				min="0"
+				(change)="onMethodChanged(method)"
+				[(ngModel)]="param.value"
+				[disabled]="!method.active"
+				placeholder="{{param.hint}}"/>
+		</mat-form-field>
+	</div>
+</div>

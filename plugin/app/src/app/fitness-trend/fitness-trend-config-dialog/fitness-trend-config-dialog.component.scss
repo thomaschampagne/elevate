@@ -1,0 +1,39 @@
+@import "../../../assets/styles/constant";
+
+mat-radio-group {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+mat-radio-button {
+	padding-bottom: 10px;
+}
+
+mat-accordion .mat-expansion-panel-header-title,
+mat-accordion .mat-expansion-panel-header-description {
+	flex-basis: 0;
+}
+
+mat-accordion .mat-expansion-panel-header-description {
+	justify-content: space-between;
+	align-items: center;
+}
+
+textarea {
+	border: 1px solid $light-grey;
+}
+
+.hint {
+	font-style: italic;
+	padding-top: 5px;
+	padding-bottom: 20px;
+}
+
+.note {
+	margin-top: 30px;
+	font-style: italic;
+}
+
+ul {
+	list-style-type: square;
+}

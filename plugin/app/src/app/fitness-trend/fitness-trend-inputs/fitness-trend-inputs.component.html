@@ -1,0 +1,94 @@
+<div fxFill fxLayout="row" fxLayoutAlign="space-between center">
+
+	<mat-form-field fxFlex="25" fxFlex.lt-lg="47">
+		<mat-select
+			[(ngModel)]="lastPeriodViewed"
+			(selectionChange)="onLastPeriodSelected()"
+			placeholder="Last">
+			<mat-option
+				*ngFor="let lastPeriod of lastPeriods;"
+				[value]="lastPeriod">
+				{{lastPeriod.label}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<span fxFlex="1"></span>
+
+	<mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
+		<input matInput
+			   [(ngModel)]="periodViewed.from"
+			   [min]="dateMin"
+			   [max]="periodViewed.to"
+			   [matDatepicker]="datePickerFrom"
+			   (dateChange)="onDateToDateChange()"
+			   placeholder="From">
+		<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+		<mat-datepicker #datePickerFrom></mat-datepicker>
+	</mat-form-field>
+
+	<span fxFlex="1"></span>
+
+	<mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
+		<input matInput
+			   [(ngModel)]="periodViewed.to"
+			   [min]="periodViewed.from"
+			   [max]="dateMax"
+			   [matDatepicker]="datePickerTo"
+			   (dateChange)="onDateToDateChange()"
+			   placeholder="To">
+		<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
+		<mat-datepicker #datePickerTo></mat-datepicker>
+	</mat-form-field>
+
+	<span fxFlex="3"></span>
+
+	<button mat-icon-button color="primary" (click)="onConfigClicked()"
+			matTooltip="Configure Fitness Trend">
+		<mat-icon>settings</mat-icon>
+	</button>
+
+	<span fxFlex="3"></span>
+
+	<button mat-icon-button color="primary" (click)="onShowInfo()">
+		<mat-icon>help_outline</mat-icon>
+	</button>
+
+</div>
+
+<div fxFill fxLayout="row" fxLayoutAlign="space-between center" class="fromToPeriod">
+
+	<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  (change)="onTrainingZonesToggle()"
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Training Zones are disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores are not optimized to be use with Training Zones. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
+					  'Display Training Zones on graph'}}">
+		<mat-icon>power_input</mat-icon>
+	</mat-slide-toggle>
+
+	<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  (change)="onPowerMeterToggle()"
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Cycling Power Stress Scores (PSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to PSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
+					  'Use cycling power data when available'}}">
+		<mat-icon>flash_on</mat-icon>
+	</mat-slide-toggle>
+
+	<mat-slide-toggle [(ngModel)]="isSwimEnabled"
+					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+					  (change)="onSwimToggle()"
+					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Swimming Stress Scores (SSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to SSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
+					  'Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)'}}">
+		<mat-icon>pool</mat-icon>
+	</mat-slide-toggle>
+
+	<mat-slide-toggle [(ngModel)]="isEBikeRidesEnabled"
+					  (change)="onEBikeRidesEnabledToggle()"
+					  matTooltip="Includes electrical assisted efforts in your fitness trend when checked">
+		<mat-icon>battery_charging_full</mat-icon>
+	</mat-slide-toggle>
+
+</div>

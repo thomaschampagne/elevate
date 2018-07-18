@@ -1,0 +1,21 @@
+<mat-dialog-content class="mat-body-1">
+	<div>
+		<h3 class="mat-title">What is the purpose of this feature?</h3>
+		This feature allows you to evaluate a progress of your choice (distance, time, ...) from the beginning of a year
+		to a specific day of that year. And compare it to previous years. Let's take an example: Today is
+		{{todayMoment.format("MMM Do")}}. So the feature will reply to the following question:<br/><br/>
+		<i>"What I've accomplished by {{todayMoment.format("MMM Do")}} of this year compared to previous years to the
+			same date?"</i>
+	</div>
+
+	<div>
+		<h3 class="mat-title">How to display progression in imperial system unit?</h3>
+		You will find a <i>"App system units"</i> option in <i>common settings</i>. Set it to <i>imperial</i> and go
+		back to this page
+	</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">Got It</button>
+</mat-dialog-actions>

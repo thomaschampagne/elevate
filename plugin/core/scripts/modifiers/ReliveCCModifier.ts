@@ -1,39 +1,43 @@
-export class ReliveCCModifier implements IModifier {
+import * as $ from "jquery";
+import { AbstractModifier } from "./AbstractModifier";
 
-    private activityId: number;
+export class ReliveCCModifier extends AbstractModifier {
 
-    constructor(activityId: number) {
-        this.activityId = activityId;
-    }
+	private activityId: number;
 
-    public modify(): void {
+	constructor(activityId: number) {
+		super();
+		this.activityId = activityId;
+	}
 
-        let html: string = "<li class='group'>";
-        html += "<div class='title' style='cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
+	public modify(): void {
 
-        $("#pagenav").append($(html)).each(() => {
+		let html = "<li class='group'>";
+		html += "<div class='title' style='cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
 
-            $("#stravistix_relivecc").click((evt: JQuery.Event) => {
+		$("#pagenav").append($(html)).each(() => {
 
-                evt.preventDefault();
-                evt.stopPropagation();
+			$("#stravistix_relivecc").click((evt: JQuery.Event) => {
 
-                const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
+				evt.preventDefault();
+				evt.stopPropagation();
 
-                const windowWidth: number = 800;
-                const windowHeight: number = 600;
+				const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
 
-                $.fancybox({
-                    fitToView: true,
-                    autoSize: true,
-                    closeClick: false,
-                    openEffect: "none",
-                    closeEffect: "none",
-                    scrolling: "no",
-                    type: "iframe",
-                    content: "<iframe src=\"" + url + "\" width=\"" + windowWidth + "\" height=\"" + windowHeight + "\" frameborder=\"0\"></iframe>",
-                });
-            });
-        });
-    }
+				const windowWidth = 800;
+				const windowHeight = 600;
+
+				$.fancybox({
+					fitToView: true,
+					autoSize: true,
+					closeClick: false,
+					openEffect: "none",
+					closeEffect: "none",
+					scrolling: "no",
+					type: "iframe",
+					content: "<iframe src=\"" + url + "\" width=\"" + windowWidth + "\" height=\"" + windowHeight + "\" frameborder=\"0\"></iframe>",
+				});
+			});
+		});
+	}
 }
