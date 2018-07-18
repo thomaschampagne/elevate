@@ -59,7 +59,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 	}
 
 	public printShortDate(): string {
-		return moment(this.date).format("MMM Do YYYY");
+		return moment(this.date).format("dd, MMM Do YYYY");
 	}
 
 	public hasActivities(): boolean {
