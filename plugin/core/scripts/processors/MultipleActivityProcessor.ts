@@ -1,179 +1,179 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { IActivityStatsMap, IAnalysisData } from "../../../common/scripts/interfaces/IActivityData";
-import { ISyncActivityComputed, ISyncActivityWithStream, ISyncNotify } from "../../../common/scripts/interfaces/ISync";
-import { IUserSettings } from "../../../common/scripts/interfaces/IUserSettings";
-import { IAppResources } from "../interfaces/IAppResources";
-import { IComputeActivityThreadMessage } from "../interfaces/IComputeActivityThreadMessage";
-import { ComputeAnalysisWorker } from "./workers/ComputeAnalysisWorker";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AppResourcesModel } from "../models/app-resources.model";
+import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
+import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
+import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
+import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+
+const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
 export class MultipleActivityProcessor {
 
-    protected appResources: IAppResources;
-    protected userSettings: IUserSettings;
+	protected appResources: AppResourcesModel;
+	protected userSettings: UserSettingsModel;
 
-    constructor(appResources: IAppResources, userSettings: IUserSettings) {
-        this.appResources = appResources;
-        this.userSettings = userSettings;
-    }
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+		this.appResources = appResources;
+		this.userSettings = userSettings;
+	}
 
-    public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
+	public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
 
-    /**
-     * @return Activities array with computed stats
-     */
-    public compute(activitiesWithStream: ISyncActivityWithStream[]): Q.IPromise<ISyncActivityComputed[]> {
+	/**
+	 * @return Activities array with computed stats
+	 */
+	public compute(activitiesWithStream: StreamActivityModel[]): Q.IPromise<SyncedActivityModel[]> {
 
-        const deferred = Q.defer<ISyncActivityComputed[]>();
+		const deferred = Q.defer<SyncedActivityModel[]>();
 
-        let computedActivitiesPercentageCount: number = 0;
+		let syncedActivitiesPercentageCount = 0;
 
-        let activitiesComputedResults: IAnalysisData[] = [];
+		let activitiesComputedResults: AnalysisDataModel[] = [];
 
-        const queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: ISyncActivityWithStream, index: number) => {
+		const queue: Q.Promise<any> = activitiesWithStream.reduce((promise: Q.Promise<any>, activityWithStream: StreamActivityModel, index: number) => {
 
-            return promise.then(() => {
+			return promise.then(() => {
 
-                return this.computeActivity(activityWithStream).then((activityComputed: IAnalysisData) => {
+				return this.computeActivity(activityWithStream).then((activityComputed: AnalysisDataModel) => {
 
-                    activitiesComputedResults.push(activityComputed);
+					activitiesComputedResults.push(activityComputed);
 
-                    const notify: ISyncNotify = {
-                        step: "computedActivitiesPercentage",
-                        progress: computedActivitiesPercentageCount / activitiesWithStream.length * 100,
-                        index,
-                        activityId: activityWithStream.id,
-                    };
+					const notify: SyncNotifyModel = {
+						step: "syncedActivitiesPercentage",
+						progress: syncedActivitiesPercentageCount / activitiesWithStream.length * 100,
+						index,
+						activityId: activityWithStream.id,
+					};
 
-                    deferred.notify(notify);
+					deferred.notify(notify);
 
-                    computedActivitiesPercentageCount++;
+					syncedActivitiesPercentageCount++;
 
-                });
+				});
 
-            });
+			});
 
-        }, Q.resolve({}));
+		}, Q.resolve({}));
 
-        // Queue Finished
-        queue.then(() => {
+		// Queue Finished
+		queue.then(() => {
 
-            if (activitiesComputedResults.length !== activitiesWithStream.length) {
+			if (activitiesComputedResults.length !== activitiesWithStream.length) {
 
-                const errMessage: string = "activitiesComputedResults length mismatch with activitiesWithStream length: " + activitiesComputedResults.length + " != " + activitiesWithStream.length + ")";
-                deferred.reject(errMessage);
+				const errMessage: string = "activitiesComputedResults length mismatch with activitiesWithStream length: " + activitiesComputedResults.length + " != " + activitiesWithStream.length + ")";
+				deferred.reject(errMessage);
 
-            } else {
+			} else {
 
-                let activitiesComputed: ISyncActivityComputed[] = [];
+				let activitiesComputed: SyncedActivityModel[] = [];
 
-                _.forEach(activitiesComputedResults, (computedResult: IAnalysisData, index: number) => {
+				_.forEach(activitiesComputedResults, (computedResult: AnalysisDataModel, index: number) => {
 
-                    const activityComputed: ISyncActivityComputed = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as ISyncActivityComputed;
-                    activityComputed.extendedStats = computedResult;
-                    activitiesComputed.push(activityComputed);
+					const activityComputed: SyncedActivityModel = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as SyncedActivityModel;
+					activityComputed.extendedStats = computedResult;
+					activitiesComputed.push(activityComputed);
 
-                });
+				});
 
-                // Sort computedActivities by start date ascending before resolve
-                activitiesComputed = _.sortBy(activitiesComputed, (item: ISyncActivityComputed) => {
-                    return (new Date(item.start_time)).getTime();
-                });
+				// Sort syncedActivities by start date ascending before resolve
+				activitiesComputed = _.sortBy(activitiesComputed, (item: SyncedActivityModel) => {
+					return (new Date(item.start_time)).getTime();
+				});
 
-                // Finishing... force progress @ 100% for compute progress callback
-                const notify: ISyncNotify = {
-                    step: "computedActivitiesPercentage",
-                    progress: 100,
-                };
+				// Finishing... force progress @ 100% for compute progress callback
+				const notify: SyncNotifyModel = {
+					step: "syncedActivitiesPercentage",
+					progress: 100,
+				};
 
-                deferred.notify(notify);
+				deferred.notify(notify);
 
-                deferred.resolve(activitiesComputed);
+				deferred.resolve(activitiesComputed);
 
-                // Free mem for garbage collector!
-                activitiesComputedResults = null;
-                activitiesWithStream = null;
-                activitiesComputed = null;
-            }
+				// Free mem for garbage collector!
+				activitiesComputedResults = null;
+				activitiesWithStream = null;
+				activitiesComputed = null;
+			}
 
-        }).catch((error: any) => {
-            console.error(error);
-            deferred.reject(error);
-        });
+		}).catch((error: any) => {
+			console.error(error);
+			deferred.reject(error);
+		});
 
-        return deferred.promise;
-    }
+		return deferred.promise;
+	}
 
-    protected createActivityStatMap(activityWithStream: ISyncActivityWithStream): IActivityStatsMap {
+	protected createActivityStatMap(activityWithStream: StreamActivityModel): ActivityStatsMapModel {
 
-        const statsMap: IActivityStatsMap = {
-            distance: parseInt(activityWithStream.distance),
-            elevation: parseInt(activityWithStream.elevation_gain),
-            avgPower: null, // Toughness Score will not be computed
-            averageSpeed: null, // Toughness Score will not be computed
-        };
+		const statsMap: ActivityStatsMapModel = {
+			elevation: parseInt(activityWithStream.elevation_gain),
+			movingTime: activityWithStream.moving_time_raw,
+		};
 
-        return statsMap;
-    }
+		return statsMap;
+	}
 
-    protected computeActivity(activityWithStream: ISyncActivityWithStream): Q.IPromise<IAnalysisData> {
+	protected computeActivity(activityWithStream: StreamActivityModel): Q.IPromise<AnalysisDataModel> {
 
-        const deferred = Q.defer<IAnalysisData>();
+		const deferred = Q.defer<AnalysisDataModel>();
 
-        // Lets create that worker/thread!
-        const computeAnalysisThread: Worker = new Worker(URL.createObjectURL(new Blob(["(", ComputeAnalysisWorker.toString(), ")()"], {
-            type: "application/javascript",
-        })));
+		// Lets create that worker/thread!
+		const computeAnalysisThread: Worker = new ComputeAnalysisWorker();
 
-        // Create activity stats map from given activity
-        const activityStatsMap: IActivityStatsMap = this.createActivityStatMap(activityWithStream);
+		// Create activity stats map from given activity
+		const activityStatsMap: ActivityStatsMapModel = this.createActivityStatMap(activityWithStream);
 
-        const threadMessage: IComputeActivityThreadMessage = {
-            activityType: activityWithStream.type,
-            isTrainer: activityWithStream.trainer,
-            appResources: this.appResources,
-            userSettings: this.userSettings,
-            isActivityAuthor: true, // While syncing and processing activities, stravistix user is always author of the activity
-            athleteWeight: this.userSettings.userWeight,
-            hasPowerMeter: activityWithStream.hasPowerMeter,
-            activityStatsMap,
-            activityStream: activityWithStream.stream,
-            bounds: null,
-            returnZones: false,
-            systemJsConfig: SystemJS.getConfig(),
-        };
+		const threadMessage: ComputeActivityThreadMessageModel = {
+			activityType: activityWithStream.type,
+			supportsGap: (activityWithStream.type === "Run"),
+			isTrainer: activityWithStream.trainer,
+			appResources: this.appResources,
+			userSettings: this.userSettings,
+			isActivityAuthor: true, // While syncing and processing activities, stravistix user is always author of the activity
+			athleteWeight: this.userSettings.userWeight,
+			hasPowerMeter: activityWithStream.hasPowerMeter,
+			activityStatsMap: activityStatsMap,
+			activityStream: activityWithStream.stream,
+			bounds: null,
+			returnZones: false
+		};
 
-        computeAnalysisThread.postMessage(threadMessage);
+		computeAnalysisThread.postMessage(threadMessage);
 
-        // Listen messages from thread. Thread will send to us the result of computation
-        computeAnalysisThread.onmessage = (messageFromThread: MessageEvent) => {
+		// Listen messages from thread. Thread will send to us the result of computation
+		computeAnalysisThread.onmessage = (messageFromThread: MessageEvent) => {
 
-            // Notify upper compute method when an activity has been computed for progress percentage
-            deferred.notify(activityWithStream.id);
+			// Notify upper compute method when an activity has been computed for progress percentage
+			deferred.notify(activityWithStream.id);
 
-            // Then resolve...
-            deferred.resolve(messageFromThread.data);
+			// Then resolve...
+			deferred.resolve(messageFromThread.data);
 
-            // Finish and kill thread
-            computeAnalysisThread.terminate();
+			// Finish and kill thread
+			computeAnalysisThread.terminate();
 
-        };
+		};
 
-        computeAnalysisThread.onerror = (err) => {
+		computeAnalysisThread.onerror = (err) => {
 
-            const errorMessage: any = {
-                errObject: err,
-                activityId: activityWithStream.id,
-            };
+			const errorMessage: any = {
+				errObject: err,
+				activityId: activityWithStream.id,
+			};
 
-            // Push error uppper
-            console.error(errorMessage);
-            deferred.reject(errorMessage);
+			// Push error uppper
+			console.error(errorMessage);
+			deferred.reject(errorMessage);
 
-            // Finish and kill thread
-            computeAnalysisThread.terminate();
-        };
+			// Finish and kill thread
+			computeAnalysisThread.terminate();
+		};
 
-        return deferred.promise;
-    }
+		return deferred.promise;
+	}
 }

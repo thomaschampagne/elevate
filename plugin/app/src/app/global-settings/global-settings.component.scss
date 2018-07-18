@@ -1,0 +1,17 @@
+@import '../../assets/styles/constant';
+@import "~@angular/material/theming";
+
+$config: mat-typography-config();
+
+.search-options {
+	margin: 20px $default-margin;
+	font-size: mat-font-size($config, title);
+}
+
+.info, .tags {
+	color: $light-grey;
+}
+
+mat-select, mat-form-field {
+	width: 20%;
+}

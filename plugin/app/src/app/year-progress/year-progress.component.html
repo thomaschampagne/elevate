@@ -1,0 +1,138 @@
+<mat-card *ngIf="!isProgressionInitialized && hasActivityModels !== false">
+	<mat-card-content>
+		<mat-progress-bar mode="buffer"></mat-progress-bar>
+	</mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="hasActivityModels === false" class="no-data">
+	<mat-card-title>
+		Synchronise your activities
+	</mat-card-title>
+	<mat-card-content>
+
+		<div>
+			Please synchronize your activities to turn on the feature.
+		</div>
+
+		<div>
+			You can synchronize by clicking on
+			<mat-icon>sync_disabled</mat-icon>
+			icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
+		</div>
+
+	</mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="hasActivityModels">
+	<mat-card-content>
+
+		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
+			<div fxFlex="68" fxFlex.lt-lg="100">
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<mat-form-field fxFlex="150px">
+						<mat-select placeholder="Progress Type"
+									(selectionChange)="onSelectedProgressTypeChange()"
+									[(ngModel)]="selectedProgressType">
+							<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+								{{progressType.label}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="1"></span>
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Activity Types"
+									(selectionChange)="onSelectedActivityTypesChange()"
+									[(ngModel)]="selectedActivityTypes"
+									multiple>
+							<mat-option *ngFor="let type of availableActivityTypes"
+										[value]="type"
+										[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
+								{{type}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeCommuteRide"
+						(change)="onIncludeCommuteRideToggle()"
+						matTooltip="Include commute activities in your progression.">
+						<mat-icon>work</mat-icon>
+					</mat-slide-toggle>
+					<span fxFlex="1"></span>
+					<mat-slide-toggle
+						fxFlexAlign="center"
+						[(ngModel)]="includeIndoorRide"
+						(change)="onIncludeIndoorRideToggle()"
+						matTooltip="Include indoor activities in your progression.">
+						<mat-icon>home</mat-icon>
+					</mat-slide-toggle>
+				</div>
+			</div>
+
+			<span fxFlex="1" fxHide.lt-lg></span>
+
+			<div fxFlex fxHide.lt-lg>
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<mat-form-field fxFlex>
+						<mat-select placeholder="Years"
+									[(ngModel)]="selectedYears"
+									(selectionChange)="onSelectedYearsChange()"
+									multiple>
+							<mat-option *ngFor="let year of availableYears"
+										[value]="year"
+										[disabled]="(selectedYears.length === 1 && year === selectedYears[0])">
+								{{year}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<span fxFlex="2"></span>
+					<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
+						<mat-icon>help_outline</mat-icon>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!--Graph Card + Table Card -->
+		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+
+			<!--Graph -->
+			<div fxFlex="68" fxFill>
+				<mat-card-title class="mat-title">
+					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
+					selectedProgressType.unit : ""}}
+				</mat-card-title>
+				<app-year-progress-graph
+					[selectedYears]="selectedYears"
+					[selectedProgressType]="selectedProgressType"
+					[yearProgressModels]="yearProgressModels"
+					[yearProgressStyleModel]="yearProgressStyleModel">
+				</app-year-progress-graph>
+			</div>
+
+			<span fxFlex="1" fxHide.lt-lg></span>
+
+			<!-- Table/Legend -->
+			<div fxFlex fxFill>
+				<mat-card-title class="mat-title">
+					<div fxLayout="row" fxLayoutAlign="space-between start">
+						<span fxFlex="100">
+							{{momentWatched.format("MMMM Do")}}
+						</span>
+						<span fxFlex>
+							<button mat-button color="primary" (click)="onShowOverview()">Overview</button>
+						</span>
+					</div>
+				</mat-card-title>
+				<app-year-progress-table
+					[selectedYears]="selectedYears"
+					[selectedProgressType]="selectedProgressType"
+					[yearProgressModels]="yearProgressModels"
+					[yearProgressStyleModel]="yearProgressStyleModel">
+				</app-year-progress-table>
+			</div>
+		</div>
+
+	</mat-card-content>
+</mat-card>

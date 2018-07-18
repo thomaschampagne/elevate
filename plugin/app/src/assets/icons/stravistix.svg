@@ -1,0 +1,37 @@
+<svg width="128.15552" height="95.236336" xmlns="http://www.w3.org/2000/svg">
+	<metadata id="metadata3199">image/svg+xml</metadata>
+
+	<style type="text/css">.st0{fill:none;stroke:#E94E1B;stroke-width:5;stroke-linecap:round;stroke-miterlimit:10;}
+		.st1{fill:#E94F1C;}
+		.st2{fill:none;stroke:#e94f1c;stroke-miterlimit:10;}
+		.st3{fill:#e94f1c;}
+		.st4{fill:none;stroke:#e94f1c;stroke-width:0.54;stroke-miterlimit:10;}
+	</style>
+	<g>
+		<title>background</title>
+		<rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+	</g>
+	<g>
+		<title>Layer 1</title>
+		<path fill="none" stroke="#e94e1b" stroke-width="5" stroke-linecap="round" stroke-miterlimit="10" id="path3115"
+			  d="m-232.49211,57.84025" class="st0"/>
+		<circle fill="#e94f1c" fill-opacity="0" id="circle3119" r="80.5" cy="57.840254" cx="64.20789" class="st1"/>
+		<g id="g3121">
+			<polygon fill="none" stroke="#e94f1c" stroke-miterlimit="10" id="polygon3123"
+					 points="3.807891845703125,83.14024296402931 34.2078857421875,30.640242964029312 64.50787353515625,83.14024296402931 "
+					 class="st2"/>
+			<polygon fill="none" stroke="#e94f1c" stroke-miterlimit="10" id="polygon3125"
+					 points="34.2078857421875,83.14024296402931 64.50787353515625,15.640209585428238 94.80789184570312,83.14024296402931 "
+					 class="st2"/>
+			<polygon fill="none" stroke="#e94f1c" stroke-miterlimit="10" id="polygon3127"
+					 points="64.50787353515625,83.14024296402931 94.80789184570312,30.640242964029312 125.2078857421875,83.14024296402931 "
+					 class="st2"/>
+		</g>
+		<g id="g3183"/>
+		<g id="g3185"/>
+		<g id="g3187"/>
+		<g id="g3189"/>
+		<g id="g3191"/>
+		<g id="g3193"/>
+	</g>
+</svg>

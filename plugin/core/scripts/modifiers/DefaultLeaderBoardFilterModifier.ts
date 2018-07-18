@@ -1,31 +1,34 @@
-export class DefaultLeaderBoardFilterModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
 
-    protected defaultLeaderBoardFilter: string;
+export class DefaultLeaderBoardFilterModifier extends AbstractModifier {
 
-    constructor(defaultLeaderBoardFilter: string) {
-        this.defaultLeaderBoardFilter = defaultLeaderBoardFilter;
-    }
+	protected defaultLeaderBoardFilter: string;
 
-    public modify(): void {
+	constructor(defaultLeaderBoardFilter: string) {
+		super();
+		this.defaultLeaderBoardFilter = defaultLeaderBoardFilter;
+	}
 
-        if (this.defaultLeaderBoardFilter === "overall") {
-            return;
-        }
+	public modify(): void {
 
-        const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
+		if (this.defaultLeaderBoardFilter === "overall") {
+			return;
+		}
 
-        if (!view) {
-            return;
-        }
+		const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
 
-        const functionRender = view.prototype.render;
+		if (!view) {
+			return;
+		}
 
-        const that: any = this;
+		const functionRender = view.prototype.render;
 
-        view.prototype.render = function () {
-            const r = functionRender.apply(this, Array.prototype.slice.call(arguments));
-            $(this.el).not(".once-only").addClass("once-only").find(".clickable[data-filter=" + that.defaultLeaderBoardFilter + "]").click();
-            return r;
-        };
-    }
+		const that: any = this;
+
+		view.prototype.render = function () {
+			const r = functionRender.apply(this, Array.prototype.slice.call(arguments));
+			$(this.el).not(".once-only").addClass("once-only").find(".clickable[data-filter=" + that.defaultLeaderBoardFilter + "]").click();
+			return r;
+		};
+	}
 }

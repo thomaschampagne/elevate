@@ -1,41 +1,44 @@
-export class ActivityBikeOdoModifier implements IModifier {
-    private bikeOdoArray: any;
-    private cacheKey: string;
+import { AbstractModifier } from "./AbstractModifier";
 
-    constructor(bikeOdoArray: any, cacheKey: string) {
-        this.bikeOdoArray = bikeOdoArray;
-        this.cacheKey = cacheKey;
-    }
+export class ActivityBikeOdoModifier extends AbstractModifier {
+	private bikeOdoArray: any;
+	private cacheKey: string;
 
-    public modify(): void {
+	constructor(bikeOdoArray: any, cacheKey: string) {
+		super();
+		this.bikeOdoArray = bikeOdoArray;
+		this.cacheKey = cacheKey;
+	}
 
-        // Get bike name on Activity Page
-        const bikeDisplayedOnActivityPage: string = $(".gear-name").text().trim();
+	public modify(): void {
 
-        // Get odo from map
-        let activityBikeOdo: string = "No bike declared";
-        try {
-            activityBikeOdo = this.bikeOdoArray[btoa(bikeDisplayedOnActivityPage)];
-        } catch (err) {
-            console.warn("Unable to find bike odo for this Activity");
-        }
+		// Get bike name on Activity Page
+		const bikeDisplayedOnActivityPage: string = $(".gear-name").text().trim();
 
-        const newBikeDisplayHTML: string = bikeDisplayedOnActivityPage + "<strong> / " + activityBikeOdo + "</strong>";
+		// Get odo from map
+		let activityBikeOdo = "No bike declared";
+		try {
+			activityBikeOdo = this.bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeDisplayedOnActivityPage)))] || activityBikeOdo;
+		} catch (err) {
+			console.warn("Unable to find bike odo for this Activity");
+		}
 
-        const forceRefreshActionHTML: string = "<a href=\"#\" style=\"cursor: pointer;\" title=\"Force odo refresh for this athlete's bike. Usually it refresh every 2 hours...\" id=\"bikeOdoForceRefresh\">Force refresh odo</a>";
+		const newBikeDisplayHTML: string = bikeDisplayedOnActivityPage + "<strong> / " + activityBikeOdo + "</strong>";
 
-        // Edit Activity Page
-        $(".gear-name").html(newBikeDisplayHTML + "<br />" + forceRefreshActionHTML).each(() => {
+		const forceRefreshActionHTML = "<a href=\"#\" style=\"cursor: pointer;\" title=\"Force odo refresh for this athlete's bike. Usually it refresh every 2 hours...\" id=\"bikeOdoForceRefresh\">Force refresh odo</a>";
 
-            $("#bikeOdoForceRefresh").on("click", () => {
-                this.handleUserBikeOdoForceRefresh();
-            });
+		// Edit Activity Page
+		$(".gear-name").html(newBikeDisplayHTML + "<br />" + forceRefreshActionHTML).each(() => {
 
-        });
-    }
+			$("#bikeOdoForceRefresh").on("click", () => {
+				this.handleUserBikeOdoForceRefresh();
+			});
 
-    protected handleUserBikeOdoForceRefresh(): void {
-        localStorage.removeItem(this.cacheKey);
-        window.location.reload();
-    }
+		});
+	}
+
+	protected handleUserBikeOdoForceRefresh(): void {
+		localStorage.removeItem(this.cacheKey);
+		window.location.reload();
+	}
 }

@@ -1,0 +1,99 @@
+<div fxLayout="row" fxLayoutAlign="start center">
+
+	<div fxFlex="3">
+		<button mat-icon-button matTooltip="Zoom In (UP key press)"
+				color="primary"
+				[disabled]="!canZoomInPeriodViewed"
+				(click)="onPeriodViewedZoomIn()">
+			<mat-icon>add</mat-icon>
+		</button>
+		<button mat-icon-button matTooltip="Move Backward (LEFT key)"
+				color="primary"
+				[disabled]="!canPeriodViewedBackward"
+				(click)="onPeriodViewedBackward()">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<button mat-icon-button matTooltip="Zoom Out (DOWN key)"
+				color="primary"
+				[disabled]="!canZoomOutPeriodViewed"
+				(click)="onPeriodViewedZoomOut()">
+			<mat-icon>remove</mat-icon>
+		</button>
+	</div>
+
+	<div fxFlex="94">
+
+		<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewed-day-tooltip"
+			 [ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'
+			 (document:mousemove)="onTooltipMouseMove($event)">
+
+			<!--Tooltip shown on mouse move over graph-->
+			<div #viewedDayTooltip>
+
+				<table *ngIf="viewedDay" cellspacing="0" cellpadding="0">
+
+					<!--Date-->
+					<tr class="date">
+						<td>
+							{{viewedDay.printShortDate()}}
+						</td>
+						<td class="open">
+							<span *ngIf="viewedDay.hasActivities()">(click to open)</span>
+						</td>
+					</tr>
+
+					<tr class="typesCount">
+						<td colspan="2">
+							{{viewedDay.printTypesCount(2, "-")}}
+						</td>
+					</tr>
+
+					<!--Stress score-->
+					<tr *ngIf="viewedDay.hasActivities()" class="active">
+						<td>Stress score</td>
+						<td>{{viewedDay.printFinalStressScore()}}</td>
+					</tr>
+					<tr *ngIf="!viewedDay.hasActivities()" class="rest">
+						<td>
+							<span *ngIf="!viewedDay.previewDay">Rest day</span>
+							<span *ngIf="viewedDay.previewDay">Preview day</span>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr class="separator">
+						<td colspan="2"></td>
+					</tr>
+
+					<!--Fitness, Fatigue & Form-->
+					<tr class="ctl-value">
+						<td>Fitness</td>
+						<td>{{viewedDay.printFitness()}}</td>
+					</tr>
+					<tr class="atl-value">
+						<td>Fatigue</td>
+						<td>{{viewedDay.printFatigue()}}</td>
+					</tr>
+					<tr class="tsb-value">
+						<td>Form <span
+							*ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
+						<td>{{viewedDay.printForm()}}</td>
+					</tr>
+
+				</table>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div fxFlex="3">
+		<button mat-icon-button matTooltip="Move Forward (RIGHT key)"
+				color="primary"
+				[disabled]="!canPeriodViewedForward"
+				(click)="onPeriodViewedForward()">
+			<mat-icon>arrow_forward</mat-icon>
+		</button>
+	</div>
+</div>
