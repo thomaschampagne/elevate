@@ -61,7 +61,7 @@ class Installer {
 			migration_from_version_below_than_6_4_0();
 		}
 
-        // v <= v6.3.0 ?: Reverse saved running pace / GAP zones
+        // v <= v6.4.1 ?: Reverse saved running pace / GAP zones
         if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.4.1")) {
 			migration_from_version_below_than_6_4_1();
         }
