@@ -7,13 +7,14 @@ import { ZoneModel } from "../../../../../shared/models/activity-data/zone.model
 export class PaceDataView extends AbstractDataView {
 
 	protected paceData: PaceDataModel;
+	protected supportsGap: boolean;
 
 	constructor(paceData: PaceDataModel, units: string) {
 		super(units);
 		this.mainColor = [9, 183, 219];
 		this.setGraphTitleFromUnits();
 		this.paceData = paceData;
-		this.speedUnitsData = Helper.getSpeedUnitData();
+		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
 		this.setupDistributionGraph(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);
 		this.setupDistributionTable(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);
@@ -41,6 +42,11 @@ export class PaceDataView extends AbstractDataView {
 			if (_.isNumber(this.paceData.best20min)) {
 				this.insertContentAtGridPosition(0, 0, Helper.secondsToHHMMSS(this.paceData.best20min / this.speedUnitsData.speedUnitFactor, true), "Best 20min Pace <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", this.units, "displayAdvancedSpeedData");
 			}
+		}
+
+		if (this.isAuthorOfViewedActivity && this.supportsGap && _.isNumber(this.paceData.runningStressScore)) {
+			this.insertContentAtGridPosition(1, 0, this.printNumber(this.paceData.runningStressScore, 0), "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
+			this.insertContentAtGridPosition(2, 0, this.printNumber(this.paceData.runningStressScorePerHour, 1), "RSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
 		}
 
 		// Quartiles
@@ -123,6 +129,10 @@ export class PaceDataView extends AbstractDataView {
 				data: distributionArray,
 			}],
 		};
+	}
+
+	public setSupportsGap(supportsGap: boolean): void {
+		this.supportsGap = supportsGap;
 	}
 
 }

@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class HideFeedModifier implements IModifier {
+export class HideFeedModifier extends AbstractModifier {
 
 	private static VIRTUAL_RIDE = "virtualride";
 	private static RIDE = "ride";
@@ -10,6 +11,7 @@ export class HideFeedModifier implements IModifier {
 	protected userSettings: UserSettingsModel;
 
 	constructor(userSettings: UserSettingsModel) {
+		super();
 		this.userSettings = userSettings;
 	}
 
@@ -59,7 +61,7 @@ export class HideFeedModifier implements IModifier {
 						.replace("icon-", "");
 
 					const distanceElement = _.filter($(element).find("ul.list-stats").find("[class=unit]"), (item) => {
-						return ($(item).html() == "km" || $(item).html() == "mi");
+						return ($(item).html().trim() == "km" || $(item).html().trim() == "mi");
 					});
 
 					const distance: number = parseFloat($(distanceElement).parent().text().replace(",", "."));
@@ -83,7 +85,7 @@ export class HideFeedModifier implements IModifier {
 
 			// Cleaning time container with no activites
 			$("div.feed>.time-header").each((index: number, element: Element) => {
-				const timeHeaderElement: JQuery = $(element);
+				const timeHeaderElement = $(element);
 				if (timeHeaderElement.nextUntil(".time-header").not("script").length === 0) {
 					timeHeaderElement.remove();
 				}

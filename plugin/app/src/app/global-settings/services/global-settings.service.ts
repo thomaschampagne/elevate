@@ -44,11 +44,6 @@ export class GlobalSettingsService {
 			title: "Move Ratio stat",
 			labels: ["Cycling", "Running"],
 		}, {
-			key: "displayMotivationScore",
-			type: "checkbox",
-			title: "Toughness Factor stat",
-			labels: ["Cycling"],
-		}, {
 			key: "displayAdvancedPowerData",
 			type: "checkbox",
 			title: "Power stats",

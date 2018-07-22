@@ -136,7 +136,6 @@ describe("ActivitiesSynchronizer", () => {
 			const activitiesComputed: Array<SyncedActivityModel> = [];
 			const fakeAnalysisData: AnalysisDataModel = {
 				moveRatio: null,
-				toughnessScore: null,
 				speedData: null,
 				paceData: null,
 				powerData: null,

@@ -43,14 +43,21 @@
 				</ul>
 			</li>
 			<li>
-				Without sensors:
+				Without sensors (e.g. smartphone or GPS only):
 				<ul>
 					<li><i>Swimming Stress Score (SSS)</i>: Calculated from workout moving duration, distance and
 						athlete <i>Swimming Functional Threshold Pace (SFTP)</i>. <i>SFTP</i> is configurable in athlete
 						settings. <i>SSS</i> is equivalent to <i>sTSS&reg;</i> from TrainingPeaks&trade;
 					</li>
 					<li>
-						More stress scores without sensors are planned...
+						<i>Estimated Power Stress Score (PSS)</i>: Same as <i>Power Stress Score (PSS)</i> described
+						above but calculation of <i>PSS</i> is performed on estimated power data.
+					</li>
+					<li>
+						<i>Running Stress Score (RSS)</i>: Calculated from workout moving duration, activity grade
+						adjusted pace (GAP) and athlete <i>Running Functional Threshold Pace (RFTP)</i>. <i>RFTP</i> is
+						configurable in athlete settings. <i>RSS</i> is equivalent to <i>rTSS&reg;</i> from
+						TrainingPeaks&trade;
 					</li>
 				</ul>
 			</li>
@@ -222,8 +229,9 @@
 		<h1 class="mat-title">Power Stress Score (PSS)</h1>
 		<div>
 			<i>Power Stress Score</i> is a stress score designed for cyclists having a power meter. It is the more
-			accurate of all. The <i>PSS</i> is
-			calculated from the duration of the workout, the athlete's <i>Functional Threshold Power (FTP)</i> and the
+			accurate of all. The <i>PSS</i> is calculated from the duration of the workout, the athlete's <i>Functional
+			Threshold Power (FTP)</i> and the
+
 			<i>Intensity</i>.<br/><br/>
 
 			<i>Intensity</i> is defined by:
@@ -253,16 +261,22 @@
 
 		</div>
 
+		<h1 class="mat-title">Estimated Power Stress Score (PSS)</h1>
+
+		<div>
+			Same as <i>Power Stress Score (PSS)</i> described above but calculation of <i>PSS</i> is performed on
+			estimated power data.
+		</div>
+
 		<h1 class="mat-title">Swimming Stress Score (SSS)</h1>
 
 		<div>
 			No surprise the <i>Swimming Stress Score</i> is designed for swimming activities. In prerequisites you have
 			to set your <i>Swimming Functional Threshold Pace (SFTP)</i> in athlete settings.
 			There is no need to wear a swimming heart rate monitor. Workout distance and active swimming time are the
-			only
-			required to compute the <i>SSS</i>. If your watch supports indoor and/or outdoor swimming, it's all good.
-			Else if you have a simple waterproof stopwatch you need to know the distance of your workout and the time of
-			active swimming without rest periods (before entering your manual entry in Strava).<br/><br/>
+			only required to compute the <i>SSS</i>. If your watch supports indoor and/or outdoor swimming, it's all
+			good. Else if you have a simple waterproof stopwatch you need to know the distance of your workout and the
+			time of active swimming without rest periods (before entering your manual entry in Strava).<br/><br/>
 
 			<i>Swimming Stress Score</i> is defined by:
 
@@ -284,6 +298,36 @@
 			</div>
 
 			Note that <i>SSS</i> is equivalent to <i>sTSS&reg;</i> from TrainingPeaks&trade;
+		</div>
+
+		<h1 class="mat-title">Running Stress Score (RSS)</h1>
+
+		<div>
+			The <i>Running Stress Score</i> is an estimated stress score for runners. It can be used as stress score
+			input for fitness trend when athlete don't own (or forgot) heart rate monitor. In prerequisites you have
+			to set your Running Functional Threshold Pace (RFTP) in athlete settings to access this stress score.
+			<br/><br/>
+
+			<i>Running Stress Score</i> is defined by:
+
+			<div class="maths-area">
+				<katex
+					[expression]="'RSS=\\frac{EffortInSeconds~\\times~GradeAdjustedPace~\\times~Intensity}{Running FTP~\\times~3600}~\\times~100'"></katex>
+			</div>
+
+			Where <i>Grade Adjusted Pace (GAP)</i> is a estimation of the equivalent flat land pace for a given running
+			pace on hilly terrain. (Running uphill requires more effort than running on a flat grade, so GAP adjusts
+			pace
+			to be faster than the actual running pace. Similarly, GAP is slower than actual pace on downhill
+			terrain).<br/><br/>
+
+			And Intensity is:
+
+			<div class="maths-area">
+				<katex [expression]="'Intensity=\\frac{GAP}{Running FTP}'"></katex>
+			</div>
+
+			Note that <i>RSS</i> is equivalent to <i>rTSS&reg;</i> from TrainingPeaks&trade;
 		</div>
 
 	</div>

@@ -1,3 +1,5 @@
+import _ = require("lodash");
+
 export class LowPassFilter {
 
 	private _bufferMaxSize: number;
@@ -67,6 +69,14 @@ export class LowPassFilter {
 		return values;
 	}
 
+	/**
+	 *
+	 * @param {number[]} values
+	 * @param {number[]} scale
+	 * @param {number} positiveVariationTrigger
+	 * @param {number} negativeVariationTrigger
+	 * @returns {number[]}
+	 */
 	public adaptiveSmoothArray(values: number[], scale: number[],
 							   positiveVariationTrigger?: number, negativeVariationTrigger?: number): number[] {
 
@@ -78,12 +88,9 @@ export class LowPassFilter {
 			const deltaScale = (scale[i] - scale[i - 1]);
 			const variation = deltaValue / deltaScale;
 
-			if (positiveVariationTrigger && variation >= 0 && Math.abs(variation) >= positiveVariationTrigger) {
-
+			if (_.isNumber(positiveVariationTrigger) && variation >= 0 && Math.abs(variation) >= positiveVariationTrigger) {
 				value += (values[i] - value) * this._smoothing;
-
-			} else if (negativeVariationTrigger && variation < 0 && Math.abs(variation) >= negativeVariationTrigger) {
-
+			} else if (_.isNumber(negativeVariationTrigger) && variation < 0 && Math.abs(variation) >= negativeVariationTrigger) {
 				value += (values[i] - value) * this._smoothing;
 
 			} else {

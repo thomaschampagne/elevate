@@ -1,3 +1,5 @@
+import { AbstractModifier } from "./AbstractModifier";
+
 const GOAL_MARKER_TEXT_WIDTH = 40;
 
 /**
@@ -7,7 +9,7 @@ const GOAL_MARKER_TEXT_WIDTH = 40;
  * tracker found in the #progress-goals-v2 element. The bars track monthly
  * and weekly progress towards the overall annual goal.
  */
-export class GoalsModifier implements IModifier {
+export class GoalsModifier extends AbstractModifier {
 
 	private $element: JQuery;
 
@@ -19,6 +21,7 @@ export class GoalsModifier implements IModifier {
 	 * @param $element: A jQuery wrapper around a #progress-goals-v2.
 	 */
 	constructor($element: JQuery) {
+		super();
 		this.$element = $element;
 	}
 
@@ -32,7 +35,7 @@ export class GoalsModifier implements IModifier {
 	 *
 	 * If the atheletes activities fail to load then this does nothing.
 	 */
-	public modify = (): void => {
+	public modify(): void {
 		this.getActivities().then((activities) => {
 			this.$element.find(".tab-contents > .tab-content").each(
 				(_, tab) => {

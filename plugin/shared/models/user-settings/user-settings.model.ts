@@ -12,7 +12,8 @@ export class UserSettingsModel {
 	public userMaxHr: number;
 	public userRestHr: number;
 	public userLTHR: UserLactateThresholdModel;
-	public userFTP: number;
+	public userFTP: number; // TODO Refactor userCyclingFTP
+	public userRunningFTP: number;
 	public userSwimFTP: number;
 	public userWeight: number;
 	public zones: UserZonesModel;
@@ -27,7 +28,6 @@ export class UserSettingsModel {
 	public activityStravaMapType: string;
 	public displaySegmentRankPercentage: boolean;
 	public displayNearbySegments: boolean;
-	public displayMotivationScore: boolean;
 	public displayActivityRatio: boolean;
 	public displayAdvancedPowerData: boolean;
 	public displayAdvancedSpeedData: boolean;

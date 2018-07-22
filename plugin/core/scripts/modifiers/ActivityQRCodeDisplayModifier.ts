@@ -1,12 +1,14 @@
 import { AppResourcesModel } from "../models/app-resources.model";
 import * as QRCode from "qrcode";
+import { AbstractModifier } from "./AbstractModifier";
 
-export class ActivityQRCodeDisplayModifier implements IModifier {
+export class ActivityQRCodeDisplayModifier extends AbstractModifier {
 
 	protected appResources: AppResourcesModel;
 	protected activityId: number;
 
 	constructor(appResources: AppResourcesModel, activityId: number) {
+		super();
 		this.appResources = appResources;
 		this.activityId = activityId;
 	}

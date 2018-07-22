@@ -1,8 +1,11 @@
-export class DefaultLeaderBoardFilterModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
+
+export class DefaultLeaderBoardFilterModifier extends AbstractModifier {
 
 	protected defaultLeaderBoardFilter: string;
 
 	constructor(defaultLeaderBoardFilter: string) {
+		super();
 		this.defaultLeaderBoardFilter = defaultLeaderBoardFilter;
 	}
 

@@ -1,8 +1,11 @@
-export class ActivityBikeOdoModifier implements IModifier {
+import { AbstractModifier } from "./AbstractModifier";
+
+export class ActivityBikeOdoModifier extends AbstractModifier {
 	private bikeOdoArray: any;
 	private cacheKey: string;
 
 	constructor(bikeOdoArray: any, cacheKey: string) {
+		super();
 		this.bikeOdoArray = bikeOdoArray;
 		this.cacheKey = cacheKey;
 	}

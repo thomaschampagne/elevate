@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
+import { Constant } from "../../../../shared/Constant";
 
 export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 	{
@@ -14,7 +15,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 			name: "Miles Conversion",
 			zoneValue: "speed",
 			output: (speedKph: number) => {
-				return (speedKph * 0.621371).toFixed(1) + " mph";
+				return (speedKph * Constant.KM_TO_MILE_FACTOR).toFixed(1) + " mph";
 			}
 		}
 	}, {
@@ -30,7 +31,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 			zoneValue: "pace",
 			output: (seconds: number) => {
 				const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
-				const paceImperial = moment().startOf("day").seconds(seconds / 0.621371192).format("mm:ss") + "/mi";
+				const paceImperial = moment().startOf("day").seconds(seconds / Constant.KM_TO_MILE_FACTOR).format("mm:ss") + "/mi";
 				return paceMetric + "  | " + paceImperial;
 			}
 		}
@@ -48,7 +49,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 			zoneValue: "gradeAdjustedPace",
 			output: (seconds: number) => {
 				const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
-				const paceImperial = moment().startOf("day").seconds(seconds / 0.621371192).format("mm:ss") + "/mi";
+				const paceImperial = moment().startOf("day").seconds(seconds / Constant.KM_TO_MILE_FACTOR).format("mm:ss") + "/mi";
 				return paceMetric + "  | " + paceImperial;
 			}
 		}
