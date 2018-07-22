@@ -56,6 +56,11 @@ class Installer {
 			migration_from_version_below_than_6_1_2();
 		}
 
+        // v <= v6.3.0 ?: Reverse saved running pace / GAP zones
+        if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.3.0")) {
+			migration_from_version_below_than_6_3_0();
+        }
+
 	}
 
 	protected static clearSyncCache(): void {
@@ -144,3 +149,15 @@ const migration_from_version_below_than_5_11_0 = function () {
 		}
 	});
 };
+
+const migration_from_version_below_than_6_3_0 = function () {
+	chrome.storage.sync.get(null, (currentUserSavedSettings: any) => {
+        currentUserSavedSettings.zones.pace.reverse();
+        currentUserSavedSettings.zones.gradeAdjustedPace.reverse();
+
+        chrome.storage.sync.set(currentUserSavedSettings, () => {
+            console.log("Running pace / GAP zones are reversed");
+        });
+	});
+
+}
