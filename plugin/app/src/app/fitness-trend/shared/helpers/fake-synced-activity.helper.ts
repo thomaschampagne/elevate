@@ -2,7 +2,6 @@ import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced
 import * as moment from "moment";
 import * as _ from "lodash";
 
-
 export class FakeSyncedActivityHelper {
 
 	public static create(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number, hasPowerMeter?: boolean, avgPace?: number): SyncedActivityModel {

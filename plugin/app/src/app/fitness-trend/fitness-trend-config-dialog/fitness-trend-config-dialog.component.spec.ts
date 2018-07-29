@@ -82,7 +82,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
 	it("should handle ignore patterns empty (1)", (done: Function) => {
 
 		// Given
-		const userInputPatterns: string = " ";
+		const userInputPatterns = " ";
 
 		// When
 		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
@@ -96,7 +96,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
 	it("should handle ignore patterns empty (2)", (done: Function) => {
 
 		// Given
-		const userInputPatterns: string = "\n";
+		const userInputPatterns = "\n";
 
 		// When
 		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
@@ -110,7 +110,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
 	it("should handle ignore patterns empty (3)", (done: Function) => {
 
 		// Given
-		const userInputPatterns: string = "";
+		const userInputPatterns = "";
 
 		// When
 		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
@@ -125,7 +125,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
 
 		// Given
 		const patterns: string[] = ["#tag_1", "#tag_2"];
-		const expectedResult: string = `#tag_1\n#tag_2`;
+		const expectedResult = "#tag_1\n#tag_2";
 
 		// When
 		const result: string = component.formatPatternsForDisplay(patterns);

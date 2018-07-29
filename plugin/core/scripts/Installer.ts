@@ -1,26 +1,57 @@
 import { userSettings } from "../../shared/UserSettings";
 import { Helper } from "./Helper";
-import { StorageManager } from "./StorageManager";
 import * as semver from "semver";
+import { AthleteModel } from "../../shared/models/athlete.model";
+import { Gender } from "../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../shared/models/athlete-settings/athlete-settings.model";
+import { PeriodicAthleteSettingsModel } from "../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { UserLactateThresholdModel } from "../../shared/models/user-settings/user-lactate-threshold.model";
+import * as _ from "lodash";
+
+
+enum BrowserStorage { // TODO Refactor use with StorageManager (duplicate code)
+	SYNC = "sync",
+	LOCAL = "local"
+}
 
 class Installer {
 
-	public static listen() {
+	public previousVersion: string;
+	public currentVersion: string;
+
+	public listen() {
 
 		chrome.runtime.onInstalled.addListener((details) => {
 			if (details.reason === "install") {
 				this.handleInstall(); // Pop in tab application and plugin page
 			} else if (details.reason === "update") {
-				this.handleUpdate(details);
+
+				this.currentVersion = chrome.runtime.getManifest().version;
+				this.previousVersion = details.previousVersion;
+
+				this.handleUpdate().then(() => {
+
+					// Check and display sync & local storage after update
+					return Promise.all([this.get(BrowserStorage.SYNC, null), this.get(BrowserStorage.LOCAL, null)]);
+
+				}).then((result: any[]) => {
+
+					console.log("Migration finished!");
+					console.log("Synced data: ", result[0]);
+					console.log("Local data: ", result[1]);
+
+				}).catch((error) => {
+					console.error(error);
+				});
 			}
 		});
 	}
 
-	public static isPreviousVersionLowerThanOrEqualsTo(oldVersion: string, upgradingVersion: string) {
+	protected isPreviousVersionLowerThanOrEqualsTo(oldVersion: string, upgradingVersion: string) {
 		return semver.gte(upgradingVersion, oldVersion);
 	}
 
-	protected static handleInstall() {
+	protected handleInstall() {
 
 		chrome.tabs.create({
 			url: "http://thomaschampagne.github.io/stravistix/", // TODO Get from config/constants
@@ -34,129 +65,293 @@ class Installer {
 		});
 	}
 
-	protected static handleUpdate(details: any) {
+	/**
+	 * Summary: Clear local history if coming from version under 5.1.1
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_5_1_1(): Promise<void> {
 
-		const thisVersion: string = chrome.runtime.getManifest().version;
+		let promise = Promise.resolve();
 
-		console.log("Updated from " + details.previousVersion + " to " + thisVersion);
+		//  v <= v5.1.1 ?: Clear local history if coming from version under 5.1.1
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "5.1.1")) {
+
+			console.log("Migrate to 5.1.1");
+
+			promise = this.remove(BrowserStorage.LOCAL, "computedActivities")
+				.then(() => {
+					return this.remove(BrowserStorage.LOCAL, "lastSyncDateTime")
+				}).then(() => {
+					console.log("Local History cleared");
+					return Promise.resolve();
+				}).catch((error: Error) => {
+					return Promise.reject(error);
+				});
+		} else {
+			console.log("Skip migrate to 5.1.1");
+		}
+
+		return promise;
+	}
+
+	/**
+	 * Summary: Move & convert userHrrZones to generic heartrate zones. Remove enableAlphaFitnessTrend
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_5_11_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "5.11.0")) {
+
+			console.log("Migrate to 5.11.0");
+
+			promise = this.remove(BrowserStorage.SYNC, ["enableAlphaFitnessTrend"]).then(() => {
+
+				return this.get(BrowserStorage.SYNC, null);
+
+			}).then((currentUserSavedSettings: any) => {
+
+				const oldUserHrrZones = currentUserSavedSettings.userHrrZones; // Get user current zones
+
+				if (oldUserHrrZones) {
+
+					if (oldUserHrrZones.length > 0) { // If user has zones
+						const newHeartRateZones: any = [];
+						for (let i = 0; i < oldUserHrrZones.length; i++) {
+							const hrrZone: any = oldUserHrrZones[i];
+							newHeartRateZones.push({
+								from: Helper.heartrateFromHeartRateReserve(hrrZone.fromHrr, currentUserSavedSettings.userMaxHr, currentUserSavedSettings.userRestHr),
+								to: Helper.heartrateFromHeartRateReserve(hrrZone.toHrr, currentUserSavedSettings.userMaxHr, currentUserSavedSettings.userRestHr),
+							});
+						}
+
+						if (!currentUserSavedSettings.zones) {
+							currentUserSavedSettings.zones = {};
+						}
+
+						currentUserSavedSettings.zones.heartRate = newHeartRateZones;
+						return this.set(BrowserStorage.SYNC, null, currentUserSavedSettings).then(() => {
+							return this.remove(BrowserStorage.SYNC, ["userHrrZones"]);
+						});
+
+					} else {  // Key exists
+						return this.remove(BrowserStorage.SYNC, ["userHrrZones"]);
+					}
+				} else {
+					return Promise.resolve();
+				}
+
+			});
+
+		} else {
+			console.log("Skip migrate to 5.11.0");
+		}
+
+		return promise;
+	};
+
+	/**
+	 * Summary: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities. remove autoSyncMinutes
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_6_1_2(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		// v <= v6.1.2 ?: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.1.2")) {
+
+			console.log("Migrate to 6.1.2");
+
+			promise = this.remove(BrowserStorage.LOCAL, ["syncWithAthleteProfile"]).then(() => {
+
+				return this.get(BrowserStorage.LOCAL, "computedActivities").then((result: any) => {
+
+					if (result.computedActivities) {
+						return this.set(BrowserStorage.LOCAL, "syncedActivities", result.computedActivities).then(() => {
+							return this.remove(BrowserStorage.LOCAL, ["computedActivities"]);
+						});
+					} else {
+						return Promise.resolve();
+					}
+				}).then(() => {
+					return this.remove(BrowserStorage.SYNC, ["autoSyncMinutes"]);
+				});
+
+			});
+
+		} else {
+			console.log("Skip migrate to 6.1.2");
+		}
+
+		return promise;
+	};
+
+	/**
+	 * Summary: Removing synced displayMotivationScore
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_6_4_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.4.0")) {
+			console.log("Migrate to 6.4.0");
+			promise = this.remove(BrowserStorage.SYNC, ["displayMotivationScore"]);
+		} else {
+			console.log("Skip migrate to 6.4.0");
+		}
+
+		return promise;
+	};
+
+	/**
+	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
+	 * Create periodicAthleteSettings into local storage
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_6_5_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.5.0")) {
+
+			console.log("Migrate to 6.5.0");
+
+			let athleteModel: AthleteModel = null;
+
+			promise = this.get(BrowserStorage.SYNC, null).then((userSettingsModel: any) => {
+
+				if (userSettingsModel.userGender) {
+					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
+
+					athleteModel = new AthleteModel(userGender, new AthleteSettingsModel(
+						(_.isNumber(userSettingsModel.userMaxHr)) ? userSettingsModel.userMaxHr : null,
+						(_.isNumber(userSettingsModel.userRestHr)) ? userSettingsModel.userRestHr : null,
+						(!_.isEmpty(userSettingsModel.userLTHR)) ? userSettingsModel.userLTHR : UserLactateThresholdModel.DEFAULT_MODEL,
+						(_.isNumber(userSettingsModel.userFTP)) ? userSettingsModel.userFTP : null,
+						(_.isNumber(userSettingsModel.userRunningFTP)) ? userSettingsModel.userRunningFTP : null,
+						(_.isNumber(userSettingsModel.userSwimFTP)) ? userSettingsModel.userSwimFTP : null,
+						(_.isNumber(userSettingsModel.userWeight)) ? userSettingsModel.userWeight : null
+					));
+
+					// Create new athlete model structure and apply change in sync settings
+					return this.set(BrowserStorage.SYNC, "athleteModel", athleteModel);
+				} else {
+					return Promise.resolve();
+				}
+
+			}).then(() => {
+				// Remove deprecated old user settings
+				return this.remove(BrowserStorage.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
+
+			}).then(() => {
+
+				if (athleteModel) {
+					const periodicAthleteSettings = new PeriodicAthleteSettingsModel(
+						null, // From forever
+						athleteModel.athleteSettings.maxHr,
+						athleteModel.athleteSettings.restHr,
+						athleteModel.athleteSettings.lthr,
+						athleteModel.athleteSettings.cyclingFtp,
+						athleteModel.athleteSettings.runningFtp,
+						athleteModel.athleteSettings.swimFtp,
+						athleteModel.athleteSettings.weight);
+
+					return this.set(BrowserStorage.LOCAL, "periodicAthleteSettings", [periodicAthleteSettings]);
+				} else {
+					return Promise.resolve();
+				}
+
+			}).then(() => {
+				return this.remove(BrowserStorage.LOCAL, "profileConfigured");
+			});
+
+		} else {
+			console.log("Skip migrate to 6.5.0");
+		}
+
+		return promise;
+
+	};
+
+	protected handleUpdate(): Promise<void> {
+
+		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
 		console.debug("UserSettings on update", userSettings);
 
-		// v <= v5.1.1 ?: Clear local history if coming from version under 5.1.1
-		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "5.1.1")) {
-			this.clearSyncCache();
-		}
-
-		// v <= v5.11. ?0: Move & convert userHrrZones to generic heartrate zones
-		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "5.11.0")) {
-			migration_from_version_below_than_5_11_0();
-		}
-
-		// v <= v6.1.2 ?: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities
-		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.1.2")) {
-			migration_from_version_below_than_6_1_2();
-		}
-
-		// v <= v6.1.2 ?: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities
-		if (this.isPreviousVersionLowerThanOrEqualsTo(details.previousVersion, "6.4.0")) {
-			migration_from_version_below_than_6_4_0();
-		}
-
-	}
-
-	protected static clearSyncCache(): void {
-
-		const storageManagerOnLocal = new StorageManager(); // typeof StorageManager
-		storageManagerOnLocal.removeFromStorage(StorageManager.TYPE_LOCAL, "computedActivities", () => {
-			storageManagerOnLocal.removeFromStorage(StorageManager.TYPE_LOCAL, "lastSyncDateTime", () => {
-				console.log("Local History cleared");
-			});
+		return this.migrate_to_5_1_1().then(() => {
+			return this.migrate_to_5_11_0();
+		}).then(() => {
+			return this.migrate_to_6_1_2();
+		}).then(() => {
+			return this.migrate_to_6_4_0();
+		}).then(() => {
+			return this.migrate_to_6_5_0();
 		});
+
 	}
-}
 
-Installer.listen();
+	public set(storageType: string, key: string, value: any): Promise<void> { // TODO Refactor use with StorageManager (duplicate code)
 
-const migration_from_version_below_than_6_4_0 = () => {
+		return new Promise<void>((resolve: Function, reject: Function) => {
 
-	console.log("Migrate from 6.4.0 or below");
-
-	// Remove sync displayMotivationScore
-	chrome.storage.sync.remove(["displayMotivationScore"], () => {
-		console.log("displayMotivationScore removed");
-	});
-
-};
-
-const migration_from_version_below_than_6_1_2 = () => {
-
-	console.log("Migrate from 6.1.2 or below");
-
-	// Remove local syncWithAthleteProfile
-	chrome.storage.local.remove(["syncWithAthleteProfile"], () => {
-		console.log("syncWithAthleteProfile removed");
-		chrome.storage.local.get(["computedActivities"], result => {
-			if (result.computedActivities) {
-				chrome.storage.local.set({syncedActivities: result.computedActivities}, () => {
-					console.log("syncedActivities saved");
-					chrome.storage.local.remove(["computedActivities"], () => {
-						console.log("computedActivities removed");
-					});
-				});
+			let object = {};
+			if (key) {
+				object[key] = value;
 			} else {
-				console.log("No computedActivities key found");
+				object = value
 			}
-		});
-	});
 
-	// Remove sync autoSyncMinutes
-	chrome.storage.sync.remove(["autoSyncMinutes"], () => {
-		console.log("autoSyncMinutes removed");
-	});
-
-};
-
-/**
- * Migration from previous version under 5.11.0
- */
-const migration_from_version_below_than_5_11_0 = () => {
-
-	const removeDeprecatedHrrZonesKey = (callback: Function) => {
-		chrome.storage.sync.remove(["userHrrZones"], () => {
-			callback();
+			chrome.storage[storageType].set(object, () => {
+				const error = chrome.runtime.lastError;
+				if (error) {
+					reject(error.message);
+				} else {
+					resolve();
+				}
+			});
 		});
 	};
 
-	chrome.storage.sync.get(null, (currentUserSavedSettings: any) => {
-		const savedUserHrrZones = currentUserSavedSettings.userHrrZones; // Get user current zones
-		if (savedUserHrrZones) {
-			if (savedUserHrrZones.length > 0) { // If user has zones
-				const newHeartRateZones: any = [];
-				for (let i = 0; i < savedUserHrrZones.length; i++) {
-					const hrrZone: any = savedUserHrrZones[i];
-					newHeartRateZones.push({
-						from: Helper.heartrateFromHeartRateReserve(hrrZone.fromHrr, currentUserSavedSettings.userMaxHr, currentUserSavedSettings.userRestHr),
-						to: Helper.heartrateFromHeartRateReserve(hrrZone.toHrr, currentUserSavedSettings.userMaxHr, currentUserSavedSettings.userRestHr),
-					});
+	public get<T>(storageType: string, key: string): Promise<T> { // TODO Refactor use with StorageManager (duplicate code)
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			chrome.storage[storageType].get(key, (result: T) => {
+				const error = chrome.runtime.lastError;
+				if (error) {
+					reject(error.message);
+				} else {
+					resolve(result);
 				}
+			});
+		});
+	};
 
-				if (!currentUserSavedSettings.zones) {
-					currentUserSavedSettings.zones = {};
+	public remove(storageType: string, key: string | string[]): Promise<void> { // TODO Refactor use with StorageManager (duplicate code)
+		return new Promise<void>((resolve: Function, reject: Function) => {
+			chrome.storage[storageType].remove(key, () => {
+				const error = chrome.runtime.lastError;
+				if (error) {
+					reject(error.message);
+				} else {
+					resolve();
 				}
+			});
+		});
+	};
 
-				currentUserSavedSettings.zones.heartRate = newHeartRateZones;
-				chrome.storage.sync.set(currentUserSavedSettings, () => { // Inject updated zones (inc. new heartrate)
-					removeDeprecatedHrrZonesKey(() => { // Remove deprecated hrr zones
-						chrome.storage.sync.get(null, (results: any) => { // Show final result
-							console.log("Migration to 5.11.0 done");
-							console.log("Updated settings: ", results);
-						});
-					});
-				});
-			} else {  // Key exists
-				removeDeprecatedHrrZonesKey(() => {
-					console.log("userHrrZones key removed");
-				});
-			}
-		}
-	});
-};
+}
+
+const installer = new Installer();
+installer.listen();
+
+
+
+
+
+
+
+
+
+

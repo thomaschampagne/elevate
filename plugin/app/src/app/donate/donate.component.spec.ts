@@ -12,7 +12,7 @@ describe("DonateComponent", () => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
-				SharedModule,
+				SharedModule
 			]
 		}).compileComponents();
 

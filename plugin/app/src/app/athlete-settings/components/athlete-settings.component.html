@@ -1,0 +1,34 @@
+<mat-slide-toggle [(ngModel)]="hasPeriodicAthleteSettings" (change)="onHasPeriodicAthleteSettingsChange()">
+	Enable Periodic Athlete Settings (Beta)
+</mat-slide-toggle>
+
+<!--Gender-->
+<mat-card class="gender-card" *ngIf="(athleteModel && athleteModel.gender)">
+	<mat-card-title>
+		Gender
+	</mat-card-title>
+	<mat-card-content>
+		<mat-form-field fxFill>
+			<mat-select
+				aria-label="Gender"
+				(selectionChange)="onGenderChanged()"
+				[(ngModel)]="athleteModel.gender">
+				<mat-option
+					*ngFor="let gender of GENDER_LIST;"
+					[value]="gender.type">
+					{{gender.display}}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</mat-card-content>
+</mat-card>
+
+
+<!--Single athlete settings form when athlete hasn't PeriodicAthleteSettings ON-->
+<app-athlete-settings-form *ngIf="(hasPeriodicAthleteSettings !== true && athleteModel && athleteModel.athleteSettings)"
+						   [athleteSettingsModel]="athleteModel.athleteSettings"
+						   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
+
+<!--Periodic Athlete Settings manager component-->
+<app-periodic-athlete-settings-manager
+	*ngIf="(hasPeriodicAthleteSettings === true)"></app-periodic-athlete-settings-manager>
