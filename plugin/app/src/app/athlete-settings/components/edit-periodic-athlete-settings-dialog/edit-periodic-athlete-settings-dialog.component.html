@@ -1,0 +1,31 @@
+<mat-dialog-content>
+	<button *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_ADD" mat-button mat-raised-button
+			color="primary" (click)="onConfirm()">Add
+	</button>
+	<button *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_EDIT" mat-button mat-raised-button
+			color="primary" (click)="onConfirm()">Edit
+	</button>
+	<mat-card>
+		<mat-card-title>
+			Period definition
+		</mat-card-title>
+		<mat-card-content>
+			<mat-form-field>
+				<input matInput
+					   [(ngModel)]="periodicAthleteSettingsModel.from"
+					   [matDatepicker]="datePickerFrom"
+					   (dateChange)="onPeriodChange()"
+					   placeholder="From">
+				<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerFrom></mat-datepicker>
+			</mat-form-field>
+		</mat-card-content>
+
+	</mat-card>
+
+	<app-athlete-settings-form *ngIf="periodicAthleteSettingsModel"
+							   [athleteSettingsModel]="periodicAthleteSettingsModel"
+							   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
+
+</mat-dialog-content>
+

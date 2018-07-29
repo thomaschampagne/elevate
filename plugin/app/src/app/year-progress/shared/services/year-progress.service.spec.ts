@@ -296,7 +296,7 @@ describe("YearProgressService", () => {
 		done();
 
 	});
-	
+
 	it("should compute progression with imperial system unit", (done: Function) => {
 
 		// Given

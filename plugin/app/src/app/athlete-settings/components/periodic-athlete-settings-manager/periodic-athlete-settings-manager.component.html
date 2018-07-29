@@ -1,0 +1,105 @@
+<mat-card>
+	<mat-card-title>
+		Periodic Athlete Settings
+	</mat-card-title>
+	<mat-card-content>
+
+		<button mat-button (click)="onAdd()">Add period</button>
+
+		<mat-table #table [dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="from">
+				<mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">
+					<span *ngIf="!periodicSettings.isForever()">{{periodicSettings.fromAsDate | date}}</span>
+					<span *ngIf="periodicSettings.isForever()">Forever</span>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="to">
+				<mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">
+					<span *ngIf="!periodicSettings.isNow()">{{periodicSettings.toAsDate | date}}</span>
+					<span *ngIf="periodicSettings.isNow()">Today</span>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="weight">
+				<mat-header-cell *matHeaderCellDef>Weight</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.weight}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="maxHr">
+				<mat-header-cell *matHeaderCellDef>Max HR</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.maxHr}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="restHr">
+				<mat-header-cell *matHeaderCellDef>Rest HR</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.restHr}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.default">
+				<mat-header-cell *matHeaderCellDef>Default LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.lthr.default}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.cycling">
+				<mat-header-cell *matHeaderCellDef>Cycling LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.lthr.cycling}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.running">
+				<mat-header-cell *matHeaderCellDef>Running LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.lthr.running}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="cyclingFtp">
+				<mat-header-cell *matHeaderCellDef>Cycling FTP</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.cyclingFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="runningFtp">
+				<mat-header-cell *matHeaderCellDef>Running FTP</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.runningFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="swimFtp">
+				<mat-header-cell *matHeaderCellDef>Swim FTP</mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings">{{periodicSettings.swimFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="edit">
+				<mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings" [ngClass]="'editColumn'">
+					<button mat-icon-button (click)="onEdit(periodicSettings.from)"
+							matTooltip="Edit periodic settings">
+						<mat-icon>edit</mat-icon>
+					</button>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="delete">
+				<mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+				<mat-cell *matCellDef="let periodicSettings" [ngClass]="'deleteColumn'">
+					<button *ngIf="!periodicSettings.isForever()" mat-icon-button
+							(click)="onRemove(periodicSettings.from)"
+							matTooltip="Delete periodic settings">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+		<mat-paginator #paginator
+					   [pageSize]="50"
+					   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]">
+		</mat-paginator>
+	</mat-card-content>
+</mat-card>
+
+
+
+

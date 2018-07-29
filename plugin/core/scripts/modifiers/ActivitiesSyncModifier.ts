@@ -6,7 +6,7 @@ import { AppResourcesModel } from "../models/app-resources.model";
 import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
+import { HerokuEndpointResolver } from "../../../shared/resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./AbstractModifier";
 import _ = require("lodash");
 
@@ -145,7 +145,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				error: {path: window.location.href, date: new Date(), content: err},
 			};
 
-			const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
+			const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,

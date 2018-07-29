@@ -74,7 +74,7 @@ export class StravistiX {
 		this.athleteId = this.vacuumProcessor.getAthleteId();
 		this.athleteName = this.vacuumProcessor.getAthleteName();
 		this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-		this.isActivityAuthor = (this.activityAthleteId == this.athleteId);
+		this.isActivityAuthor = (this.activityAthleteId === this.athleteId);
 		this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this.userSettings, this.isActivityAuthor);
 		this.isPremium = this.vacuumProcessor.getPremiumStatus();
 		this.isPro = this.vacuumProcessor.getProStatus();

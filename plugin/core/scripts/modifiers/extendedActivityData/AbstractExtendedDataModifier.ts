@@ -2,7 +2,6 @@ import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../Helper";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
-import { StorageManager } from "../../StorageManager";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractDataView } from "./views/AbstractDataView";
@@ -68,18 +67,7 @@ export abstract class AbstractExtendedDataModifier {
 
 						// Add Show extended statistics to page
 						this.placeExtendedStatsButton(() => {
-
 							// Extended Button has been placed...
-							// Check is owner of activity
-							if (this.isAuthorOfViewedActivity) {
-								// Check if profileConfigured locally. Ask user to double check is athlete settings
-								Helper.getFromStorage(this.appResources.extensionId, StorageManager.TYPE_LOCAL, "profileConfigured")
-									.then((profileConfigured: any) => {
-										if (!profileConfigured || !profileConfigured.data) {
-											$("#extendedStatsButton").after("<a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'>Did you check your athlete settings before?</a>");
-										}
-									});
-							}
 						});
 					});
 

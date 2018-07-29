@@ -1,9 +1,7 @@
 import { NgModule } from "@angular/core";
-import { AthleteSettingsComponent } from "../athlete-settings/athlete-settings.component";
 import { GlobalSettingsComponent } from "../global-settings/global-settings.component";
 import { ZonesSettingsComponent } from "../zones-settings/zones-settings.component";
 import { ZoneComponent } from "../zones-settings/zone/zone.component";
-import { SwimFtpHelperComponent } from "../athlete-settings/swim-ftp-helper/swim-ftp-helper.component";
 import { ZonesImportExportDialogComponent } from "../zones-settings/zones-import-export-dialog/zones-import-export-dialog.component";
 import { ZoneToolBarComponent } from "../zones-settings/zone-tool-bar/zone-tool-bar.component";
 import { GotItDialogComponent } from "./dialogs/got-it-dialog/got-it-dialog.component";
@@ -33,6 +31,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
 import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
+import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
+import { PeriodicAthleteSettingsService } from "./services/periodic-athlete-settings/periodic-athlete-settings.service";
+import { PeriodicAthleteSettingsDao } from "./dao/periodic-athlete-settings/periodic-athlete-settings.dao";
 
 @NgModule({
 	imports: [
@@ -49,9 +50,7 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 	],
 	declarations: [
 		// Components
-		AthleteSettingsComponent,
 		GlobalSettingsComponent,
-		SwimFtpHelperComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
 		DonateComponent,
@@ -82,6 +81,9 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 		SyncDao,
 		UserSettingsService,
 		UserSettingsDao,
+		PeriodicAthleteSettingsService,
+		PeriodicAthleteSettingsDao,
+		AthleteModelResolverService,
 		ActivityService,
 		ActivityDao,
 		GlobalSettingsService,
