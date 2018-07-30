@@ -27,7 +27,7 @@
 							"node_modules/metrics-graphics/dist/metricsgraphics.css"
 						],
 						"scripts": [
-							"node_modules/d3/build/d3.js",
+							"node_modules/d3/dist/d3.js",
 							"node_modules/metrics-graphics/dist/metricsgraphics.js"
 						]
 					},
@@ -76,7 +76,7 @@
 						"polyfills": "src/polyfills.ts",
 						"tsConfig": "src/tsconfig.spec.json",
 						"scripts": [
-							"node_modules/d3/build/d3.js",
+							"node_modules/d3/dist/d3.js",
 							"node_modules/metrics-graphics/dist/metricsgraphics.js"
 						],
 						"styles": [
