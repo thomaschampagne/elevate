@@ -42,4 +42,5 @@ describe("AthleteSettingsComponent", () => {
 	it("should create", () => {
 		expect(component).toBeTruthy();
 	});
+
 });
