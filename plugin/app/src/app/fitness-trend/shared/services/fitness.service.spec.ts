@@ -3,7 +3,6 @@ import * as _ from "lodash";
 import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
-import { ActivityDao } from "../../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { Gender } from "../../../shared/enums/gender.enum";
@@ -15,6 +14,9 @@ import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper";
+import { CoreModule } from "../../../core/core.module";
+import { SharedModule } from "../../../shared/shared.module";
+import { FitnessTrendModule } from "../../fitness-trend.module";
 
 describe("FitnessService", () => {
 
@@ -49,7 +51,11 @@ describe("FitnessService", () => {
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
-			providers: [FitnessService, ActivityService, ActivityDao]
+			imports: [
+				CoreModule,
+				SharedModule,
+				FitnessTrendModule
+			]
 		});
 
 		_TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);

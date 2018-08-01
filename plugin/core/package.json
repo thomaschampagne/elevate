@@ -22,6 +22,9 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"config": {
+		"unsafe-perm": true
+	},
 	"author": "Thomas Champagne",
 	"license": "MIT",
 	"readme": "None",
