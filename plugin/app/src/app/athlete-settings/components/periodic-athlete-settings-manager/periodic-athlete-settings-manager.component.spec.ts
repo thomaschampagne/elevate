@@ -10,7 +10,7 @@ describe("PeriodicAthleteSettingsManagerComponent", () => {
 	let component: PeriodicAthleteSettingsManagerComponent;
 	let fixture: ComponentFixture<PeriodicAthleteSettingsManagerComponent>;
 
-	beforeEach(async(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -23,15 +23,18 @@ describe("PeriodicAthleteSettingsManagerComponent", () => {
 
 		spyOn(periodicAthleteSettingsService, "fetch").and.returnValue(Promise.resolve([]));
 
-	}));
+		done();
+	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(PeriodicAthleteSettingsManagerComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
-	it("should create", () => {
+	it("should create", (done: Function) => {
 		expect(component).toBeTruthy();
+		done();
 	});
 });

@@ -47,13 +47,10 @@ describe("EditPeriodicAthleteSettingsDialogComponent", () => {
 			}
 		});
 
-		done();
-	});
-
-	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(EditPeriodicAthleteSettingsDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+
 		done();
 	});
 
