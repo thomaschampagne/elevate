@@ -1,10 +1,27 @@
 <mat-card>
 	<mat-card-title>
-		Periodic Athlete Settings
+		Periodic Athlete Settings (preview)
 	</mat-card-title>
+
+	<mat-card-content>
+		<div>
+			<strong>Why Periodic Athlete Settings?</strong> Since your physiological attributes evolve over time
+			(heart rate, weight, power, pace, ...), this feature will provide the "period-matching" physiological
+			attributes required to calculate stats of an activity (including stress scores) at a given date. When
+			Periodic Athlete Settings is enabled, every features in stravistix will use it.
+		</div>
+
+		<div>
+			<strong>Periodic Athlete Settings are currently in preview.</strong>Note that your settings might change
+			along updates. Also these settings are saved locally at the moment. They are not synced between computers
+			(using browser account) for technicals reasons. But they will be in future...
+		</div>
+
+	</mat-card-content>
+
 	<mat-card-content>
 
-		<button mat-button (click)="onAdd()">Add period</button>
+		<button mat-button color="primary" (click)="onAdd()">Add period</button>
 
 		<mat-table #table [dataSource]="dataSource" matSort>
 
