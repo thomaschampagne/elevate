@@ -77,7 +77,8 @@
 						"tsConfig": "src/tsconfig.spec.json",
 						"scripts": [
 							"node_modules/d3/dist/d3.js",
-							"node_modules/metrics-graphics/dist/metricsgraphics.js"
+							"node_modules/metrics-graphics/dist/metricsgraphics.js",
+							"node_modules/hammerjs/hammer.js"
 						],
 						"styles": [
 							"src/styles.scss",
