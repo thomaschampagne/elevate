@@ -33,6 +33,9 @@
 		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./plugin/core/package-lock.json ./plugin/app/package-lock.json",
 		"zipRelease": "node -e \"const z = require('zip-folder'), f = require('fs'), m = require('./dist/manifest.json'), t = './package', o = t + '/v' + m.version_name.split(' ').join('_').toLowerCase() + '_' + (new Date()).toJSON().slice(0, 16).replace('T', '-').replace(':', '-') + '.zip';if (!f.existsSync(t)) f.mkdirSync(t);z('./dist', o, (e) => {let code = (e) ? 1 : 0;if (!code) console.log('Generated archive ' + o);process.exit(code);});\""
 	},
+	"config": {
+		"unsafe-perm": true
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/thomaschampagne/stravistix"
