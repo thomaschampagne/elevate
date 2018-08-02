@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { PeriodicAthleteSettingsDao } from "./periodic-athlete-settings.dao";
 import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("PeriodicAthleteSettingsDao", () => {
 
@@ -23,9 +24,9 @@ describe("PeriodicAthleteSettingsDao", () => {
 		const swimFTP = 31;
 
 		_TEST_PERIODIC_ATHLETE_SETTINGS_ = [
-			new PeriodicAthleteSettingsModel("2018-06-02", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-			new PeriodicAthleteSettingsModel("2018-02-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-			new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+			new PeriodicAthleteSettingsModel("2018-06-02", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+			new PeriodicAthleteSettingsModel("2018-02-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 		];
 
 		// Retrieve injected service

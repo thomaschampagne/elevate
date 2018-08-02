@@ -1,16 +1,23 @@
 <mat-dialog-content>
-	<button *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_ADD" mat-button mat-raised-button
-			color="primary" (click)="onConfirm()">Add
-	</button>
-	<button *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_EDIT" mat-button mat-raised-button
-			color="primary" (click)="onConfirm()">Edit
-	</button>
+
+	<div class="actions" fxLayoutAlign="center center">
+		<button fxFlex="50" *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_ADD" mat-stroked-button
+				color="primary" (click)="onConfirm()"> Add
+		</button>
+		<button fxFlex="50" *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_EDIT" mat-stroked-button
+				color="primary" (click)="onConfirm()">Edit
+		</button>
+		<span fxFlex="1"></span>
+		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
+		</button>
+	</div>
+
 	<mat-card>
 		<mat-card-title>
-			Period definition
+			Period
 		</mat-card-title>
 		<mat-card-content>
-			<mat-form-field>
+			<mat-form-field fxFill>
 				<input matInput
 					   [(ngModel)]="periodicAthleteSettingsModel.from"
 					   [matDatepicker]="datePickerFrom"
@@ -26,6 +33,18 @@
 	<app-athlete-settings-form *ngIf="periodicAthleteSettingsModel"
 							   [athleteSettingsModel]="periodicAthleteSettingsModel"
 							   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
+
+	<div class="actions" fxLayoutAlign="center center">
+		<button fxFlex="50" *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_ADD" mat-stroked-button
+				color="primary" (click)="onConfirm()"> Add
+		</button>
+		<button fxFlex="50" *ngIf="this.data.action === PeriodicAthleteSettingsAction.ACTION_EDIT" mat-stroked-button
+				color="primary" (click)="onConfirm()">Edit
+		</button>
+		<span fxFlex="1"></span>
+		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
+		</button>
+	</div>
 
 </mat-dialog-content>
 
