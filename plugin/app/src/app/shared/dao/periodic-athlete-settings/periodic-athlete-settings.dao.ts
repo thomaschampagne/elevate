@@ -11,7 +11,9 @@ export class PeriodicAthleteSettingsDao {
 	}
 
 	public fetch(): Promise<PeriodicAthleteSettingsModel[]> {
+
 		return new Promise<PeriodicAthleteSettingsModel[]>((resolve: Function, reject: Function) => {
+
 			this.browserStorageLocal().get(PeriodicAthleteSettingsDao.PERIODIC_ATHLETE_SETTINGS_KEY, (result: { periodicAthleteSettings: PeriodicAthleteSettingsModel[] }) => {
 				const error = this.getChromeError();
 				if (error) {
@@ -21,10 +23,12 @@ export class PeriodicAthleteSettingsDao {
 					resolve(periodicAthleteSettingsModels);
 				}
 			});
+
 		});
 	}
 
 	public save(athletePeriodSettings: PeriodicAthleteSettingsModel[]): Promise<PeriodicAthleteSettingsModel[]> {
+
 		return new Promise<PeriodicAthleteSettingsModel[]>((resolve: Function, reject: Function) => {
 
 			const athletePeriodSettingsData = {};
@@ -40,6 +44,7 @@ export class PeriodicAthleteSettingsDao {
 					});
 				}
 			});
+
 		});
 	}
 

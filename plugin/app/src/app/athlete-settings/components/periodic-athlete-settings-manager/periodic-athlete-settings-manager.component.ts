@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import { Component, OnInit } from "@angular/core";
+import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
 import { PeriodicAthleteSettingsService } from "../../../shared/services/periodic-athlete-settings/periodic-athlete-settings.service";
 import { EditPeriodicAthleteSettingsDialogComponent } from "../edit-periodic-athlete-settings-dialog/edit-periodic-athlete-settings-dialog.component";
@@ -18,13 +18,35 @@ import { AppError } from "../../../shared/models/app-error.model";
 })
 export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
-	public readonly displayedColumns: string[] = ["from", "to", "weight", "maxHr", "restHr", "lthr.default", "lthr.cycling", "lthr.running", "cyclingFtp", "runningFtp", "swimFtp", "edit", "delete"]; // TODO !!
+	public static readonly COLUMN_FROM: string = "from";
+	public static readonly COLUMN_TO: string = "to";
+	public static readonly COLUMN_WEIGHT: string = "weight";
+	public static readonly COLUMN_MAX_HR: string = "maxHr";
+	public static readonly COLUMN_REST_HR: string = "restHr";
+	public static readonly COLUMN_LTHR_DEFAULT: string = "lthr.default";
+	public static readonly COLUMN_LTHR_CYCLING: string = "lthr.cycling";
+	public static readonly COLUMN_LTHR_RUNNING: string = "lthr.running";
+	public static readonly COLUMN_CYCLING_FTP: string = "cyclingFtp";
+	public static readonly COLUMN_RUNNING_FTP: string = "runningFtp";
+	public static readonly COLUMN_SWIM_FTP: string = "swimFtp";
+	public static readonly COLUMN_ACTION_EDIT: string = "edit";
+	public static readonly COLUMN_ACTION_DELETE: string = "delete";
 
-	@ViewChild(MatPaginator)
-	public matPaginator: MatPaginator;
-
-	@ViewChild(MatSort)
-	public matSort: MatSort;
+	public readonly displayedColumns: string[] = [
+		PeriodicAthleteSettingsManagerComponent.COLUMN_FROM,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_TO,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_WEIGHT,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_MAX_HR,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_REST_HR,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_LTHR_DEFAULT,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_LTHR_CYCLING,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_LTHR_RUNNING,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_CYCLING_FTP,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE,
+	];
 
 	public periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[];
 
@@ -62,9 +84,10 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		const periodicAthleteSettingsDialogData: PeriodicAthleteSettingsDialogData = {
 			action: PeriodicAthleteSettingsAction.ACTION_ADD
 		};
-		const dialogRef = this.dialog.open(EditPeriodicAthleteSettingsDialogComponent, {
-			data: periodicAthleteSettingsDialogData
 
+		const dialogRef = this.dialog.open(EditPeriodicAthleteSettingsDialogComponent, {
+			width: EditPeriodicAthleteSettingsDialogComponent.WIDTH,
+			data: periodicAthleteSettingsDialogData
 		});
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((periodicAthleteSettingsModel: PeriodicAthleteSettingsModel) => {
@@ -91,6 +114,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		};
 
 		const dialogRef = this.dialog.open(EditPeriodicAthleteSettingsDialogComponent, {
+			width: EditPeriodicAthleteSettingsDialogComponent.WIDTH,
 			data: periodicAthleteSettingsDialogData
 		});
 

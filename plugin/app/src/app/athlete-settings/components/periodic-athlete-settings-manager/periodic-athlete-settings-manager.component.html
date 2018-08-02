@@ -5,23 +5,30 @@
 
 	<mat-card-content>
 		<div>
-			<strong>Why Periodic Athlete Settings?</strong> Since your physiological attributes evolve over time
-			(heart rate, weight, power, pace, ...), this feature will provide the "period-matching" physiological
-			attributes required to calculate stats of an activity (including stress scores) at a given date. When
-			Periodic Athlete Settings is enabled, every features in stravistix will use it.
+			<strong>Why Periodic Athlete Settings are usefull?</strong> As you know your physiological attributes evolve
+			over time (heart rate, weight, power, pace, ...). Once you defined your various athlete settings on multiple
+			periods, others features like fitness trend will use the correct athlete settings from activities' dates to
+			calculate activities stats and stress scores. And thus providing more accurate and relevant results.
 		</div>
 
 		<div>
-			<strong>Periodic Athlete Settings are currently in preview.</strong>Note that your settings might change
-			along updates. Also these settings are saved locally at the moment. They are not synced between computers
-			(using browser account) for technicals reasons. But they will be in future...
+			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
+			<strong>Periodic Athlete Settings are currently in preview!</strong> The below settings might change
+			through updates. At the moment, they are saved locally and not synced between computers for technicals
+			reasons.
+			They will be synced in a near future using a dedicated online service.
 		</div>
 
 	</mat-card-content>
 
 	<mat-card-content>
 
-		<button mat-button color="primary" (click)="onAdd()">Add period</button>
+		<div fxFill fxLayoutAlign="end center">
+			<button mat-button color="primary" (click)="onAdd()">
+				<mat-icon>add</mat-icon>
+				Add new periodic athlete settings
+			</button>
+		</div>
 
 		<mat-table #table [dataSource]="dataSource" matSort>
 
@@ -110,10 +117,6 @@
 			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 		</mat-table>
-		<mat-paginator #paginator
-					   [pageSize]="50"
-					   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]">
-		</mat-paginator>
 	</mat-card-content>
 </mat-card>
 

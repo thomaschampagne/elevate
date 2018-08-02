@@ -9,13 +9,7 @@ export class PeriodicAthleteSettingsTableModel extends PeriodicAthleteSettingsMo
 	constructor(periodicAthleteSettingsModel: PeriodicAthleteSettingsModel, previousPeriodicAthleteSettingsModel: PeriodicAthleteSettingsModel) {
 		super(
 			periodicAthleteSettingsModel.from,
-			periodicAthleteSettingsModel.maxHr,
-			periodicAthleteSettingsModel.restHr,
-			periodicAthleteSettingsModel.lthr,
-			periodicAthleteSettingsModel.cyclingFtp,
-			periodicAthleteSettingsModel.runningFtp,
-			periodicAthleteSettingsModel.swimFtp,
-			periodicAthleteSettingsModel.weight
+			periodicAthleteSettingsModel
 		);
 
 		this.fromAsDate = (this.from) ? new Date(this.from) : null;

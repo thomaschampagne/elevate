@@ -1,21 +1,14 @@
 import { AthleteSettingsModel } from "./athlete-settings.model";
-import { UserLactateThresholdModel } from "../user-settings/user-lactate-threshold.model";
 
 export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 
-	public static readonly DEFAULT_FROM: string = new Date().toISOString();
+	public static readonly DEFAULT_FROM: string = (new Date()).toISOString().split('T')[0];
 
 	public static readonly FROM_DATE_FORMAT: string = "YYYY-MM-DD";
 
 	public static readonly DEFAULT_MODEL: PeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(
 		PeriodicAthleteSettingsModel.DEFAULT_FROM,
-		AthleteSettingsModel.DEFAULT_MAX_HR,
-		AthleteSettingsModel.DEFAULT_REST_HR,
-		UserLactateThresholdModel.DEFAULT_MODEL,
-		AthleteSettingsModel.DEFAULT_CYCLING_FTP,
-		AthleteSettingsModel.DEFAULT_RUNNING_FTP,
-		AthleteSettingsModel.DEFAULT_SWIM_FTP,
-		AthleteSettingsModel.DEFAULT_WEIGHT
+		AthleteSettingsModel.DEFAULT_MODEL
 	);
 
 	/**
@@ -26,17 +19,11 @@ export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 	/**
 	 *
 	 * @param {string} from Date format YYYY-MM-DD
-	 * @param {number} maxHr
-	 * @param {number} restHr
-	 * @param {UserLactateThresholdModel} lthr
-	 * @param {number} cyclingFtp
-	 * @param {number} runningFtp
-	 * @param {number} swimFtp
-	 * @param {number} weight
+	 * @param {AthleteSettingsModel} athleteSettingsModel
 	 */
-	constructor(from: string, maxHr: number, restHr: number, lthr: UserLactateThresholdModel, cyclingFtp: number, // TODO Simplify constructor with AthleteSettingsModel param
-				runningFtp: number, swimFtp: number, weight: number) {
-		super(maxHr, restHr, lthr, cyclingFtp, runningFtp, swimFtp, weight);
+	constructor(from: string, athleteSettingsModel: AthleteSettingsModel) {
+		super(athleteSettingsModel.maxHr, athleteSettingsModel.restHr, athleteSettingsModel.lthr,
+			athleteSettingsModel.cyclingFtp, athleteSettingsModel.runningFtp, athleteSettingsModel.swimFtp, athleteSettingsModel.weight);
 		this.from = from;
 	}
 

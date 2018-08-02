@@ -9,6 +9,7 @@ import { UserSettingsModel } from "../../../../../../shared/models/user-settings
 import { userSettings } from "../../../../../../shared/UserSettings";
 import * as _ from "lodash";
 import { AthleteModel } from "../../../../../../shared/models/athlete.model";
+import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("AthleteModelResolverService", () => {
 
@@ -42,9 +43,9 @@ describe("AthleteModelResolverService", () => {
 
 		// Given
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
-			new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, 325, 32, 75),
-			new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, 325, 32, 78),
-			new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, 325, 32, 78)
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
 		spyOn(athleteModelResolverService.userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettingsModel));
@@ -103,12 +104,12 @@ describe("AthleteModelResolverService", () => {
 		const onDate = "2018-04-29";
 		userSettingsModel.hasPeriodicAthleteSettings = true;
 
-		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", 195, 55, lthr, 150, 325, 32, 76);
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
-			new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, 325, 32, 75),
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
 			expectedPeriodicAthleteSettingsModel,
-			new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, 325, 32, 78),
-			new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, 325, 32, 78)
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
 		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
@@ -129,12 +130,12 @@ describe("AthleteModelResolverService", () => {
 		const onDate = "2018-04-15";
 		userSettingsModel.hasPeriodicAthleteSettings = true;
 
-		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", 195, 55, lthr, 150, 325, 32, 76);
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
-			new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, 325, 32, 75),
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
 			expectedPeriodicAthleteSettingsModel,
-			new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, 325, 32, 78),
-			new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, 325, 32, 78)
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
 		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
@@ -155,11 +156,11 @@ describe("AthleteModelResolverService", () => {
 		const onDate = "2018-01-15";
 		userSettingsModel.hasPeriodicAthleteSettings = false;
 
-		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, 325, 32, 78);
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
-			new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, 325, 32, 75),
-			new PeriodicAthleteSettingsModel("2018-04-15", 195, 55, lthr, 150, 325, 32, 76),
-			new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, 325, 32, 78),
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
 			expectedPeriodicAthleteSettingsModel
 		];
 
@@ -181,11 +182,11 @@ describe("AthleteModelResolverService", () => {
 		const onDate = "2018-01-15";
 		userSettingsModel.hasPeriodicAthleteSettings = true;
 
-		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, 325, 32, 78);
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
-			new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, 325, 32, 75),
-			new PeriodicAthleteSettingsModel("2018-04-15", 195, 55, lthr, 150, 325, 32, 76),
-			new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, 325, 32, 78),
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
 			expectedPeriodicAthleteSettingsModel
 		];
 

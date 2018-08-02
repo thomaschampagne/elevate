@@ -4,6 +4,7 @@ import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/at
 import * as _ from "lodash";
 import { PeriodicAthleteSettingsDao } from "../../dao/periodic-athlete-settings/periodic-athlete-settings.dao";
 import { AppError } from "../../models/app-error.model";
+import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("PeriodicAthleteSettingsService", () => {
 
@@ -55,9 +56,9 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should fetch and sort descending existing 'periodic athlete settings'", (done: Function) => {
 
 			// Given
-			const expectedApsModel_03 = new PeriodicAthleteSettingsModel("2018-06-01", 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const expectedApsModel_02 = new PeriodicAthleteSettingsModel("2018-02-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const expectedApsModel_01 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const expectedApsModel_03 = new PeriodicAthleteSettingsModel("2018-06-01", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const expectedApsModel_02 = new PeriodicAthleteSettingsModel("2018-02-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const expectedApsModel_01 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				expectedApsModel_03,
 				expectedApsModel_01, // Introduce not sorted period between 01/02
@@ -149,14 +150,14 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
-			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", maxHr,
-				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight);
+			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
+				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
 			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
@@ -195,11 +196,11 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78)
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
 			];
 
-			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", maxHr,
-				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight);
+			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
+				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
 			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
@@ -238,8 +239,8 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [];
 
-			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", maxHr,
-				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight);
+			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
+				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
 			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
@@ -282,14 +283,14 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const addAtDate = "2018-04-15";
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel(addAtDate, 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel(addAtDate, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
-			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel(addAtDate, maxHr,
-				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight);
+			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel(addAtDate, new AthleteSettingsModel(maxHr,
+				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
@@ -325,15 +326,15 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const invalidDate = "2018-99-99";
-			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel(invalidDate, maxHr,
-				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight);
+			const athletePeriodSettingsToAdd = new PeriodicAthleteSettingsModel(invalidDate, new AthleteSettingsModel(maxHr,
+				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
 			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
@@ -376,10 +377,10 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const editAtDate = "2018-04-15";
-			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel(editAtDate, 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78);
-			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel(editAtDate, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
+			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				periodicAthleteSettingsModel_01,
@@ -391,7 +392,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(editAtDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(editAtDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const expectedEditedPeriodAthleteSettings = [periodicAthleteSettingsModel_01, expectedEditedPeriodicAthleteSettings,
 				periodicAthleteSettingsModel_03, periodicAthleteSettingsModel_04];
@@ -426,10 +427,10 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const editAtDate = "2018-04-15";
-			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel(editAtDate, 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78);
-			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel(editAtDate, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
+			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				periodicAthleteSettingsModel_01,
@@ -442,7 +443,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
 			const expectedNewDate = "2018-03-01";
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(expectedNewDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(expectedNewDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const expectedEditedPeriodAthleteSettings = [periodicAthleteSettingsModel_01, expectedEditedPeriodicAthleteSettings,
 				periodicAthleteSettingsModel_03, periodicAthleteSettingsModel_04];
@@ -477,7 +478,7 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const editAtDate = null;
-			const foreverPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const foreverPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				foreverPeriodicAthleteSettingsModel
@@ -486,7 +487,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(editAtDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(editAtDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const expectedEditedPeriodAthleteSettings = [expectedEditedPeriodicAthleteSettings];
 
@@ -521,10 +522,10 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const fakeEditAtDate = "2018-04-23";
-			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78);
-			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
+			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				periodicAthleteSettingsModel_01,
@@ -537,7 +538,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
 			const expectedNewDate = "2018-03-01";
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(expectedNewDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(expectedNewDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
@@ -570,10 +571,10 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const editAtDate = "2018-05-10";
 			const existingPeriodicSettingsDate = "2018-02-01";
-			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel(editAtDate, 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel(existingPeriodicSettingsDate, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
-			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel(editAtDate, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel(existingPeriodicSettingsDate, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
+			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				periodicAthleteSettingsModel_01,
@@ -585,7 +586,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(existingPeriodicSettingsDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(existingPeriodicSettingsDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
@@ -618,10 +619,10 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const invalidDate = "2018-99-99";
-			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75);
-			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76);
-			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78);
-			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78);
+			const periodicAthleteSettingsModel_01 = new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
+			const periodicAthleteSettingsModel_02 = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
+			const periodicAthleteSettingsModel_03 = new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
+			const periodicAthleteSettingsModel_04 = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				periodicAthleteSettingsModel_01,
@@ -633,7 +634,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(invalidDate, 99, 99, lthr, 99, 99, 99, 99);
+			const expectedEditedPeriodicAthleteSettings = new PeriodicAthleteSettingsModel(invalidDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
@@ -671,10 +672,10 @@ describe("PeriodicAthleteSettingsService", () => {
 			const removeFromIdentifier = "2018-04-15";
 			const removePeriodicAthleteSettingsIndex = 1;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
@@ -715,8 +716,8 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const removeFromIdentifier = null;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -756,7 +757,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const removeFromIdentifier = null;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -796,10 +797,10 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const removeFromIdentifier = "fake";
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -840,10 +841,10 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			// When
@@ -863,10 +864,10 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const duplicateFromIdentifier = "2018-05-10";
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(null, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			// When
@@ -888,10 +889,10 @@ describe("PeriodicAthleteSettingsService", () => {
 			// Given
 			const duplicateFromIdentifier = null;
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			// When
@@ -912,9 +913,9 @@ describe("PeriodicAthleteSettingsService", () => {
 
 			// Given
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel("2018-05-10", 200, 50, lthr, 190, runningFTP, swimFTP, 75),
-				new PeriodicAthleteSettingsModel("2018-04-15", 195, restHr, lthr, 150, runningFTP, swimFTP, 76),
-				new PeriodicAthleteSettingsModel("2018-02-01", 190, 65, lthr, 110, runningFTP, swimFTP, 78),
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			// When
