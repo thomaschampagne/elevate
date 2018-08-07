@@ -19,10 +19,12 @@ export class AthleteModelResolver {
 
 	/**
 	 * Resolve the proper AthleteModel along UserSettingsModel.hasPeriodicAthleteSettings and activity date
-	 * @param onDateString Date format YYYY-MM-DD
+	 * @param onDate Date format YYYY-MM-DD or Date object
 	 * @returns {AthleteModel}
 	 */
-	public resolve(onDateString: string): AthleteModel {
+	public resolve(onDate: string | Date): AthleteModel {
+
+		const onDateString = (onDate instanceof Date) ? (onDate).toISOString().split('T')[0] : onDate;
 
 		this.assertCompliantDate(onDateString);
 
@@ -44,6 +46,10 @@ export class AthleteModelResolver {
 		}
 
 		return athleteModel;
+	}
+
+	public getCurrent(): AthleteModel {
+		return this.resolve((new Date()));
 	}
 
 	public resolvePeriodicAthleteSettingsAtDate(onDate: string): PeriodicAthleteSettingsModel {

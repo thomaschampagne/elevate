@@ -32,16 +32,24 @@ export class AthleteModelResolverService {
 	}
 
 	/**
-	 *
-	 * @param onDate Date format YYYY-MM-DD
+	 * Resolve the proper AthleteModel along UserSettingsModel.hasPeriodicAthleteSettings and activity date
+	 * @param onDate Date format YYYY-MM-DD or Date object
 	 * @returns {AthleteModel}
 	 */
-	public resolve(onDate: string): AthleteModel {
+	public resolve(onDate: string | Date): AthleteModel {
 
 		if (_.isEmpty(this.athleteModelResolver)) {
 			throw new Error("AthleteModelResolver do not exists. Please init service at first with AthleteModelResolverService#init()");
 		}
 
 		return this.athleteModelResolver.resolve(onDate);
+	}
+
+	/**
+	 * Resolve current being used AthleteModel
+	 * @returns {AthleteModel}
+	 */
+	public getCurrent(): AthleteModel {
+		return this.athleteModelResolver.resolve(new Date());
 	}
 }
