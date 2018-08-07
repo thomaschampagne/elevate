@@ -98,7 +98,33 @@ describe("AthleteModelResolverService", () => {
 
 	});
 
-	it("should resolve AthleteModel at given date with hasPeriodicAthleteSettings 'true' (1)", (done: Function) => {
+	it("should resolve AthleteModel at given date (as Date object) with hasPeriodicAthleteSettings 'true'", (done: Function) => {
+
+		// Given
+		const onDate = new Date("2018-04-29");
+		userSettingsModel.hasPeriodicAthleteSettings = true;
+
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			expectedPeriodicAthleteSettingsModel,
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+		];
+
+		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'true' (1)", (done: Function) => {
 
 		// Given
 		const onDate = "2018-04-29";
@@ -124,7 +150,7 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
-	it("should resolve AthleteModel at given date with hasPeriodicAthleteSettings 'true' (2)", (done: Function) => {
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'true' (2)", (done: Function) => {
 
 		// Given
 		const onDate = "2018-04-15";
@@ -150,7 +176,7 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
-	it("should resolve AthleteModel at given date with hasPeriodicAthleteSettings 'true' (3)", (done: Function) => {
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'true' (3)", (done: Function) => {
 
 		// Given
 		const onDate = "2018-01-15";
@@ -176,11 +202,11 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
-	it("should resolve AthleteModel at given date with hasPeriodicAthleteSettings 'false'", (done: Function) => {
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'false'", (done: Function) => {
 
 		// Given
 		const onDate = "2018-01-15";
-		userSettingsModel.hasPeriodicAthleteSettings = true;
+		userSettingsModel.hasPeriodicAthleteSettings = false;
 
 		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
@@ -190,11 +216,35 @@ describe("AthleteModelResolverService", () => {
 			expectedPeriodicAthleteSettingsModel
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = userSettings.athleteModel;
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
 
 		// When
 		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve current and latest AthleteModel with hasPeriodicAthleteSettings 'true'", (done: Function) => {
+
+		// Given
+		userSettingsModel.hasPeriodicAthleteSettings = true;
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75));
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
+			expectedPeriodicAthleteSettingsModel,
+			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+		];
+
+		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.getCurrent();
 
 		// Then
 		expect(athleteModel).toEqual(expectedAthleteModel);
