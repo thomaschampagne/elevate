@@ -32,5 +32,5 @@
 						   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
 
 <!--Periodic Athlete Settings manager component-->
-<app-periodic-athlete-settings-manager
-	*ngIf="(hasPeriodicAthleteSettings === true)"></app-periodic-athlete-settings-manager>
+<app-periodic-athlete-settings-manager *ngIf="(hasPeriodicAthleteSettings === true)"
+									   (periodicAthleteSettingsModelsChange)="onPeriodicAthleteSettingsModelsChanged()"></app-periodic-athlete-settings-manager>

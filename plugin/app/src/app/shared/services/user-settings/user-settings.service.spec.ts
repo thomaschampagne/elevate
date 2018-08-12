@@ -158,15 +158,12 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseClearLS: Promise<UserSettingsModel> = userSettingsService.markLocalStorageClear();
+		const promiseClearLS: Promise<void> = userSettingsService.clearLocalStorageOnNextLoad();
 
 		// Then
-		promiseClearLS.then((result: UserSettingsModel) => {
-
-			expect(result.localStorageMustBeCleared).toEqual(true);
+		promiseClearLS.then(() => {
 			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 			expect(updateDaoSpy).toHaveBeenCalledWith(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
-
 			done();
 
 		}, error => {

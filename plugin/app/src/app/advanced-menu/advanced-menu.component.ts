@@ -65,7 +65,7 @@ export class AdvancedMenuComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
 				localStorage.clear();
-				this.userSettingsService.markLocalStorageClear().then(() => {
+				this.userSettingsService.clearLocalStorageOnNextLoad().then(() => {
 					this.snackBar.open("Plugin cache has been cleared", "Reload App").afterDismissed().toPromise().then(() => {
 						location.reload();
 					});

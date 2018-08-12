@@ -9,10 +9,11 @@ import { AthleteModel } from "../../../../../shared/models/athlete.model";
 // To be defined:
 // TODO append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
 // TODO append athleteModel on SyncedActivityModel in migration script?
+// TODO Detect athleteModels mismatchs between local synced activities and athleteModels resolved on fly by AthleteModelResolverService?
 
 // To be done:
-// TODO Mark localstorage to be cleared when switch classic/periodic athlete settings
-// TODO Mark localstorage to be cleared when classic or periodic athlete settings have changed
+// DONE Mark localstorage to be cleared when switch classic/periodic athlete settings
+// DONE Mark localstorage to be cleared when classic or periodic athlete settings have changed
 // TODO Warn user to redo a "activities sync" when classic or periodic athlete settings have changed
 // TODO Use AthletePeriodSettingsService only in FitnessTrendComponent (no more UserSettingsService). The resolved "PeriodicAthleteSettings" will be handled by AthletePeriodicSettingsManager (including AthletePeriodicSettings revolving along UserSettingsModel.enableAthletePeriodicSettings on/off)
 // TODO Export periodicAthleteSettings inside backups sync.
@@ -62,22 +63,28 @@ export class AthleteSettingsComponent implements OnInit {
 		this.onAthleteModelChanged();
 	}
 
+	public onPeriodicAthleteSettingsModelsChanged(): void {
+		this.clearLocalStorageOnNextLoad();
+	}
+
+	public clearLocalStorageOnNextLoad(): void {
+		this.userSettingsService.clearLocalStorageOnNextLoad().catch((error) => console.error(error));
+	}
+
 	/**
 	 * Clear local storage for athlete settings (periodic included) change
 	 */
 	public onAthleteModelChanged(): void {
 		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
-			this.userSettingsService.markLocalStorageClear();
-		}).catch((error) => {
-			console.error(error);
-		});
+			this.clearLocalStorageOnNextLoad();
+		}).catch((error) => console.error(error));
 	}
 
 	public onHasPeriodicAthleteSettingsChange(): void {
 		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_HAS_PERIODIC_ATHLETE_SETTINGS_KEY, this.hasPeriodicAthleteSettings).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
-			this.userSettingsService.markLocalStorageClear();
+			this.clearLocalStorageOnNextLoad();
 		}).catch((error) => {
 			console.error(error);
 		});
