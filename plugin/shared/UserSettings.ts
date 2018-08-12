@@ -1,5 +1,4 @@
 import { UserSettingsModel } from "./models/user-settings/user-settings.model";
-import { Gender } from "../app/src/app/shared/enums/gender.enum";
 import { AthleteModel } from "./models/athlete.model";
 
 export const userSettings: UserSettingsModel = { // TODO rename file as user-settings.model and move in models
@@ -7,18 +6,6 @@ export const userSettings: UserSettingsModel = { // TODO rename file as user-set
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 	hasPeriodicAthleteSettings: false,
 	athleteModel: AthleteModel.DEFAULT_MODEL,
-	userGender: Gender.MEN, // TODO Remove
-	userMaxHr: 190, // TODO Remove
-	userRestHr: 65, // TODO Remove
-	userLTHR: {
-		default: null, // TODO Remove
-		cycling: null, // TODO Remove
-		running: null// TODO Remove
-	},
-	userFTP: null, // TODO Remove
-	userRunningFTP: null, // TODO Remove
-	userSwimFTP: null, // TODO Remove
-	userWeight: 70, // TODO Remove
 	zones: {
 		speed: [{from: 0, to: 7}, {from: 7, to: 9}, {from: 9, to: 11}, {from: 11, to: 13}, {
 			from: 13,

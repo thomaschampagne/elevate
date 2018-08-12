@@ -1,6 +1,6 @@
-import { UserLactateThresholdModel } from "./user-lactate-threshold.model";
 import { UserZonesModel } from "./user-zones.model";
 import { AthleteModel } from "../athlete.model";
+import { UserLactateThresholdModel } from "./user-lactate-threshold.model";
 
 export class UserSettingsModel {
 
@@ -9,18 +9,19 @@ export class UserSettingsModel {
 
 	public localStorageMustBeCleared: boolean;
 	public systemUnit: string;
-
 	public hasPeriodicAthleteSettings: boolean;
 	public athleteModel?: AthleteModel; // TODO edit -> remove -> '?'
 
-	public userGender: string; // TODO Remove
-	public userMaxHr: number; // TODO To be removed:
-	public userRestHr: number; // TODO To be removed:
-	public userLTHR: UserLactateThresholdModel; // TODO To be removed:
-	public userFTP: number; // TODO To be removed:
-	public userRunningFTP: number; // TODO To be removed:
-	public userSwimFTP: number; // TODO To be removed:
-	public userWeight: number; // TODO To be removed:
+	// TODO START - Deprecated to remove
+	public userGender?: string; // TODO Remove
+	public userMaxHr?: number; // TODO To be removed:
+	public userRestHr?: number; // TODO To be removed:
+	public userLTHR?: UserLactateThresholdModel; // TODO To be removed:
+	public userFTP?: number; // TODO To be removed:
+	public userRunningFTP?: number; // TODO To be removed:
+	public userSwimFTP?: number; // TODO To be removed:
+	public userWeight?: number; // TODO To be removed:
+	// TODO END - Deprecated to remove
 
 	public zones: UserZonesModel;
 	public targetsYearRide: number;

@@ -105,31 +105,6 @@
 					}
 				}
 			}
-		},
-		"app-e2e": {
-			"root": "",
-			"sourceRoot": "",
-			"projectType": "application",
-			"architect": {
-				"e2e": {
-					"builder": "@angular-devkit/build-angular:protractor",
-					"options": {
-						"protractorConfig": "./protractor.conf.js",
-						"devServerTarget": "app:serve"
-					}
-				},
-				"lint": {
-					"builder": "@angular-devkit/build-angular:tslint",
-					"options": {
-						"tsConfig": [
-							"e2e/tsconfig.e2e.json"
-						],
-						"exclude": [
-							"**/node_modules/**"
-						]
-					}
-				}
-			}
 		}
 	},
 	"defaultProject": "app",

@@ -252,6 +252,27 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
+	it("should resolve a default AthleteModel when no PeriodicAthleteSettings found", (done: Function) => {
+
+		// Given
+		const onDate = new Date("2018-04-29");
+		userSettingsModel.hasPeriodicAthleteSettings = true;
+		const expectedAthleteModel = userSettingsModel.athleteModel;
+
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [];
+
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).not.toBeNull();
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
 	it("should not resolve AthleteModel when athleteModelResolver not ready.", (done: Function) => {
 
 		// Given

@@ -4,6 +4,9 @@ import { ActivityStreamsModel } from "../../../../shared/models/activity-data/ac
 import { ActivityStatsMapModel } from "../../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityComputer } from "../../../scripts/processors/ActivityComputer";
 import { StreamVariationSplit } from "../../../scripts/models/stream-variation-split.model";
+import { AthleteModel } from "../../../../shared/models/athlete.model";
+import { Gender } from "../../../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("ActivityComputer", () => {
 
@@ -49,11 +52,12 @@ describe("ActivityComputer", () => {
 		const userSettingsMock: UserSettingsModel = require("../../fixtures/userSettings/2470979.json");
 		const stream: ActivityStreamsModel = require("../../fixtures/activities/723224273/stream.json");
 		const statsMap: ActivityStatsMapModel = require("../../fixtures/activities/723224273/statsMap.json");
+		const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		const isActivityAuthor = true;
-		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteModel,
 			isActivityAuthor, powerMeter, statsMap, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();

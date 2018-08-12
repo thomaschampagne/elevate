@@ -6,8 +6,19 @@ import { StravaActivityModel } from "../../../shared/models/sync/strava-activity
 import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
+import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
+import { userSettings } from "../../../shared/UserSettings";
 
 describe("ActivitiesSynchronizer", () => {
+
+	let userSettingsMock: UserSettingsModel;
+	let athleteModelResolver: AthleteModelResolver;
+
+	beforeEach((done: Function) => {
+		userSettingsMock = _.cloneDeep(userSettings);
+		athleteModelResolver = new AthleteModelResolver(userSettingsMock, []);
+		done();
+	});
 
 	it("should remove activity from array properly ", (done: Function) => {
 
@@ -54,7 +65,6 @@ describe("ActivitiesSynchronizer", () => {
 		rawPageOfActivities = editActivityFromArray(708752345, rawPageOfActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
 
 		// Now find+test changes
-		// let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
 
 		expect(changes).not.toBeNull();
@@ -85,9 +95,8 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should append activities of pages where activities added, modified and deleted ", (done: Function) => {
 
-		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
 		const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
-		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
 
 		// Append
 		activitiesSynchronizer.appendGlobalActivitiesChanges({

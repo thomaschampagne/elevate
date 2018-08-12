@@ -39,7 +39,9 @@ export class AthleteModelResolver {
 
 			// Find the local AthleteModel for the given date
 			const periodicAthleteSettingsModel: PeriodicAthleteSettingsModel = this.resolvePeriodicAthleteSettingsAtDate(onDateString);
-			athleteModel = new AthleteModel(gender, periodicAthleteSettingsModel.toAthleteSettingsModel());
+
+			// If periodicAthleteSettingsModel found use it, instead use 'classic' AthleteSettingsModel
+			athleteModel = (periodicAthleteSettingsModel) ? new AthleteModel(gender, periodicAthleteSettingsModel.toAthleteSettingsModel()) : this.userSettingsModel.athleteModel;
 
 		} else {
 			athleteModel = this.userSettingsModel.athleteModel; // Use default synced AthleteModel
@@ -57,10 +59,11 @@ export class AthleteModelResolver {
 		const onDateTime: number = new Date(onDate).getTime();
 
 		const periodicAthleteSettingsModel: PeriodicAthleteSettingsModel = _.find(this.periodicAthleteSettingsModels, (periodicAthleteSettings: PeriodicAthleteSettingsModel) => {
-			return onDateTime >= new Date(periodicAthleteSettings.from).getTime();
+			const fromDate = (periodicAthleteSettings.from) ? new Date(periodicAthleteSettings.from) : new Date(0);
+			return onDateTime >= fromDate.getTime();
 		});
 
-		return (periodicAthleteSettingsModel) ? periodicAthleteSettingsModel : null;
+		return (periodicAthleteSettingsModel) ? PeriodicAthleteSettingsModel.asInstance(periodicAthleteSettingsModel) : null;
 	}
 
 
