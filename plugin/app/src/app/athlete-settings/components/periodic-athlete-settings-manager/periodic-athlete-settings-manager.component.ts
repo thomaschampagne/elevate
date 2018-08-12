@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
 import { PeriodicAthleteSettingsService } from "../../../shared/services/periodic-athlete-settings/periodic-athlete-settings.service";
@@ -52,6 +52,9 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 	public dataSource: MatTableDataSource<PeriodicAthleteSettingsTableModel>;
 
+	@Output("periodicAthleteSettingsModelsChange")
+	public periodicAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
+
 	constructor(public athletePeriodicSettingsService: PeriodicAthleteSettingsService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
@@ -94,6 +97,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 			if (periodicAthleteSettingsModel) {
 				this.athletePeriodicSettingsService.add(periodicAthleteSettingsModel).then(() => {
+					this.periodicAthleteSettingsModelsChange.emit();
 					this.updateTable();
 				}, error => {
 					this.handleErrors(error);
@@ -122,6 +126,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 			if (periodicAthleteSettingsModel) {
 				this.athletePeriodicSettingsService.edit(fromIdentifier, periodicAthleteSettingsModel).then(() => {
+					this.periodicAthleteSettingsModelsChange.emit();
 					this.updateTable();
 				}, error => {
 					this.handleErrors(error);
@@ -144,16 +149,14 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
 				this.athletePeriodicSettingsService.remove(fromIdentifier).then(() => {
-					afterClosedSubscription.unsubscribe();
+					this.periodicAthleteSettingsModelsChange.emit();
 					this.updateTable();
-
 				}, error => {
 					this.handleErrors(error);
 				});
 
-			} else {
-				afterClosedSubscription.unsubscribe();
 			}
+			afterClosedSubscription.unsubscribe();
 		});
 	}
 

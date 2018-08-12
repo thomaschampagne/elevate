@@ -657,7 +657,7 @@ describe("ZonesService", () => {
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(zoneModels));
 
-		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
 		// When
 		const promiseSave: Promise<void> = zonesService.saveZones();
@@ -687,7 +687,7 @@ describe("ZonesService", () => {
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(true));
 
-		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
 		// When
 		const promiseSave: Promise<void> = zonesService.saveZones();
@@ -718,7 +718,7 @@ describe("ZonesService", () => {
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.reject(fakeError));
 
-		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear");
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
 		// When
 		const promiseSave: Promise<void> = zonesService.saveZones();
@@ -742,16 +742,16 @@ describe("ZonesService", () => {
 
 	});
 
-	it("should not save zones on markLocalStorageClear rejection", (done: Function) => {
+	it("should not save zones on clearLocalStorageOnNextLoad rejection", (done: Function) => {
 
 		// Given
-		const fakeError = "markLocalStorageClear Error!";
+		const fakeError = "clearLocalStorageOnNextLoad Error!";
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
 		const zoneModels: ZoneModel[] = [{from: 0, to: 110}, {from: 110, to: 210}];
 		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
 			.and.returnValue(Promise.resolve(zoneModels));
 
-		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "markLocalStorageClear")
+		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad")
 			.and.returnValue(Promise.reject(fakeError));
 
 		// When
