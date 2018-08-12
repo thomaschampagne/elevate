@@ -11,6 +11,7 @@ import { HeartRateDataView } from "./views/HeartRateDataView";
 import { ActivityBasicInfoModel } from "../../../../shared/models/activity-data/activity-basic-info.model";
 import { SpeedUnitDataModel } from "../../../../shared/models/activity-data/speed-unit-data.model";
 import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
+import { AthleteModel } from "../../../../shared/models/athlete.model";
 
 export abstract class AbstractExtendedDataModifier {
 
@@ -23,6 +24,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected supportsGap: boolean;
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
+	protected athleteModel: AthleteModel;
 	protected basicInfo: ActivityBasicInfoModel;
 	protected isAuthorOfViewedActivity: boolean;
 	protected speedUnitsData: SpeedUnitDataModel;
@@ -33,12 +35,11 @@ export abstract class AbstractExtendedDataModifier {
 	protected content: string;
 	protected dataViews: AbstractDataView[] = [];
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean, appResources: AppResourcesModel,
-				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
+	protected constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
+						  userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
 
 		this.activityProcessor = activityProcessor;
 		this.activityId = activityId;
-		this.activityType = activityType;
 		this.supportsGap = supportsGap;
 		this.appResources = appResources;
 		this.userSettings = userSettings;
@@ -51,14 +52,13 @@ export abstract class AbstractExtendedDataModifier {
 			console.error("ExtendedDataModifier must be set");
 		}
 
-		this.activityProcessor.setActivityType(activityType);
-
 		// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
 		this.activityProcessor.getAnalysisData(
 			this.activityId,
 			null, // No bounds given, full activity requested
-			(analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+			(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
+				this.athleteModel = athleteModel;
 				this.analysisData = analysisData;
 
 				if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
@@ -171,12 +171,15 @@ export abstract class AbstractExtendedDataModifier {
 
 			$("#extendedStatsButton").click(() => {
 
-				this.activityProcessor.setActivityType(this.activityType);
-
 				this.activityProcessor.getAnalysisData(
 					this.activityId,
 					null, // No bounds given, full activity requested
-					(analysisData: any) => { // Callback when analysis data has been computed
+					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+
+						if (!this.athleteModel) {
+							this.athleteModel = athleteModel;
+						}
+
 						this.analysisData = analysisData;
 						this.renderViews();
 						this.showResultsAndRefreshGraphs();
@@ -209,7 +212,12 @@ export abstract class AbstractExtendedDataModifier {
 				this.activityProcessor.getAnalysisData(
 					this.activityId,
 					[segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
-					(analysisData: any) => { // Callback when analysis data has been computed
+					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+
+						if (!this.athleteModel) {
+							this.athleteModel = athleteModel;
+						}
+
 						this.analysisData = analysisData;
 						this.renderViews();
 						this.showResultsAndRefreshGraphs();
@@ -318,7 +326,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		// Heart view
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.userSettings);
+			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteModel);
 			heartRateDataView.setAppResources(this.appResources);
 			heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
 			heartRateDataView.setActivityType(this.activityType);

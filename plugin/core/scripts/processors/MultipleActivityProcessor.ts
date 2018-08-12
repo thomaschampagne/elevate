@@ -8,6 +8,7 @@ import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
+import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 
@@ -15,10 +16,12 @@ export class MultipleActivityProcessor {
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
+	protected athleteModelResolver: AthleteModelResolver;
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
+		this.athleteModelResolver = athleteModelResolver;
 	}
 
 	public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
@@ -38,6 +41,9 @@ export class MultipleActivityProcessor {
 
 			return promise.then(() => {
 
+				// Find athlete model to compute with activity
+				activityWithStream.athleteModel = this.athleteModelResolver.resolve(new Date(activityWithStream.start_time));
+
 				return this.computeActivity(activityWithStream).then((activityComputed: AnalysisDataModel) => {
 
 					activitiesComputedResults.push(activityComputed);
@@ -45,7 +51,7 @@ export class MultipleActivityProcessor {
 					const notify: SyncNotifyModel = {
 						step: "syncedActivitiesPercentage",
 						progress: syncedActivitiesPercentageCount / activitiesWithStream.length * 100,
-						index,
+						index: index,
 						activityId: activityWithStream.id,
 					};
 
@@ -75,6 +81,7 @@ export class MultipleActivityProcessor {
 
 					const activityComputed: SyncedActivityModel = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as SyncedActivityModel;
 					activityComputed.extendedStats = computedResult;
+					activityComputed.athleteModel = activitiesWithStream[index].athleteModel;
 					activitiesComputed.push(activityComputed);
 
 				});
@@ -135,7 +142,7 @@ export class MultipleActivityProcessor {
 			appResources: this.appResources,
 			userSettings: this.userSettings,
 			isActivityAuthor: true, // While syncing and processing activities, stravistix user is always author of the activity
-			athleteWeight: this.userSettings.userWeight,
+			athleteModel: activityWithStream.athleteModel,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
 			activityStatsMap: activityStatsMap,
 			activityStream: activityWithStream.stream,

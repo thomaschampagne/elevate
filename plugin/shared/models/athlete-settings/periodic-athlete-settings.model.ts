@@ -11,6 +11,19 @@ export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 		AthleteSettingsModel.DEFAULT_MODEL
 	);
 
+	public static asInstance(periodicAthleteSettingsModel: PeriodicAthleteSettingsModel): PeriodicAthleteSettingsModel {
+		return new PeriodicAthleteSettingsModel(periodicAthleteSettingsModel.from,
+			new AthleteSettingsModel(
+				periodicAthleteSettingsModel.maxHr,
+				periodicAthleteSettingsModel.restHr,
+				periodicAthleteSettingsModel.lthr,
+				periodicAthleteSettingsModel.cyclingFtp,
+				periodicAthleteSettingsModel.runningFtp,
+				periodicAthleteSettingsModel.swimFtp,
+				periodicAthleteSettingsModel.weight
+			));
+	}
+
 	/**
 	 * Start period date. A null value means from "forever"
 	 */

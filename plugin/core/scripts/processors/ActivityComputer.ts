@@ -2,7 +2,6 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 import { SplitCalculator } from "./SplitCalculator";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { UserLactateThresholdModel } from "../../../shared/models/user-settings/user-lactate-threshold.model";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
@@ -22,6 +21,9 @@ import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/
 import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
 import { LowPassFilter } from "../utils/LowPassFilter";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
+import { AthleteModel } from "../../../shared/models/athlete.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { Gender } from "../../../app/src/app/shared/enums/gender.enum";
 
 export class ActivityComputer {
 
@@ -38,11 +40,11 @@ export class ActivityComputer {
 	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
 	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
 
+	protected athleteModel: AthleteModel;
 	protected activityType: string;
 	protected isTrainer: boolean;
 	protected userSettings: UserSettingsModel;
 	protected movementData: MoveDataModel;
-	protected athleteWeight: number;
 	protected isActivityAuthor: boolean;
 	protected hasPowerMeter: boolean;
 	protected activityStatsMap: ActivityStatsMapModel;
@@ -50,18 +52,22 @@ export class ActivityComputer {
 	protected bounds: number[];
 	protected returnZones: boolean;
 
-	constructor(activityType: string, isTrainer: boolean, userSettings: UserSettingsModel, athleteWeight: number,
+	constructor(activityType: string,
+				isTrainer: boolean,
+				userSettings: UserSettingsModel,
+				athleteModel: AthleteModel,
 				isActivityAuthor: boolean,
 				hasPowerMeter: boolean,
 				activityStatsMap: ActivityStatsMapModel,
 				activityStream: ActivityStreamsModel,
-				bounds: number[], returnZones: boolean) {
+				bounds: number[],
+				returnZones: boolean) {
 
 		// Store activityType, isTrainer, input activity params and userSettings
 		this.activityType = activityType;
 		this.isTrainer = isTrainer;
 		this.userSettings = userSettings;
-		this.athleteWeight = athleteWeight;
+		this.athleteModel = athleteModel;
 		this.isActivityAuthor = isActivityAuthor;
 		this.hasPowerMeter = hasPowerMeter;
 		this.activityStatsMap = activityStatsMap;
@@ -123,9 +129,7 @@ export class ActivityComputer {
 		// It's mainly used for segment effort extended stats
 		this.sliceStreamFromBounds(this.activityStream, this.bounds);
 
-		return this.computeAnalysisData(this.userSettings.userGender, this.userSettings.userRestHr, this.userSettings.userMaxHr,
-			this.userSettings.userLTHR, this.userSettings.userFTP, this.athleteWeight, this.hasPowerMeter,
-			this.activityStatsMap, this.activityStream);
+		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
 	}
 
 	protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
@@ -188,8 +192,7 @@ export class ActivityComputer {
 	}
 
 
-	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel,
-								  userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
+	protected computeAnalysisData(athleteModel: AthleteModel, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
@@ -224,14 +227,11 @@ export class ActivityComputer {
 			&& !this.hasPowerMeter
 			&& this.isActivityAuthor) {
 
-			// Override athlete weight given in settings for the author watching his run
-			athleteWeight = this.userSettings.userWeight;
-
-			powerData = this.estimatedRunningPower(activityStream, athleteWeight, hasPowerMeter, userFTP);
+			powerData = this.estimatedRunningPower(activityStream, athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp);
 
 		} else {
 
-			powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp, activityStream.watts, activityStream.velocity_smooth,
 				activityStream.time);
 
 		}
@@ -242,7 +242,7 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, userLactateThresholdModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
+		const heartRateData: HeartRateDataModel = this.heartRateData(athleteModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
@@ -484,8 +484,8 @@ export class ActivityComputer {
 
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
 
-		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.userSettings.userRunningFTP)
-			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
+		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
+			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
@@ -532,9 +532,9 @@ export class ActivityComputer {
 	 * @param {number} activityTrainingImpulse
 	 * @returns {number}
 	 */
-	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
+	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
 		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
-		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
+		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
 		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
 		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
 	}
@@ -748,8 +748,8 @@ export class ActivityComputer {
 		return powerData;
 	}
 
-	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel, heartRateArray: number[],
-							timeArray: number[], velocityArray: number[]): HeartRateDataModel {
+	protected heartRateData(athleteModel: AthleteModel, heartRateArray: number[], timeArray: number[],
+							velocityArray: number[]): HeartRateDataModel {
 
 		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -758,7 +758,7 @@ export class ActivityComputer {
 		this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
 
 		let trainingImpulse = 0;
-		const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
+		const TRIMPGenderFactor: number = (athleteModel.gender === Gender.MEN) ? 1.92 : 1.67;
 		let hrrSecondsCount = 0;
 		let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number,
 			zoneId: number;
@@ -785,7 +785,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
@@ -805,8 +805,11 @@ export class ActivityComputer {
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, userMaxHr, userRestHr, userLactateThresholdModel);
-		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLthrAlongActivityType, trainingImpulse);
+		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, athleteModel.athleteSettings.maxHr,
+			athleteModel.athleteSettings.restHr, athleteModel.athleteSettings.lthr);
+
+		const heartRateStressScore = this.computeHeartRateStressScore(athleteModel.gender, athleteModel.athleteSettings.maxHr,
+			athleteModel.athleteSettings.restHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
 
 		const averageHeartRate: number = hrSum / hrrSecondsCount;
@@ -832,8 +835,8 @@ export class ActivityComputer {
 			upperQuartileHeartRate: percentiles[2],
 			averageHeartRate: averageHeartRate,
 			maxHeartRate: maxHeartRate,
-			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
-			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
+			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr) * 100,
+			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr) * 100,
 		};
 	}
 

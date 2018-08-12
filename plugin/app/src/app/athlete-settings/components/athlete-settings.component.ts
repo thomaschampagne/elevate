@@ -6,10 +6,19 @@ import { GenderModel } from "../models/gender.model";
 import { AthleteSettingsModel } from "../../../../../shared/models/athlete-settings/athlete-settings.model";
 import { AthleteModel } from "../../../../../shared/models/athlete.model";
 
+// To be defined:
+// TODO append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
+// TODO append athleteModel on SyncedActivityModel in migration script?
+
+// To be done:
+// TODO Mark localstorage to be cleared when switch classic/periodic athlete settings
+// TODO Mark localstorage to be cleared when classic or periodic athlete settings have changed
+// TODO Warn user to redo a "activities sync" when classic or periodic athlete settings have changed
 // TODO Use AthletePeriodSettingsService only in FitnessTrendComponent (no more UserSettingsService). The resolved "PeriodicAthleteSettings" will be handled by AthletePeriodicSettingsManager (including AthletePeriodicSettings revolving along UserSettingsModel.enableAthletePeriodicSettings on/off)
-// TODO App athlete settings messages
-// TODO Also export local saved AthleteModel (with periodicSettingsModels) in a sync backup?
-// TODO Warn user to redo a "activities sync" when changing the periodicSettingsModels.
+// TODO Export periodicAthleteSettings inside backups sync.
+// TODO DO NOT CLEAN periodicAthleteSettings when sync clean.
+// TODO Show athleteModel used on strava activities
+// TODO Show athleteModel used in fitness trend tooltips
 
 @Component({
 	selector: "app-athlete-settings",

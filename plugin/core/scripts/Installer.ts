@@ -251,13 +251,7 @@ class Installer {
 				if (athleteModel) {
 					const periodicAthleteSettings = new PeriodicAthleteSettingsModel(
 						null, // From forever
-						athleteModel.athleteSettings.maxHr,
-						athleteModel.athleteSettings.restHr,
-						athleteModel.athleteSettings.lthr,
-						athleteModel.athleteSettings.cyclingFtp,
-						athleteModel.athleteSettings.runningFtp,
-						athleteModel.athleteSettings.swimFtp,
-						athleteModel.athleteSettings.weight);
+						athleteModel.athleteSettings);
 
 					return this.set(BrowserStorage.LOCAL, "periodicAthleteSettings", [periodicAthleteSettings]);
 				} else {
