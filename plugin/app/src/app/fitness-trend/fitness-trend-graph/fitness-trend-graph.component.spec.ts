@@ -16,8 +16,6 @@ import * as _ from "lodash";
 import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
-import { Gender } from "../../shared/enums/gender.enum";
-import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -85,21 +83,7 @@ describe("FitnessTrendGraphComponent", () => {
 		const powerMeterEnable = true;
 		const swimEnable = true;
 
-		const fitnessUserSettingsModel: FitnessUserSettingsModel = {
-			userGender: Gender.MEN,
-			userMaxHr: 190,
-			userRestHr: 60,
-			userLactateThreshold: {
-				default: 163,
-				cycling: null,
-				running: null
-			},
-			cyclingFtp: 150,
-			runningFtp: null,
-			swimFtp: 31,
-		};
-
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel, fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessTrendConfigModel, powerMeterEnable, swimEnable);
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 			FITNESS_TREND = fitnessTrend;
 			done();

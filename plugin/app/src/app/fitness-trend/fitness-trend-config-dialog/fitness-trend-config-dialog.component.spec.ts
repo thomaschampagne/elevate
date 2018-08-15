@@ -18,8 +18,6 @@ describe("FitnessTrendConfigDialogComponent", () => {
 		fitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
 			lastFitnessActiveDate: new Date(),
-			hasCyclingFtp: true,
-			hasRunningFtp: true,
 			isPowerMeterEnabled: true,
 			expandEstimatedStressScorePanel: false
 		};
