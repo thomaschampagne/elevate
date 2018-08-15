@@ -1,8 +1,8 @@
-<mat-card *ngIf="!isProgressionInitialized && hasActivityModels !== false">
-	<mat-card-content>
-		<mat-progress-bar mode="buffer"></mat-progress-bar>
-	</mat-card-content>
-</mat-card>
+<!--Loading-->
+<div *ngIf="(!isProgressionInitialized && hasActivityModels !== false)">
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
 
 <mat-card *ngIf="hasActivityModels === false" class="no-data">
 	<mat-card-title>
