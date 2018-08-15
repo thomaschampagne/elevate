@@ -147,12 +147,6 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("isSwimEnabled")
 	public isSwimEnabled;
 
-	@Input("hasCyclingFtp")
-	public hasCyclingFtp: boolean;
-
-	@Input("hasRunningFtp")
-	public hasRunningFtp: boolean;
-
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
@@ -177,7 +171,6 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.hasRunningFtp)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)

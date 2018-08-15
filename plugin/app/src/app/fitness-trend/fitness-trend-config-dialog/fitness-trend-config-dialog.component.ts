@@ -47,12 +47,10 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 
 	public updateEstimatedStressScoresToggles(): void {
 
-		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasCyclingFtp
-			&& this.fitnessTrendConfigDialogData.isPowerMeterEnabled
+		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.isPowerMeterEnabled
 			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
-		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasRunningFtp
-			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
 	}
 
