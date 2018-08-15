@@ -5,7 +5,8 @@ export class AppError {
 	// List of errors that must to be registered in below method
 	public static readonly SYNC_NOT_SYNCED: string = "SYNC_1";
 	public static readonly FT_NO_ACTIVITIES: string = "FT_1";
-	public static readonly FT_ALL_ACTIVITIES_FILTERED: string = "FT_2";
+	public static readonly FT_NO_ACTIVITY_ATHLETE_MODEL: string = "FT_2";
+	public static readonly FT_ALL_ACTIVITIES_FILTERED: string = "FT_3";
 	public static readonly PERIODIC_ATHLETE_SETTINGS_EXISTS: string = "PAS_1";
 	public static readonly PERIODIC_ATHLETE_SETTINGS_DO_NOT_EXISTS: string = "PAS_2";
 	public static readonly PERIODIC_ATHLETE_SETTINGS_FOREVER_MUST_EXISTS: string = "PAS_3";
@@ -15,6 +16,7 @@ export class AppError {
 	public registerCodes(): void {
 		this._codes.push(AppError.SYNC_NOT_SYNCED);
 		this._codes.push(AppError.FT_NO_ACTIVITIES);
+		this._codes.push(AppError.FT_NO_ACTIVITY_ATHLETE_MODEL);
 		this._codes.push(AppError.FT_ALL_ACTIVITIES_FILTERED);
 		this._codes.push(AppError.PERIODIC_ATHLETE_SETTINGS_EXISTS);
 		this._codes.push(AppError.PERIODIC_ATHLETE_SETTINGS_DO_NOT_EXISTS);
