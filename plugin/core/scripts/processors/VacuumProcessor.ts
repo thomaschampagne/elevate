@@ -137,8 +137,8 @@ export class VacuumProcessor {
 	protected getActivityStatsMap(): ActivityStatsMapModel {
 
 		// Create activityData Map
-		const movingTime = window.pageView.activity().get('moving_time');
-		const elevGain = window.pageView.activity().get('elev_gain');
+		const movingTime = window.pageView.activity().get("moving_time");
+		const elevGain = window.pageView.activity().get("elev_gain");
 
 		const activityCommonStats: ActivityStatsMapModel = {
 			movingTime: (movingTime) ? movingTime : null,

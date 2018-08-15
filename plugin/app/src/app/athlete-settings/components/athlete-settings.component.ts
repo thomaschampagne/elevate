@@ -7,11 +7,14 @@ import { AthleteSettingsModel } from "../../../../../shared/models/athlete-setti
 import { AthleteModel } from "../../../../../shared/models/athlete.model";
 
 // To be defined:
-// TODO append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
-// TODO append athleteModel on SyncedActivityModel in migration script?
+// DONE append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
+// SKIP append athleteModel on SyncedActivityModel in migration script?
 // TODO Detect athleteModels mismatchs between local synced activities and athleteModels resolved on fly by AthleteModelResolverService?
+// TODO computeSwimStressScore from AcitvityComputer and not from FitnessService to keep coherencie with pSS, RSS, HRSS?
 
 // To be done:
+// TODO Highlight periodic settings toggle
+// TODO Give a helper guide to find periodic settings (how to?)
 // DONE Mark localstorage to be cleared when switch classic/periodic athlete settings
 // DONE Mark localstorage to be cleared when classic or periodic athlete settings have changed
 // TODO Warn user to redo a "activities sync" when classic or periodic athlete settings have changed
@@ -19,7 +22,10 @@ import { AthleteModel } from "../../../../../shared/models/athlete.model";
 // TODO Export periodicAthleteSettings inside backups sync.
 // TODO DO NOT CLEAN periodicAthleteSettings when sync clean.
 // TODO Show athleteModel used on strava activities
-// TODO Show athleteModel used in fitness trend tooltips
+// TODO Show athleteModel used in fitness trend tooltips + FT table
+// TODO What happen in fitness trend if user has no PSS and HRSS scores in his Synced History? Case of history build before "HRSS" user story
+// TODO Move FitnessService "compute stress scores" specs to ActivityComputer core specs
+
 
 @Component({
 	selector: "app-athlete-settings",
