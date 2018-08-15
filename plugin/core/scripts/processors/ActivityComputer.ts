@@ -2,7 +2,6 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 import { SplitCalculator } from "./SplitCalculator";
-import { UserLactateThresholdModel } from "../../../shared/models/user-settings/user-lactate-threshold.model";
 import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
 import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
@@ -24,6 +23,7 @@ import { StreamVariationSplit } from "../models/stream-variation-split.model";
 import { AthleteModel } from "../../../shared/models/athlete.model";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { Gender } from "../../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
 
 export class ActivityComputer {
 
@@ -115,6 +115,88 @@ export class ActivityComputer {
 
 		return streamVariations;
 	}
+
+	/**
+	 * Compute Heart Rate Stress Score (HRSS)
+	 * @param {string} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} lactateThreshold
+	 * @param {number} activityTrainingImpulse
+	 * @returns {number}
+	 */
+	public static computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
+		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 *
+	 * @param {boolean} hasPowerMeter
+	 * @param {number} movingTime
+	 * @param {number} weightedPower
+	 * @param {number} bestEightyPercentPower
+	 * @param {number} cyclingFtp
+	 * @returns {number}
+	 */
+	public static computePowerStressScore(hasPowerMeter: boolean, movingTime: number, weightedPower: number,
+										  bestEightyPercentPower: number, cyclingFtp: number): number {
+
+		if (!_.isNumber(cyclingFtp) || cyclingFtp <= 0) {
+			return null;
+		}
+
+		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercentPower);
+		const intensity = (weightedPower / cyclingFtp);
+		return (movingTime * pssWeightedPowerUsed * intensity) / (cyclingFtp * 3600) * 100;
+	}
+
+	/**
+	 * @param {number} movingTime
+	 * @param {number} gradeAdjustedAvgPace in s/km
+	 * @param {number} runningThresholdPace
+	 * @returns {number}
+	 */
+	public static computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
+		// Convert pace to speed (km/s)
+		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
+		const runningThresholdSpeed = 1 / runningThresholdPace;
+		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
+		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
+	}
+
+	/**
+	 *
+	 * @param activityType
+	 * @param athleteSettingsModel
+	 */
+	public static resolveLTHR(activityType: string, athleteSettingsModel: AthleteSettingsModel): number {
+
+		if (athleteSettingsModel.lthr) {
+			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+				if (_.isNumber(athleteSettingsModel.lthr.cycling)) {
+					return athleteSettingsModel.lthr.cycling;
+				}
+			}
+
+			if (activityType === "Run") {
+				if (_.isNumber(athleteSettingsModel.lthr.running)) {
+					return athleteSettingsModel.lthr.running;
+				}
+			}
+
+			if (_.isNumber(athleteSettingsModel.lthr.default)) {
+				return athleteSettingsModel.lthr.default;
+			}
+		}
+
+		return athleteSettingsModel.restHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR
+			* (athleteSettingsModel.maxHr - athleteSettingsModel.restHr);
+
+	}
+
 
 	public compute(): AnalysisDataModel {
 
@@ -485,7 +567,7 @@ export class ActivityComputer {
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
 
 		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
-			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
+			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
@@ -522,69 +604,6 @@ export class ActivityComputer {
 		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
 	}
 
-	/**
-	 * TODO Duplicated code of FitnessService.computeHeartRateStressScore. To be refactored
-	 * Compute Heart Rate Stress Score (HRSS)
-	 * @param {string} userGender
-	 * @param {number} userMaxHr
-	 * @param {number} userMinHr
-	 * @param {number} lactateThreshold
-	 * @param {number} activityTrainingImpulse
-	 * @returns {number}
-	 */
-	public computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
-		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
-		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
-		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
-	}
-
-	/**
-	 * TODO Duplicated code of FitnessService.computeRunningStressScore. To be refactored
-	 * @param {number} movingTime
-	 * @param {number} gradeAdjustedAvgPace in s/km
-	 * @param {number} runningThresholdPace
-	 * @returns {number}
-	 */
-	public computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
-		// Convert pace to speed (km/s)
-		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
-		const runningThresholdSpeed = 1 / runningThresholdPace;
-		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
-		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
-	}
-
-	/**
-	 * TODO Duplicated code of FitnessService.resolveLTHR. To be refactored
-	 * @param {string} activityType
-	 * @param {number} userMaxHr
-	 * @param {number} userRestHr
-	 * @param {UserLactateThresholdModel} userLactateThresholdModel
-	 * @returns {number}
-	 */
-	public resolveLTHR(activityType: string, userMaxHr: number, userRestHr: number, userLactateThresholdModel: UserLactateThresholdModel): number {
-
-		if (userLactateThresholdModel) {
-			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
-				if (_.isNumber(userLactateThresholdModel.cycling)) {
-					return userLactateThresholdModel.cycling;
-				}
-			}
-
-			if (activityType === "Run") {
-				if (_.isNumber(userLactateThresholdModel.running)) {
-					return userLactateThresholdModel.running;
-				}
-			}
-
-			if (_.isNumber(userLactateThresholdModel.default)) {
-				return userLactateThresholdModel.default;
-			}
-		}
-
-		return userRestHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userRestHr);
-	}
-
 
 	/**
 	 * Andrew Coggan weighted power compute method
@@ -596,7 +615,7 @@ export class ActivityComputer {
 	 * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
 	 * like WKO+ to do the work for you <g>.)
 	 */
-	protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[],
+	protected powerData(athleteWeight: number, hasPowerMeter: boolean, cyclingFtp: number, powerArray: number[],
 						velocityArray: number[], timeArray: number[], isEstimatedRunningPower?: boolean): PowerDataModel {
 
 		if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
@@ -686,7 +705,7 @@ export class ActivityComputer {
 		}, 0) / sum4thPower.length));
 
 		const variabilityIndex: number = weightedPower / avgWatts;
-		const intensity: number = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
+		const intensity: number = (_.isNumber(cyclingFtp) && cyclingFtp > 0) ? (weightedPower / cyclingFtp) : null;
 		const weightedWattsPerKg: number = weightedPower / athleteWeight;
 		const avgWattsPerKg: number = avgWatts / athleteWeight;
 
@@ -718,9 +737,7 @@ export class ActivityComputer {
 			console.warn("Cannot use split calculator on this activity");
 		}
 
-		// If athlete don't have power meter we use his best 80% split power as weightedPower
-		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercent);
-		const powerStressScore = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * pssWeightedPowerUsed * intensity) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
+		const powerStressScore = ActivityComputer.computePowerStressScore(hasPowerMeter, totalMovingInSeconds, weightedPower, bestEightyPercent, cyclingFtp);
 		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
 
 		const powerData: PowerDataModel = {
@@ -805,10 +822,9 @@ export class ActivityComputer {
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, athleteModel.athleteSettings.maxHr,
-			athleteModel.athleteSettings.restHr, athleteModel.athleteSettings.lthr);
+		const userLthrAlongActivityType: number = ActivityComputer.resolveLTHR(this.activityType, athleteModel.athleteSettings);
 
-		const heartRateStressScore = this.computeHeartRateStressScore(athleteModel.gender, athleteModel.athleteSettings.maxHr,
+		const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(athleteModel.gender, athleteModel.athleteSettings.maxHr,
 			athleteModel.athleteSettings.restHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
 
