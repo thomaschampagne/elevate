@@ -22,10 +22,10 @@ import { AthleteModel } from "../../../../../shared/models/athlete.model";
 // TODO Export periodicAthleteSettings inside backups sync.
 // TODO DO NOT CLEAN periodicAthleteSettings when sync clean.
 // TODO Show athleteModel used on strava activities
-// TODO Show athleteModel used in fitness trend tooltips + FT table
-// TODO What happen in fitness trend if user has no PSS and HRSS scores in his Synced History? Case of history build before "HRSS" user story
+// DONE Show athleteModel used in fitness trend tooltips + FT table
+// DONE What happen in fitness trend if user has no PSS and HRSS scores in his Synced History? Case of history build before "HRSS" user story
 // TODO Move FitnessService "compute stress scores" specs to ActivityComputer core specs
-
+// TODO create a "fix mismatch" between "activities athlete models" and "athlete settings config": flag activities (or remove them local?) and recompute on full sync.
 
 @Component({
 	selector: "app-athlete-settings",
