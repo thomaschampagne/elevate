@@ -330,6 +330,8 @@ export class FitnessService {
 
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
+					let previousDayFitnessTrend: DayFitnessTrendModel = null;
+
 					_.forEach(dailyActivity, (dayStress: DayStressModel, index: number) => {
 
 						const isPreStartDay = (index === 0);
@@ -352,7 +354,15 @@ export class FitnessService {
 							tsb = ctl - atl;
 						}
 
-						const dayFitnessTrend: DayFitnessTrendModel = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+
+						let dayFitnessTrend: DayFitnessTrendModel;
+
+						if (previousDayFitnessTrend) {
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb, previousDayFitnessTrend.ctl,
+								previousDayFitnessTrend.atl, previousDayFitnessTrend.tsb);
+						} else {
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+						}
 
 						if (_.isNumber(dayStress.heartRateStressScore) && dayStress.heartRateStressScore > 0) {
 							dayFitnessTrend.heartRateStressScore = dayStress.heartRateStressScore;
@@ -377,6 +387,8 @@ export class FitnessService {
 						if (_.isNumber(dayStress.finalStressScore) && dayStress.finalStressScore > 0) {
 							dayFitnessTrend.finalStressScore = dayStress.finalStressScore;
 						}
+
+						previousDayFitnessTrend = dayFitnessTrend;
 
 						fitnessTrend.push(dayFitnessTrend);
 
