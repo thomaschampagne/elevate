@@ -10,14 +10,14 @@ import { AthleteModel } from "../../../../../shared/models/athlete.model";
 // DONE append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
 // SKIP append athleteModel on SyncedActivityModel in migration script?
 // TODO Detect athleteModels mismatchs between local synced activities and athleteModels resolved on fly by AthleteModelResolverService?
-// TODO computeSwimStressScore from AcitvityComputer and not from FitnessService to keep coherencie with pSS, RSS, HRSS?
+// SKIP computeSwimStressScore from AcitvityComputer and not from FitnessService to keep coherencie with pSS, RSS, HRSS?
 
 // To be done:
-// TODO Highlight periodic settings toggle
+// DONE Highlight periodic settings toggle
 // TODO Give a helper guide to find periodic settings (how to?)
 // DONE Mark localstorage to be cleared when switch classic/periodic athlete settings
-// DONE Mark localstorage to be cleared when classic or periodic athlete settings have changed
-// TODO Warn user to redo a "activities sync" when classic or periodic athlete settings have changed
+// DONE Mark localstorage to be cleared when single or periodic athlete settings have changed
+// TODO Warn user to redo a "activities sync" when single or periodic athlete settings have changed
 // TODO Use AthletePeriodSettingsService only in FitnessTrendComponent (no more UserSettingsService). The resolved "PeriodicAthleteSettings" will be handled by AthletePeriodicSettingsManager (including AthletePeriodicSettings revolving along UserSettingsModel.enableAthletePeriodicSettings on/off)
 // TODO Export periodicAthleteSettings inside backups sync.
 // TODO DO NOT CLEAN periodicAthleteSettings when sync clean.
