@@ -109,7 +109,8 @@ export class FitnessService {
 						year: momentStartTime.year(),
 						type: activity.type,
 						hasPowerMeter: (activity.extendedStats && activity.extendedStats.powerData && activity.extendedStats.powerData.hasPowerMeter),
-						name: activity.name
+						name: activity.name,
+						athleteModel: activity.athleteModel
 					};
 
 					if (hasHeartRateData) {
@@ -336,6 +337,7 @@ export class FitnessService {
 				dayActivity.ids.push(activity.id);
 				dayActivity.activitiesName.push(activity.name);
 				dayActivity.types.push(activity.type);
+				dayActivity.athleteModel = activity.athleteModel;
 
 				const hasPowerStressScore = _.isNumber(activity.powerStressScore);
 				const hasHeartRateStressScore = _.isNumber(activity.heartRateStressScore);
