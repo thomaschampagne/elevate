@@ -1,3 +1,15 @@
+<mat-toolbar>
+	<span class="mat-body-1">
+		<span *ngIf="!hasPeriodicAthleteSettings"><strong>Single Athlete Settings</strong> are <strong>active</strong>. Enable <strong>Periodic Athlete Settings</strong> (right toggle) for more reliable stats.</span>
+
+		<span *ngIf="hasPeriodicAthleteSettings"><strong>Periodic Athlete Settings</strong> are <strong>active</strong>.</span>
+	</span>
+	<span fxFlex></span>
+	<mat-slide-toggle [(ngModel)]="hasPeriodicAthleteSettings" (change)="onHasPeriodicAthleteSettingsChange()">
+		Periodic Athlete Settings
+	</mat-slide-toggle>
+</mat-toolbar>
+
 <!--Gender-->
 <mat-card class="gender-card" *ngIf="(athleteModel && athleteModel.gender)">
 	<mat-card-title>
@@ -18,13 +30,6 @@
 		</mat-form-field>
 	</mat-card-content>
 </mat-card>
-
-<mat-toolbar>
-	<mat-slide-toggle [(ngModel)]="hasPeriodicAthleteSettings" (change)="onHasPeriodicAthleteSettingsChange()">
-		Periodic Athlete Settings <sup>NEW</sup>
-	</mat-slide-toggle>
-</mat-toolbar>
-
 
 <!--Single athlete settings form when athlete hasn't PeriodicAthleteSettings ON-->
 <app-athlete-settings-form *ngIf="(hasPeriodicAthleteSettings !== true && athleteModel && athleteModel.athleteSettings)"
