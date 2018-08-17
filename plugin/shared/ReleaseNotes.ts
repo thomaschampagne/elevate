@@ -2,6 +2,22 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
+		version: "6.4.2",
+		date: "2018-08-10",
+		message: "Version 6.4.* patched. (Reminder) Version 6.4 adds \"Fitness Trend Estimation\" for users without sensor, \"Running Stress Score (RSS)\" to activities and fitness trend, \"Fitness Trend\" options to exclude activities from the trend, \"Fitness Trend Spreadsheet Export\" feature.",
+		hotFixes: [],
+		features: [
+			"Adds \"fitness, fatigue & form deltas\" with previous day on fitness trend tooltips"
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed wrong exported date in fitness trend \"Export to spreadsheet\"",
+			"Fixed QRCode feature on strava activities (was broken)",
+			"Optimized the process of migration of versions",
+			"Upgrading libraries"
+		]
+	},
+	{
 		version: "6.4.1",
 		date: "2018-07-07",
 		message: "Added \"Fitness Trend Estimation\" for users WITHOUT SENSORS!!. Added \"Running Stress Score (RSS)\" to activities and fitness trend. Added \"Fitness Trend\" options to exclude activities from the trend. Added a \"Fitness Trend Spreadsheet Export\" feature. And more improvements.",
