@@ -185,7 +185,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 							console.warn("Stream not found for activity <" + data.reason.activityId + ">", data);
 
 							// Add to activities list without even if no stream...
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: data.reason.activityId});
+							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number> data.reason.activityId});
 							const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
 							activityWithStream.hasPowerMeter = null;
 							activityWithStream.stream = null;
@@ -194,7 +194,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 						} else if (data.state === "fulfilled") {
 
 							// Find raw activities of fetched stream and push
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: data.value.activityId});
+							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number> data.value.activityId});
 
 							let hasPowerMeter = true;
 							if (_.isEmpty(data.value.watts)) {

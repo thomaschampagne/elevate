@@ -291,10 +291,13 @@ export class YearProgressComponent implements OnInit {
 	 * @returns {number[]}
 	 */
 	public findExistingSelectedProgressType(): YearProgressTypeModel {
-		const existingSelectedProgressType = localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY);
-		if (!_.isEmpty(existingSelectedProgressType)) {
-			return _.find(this.progressTypes, {type: parseInt(existingSelectedProgressType)});
+
+		const existingProgressType: ProgressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY)) as ProgressType;
+
+		if (_.isNumber(existingProgressType)) {
+			return _.find(this.progressTypes, {type: existingProgressType});
 		}
+
 		return null;
 	}
 
