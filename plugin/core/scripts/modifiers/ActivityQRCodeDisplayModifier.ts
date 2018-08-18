@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import { AppResourcesModel } from "../models/app-resources.model";
 import * as QRCode from "qrcode";
 import { AbstractModifier } from "./AbstractModifier";

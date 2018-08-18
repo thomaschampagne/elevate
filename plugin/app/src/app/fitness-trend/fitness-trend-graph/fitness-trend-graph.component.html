@@ -68,16 +68,18 @@
 					<!--Fitness, Fatigue & Form-->
 					<tr class="ctl-value">
 						<td>Fitness</td>
-						<td>{{viewedDay.printFitness()}}</td>
+						<td>{{viewedDay.printFitness()}}<span *ngIf="viewedDay.prevCtl" class="mat-caption"> ({{viewedDay.printDeltaFitness()}})</span>
+						</td>
 					</tr>
 					<tr class="atl-value">
 						<td>Fatigue</td>
-						<td>{{viewedDay.printFatigue()}}</td>
+						<td>{{viewedDay.printFatigue()}}<span *ngIf="viewedDay.prevAtl" class="mat-caption"> ({{viewedDay.printDeltaFatigue()}})</span>
+						</td>
 					</tr>
 					<tr class="tsb-value">
-						<td>Form <span
-							*ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
-						<td>{{viewedDay.printForm()}}</td>
+						<td>Form <span *ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
+						<td>{{viewedDay.printForm()}}<span *ngIf="viewedDay.prevTsb" class="mat-caption"> ({{viewedDay.printDeltaForm()}})</span>
+						</td>
 					</tr>
 
 				</table>
