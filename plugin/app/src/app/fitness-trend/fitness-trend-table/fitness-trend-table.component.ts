@@ -187,6 +187,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			}
 			return true;
 		});
+
 		this.displayedColumns = this.columns.map(column => column.columnDef);
 
 		if (changes.fitnessTrend && changes.fitnessTrend.currentValue) {
@@ -288,6 +289,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 			const exportedFitnessDay: any = _.clone(dayFitnessTrendModel);
 
+			exportedFitnessDay[FitnessTrendTableComponent.COLUMN_DATE] = dayFitnessTrendModel.dateString;
 			exportedFitnessDay[FitnessTrendTableComponent.COLUMN_ACTIVITIES] = dayFitnessTrendModel.printActivities();
 			exportedFitnessDay[FitnessTrendTableComponent.COLUMN_TYPES] = dayFitnessTrendModel.printTypes();
 

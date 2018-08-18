@@ -7,7 +7,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
-	constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number) {
+	constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number, prevCtl?: number, prevAtl?: number, prevTsb?: number) {
 		super(dayStress.date, dayStress.previewDay);
 
 		this.ids = dayStress.ids;
@@ -20,29 +20,65 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
 
 		this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
+
 		this.ctl = ctl;
 		this.atl = atl;
 		this.tsb = tsb;
+
+		this.prevCtl = (prevCtl) ? prevCtl : null;
+		this.prevAtl = (prevAtl) ? prevAtl : null;
+		this.prevTsb = (prevTsb) ? prevTsb : null;
+
 		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
 	public dateString: string;
+
 	public ctl: number;
 	public atl: number;
 	public tsb: number;
+
+	public prevCtl: number;
+	public prevAtl: number;
+	public prevTsb: number;
+
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
 
 	public printFitness(): number {
-		return Math.floor(this.ctl * 10) / 10;
+		return _.floor(this.ctl, 1);
 	}
 
 	public printFatigue(): number {
-		return Math.floor(this.atl * 10) / 10;
+		return _.floor(this.atl, 1);
 	}
 
 	public printForm(): number {
-		return Math.floor(this.tsb * 10) / 10;
+		return _.floor(this.tsb, 1);
+	}
+
+	public printDeltaFitness(): string {
+		if (!this.prevCtl) {
+			return null;
+		}
+		const delta = _.floor(this.ctl, 1) - _.floor(this.prevCtl, 1);
+		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+	}
+
+	public printDeltaFatigue(): string {
+		if (!this.prevAtl) {
+			return null;
+		}
+		const delta = _.floor(this.atl, 1) - _.floor(this.prevAtl, 1);
+		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+	}
+
+	public printDeltaForm(): string {
+		if (!this.prevTsb) {
+			return null;
+		}
+		const delta = _.floor(this.tsb, 1) - _.floor(this.prevTsb, 1);
+		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
 	}
 
 	public printDate(): string {
