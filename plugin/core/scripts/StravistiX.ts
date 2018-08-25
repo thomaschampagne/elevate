@@ -8,6 +8,7 @@ import { AthleteUpdateModel } from "./models/athlete-update.model";
 import { ActivitiesSyncModifier } from "./modifiers/ActivitiesSyncModifier";
 import { ActivityBestSplitsModifier } from "./modifiers/ActivityBestSplitsModifier";
 import { ActivityBikeOdoModifier } from "./modifiers/ActivityBikeOdoModifier";
+import { ActivityFeedModifier } from "./modifiers/ActivityFeedModifier";
 import { ActivityQRCodeDisplayModifier } from "./modifiers/ActivityQRCodeDisplayModifier";
 import { ActivitySegmentTimeComparisonModifier } from "./modifiers/ActivitySegmentTimeComparisonModifier";
 import { ActivityStravaMapTypeModifier } from "./modifiers/ActivityStravaMapTypeModifier";
@@ -126,6 +127,7 @@ export class StravistiX {
 		this.handleSegmentRankPercentage();
 		this.handleSegmentHRAP();
 		this.handleActivityStravaMapType();
+		this.handleActivityFeedModifier();
 		this.handleHideFeed();
 		this.handleDisplayFlyByFeedModifier();
 		this.handleOnFlyActivitiesSync();
@@ -552,6 +554,23 @@ export class StravistiX {
 
 		const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings.activityStravaMapType);
 		activityStravaMapTypeModifier.modify();
+	}
+
+	public handleActivityFeedModifier(): void {
+		if (!window.location.pathname.match(/^\/dashboard/)) {
+			return;
+		}
+		
+		if (!this.userSettings.feedChronologicalOrder) {
+			return;
+		}
+
+		if (CoreEnv.debugMode) {
+			console.log("Execute handleActivityFeedModifier()");
+		}
+
+		const activityFeedModifier: ActivityFeedModifier = new ActivityFeedModifier(this.userSettings);
+		activityFeedModifier.modify();
 	}
 
 	public handleHideFeed(): void {
