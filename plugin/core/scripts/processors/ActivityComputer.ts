@@ -37,6 +37,7 @@ export class ActivityComputer {
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
 	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
+	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
 	protected activityType: string;
 	protected isTrainer: boolean;
@@ -462,7 +463,7 @@ export class ActivityComputer {
 
 		let best20min = null;
 		try {
-			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray));
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 			best20min = splitCalculator.getBestSplit(60 * 20, true) * 3.6;
 		} catch (err) {
 			console.warn("No best 20min speed/pace available for this range");
@@ -701,7 +702,7 @@ export class ActivityComputer {
 		let bestEightyPercent = null;
 
 		try {
-			splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
+			splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 			try {
 				best20min = splitCalculator.getBestSplit(60 * 20, true);
 			} catch (err) {
@@ -814,7 +815,7 @@ export class ActivityComputer {
 
 		let best20minHr = null;
 		try {
-			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 			best20minHr = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
 			console.warn("No best 20min heart rate available for this range");

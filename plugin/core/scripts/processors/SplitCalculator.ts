@@ -2,15 +2,15 @@ import * as _ from "lodash";
 
 export class SplitCalculator {
 
-	public static readonly GAP_THRESHOLD: number = 3000;
-
 	public scale: number[];
 	public data: number[];
+	public maxScaleGapThreshold: number;
 	public start: number;
 
-	constructor(scale: number[], data: number[]) {
+	constructor(scale: number[], data: number[], maxScaleGapThreshold?: number) {
 		this.scale = scale;
 		this.data = data;
+		this.maxScaleGapThreshold = maxScaleGapThreshold;
 		this.start = performance.now();
 		this.normalize();
 	}
@@ -35,10 +35,9 @@ export class SplitCalculator {
 					throw new Error("Scale should have gaps >= 0");
 				}
 
-				if (nextScaleDiff > SplitCalculator.GAP_THRESHOLD) {
+				if (_.isNumber(this.maxScaleGapThreshold) && nextScaleDiff > this.maxScaleGapThreshold) {
 					throw new Error("Scale has a too importants gap. Cannot normalize scale");
 				}
-
 
 				if (nextScaleDiff > 1) { // Is next scale not linear normalized (+1) with current scale?
 					const linearFunction = this.getLinearFunction(this.data[index + 1], this.data[index], nextScaleValue, scaleValue);
