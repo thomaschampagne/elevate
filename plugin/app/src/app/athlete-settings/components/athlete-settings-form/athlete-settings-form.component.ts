@@ -124,10 +124,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 	}
 
 	public onSwimFtpCalculatorEnabled(): void {
-		// Scroll down to bottom element
-		setTimeout(() => {
-			this.bottomElement.nativeElement.scrollIntoView();
-		});
+		_.defer(() => this.bottomElement.nativeElement.scrollIntoView()); // Scroll down to bottom element
 	}
 
 	public onSwimFtpChanged(changeFromPaceField?: boolean) {

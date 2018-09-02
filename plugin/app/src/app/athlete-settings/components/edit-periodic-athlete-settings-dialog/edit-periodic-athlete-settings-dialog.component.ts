@@ -26,9 +26,9 @@ export class EditPeriodicAthleteSettingsDialogComponent implements OnInit {
 	public ngOnInit(): void {
 
 		if (this.data.action === PeriodicAthleteSettingsAction.ACTION_ADD) {
-			this.periodicAthleteSettingsModel = _.cloneDeep(PeriodicAthleteSettingsModel.DEFAULT_MODEL); // Use default model on init
+			this.periodicAthleteSettingsModel = PeriodicAthleteSettingsModel.asInstance(_.cloneDeep(PeriodicAthleteSettingsModel.DEFAULT_MODEL)); // Use default model on update
 		} else if (this.data.action === PeriodicAthleteSettingsAction.ACTION_EDIT) {
-			this.periodicAthleteSettingsModel = _.cloneDeep(this.data.periodicAthleteSettingsModel);
+			this.periodicAthleteSettingsModel = PeriodicAthleteSettingsModel.asInstance(_.cloneDeep(this.data.periodicAthleteSettingsModel));
 		}
 
 	}

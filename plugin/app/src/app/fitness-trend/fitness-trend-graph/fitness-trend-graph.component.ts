@@ -235,7 +235,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public draw(): void {
 
-		setTimeout(() => {
+		_.defer(() => {
 			MG.data_graphic(this.graphConfig);
 			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
 		});

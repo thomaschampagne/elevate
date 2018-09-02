@@ -371,6 +371,96 @@ describe("PeriodicAthleteSettingsService", () => {
 
 	});
 
+	describe("should save", () => {
+
+		it("should save several periodic athlete settings", (done: Function) => {
+
+			// Given
+			const expectedPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
+				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+			];
+
+			const validateSpy = spyOn(service, "validate").and.returnValue(Promise.resolve());
+
+			const saveDaoSpy = spyOn(service.periodicAthleteSettingsDao, "save")
+				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+
+			// When
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.save(expectedPeriodAthleteSettings);
+
+			// Then
+			promise.then((result: PeriodicAthleteSettingsModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(validateSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+
+				done();
+
+			}, error => {
+
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+	});
+
+	describe("should reset", () => {
+
+		it("should reset periodic athlete settings", (done: Function) => {
+
+			// Given
+			const saveDaoSpy = spyOn(service.periodicAthleteSettingsDao, "save").and.callThrough();
+			const validateSpy = spyOn(service, "validate").and.callThrough();
+			const addDaoSpy = spyOn(service, "add").and.callThrough();
+
+			let browserStorageLocal = {};
+			spyOn(service.periodicAthleteSettingsDao, "browserStorageLocal").and.returnValue({
+				set: (object: Object, callback: () => {}) => {
+					browserStorageLocal = object;
+					callback();
+				},
+				get: (key: string, callback: (item: Object) => {}) => {
+					const result = {};
+					result[key] = browserStorageLocal[key];
+					callback(result);
+				}
+			});
+			spyOn(service.periodicAthleteSettingsDao, "getChromeError").and.returnValue(null);
+
+			// When
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.reset();
+
+			// Then
+			promise.then((result: PeriodicAthleteSettingsModel[]) => {
+
+				expect(result).not.toBeNull();
+				expect(result.length).toEqual(2);
+				expect(_.first(result)).toEqual(PeriodicAthleteSettingsModel.DEFAULT_MODEL);
+				expect(validateSpy).toHaveBeenCalledTimes(1);
+				expect(addDaoSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).toHaveBeenCalledTimes(2);
+
+				done();
+
+			}, error => {
+
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+	});
+
 	describe("should edit", () => {
 
 		it("should edit 'settings' a of periodic athlete settings with already existing periods", (done: Function) => {
@@ -835,7 +925,7 @@ describe("PeriodicAthleteSettingsService", () => {
 		});
 	});
 
-	describe("should verify", () => {
+	describe("should validate", () => {
 
 		it("should validate periodic athlete settings consistency", (done: Function) => {
 
@@ -847,11 +937,14 @@ describe("PeriodicAthleteSettingsService", () => {
 				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
+			const spyResolve = spyOn(Promise, "resolve").and.callThrough();
+
 			// When
 			const promise: Promise<void> = service.validate(periodAthleteSettings);
 
 			// Then
 			promise.then(() => {
+				expect(spyResolve).toHaveBeenCalled();
 				done();
 			}, (error: AppError) => {
 				expect(error).toBeNull();

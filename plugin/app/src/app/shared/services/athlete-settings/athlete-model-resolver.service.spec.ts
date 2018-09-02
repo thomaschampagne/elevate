@@ -39,7 +39,7 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
-	it("should init the service", (done: Function) => {
+	it("should update the service", (done: Function) => {
 
 		// Given
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
@@ -52,7 +52,7 @@ describe("AthleteModelResolverService", () => {
 		spyOn(athleteModelResolverService.periodicAthleteSettingsService, "fetch").and.returnValue(Promise.resolve(periodicAthleteSettingsModels));
 
 		// When
-		const promise = athleteModelResolverService.init();
+		const promise = athleteModelResolverService.update();
 
 		// Then
 		promise.then(() => {
@@ -71,7 +71,7 @@ describe("AthleteModelResolverService", () => {
 
 	});
 
-	it("should reject init the service", (done: Function) => {
+	it("should reject update the service", (done: Function) => {
 
 		// Given
 		const errorMessage = "We have an error !";
@@ -79,7 +79,7 @@ describe("AthleteModelResolverService", () => {
 		spyOn(athleteModelResolverService.periodicAthleteSettingsService, "fetch").and.returnValue(Promise.reject(errorMessage));
 
 		// When
-		const promise = athleteModelResolverService.init();
+		const promise = athleteModelResolverService.update();
 
 		// Then
 		promise.then(() => {
@@ -176,7 +176,7 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
-	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'true' (3)", (done: Function) => {
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'false' (3)", (done: Function) => {
 
 		// Given
 		const onDate = "2018-01-15";
@@ -187,6 +187,29 @@ describe("AthleteModelResolverService", () => {
 			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
 			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
 			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedPeriodicAthleteSettingsModel
+		];
+
+		const expectedAthleteModel = userSettings.athleteModel;
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve AthleteModel at given date (as string) with hasPeriodicAthleteSettings 'false' (4)", (done: Function) => {
+
+		// Given
+		const onDate = "2018-01-15";
+		userSettingsModel.hasPeriodicAthleteSettings = false;
+
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
 			expectedPeriodicAthleteSettingsModel
 		];
 
@@ -252,6 +275,34 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
+	it("should resolve AthleteModel with not sorted periodic athlete settings", (done: Function) => {
+
+		// Given
+		const onDate = "2018-04-15";
+		userSettingsModel.hasPeriodicAthleteSettings = true;
+
+		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+
+		// Below periodic athlete settings are not sorted along from attribute
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedPeriodicAthleteSettingsModel,
+		];
+
+		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedPeriodicAthleteSettingsModel.toAthleteSettingsModel());
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, periodicAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
 	it("should resolve a default AthleteModel when no PeriodicAthleteSettings found", (done: Function) => {
 
 		// Given
@@ -277,7 +328,7 @@ describe("AthleteModelResolverService", () => {
 
 		// Given
 		const onDate = "2018-01-15";
-		const expectedError = new Error("AthleteModelResolver do not exists. Please init service at first with AthleteModelResolverService#init()");
+		const expectedError = new Error("AthleteModelResolver do not exists. Please update service at first with AthleteModelResolverService#update()");
 
 		// When
 		const call = () => {

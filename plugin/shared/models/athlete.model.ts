@@ -18,4 +18,23 @@ export class AthleteModel {
 		this.athleteSettings = athleteSettings;
 	}
 
+	/**
+	 *
+	 * @param otherAthleteModel {AthleteModel}
+	 */
+	public equals(otherAthleteModel: AthleteModel): boolean {
+
+		const isSame = otherAthleteModel && (this.athleteSettings.maxHr !== otherAthleteModel.athleteSettings.maxHr
+			|| this.athleteSettings.restHr !== otherAthleteModel.athleteSettings.restHr
+			|| this.athleteSettings.cyclingFtp !== otherAthleteModel.athleteSettings.cyclingFtp
+			|| this.athleteSettings.runningFtp !== otherAthleteModel.athleteSettings.runningFtp
+			|| this.athleteSettings.lthr.default !== otherAthleteModel.athleteSettings.lthr.default
+			|| this.athleteSettings.lthr.cycling !== otherAthleteModel.athleteSettings.lthr.cycling
+			|| this.athleteSettings.lthr.running !== otherAthleteModel.athleteSettings.lthr.running
+			|| this.athleteSettings.weight !== otherAthleteModel.athleteSettings.weight
+			|| this.athleteSettings.swimFtp !== otherAthleteModel.athleteSettings.swimFtp
+			|| this.gender !== otherAthleteModel.gender
+		);
+		return !isSame;
+	}
 }

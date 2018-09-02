@@ -10,6 +10,9 @@ import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced
 import { SyncedBackupModel } from "./synced-backup.model";
 import * as semver from "semver";
 import { Constant } from "../../../../../../shared/Constant";
+import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { PeriodicAthleteSettingsService } from "../periodic-athlete-settings/periodic-athlete-settings.service";
+import { UserSettingsService } from "../user-settings/user-settings.service";
 
 @Injectable()
 export class SyncService {
@@ -19,7 +22,9 @@ export class SyncService {
 	public static readonly SYNC_WINDOW_HEIGHT: number = 675;
 
 	constructor(public syncDao: SyncDao,
-				public activityDao: ActivityDao) {
+				public activityDao: ActivityDao,
+				public periodicAthleteSettingsService: PeriodicAthleteSettingsService,
+				public userSettingsService: UserSettingsService) {
 
 	}
 
@@ -72,19 +77,32 @@ export class SyncService {
 
 		return this.clearSyncedData().then(() => {
 
+			let promiseImportPeriodicAthleteSettings;
+
+			// If no periodic athlete settings provided in backup then reset periodic athlete settings
+			if (_.isEmpty(importedBackupModel.periodicAthleteSettings)) {
+				promiseImportPeriodicAthleteSettings = this.periodicAthleteSettingsService.reset();
+			} else {
+				promiseImportPeriodicAthleteSettings = this.periodicAthleteSettingsService.save(importedBackupModel.periodicAthleteSettings);
+			}
+
 			return Promise.all([
 				this.saveLastSyncDateTime(importedBackupModel.lastSyncDateTime),
-				this.activityDao.save(importedBackupModel.syncedActivities)
+				this.activityDao.save(importedBackupModel.syncedActivities),
+				promiseImportPeriodicAthleteSettings,
+				this.userSettingsService.clearLocalStorageOnNextLoad()
 			]);
 
 		}).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+			const periodicAthleteSettings: PeriodicAthleteSettingsModel[] = result[2] as PeriodicAthleteSettingsModel[];
 
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
+				periodicAthleteSettings: periodicAthleteSettings,
 				pluginVersion: importedBackupModel.pluginVersion
 			};
 
@@ -119,12 +137,14 @@ export class SyncService {
 		return Promise.all([
 
 			this.syncDao.getLastSyncDateTime(),
-			this.activityDao.fetch()
+			this.activityDao.fetch(),
+			this.periodicAthleteSettingsService.fetch()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+			const periodicAthleteSettings: PeriodicAthleteSettingsModel[] = result[2] as PeriodicAthleteSettingsModel[];
 
 			if (!_.isNumber(lastSyncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
@@ -133,6 +153,7 @@ export class SyncService {
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
+				periodicAthleteSettings: periodicAthleteSettings,
 				pluginVersion: this.getAppVersion()
 			};
 

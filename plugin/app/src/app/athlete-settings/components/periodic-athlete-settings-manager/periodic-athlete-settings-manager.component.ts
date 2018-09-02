@@ -55,20 +55,35 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 	@Output("periodicAthleteSettingsModelsChange")
 	public periodicAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
-	constructor(public athletePeriodicSettingsService: PeriodicAthleteSettingsService,
+	constructor(public periodicAthleteSettingsService: PeriodicAthleteSettingsService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
 		this.dataSource = new MatTableDataSource<PeriodicAthleteSettingsTableModel>();
-		this.updateTable();
+		this.loadData();
 	}
 
-	private updateTable(): void {
-		this.athletePeriodicSettingsService.fetch().then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
+	private loadData(): void {
+
+		this.periodicAthleteSettingsService.fetch().then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
+
 			this.periodicAthleteSettingsModels = periodicAthleteSettingsModels;
-			this.dataSource.data = this.generateTableData(periodicAthleteSettingsModels);
+
+			// Auto creates a periodic athlete settings if no one exists
+			if (this.periodicAthleteSettingsModels.length === 0) {
+				this.periodicAthleteSettingsService.add(PeriodicAthleteSettingsModel.DEFAULT_MODEL).then(() => {
+					this.periodicAthleteSettingsModelsChange.emit();
+					this.loadData();
+				}, error => {
+					this.handleErrors(error);
+				});
+
+			} else {
+				this.dataSource.data = this.generateTableData(periodicAthleteSettingsModels);
+			}
+
 		});
 	}
 
@@ -96,9 +111,38 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((periodicAthleteSettingsModel: PeriodicAthleteSettingsModel) => {
 
 			if (periodicAthleteSettingsModel) {
-				this.athletePeriodicSettingsService.add(periodicAthleteSettingsModel).then(() => {
+				this.periodicAthleteSettingsService.add(periodicAthleteSettingsModel).then(() => {
 					this.periodicAthleteSettingsModelsChange.emit();
-					this.updateTable();
+					this.loadData();
+				}, error => {
+					this.handleErrors(error);
+				});
+			}
+
+			afterClosedSubscription.unsubscribe();
+		});
+	}
+
+	public onReset(): void {
+
+		const data: ConfirmDialogDataModel = {
+			title: "Reset your periodic athlete settings",
+			content: "Are you sure to perform this action? Current settings will be lost."
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+			if (confirm) {
+
+				this.periodicAthleteSettingsService.reset().then(() => {
+					this.periodicAthleteSettingsModelsChange.emit();
+					this.loadData();
 				}, error => {
 					this.handleErrors(error);
 				});
@@ -125,9 +169,9 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((periodicAthleteSettingsModel: PeriodicAthleteSettingsModel) => {
 
 			if (periodicAthleteSettingsModel) {
-				this.athletePeriodicSettingsService.edit(fromIdentifier, periodicAthleteSettingsModel).then(() => {
+				this.periodicAthleteSettingsService.edit(fromIdentifier, periodicAthleteSettingsModel).then(() => {
 					this.periodicAthleteSettingsModelsChange.emit();
-					this.updateTable();
+					this.loadData();
 				}, error => {
 					this.handleErrors(error);
 				});
@@ -148,9 +192,9 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
-				this.athletePeriodicSettingsService.remove(fromIdentifier).then(() => {
+				this.periodicAthleteSettingsService.remove(fromIdentifier).then(() => {
 					this.periodicAthleteSettingsModelsChange.emit();
-					this.updateTable();
+					this.loadData();
 				}, error => {
 					this.handleErrors(error);
 				});

@@ -19,9 +19,9 @@ export class AthleteModelResolverService {
 	}
 
 	/**
-	 * Init service. Full-filled means ready
+	 * Update or update AthleteModelResolver dependency with up-to-date UserSettingsModel & PeriodicAthleteSettingsModels.
 	 */
-	public init(): Promise<void> {
+	public update(): Promise<void> {
 		return this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 			this.userSettingsModel = userSettings;
 			return this.periodicAthleteSettingsService.fetch();
@@ -39,7 +39,7 @@ export class AthleteModelResolverService {
 	public resolve(onDate: string | Date): AthleteModel {
 
 		if (_.isEmpty(this.athleteModelResolver)) {
-			throw new Error("AthleteModelResolver do not exists. Please init service at first with AthleteModelResolverService#init()");
+			throw new Error("AthleteModelResolver do not exists. Please update service at first with AthleteModelResolverService#update()");
 		}
 
 		return this.athleteModelResolver.resolve(onDate);

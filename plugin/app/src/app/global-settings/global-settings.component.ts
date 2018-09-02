@@ -64,8 +64,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 			}
 
 			if (!_.isEmpty(params.viewOptionHelperId)) {
-				// FIXME should be called without timeout. maybe in ngAfterContentInit?
-				setTimeout(() => this.showOptionHelperDialog(params.viewOptionHelperId));
+				_.defer(() => this.showOptionHelperDialog(params.viewOptionHelperId));
 			}
 		});
 	}
