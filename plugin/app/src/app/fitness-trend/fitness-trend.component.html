@@ -95,9 +95,8 @@
 	<mat-card-content>
 		<div>
 			Don't worry! This behavior can occur after a recent update of the plugin. Indeed stravistix needs your
-			activities to be recalculated for technical reasons. To recalculate/resynchronize your history, please
-			follow
-			below steps:
+			activities to be recalculated for technical reasons. To recalculate your history, please
+			follow below steps:
 			<ul>
 				<li>
 					Perform a backup of your currently synced activities for security before. Just click
@@ -109,7 +108,9 @@
 				</li>
 				<li>
 					Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">single or periodic
-					athlete settings</a>.
+					athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
+					then stress scores that depend on these settings will not be calculated resulting in missing data
+					in fitness trend.
 				</li>
 				<li>
 					Clear and synchronize again your activities. Click
