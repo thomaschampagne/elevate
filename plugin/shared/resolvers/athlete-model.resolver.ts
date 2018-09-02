@@ -14,7 +14,10 @@ export class AthleteModelResolver {
 
 	constructor(userSettingsModel: UserSettingsModel, periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) {
 		this.userSettingsModel = userSettingsModel;
-		this.periodicAthleteSettingsModels = periodicAthleteSettingsModels;
+		this.periodicAthleteSettingsModels = _.sortBy(periodicAthleteSettingsModels, (model: PeriodicAthleteSettingsModel) => {
+			const sortOnDate: Date = (_.isNull(model.from)) ? new Date(0) : new Date(model.from);
+			return sortOnDate.getTime() * -1;
+		});
 	}
 
 	/**
@@ -24,7 +27,13 @@ export class AthleteModelResolver {
 	 */
 	public resolve(onDate: string | Date): AthleteModel {
 
-		const onDateString = (onDate instanceof Date) ? (onDate).toISOString().split('T')[0] : onDate;
+		let onDateString: string;
+
+		if (onDate instanceof Date) {
+			onDateString = onDate.getFullYear() + "-" + (onDate.getMonth() + 1).toString().padStart(2, "0") + "-" + onDate.getDate().toString().padStart(2, "0");
+		} else {
+			onDateString = onDate;
+		}
 
 		this.assertCompliantDate(onDateString);
 
@@ -41,10 +50,11 @@ export class AthleteModelResolver {
 			const periodicAthleteSettingsModel: PeriodicAthleteSettingsModel = this.resolvePeriodicAthleteSettingsAtDate(onDateString);
 
 			// If periodicAthleteSettingsModel found use it, instead use 'classic' AthleteSettingsModel
-			athleteModel = (periodicAthleteSettingsModel) ? new AthleteModel(gender, periodicAthleteSettingsModel.toAthleteSettingsModel()) : this.userSettingsModel.athleteModel;
+			athleteModel = (periodicAthleteSettingsModel) ? new AthleteModel(gender, periodicAthleteSettingsModel.toAthleteSettingsModel())
+				: new AthleteModel(this.userSettingsModel.athleteModel.gender, this.userSettingsModel.athleteModel.athleteSettings);
 
 		} else {
-			athleteModel = this.userSettingsModel.athleteModel; // Use default synced AthleteModel
+			athleteModel = new AthleteModel(this.userSettingsModel.athleteModel.gender, this.userSettingsModel.athleteModel.athleteSettings);
 		}
 
 		return athleteModel;

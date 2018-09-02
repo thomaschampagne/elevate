@@ -1,0 +1,14 @@
+<div class="athlete-settings-consistency-ribbon">
+	<div fxLayout="row" fxLayoutAlign="space-between center">
+		<div>
+			Some of your synced activities need to be recalculated according recent athlete settings changes.
+		</div>
+		<div fxLayout="row" fxLayoutAlign="space-between center">
+			<button mat-stroked-button (click)="onFixActivities()">Fix</button>
+			<button mat-stroked-button *ngIf="showAthleteSettingsButton === false" (click)="onEditAthleteSettings()">
+				Go to Athlete Settings
+			</button>
+			<button mat-stroked-button (click)="onDismiss()">Dismiss</button>
+		</div>
+	</div>
+</div>

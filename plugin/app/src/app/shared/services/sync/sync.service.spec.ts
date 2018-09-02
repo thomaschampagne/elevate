@@ -1,12 +1,13 @@
 import { inject, TestBed } from "@angular/core/testing";
 import { SyncDao } from "../../dao/sync/sync.dao";
 import { SyncService } from "./sync.service";
-import { ActivityDao } from "../../dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "./sync-state.enum";
-import { UserSettingsService } from "../user-settings/user-settings.service";
-import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { SyncedBackupModel } from "./synced-backup.model";
+import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { CoreModule } from "../../../core/core.module";
+import { SharedModule } from "../../shared.module";
 
 describe("SyncService", () => {
 
@@ -18,7 +19,10 @@ describe("SyncService", () => {
 	beforeEach(() => {
 
 		TestBed.configureTestingModule({
-			providers: [SyncService, SyncDao, ActivityDao, UserSettingsService, UserSettingsDao]
+			imports: [
+				CoreModule,
+				SharedModule,
+			]
 		});
 
 		syncService = TestBed.get(SyncService);
@@ -86,7 +90,6 @@ describe("SyncService", () => {
 			done();
 		});
 
-
 	});
 
 	it("should remove last sync date time (for activities clear)", (done: Function) => {
@@ -115,8 +118,17 @@ describe("SyncService", () => {
 
 		// Given
 		const lastSyncDateTime = 99;
+
+		const expectedPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
+			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+		];
+
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.periodicAthleteSettingsService, "fetch").and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.prepareForExport();
@@ -128,6 +140,7 @@ describe("SyncService", () => {
 			expect(syncedBackupModel.pluginVersion).toEqual(installedVersion);
 			expect(syncedBackupModel.lastSyncDateTime).toEqual(lastSyncDateTime);
 			expect(syncedBackupModel.syncedActivities).toEqual(TEST_SYNCED_ACTIVITIES);
+			expect(syncedBackupModel.periodicAthleteSettings).toEqual(expectedPeriodAthleteSettings);
 			done();
 
 		}, error => {
@@ -143,7 +156,7 @@ describe("SyncService", () => {
 
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-
+		spyOn(syncService.periodicAthleteSettingsService, "fetch").and.returnValue(Promise.resolve([]));
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
 		const saveAsSpy = spyOn(syncService, "saveAs").and.stub();
@@ -170,6 +183,7 @@ describe("SyncService", () => {
 		// Given
 		spyOn(syncService.syncDao, "getLastSyncDateTime").and.returnValue(null);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.periodicAthleteSettingsService, "fetch").and.returnValue(Promise.resolve([]));
 
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
@@ -193,39 +207,52 @@ describe("SyncService", () => {
 
 	});
 
-	it("should import athlete activities with a 1.0.0 backup and 1.0.0 compatible backup version threshold", (done: Function) => {
+	it("should import athlete activities with a 1.0.0 backup and 1.0.0 compatible backup version threshold (with periodicAthleteSettings)", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime = 99;
 		const importedBackupVersion = "1.0.0";
 		const compatibleBackupVersionThreshold = "1.0.0";
+		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
+			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
+			new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
+			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+		];
+
 		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
+			periodicAthleteSettings: periodicAthleteSettingsModels,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.syncDao, "saveLastSyncDateTime").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.periodicAthleteSettingsService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.periodicAthleteSettings));
 
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
-		const spy = spyOn(syncService, "clearSyncedData").and.callThrough();
+		const spyClearSyncedData = spyOn(syncService, "clearSyncedData").and.callThrough();
+		const spyClearLocalStorage = spyOn(syncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
+
 		// Then
 		promise.then((syncedBackupModel: SyncedBackupModel) => {
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spyClearSyncedData).toHaveBeenCalledTimes(1);
+			expect(spyClearLocalStorage).toHaveBeenCalledTimes(1);
 
 			expect(syncedBackupModel).not.toBeNull();
 			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
 			expect(syncedBackupModel.lastSyncDateTime).toEqual(importedSyncedBackupModel.lastSyncDateTime);
 			expect(syncedBackupModel.syncedActivities).toEqual(importedSyncedBackupModel.syncedActivities);
+			expect(syncedBackupModel.periodicAthleteSettings).toEqual(importedSyncedBackupModel.periodicAthleteSettings);
 			done();
 
 		}, error => {
@@ -235,7 +262,7 @@ describe("SyncService", () => {
 
 	});
 
-	it("should import athlete activities with a 1.5.1 backup and 1.2.3 compatible backup version threshold", (done: Function) => {
+	it("should import athlete activities with a 1.5.1 backup and 1.2.3 compatible backup version threshold (periodicAthleteSettings empty)", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime = 99;
@@ -245,6 +272,7 @@ describe("SyncService", () => {
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
+			periodicAthleteSettings: [],
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -255,14 +283,22 @@ describe("SyncService", () => {
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
-		const spy = spyOn(syncService, "clearSyncedData").and.callThrough();
+		const spyClearSyncedData = spyOn(syncService, "clearSyncedData").and.callThrough();
+		const spyResetPeriodicAthleteSettings = spyOn(syncService.periodicAthleteSettingsService, "reset").and.stub();
+		const spySavePeriodicAthleteSettings = spyOn(syncService.periodicAthleteSettingsService, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.periodicAthleteSettings));
+
+		const spyClearLocalStorage = spyOn(syncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
 		// Then
 		promise.then((syncedBackupModel: SyncedBackupModel) => {
 
-			expect(spy).toHaveBeenCalledTimes(1);
+			expect(spyResetPeriodicAthleteSettings).toHaveBeenCalledTimes(1);
+			expect(spySavePeriodicAthleteSettings).not.toHaveBeenCalled();
+			expect(spyClearSyncedData).toHaveBeenCalledTimes(1);
+			expect(spyClearLocalStorage).toHaveBeenCalledTimes(1);
 
 			expect(syncedBackupModel).not.toBeNull();
 			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
@@ -288,6 +324,7 @@ describe("SyncService", () => {
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
+			periodicAthleteSettings: [],
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -319,6 +356,7 @@ describe("SyncService", () => {
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
+			periodicAthleteSettings: [],
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: null
 		};
@@ -379,6 +417,7 @@ describe("SyncService", () => {
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: null,
+			periodicAthleteSettings: [],
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -440,6 +479,7 @@ describe("SyncService", () => {
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: [],
+			periodicAthleteSettings: [],
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -468,11 +508,14 @@ describe("SyncService", () => {
 		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
+		const spyResolve = spyOn(Promise, "resolve").and.callThrough();
+
 		// When
 		const promise: Promise<void> = syncService.clearSyncedData();
 
 		// Then
 		promise.then(() => {
+			expect(spyResolve).toHaveBeenCalled();
 			done();
 
 		}, error => {

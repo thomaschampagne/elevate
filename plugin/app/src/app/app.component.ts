@@ -134,7 +134,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.toolBarTitle = AppComponent.convertRouteToTitle((<NavigationEnd> routerEvent).urlAfterRedirects);
+				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
+				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
 			}
 		});
 
@@ -151,7 +152,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 
 		this.setupWindowResizeBroadcast();
-
 	}
 
 	public sideNavSetup(): void {
@@ -222,7 +222,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		const data: ConfirmDialogDataModel = {
 			title: "Clear your athlete synced data",
 			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-			"or a new re-synchronization."
+				"or a new re-synchronization."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {

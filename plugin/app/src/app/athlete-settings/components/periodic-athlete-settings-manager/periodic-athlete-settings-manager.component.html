@@ -17,9 +17,11 @@
 
 		<div>
 			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
-			<strong>Periodic Athlete Settings are currently in preview!</strong> The below settings might change
-			along updates. These settings are saved locally and not synced between computers for technicals
-			reasons. They will be online synced in a near future using a dedicated service.
+			<strong>Periodic Athlete Settings are currently in preview!</strong> Because preview, your below settings
+			might change along updates. These settings are currently saved locally and they not synced between computers
+			for technicals reasons (chrome sync api limitations). They will be online synced in a near future using a
+			dedicated service. By the way, Periodic Athlete Settings are exported inside stravistix backups and can be
+			imported back with a restoration.
 		</div>
 
 	</mat-card-content>
@@ -30,6 +32,11 @@
 			<button mat-button color="primary" (click)="onAdd()">
 				<mat-icon>add</mat-icon>
 				Add new periodic athlete settings
+			</button>
+
+			<button mat-button color="primary" (click)="onReset()">
+				<mat-icon>settings_backup_restore</mat-icon>
+				Reset
 			</button>
 		</div>
 

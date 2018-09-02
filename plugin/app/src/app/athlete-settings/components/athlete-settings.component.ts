@@ -5,27 +5,23 @@ import { Gender } from "../../shared/enums/gender.enum";
 import { GenderModel } from "../models/gender.model";
 import { AthleteSettingsModel } from "../../../../../shared/models/athlete-settings/athlete-settings.model";
 import { AthleteModel } from "../../../../../shared/models/athlete.model";
+import { ActivityService } from "../../shared/services/activity/activity.service";
 
-// To be defined:
-// DONE append and use athleteModel on SyncedActivityModel from FitnessService. This mean to not compute PSS and HRSS from fitness service and use athleteModel provided
-// SKIP append athleteModel on SyncedActivityModel in migration script?
-// TODO Detect athleteModels mismatchs between local synced activities and athleteModels resolved on fly by AthleteModelResolverService?
-// SKIP computeSwimStressScore from AcitvityComputer and not from FitnessService to keep coherencie with pSS, RSS, HRSS?
-
-// To be done:
-// DONE Highlight periodic settings toggle
 // TODO Give a helper guide to find periodic settings (how to?)
-// DONE Mark localstorage to be cleared when switch classic/periodic athlete settings
-// DONE Mark localstorage to be cleared when single or periodic athlete settings have changed
-// TODO Warn user to redo a "activities sync" when single or periodic athlete settings have changed
-// TODO Use AthletePeriodSettingsService only in FitnessTrendComponent (no more UserSettingsService). The resolved "PeriodicAthleteSettings" will be handled by AthletePeriodicSettingsManager (including AthletePeriodicSettings revolving along UserSettingsModel.enableAthletePeriodicSettings on/off)
-// TODO Export periodicAthleteSettings inside backups sync.
-// TODO DO NOT CLEAN periodicAthleteSettings when sync clean.
 // TODO Show athleteModel used on strava activities
-// DONE Show athleteModel used in fitness trend tooltips + FT table
-// DONE What happen in fitness trend if user has no PSS and HRSS scores in his Synced History? Case of history build before "HRSS" user story
-// TODO Move FitnessService "compute stress scores" specs to ActivityComputer core specs
-// TODO create a "fix mismatch" between "activities athlete models" and "athlete settings config": flag activities (or remove them local?) and recompute on full sync.
+
+/*
+TODO Fix sync error:
+d81a2915-70cf-4cb6-b97f-a54321ec62ed:1 Error: InconsistentParameters: athleteWeight required as number
+    at new n (d81a2915-70cf-4cb6-b97f-a54321ec62ed:28)
+    at Function.t.createRunningPowerEstimationStream (d81a2915-70cf-4cb6-b97f-a54321ec62ed:28)
+    at t.estimatedRunningPower (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
+    at t.computeAnalysisData (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
+    at t.compute (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
+
+Also...
+TODO Handle Fitness Trend on activities without AthleteModel (e.g. Les 2 Alpes => "AlpineSki")
+ */
 
 @Component({
 	selector: "app-athlete-settings",
@@ -49,15 +45,24 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public hasPeriodicAthleteSettings: boolean;
 
-	constructor(public userSettingsService: UserSettingsService) {
+	constructor(public userSettingsService: UserSettingsService,
+				public activityService: ActivityService) {
 	}
 
 	public ngOnInit(): void {
-
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 			this.hasPeriodicAthleteSettings = userSettings.hasPeriodicAthleteSettings;
 			this.athleteModel = userSettings.athleteModel;
 		});
+	}
+
+	public onAthleteSettingsChanged(): void {
+		this.verifyConsistencyWithAthleteSettings();
+		this.clearLocalStorageOnNextLoad();
+	}
+
+	private verifyConsistencyWithAthleteSettings() {
+		this.activityService.verifyConsistencyWithAthleteSettings();
 	}
 
 	public onAthleteSettingsModelChanged(athleteSettingsModel: AthleteSettingsModel): void {
@@ -70,7 +75,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	public onPeriodicAthleteSettingsModelsChanged(): void {
-		this.clearLocalStorageOnNextLoad();
+		this.onAthleteSettingsChanged();
 	}
 
 	public clearLocalStorageOnNextLoad(): void {
@@ -83,14 +88,14 @@ export class AthleteSettingsComponent implements OnInit {
 	public onAthleteModelChanged(): void {
 		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
-			this.clearLocalStorageOnNextLoad();
+			this.onAthleteSettingsChanged();
 		}).catch((error) => console.error(error));
 	}
 
 	public onHasPeriodicAthleteSettingsChange(): void {
 		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_HAS_PERIODIC_ATHLETE_SETTINGS_KEY, this.hasPeriodicAthleteSettings).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
-			this.clearLocalStorageOnNextLoad();
+			this.onAthleteSettingsChanged();
 		}).catch((error) => {
 			console.error(error);
 		});

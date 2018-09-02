@@ -6,10 +6,12 @@
 @import "./native-elements.theme";
 @import "../../app/app.component.theme";
 @import "../../app/fitness-trend/fitness-trend.component.theme";
+@import "../../app/athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 
 @mixin stravistix-custom-theme($theme) {
 	@include native-web-elements($theme);
 	@include app-theming($theme);
+	@include athlete-settings-consistency-ribbon-theming($theme);
 	@include fitness-trend-theming($theme);
 }
 

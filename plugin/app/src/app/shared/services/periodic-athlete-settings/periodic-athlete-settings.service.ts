@@ -32,6 +32,7 @@ export class PeriodicAthleteSettingsService {
 	/**
 	 * Add a athlete periodic settings.
 	 * @param {AthletePeriodicSettings} periodicAthleteSettings
+	 * @returns {Promise<PeriodicAthleteSettingsModel[]>}
 	 */
 	public add(periodicAthleteSettings: PeriodicAthleteSettingsModel): Promise<PeriodicAthleteSettingsModel[]> {
 
@@ -64,6 +65,28 @@ export class PeriodicAthleteSettingsService {
 			return this.validate(periodicAthleteSettingsModels).then(() => {
 				return this.periodicAthleteSettingsDao.save(periodicAthleteSettingsModels);
 			});
+		});
+	}
+
+	/**
+	 * Save (replace existing) athlete periodic settings.
+	 * @param periodicAthleteSettingsModels
+	 * @returns {Promise<PeriodicAthleteSettingsModel[]>}
+	 */
+	public save(periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]): Promise<PeriodicAthleteSettingsModel[]> {
+		return this.validate(periodicAthleteSettingsModels).then(() => {
+			return this.periodicAthleteSettingsDao.save(periodicAthleteSettingsModels);
+		});
+	}
+
+	/**
+	 * Reset (replace existing) athlete periodic settings with default PeriodicAthleteSettingsModel
+	 * @returns {Promise<PeriodicAthleteSettingsModel[]>}
+	 */
+	public reset(): Promise<PeriodicAthleteSettingsModel[]> {
+		// Force save empty and add default PeriodicAthleteSettingsModel
+		return this.periodicAthleteSettingsDao.save([]).then(() => {
+			return this.add(PeriodicAthleteSettingsModel.DEFAULT_MODEL);
 		});
 	}
 

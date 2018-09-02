@@ -2903,7 +2903,7 @@ describe("FitnessService", () => {
 
 				let dayTrend: DayFitnessTrendModel;
 
-				dayTrend = _.find(fitnessTrend, ['ids', [2]]);
+				dayTrend = _.find(fitnessTrend, ["ids", [2]]);
 				expect(dayTrend).not.toBeNull();
 				expect(_.indexOf(dayTrend.activitiesName, expectedRideName)).not.toEqual(-1);
 				expect(dayTrend.heartRateStressScore).toEqual(190);
@@ -2914,7 +2914,7 @@ describe("FitnessService", () => {
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(9.58);
 				expect(_.floor(dayTrend.tsb, 2)).toEqual(-21.53);
 
-				dayTrend = _.find(fitnessTrend, ['ids', [5]]);
+				dayTrend = _.find(fitnessTrend, ["ids", [5]]);
 				expect(dayTrend).not.toBeNull();
 				expect(dayTrend.activitiesName[0]).toEqual(expectedRunName);
 				expect(dayTrend.heartRateStressScore).toEqual(190);
@@ -2925,7 +2925,7 @@ describe("FitnessService", () => {
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(18.14);
 				expect(_.floor(dayTrend.tsb, 2)).toEqual(-42.42);
 
-				dayTrend = _.find(fitnessTrend, ['ids', [7]]);
+				dayTrend = _.find(fitnessTrend, ["ids", [7]]);
 				expect(_.floor(dayTrend.atl, 2)).toEqual(104.2);
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(30.05);
 				expect(_.floor(dayTrend.tsb, 2)).toEqual(-74.15);

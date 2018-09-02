@@ -184,7 +184,7 @@ export class FitnessService {
 						dailyActivity.push(dayStress);
 
 						// If current day is today. The last real day right?! Then leave the loop !
-						if (currentDay.isSame(today)) {
+						if (currentDay.isSame(today, "day")) {
 							break;
 						}
 

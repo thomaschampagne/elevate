@@ -25,6 +25,13 @@ import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog
 })
 export class FitnessTrendComponent implements OnInit {
 
+	constructor(public syncService: SyncService,
+				public fitnessService: FitnessService,
+				public externalUpdatesService: ExternalUpdatesService,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar) {
+	}
+
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
 		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
 		initializedFitnessTrendModel: {ctl: null, atl: null},
@@ -42,6 +49,28 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
+
+	@ViewChild(FitnessTrendInputsComponent)
+	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
+
+	public fitnessTrend: DayFitnessTrendModel[];
+	public lastPeriods: LastPeriodModel[];
+	public periodViewed: PeriodModel;
+	public lastPeriodViewed: PeriodModel;
+	public dateMin: Date;
+	public dateMax: Date;
+	public lastFitnessActiveDate: Date;
+	public fitnessTrendConfigModel: FitnessTrendConfigModel;
+	public isTrainingZonesEnabled: boolean;
+	public isPowerMeterEnabled: boolean;
+	public isSwimEnabled: boolean;
+	public isEBikeRidesEnabled: boolean;
+	public isEstimatedPowerStressScoreEnabled: boolean;
+	public isEstimatedRunningStressScoreEnabled: boolean;
+	public skipActivityTypes: string[] = [];
+	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
+	public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
 
 	public static provideLastPeriods(minDate: Date): LastPeriodModel[] {
 
@@ -130,33 +159,15 @@ export class FitnessTrendComponent implements OnInit {
 		}];
 	}
 
-	@ViewChild(FitnessTrendInputsComponent)
-	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
-
-	public fitnessTrend: DayFitnessTrendModel[];
-	public lastPeriods: LastPeriodModel[];
-	public periodViewed: PeriodModel;
-	public lastPeriodViewed: PeriodModel;
-	public dateMin: Date;
-	public dateMax: Date;
-	public lastFitnessActiveDate: Date;
-	public fitnessTrendConfigModel: FitnessTrendConfigModel;
-	public isTrainingZonesEnabled: boolean;
-	public isPowerMeterEnabled: boolean;
-	public isSwimEnabled: boolean;
-	public isEBikeRidesEnabled: boolean;
-	public isEstimatedPowerStressScoreEnabled: boolean;
-	public isEstimatedRunningStressScoreEnabled: boolean;
-	public skipActivityTypes: string[] = [];
-	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
-	public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
-
-	constructor(public syncService: SyncService,
-				public fitnessService: FitnessService,
-				public externalUpdatesService: ExternalUpdatesService,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+	public static openActivities(ids: number[]) {
+		if (ids.length > 0) {
+			const url = "https://www.strava.com/activities/{activityId}";
+			_.forEach(ids, (id: number) => {
+				window.open(url.replace("{activityId}", id.toString()), "_blank");
+			});
+		} else {
+			console.warn("No activities found");
+		}
 	}
 
 	public ngOnInit(): void {
@@ -395,29 +406,15 @@ export class FitnessTrendComponent implements OnInit {
 		this.lastPeriodViewed = this.periodViewed;
 	}
 
-	public static openActivities(ids: number[]) {
-		if (ids.length > 0) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			_.forEach(ids, (id: number) => {
-				window.open(url.replace("{activityId}", id.toString()), "_blank");
-			});
-		} else {
-			console.warn("No activities found");
-		}
-	}
-
 	public showFitnessWelcomeDialog(): void {
 
 		const show: boolean = _.isEmpty(localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG));
 
 		if (show) {
-			setTimeout(() => {
-				this.dialog.open(FitnessTrendWelcomeDialogComponent, {
-					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
-					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
-				});
-			}, 1000);
-
+			_.delay(() => this.dialog.open(FitnessTrendWelcomeDialogComponent, {
+				minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
+				maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
+			}), 1000);
 		}
 	}
 }

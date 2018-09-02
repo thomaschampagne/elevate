@@ -31,6 +31,11 @@ export class PeriodicAthleteSettingsDao {
 
 		return new Promise<PeriodicAthleteSettingsModel[]>((resolve: Function, reject: Function) => {
 
+			athletePeriodSettings = _.sortBy(athletePeriodSettings, (model: PeriodicAthleteSettingsModel) => {
+				const sortOnDate: Date = (_.isNull(model.from)) ? new Date(0) : new Date(model.from);
+				return sortOnDate.getTime() * -1;
+			});
+
 			const athletePeriodSettingsData = {};
 			athletePeriodSettingsData[PeriodicAthleteSettingsDao.PERIODIC_ATHLETE_SETTINGS_KEY] = athletePeriodSettings;
 
