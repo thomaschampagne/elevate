@@ -14,7 +14,7 @@ export class PeriodicAthleteSettingsTableModel extends PeriodicAthleteSettingsMo
 
 		this.fromAsDate = (this.from) ? new Date(this.from) : null;
 		this.toAsDate = (previousPeriodicAthleteSettingsModel && previousPeriodicAthleteSettingsModel.from) ?
-			moment(previousPeriodicAthleteSettingsModel.from, PeriodicAthleteSettingsModel.FROM_DATE_FORMAT).subtract("days", 1).toDate() : null;
+			moment(previousPeriodicAthleteSettingsModel.from, PeriodicAthleteSettingsModel.FROM_DATE_FORMAT).subtract(1, "days").toDate() : null;
 	}
 
 	public isNow(): boolean {
