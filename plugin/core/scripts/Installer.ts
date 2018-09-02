@@ -4,7 +4,6 @@ import * as semver from "semver";
 import { AthleteModel } from "../../shared/models/athlete.model";
 import { Gender } from "../../app/src/app/shared/enums/gender.enum";
 import { AthleteSettingsModel } from "../../shared/models/athlete-settings/athlete-settings.model";
-import { PeriodicAthleteSettingsModel } from "../../shared/models/athlete-settings/periodic-athlete-settings.model";
 import { UserLactateThresholdModel } from "../../shared/models/user-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 
@@ -219,14 +218,12 @@ class Installer {
 
 			console.log("Migrate to 6.5.0");
 
-			let athleteModel: AthleteModel = null;
-
 			promise = this.get(BrowserStorage.SYNC, null).then((userSettingsModel: any) => {
 
 				if (userSettingsModel.userGender) {
 					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
 
-					athleteModel = new AthleteModel(userGender, new AthleteSettingsModel(
+					const athleteModel = new AthleteModel(userGender, new AthleteSettingsModel(
 						(_.isNumber(userSettingsModel.userMaxHr)) ? userSettingsModel.userMaxHr : null,
 						(_.isNumber(userSettingsModel.userRestHr)) ? userSettingsModel.userRestHr : null,
 						(!_.isEmpty(userSettingsModel.userLTHR)) ? userSettingsModel.userLTHR : UserLactateThresholdModel.DEFAULT_MODEL,
@@ -245,18 +242,6 @@ class Installer {
 			}).then(() => {
 				// Remove deprecated old user settings
 				return this.remove(BrowserStorage.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
-
-			}).then(() => {
-
-				if (athleteModel) {
-					const periodicAthleteSettings = new PeriodicAthleteSettingsModel(
-						null, // From forever
-						athleteModel.athleteSettings);
-
-					return this.set(BrowserStorage.LOCAL, "periodicAthleteSettings", [periodicAthleteSettings]);
-				} else {
-					return Promise.resolve();
-				}
 
 			}).then(() => {
 				return this.remove(BrowserStorage.LOCAL, "profileConfigured");
