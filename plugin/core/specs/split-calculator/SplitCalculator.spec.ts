@@ -33,13 +33,14 @@ describe("SplitCalculator", () => {
 	it("should NOT normalize scale having a gaps over 5000", (done: Function) => {
 
 		// Given
-		const scale: number[] = [0, 1, 3, 6, 6000];
+		const maxScaleGapThreshold = 60 * 60 * 8; // 8 hours
+		const scale: number[] = [0, 1, 3, 6, 50 + maxScaleGapThreshold];
 		const data: number[] = [0, 10, 40, 60, 90];
 		const scaleRange = 3;
 
 		// When
 		const call = () => {
-			const splitCalculator = new SplitCalculator(scale, data);
+			const splitCalculator = new SplitCalculator(scale, data, maxScaleGapThreshold);
 			splitCalculator.getBestSplit(scaleRange, true);
 		};
 
