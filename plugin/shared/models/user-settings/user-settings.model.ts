@@ -9,7 +9,7 @@ export class UserSettingsModel {
 
 	public localStorageMustBeCleared: boolean;
 	public systemUnit: string;
-	public hasPeriodicAthleteSettings: boolean;
+	public hasDatedAthleteSettings: boolean;
 	public athleteModel?: AthleteModel; // TODO edit -> remove -> '?'
 
 	// TODO START - Deprecated to remove

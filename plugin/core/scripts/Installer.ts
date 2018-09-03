@@ -207,7 +207,7 @@ class Installer {
 
 	/**
 	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
-	 * Create periodicAthleteSettings into local storage
+	 * Create datedAthleteSettings into local storage
 	 * @returns {Promise<void>}
 	 */
 	protected migrate_to_6_5_0(): Promise<void> {

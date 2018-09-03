@@ -32,8 +32,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
 import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
 import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
-import { PeriodicAthleteSettingsService } from "./services/periodic-athlete-settings/periodic-athlete-settings.service";
-import { PeriodicAthleteSettingsDao } from "./dao/periodic-athlete-settings/periodic-athlete-settings.dao";
+import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
+import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings-dao.service";
 
 @NgModule({
 	imports: [
@@ -81,8 +81,8 @@ import { PeriodicAthleteSettingsDao } from "./dao/periodic-athlete-settings/peri
 		SyncDao,
 		UserSettingsService,
 		UserSettingsDao,
-		PeriodicAthleteSettingsService,
-		PeriodicAthleteSettingsDao,
+		DatedAthleteSettingsService,
+		DatedAthleteSettingsDao,
 		AthleteModelResolverService,
 		ActivityService,
 		ActivityDao,

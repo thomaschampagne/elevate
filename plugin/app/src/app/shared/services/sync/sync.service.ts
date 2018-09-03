@@ -10,8 +10,8 @@ import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced
 import { SyncedBackupModel } from "./synced-backup.model";
 import * as semver from "semver";
 import { Constant } from "../../../../../../shared/Constant";
-import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
-import { PeriodicAthleteSettingsService } from "../periodic-athlete-settings/periodic-athlete-settings.service";
+import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 
 @Injectable()
@@ -23,7 +23,7 @@ export class SyncService {
 
 	constructor(public syncDao: SyncDao,
 				public activityDao: ActivityDao,
-				public periodicAthleteSettingsService: PeriodicAthleteSettingsService,
+				public datedAthleteSettingsService: DatedAthleteSettingsService,
 				public userSettingsService: UserSettingsService) {
 
 	}
@@ -77,19 +77,19 @@ export class SyncService {
 
 		return this.clearSyncedData().then(() => {
 
-			let promiseImportPeriodicAthleteSettings;
+			let promiseImportDatedAthleteSettings;
 
-			// If no periodic athlete settings provided in backup then reset periodic athlete settings
-			if (_.isEmpty(importedBackupModel.periodicAthleteSettings)) {
-				promiseImportPeriodicAthleteSettings = this.periodicAthleteSettingsService.reset();
+			// If no dated athlete settings provided in backup then reset dated athlete settings
+			if (_.isEmpty(importedBackupModel.datedAthleteSettings)) {
+				promiseImportDatedAthleteSettings = this.datedAthleteSettingsService.reset();
 			} else {
-				promiseImportPeriodicAthleteSettings = this.periodicAthleteSettingsService.save(importedBackupModel.periodicAthleteSettings);
+				promiseImportDatedAthleteSettings = this.datedAthleteSettingsService.save(importedBackupModel.datedAthleteSettings);
 			}
 
 			return Promise.all([
 				this.saveLastSyncDateTime(importedBackupModel.lastSyncDateTime),
 				this.activityDao.save(importedBackupModel.syncedActivities),
-				promiseImportPeriodicAthleteSettings,
+				promiseImportDatedAthleteSettings,
 				this.userSettingsService.clearLocalStorageOnNextLoad()
 			]);
 
@@ -97,12 +97,12 @@ export class SyncService {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-			const periodicAthleteSettings: PeriodicAthleteSettingsModel[] = result[2] as PeriodicAthleteSettingsModel[];
+			const datedAthleteSettings: DatedAthleteSettingsModel[] = result[2] as DatedAthleteSettingsModel[];
 
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
-				periodicAthleteSettings: periodicAthleteSettings,
+				datedAthleteSettings: datedAthleteSettings,
 				pluginVersion: importedBackupModel.pluginVersion
 			};
 
@@ -138,13 +138,13 @@ export class SyncService {
 
 			this.syncDao.getLastSyncDateTime(),
 			this.activityDao.fetch(),
-			this.periodicAthleteSettingsService.fetch()
+			this.datedAthleteSettingsService.fetch()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-			const periodicAthleteSettings: PeriodicAthleteSettingsModel[] = result[2] as PeriodicAthleteSettingsModel[];
+			const datedAthleteSettings: DatedAthleteSettingsModel[] = result[2] as DatedAthleteSettingsModel[];
 
 			if (!_.isNumber(lastSyncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
@@ -153,7 +153,7 @@ export class SyncService {
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
-				periodicAthleteSettings: periodicAthleteSettings,
+				datedAthleteSettings: datedAthleteSettings,
 				pluginVersion: this.getAppVersion()
 			};
 
