@@ -1,13 +1,14 @@
 <mat-toolbar>
 	<span class="mat-body-1">
-		<span *ngIf="!hasPeriodicAthleteSettings"><strong>Single Athlete Settings</strong> are <strong>active</strong>.
-			Enable <strong>Periodic Athlete Settings</strong> for more reliable stats.</span>
+		<span *ngIf="!hasDatedAthleteSettings"><strong>Single Athlete Settings</strong> are <strong>active</strong>.
+			Enable <strong>Dated Athlete Settings</strong> for more reliable stats.</span>
 
-		<span *ngIf="hasPeriodicAthleteSettings"><strong>Periodic Athlete Settings</strong> are <strong>active</strong>.</span>
+		<span
+			*ngIf="hasDatedAthleteSettings"><strong>Dated Athlete Settings</strong> are <strong>active</strong>.</span>
 	</span>
 	<span fxFlex></span>
-	<mat-slide-toggle [(ngModel)]="hasPeriodicAthleteSettings" (change)="onHasPeriodicAthleteSettingsChange()">
-		Periodic Athlete Settings
+	<mat-slide-toggle [(ngModel)]="hasDatedAthleteSettings" (change)="onHasDatedAthleteSettingsChange()">
+		Dated Athlete Settings
 	</mat-slide-toggle>
 </mat-toolbar>
 
@@ -32,11 +33,11 @@
 	</mat-card-content>
 </mat-card>
 
-<!--Single athlete settings form when athlete hasn't PeriodicAthleteSettings ON-->
-<app-athlete-settings-form *ngIf="(hasPeriodicAthleteSettings !== true && athleteModel && athleteModel.athleteSettings)"
+<!--Single athlete settings form when athlete hasn't DatedAthleteSettings ON-->
+<app-athlete-settings-form *ngIf="(hasDatedAthleteSettings !== true && athleteModel && athleteModel.athleteSettings)"
 						   [athleteSettingsModel]="athleteModel.athleteSettings"
 						   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
 
-<!--Periodic Athlete Settings manager component-->
-<app-periodic-athlete-settings-manager *ngIf="(hasPeriodicAthleteSettings === true)"
-									   (periodicAthleteSettingsModelsChange)="onPeriodicAthleteSettingsModelsChanged()"></app-periodic-athlete-settings-manager>
+<!--Dated Athlete Settings manager component-->
+<app-dated-athlete-settings-manager *ngIf="(hasDatedAthleteSettings === true)"
+									(datedAthleteSettingsModelsChange)="onDatedAthleteSettingsModelsChanged()"></app-dated-athlete-settings-manager>

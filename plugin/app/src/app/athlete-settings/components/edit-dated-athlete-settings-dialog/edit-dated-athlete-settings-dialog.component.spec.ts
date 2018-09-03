@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { EditPeriodicAthleteSettingsDialogComponent } from "./edit-periodic-athlete-settings-dialog.component";
+import { EditDatedAthleteSettingsDialogComponent } from "./edit-dated-athlete-settings-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
@@ -8,19 +8,19 @@ import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { userSettings } from "../../../../../../shared/UserSettings";
-import { PeriodicAthleteSettingsDialogData } from "./periodic-athlete-settings-dialog-data.model";
-import { PeriodicAthleteSettingsAction } from "./periodic-athlete-settings-action.enum";
+import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
+import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
 
-describe("EditPeriodicAthleteSettingsDialogComponent", () => {
+describe("EditDatedAthleteSettingsDialogComponent", () => {
 
-	let component: EditPeriodicAthleteSettingsDialogComponent;
-	let fixture: ComponentFixture<EditPeriodicAthleteSettingsDialogComponent>;
+	let component: EditDatedAthleteSettingsDialogComponent;
+	let fixture: ComponentFixture<EditDatedAthleteSettingsDialogComponent>;
 	let userSettingsDao: UserSettingsDao;
 
 	beforeEach((done: Function) => {
 
-		const periodicAthleteSettingsDialogData: PeriodicAthleteSettingsDialogData = {
-			action: PeriodicAthleteSettingsAction.ACTION_ADD
+		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
+			action: DatedAthleteSettingsAction.ACTION_ADD
 		};
 
 		TestBed.configureTestingModule({
@@ -31,7 +31,7 @@ describe("EditPeriodicAthleteSettingsDialogComponent", () => {
 			],
 			providers: [
 				{
-					provide: MAT_DIALOG_DATA, useValue: periodicAthleteSettingsDialogData,
+					provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData,
 				},
 				{
 					provide: MatDialogRef, useValue: {},
@@ -47,7 +47,7 @@ describe("EditPeriodicAthleteSettingsDialogComponent", () => {
 			}
 		});
 
-		fixture = TestBed.createComponent(EditPeriodicAthleteSettingsDialogComponent);
+		fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 

@@ -7,7 +7,7 @@ import { AthleteSettingsModel } from "../../../../../shared/models/athlete-setti
 import { AthleteModel } from "../../../../../shared/models/athlete.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 
-// TODO Give a helper guide to find periodic settings (how to?)
+// TODO Give a helper guide to find dated settings (how to?)
 // TODO Show athleteModel used on strava activities
 
 /*
@@ -31,7 +31,7 @@ TODO Handle Fitness Trend on activities without AthleteModel (e.g. Les 2 Alpes =
 export class AthleteSettingsComponent implements OnInit {
 
 	public static readonly SYNCED_ATHLETE_MODEL_SETTING_KEY = "athleteModel";
-	public static readonly SYNCED_HAS_PERIODIC_ATHLETE_SETTINGS_KEY = "hasPeriodicAthleteSettings";
+	public static readonly SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY = "hasDatedAthleteSettings";
 
 	public readonly GENDER_LIST: GenderModel[] = [{
 		type: Gender.MEN,
@@ -43,7 +43,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public athleteModel: AthleteModel;
 
-	public hasPeriodicAthleteSettings: boolean;
+	public hasDatedAthleteSettings: boolean;
 
 	constructor(public userSettingsService: UserSettingsService,
 				public activityService: ActivityService) {
@@ -51,7 +51,7 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
-			this.hasPeriodicAthleteSettings = userSettings.hasPeriodicAthleteSettings;
+			this.hasDatedAthleteSettings = userSettings.hasDatedAthleteSettings;
 			this.athleteModel = userSettings.athleteModel;
 		});
 	}
@@ -74,7 +74,7 @@ export class AthleteSettingsComponent implements OnInit {
 		this.onAthleteModelChanged();
 	}
 
-	public onPeriodicAthleteSettingsModelsChanged(): void {
+	public onDatedAthleteSettingsModelsChanged(): void {
 		this.onAthleteSettingsChanged();
 	}
 
@@ -83,7 +83,7 @@ export class AthleteSettingsComponent implements OnInit {
 	}
 
 	/**
-	 * Clear local storage for athlete settings (periodic included) change
+	 * Clear local storage for athlete settings (dated included) change
 	 */
 	public onAthleteModelChanged(): void {
 		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
@@ -92,8 +92,8 @@ export class AthleteSettingsComponent implements OnInit {
 		}).catch((error) => console.error(error));
 	}
 
-	public onHasPeriodicAthleteSettingsChange(): void {
-		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_HAS_PERIODIC_ATHLETE_SETTINGS_KEY, this.hasPeriodicAthleteSettings).then((userSettings: UserSettingsModel) => {
+	public onHasDatedAthleteSettingsChange(): void {
+		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY, this.hasDatedAthleteSettings).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
 			this.onAthleteSettingsChanged();
 		}).catch((error) => {

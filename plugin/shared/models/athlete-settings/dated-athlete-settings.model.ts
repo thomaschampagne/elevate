@@ -1,6 +1,6 @@
-import {AthleteSettingsModel} from "./athlete-settings.model";
+import { AthleteSettingsModel } from "./athlete-settings.model";
 
-export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
+export class DatedAthleteSettingsModel extends AthleteSettingsModel {
 
 	/**
 	 *
@@ -19,8 +19,8 @@ export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 
 	public static readonly SINCE_DATE_FORMAT: string = "YYYY-MM-DD";
 
-	public static readonly DEFAULT_MODEL: PeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(
-		PeriodicAthleteSettingsModel.DEFAULT_SINCE,
+	public static readonly DEFAULT_MODEL: DatedAthleteSettingsModel = new DatedAthleteSettingsModel(
+		DatedAthleteSettingsModel.DEFAULT_SINCE,
 		AthleteSettingsModel.DEFAULT_MODEL
 	);
 
@@ -29,16 +29,16 @@ export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 	 */
 	public since: string = null;
 
-	public static asInstance(periodicAthleteSettingsModel: PeriodicAthleteSettingsModel): PeriodicAthleteSettingsModel {
-		return new PeriodicAthleteSettingsModel(periodicAthleteSettingsModel.since,
+	public static asInstance(datedAthleteSettingsModel: DatedAthleteSettingsModel): DatedAthleteSettingsModel {
+		return new DatedAthleteSettingsModel(datedAthleteSettingsModel.since,
 			new AthleteSettingsModel(
-				periodicAthleteSettingsModel.maxHr,
-				periodicAthleteSettingsModel.restHr,
-				periodicAthleteSettingsModel.lthr,
-				periodicAthleteSettingsModel.cyclingFtp,
-				periodicAthleteSettingsModel.runningFtp,
-				periodicAthleteSettingsModel.swimFtp,
-				periodicAthleteSettingsModel.weight
+				datedAthleteSettingsModel.maxHr,
+				datedAthleteSettingsModel.restHr,
+				datedAthleteSettingsModel.lthr,
+				datedAthleteSettingsModel.cyclingFtp,
+				datedAthleteSettingsModel.runningFtp,
+				datedAthleteSettingsModel.swimFtp,
+				datedAthleteSettingsModel.weight
 			));
 	}
 

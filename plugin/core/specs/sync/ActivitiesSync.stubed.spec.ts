@@ -15,7 +15,7 @@ import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
 import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
 import { userSettings } from "../../../shared/UserSettings";
-import { PeriodicAthleteSettingsModel } from "../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../../shared/models/athlete-settings/dated-athlete-settings.model";
 import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("ActivitiesSynchronizer", () => {
@@ -95,12 +95,12 @@ describe("ActivitiesSynchronizer", () => {
 		];
 
 		// Setup athlete models resolution
-		userSettingsMock.hasPeriodicAthleteSettings = true;
+		userSettingsMock.hasDatedAthleteSettings = true;
 
-		const periodicAthleteSettingsModels = [
-			new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, 325, 32, 78))
+		const datedAthleteSettingsModels = [
+			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, 325, 32, 78))
 		];
-		athleteModelResolver = new AthleteModelResolver(userSettingsMock, periodicAthleteSettingsModels);
+		athleteModelResolver = new AthleteModelResolver(userSettingsMock, datedAthleteSettingsModels);
 
 		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
 

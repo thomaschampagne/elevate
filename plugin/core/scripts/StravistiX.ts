@@ -46,7 +46,7 @@ import "./Follow";
 import { releaseNotes } from "../../shared/ReleaseNotes";
 import { ReleaseNoteModel } from "../../shared/models/release-note.model";
 import { AthleteModelResolver } from "../../shared/resolvers/athlete-model.resolver";
-import { PeriodicAthleteSettingsModel } from "../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../shared/models/athlete-settings/dated-athlete-settings.model";
 import { Gender } from "../../app/src/app/shared/enums/gender.enum";
 
 export class StravistiX {
@@ -54,7 +54,7 @@ export class StravistiX {
 	public static instance: StravistiX = null;
 
 	public static LOCAL_VERSION_INSTALLED_KEY = "versionInstalled";
-	public static LOCAL_PERIODIC_ATHLETE_SETTINGS_KEY = "periodicAthleteSettings";
+	public static LOCAL_DATED_ATHLETE_SETTINGS_KEY = "datedAthleteSettings";
 
 	public isPro: boolean;
 	public isPremium: boolean;
@@ -188,8 +188,8 @@ export class StravistiX {
 	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
 
 		return new Promise((resolve, reject) => {
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_PERIODIC_ATHLETE_SETTINGS_KEY)
-				.then((result: { data: PeriodicAthleteSettingsModel[] }) => {
+			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
+				.then((result: { data: DatedAthleteSettingsModel[] }) => {
 					resolve(new AthleteModelResolver(userSettings, result.data));
 				}, error => reject(error));
 		});

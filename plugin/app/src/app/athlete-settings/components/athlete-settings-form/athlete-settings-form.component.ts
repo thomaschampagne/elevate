@@ -15,15 +15,15 @@ import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-se
 })
 export class AthleteSettingsFormComponent implements OnInit {
 
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_WEIGHT: any = "weight";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_MAX_HR: string = "maxHr";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_REST_HR: string = "restHr";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_DEFAULT_LTHR: string = "lthr.default";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_CYCLING_LTHR: string = "lthr.cycling";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_RUNNING_LTHR: string = "lthr.running";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_CYCLING_FTP: string = "cyclingFtp";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_RUNNING_FTP: string = "runningFtp";
-	public static readonly PERIODIC_ATHLETE_SETTING_KEY_SWIMMING_FTP: string = "swimFtp";
+	public static readonly DATED_ATHLETE_SETTING_KEY_WEIGHT: any = "weight";
+	public static readonly DATED_ATHLETE_SETTING_KEY_MAX_HR: string = "maxHr";
+	public static readonly DATED_ATHLETE_SETTING_KEY_REST_HR: string = "restHr";
+	public static readonly DATED_ATHLETE_SETTING_KEY_DEFAULT_LTHR: string = "lthr.default";
+	public static readonly DATED_ATHLETE_SETTING_KEY_CYCLING_LTHR: string = "lthr.cycling";
+	public static readonly DATED_ATHLETE_SETTING_KEY_RUNNING_LTHR: string = "lthr.running";
+	public static readonly DATED_ATHLETE_SETTING_KEY_CYCLING_FTP: string = "cyclingFtp";
+	public static readonly DATED_ATHLETE_SETTING_KEY_RUNNING_FTP: string = "runningFtp";
+	public static readonly DATED_ATHLETE_SETTING_KEY_SWIMMING_FTP: string = "swimFtp";
 
 	public readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR;
 
@@ -78,12 +78,12 @@ export class AthleteSettingsFormComponent implements OnInit {
 	}
 
 	public onWeightChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_WEIGHT);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_WEIGHT);
 	}
 
 	public onMaxHrChanged() {
 
-		const maxHrProperty = AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_MAX_HR;
+		const maxHrProperty = AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_MAX_HR;
 		if (this.isPropertyCompliant(maxHrProperty) && this.athleteSettingsModel.maxHr > this.athleteSettingsModel.restHr) {
 			this.onValidateChange(maxHrProperty);
 		} else {
@@ -94,7 +94,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
 	public onRestHrChanged() {
 
-		const restHrProperty = AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_REST_HR;
+		const restHrProperty = AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_REST_HR;
 		if (this.isPropertyCompliant(restHrProperty) && this.athleteSettingsModel.restHr < this.athleteSettingsModel.maxHr) {
 			this.onValidateChange(restHrProperty);
 		} else {
@@ -104,23 +104,23 @@ export class AthleteSettingsFormComponent implements OnInit {
 	}
 
 	public onLTHRChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_DEFAULT_LTHR, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_DEFAULT_LTHR, true);
 	}
 
 	public onCyclingLTHRChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_CYCLING_LTHR, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_CYCLING_LTHR, true);
 	}
 
 	public onRunningLTHRChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_RUNNING_LTHR, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_RUNNING_LTHR, true);
 	}
 
 	public onCyclingFtpChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_CYCLING_FTP, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_CYCLING_FTP, true);
 	}
 
 	public onRunningFtpChanged() {
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_RUNNING_FTP, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_RUNNING_FTP, true);
 	}
 
 	public onSwimFtpCalculatorEnabled(): void {
@@ -131,7 +131,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 		if (_.isUndefined(changeFromPaceField) || !changeFromPaceField) { // If change is not from "hh:mm:ss / 100m" pace field
 			this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.athleteSettingsModel.swimFtp); // Update min/100m field
 		}
-		this.onValidateChange(AthleteSettingsFormComponent.PERIODIC_ATHLETE_SETTING_KEY_SWIMMING_FTP, true);
+		this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_SWIMMING_FTP, true);
 	}
 
 	public onSwimFtp100mChanged() {

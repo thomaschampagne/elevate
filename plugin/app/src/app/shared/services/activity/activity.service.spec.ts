@@ -10,7 +10,7 @@ import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-se
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { userSettings } from "../../../../../../shared/UserSettings";
-import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
 
 describe("ActivityService", () => {
 
@@ -165,7 +165,7 @@ describe("ActivityService", () => {
 
 	describe("Activity compliance with athlete settings", () => {
 
-		it("should resolve activities compliant with athlete settings hasPeriodicAthleteSettings=false", (done: Function) => {
+		it("should resolve activities compliant with athlete settings hasDatedAthleteSettings=false", (done: Function) => {
 
 			// Given
 			const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
@@ -206,11 +206,11 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			const userSettingsModel = _.cloneDeep(userSettings);
-			userSettingsModel.hasPeriodicAthleteSettings = false;
+			userSettingsModel.hasDatedAthleteSettings = false;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
 				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.periodicAthleteSettingsService, "fetch")
+			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
 				.and.returnValue(Promise.resolve([]));
 
 			// When
@@ -231,7 +231,7 @@ describe("ActivityService", () => {
 
 		});
 
-		it("should resolve activities compliant with athlete settings hasPeriodicAthleteSettings=true", (done: Function) => {
+		it("should resolve activities compliant with athlete settings hasDatedAthleteSettings=true", (done: Function) => {
 
 			// Given
 			const athleteModel01 = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
@@ -245,9 +245,9 @@ describe("ActivityService", () => {
 			athleteModel02.athleteSettings.restHr = 66;
 			athleteModel02.athleteSettings.cyclingFtp = 250;
 
-			const periodicAthleteSettingsModels = [
-				new PeriodicAthleteSettingsModel("2018-01-14", athleteModel02.athleteSettings),
-				new PeriodicAthleteSettingsModel(null, athleteModel01.athleteSettings),
+			const datedAthleteSettingsModels = [
+				new DatedAthleteSettingsModel("2018-01-14", athleteModel02.athleteSettings),
+				new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings),
 			];
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
@@ -282,12 +282,12 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			const userSettingsModel = _.cloneDeep(userSettings);
-			userSettingsModel.hasPeriodicAthleteSettings = true;
+			userSettingsModel.hasDatedAthleteSettings = true;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
 				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.periodicAthleteSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(periodicAthleteSettingsModels));
+			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
+				.and.returnValue(Promise.resolve(datedAthleteSettingsModels));
 
 			// When
 			const promise = activityService.isAthleteSettingsConsistent();
@@ -307,7 +307,7 @@ describe("ActivityService", () => {
 
 		});
 
-		it("should resolve non consistent activities ids which are not compliant athlete settings hasPeriodicAthleteSettings=true", (done: Function) => {
+		it("should resolve non consistent activities ids which are not compliant athlete settings hasDatedAthleteSettings=true", (done: Function) => {
 
 			// Given
 			const athleteModel01 = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
@@ -321,9 +321,9 @@ describe("ActivityService", () => {
 			athleteModel02.athleteSettings.restHr = 66;
 			athleteModel02.athleteSettings.cyclingFtp = 250;
 
-			const periodicAthleteSettingsModels = [
-				new PeriodicAthleteSettingsModel("2018-01-15", athleteModel02.athleteSettings),
-				new PeriodicAthleteSettingsModel(null, athleteModel01.athleteSettings),
+			const datedAthleteSettingsModels = [
+				new DatedAthleteSettingsModel("2018-01-15", athleteModel02.athleteSettings),
+				new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings),
 			];
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
@@ -358,12 +358,12 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			const userSettingsModel = _.cloneDeep(userSettings);
-			userSettingsModel.hasPeriodicAthleteSettings = true;
+			userSettingsModel.hasDatedAthleteSettings = true;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
 				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.periodicAthleteSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(periodicAthleteSettingsModels));
+			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
+				.and.returnValue(Promise.resolve(datedAthleteSettingsModels));
 
 			// When
 			const promise = activityService.nonConsistentActivitiesWithAthleteSettings();
@@ -430,11 +430,11 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			const userSettingsModel = _.cloneDeep(userSettings);
-			userSettingsModel.hasPeriodicAthleteSettings = false;
+			userSettingsModel.hasDatedAthleteSettings = false;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
 				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.periodicAthleteSettingsService, "fetch")
+			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
 				.and.returnValue(Promise.resolve([]));
 
 			// When

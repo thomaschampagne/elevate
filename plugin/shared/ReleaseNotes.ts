@@ -1,13 +1,13 @@
-import {ReleaseNoteModel} from "./models/release-note.model";
+import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
 		version: "6.5.0",
 		date: "2018-09-03",
-		message: "Added support of \"Periodic Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date.",
+		message: "Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date.",
 		hotFixes: [],
 		features: [
-			"Added support of \"Periodic Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date."
+			"Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date."
 		],
 		isPatch: false,
 		fixes: [

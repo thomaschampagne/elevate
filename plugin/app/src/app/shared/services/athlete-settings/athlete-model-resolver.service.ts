@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { AthleteModelResolver } from "../../../../../../shared/resolvers/athlete-model.resolver";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { PeriodicAthleteSettingsService } from "../periodic-athlete-settings/periodic-athlete-settings.service";
+import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { PeriodicAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/periodic-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
 import { AthleteModel } from "../../../../../../shared/models/athlete.model";
 import * as _ from "lodash";
 
@@ -15,24 +15,24 @@ export class AthleteModelResolverService {
 	public userSettingsModel: UserSettingsModel;
 
 	constructor(public userSettingsService: UserSettingsService,
-				public periodicAthleteSettingsService: PeriodicAthleteSettingsService) {
+				public datedAthleteSettingsService: DatedAthleteSettingsService) {
 	}
 
 	/**
-	 * Update or update AthleteModelResolver dependency with up-to-date UserSettingsModel & PeriodicAthleteSettingsModels.
+	 * Update or update AthleteModelResolver dependency with up-to-date UserSettingsModel & DatedAthleteSettingsModels.
 	 */
 	public update(): Promise<void> {
 		return this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 			this.userSettingsModel = userSettings;
-			return this.periodicAthleteSettingsService.fetch();
-		}).then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
-			this.athleteModelResolver = new AthleteModelResolver(this.userSettingsModel, periodicAthleteSettingsModels);
+			return this.datedAthleteSettingsService.fetch();
+		}).then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+			this.athleteModelResolver = new AthleteModelResolver(this.userSettingsModel, datedAthleteSettingsModels);
 			return Promise.resolve();
 		});
 	}
 
 	/**
-	 * Resolve the proper AthleteModel along UserSettingsModel.hasPeriodicAthleteSettings and activity date
+	 * Resolve the proper AthleteModel along UserSettingsModel.hasDatedAthleteSettings and activity date
 	 * @param onDate Date format YYYY-MM-DD or Date object
 	 * @returns {AthleteModel}
 	 */

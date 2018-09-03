@@ -4,7 +4,7 @@ import { AthleteModel } from "./models/athlete.model";
 export const userSettings: UserSettingsModel = { // TODO rename file as user-settings.model and move in models
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
-	hasPeriodicAthleteSettings: false,
+	hasDatedAthleteSettings: false,
 	athleteModel: AthleteModel.DEFAULT_MODEL,
 	zones: {
 		speed: [{from: 0, to: 7}, {from: 7, to: 9}, {from: 9, to: 11}, {from: 11, to: 13}, {

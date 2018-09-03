@@ -1,10 +1,10 @@
 <mat-dialog-content>
 
 	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === PeriodicAthleteSettingsAction.ACTION_ADD)" mat-flat-button
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-flat-button
 				color="primary" (click)="onConfirm()"> Add
 		</button>
-		<button fxFlex="50" *ngIf="(data.action === PeriodicAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
 				color="primary" (click)="onConfirm()">Edit
 		</button>
 		<span fxFlex="1"></span>
@@ -16,11 +16,11 @@
 		<mat-card-content>
 			<mat-form-field fxFill>
 				<input matInput
-					   [disabled]="(periodicAthleteSettingsModel.isForever())"
-					   [(ngModel)]="periodicAthleteSettingsModel.since"
+					   [disabled]="(datedAthleteSettingsModel.isForever())"
+					   [(ngModel)]="datedAthleteSettingsModel.since"
 					   [matDatepicker]="datePickerSince"
 					   (dateChange)="onDateChange()"
-					   placeholder="{{(periodicAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
+					   placeholder="{{(datedAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
 				<mat-datepicker-toggle matSuffix [for]="datePickerSince"></mat-datepicker-toggle>
 				<mat-datepicker #datePickerSince></mat-datepicker>
 			</mat-form-field>
@@ -28,15 +28,15 @@
 
 	</mat-card>
 
-	<app-athlete-settings-form *ngIf="periodicAthleteSettingsModel"
-							   [athleteSettingsModel]="periodicAthleteSettingsModel"
+	<app-athlete-settings-form *ngIf="datedAthleteSettingsModel"
+							   [athleteSettingsModel]="datedAthleteSettingsModel"
 							   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
 
 	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === PeriodicAthleteSettingsAction.ACTION_ADD)" mat-flat-button
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-flat-button
 				color="primary" (click)="onConfirm()"> Add
 		</button>
-		<button fxFlex="50" *ngIf="(data.action === PeriodicAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
 				color="primary" (click)="onConfirm()">Edit
 		</button>
 		<span fxFlex="1"></span>
