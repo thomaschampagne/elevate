@@ -1,13 +1,13 @@
 import * as _ from "lodash";
-import { AppResourcesModel } from "../../scripts/models/app-resources.model";
-import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
-import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
-import { userSettings } from "../../../shared/UserSettings";
+import {AppResourcesModel} from "../../scripts/models/app-resources.model";
+import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
+import {SyncedActivityModel} from "../../../shared/models/sync/synced-activity.model";
+import {StravaActivityModel} from "../../../shared/models/sync/strava-activity.model";
+import {ActivitiesChangesModel} from "../../scripts/synchronizer/activities-changes.model";
+import {UserSettingsModel} from "../../../shared/models/user-settings/user-settings.model";
+import {ActivitiesSynchronizer} from "../../scripts/synchronizer/ActivitiesSynchronizer";
+import {AthleteModelResolver} from "../../../shared/resolvers/athlete-model.resolver";
+import {userSettings} from "../../../shared/UserSettings";
 
 describe("ActivitiesSynchronizer", () => {
 
@@ -56,7 +56,7 @@ describe("ActivitiesSynchronizer", () => {
 		let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/syncedActivities20161213.json").syncedActivities);
 		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 
-		// Simulate Added in strava: consist to remove from synced activities...
+		// Simulate Added in strava: consist to remove since synced activities...
 		syncedActivities = removeActivityFromArray(723224273, syncedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
 		syncedActivities = removeActivityFromArray(707356065, syncedActivities); // Remove Ride "Je suis un gros lent !"
 

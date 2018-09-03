@@ -10,8 +10,8 @@ describe("PeriodicAthleteSettingsService", () => {
 
 	let service: PeriodicAthleteSettingsService = null;
 
-	let from;
-	let to;
+	let since;
+	let until;
 	let maxHr;
 	let restHr;
 	let lthr;
@@ -31,8 +31,8 @@ describe("PeriodicAthleteSettingsService", () => {
 		// Retrieve injected service
 		service = TestBed.get(PeriodicAthleteSettingsService);
 
-		from = new Date();
-		to = new Date();
+		since = new Date();
+		until = new Date();
 		maxHr = 200;
 		restHr = 50;
 		lthr = {
@@ -247,8 +247,8 @@ describe("PeriodicAthleteSettingsService", () => {
 			const fetchDaoSpy = spyOn(service.periodicAthleteSettingsDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const foreverPeriodicSettings = _.cloneDeep(athletePeriodSettingsToAdd); // Forever periodic settings have to be created !
-			foreverPeriodicSettings.from = null;
+			const foreverPeriodicSettings = _.cloneDeep(athletePeriodSettingsToAdd); // Forever periodic settings have until be created !
+			foreverPeriodicSettings.since = null;
 			expectedPeriodAthleteSettings.push(foreverPeriodicSettings);
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
@@ -513,7 +513,7 @@ describe("PeriodicAthleteSettingsService", () => {
 			});
 		});
 
-		it("should edit 'from date & settings' of a periodic athlete settings with already existing periods", (done: Function) => {
+		it("should edit 'since date & settings' of a periodic athlete settings with already existing periods", (done: Function) => {
 
 			// Given
 			const editAtDate = "2018-04-15";
@@ -759,11 +759,11 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should remove a periodic athlete settings with already existing periods", (done: Function) => {
 
 			// Given
-			const removeFromIdentifier = "2018-04-15";
+			const removeSinceIdentifier = "2018-04-15";
 			const removePeriodicAthleteSettingsIndex = 1;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel(removeSinceIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
 				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
@@ -780,7 +780,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeFromIdentifier);
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: PeriodicAthleteSettingsModel[]) => {
@@ -804,10 +804,10 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should reject deletion of the 'forever' existing period", (done: Function) => {
 
 			// Given
-			const removeFromIdentifier = null;
+			const removeSinceIdentifier = null;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(removeSinceIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -821,7 +821,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeFromIdentifier);
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: PeriodicAthleteSettingsModel[]) => {
@@ -845,9 +845,9 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should reject deletion of the single 'forever' existing period", (done: Function) => {
 
 			// Given
-			const removeFromIdentifier = null;
+			const removeSinceIdentifier = null;
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(removeFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(removeSinceIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -861,7 +861,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeFromIdentifier);
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: PeriodicAthleteSettingsModel[]) => {
@@ -885,7 +885,7 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should reject deletion of a non-existing period", (done: Function) => {
 
 			// Given
-			const removeFromIdentifier = "fake";
+			const removeSinceIdentifier = "fake";
 			const existingPeriodAthleteSettings: PeriodicAthleteSettingsModel[] = [
 				new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
 				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
@@ -904,7 +904,7 @@ describe("PeriodicAthleteSettingsService", () => {
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeFromIdentifier);
+			const promise: Promise<PeriodicAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: PeriodicAthleteSettingsModel[]) => {
@@ -955,10 +955,10 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should not validate periodic athlete settings consistency with duplicate identifier (1)", (done: Function) => {
 
 			// Given
-			const duplicateFromIdentifier = "2018-05-10";
+			const duplicateSinceIdentifier = "2018-05-10";
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+				new PeriodicAthleteSettingsModel(duplicateSinceIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel(duplicateSinceIdentifier, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
 				new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 				new PeriodicAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
@@ -980,12 +980,12 @@ describe("PeriodicAthleteSettingsService", () => {
 		it("should not validate periodic athlete settings consistency with duplicate identifier (2)", (done: Function) => {
 
 			// Given
-			const duplicateFromIdentifier = null;
+			const duplicateSinceIdentifier = null;
 			const periodAthleteSettings: PeriodicAthleteSettingsModel[] = [
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+				new PeriodicAthleteSettingsModel(duplicateSinceIdentifier, new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
 				new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
-				new PeriodicAthleteSettingsModel(duplicateFromIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(duplicateSinceIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+				new PeriodicAthleteSettingsModel(duplicateSinceIdentifier, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
 			// When

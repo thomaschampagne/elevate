@@ -1,6 +1,6 @@
-import { AthleteModel } from "../models/athlete.model";
-import { PeriodicAthleteSettingsModel } from "../models/athlete-settings/periodic-athlete-settings.model";
-import { UserSettingsModel } from "../models/user-settings/user-settings.model";
+import {AthleteModel} from "../models/athlete.model";
+import {PeriodicAthleteSettingsModel} from "../models/athlete-settings/periodic-athlete-settings.model";
+import {UserSettingsModel} from "../models/user-settings/user-settings.model";
 import * as _ from "lodash";
 
 /**
@@ -15,7 +15,7 @@ export class AthleteModelResolver {
 	constructor(userSettingsModel: UserSettingsModel, periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) {
 		this.userSettingsModel = userSettingsModel;
 		this.periodicAthleteSettingsModels = _.sortBy(periodicAthleteSettingsModels, (model: PeriodicAthleteSettingsModel) => {
-			const sortOnDate: Date = (_.isNull(model.from)) ? new Date(0) : new Date(model.from);
+			const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
 			return sortOnDate.getTime() * -1;
 		});
 	}
@@ -69,7 +69,7 @@ export class AthleteModelResolver {
 		const onDateTime: number = new Date(onDate).getTime();
 
 		const periodicAthleteSettingsModel: PeriodicAthleteSettingsModel = _.find(this.periodicAthleteSettingsModels, (periodicAthleteSettings: PeriodicAthleteSettingsModel) => {
-			const fromDate = (periodicAthleteSettings.from) ? new Date(periodicAthleteSettings.from) : new Date(0);
+			const fromDate = (periodicAthleteSettings.since) ? new Date(periodicAthleteSettings.since) : new Date(0);
 			return onDateTime >= fromDate.getTime();
 		});
 

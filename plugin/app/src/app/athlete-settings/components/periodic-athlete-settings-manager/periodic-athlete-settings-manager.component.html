@@ -42,18 +42,18 @@
 
 		<mat-table #table [dataSource]="dataSource" matSort>
 
-			<ng-container matColumnDef="from">
+			<ng-container matColumnDef="since">
 				<mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
 				<mat-cell *matCellDef="let periodicSettings">
-					<span *ngIf="!periodicSettings.isForever()">{{periodicSettings.fromAsDate | date}}</span>
+					<span *ngIf="!periodicSettings.isForever()">{{periodicSettings.sinceAsDate | date}}</span>
 					<span *ngIf="periodicSettings.isForever()">Forever</span>
 				</mat-cell>
 			</ng-container>
 
-			<ng-container matColumnDef="to">
+			<ng-container matColumnDef="until">
 				<mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
 				<mat-cell *matCellDef="let periodicSettings">
-					<span *ngIf="!periodicSettings.isNow()">{{periodicSettings.toAsDate | date}}</span>
+					<span *ngIf="!periodicSettings.isNow()">{{periodicSettings.untilAsDate | date}}</span>
 					<span *ngIf="periodicSettings.isNow()">Today</span>
 				</mat-cell>
 			</ng-container>
@@ -106,7 +106,7 @@
 			<ng-container matColumnDef="edit">
 				<mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
 				<mat-cell *matCellDef="let periodicSettings" [ngClass]="'editColumn'">
-					<button mat-icon-button (click)="onEdit(periodicSettings.from)"
+					<button mat-icon-button (click)="onEdit(periodicSettings.since)"
 							matTooltip="Edit periodic settings">
 						<mat-icon>edit</mat-icon>
 					</button>

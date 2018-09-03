@@ -1,36 +1,36 @@
-import { AthleteSettingsModel } from "./athlete-settings.model";
+import {AthleteSettingsModel} from "./athlete-settings.model";
 
 export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 
 	/**
 	 *
-	 * @param {string} from Date format YYYY-MM-DD
+	 * @param {string} since Date format YYYY-MM-DD
 	 * @param {AthleteSettingsModel} athleteSettingsModel
 	 */
-	constructor(from: string, athleteSettingsModel: AthleteSettingsModel) {
+	constructor(since: string, athleteSettingsModel: AthleteSettingsModel) {
 		super(athleteSettingsModel.maxHr, athleteSettingsModel.restHr, athleteSettingsModel.lthr,
 			athleteSettingsModel.cyclingFtp, athleteSettingsModel.runningFtp, athleteSettingsModel.swimFtp, athleteSettingsModel.weight);
-		this.from = from;
+		this.since = since;
 	}
 
-	public static readonly DEFAULT_FROM: string = (new Date()).getFullYear() + "-"
+	public static readonly DEFAULT_SINCE: string = (new Date()).getFullYear() + "-"
 		+ ((new Date()).getMonth() + 1).toString().padStart(2, "0") + "-"
 		+ (new Date()).getDate().toString().padStart(2, "0");
 
-	public static readonly FROM_DATE_FORMAT: string = "YYYY-MM-DD";
+	public static readonly SINCE_DATE_FORMAT: string = "YYYY-MM-DD";
 
 	public static readonly DEFAULT_MODEL: PeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel(
-		PeriodicAthleteSettingsModel.DEFAULT_FROM,
+		PeriodicAthleteSettingsModel.DEFAULT_SINCE,
 		AthleteSettingsModel.DEFAULT_MODEL
 	);
 
 	/**
-	 * Start period date. A null value means from "forever"
+	 * Start period date. A null value means since "forever"
 	 */
-	public from: string = null;
+	public since: string = null;
 
 	public static asInstance(periodicAthleteSettingsModel: PeriodicAthleteSettingsModel): PeriodicAthleteSettingsModel {
-		return new PeriodicAthleteSettingsModel(periodicAthleteSettingsModel.from,
+		return new PeriodicAthleteSettingsModel(periodicAthleteSettingsModel.since,
 			new AthleteSettingsModel(
 				periodicAthleteSettingsModel.maxHr,
 				periodicAthleteSettingsModel.restHr,
@@ -55,7 +55,7 @@ export class PeriodicAthleteSettingsModel extends AthleteSettingsModel {
 	}
 
 	public isForever(): boolean {
-		return (this.from === null);
+		return (this.since === null);
 	}
 
 }

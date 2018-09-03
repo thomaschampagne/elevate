@@ -18,8 +18,8 @@ import { AppError } from "../../../shared/models/app-error.model";
 })
 export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
-	public static readonly COLUMN_FROM: string = "from";
-	public static readonly COLUMN_TO: string = "to";
+	public static readonly COLUMN_SINCE: string = "since";
+	public static readonly COLUMN_UNTIL: string = "until";
 	public static readonly COLUMN_WEIGHT: string = "weight";
 	public static readonly COLUMN_MAX_HR: string = "maxHr";
 	public static readonly COLUMN_REST_HR: string = "restHr";
@@ -33,8 +33,8 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 	public static readonly COLUMN_ACTION_DELETE: string = "delete";
 
 	public readonly displayedColumns: string[] = [
-		PeriodicAthleteSettingsManagerComponent.COLUMN_FROM,
-		PeriodicAthleteSettingsManagerComponent.COLUMN_TO,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_SINCE,
+		PeriodicAthleteSettingsManagerComponent.COLUMN_UNTIL,
 		PeriodicAthleteSettingsManagerComponent.COLUMN_WEIGHT,
 		PeriodicAthleteSettingsManagerComponent.COLUMN_MAX_HR,
 		PeriodicAthleteSettingsManagerComponent.COLUMN_REST_HR,
@@ -152,9 +152,9 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		});
 	}
 
-	public onEdit(fromIdentifier: string): void {
+	public onEdit(sinceIdentifier: string): void {
 
-		const periodicAthleteSettingsModelToEdit = _.find(this.periodicAthleteSettingsModels, {from: fromIdentifier});
+		const periodicAthleteSettingsModelToEdit = _.find(this.periodicAthleteSettingsModels, {since: sinceIdentifier});
 
 		const periodicAthleteSettingsDialogData: PeriodicAthleteSettingsDialogData = {
 			action: PeriodicAthleteSettingsAction.ACTION_EDIT,
@@ -169,7 +169,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((periodicAthleteSettingsModel: PeriodicAthleteSettingsModel) => {
 
 			if (periodicAthleteSettingsModel) {
-				this.periodicAthleteSettingsService.edit(fromIdentifier, periodicAthleteSettingsModel).then(() => {
+				this.periodicAthleteSettingsService.edit(sinceIdentifier, periodicAthleteSettingsModel).then(() => {
 					this.periodicAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -182,7 +182,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 	}
 
-	public onRemove(fromIdentifier: string): void {
+	public onRemove(sinceIdentifier: string): void {
 
 		const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this periodic athlete settings?");
 
@@ -192,7 +192,7 @@ export class PeriodicAthleteSettingsManagerComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
-				this.periodicAthleteSettingsService.remove(fromIdentifier).then(() => {
+				this.periodicAthleteSettingsService.remove(sinceIdentifier).then(() => {
 					this.periodicAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {

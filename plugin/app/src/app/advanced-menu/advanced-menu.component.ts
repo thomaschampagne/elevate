@@ -26,7 +26,7 @@ export class AdvancedMenuComponent implements OnInit {
 		const data: ConfirmDialogDataModel = {
 			title: "Clear your athlete synced data",
 			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-			"or a new re-synchronization."
+				"or a new re-synchronization."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {

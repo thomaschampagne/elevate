@@ -5,8 +5,7 @@ import * as _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 
 /**
- * The latest managed period must have "from" as "forever"
- * The earliest managed period must have "to" as "forever"
+ * The latest managed period must have "since" as "forever"
  */
 @Injectable()
 export class PeriodicAthleteSettingsService {
@@ -22,7 +21,7 @@ export class PeriodicAthleteSettingsService {
 		return this.periodicAthleteSettingsDao.fetch()
 			.then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
 				periodicAthleteSettingsModels = _.sortBy(periodicAthleteSettingsModels, (model: PeriodicAthleteSettingsModel) => {
-					const sortOnDate: Date = (_.isNull(model.from)) ? new Date(0) : new Date(model.from);
+					const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
 					return sortOnDate.getTime() * -1;
 				});
 				return Promise.resolve(periodicAthleteSettingsModels);
@@ -43,7 +42,7 @@ export class PeriodicAthleteSettingsService {
 		}).then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
 
 			// Check if period already exists
-			const alreadyExistingPeriodicSettings = _.find(periodicAthleteSettingsModels, {from: periodicAthleteSettings.from});
+			const alreadyExistingPeriodicSettings = _.find(periodicAthleteSettingsModels, {since: periodicAthleteSettings.since});
 
 			if (!_.isEmpty(alreadyExistingPeriodicSettings)) {
 				return Promise.reject(new AppError(AppError.PERIODIC_ATHLETE_SETTINGS_EXISTS, "Periodic athlete settings already exists. You should edit it instead."));
@@ -58,7 +57,7 @@ export class PeriodicAthleteSettingsService {
 
 				// And append a default forever PeriodicAthleteSettingsModel must be created
 				const defaultForeverPeriodicAthleteSettings = _.cloneDeep(periodicAthleteSettings);
-				defaultForeverPeriodicAthleteSettings.from = null;
+				defaultForeverPeriodicAthleteSettings.since = null;
 				periodicAthleteSettingsModels.push(defaultForeverPeriodicAthleteSettings);
 			}
 
@@ -92,11 +91,11 @@ export class PeriodicAthleteSettingsService {
 
 	/**
 	 * Edit a periodic athlete settings
-	 * @param {string} fromIdentifier
+	 * @param {string} sinceIdentifier
 	 * @param {PeriodicAthleteSettingsModel} periodicAthleteSettings
 	 * @returns {Promise<PeriodicAthleteSettingsModel[]>}
 	 */
-	public edit(fromIdentifier: string, periodicAthleteSettings: PeriodicAthleteSettingsModel): Promise<PeriodicAthleteSettingsModel[]> {
+	public edit(sinceIdentifier: string, periodicAthleteSettings: PeriodicAthleteSettingsModel): Promise<PeriodicAthleteSettingsModel[]> {
 
 		return this.validateSingle(periodicAthleteSettings).then(() => {
 
@@ -104,17 +103,17 @@ export class PeriodicAthleteSettingsService {
 
 		}).then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
 
-			// Test if the edited periodic athlete settings 'from' conflicts with an existing one
-			const isEditChangingFrom = (fromIdentifier !== periodicAthleteSettings.from);
-			const isEditOverridingExistingSettings = (_.findIndex(periodicAthleteSettingsModels, {from: periodicAthleteSettings.from}) !== -1);
-			const isEditConflictWithExistingSettings = (isEditChangingFrom && isEditOverridingExistingSettings);
+			// Test if the edited periodic athlete settings 'since' conflicts with an existing one
+			const isEditChangingSince = (sinceIdentifier !== periodicAthleteSettings.since);
+			const isEditOverridingExistingSettings = (_.findIndex(periodicAthleteSettingsModels, {since: periodicAthleteSettings.since}) !== -1);
+			const isEditConflictWithExistingSettings = (isEditChangingSince && isEditOverridingExistingSettings);
 
 			if (isEditConflictWithExistingSettings) {
 				return Promise.reject(new AppError(AppError.PERIODIC_ATHLETE_SETTINGS_EXISTS,
 					"Periodic athlete settings do not exists. You should add it instead."));
 			}
 
-			const indexOfSettingsToEdit = _.findIndex(periodicAthleteSettingsModels, {from: fromIdentifier});
+			const indexOfSettingsToEdit = _.findIndex(periodicAthleteSettingsModels, {since: sinceIdentifier});
 
 			if (indexOfSettingsToEdit === -1) {
 				return Promise.reject(new AppError(AppError.PERIODIC_ATHLETE_SETTINGS_DO_NOT_EXISTS,
@@ -132,19 +131,19 @@ export class PeriodicAthleteSettingsService {
 
 	/**
 	 * Remove a periodic athlete settings
-	 * @param {string} fromIdentifier
+	 * @param {string} sinceIdentifier
 	 * @returns {Promise<PeriodicAthleteSettingsModel[]>}
 	 */
-	public remove(fromIdentifier: string): Promise<PeriodicAthleteSettingsModel[]> {
+	public remove(sinceIdentifier: string): Promise<PeriodicAthleteSettingsModel[]> {
 
 		return this.periodicAthleteSettingsDao.fetch().then((periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[]) => {
 
-			if (_.isNull(fromIdentifier)) {
+			if (_.isNull(sinceIdentifier)) {
 				return Promise.reject(new AppError(AppError.PERIODIC_ATHLETE_SETTINGS_FOREVER_MUST_EXISTS,
 					"Default forever periodic athlete settings cannot be removed."));
 			}
 
-			const indexOfSettingsToRemove = _.findIndex(periodicAthleteSettingsModels, {from: fromIdentifier});
+			const indexOfSettingsToRemove = _.findIndex(periodicAthleteSettingsModels, {since: sinceIdentifier});
 
 			if (indexOfSettingsToRemove === -1) {
 				return Promise.reject(new AppError(AppError.PERIODIC_ATHLETE_SETTINGS_DO_NOT_EXISTS,
@@ -169,7 +168,7 @@ export class PeriodicAthleteSettingsService {
 		let hasForeverSettings = false;
 		let hasDuplicate = false;
 
-		const keyOccurrences = _.countBy(periodAthleteSettings, "from");
+		const keyOccurrences = _.countBy(periodAthleteSettings, "since");
 
 		_.mapKeys(keyOccurrences, (count: number, key: string) => {
 			if (key === "null") {
@@ -205,9 +204,9 @@ export class PeriodicAthleteSettingsService {
 		// Checking date format and validity
 		if (periodicAthleteSettingsModel) {
 
-			if (!_.isNull(periodicAthleteSettingsModel.from)) {
-				const isDateWellFormatted = (/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm).exec(periodicAthleteSettingsModel.from);
-				const onDate = new Date(periodicAthleteSettingsModel.from);
+			if (!_.isNull(periodicAthleteSettingsModel.since)) {
+				const isDateWellFormatted = (/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm).exec(periodicAthleteSettingsModel.since);
+				const onDate = new Date(periodicAthleteSettingsModel.since);
 				const isValidDate = (onDate instanceof Date && !isNaN(onDate.getTime()));
 
 				if (!isDateWellFormatted || !isValidDate) {
