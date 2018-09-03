@@ -13,9 +13,6 @@
 	</div>
 
 	<mat-card>
-		<mat-card-title>
-			Period
-		</mat-card-title>
 		<mat-card-content>
 			<mat-form-field fxFill>
 				<input matInput
@@ -23,7 +20,7 @@
 					   [(ngModel)]="periodicAthleteSettingsModel.from"
 					   [matDatepicker]="datePickerFrom"
 					   (dateChange)="onPeriodChange()"
-					   placeholder="{{(periodicAthleteSettingsModel.isForever()) ?  'Forever period' : 'From'}}">
+					   placeholder="{{(periodicAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
 				<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
 				<mat-datepicker #datePickerFrom></mat-datepicker>
 			</mat-form-field>
