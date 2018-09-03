@@ -43,7 +43,7 @@
 		<mat-table #table [dataSource]="dataSource" matSort>
 
 			<ng-container matColumnDef="from">
-				<mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+				<mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
 				<mat-cell *matCellDef="let periodicSettings">
 					<span *ngIf="!periodicSettings.isForever()">{{periodicSettings.fromAsDate | date}}</span>
 					<span *ngIf="periodicSettings.isForever()">Forever</span>
@@ -51,7 +51,7 @@
 			</ng-container>
 
 			<ng-container matColumnDef="to">
-				<mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+				<mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
 				<mat-cell *matCellDef="let periodicSettings">
 					<span *ngIf="!periodicSettings.isNow()">{{periodicSettings.toAsDate | date}}</span>
 					<span *ngIf="periodicSettings.isNow()">Today</span>
