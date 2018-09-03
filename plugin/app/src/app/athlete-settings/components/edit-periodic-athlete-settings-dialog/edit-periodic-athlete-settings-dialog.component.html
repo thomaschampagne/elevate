@@ -17,12 +17,12 @@
 			<mat-form-field fxFill>
 				<input matInput
 					   [disabled]="(periodicAthleteSettingsModel.isForever())"
-					   [(ngModel)]="periodicAthleteSettingsModel.from"
-					   [matDatepicker]="datePickerFrom"
-					   (dateChange)="onPeriodChange()"
+					   [(ngModel)]="periodicAthleteSettingsModel.since"
+					   [matDatepicker]="datePickerSince"
+					   (dateChange)="onDateChange()"
 					   placeholder="{{(periodicAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
-				<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-				<mat-datepicker #datePickerFrom></mat-datepicker>
+				<mat-datepicker-toggle matSuffix [for]="datePickerSince"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerSince></mat-datepicker>
 			</mat-form-field>
 		</mat-card-content>
 

@@ -37,8 +37,8 @@ export class EditPeriodicAthleteSettingsDialogComponent implements OnInit {
 		this.periodicAthleteSettingsModel = periodicAthleteSettingsModel;
 	}
 
-	public onPeriodChange(): void {
-		this.periodicAthleteSettingsModel.from = moment(this.periodicAthleteSettingsModel.from).format(PeriodicAthleteSettingsModel.FROM_DATE_FORMAT);
+	public onDateChange(): void {
+		this.periodicAthleteSettingsModel.since = moment(this.periodicAthleteSettingsModel.since).format(PeriodicAthleteSettingsModel.SINCE_DATE_FORMAT);
 	}
 
 	public onConfirm(): void {

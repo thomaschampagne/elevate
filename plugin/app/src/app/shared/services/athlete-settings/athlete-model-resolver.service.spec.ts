@@ -283,7 +283,7 @@ describe("AthleteModelResolverService", () => {
 
 		const expectedPeriodicAthleteSettingsModel = new PeriodicAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
 
-		// Below periodic athlete settings are not sorted along from attribute
+		// Below periodic athlete settings are not sorted along since attribute
 		const periodicAthleteSettingsModels: PeriodicAthleteSettingsModel[] = [
 			new PeriodicAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
 			new PeriodicAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),

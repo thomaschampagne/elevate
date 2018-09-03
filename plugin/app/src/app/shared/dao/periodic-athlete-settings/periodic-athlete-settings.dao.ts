@@ -32,7 +32,7 @@ export class PeriodicAthleteSettingsDao {
 		return new Promise<PeriodicAthleteSettingsModel[]>((resolve: Function, reject: Function) => {
 
 			athletePeriodSettings = _.sortBy(athletePeriodSettings, (model: PeriodicAthleteSettingsModel) => {
-				const sortOnDate: Date = (_.isNull(model.from)) ? new Date(0) : new Date(model.from);
+				const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
 				return sortOnDate.getTime() * -1;
 			});
 

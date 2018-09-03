@@ -3,21 +3,21 @@ import * as moment from "moment";
 
 export class PeriodicAthleteSettingsTableModel extends PeriodicAthleteSettingsModel {
 
-	public fromAsDate: Date;
-	public toAsDate: Date;
+	public sinceAsDate: Date;
+	public untilAsDate: Date;
 
 	constructor(periodicAthleteSettingsModel: PeriodicAthleteSettingsModel, previousPeriodicAthleteSettingsModel: PeriodicAthleteSettingsModel) {
 		super(
-			periodicAthleteSettingsModel.from,
+			periodicAthleteSettingsModel.since,
 			periodicAthleteSettingsModel
 		);
 
-		this.fromAsDate = (this.from) ? new Date(this.from) : null;
-		this.toAsDate = (previousPeriodicAthleteSettingsModel && previousPeriodicAthleteSettingsModel.from) ?
-			moment(previousPeriodicAthleteSettingsModel.from, PeriodicAthleteSettingsModel.FROM_DATE_FORMAT).subtract(1, "days").toDate() : null;
+		this.sinceAsDate = (this.since) ? new Date(this.since) : null;
+		this.untilAsDate = (previousPeriodicAthleteSettingsModel && previousPeriodicAthleteSettingsModel.since) ?
+			moment(previousPeriodicAthleteSettingsModel.since, PeriodicAthleteSettingsModel.SINCE_DATE_FORMAT).subtract(1, "days").toDate() : null;
 	}
 
 	public isNow(): boolean {
-		return (this.toAsDate === null);
+		return (this.untilAsDate === null);
 	}
 }
