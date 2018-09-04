@@ -104,11 +104,6 @@
 	"targetsYearRide": 5000,
 	"targetsYearRun": 750,
 	"temperatureUnit": "C",
-	"userFTP": 240,
-	"userGender": "men",
-	"userWeight": 71.9,
-	"userMaxHr": 200,
-	"userRestHr": 45,
 	"windUnit": "km/h",
 	"zones": {
 		"heartRate": [

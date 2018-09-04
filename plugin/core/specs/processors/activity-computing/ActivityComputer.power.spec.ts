@@ -4,6 +4,9 @@ import { ActivityComputer } from "../../../scripts/processors/ActivityComputer";
 import * as _ from "lodash";
 import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { ActivityStatsMapModel } from "../../../../shared/models/activity-data/activity-stats-map.model";
+import { AthleteModel } from "../../../../shared/models/athlete.model";
+import { Gender } from "../../../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../../../shared/models/athlete-settings/athlete-settings.model";
 
 const expectBetween = (expectValue: number, toEqual: number, tolerance: number) => {
 
@@ -24,6 +27,7 @@ describe("ActivityComputer Cycling Power", () => {
 	const bounds: number[] = null;
 	const returnZones = false;
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/userSettings/2470979.json")); // Thomas C user settings
+	const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 	const statsMap: ActivityStatsMapModel = {
 		movingTime: -1,
 		elevation: -1
@@ -42,10 +46,10 @@ describe("ActivityComputer Cycling Power", () => {
 		// Given
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1109968202/stream.json"));
-		userSettingsMock.userFTP = 288; // ~FTP in July 2017 (Christophe B)
+		athleteModel.athleteSettings.cyclingFtp = 288; // ~FTP in July 2017 (Christophe B)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -68,10 +72,10 @@ describe("ActivityComputer Cycling Power", () => {
 		// Given
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1302129959/stream.json"));
-		userSettingsMock.userFTP = 380; // ~FTP in December 2017 (Jasper Verkuijl)
+		athleteModel.athleteSettings.cyclingFtp = 380; // ~FTP in December 2017 (Jasper Verkuijl)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -94,12 +98,12 @@ describe("ActivityComputer Cycling Power", () => {
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/343080886/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 223; // ~FTP in July 2015 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 205; // in July 2015 (Thomas Champagne)
-		userSettingsMock.userRestHr = 55; // in July 2015 (Thomas Champagne)
+		athleteModel.athleteSettings.cyclingFtp = 223; // ~FTP in July 2015 (Thomas Champagne)
+		athleteModel.athleteSettings.maxHr = 205; // in July 2015 (Thomas Champagne)
+		athleteModel.athleteSettings.restHr = 55; // in July 2015 (Thomas Champagne)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -120,12 +124,12 @@ describe("ActivityComputer Cycling Power", () => {
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/600329531/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 239; // ~FTP in July 2016 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 205; // in July 2016 (Thomas Champagne)
-		userSettingsMock.userRestHr = 55; // in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.cyclingFtp = 239; // ~FTP in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.maxHr = 205; // in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.restHr = 55; // in July 2016 (Thomas Champagne)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -147,12 +151,12 @@ describe("ActivityComputer Cycling Power", () => {
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/597999523/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 239; // ~FTP in July 2016 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 205; // in July 2016 (Thomas Champagne)
-		userSettingsMock.userRestHr = 55; // in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.cyclingFtp = 239; // ~FTP in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.maxHr = 205; // in July 2016 (Thomas Champagne)
+		athleteModel.athleteSettings.restHr = 55; // in July 2016 (Thomas Champagne)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -174,12 +178,12 @@ describe("ActivityComputer Cycling Power", () => {
 		const hasPowerMeter = false;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1610385844/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
-		userSettingsMock.userFTP = 130; // ~FTP in May 2018 (Thomas Champagne)
-		userSettingsMock.userMaxHr = 190; // in May 2018 (Thomas Champagne)
-		userSettingsMock.userRestHr = 55; // in May 2018 (Thomas Champagne)
+		athleteModel.athleteSettings.cyclingFtp = 130; // ~FTP in May 2018 (Thomas Champagne)
+		athleteModel.athleteSettings.maxHr = 190; // in May 2018 (Thomas Champagne)
+		athleteModel.athleteSettings.restHr = 55; // in May 2018 (Thomas Champagne)
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 

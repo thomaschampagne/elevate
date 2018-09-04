@@ -1,20 +1,11 @@
 import { UserSettingsModel } from "./models/user-settings/user-settings.model";
+import { AthleteModel } from "./models/athlete.model";
 
-export const userSettings: UserSettingsModel = {
+export const userSettings: UserSettingsModel = { // TODO rename file as user-settings.model and move in models
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
-	userGender: "men",
-	userMaxHr: 190,
-	userRestHr: 65,
-	userLTHR: {
-		default: null,
-		cycling: null,
-		running: null
-	},
-	userFTP: null,
-	userRunningFTP: null,
-	userSwimFTP: null,
-	userWeight: 70,
+	hasDatedAthleteSettings: false,
+	athleteModel: AthleteModel.DEFAULT_MODEL,
 	zones: {
 		speed: [{from: 0, to: 7}, {from: 7, to: 9}, {from: 9, to: 11}, {from: 11, to: 13}, {
 			from: 13,

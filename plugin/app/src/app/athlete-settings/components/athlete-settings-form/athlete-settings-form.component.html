@@ -1,45 +1,18 @@
-<div fxLayout="row" fxFlexAlign="center center">
-	<div fxFlex>
-		<mat-card class="gender-card">
-			<mat-card-title>
-				Gender
-			</mat-card-title>
-			<mat-card-content>
-				<mat-form-field fxFill>
-					<mat-select
-						aria-label="Gender"
-						(selectionChange)="onGenderChanged()"
-						[(ngModel)]="gender">
-						<mat-option
-							*ngFor="let gender of GENDER_LIST;"
-							[value]="gender.type">
-							{{gender.display}}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-			</mat-card-content>
-		</mat-card>
-	</div>
-
-	<div fxFlex>
-		<mat-card>
-			<mat-card-title>
-				Weight
-			</mat-card-title>
-			<mat-card-content>
-				<mat-form-field fxFill>
-					<input
-						matInput
-						type="number" min="1" max="999"
-						[(ngModel)]="weight"
-						(change)="onWeightChanged()"
-						placeholder="Weight in kilograms"/>
-				</mat-form-field>
-			</mat-card-content>
-		</mat-card>
-	</div>
-</div>
-
+<mat-card>
+	<mat-card-title>
+		Weight
+	</mat-card-title>
+	<mat-card-content>
+		<mat-form-field fxFill>
+			<input
+				matInput
+				type="number"
+				[(ngModel)]="athleteSettingsModel.weight"
+				(change)="onWeightChanged()"
+				placeholder="Weight in kilograms"/>
+		</mat-form-field>
+	</mat-card-content>
+</mat-card>
 <mat-card>
 	<mat-card-title>
 		Max heart rate
@@ -56,8 +29,8 @@
 		<mat-form-field fxFill>
 			<input
 				matInput
-				type="number" min="1" max="999"
-				[(ngModel)]="maxHr"
+				type="number"
+				[(ngModel)]="athleteSettingsModel.maxHr"
 				(change)="onMaxHrChanged()"/>
 			<mat-placeholder>
 				Your max HR in bpm
@@ -79,8 +52,8 @@
 		<mat-form-field fxFill>
 			<input
 				matInput
-				type="number" min="1" max="999"
-				[(ngModel)]="restHr"
+				type="number"
+				[(ngModel)]="athleteSettingsModel.restHr"
 				(change)="onRestHrChanged()"/>
 			<mat-placeholder>
 				Your rest HR in bpm
@@ -105,46 +78,47 @@
 		<div fxLayout="column" fxLayoutAlign="start center">
 			<mat-form-field fxFill>
 				<input matInput
-					   type="number" min="1" max="999"
-					   [(ngModel)]="defaultLTHR"
+					   type="number"
+					   [(ngModel)]="athleteSettingsModel.lthr.default"
 					   (change)="onLTHRChanged()"/>
 				<mat-placeholder>
 					Default LTHR in bpm
-					{{(!defaultLTHR) ? '(currently ' + (restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (maxHr -
-					restHr)).toFixed(0) + ' bpm)' : ''}}
+					{{(!athleteSettingsModel.lthr.default) ? '(currently ' +
+					(athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR *
+					(athleteSettingsModel.maxHr -
+					athleteSettingsModel.restHr)).toFixed(0) + ' bpm)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
 			<mat-form-field fxFill>
 				<input matInput
-					   type="number" min="1" max="999"
-					   [(ngModel)]="cyclingLTHR"
+					   type="number"
+					   [(ngModel)]="athleteSettingsModel.lthr.cycling"
 					   (change)="onCyclingLTHRChanged()"/>
 				<mat-placeholder>
-					Cycling LTHR in bpm {{(!cyclingLTHR) ? '(using default LTHR)' : ''}}
+					Cycling LTHR in bpm {{(!athleteSettingsModel.lthr.cycling) ? '(using default LTHR)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
 			<mat-form-field fxFill>
 				<input matInput
-					   type="number" min="1" max="999"
-					   [(ngModel)]="runningLTHR"
+					   type="number"
+					   [(ngModel)]="athleteSettingsModel.lthr.running"
 					   (change)="onRunningLTHRChanged()"/>
 				<mat-placeholder>
-					Running LTHR in bpm {{(!runningLTHR) ? '(using default LTHR)' : ''}}
+					Running LTHR in bpm {{(!athleteSettingsModel.lthr.running) ? '(using default LTHR)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
 		</div>
-		<div *ngIf="!defaultLTHR">
+		<div *ngIf="!athleteSettingsModel.lthr.default">
 			<span>
 				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
 				Since no default lactate threshold heart rate is currently defined. The value being used by default
-				is <strong>{{(restHr +  DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (maxHr - restHr)).toFixed(0)}} bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
+				is <strong>{{(athleteSettingsModel.restHr +  DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (athleteSettingsModel.maxHr - athleteSettingsModel.restHr)).toFixed(0)}} bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
 			</span>
 		</div>
 	</mat-card-content>
 </mat-card>
-
 <mat-card>
 	<mat-card-title>
 		Cycling Functional Threshold Power (FTP)
@@ -168,7 +142,7 @@
 					matInput
 					type="number" min="1" max="999"
 					placeholder="Your cycling FTP in watts"
-					[(ngModel)]="cyclingFtp"
+					[(ngModel)]="athleteSettingsModel.cyclingFtp"
 					(change)="onCyclingFtpChanged()"/>
 			</mat-form-field>
 		</div>
@@ -199,7 +173,7 @@
 						matInput
 						type="number" min="1" max="999"
 						placeholder="Your running FTP in seconds"
-						[(ngModel)]="runningFtp"
+						[(ngModel)]="athleteSettingsModel.runningFtp"
 						(change)="onRunningFtpChanged()"/>
 				</mat-form-field>
 				<span fxFlex="1"></span>
@@ -234,7 +208,7 @@
 					matInput
 					step="0.2"
 					type="number" min="0" max="9999"
-					[(ngModel)]="swimFtp"
+					[(ngModel)]="athleteSettingsModel.swimFtp"
 					(change)="onSwimFtpChanged()"/>
 				<mat-placeholder>
 					Enter <strong>meters / min (e.g. 31)</strong>
@@ -254,7 +228,7 @@
 			</mat-form-field>
 		</div>
 
-		<!--Calculator-->
+		<!-- Calculator -->
 		<mat-slide-toggle
 			[(ngModel)]="isSwimFtpCalculatorEnabled"
 			(change)="onSwimFtpCalculatorEnabled();"
@@ -267,8 +241,8 @@
 		<ng-container *ngIf="isSwimFtpCalculatorEnabled">
 
 			<h2 class="mat-title">Swimming Functional Threshold Pace Calculator</h2>
-			<app-swim-ftp-helper [swimFtp]="swimFtp"
-								 (swimFtpChange)="swimFtp=$event; onSwimFtpChanged();"></app-swim-ftp-helper>
+			<app-swim-ftp-helper [swimFtp]="athleteSettingsModel.swimFtp"
+								 (swimFtpChange)="athleteSettingsModel.swimFtp=$event; onSwimFtpChanged();"></app-swim-ftp-helper>
 		</ng-container>
 
 		<div #bottom></div>

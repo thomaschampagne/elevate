@@ -1,0 +1,135 @@
+<mat-card>
+	<mat-card-title>
+		Dated Athlete Settings (preview)
+	</mat-card-title>
+
+	<mat-card-content>
+		<div>
+			<strong>Why use Dated Athlete Settings?</strong> As you know your physiological attributes evolve
+			over time (heart rate, weight, power, pace, ...) and activities' stats (including stress scores) are
+			functions of these attributes . After configuration by yourself, this feature will provide matching
+			athlete's attributes for a given activity date in order to calculate stats with actual attributes on that
+			date.
+
+			When enabled, Dated Athlete Settings will be used by all stravistix features which might need it (e.g.
+			fitness trend).
+		</div>
+
+		<div>
+			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
+			<strong>Dated Athlete Settings are currently in preview!</strong> Because preview, your below settings
+			might change along updates. These settings are currently saved locally and they not synced between computers
+			for technicals reasons (chrome sync api limitations). They will be online synced in a near future using a
+			dedicated service. By the way, Dated Athlete Settings are exported inside stravistix backups and can be
+			imported back with a restoration.
+		</div>
+
+	</mat-card-content>
+
+	<mat-card-content>
+
+		<div fxFill fxLayoutAlign="end center">
+			<button mat-button color="primary" (click)="onAdd()">
+				<mat-icon>add</mat-icon>
+				Add new dated athlete settings
+			</button>
+
+			<button mat-button color="primary" (click)="onReset()">
+				<mat-icon>settings_backup_restore</mat-icon>
+				Reset
+			</button>
+		</div>
+
+		<mat-table #table [dataSource]="dataSource" matSort>
+
+			<ng-container matColumnDef="since">
+				<mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">
+					<span *ngIf="!datedSettings.isForever()">{{datedSettings.sinceAsDate | date}}</span>
+					<span *ngIf="datedSettings.isForever()">Forever</span>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="until">
+				<mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">
+					<span *ngIf="!datedSettings.isNow()">{{datedSettings.untilAsDate | date}}</span>
+					<span *ngIf="datedSettings.isNow()">Today</span>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="weight">
+				<mat-header-cell *matHeaderCellDef>Weight</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.weight}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="maxHr">
+				<mat-header-cell *matHeaderCellDef>Max HR</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.maxHr}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="restHr">
+				<mat-header-cell *matHeaderCellDef>Rest HR</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.restHr}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.default">
+				<mat-header-cell *matHeaderCellDef>Default LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.default}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.cycling">
+				<mat-header-cell *matHeaderCellDef>Cycling LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.cycling}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="lthr.running">
+				<mat-header-cell *matHeaderCellDef>Running LTHR</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.running}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="cyclingFtp">
+				<mat-header-cell *matHeaderCellDef>Cycling FTP</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.cyclingFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="runningFtp">
+				<mat-header-cell *matHeaderCellDef>Running FTP</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.runningFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="swimFtp">
+				<mat-header-cell *matHeaderCellDef>Swim FTP</mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings">{{datedSettings.swimFtp}}</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="edit">
+				<mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
+					<button mat-icon-button (click)="onEdit(datedSettings.since)"
+							matTooltip="Edit dated settings">
+						<mat-icon>edit</mat-icon>
+					</button>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="delete">
+				<mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+				<mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
+					<button *ngIf="!datedSettings.isForever()" mat-icon-button
+							(click)="onRemove(datedSettings.from)"
+							matTooltip="Delete dated settings">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</mat-table>
+	</mat-card-content>
+</mat-card>
+
+
+
+

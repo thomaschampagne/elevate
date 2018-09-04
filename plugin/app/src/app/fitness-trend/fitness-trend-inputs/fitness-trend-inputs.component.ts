@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { LastPeriodModel } from "../shared/models/last-period.model";
 import { PeriodModel } from "../shared/models/period.model";
-import * as _ from "lodash";
-import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { MatDialog } from "@angular/material";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
-import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 
@@ -37,9 +33,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Input("lastFitnessActiveDate")
 	public lastFitnessActiveDate: Date;
 
-	@Input("fitnessUserSettingsModel")
-	public fitnessUserSettingsModel: FitnessUserSettingsModel;
-
 	@Input("fitnessTrendConfigModel")
 	public fitnessTrendConfigModel: FitnessTrendConfigModel;
 
@@ -54,12 +47,6 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	@Input("isEBikeRidesEnabled")
 	public isEBikeRidesEnabled: boolean;
-
-	@Input("hasCyclingFtp")
-	public hasCyclingFtp: boolean;
-
-	@Input("hasRunningFtp")
-	public hasRunningFtp: boolean;
 
 	@Output("periodViewedChange")
 	public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
@@ -99,54 +86,11 @@ export class FitnessTrendInputsComponent implements OnInit {
 	}
 
 	public onPowerMeterToggle(): void {
-
-		if (!_.isNumber(this.fitnessUserSettingsModel.cyclingFtp)) {
-
-			const data: GotItDialogDataModel = {
-				title: "Cycling Functional Threshold Power Empty",
-				content: "You cycling functional threshold power (FTP) is not defined. Please set it in athlete settings and go back to this page."
-			};
-
-			this.dialog.open(GotItDialogComponent, {
-				minWidth: GotItDialogComponent.MIN_WIDTH,
-				maxWidth: GotItDialogComponent.MAX_WIDTH,
-				data: data
-			});
-
-			// Reset toggle to false
-			setTimeout(() => {
-				this.isPowerMeterEnabled = false;
-			});
-
-		} else {
-			this.powerMeterToggleChange.emit(this.isPowerMeterEnabled);
-		}
-
+		this.powerMeterToggleChange.emit(this.isPowerMeterEnabled);
 	}
 
 	public onSwimToggle(): void {
-
-		if (!_.isNumber(this.fitnessUserSettingsModel.swimFtp)) {
-
-			const data: GotItDialogDataModel = {
-				title: "Swimming Functional Threshold Pace Empty",
-				content: "Your swimming functional threshold pace is not defined. Please set it in athlete settings and go back to this page."
-			};
-
-			this.dialog.open(GotItDialogComponent, {
-				minWidth: GotItDialogComponent.MIN_WIDTH,
-				maxWidth: GotItDialogComponent.MAX_WIDTH,
-				data: data
-			});
-
-			// Reset toggle to false
-			setTimeout(() => {
-				this.isSwimEnabled = false;
-			});
-
-		} else {
-			this.swimToggleChange.emit(this.isSwimEnabled);
-		}
+		this.swimToggleChange.emit(this.isSwimEnabled);
 	}
 
 	public onEBikeRidesEnabledToggle(): void {

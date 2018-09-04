@@ -1,15 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { AthleteSettingsComponent } from "./athlete-settings.component";
-import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
+import { AthleteSettingsFormComponent } from "./athlete-settings-form.component";
 import * as _ from "lodash";
-import { userSettings } from "../../../../shared/UserSettings";
-import { CoreModule } from "../core/core.module";
-import { SharedModule } from "../shared/shared.module";
+import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
+import { CoreModule } from "../../../core/core.module";
+import { SharedModule } from "../../../shared/shared.module";
+import { userSettings } from "../../../../../../shared/UserSettings";
+import { AthleteSettingsModule } from "../../athlete-settings.module";
+import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
 
-describe("AthleteSettingsComponent", () => {
+describe("AthleteSettingsFormComponent", () => {
 
-	let component: AthleteSettingsComponent;
-	let fixture: ComponentFixture<AthleteSettingsComponent>;
+	let component: AthleteSettingsFormComponent;
+	let fixture: ComponentFixture<AthleteSettingsFormComponent>;
 	let userSettingsDao: UserSettingsDao;
 
 	beforeEach((done: Function) => {
@@ -18,6 +20,7 @@ describe("AthleteSettingsComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				AthleteSettingsModule
 			]
 		}).compileComponents();
 
@@ -36,8 +39,9 @@ describe("AthleteSettingsComponent", () => {
 
 	beforeEach(() => {
 
-		fixture = TestBed.createComponent(AthleteSettingsComponent);
+		fixture = TestBed.createComponent(AthleteSettingsFormComponent);
 		component = fixture.componentInstance;
+		component.athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
 		fixture.detectChanges();
 
 	});
@@ -50,7 +54,7 @@ describe("AthleteSettingsComponent", () => {
 	it("should convert runningFtp in seconds to pace using imperial system", (done: Function) => {
 
 		// Given
-		component.runningFtp = 5 * 60; // 5 Minutes
+		component.athleteSettingsModel.runningFtp = 5 * 60; // 5 Minutes
 		const expectedPace = "00:08:03/mi";
 
 		// When
@@ -64,7 +68,7 @@ describe("AthleteSettingsComponent", () => {
 	it("should convert runningFtp in seconds to pace using metric system", (done: Function) => {
 
 		// Given
-		component.runningFtp = 5 * 60; // 5 Minutes
+		component.athleteSettingsModel.runningFtp = 5 * 60; // 5 Minutes
 		const expectedPace = "00:05:00/km";
 
 		// When

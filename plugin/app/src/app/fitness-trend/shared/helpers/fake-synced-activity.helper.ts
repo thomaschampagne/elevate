@@ -1,14 +1,23 @@
 import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import * as moment from "moment";
 import * as _ from "lodash";
-
+import { AthleteModel } from "../../../../../../shared/models/athlete.model";
 
 export class FakeSyncedActivityHelper {
 
-	public static create(id: number, name: string, type: string, dateStr: string, avgHr: number, avgWatts: number, hasPowerMeter?: boolean, avgPace?: number): SyncedActivityModel {
+	public static create(id: number,
+						 athleteModel: AthleteModel,
+						 name: string,
+						 type: string,
+						 dateStr: string,
+						 avgHr: number,
+						 avgWatts: number,
+						 hasPowerMeter: boolean,
+						 avgPace?: number): SyncedActivityModel {
 
 		const fakeActivity = new SyncedActivityModel();
 		fakeActivity.id = id;
+		fakeActivity.athleteModel = athleteModel;
 		fakeActivity.name = name;
 		fakeActivity.type = type;
 		fakeActivity.display_type = type;
@@ -28,13 +37,11 @@ export class FakeSyncedActivityHelper {
 			powerData: null
 		};
 
-		fakeActivity.hasPowerMeter = false;
-
 		// If avgHr given? Generate fake stats
 		if (_.isNumber(avgHr)) {
 			fakeActivity.extendedStats.heartRateData = {
 				HRSS: avgHr,
-				HRSSPerHour: avgHr / 90,
+				HRSSPerHour: avgHr,
 				TRIMP: avgHr * 2,
 				TRIMPPerHour: avgHr / 60,
 				best20min: avgHr * 1.5,
@@ -57,8 +64,8 @@ export class FakeSyncedActivityHelper {
 				hasPowerMeter: (_.isBoolean(hasPowerMeter)) ? hasPowerMeter : true,
 				lowerQuartileWatts: avgWatts / 4,
 				medianWatts: avgWatts / 2,
-				powerStressScore: avgWatts * 3,
-				powerStressScorePerHour: avgWatts * 3,
+				powerStressScore: avgWatts,
+				powerStressScorePerHour: avgWatts,
 				powerZones: null,
 				punchFactor: avgWatts * 4,
 				upperQuartileWatts: (avgWatts / 4) * 3,
@@ -68,8 +75,6 @@ export class FakeSyncedActivityHelper {
 				bestEightyPercent: avgWatts,
 				weightedWattsPerKg: avgWatts * 1.25 / 70,
 			};
-
-			fakeActivity.hasPowerMeter = (_.isBoolean(hasPowerMeter)) ? hasPowerMeter : true;
 		}
 
 		if (_.isNumber(avgPace)) {
@@ -83,8 +88,8 @@ export class FakeSyncedActivityHelper {
 				genuineGradeAdjustedAvgPace: avgPace,
 				paceZones: null,
 				gradeAdjustedPaceZones: null,
-				runningStressScore: null,
-				runningStressScorePerHour: null,
+				runningStressScore: (type === "Run") ? avgPace : null,
+				runningStressScorePerHour: (type === "Run") ? avgPace : null,
 			};
 		}
 		return fakeActivity;

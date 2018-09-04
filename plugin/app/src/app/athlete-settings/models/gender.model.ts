@@ -1,4 +1,4 @@
-import { Gender } from "../shared/enums/gender.enum";
+import { Gender } from "../../shared/enums/gender.enum";
 
 export class GenderModel {
 	public type: Gender;

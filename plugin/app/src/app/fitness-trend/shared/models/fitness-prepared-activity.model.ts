@@ -1,3 +1,5 @@
+import { AthleteModel } from "../../../../../../shared/models/athlete.model";
+
 export class FitnessPreparedActivityModel {
 	public id: number;
 	public date: Date;
@@ -7,6 +9,7 @@ export class FitnessPreparedActivityModel {
 	public type: string;
 	public name: string;
 	public hasPowerMeter: boolean;
+	public athleteModel: AthleteModel;
 	public heartRateStressScore?: number;
 	public trainingImpulseScore?: number;
 	public powerStressScore?: number;

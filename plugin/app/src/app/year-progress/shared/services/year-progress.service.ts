@@ -137,7 +137,7 @@ export class YearProgressService {
 
 				for (let i = 0; i < activitiesFound.length; i++) {
 
-					if ((!includeCommuteRide && activitiesFound[i].commute)||(!includeIndoorRide && activitiesFound[i].trainer)) {
+					if ((!includeCommuteRide && activitiesFound[i].commute) || (!includeIndoorRide && activitiesFound[i].trainer)) {
 						continue;
 					}
 

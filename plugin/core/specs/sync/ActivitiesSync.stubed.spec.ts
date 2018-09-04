@@ -13,9 +13,14 @@ import { MultipleActivityProcessor } from "../../scripts/processors/MultipleActi
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
+import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
+import { userSettings } from "../../../shared/UserSettings";
+import { DatedAthleteSettingsModel } from "../../../shared/models/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("ActivitiesSynchronizer", () => {
 
+	let athleteModelResolver: AthleteModelResolver;
 	let userSettingsMock: UserSettingsModel;
 	let appResourcesMock: AppResourcesModel;
 	let activitiesSynchronizer: ActivitiesSynchronizer;
@@ -75,7 +80,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
-		userSettingsMock = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
+		userSettingsMock = _.cloneDeep(userSettings);
 		appResourcesMock = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
 
 		// We have 7 pages
@@ -88,7 +93,16 @@ describe("ActivitiesSynchronizer", () => {
 			_.cloneDeep(require("../fixtures/sync/rawPage0620161213.json")), // Page 06 - 20 ACT
 			_.cloneDeep(require("../fixtures/sync/rawPage0720161213.json")), // Page 07 - 20 ACT
 		];
-		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+
+		// Setup athlete models resolution
+		userSettingsMock.hasDatedAthleteSettings = true;
+
+		const datedAthleteSettingsModels = [
+			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, 325, 32, 78))
+		];
+		athleteModelResolver = new AthleteModelResolver(userSettingsMock, datedAthleteSettingsModels);
+
+		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
 
 		/**
 		 * Stubing http calls to strava training pages

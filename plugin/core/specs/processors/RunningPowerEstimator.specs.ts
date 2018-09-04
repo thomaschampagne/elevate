@@ -6,6 +6,9 @@ import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis
 import { RunningPowerEstimator } from "../../scripts/processors/RunningPowerEstimator";
 import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { ActivityComputer } from "../../scripts/processors/ActivityComputer";
+import { AthleteModel } from "../../../shared/models/athlete.model";
+import { Gender } from "../../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("RunningPowerEstimator", () => {
 
@@ -238,9 +241,10 @@ describe("RunningPowerEstimator", () => {
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json")); // Thomas C user settings
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/887284960/stream.json"));
 		const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../fixtures/activities/887284960/statsMap.json"));
+		const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
 			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 
 		const result: AnalysisDataModel = activityComputer.compute();

@@ -4,6 +4,9 @@ import { ActivityStreamsModel } from "../../../../shared/models/activity-data/ac
 import { ActivityStatsMapModel } from "../../../../shared/models/activity-data/activity-stats-map.model";
 import { ActivityComputer } from "../../../scripts/processors/ActivityComputer";
 import { StreamVariationSplit } from "../../../scripts/models/stream-variation-split.model";
+import { AthleteModel } from "../../../../shared/models/athlete.model";
+import { Gender } from "../../../../app/src/app/shared/enums/gender.enum";
+import { AthleteSettingsModel } from "../../../../shared/models/athlete-settings/athlete-settings.model";
 
 describe("ActivityComputer", () => {
 
@@ -49,11 +52,12 @@ describe("ActivityComputer", () => {
 		const userSettingsMock: UserSettingsModel = require("../../fixtures/userSettings/2470979.json");
 		const stream: ActivityStreamsModel = require("../../fixtures/activities/723224273/stream.json");
 		const statsMap: ActivityStatsMapModel = require("../../fixtures/activities/723224273/statsMap.json");
+		const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		const isActivityAuthor = true;
-		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, userSettingsMock.userWeight,
+		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteModel,
 			isActivityAuthor, powerMeter, statsMap, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();
@@ -140,6 +144,348 @@ describe("ActivityComputer", () => {
 		expect(result.elevationData.upperQuartileElevation.toString()).toMatch(/^245/);
 
 		done();
+	});
+
+	describe("compute stress scores", () => {
+
+		let _ATHLETE_MODEL_: AthleteModel;
+
+		beforeEach((done: Function) => {
+			_ATHLETE_MODEL_ = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+				default: 163,
+				cycling: null,
+				running: null
+			}, 150, 300, 31, 70));
+			done();
+		});
+
+		it("should compute hrSS", (done: Function) => {
+
+			// Given
+			const activityTrainingImpulse = 333;
+			const expectedStressScore = 239;
+
+			// When
+			const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(_ATHLETE_MODEL_.gender,
+				_ATHLETE_MODEL_.athleteSettings.maxHr,
+				_ATHLETE_MODEL_.athleteSettings.restHr,
+				_ATHLETE_MODEL_.athleteSettings.lthr.default,
+				activityTrainingImpulse);
+
+			// Then
+			expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
+			done();
+		});
+
+		it("should compute hrSS without lactate threshold given (has to use Karvonen formula with 85% of HRR)", (done: Function) => {
+
+			// Given
+			_ATHLETE_MODEL_.athleteSettings.lthr.default = 170.5;
+			const activityTrainingImpulse = 333;
+			const expectedStressScore = 199;
+
+			// When
+			const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(_ATHLETE_MODEL_.gender,
+				_ATHLETE_MODEL_.athleteSettings.maxHr,
+				_ATHLETE_MODEL_.athleteSettings.restHr,
+				_ATHLETE_MODEL_.athleteSettings.lthr.default,
+				activityTrainingImpulse);
+
+			// Then
+			expect(Math.floor(heartRateStressScore)).toEqual(expectedStressScore);
+
+			done();
+		});
+
+		// Compute Running Stress Score (RSS)
+		it("should compute RSS (1)", (done: Function) => {
+
+			// Given
+			const expectedStressScore = 100;
+			const movingTime = 3600; // 1 hours
+			const gradeAdjustedPace = 300; // 300sec or 00:05:00/dist.
+			const runningThresholdPace = 300; // 300sec or 00:05:00/dist.
+
+			// When
+			const runningStressScore = ActivityComputer.computeRunningStressScore(movingTime, gradeAdjustedPace, runningThresholdPace);
+
+			// Then
+			expect(Math.floor(runningStressScore)).toEqual(expectedStressScore);
+			done();
+		});
+
+		it("should compute RSS (2)", (done: Function) => {
+
+			// Given
+			const expectedStressScore = 100;
+			const movingTime = 3600; // 1 hours
+			const gradeAdjustedPace = 300; // 300sec or 00:05:00/dist.
+			const runningThresholdPace = 600; // 600sec or 00:10:00/dist.
+
+			// When
+			const runningStressScore = ActivityComputer.computeRunningStressScore(movingTime, gradeAdjustedPace, runningThresholdPace);
+
+			// Then
+			expect(Math.floor(runningStressScore)).toBeGreaterThan(expectedStressScore);
+			done();
+		});
+	});
+
+	describe("manage lthr preferences", () => {
+
+		let _ATHLETE_MODEL_: AthleteModel;
+
+		beforeEach((done: Function) => {
+			_ATHLETE_MODEL_ = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+				default: 163,
+				cycling: null,
+				running: null
+			}, 150, 300, 31, 70));
+			done();
+		});
+
+		it("should resolve LTHR without user LTHR preferences, activityType='Ride'", (done: Function) => {
+
+			// Given
+			const activityType = "Ride";
+			const expectedLTHR = 170.5;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: null,
+				cycling: null,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR without user LTHR preferences (empty), activityType='Ride'", (done: Function) => {
+
+			// Given
+			const activityType = "Ride";
+			const expectedLTHR = 170.5;
+			_ATHLETE_MODEL_.athleteSettings.lthr = null;
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR without user LTHR preferences, activityType='Run'", (done: Function) => {
+
+			// Given
+			const activityType = "Run";
+			const expectedLTHR = 170.5;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: null,
+				cycling: null,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR without user LTHR preferences, activityType='Rowing'", (done: Function) => {
+
+			// Given
+			const activityType = "Rowing";
+			const expectedLTHR = 163;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: 175,
+				running: 185
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, activityType='Ride'", (done: Function) => {
+
+			// Given
+			const activityType = "Ride";
+			const expectedLTHR = 163;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: null,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, activityType='Run'", (done: Function) => {
+
+			// Given
+			const activityType = "Run";
+			const expectedLTHR = 163;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: null,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, activityType='Rowing'", (done: Function) => {
+
+			// Given
+			const activityType = "Rowing";
+			const expectedLTHR = 163;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: null,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, activityType='Ride'", (done: Function) => {
+
+			// Given
+			const activityType = "Ride";
+			const expectedLTHR = 175;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: 175,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Cycling LTHR=175, activityType='VirtualRide'", (done: Function) => {
+
+			// Given
+			const activityType = "VirtualRide";
+			const expectedLTHR = 175;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: null,
+				cycling: 175,
+				running: null
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='EBikeRide'", (done: Function) => {
+
+			// Given
+			const activityType = "EBikeRide";
+			const expectedLTHR = 175;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: null,
+				cycling: 175,
+				running: 185
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
+
+			// Given
+			const activityType = "Run";
+			const expectedLTHR = 185;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: null,
+				cycling: 175,
+				running: 185
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
+
+			// Given
+			const activityType = "Run";
+			const expectedLTHR = 185;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: 175,
+				running: 185
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
+
+		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Rowing'", (done: Function) => {
+
+			// Given
+			const activityType = "Rowing";
+			const expectedLTHR = 163;
+			_ATHLETE_MODEL_.athleteSettings.lthr = {
+				default: 163,
+				cycling: 175,
+				running: 185
+			};
+
+			// When
+			const lthr = ActivityComputer.resolveLTHR(activityType, _ATHLETE_MODEL_.athleteSettings);
+
+			// Then
+			expect(lthr).toEqual(expectedLTHR);
+			done();
+		});
 	});
 
 });

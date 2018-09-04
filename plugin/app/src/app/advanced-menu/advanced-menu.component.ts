@@ -26,7 +26,7 @@ export class AdvancedMenuComponent implements OnInit {
 		const data: ConfirmDialogDataModel = {
 			title: "Clear your athlete synced data",
 			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-			"or a new re-synchronization."
+				"or a new re-synchronization."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -65,7 +65,7 @@ export class AdvancedMenuComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
 				localStorage.clear();
-				this.userSettingsService.markLocalStorageClear().then(() => {
+				this.userSettingsService.clearLocalStorageOnNextLoad().then(() => {
 					this.snackBar.open("Plugin cache has been cleared", "Reload App").afterDismissed().toPromise().then(() => {
 						location.reload();
 					});

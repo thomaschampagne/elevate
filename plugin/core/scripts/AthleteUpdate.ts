@@ -3,7 +3,7 @@ import * as Q from "q";
 import * as _ from "lodash";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
 import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { HerokuEndpoints } from "../../shared/HerokuEndpoint";
+import { HerokuEndpointResolver } from "../../shared/resolvers/heroku-endpoint.resolver";
 
 export class AthleteUpdate {
 
@@ -58,7 +58,7 @@ export class AthleteUpdate {
 	public static commit(athleteUpdate: AthleteUpdateModel): Q.IPromise<any> {
 
 		const deferred = Q.defer<SyncResultModel>();
-		const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/athlete/update";
+		const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/athlete/update";
 
 		$.post({
 			url: endPoint,

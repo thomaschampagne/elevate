@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotes: ReleaseNoteModel[] = [
 	{
+		version: "6.5.0",
+		date: "2018-09-03",
+		message: "Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date.",
+		hotFixes: [],
+		features: [
+			"Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date."
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed fitness trend tomorrow preview day not displayed for Brazil/Greenland users (timezone UTC−3).",
+			"Fixed cycling power stress score not computed for activities with significant pauses."
+		]
+	},
+	{
 		version: "6.4.2",
 		date: "2018-08-10",
 		message: "Version 6.4.* patched. (Reminder) Version 6.4 adds \"Fitness Trend Estimation\" for users without sensor, \"Running Stress Score (RSS)\" to activities and fitness trend, \"Fitness Trend\" options to exclude activities from the trend, \"Fitness Trend Spreadsheet Export\" feature.",
