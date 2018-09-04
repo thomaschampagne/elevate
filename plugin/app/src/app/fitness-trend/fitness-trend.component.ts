@@ -1,18 +1,15 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import * as _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import * as moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../shared/models/app-error.model";
-import { FitnessUserSettingsModel } from "./shared/models/fitness-user-settings.model";
-import { MatDialog } from "@angular/material";
+import { MatDialog, MatSnackBar } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
@@ -27,6 +24,13 @@ import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog
 	styleUrls: ["./fitness-trend.component.scss"]
 })
 export class FitnessTrendComponent implements OnInit {
+
+	constructor(public syncService: SyncService,
+				public fitnessService: FitnessService,
+				public externalUpdatesService: ExternalUpdatesService,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar) {
+	}
 
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
 		heartRateImpulseMode: HeartRateImpulseMode.HRSS,
@@ -45,6 +49,28 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
+
+	@ViewChild(FitnessTrendInputsComponent)
+	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
+
+	public fitnessTrend: DayFitnessTrendModel[];
+	public lastPeriods: LastPeriodModel[];
+	public periodViewed: PeriodModel;
+	public lastPeriodViewed: PeriodModel;
+	public dateMin: Date;
+	public dateMax: Date;
+	public lastFitnessActiveDate: Date;
+	public fitnessTrendConfigModel: FitnessTrendConfigModel;
+	public isTrainingZonesEnabled: boolean;
+	public isPowerMeterEnabled: boolean;
+	public isSwimEnabled: boolean;
+	public isEBikeRidesEnabled: boolean;
+	public isEstimatedPowerStressScoreEnabled: boolean;
+	public isEstimatedRunningStressScoreEnabled: boolean;
+	public skipActivityTypes: string[] = [];
+	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
+	public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
 
 	public static provideLastPeriods(minDate: Date): LastPeriodModel[] {
 
@@ -133,35 +159,15 @@ export class FitnessTrendComponent implements OnInit {
 		}];
 	}
 
-	@ViewChild(FitnessTrendInputsComponent)
-	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
-
-	public fitnessTrend: DayFitnessTrendModel[];
-	public lastPeriods: LastPeriodModel[];
-	public periodViewed: PeriodModel;
-	public lastPeriodViewed: PeriodModel;
-	public dateMin: Date;
-	public dateMax: Date;
-	public lastFitnessActiveDate: Date;
-	public fitnessTrendConfigModel: FitnessTrendConfigModel;
-	public isTrainingZonesEnabled: boolean;
-	public isPowerMeterEnabled: boolean;
-	public isSwimEnabled: boolean;
-	public isEBikeRidesEnabled: boolean;
-	public fitnessUserSettingsModel: FitnessUserSettingsModel;
-	public hasCyclingFtp: boolean;
-	public hasRunningFtp: boolean;
-	public isEstimatedPowerStressScoreEnabled: boolean;
-	public isEstimatedRunningStressScoreEnabled: boolean;
-	public skipActivityTypes: string[] = [];
-	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
-
-	constructor(public syncService: SyncService,
-				public userSettingsService: UserSettingsService,
-				public fitnessService: FitnessService,
-				public externalUpdatesService: ExternalUpdatesService,
-				public dialog: MatDialog) {
+	public static openActivities(ids: number[]) {
+		if (ids.length > 0) {
+			const url = "https://www.strava.com/activities/{activityId}";
+			_.forEach(ids, (id: number) => {
+				window.open(url.replace("{activityId}", id.toString()), "_blank");
+			});
+		} else {
+			console.warn("No activities found");
+		}
 	}
 
 	public ngOnInit(): void {
@@ -174,21 +180,11 @@ export class FitnessTrendComponent implements OnInit {
 
 		return this.syncService.getSyncState().then((syncState: SyncState) => {
 
-			if (syncState === SyncState.SYNCED) {
-				this.isSynced = true;
-				return this.userSettingsService.fetch() as PromiseLike<UserSettingsModel>;
-			} else {
-				this.isSynced = false;
-				return Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString()));
-			}
+			this.isSynced = syncState === SyncState.SYNCED;
+			return (this.isSynced) ? Promise.resolve() : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED,
+				"Not synced. SyncState is: " + SyncState[syncState].toString()));
 
-		}).then((userSettings: UserSettingsModel) => {
-
-			// Init fitness trend user settings
-			this.fitnessUserSettingsModel = FitnessUserSettingsModel.createFrom(userSettings);
-
-			this.hasCyclingFtp = _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
-			this.hasRunningFtp = _.isNumber(this.fitnessUserSettingsModel.runningFtp);
+		}).then(() => {
 
 			// Init fitness trend config
 			this.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
@@ -209,7 +205,7 @@ export class FitnessTrendComponent implements OnInit {
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
 			// Then compute fitness trend
-			return this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -240,11 +236,18 @@ export class FitnessTrendComponent implements OnInit {
 
 		}, (appError: AppError) => {
 
-			if (appError.code === AppError.FT_NO_ACTIVITIES || appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED) {
+			if (appError.code === AppError.SYNC_NOT_SYNCED) {
+				// Do nothing: a proper card message should be displayed
+			} else if (appError.code === AppError.FT_NO_ACTIVITIES || appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED) {
 				this.areSyncedActivitiesCompliant = false;
+			} else if (appError.code === AppError.FT_NO_ACTIVITY_ATHLETE_MODEL) {
+				this.isReSyncRequired = true;
+			} else {
+				const message = appError.toString() + ". Press (F12) to see a more detailed error message in browser console.";
+				this.snackBar.open(message, "Close");
+				console.error(message);
 			}
 
-			console.error(appError.toString());
 		});
 	}
 
@@ -308,8 +311,6 @@ export class FitnessTrendComponent implements OnInit {
 		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
 			lastFitnessActiveDate: this.lastFitnessActiveDate,
-			hasCyclingFtp: this.hasCyclingFtp,
-			hasRunningFtp: this.hasRunningFtp,
 			isPowerMeterEnabled: this.isPowerMeterEnabled,
 			expandEstimatedStressScorePanel: _.isBoolean(expandEstimatedStressScorePanel) ? expandEstimatedStressScorePanel : false
 		};
@@ -355,35 +356,31 @@ export class FitnessTrendComponent implements OnInit {
 			this.isSwimEnabled = false;
 		} else { // HeartRateImpulseMode.HRSS
 			this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
-			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.cyclingFtp);
-			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY)) && _.isNumber(this.fitnessUserSettingsModel.swimFtp);
+			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY));
+			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY));
 		}
 	}
 
 	public updateEstimatedStressScoresNotes(): void {
 
-		this.isEstimatedPowerStressScoreEnabled = this.hasCyclingFtp
-			&& this.isPowerMeterEnabled
+		this.isEstimatedPowerStressScoreEnabled = this.isPowerMeterEnabled
 			&& this.fitnessTrendConfigModel.allowEstimatedPowerStressScore
 			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
-		this.isEstimatedRunningStressScoreEnabled = this.hasRunningFtp
-			&& this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
+		this.isEstimatedRunningStressScoreEnabled = this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
 			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
 	}
 
 	public reloadFitnessTrend(): void {
 
-		this.fitnessService.computeTrend(this.fitnessUserSettingsModel, this.fitnessTrendConfigModel, this.isPowerMeterEnabled,
-			this.isSwimEnabled, this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
+		this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled,
+			this.skipActivityTypes).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
 			this.fitnessTrend = fitnessTrend;
 			this.updateDateRangeAndPeriods();
 
-		}, (appError: AppError) => {
-			console.error(appError.toString());
-		});
+		}, (appError: AppError) => console.error(appError.toString()));
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {
@@ -409,29 +406,15 @@ export class FitnessTrendComponent implements OnInit {
 		this.lastPeriodViewed = this.periodViewed;
 	}
 
-	public static openActivities(ids: number[]) {
-		if (ids.length > 0) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			_.forEach(ids, (id: number) => {
-				window.open(url.replace("{activityId}", id.toString()), "_blank");
-			});
-		} else {
-			console.warn("No activities found");
-		}
-	}
-
 	public showFitnessWelcomeDialog(): void {
 
 		const show: boolean = _.isEmpty(localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG));
 
 		if (show) {
-			setTimeout(() => {
-				this.dialog.open(FitnessTrendWelcomeDialogComponent, {
-					minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
-					maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
-				});
-			}, 1000);
-
+			_.delay(() => this.dialog.open(FitnessTrendWelcomeDialogComponent, {
+				minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
+				maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
+			}), 1000);
 		}
 	}
 }

@@ -1,14 +1,12 @@
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { IStorageUsage, StorageManager } from "../StorageManager";
 import { CoreEnv } from "../../config/core-env";
-import { AppResourcesModel } from "../models/app-resources.model";
 import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
 import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { HerokuEndpoints } from "../../../shared/HerokuEndpoint";
+import { HerokuEndpointResolver } from "../../../shared/resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./AbstractModifier";
-import _ = require("lodash");
+import * as _ from "lodash";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 
@@ -17,17 +15,13 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 	protected sourceTabId: number;
 	protected forceSync: boolean;
 	protected fastSync: boolean;
-	protected userSettings: UserSettingsModel;
-	protected appResources: AppResourcesModel;
 
 	public closeWindowIntervalId = -1;
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
+	constructor(extensionId: string, activitiesSynchronizer: ActivitiesSynchronizer, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
 		super();
-		this.activitiesSynchronizer = new ActivitiesSynchronizer(appResources, userSettings);
-		this.userSettings = userSettings;
-		this.appResources = appResources;
-		this.extensionId = appResources.extensionId;
+		this.activitiesSynchronizer = activitiesSynchronizer;
+		this.extensionId = extensionId;
 		this.sourceTabId = sourceTabId;
 		this.forceSync = forceSync;
 		this.fastSync = fastSync;
@@ -145,7 +139,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				error: {path: window.location.href, date: new Date(), content: err},
 			};
 
-			const endPoint = HerokuEndpoints.resolve(CoreEnv.endPoint) + "/api/errorReport";
+			const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,

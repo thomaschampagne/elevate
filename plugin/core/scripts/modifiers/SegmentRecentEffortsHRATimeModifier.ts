@@ -1,26 +1,28 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { EffortInfo, LeaderBoardData } from "./ActivitySegmentTimeComparisonModifier";
 import { AbstractModifier } from "./AbstractModifier";
+import { AthleteModel } from "../../../shared/models/athlete.model";
 
 export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 
-	protected userSettings: UserSettingsModel;
+	protected displayRecentEffortsHRAdjustedPacePower: boolean;
+	protected athleteModel: AthleteModel;
 	protected athleteId: number;
 	protected segmentId: number;
 	protected hraTimeLoop: number;
 
-	constructor(userSettings: UserSettingsModel, athleteId: number, segmentId: number) {
+	constructor(displayRecentEffortsHRAdjustedPacePower: boolean, athleteModel: AthleteModel, athleteId: number, segmentId: number) {
 		super();
-		this.userSettings = userSettings;
+		this.displayRecentEffortsHRAdjustedPacePower = displayRecentEffortsHRAdjustedPacePower;
+		this.athleteModel = athleteModel;
 		this.athleteId = athleteId;
 		this.segmentId = segmentId;
 	}
 
 	public modify(): void {
 
-		if (this.userSettings.displayRecentEffortsHRAdjustedPacePower) {
+		if (this.displayRecentEffortsHRAdjustedPacePower) {
 			this.hraTimeLoop = window.setInterval(() => {
 				this.hraTime();
 			}, 750);
@@ -137,7 +139,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 					maxHR = Helper.safeMax(maxHR, r.avg_heart_rate);
 				});
 
-				const restHR = this.userSettings.userRestHr;
+				const restHR = this.athleteModel.athleteSettings.restHr;
 				const targetHR = maxHR;
 
 				class HRValueComputed {

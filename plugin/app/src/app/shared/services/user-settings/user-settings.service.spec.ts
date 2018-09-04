@@ -117,10 +117,10 @@ describe("UserSettingsService", () => {
 	it("should update a user nested setting", (done: Function) => {
 
 		// Given
-		const path = "userLTHR.default";
+		const path = "athleteModel.athleteSettings.lthr.default";
 		const value = 175;
 		const expectedSettings = _.cloneDeep(userSettings);
-		expectedSettings.userLTHR.default = value;
+		expectedSettings.athleteModel.athleteSettings.lthr.default = value;
 
 		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
 			.and.returnValue(Promise.resolve(expectedSettings));
@@ -132,10 +132,10 @@ describe("UserSettingsService", () => {
 		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
-			expect(result.userLTHR.default).toEqual(value);
+			expect(result.athleteModel.athleteSettings.lthr.default).toEqual(value);
 			expect(result).toEqual(expectedSettings);
 			expect(result).not.toEqual(userSettings);
-			expect(result.userLTHR.default).not.toEqual(userSettings.userLTHR.default);
+			expect(result.athleteModel.athleteSettings.lthr.default).not.toEqual(userSettings.athleteModel.athleteSettings.lthr.default);
 			expect(updateNestedDaoSpy).toHaveBeenCalledTimes(1);
 			expect(updateNestedDaoSpy).toHaveBeenCalledWith(path, value);
 
@@ -158,15 +158,12 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseClearLS: Promise<UserSettingsModel> = userSettingsService.markLocalStorageClear();
+		const promiseClearLS: Promise<void> = userSettingsService.clearLocalStorageOnNextLoad();
 
 		// Then
-		promiseClearLS.then((result: UserSettingsModel) => {
-
-			expect(result.localStorageMustBeCleared).toEqual(true);
+		promiseClearLS.then(() => {
 			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 			expect(updateDaoSpy).toHaveBeenCalledWith(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
-
 			done();
 
 		}, error => {

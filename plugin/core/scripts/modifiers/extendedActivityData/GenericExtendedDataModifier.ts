@@ -11,10 +11,9 @@ import { UserSettingsModel } from "../../../../shared/models/user-settings/user-
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
-
 	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean,
 				appResources: AppResourcesModel, userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
-		super(activityProcessor, activityId, activityType, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfo, type);
+		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfo, type);
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {

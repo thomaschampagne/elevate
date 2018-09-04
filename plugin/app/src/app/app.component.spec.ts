@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
-import { CoreModule } from "./core/core.module";
-import { SharedModule } from "./shared/shared.module";
 import { TEST_SYNCED_ACTIVITIES } from "../shared-fixtures/activities-2015.fixture";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
+import { AppModule } from "./app.module";
 
 describe("AppComponent", () => {
 
@@ -14,12 +13,8 @@ describe("AppComponent", () => {
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
-			declarations: [
-				AppComponent
-			],
 			imports: [
-				CoreModule,
-				SharedModule
+				AppModule
 			]
 		}).compileComponents();
 

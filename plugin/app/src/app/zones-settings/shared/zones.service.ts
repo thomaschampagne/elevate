@@ -261,7 +261,7 @@ export class ZonesService {
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {
-					return this.userSettingsService.markLocalStorageClear();
+					return this.userSettingsService.clearLocalStorageOnNextLoad();
 				}).then(() => {
 					resolve();
 				}).catch(error => {

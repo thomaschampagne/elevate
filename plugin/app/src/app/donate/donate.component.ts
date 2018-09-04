@@ -10,6 +10,7 @@ export class DonateComponent implements OnInit {
 	public static readonly DEFAULT_AMOUNT: number = 25;
 	public static readonly DEFAULT_CURRENCY: string = "usd";
 	public static readonly PAYPAL_ACCOUNT_BASE_URL: string = "https://www.paypal.me/thomaschampagne";
+
 	public donateUrl: string;
 
 	constructor() {

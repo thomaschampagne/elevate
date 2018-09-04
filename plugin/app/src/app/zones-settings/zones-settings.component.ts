@@ -99,7 +99,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 		// Update the zone definition used
 		this.zoneDefinitionSelected = zoneDefinition;
 
-		setTimeout(() => { // Postpone display of zone at the end of all executions
+		_.defer(() => { // Postpone display of zone at the end of all executions
 			this.areZonesLoaded = true;
 		});
 

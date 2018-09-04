@@ -12,9 +12,9 @@ import { GradeAdjustedPaceDataView } from "./views/GradeAdjustedPaceDataView";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean, appResources: AppResourcesModel,
+	constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
 				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
-		super(activityProcessor, activityId, activityType, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
+		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {

@@ -10,7 +10,7 @@ onmessage = (mainThreadEvent: MessageEvent) => {
 		threadMessage.activityType,
 		threadMessage.isTrainer,
 		threadMessage.userSettings,
-		threadMessage.athleteWeight,
+		threadMessage.athleteModel,
 		threadMessage.isActivityAuthor,
 		threadMessage.hasPowerMeter,
 		threadMessage.activityStatsMap,

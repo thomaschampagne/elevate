@@ -12,6 +12,7 @@ import { StravaActivityModel } from "../../../shared/models/sync/strava-activity
 import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
 import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
 import { MessagesModel } from "../../../shared/models/messages.model";
+import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
 
 export class ActivitiesSynchronizer { // TODO Rename
 
@@ -44,11 +45,11 @@ export class ActivitiesSynchronizer { // TODO Rename
 		edited: [],
 	};
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.extensionId = this.appResources.extensionId;
-		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings);
+		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings, athleteModelResolver);
 	}
 
 	public appendGlobalActivitiesChanges(activitiesChangesModel: ActivitiesChangesModel): void {

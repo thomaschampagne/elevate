@@ -1,8 +1,8 @@
 import { SwimFtpHelperComponent } from "./swim-ftp-helper.component";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MaterialModule } from "../../shared/modules/material.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
+import { MaterialModule } from "../../../../shared/modules/material.module";
 
 describe("SwimFtpHelperComponent", () => {
 

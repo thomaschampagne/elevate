@@ -1,9 +1,9 @@
 import { TestBed } from "@angular/core/testing";
-
 import { UserSettingsDao } from "./user-settings.dao";
 import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
 import { userSettings } from "../../../../../../shared/UserSettings";
 import * as _ from "lodash";
+import { AthleteModel } from "../../../../../../shared/models/athlete.model";
 
 describe("UserSettingsDao", () => {
 
@@ -130,11 +130,11 @@ describe("UserSettingsDao", () => {
 		});
 	});
 
-	it("should get a userGender setting", (done: Function) => {
+	it("should get a athleteModel setting", (done: Function) => {
 
 		// Given
-		const key = "userGender";
-		const expectedResult = "men";
+		const key = "athleteModel";
+		const expectedResult = AthleteModel.DEFAULT_MODEL;
 		const expectedSettings = _.cloneDeep(userSettings);
 		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
@@ -147,7 +147,7 @@ describe("UserSettingsDao", () => {
 		const promiseGet: Promise<Object> = userSettingsDao.get(key);
 
 		// Then
-		promiseGet.then((result: string) => {
+		promiseGet.then((result: AthleteModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
@@ -161,24 +161,25 @@ describe("UserSettingsDao", () => {
 		});
 	});
 
-	it("should get a userWeight setting", (done: Function) => {
+	it("should get a systemUnit setting", (done: Function) => {
 
 		// Given
-		const key = "userWeight";
+		const key = "systemUnit";
 		const expectedSettings = _.cloneDeep(userSettings);
-		const expectedResult = expectedSettings.userWeight;
+		const expectedResult = expectedSettings.systemUnit;
 		const browserStorageSyncGetSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(expectedSettings);
 			}
 		});
+
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
 		const promiseGet: Promise<Object> = userSettingsDao.get(key);
 
 		// Then
-		promiseGet.then((result: number) => {
+		promiseGet.then((result: string) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedResult);
@@ -231,12 +232,12 @@ describe("UserSettingsDao", () => {
 	it("should update a user setting", (done: Function) => {
 
 		// Given
-		const keyMaxHr = "userMaxHr";
-		const maxHrValue = 199;
+		const keySystemUnit = "systemUnit";
+		const systemUnit = UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY;
 		const expectedSettings = _.cloneDeep(userSettings);
-		expectedSettings.userMaxHr = maxHrValue;
+		expectedSettings.systemUnit = systemUnit;
 
-		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({ // TODO Put spy in beforeEach
+		const browserStorageSyncSpy = spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
 				callback();
 			},
@@ -247,16 +248,16 @@ describe("UserSettingsDao", () => {
 		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
 
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keyMaxHr, maxHrValue);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keySystemUnit, systemUnit);
 
 		// Then
 		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
-			expect(result.userMaxHr).toEqual(maxHrValue);
+			expect(result.systemUnit).toEqual(systemUnit);
 			expect(result).toEqual(expectedSettings);
 			expect(result).not.toEqual(userSettings);
-			expect(result.userMaxHr).not.toEqual(userSettings.userMaxHr);
+			expect(result.systemUnit).not.toEqual(userSettings.systemUnit);
 
 			expect(browserStorageSyncSpy).toHaveBeenCalled();
 
@@ -272,10 +273,10 @@ describe("UserSettingsDao", () => {
 
 		// Given
 		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
-		const keyMaxHr = "userMaxHr";
-		const maxHrValue = 199;
+		const keySystemUnit = "systemUnit";
+		const systemUnit = UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY;
 		const expectedSettings = _.cloneDeep(userSettings);
-		expectedSettings.userMaxHr = maxHrValue;
+		expectedSettings.systemUnit = systemUnit;
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			set: (object: Object, callback: () => {}) => {
@@ -286,15 +287,14 @@ describe("UserSettingsDao", () => {
 			}
 		});
 
-
 		const chromeError: chrome.runtime.LastError = {
 			message: expectedErrorMessage
 		};
+
 		const getChromeErrorSpy = spyOn(userSettingsDao, "getChromeError").and.returnValue(chromeError);
 
-
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keyMaxHr, maxHrValue);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsDao.update(keySystemUnit, systemUnit);
 
 		// Then
 		promiseUpdate.then((result: UserSettingsModel) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, VERSION as  angularCoreVersion } from "@angular/core";
+import { Component, OnInit, VERSION as angularCoreVersion } from "@angular/core";
 import { VERSION as angularMaterialVersion } from "@angular/material";
 import * as d3 from "d3";
 import { AppUsageService } from "../shared/services/app-usage/app-usage.service";
