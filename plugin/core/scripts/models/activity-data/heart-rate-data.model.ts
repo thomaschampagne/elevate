@@ -1,4 +1,4 @@
-import { ZoneModel } from "./zone.model";
+import { ZoneModel } from "../../shared/models/zone.model";
 
 export class HeartRateDataModel {
 	public HRSS: number;

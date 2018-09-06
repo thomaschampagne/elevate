@@ -7,7 +7,7 @@ import { PaceDataView } from "./views/PaceDataView";
 import { RunningCadenceDataView } from "./views/RunningCadenceDataView";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AppResourcesModel } from "../../models/app-resources.model";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 

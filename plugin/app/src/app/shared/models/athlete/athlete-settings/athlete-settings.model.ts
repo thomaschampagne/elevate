@@ -1,4 +1,4 @@
-import { UserLactateThresholdModel } from "../user-settings/user-lactate-threshold.model";
+import { UserLactateThresholdModel } from "./user-lactate-threshold.model";
 
 export class AthleteSettingsModel {
 

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../core/scripts/shared/models/user-settings/user-settings.model";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
-import { userSettings } from "../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
@@ -159,7 +159,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 	 * @param {OptionModel} option
 	 */
 	public resetOptionToDefaultValue(option: OptionModel): void {
-		const resetValue = _.propertyOf(userSettings)(option.key);
+		const resetValue = _.propertyOf(userSettingsData)(option.key);
 		console.log(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
 	}

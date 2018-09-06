@@ -4,8 +4,8 @@ import { SyncService } from "./sync.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "./sync-state.enum";
 import { SyncedBackupModel } from "./synced-backup.model";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 
@@ -16,7 +16,7 @@ describe("SyncService", () => {
 	let syncService: SyncService;
 	let syncDao: SyncDao;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -38,6 +38,8 @@ describe("SyncService", () => {
 		spyOn(syncService, "getAppVersion").and.returnValue(installedVersion);
 
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
+
+		done();
 
 	});
 

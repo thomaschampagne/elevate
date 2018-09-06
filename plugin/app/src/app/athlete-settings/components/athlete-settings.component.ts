@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
-import { Gender } from "../../shared/enums/gender.enum";
+import { UserSettingsModel } from "../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { Gender } from "../../shared/models/athlete/gender.enum";
 import { GenderModel } from "../models/gender.model";
-import { AthleteSettingsModel } from "../../../../../shared/models/athlete-settings/athlete-settings.model";
-import { AthleteModel } from "../../../../../shared/models/athlete.model";
+import { AthleteSettingsModel } from "../../shared/models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "../../shared/models/athlete/athlete.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 
 // TODO Give a helper guide to find dated settings (how to?)

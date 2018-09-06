@@ -1,13 +1,13 @@
-import { ActivityStreamsModel } from "../../../../shared/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
+import { ActivityStreamsModel } from "../../../scripts/models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../../../scripts/models/activity-data/analysis-data.model";
 import { ActivityComputer } from "../../../scripts/processors/ActivityComputer";
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
-import { ActivityStatsMapModel } from "../../../../shared/models/activity-data/activity-stats-map.model";
+import { UserSettingsModel } from "../../../scripts/shared/models/user-settings/user-settings.model";
+import { ActivityStatsMapModel } from "../../../scripts/models/activity-data/activity-stats-map.model";
 import { Helper } from "../../../scripts/Helper";
-import { AthleteModel } from "../../../../shared/models/athlete.model";
-import { Gender } from "../../../../app/src/app/shared/enums/gender.enum";
-import { AthleteSettingsModel } from "../../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "../../../../app/src/app/shared/models/athlete/athlete.model";
+import { Gender } from "../../../../app/src/app/shared/models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 const expectPace = (expectPaceString: string, toEqualPaceString: string, secondsTolerance: number) => {
 

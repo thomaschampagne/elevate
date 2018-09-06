@@ -7,7 +7,7 @@ import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
 
@@ -43,7 +43,7 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettings));
+				callback(_.cloneDeep(userSettingsData));
 			}
 		});
 

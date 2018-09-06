@@ -1,10 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 import { DatedAthleteSettingsService } from "./dated-athlete-settings.service";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
 import * as _ from "lodash";
 import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings-dao.service";
 import { AppError } from "../../models/app-error.model";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 
 describe("DatedAthleteSettingsService", () => {
 
@@ -20,7 +20,7 @@ describe("DatedAthleteSettingsService", () => {
 	let swimFTP;
 	let weight;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			providers: [
 				DatedAthleteSettingsService,
@@ -44,6 +44,7 @@ describe("DatedAthleteSettingsService", () => {
 		runningFTP = 350;
 		swimFTP = 31;
 		weight = 72;
+		done();
 	});
 
 	it("should be created", (done: Function) => {

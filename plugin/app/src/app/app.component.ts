@@ -18,9 +18,9 @@ import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dial
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
-import { Theme } from "./shared/enums/theme.enum";
+import { Theme } from "./shared/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../core/scripts/shared/models/sync/sync-result.model";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!

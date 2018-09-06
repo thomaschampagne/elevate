@@ -1,10 +1,10 @@
 import * as _ from "lodash";
 import { Loader } from "../modules/Loader";
 import { AppResourcesModel } from "./models/app-resources.model";
-import { MessagesModel } from "../../shared/models/messages.model";
-import { StartCoreDataModel } from "../../shared/models/start-core-data.model";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
-import { userSettings } from "../../shared/UserSettings";
+import { MessagesModel } from "./shared/models/messages.model";
+import { StartCoreDataModel } from "./shared/models/start-core-data.model";
+import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
+import { userSettingsData } from "./shared/user-settings.data";
 
 export class Content {
 
@@ -60,10 +60,10 @@ export class Content {
 			if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
 				chromeSettings = this.userSettings;
 			}
-			const defaultSettings = _.keys(userSettings);
+			const defaultSettings = _.keys(userSettingsData);
 			const syncedSettings = _.keys(chromeSettings);
 			if (_.difference(defaultSettings, syncedSettings).length !== 0) { // If settings shape has changed
-				_.defaults(chromeSettings, userSettings);
+				_.defaults(chromeSettings, userSettingsData);
 			}
 
 			const startCoreData: StartCoreDataModel = {
@@ -145,5 +145,5 @@ export let appResources: AppResourcesModel = {
 	extensionId: chrome.runtime.id,
 };
 
-const content: Content = new Content(userSettings, appResources);
+const content: Content = new Content(userSettingsData, appResources);
 content.start();

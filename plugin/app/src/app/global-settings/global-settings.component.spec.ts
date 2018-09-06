@@ -4,7 +4,7 @@ import { GlobalSettingsComponent } from "./global-settings.component";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
-import { userSettings } from "../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
 import { CoreModule } from "../core/core.module";
 
 describe("GlobalSettingsComponent", () => {
@@ -27,7 +27,7 @@ describe("GlobalSettingsComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettings));
+				callback(_.cloneDeep(userSettingsData));
 			}
 		});
 
@@ -36,10 +36,11 @@ describe("GlobalSettingsComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(GlobalSettingsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {

@@ -2,15 +2,15 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
-import { AthleteModel } from "../../../../../../shared/models/athlete.model";
-import { Gender } from "../../enums/gender.enum";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "../../models/athlete/athlete.model";
+import { Gender } from "../../models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { userSettings } from "../../../../../../shared/UserSettings";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
 
 describe("ActivityService", () => {
 
@@ -205,7 +205,7 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettings);
+			const userSettingsModel = _.cloneDeep(userSettingsData);
 			userSettingsModel.hasDatedAthleteSettings = false;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
@@ -281,7 +281,7 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettings);
+			const userSettingsModel = _.cloneDeep(userSettingsData);
 			userSettingsModel.hasDatedAthleteSettings = true;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
@@ -357,7 +357,7 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettings);
+			const userSettingsModel = _.cloneDeep(userSettingsData);
 			userSettingsModel.hasDatedAthleteSettings = true;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
@@ -429,7 +429,7 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettings);
+			const userSettingsModel = _.cloneDeep(userSettingsData);
 			userSettingsModel.hasDatedAthleteSettings = false;
 			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
 			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")

@@ -2,28 +2,28 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 import { SplitCalculator } from "./SplitCalculator";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { MoveDataModel } from "../../../shared/models/activity-data/move-data.model";
-import { SpeedDataModel } from "../../../shared/models/activity-data/speed-data.model";
-import { PaceDataModel } from "../../../shared/models/activity-data/pace-data.model";
-import { GradeDataModel } from "../../../shared/models/activity-data/grade-data.model";
-import { PowerDataModel } from "../../../shared/models/activity-data/power-data.model";
-import { HeartRateDataModel } from "../../../shared/models/activity-data/heart-rate-data.model";
-import { CadenceDataModel } from "../../../shared/models/activity-data/cadence-data.model";
-import { ElevationDataModel } from "../../../shared/models/activity-data/elevation-data.model";
-import { ZoneModel } from "../../../shared/models/activity-data/zone.model";
-import { UpFlatDownSumTotalModel } from "../../../shared/models/activity-data/up-flat-down-sum-total.model";
-import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-down.model";
-import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
-import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
+import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
+import { MoveDataModel } from "../models/activity-data/move-data.model";
+import { SpeedDataModel } from "../models/activity-data/speed-data.model";
+import { PaceDataModel } from "../models/activity-data/pace-data.model";
+import { GradeDataModel } from "../models/activity-data/grade-data.model";
+import { PowerDataModel } from "../models/activity-data/power-data.model";
+import { HeartRateDataModel } from "../models/activity-data/heart-rate-data.model";
+import { CadenceDataModel } from "../models/activity-data/cadence-data.model";
+import { ElevationDataModel } from "../models/activity-data/elevation-data.model";
+import { ZoneModel } from "../shared/models/zone.model";
+import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-sum-total.model";
+import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
+import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
+import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
 import { LowPassFilter } from "../utils/LowPassFilter";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
-import { AthleteModel } from "../../../shared/models/athlete.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { Gender } from "../../../app/src/app/shared/enums/gender.enum";
-import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
+import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 export class ActivityComputer {
 
@@ -64,7 +64,7 @@ export class ActivityComputer {
 				bounds: number[],
 				returnZones: boolean) {
 
-		// Store activityType, isTrainer, input activity params and userSettings
+		// Store activityType, isTrainer, input activity params and userSettingsData
 		this.activityType = activityType;
 		this.isTrainer = isTrainer;
 		this.userSettings = userSettings;
@@ -803,7 +803,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr); // (hr - userSettingsData.userRestHr) / (userSettingsData.userMaxHr - userSettingsData.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);

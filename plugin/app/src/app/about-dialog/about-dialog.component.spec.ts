@@ -30,7 +30,7 @@ describe("AboutDialogComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(AboutDialogComponent);
 		component = fixture.componentInstance;
 
@@ -45,6 +45,8 @@ describe("AboutDialogComponent", () => {
 		spyOn(component.appUsageService, "get").and.returnValue(Promise.resolve(new AppUsageDetails(appUsage, megaBytesInUse, percentageUsage)));
 
 		fixture.detectChanges();
+
+		done();
 	});
 
 	it("should create", (done: Function) => {

@@ -2,21 +2,21 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
-import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { ActivitiesSynchronizer } from "../../scripts/models/sync/ActivitiesSynchronizer";
+import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
+import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.model";
+import { AnalysisDataModel } from "../../scripts/models/activity-data/analysis-data.model";
+import { SyncedActivityModel } from "../../scripts/shared/models/sync/synced-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/MultipleActivityProcessor";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
-import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
-import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
-import { userSettings } from "../../../shared/UserSettings";
-import { DatedAthleteSettingsModel } from "../../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../../shared/models/athlete-settings/athlete-settings.model";
+import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
+import { SyncResultModel } from "../../scripts/shared/models/sync/sync-result.model";
+import { ActivitiesChangesModel } from "../../scripts/models/sync/activities-changes.model";
+import { AthleteModelResolver } from "../../scripts/shared/resolvers/athlete-model.resolver";
+import { userSettingsData } from "../../scripts/shared/user-settings.data";
+import { DatedAthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 describe("ActivitiesSynchronizer", () => {
 
@@ -80,7 +80,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
-		userSettingsMock = _.cloneDeep(userSettings);
+		userSettingsMock = _.cloneDeep(userSettingsData);
 		appResourcesMock = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
 
 		// We have 7 pages

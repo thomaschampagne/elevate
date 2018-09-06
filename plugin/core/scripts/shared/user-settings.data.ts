@@ -1,7 +1,7 @@
 import { UserSettingsModel } from "./models/user-settings/user-settings.model";
-import { AthleteModel } from "./models/athlete.model";
+import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
 
-export const userSettings: UserSettingsModel = { // TODO rename file as user-settings.model and move in models
+export const userSettingsData: UserSettingsModel = { // TODO rename file as user-settings.model and move in models
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 	hasDatedAthleteSettings: false,

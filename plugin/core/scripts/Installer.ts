@@ -1,10 +1,10 @@
-import { userSettings } from "../../shared/UserSettings";
+import { userSettingsData } from "./shared/user-settings.data";
 import { Helper } from "./Helper";
 import * as semver from "semver";
-import { AthleteModel } from "../../shared/models/athlete.model";
-import { Gender } from "../../app/src/app/shared/enums/gender.enum";
-import { AthleteSettingsModel } from "../../shared/models/athlete-settings/athlete-settings.model";
-import { UserLactateThresholdModel } from "../../shared/models/user-settings/user-lactate-threshold.model";
+import { AthleteModel } from "../../app/src/app/shared/models/athlete/athlete.model";
+import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { UserLactateThresholdModel } from "../../app/src/app/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 
 
@@ -258,7 +258,7 @@ class Installer {
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
-		console.debug("UserSettings on update", userSettings);
+		console.debug("UserSettings on update", userSettingsData);
 
 		return this.migrate_to_5_1_1().then(() => {
 			return this.migrate_to_5_11_0();

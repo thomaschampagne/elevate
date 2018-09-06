@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AthleteModelResolver } from "../../../../../../shared/resolvers/athlete-model.resolver";
+import { AthleteModelResolver } from "../../../../../../core/scripts/shared/resolvers/athlete-model.resolver";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { AthleteModel } from "../../../../../../shared/models/athlete.model";
+import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteModel } from "../../models/athlete/athlete.model";
 import * as _ from "lodash";
 
 @Injectable()

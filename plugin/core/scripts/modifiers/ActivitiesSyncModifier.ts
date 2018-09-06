@@ -1,10 +1,10 @@
 import { Helper } from "../Helper";
 import { IStorageUsage, StorageManager } from "../StorageManager";
 import { CoreEnv } from "../../config/core-env";
-import { ActivitiesSynchronizer } from "../synchronizer/ActivitiesSynchronizer";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { HerokuEndpointResolver } from "../../../shared/resolvers/heroku-endpoint.resolver";
+import { ActivitiesSynchronizer } from "../models/sync/ActivitiesSynchronizer";
+import { SyncResultModel } from "../shared/models/sync/sync-result.model";
+import { SyncNotifyModel } from "../models/sync/sync-notify.model";
+import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./AbstractModifier";
 import * as _ from "lodash";
 

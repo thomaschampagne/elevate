@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "./Helper";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
 import { StorageManager } from "./StorageManager";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -37,17 +37,17 @@ import { ActivityProcessor } from "./processors/ActivityProcessor";
 import { BikeOdoProcessor } from "./processors/BikeOdoProcessor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
-import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
+import { ActivitiesSynchronizer } from "./models/sync/ActivitiesSynchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
-import { AthleteUpdate } from "./AthleteUpdate";
+import { SyncResultModel } from "./shared/models/sync/sync-result.model";
+import { ActivityBasicInfoModel } from "./models/activity-data/activity-basic-info.model";
+import { AthleteUpdate } from "./utils/AthleteUpdate";
 import "./Follow";
-import { releaseNotes } from "../../shared/ReleaseNotes";
-import { ReleaseNoteModel } from "../../shared/models/release-note.model";
-import { AthleteModelResolver } from "../../shared/resolvers/athlete-model.resolver";
-import { DatedAthleteSettingsModel } from "../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { Gender } from "../../app/src/app/shared/enums/gender.enum";
+import { releaseNotesData } from "./shared/release-notes.data";
+import { ReleaseNoteModel } from "./shared/models/release-note.model";
+import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver";
+import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 
 export class StravistiX {
 
@@ -207,7 +207,7 @@ export class StravistiX {
 
 	public showPluginInstallOrUpgradeRibbon(): void {
 
-		const latestRelease: ReleaseNoteModel = _.first(releaseNotes);
+		const latestRelease: ReleaseNoteModel = _.first(releaseNotesData);
 
 		if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
 			console.log("Silent update... skip update ribbon");
@@ -664,7 +664,7 @@ export class StravistiX {
                 activityType,
                 hasSupportsGap,
                 this.appResources,
-                this.userSettings,
+                this.userSettingsData,
                 this.isActivityAuthor,
                 basicInfo,
                 AbstractExtendedDataModifier.TYPE_ACTIVITY);

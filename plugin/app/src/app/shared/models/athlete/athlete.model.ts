@@ -1,4 +1,4 @@
-import { Gender } from "../../app/src/app/shared/enums/gender.enum";
+import { Gender } from "./gender.enum";
 import { AthleteSettingsModel } from "./athlete-settings/athlete-settings.model";
 
 export class AthleteModel {

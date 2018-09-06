@@ -8,7 +8,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015
 import * as moment from "moment";
 import { Moment } from "moment";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
@@ -58,7 +58,7 @@ describe("FitnessTrendGraphComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettings);
+				callback(userSettingsData);
 			},
 			set: (keys: any, callback: () => {}) => {
 				callback();

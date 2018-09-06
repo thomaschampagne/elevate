@@ -21,7 +21,7 @@ describe("AppComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
@@ -37,6 +37,8 @@ describe("AppComponent", () => {
 		spyOn(component.syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		fixture.detectChanges();
+
+		done();
 	});
 
 	it("should create the app", (done: Function) => {

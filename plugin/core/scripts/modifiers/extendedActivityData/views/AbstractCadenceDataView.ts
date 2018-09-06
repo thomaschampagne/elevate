@@ -1,5 +1,5 @@
 import { AbstractDataView } from "./AbstractDataView";
-import { CadenceDataModel } from "../../../../../shared/models/activity-data/cadence-data.model";
+import { CadenceDataModel } from "../../../models/activity-data/cadence-data.model";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
 
