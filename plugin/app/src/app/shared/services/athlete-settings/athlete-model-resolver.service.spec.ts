@@ -3,13 +3,13 @@ import { TestBed } from "@angular/core/testing";
 import { AthleteModelResolverService } from "./athlete-model-resolver.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { AthleteModelResolver } from "../../../../../../shared/resolvers/athlete-model.resolver";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { AthleteModelResolver } from "../../../../../../core/scripts/shared/resolvers/athlete-model.resolver";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import * as _ from "lodash";
-import { AthleteModel } from "../../../../../../shared/models/athlete.model";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "../../models/athlete/athlete.model";
+import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 
 describe("AthleteModelResolverService", () => {
 
@@ -29,7 +29,7 @@ describe("AthleteModelResolverService", () => {
 
 		athleteModelResolverService = TestBed.get(AthleteModelResolverService);
 
-		userSettingsModel = _.cloneDeep(userSettings);
+		userSettingsModel = _.cloneDeep(userSettingsData);
 
 		done();
 	});
@@ -112,7 +112,7 @@ describe("AthleteModelResolverService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = new AthleteModel(userSettingsData.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -138,7 +138,7 @@ describe("AthleteModelResolverService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = new AthleteModel(userSettingsData.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -164,7 +164,7 @@ describe("AthleteModelResolverService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = new AthleteModel(userSettingsData.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -190,7 +190,7 @@ describe("AthleteModelResolverService", () => {
 			expectedDatedAthleteSettingsModel
 		];
 
-		const expectedAthleteModel = userSettings.athleteModel;
+		const expectedAthleteModel = userSettingsData.athleteModel;
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -213,7 +213,7 @@ describe("AthleteModelResolverService", () => {
 			expectedDatedAthleteSettingsModel
 		];
 
-		const expectedAthleteModel = userSettings.athleteModel;
+		const expectedAthleteModel = userSettingsData.athleteModel;
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -239,7 +239,7 @@ describe("AthleteModelResolverService", () => {
 			expectedDatedAthleteSettingsModel
 		];
 
-		const expectedAthleteModel = userSettings.athleteModel;
+		const expectedAthleteModel = userSettingsData.athleteModel;
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -263,7 +263,7 @@ describe("AthleteModelResolverService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = new AthleteModel(userSettingsData.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When
@@ -291,7 +291,7 @@ describe("AthleteModelResolverService", () => {
 			expectedDatedAthleteSettingsModel,
 		];
 
-		const expectedAthleteModel = new AthleteModel(userSettings.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+		const expectedAthleteModel = new AthleteModel(userSettingsData.athleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
 		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
 
 		// When

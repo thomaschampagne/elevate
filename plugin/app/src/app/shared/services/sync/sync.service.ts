@@ -6,11 +6,11 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { SyncState } from "./sync-state.enum";
 import { environment } from "../../../../environments/environment";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { SyncedBackupModel } from "./synced-backup.model";
 import * as semver from "semver";
-import { Constant } from "../../../../../../shared/Constant";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
+import { Constant } from "../../../../../../core/scripts/shared/constant";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
 import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 

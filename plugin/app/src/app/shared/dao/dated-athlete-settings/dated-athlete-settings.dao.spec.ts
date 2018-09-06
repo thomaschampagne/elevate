@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { DatedAthleteSettingsDao } from "./dated-athlete-settings-dao.service";
-import { DatedAthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 
 describe("DatedAthleteSettingsDao", () => {
 
@@ -9,7 +9,7 @@ describe("DatedAthleteSettingsDao", () => {
 
 	let _TEST_DATED_ATHLETE_SETTINGS_: DatedAthleteSettingsModel[] = null;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			providers: [DatedAthleteSettingsDao]
 		});
@@ -31,6 +31,7 @@ describe("DatedAthleteSettingsDao", () => {
 
 		// Retrieve injected service
 		datedAthleteSettingsDao = TestBed.get(DatedAthleteSettingsDao);
+		done();
 	});
 
 	it("should be created", (done: Function) => {

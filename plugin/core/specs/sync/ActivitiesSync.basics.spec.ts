@@ -1,13 +1,13 @@
 import * as _ from "lodash";
-import {AppResourcesModel} from "../../scripts/models/app-resources.model";
-import {editActivityFromArray, removeActivityFromArray} from "../tools/SpecsTools";
-import {SyncedActivityModel} from "../../../shared/models/sync/synced-activity.model";
-import {StravaActivityModel} from "../../../shared/models/sync/strava-activity.model";
-import {ActivitiesChangesModel} from "../../scripts/synchronizer/activities-changes.model";
-import {UserSettingsModel} from "../../../shared/models/user-settings/user-settings.model";
-import {ActivitiesSynchronizer} from "../../scripts/synchronizer/ActivitiesSynchronizer";
-import {AthleteModelResolver} from "../../../shared/resolvers/athlete-model.resolver";
-import {userSettings} from "../../../shared/UserSettings";
+import { AppResourcesModel } from "../../scripts/models/app-resources.model";
+import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
+import { SyncedActivityModel } from "../../scripts/shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
+import { ActivitiesChangesModel } from "../../scripts/models/sync/activities-changes.model";
+import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
+import { ActivitiesSynchronizer } from "../../scripts/models/sync/ActivitiesSynchronizer";
+import { AthleteModelResolver } from "../../scripts/shared/resolvers/athlete-model.resolver";
+import { userSettingsData } from "../../scripts/shared/user-settings.data";
 
 describe("ActivitiesSynchronizer", () => {
 
@@ -15,7 +15,7 @@ describe("ActivitiesSynchronizer", () => {
 	let athleteModelResolver: AthleteModelResolver;
 
 	beforeEach((done: Function) => {
-		userSettingsMock = _.cloneDeep(userSettings);
+		userSettingsMock = _.cloneDeep(userSettingsData);
 		athleteModelResolver = new AthleteModelResolver(userSettingsMock, []);
 		done();
 	});

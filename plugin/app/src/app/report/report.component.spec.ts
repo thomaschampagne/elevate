@@ -19,10 +19,11 @@ describe("ReportComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(ReportComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {

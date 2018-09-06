@@ -1,4 +1,4 @@
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../core/scripts/shared/models/sync/synced-activity.model";
 
 /**
  // Get local activities between dates snippet

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ZoneToolBarComponent } from "./zone-tool-bar.component";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
@@ -44,14 +44,14 @@ describe("ZoneToolBarComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettings));
+				callback(_.cloneDeep(userSettingsData));
 			}
 		});
 
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		fixture = TestBed.createComponent(ZoneToolBarComponent);
 		component = fixture.componentInstance;
@@ -61,6 +61,7 @@ describe("ZoneToolBarComponent", () => {
 		component.zonesService.zoneDefinition = _.first(_.clone(zoneSpeedDefinition));
 
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {

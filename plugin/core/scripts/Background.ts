@@ -1,7 +1,7 @@
 import { IStorageUsage, StorageManager } from "./StorageManager";
 import * as _ from "lodash";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { MessagesModel } from "../../shared/models/messages.model";
+import { SyncResultModel } from "./shared/models/sync/sync-result.model";
+import { MessagesModel } from "./shared/models/messages.model";
 
 export class Background {
 

@@ -4,9 +4,9 @@ import * as _ from "lodash";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
-import { AthleteSettingsModel } from "../../../../../../shared/models/athlete-settings/athlete-settings.model";
+import { AthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/athlete-settings.model";
 
 describe("AthleteSettingsFormComponent", () => {
 
@@ -28,7 +28,7 @@ describe("AthleteSettingsFormComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettings));
+				callback(_.cloneDeep(userSettingsData));
 			}
 		});
 
@@ -37,12 +37,14 @@ describe("AthleteSettingsFormComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		fixture = TestBed.createComponent(AthleteSettingsFormComponent);
 		component = fixture.componentInstance;
 		component.athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
 		fixture.detectChanges();
+
+		done();
 
 	});
 

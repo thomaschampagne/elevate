@@ -7,13 +7,15 @@ describe("WindowService", () => {
 
 	let service: WindowService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			providers: [WindowService, ObservableMedia]
 		});
 
 		service = TestBed.get(WindowService);
+
+		done();
 	});
 
 	it("should be created", inject([WindowService], (service: WindowService) => {

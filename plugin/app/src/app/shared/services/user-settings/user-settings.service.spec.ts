@@ -1,24 +1,26 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { ZoneModel } from "../../../../../../shared/models/activity-data/zone.model";
+import { ZoneModel } from "../../../../../../core/scripts/shared/models/zone.model";
+import { Gender } from "../../models/athlete/gender.enum";
 
 describe("UserSettingsService", () => {
 
 	let userSettingsService: UserSettingsService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
+
 		TestBed.configureTestingModule({
 			providers: [UserSettingsService, UserSettingsDao]
 		});
 
 		// Retrieve injected service
 		userSettingsService = TestBed.get(UserSettingsService);
-
+		done();
 	});
 
 	it("should be created", (done: Function) => {
@@ -29,7 +31,7 @@ describe("UserSettingsService", () => {
 	it("should fetch user settings", (done: Function) => {
 
 		// Given
-		const expectedSettings = _.cloneDeep(userSettings);
+		const expectedSettings = _.cloneDeep(userSettingsData);
 		const fetchDaoSpy = spyOn(userSettingsService.userSettingsDao, "fetch")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
@@ -52,11 +54,11 @@ describe("UserSettingsService", () => {
 
 	});
 
-	it("should get user settings key", (done: Function) => {
+	it("should get temperatureUnit key", (done: Function) => {
 
 		// Given
-		const key = "userGender";
-		const expectedSettings = userSettings.userGender;
+		const key = "temperatureUnit";
+		const expectedSettings = userSettingsData.temperatureUnit;
 		const getDaoSpy = spyOn(userSettingsService.userSettingsDao, "get")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
@@ -83,27 +85,27 @@ describe("UserSettingsService", () => {
 	it("should update a user setting", (done: Function) => {
 
 		// Given
-		const keyMaxHr = "userMaxHr";
-		const maxHrValue = 199;
-		const expectedSettings = _.cloneDeep(userSettings);
-		expectedSettings.userMaxHr = maxHrValue;
+		const key = "displayAdvancedHrData";
+		const displayAdvancedHrData = false;
+		const expectedSettings = _.cloneDeep(userSettingsData);
+		expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
 		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.update(keyMaxHr, maxHrValue);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.update(key, displayAdvancedHrData);
 
 		// Then
 		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
-			expect(result.userMaxHr).toEqual(maxHrValue);
+			expect(result.displayAdvancedHrData).toEqual(displayAdvancedHrData);
 			expect(result).toEqual(expectedSettings);
-			expect(result).not.toEqual(userSettings);
-			expect(result.userMaxHr).not.toEqual(userSettings.userMaxHr);
+			expect(result).not.toEqual(userSettingsData);
+			expect(result.displayAdvancedHrData).not.toEqual(userSettingsData.displayAdvancedHrData);
 			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-			expect(updateDaoSpy).toHaveBeenCalledWith(keyMaxHr, maxHrValue);
+			expect(updateDaoSpy).toHaveBeenCalledWith(key, displayAdvancedHrData);
 
 			done();
 
@@ -119,7 +121,7 @@ describe("UserSettingsService", () => {
 		// Given
 		const path = "athleteModel.athleteSettings.lthr.default";
 		const value = 175;
-		const expectedSettings = _.cloneDeep(userSettings);
+		const expectedSettings = _.cloneDeep(userSettingsData);
 		expectedSettings.athleteModel.athleteSettings.lthr.default = value;
 
 		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
@@ -134,8 +136,8 @@ describe("UserSettingsService", () => {
 			expect(result).not.toBeNull();
 			expect(result.athleteModel.athleteSettings.lthr.default).toEqual(value);
 			expect(result).toEqual(expectedSettings);
-			expect(result).not.toEqual(userSettings);
-			expect(result.athleteModel.athleteSettings.lthr.default).not.toEqual(userSettings.athleteModel.athleteSettings.lthr.default);
+			expect(result).not.toEqual(userSettingsData);
+			expect(result.athleteModel.athleteSettings.lthr.default).not.toEqual(userSettingsData.athleteModel.athleteSettings.lthr.default);
 			expect(updateNestedDaoSpy).toHaveBeenCalledTimes(1);
 			expect(updateNestedDaoSpy).toHaveBeenCalledWith(path, value);
 
@@ -151,7 +153,7 @@ describe("UserSettingsService", () => {
 	it("should mark local storage to be clear", (done: Function) => {
 
 		// Given
-		const expectedSettings = _.cloneDeep(userSettings);
+		const expectedSettings = _.cloneDeep(userSettingsData);
 		expectedSettings.localStorageMustBeCleared = true;
 
 		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
@@ -197,7 +199,7 @@ describe("UserSettingsService", () => {
 			customDisplay: null
 		};
 
-		const settings = _.cloneDeep(userSettings);
+		const settings = _.cloneDeep(userSettingsData);
 		settings.zones.speed = TO_BE_SAVED_ZONES;
 
 		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
@@ -225,17 +227,15 @@ describe("UserSettingsService", () => {
 	it("should reset user settings", (done: Function) => {
 
 		// Given
-		const oldSettings = _.cloneDeep(userSettings);
-		oldSettings.userFTP = 99;
-		oldSettings.userMaxHr = 99;
-		oldSettings.userRestHr = 99;
-		oldSettings.userGender = "fakeGender";
+		const oldSettings = _.cloneDeep(userSettingsData);
+		oldSettings.displayAdvancedHrData = true;
+		oldSettings.athleteModel.gender = Gender.WOMEN;
 		oldSettings.zones.speed = [];
 		oldSettings.zones.heartRate = [];
 		oldSettings.zones.power = [];
 		oldSettings.zones.cyclingCadence = [];
 
-		spyOn(userSettingsService.userSettingsDao, "reset").and.returnValue(Promise.resolve(userSettings));
+		spyOn(userSettingsService.userSettingsDao, "reset").and.returnValue(Promise.resolve(userSettingsData));
 
 		// When
 		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
@@ -244,7 +244,7 @@ describe("UserSettingsService", () => {
 		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
-			expect(result).toEqual(userSettings);
+			expect(result).toEqual(userSettingsData);
 			done();
 
 		}, error => {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { releaseNotes } from "../../../../shared/ReleaseNotes";
+import { releaseNotesData } from "../../../../core/scripts/shared/release-notes.data";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { ReleaseNoteModel } from "../../../../shared/models/release-note.model";
+import { ReleaseNoteModel } from "../../../../core/scripts/shared/models/release-note.model";
 
 @Injectable()
 export class ReleasesNotesResolverService implements Resolve<ReleaseNoteModel[]> {
@@ -10,7 +10,7 @@ export class ReleasesNotesResolverService implements Resolve<ReleaseNoteModel[]>
 	}
 
 	public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): ReleaseNoteModel[] {
-		return releaseNotes;
+		return releaseNotesData;
 	}
 
 }

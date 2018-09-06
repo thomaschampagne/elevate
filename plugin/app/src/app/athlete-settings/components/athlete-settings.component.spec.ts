@@ -5,7 +5,7 @@ import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { AthleteSettingsModule } from "../athlete-settings.module";
 import * as _ from "lodash";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("AthleteSettingsComponent", () => {
@@ -25,7 +25,7 @@ describe("AthleteSettingsComponent", () => {
 
 		userSettingsService = TestBed.get(UserSettingsService);
 
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettings)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 		done();
 	});
 

@@ -1,5 +1,5 @@
 import { Helper } from "../../Helper";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/ActivityProcessor";
 import { AbstractExtendedDataModifier } from "./AbstractExtendedDataModifier";

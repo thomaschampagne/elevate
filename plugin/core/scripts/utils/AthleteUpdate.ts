@@ -1,9 +1,9 @@
-import { CoreEnv } from "../config/core-env";
+import { CoreEnv } from "../../config/core-env";
 import * as Q from "q";
 import * as _ from "lodash";
-import { AthleteUpdateModel } from "./models/athlete-update.model";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { HerokuEndpointResolver } from "../../shared/resolvers/heroku-endpoint.resolver";
+import { AthleteUpdateModel } from "../models/athlete-update.model";
+import { SyncResultModel } from "../shared/models/sync/sync-result.model";
+import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 
 export class AthleteUpdate {
 

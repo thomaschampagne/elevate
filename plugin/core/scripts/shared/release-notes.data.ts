@@ -1,6 +1,6 @@
 import { ReleaseNoteModel } from "./models/release-note.model";
 
-export let releaseNotes: ReleaseNoteModel[] = [
+export let releaseNotesData: ReleaseNoteModel[] = [
 	{
 		version: "6.5.0",
 		date: "2018-09-03",

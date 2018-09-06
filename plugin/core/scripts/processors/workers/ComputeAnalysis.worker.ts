@@ -1,6 +1,6 @@
 import { ComputeActivityThreadMessageModel } from "../../models/compute-activity-thread-message.model";
 import { ActivityComputer } from "../ActivityComputer";
-import { AnalysisDataModel } from "../../../../shared/models/activity-data/analysis-data.model";
+import { AnalysisDataModel } from "../../models/activity-data/analysis-data.model";
 
 onmessage = (mainThreadEvent: MessageEvent) => {
 

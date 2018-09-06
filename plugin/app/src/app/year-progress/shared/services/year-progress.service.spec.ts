@@ -10,7 +10,7 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 
 describe("YearProgressService", () => {
 

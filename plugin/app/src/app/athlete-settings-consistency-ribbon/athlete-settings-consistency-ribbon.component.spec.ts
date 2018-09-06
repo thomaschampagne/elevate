@@ -22,10 +22,11 @@ describe("AthleteSettingsConsistencyRibbonComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(AthleteSettingsConsistencyRibbonComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", () => {

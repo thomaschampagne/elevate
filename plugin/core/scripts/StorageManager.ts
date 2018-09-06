@@ -1,4 +1,4 @@
-import { userSettings } from "../../shared/UserSettings";
+import { userSettingsData } from "./shared/user-settings.data";
 
 export interface IStorageUsage {
 	bytesInUse: number;
@@ -54,7 +54,7 @@ export class StorageManager {
 
 		if (storageType === "sync") {
 
-			chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
+			chrome.storage.sync.get(userSettingsData, function (userSettingsResponseData) {
 				console.log(userSettingsResponseData);
 				let result: any = userSettingsResponseData[key];
 				result = (typeof result === "undefined") ? null : result;
@@ -85,13 +85,13 @@ export class StorageManager {
 
 		if (storageType === "sync") {
 
-			chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
+			chrome.storage.sync.get(userSettingsData, function (userSettingsResponseData) {
 
 				userSettingsResponseData[key] = value; // Set value to key
 
 				chrome.storage.sync.set(userSettingsResponseData, function () {
 					// Reload and callback sync get values
-					chrome.storage.sync.get(userSettings, function (userSettingsResponseData) {
+					chrome.storage.sync.get(userSettingsData, function (userSettingsResponseData) {
 
 						console.debug("HAS BEEN SET: " + key + " has now value of: ", userSettingsResponseData[key]);
 

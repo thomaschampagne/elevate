@@ -1,14 +1,14 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
-import { StreamActivityModel } from "../../../shared/models/sync/stream-activity.model";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { SyncNotifyModel } from "../../../shared/models/sync/sync-notify.model";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
+import { StreamActivityModel } from "../models/sync/stream-activity.model";
+import { SyncedActivityModel } from "../shared/models/sync/synced-activity.model";
+import { SyncNotifyModel } from "../models/sync/sync-notify.model";
+import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
+import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
+import { AthleteModelResolver } from "../shared/resolvers/athlete-model.resolver";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/ComputeAnalysis.worker");
 

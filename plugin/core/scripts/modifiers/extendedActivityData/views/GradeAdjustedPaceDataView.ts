@@ -1,5 +1,5 @@
 import { PaceDataView } from "./PaceDataView";
-import { PaceDataModel } from "../../../../../shared/models/activity-data/pace-data.model";
+import { PaceDataModel } from "../../../models/activity-data/pace-data.model";
 import { Helper } from "../../../Helper";
 
 export class GradeAdjustedPaceDataView extends PaceDataView {

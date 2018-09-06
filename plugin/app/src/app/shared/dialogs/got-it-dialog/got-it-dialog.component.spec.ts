@@ -36,10 +36,11 @@ describe("GotItDialogComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(GotItDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {

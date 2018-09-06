@@ -7,12 +7,13 @@ describe("SideNavService", () => {
 
 	let service: SideNavService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			providers: [SideNavService]
 		});
 
 		service = TestBed.get(SideNavService);
+		done();
 	});
 
 	it("should be created", inject([SideNavService], (service: SideNavService) => {

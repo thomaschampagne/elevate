@@ -17,10 +17,11 @@ describe("SwimFtpHelperComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(SwimFtpHelperComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {
