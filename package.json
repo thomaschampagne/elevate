@@ -55,7 +55,7 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"devDependencies": {
-		"bestzip": "^1.1.4",
+		"bestzip": "^1.1.6",
 		"cpy-cli": "^1.0.1",
 		"del-cli": "^1.1.0",
 		"npm-run-all": "^4.1.2",
