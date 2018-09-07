@@ -279,6 +279,8 @@ export class FitnessTrendComponent implements OnInit {
 
 		this.isPowerMeterEnabled = enabled;
 		this.reloadFitnessTrend();
+
+		_.defer(() => this.updateEstimatedStressScoresNotes())
 	}
 
 	public onSwimToggleChange(enabled: boolean): void {
