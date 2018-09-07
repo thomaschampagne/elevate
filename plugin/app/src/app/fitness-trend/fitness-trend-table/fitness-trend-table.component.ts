@@ -320,8 +320,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 		this.dialog.open(GotItDialogComponent, {
 			minWidth: GotItDialogComponent.MIN_WIDTH,
 			maxWidth: GotItDialogComponent.MAX_WIDTH,
-			data: new GotItDialogDataModel("Athlete Settings used on " + dayFitnessTrendModel.printShortDate(),
-				dayFitnessTrendModel.printAthleteSettings())
+			data: new GotItDialogDataModel("Calculated with athlete settings", dayFitnessTrendModel.printAthleteSettings())
 		});
 	}
 

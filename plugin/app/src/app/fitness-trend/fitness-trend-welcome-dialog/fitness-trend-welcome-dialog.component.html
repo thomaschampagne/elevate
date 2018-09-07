@@ -33,6 +33,12 @@
 						estimate power data on your next cycling activities
 						(required to compute <i>PSS</i>).
 					</li>
+					<li>
+						Your cycling activities must have correct elevation data. If not, you may encounter too big PSS
+						scores on some activities. To fix that you need to "Correct Elevation" of the related activities
+						directly on strava activities pages (link under elevation field). A "Clear and re-sync
+						activities" can be required.
+					</li>
 				</ul>
 			</li>
 			<li>
@@ -42,38 +48,6 @@
 						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
 					</li>
 				</ul>
-			</li>
-		</ul>
-	</div>
-
-	<div>
-		<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-		The "Estimated Fitness Trend" <strong>may not work properly on existing synced activities</strong> because some
-		added stats (required to estimate stress scores and fitness trend) are missing on your currently
-		synced activities. If you need to estimate stress scores on some of your activities and you have already synced
-		your activities in the past, you may do this:
-
-		<ul>
-			<li>
-				Perform a backup of your synced activities for security before. Just click
-				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
-				icon then
-				<i>
-					<mat-icon [style.vertical-align]="'bottom'">file_download</mat-icon>
-					Backup activities</i>
-			</li>
-			<li>
-				Make sure you properly configured all your <a [routerLink]="'/athleteSettings'"
-															  (click)="dialogRef.close()">single or dated athlete
-				settings</a>.
-			</li>
-			<li>
-				Clear and synchronize again your activities. Click
-				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
-				icon then
-				<i>
-					<mat-icon [style.vertical-align]="'bottom'">redo</mat-icon>
-					Clear and re-sync activities</i>
 			</li>
 		</ul>
 	</div>

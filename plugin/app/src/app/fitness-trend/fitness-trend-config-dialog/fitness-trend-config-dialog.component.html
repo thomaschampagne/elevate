@@ -44,7 +44,20 @@
 								profile</a> to allow strava to estimate power data on your next cycling activities
 								(required to compute <i>PSS</i>).
 							</li>
+							<li>
+								Your cycling activities have correct elevation data. If not, you may encounter too big
+								PSS scores on some activities. To fix that you need to "Correct Elevation" of the
+								related activities directly on strava activities pages (link under elevation field). A
+								"Clear and re-sync activities" can be required.
+							</li>
 						</ul>
+					</div>
+					<div class="hint">
+						Note: If you encounter too big PSS scores on some activities, you may need to "Correct
+						Elevation" of the related activities (link under elevation field on activities pages). Also
+						ensure that you cycling ftp is well
+						configured in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">single or dated
+						athlete settings</a>.
 					</div>
 				</div>
 				<div fxFlex="10px"></div>
