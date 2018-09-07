@@ -18,7 +18,6 @@ import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-su
 import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
 import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
 import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
-import { LowPassFilter } from "../utils/LowPassFilter";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
 import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
 import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
@@ -36,9 +35,7 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
-	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
-	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
+	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 60; // Seconds
 	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
 	protected athleteModel: AthleteModel;
@@ -135,23 +132,18 @@ export class ActivityComputer {
 
 	/**
 	 *
-	 * @param {boolean} hasPowerMeter
-	 * @param {number} movingTime
-	 * @param {number} weightedPower
-	 * @param {number} bestEightyPercentPower
-	 * @param {number} cyclingFtp
-	 * @returns {number}
+	 * @param movingTime
+	 * @param weightedPower
+	 * @param cyclingFtp
 	 */
-	public static computePowerStressScore(hasPowerMeter: boolean, movingTime: number, weightedPower: number,
-										  bestEightyPercentPower: number, cyclingFtp: number): number {
+	public static computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
 
 		if (!_.isNumber(cyclingFtp) || cyclingFtp <= 0) {
 			return null;
 		}
 
-		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercentPower);
 		const intensity = (weightedPower / cyclingFtp);
-		return (movingTime * pssWeightedPowerUsed * intensity) / (cyclingFtp * 3600) * 100;
+		return (movingTime * weightedPower * intensity) / (cyclingFtp * 3600) * 100;
 	}
 
 	/**
@@ -623,12 +615,6 @@ export class ActivityComputer {
 			return null;
 		}
 
-		if (!hasPowerMeter) {
-			const lowPassFilter = new LowPassFilter(ActivityComputer.POWER_IMPULSE_SMOOTHING_FACTOR);
-			powerArray = lowPassFilter.adaptiveSmoothArray(powerArray, timeArray,
-				ActivityComputer.POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING);
-		}
-
 		let powerZonesAlongActivityType: ZoneModel[];
 		if (this.activityType === "Ride") {
 			powerZonesAlongActivityType = this.userSettings.zones.power;
@@ -668,16 +654,17 @@ export class ActivityComputer {
 					totalMovingInSeconds += durationInSeconds;
 				}
 
-
 				timeWindowValue += durationInSeconds; // Add seconds to time buffer
 				sumPowerTimeWindow.push(powerArray[i]); // Add power value
 
 				if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
-					// Get average of power during these 30 seconds windows & power 4th
-					sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
-						return (a as number) + (b as number);
-					}, 0) / sumPowerTimeWindow.length, 4));
+					// Get average of power during these 60 seconds windows & power 4th
+					const sumPower = _.reduce(sumPowerTimeWindow, (a: number, b: number) => { // The reduce function and implementation return the sum of array
+						return (a + b);
+					}, 0) / sumPowerTimeWindow.length;
+
+					sum4thPower.push(Math.pow(sumPower, 4));
 
 					timeWindowValue = 0; // Reset time window
 					sumPowerTimeWindow = []; // Reset sum of power window
@@ -700,10 +687,20 @@ export class ActivityComputer {
 
 		// Finalize compute of Power
 		const avgWatts: number = _.mean(powerArray);
+		const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray),
+			ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+
+		let bestEightyPercent = null;
+		try {
+			bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
+		} catch (err) {
+			console.warn("No best 80% power available for this range");
+		}
 
 		const weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, (a: number, b: number) => { // The reduce function and implementation return the sum of array
 			return (a + b);
 		}, 0) / sum4thPower.length));
+
 
 		const variabilityIndex: number = weightedPower / avgWatts;
 		const intensity: number = (_.isNumber(cyclingFtp) && cyclingFtp > 0) ? (weightedPower / cyclingFtp) : null;
@@ -716,29 +713,15 @@ export class ActivityComputer {
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
 		// Find Best 20min and best 80% of time power splits
-		let splitCalculator: SplitCalculator = null;
+
 		let best20min = null;
-		let bestEightyPercent = null;
-
 		try {
-			splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-			try {
-				best20min = splitCalculator.getBestSplit(60 * 20, true);
-			} catch (err) {
-				console.warn("No best 20min power available for this range");
-			}
-
-			try {
-				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
-			} catch (err) {
-				console.warn("No best 80% power available for this range");
-			}
-
+			best20min = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("Cannot use split calculator on this activity");
+			console.warn("No best 20min power available for this range");
 		}
 
-		const powerStressScore = ActivityComputer.computePowerStressScore(hasPowerMeter, totalMovingInSeconds, weightedPower, bestEightyPercent, cyclingFtp);
+		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
 		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
 
 		const powerData: PowerDataModel = {
