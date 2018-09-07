@@ -29,7 +29,7 @@
 						<ul>
 							<li>You set one or several <strong>Cycling Functional Threshold Power</strong> in <a
 								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">single or dated
-								athlete settings</a>.
+								athlete settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
 							</li>
 							<li>You switch <strong>ON</strong> the power meter data toggle identified by the icon
 								<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
@@ -45,19 +45,14 @@
 								(required to compute <i>PSS</i>).
 							</li>
 							<li>
-								Your cycling activities have correct elevation data. If not, you may encounter too big
-								PSS scores on some activities. To fix that you need to "Correct Elevation" of the
-								related activities directly on strava activities pages (link under elevation field). A
-								"Clear and re-sync activities" can be required.
+								Your cycling activities must have correct elevation data. Read Strava elevation <a
+								href="https://support.strava.com/hc/en-us/articles/115001294564-Elevation-on-Strava-FAQs"
+								target="_blank">FAQ</a> and <a
+								href="https://support.strava.com/hc/en-us/articles/216919447-Elevation-for-Your-Activity"
+								target="_blank">Notes</a> to fix your activities if needed. A "Clear and re-sync
+								activities" can be required after any fix.
 							</li>
 						</ul>
-					</div>
-					<div class="hint">
-						Note: If you encounter too big PSS scores on some activities, you may need to "Correct
-						Elevation" of the related activities (link under elevation field on activities pages). Also
-						ensure that you cycling ftp is well
-						configured in <a [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">single or dated
-						athlete settings</a>.
 					</div>
 				</div>
 				<div fxFlex="10px"></div>
