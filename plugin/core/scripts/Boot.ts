@@ -15,8 +15,8 @@ class Boot {
 		addEventListener(MessagesModel.ON_START_CORE_EVENT, (event: any) => {
 
 			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
-			const stravistiX = new Elevate(initData.userSettings, initData.appResources);
-			stravistiX.run();
+			const elevate = new Elevate(initData.userSettings, initData.appResources);
+			elevate.run();
 
 		});
 	}

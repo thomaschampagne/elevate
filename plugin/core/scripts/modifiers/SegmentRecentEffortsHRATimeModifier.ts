@@ -82,9 +82,9 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 
 		const recentEffortsChart: JQuery = $("#athlete-history-chart");
 
-		if (!recentEffortsChart.hasClass("stravistiXGraph")) {
+		if (!recentEffortsChart.hasClass("elevateGraph")) {
 
-			recentEffortsChart.addClass("stravistiXGraph");
+			recentEffortsChart.addClass("elevateGraph");
 
 			const chart = recentEffortsChart.find("svg");
 
