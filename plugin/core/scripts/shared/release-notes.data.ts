@@ -2,7 +2,7 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
-		version: "6.5.0",
+		version: "6.5.1",
 		date: "2018-09-09",
 		message: "Big update! Introducing \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
 		hotFixes: [],
