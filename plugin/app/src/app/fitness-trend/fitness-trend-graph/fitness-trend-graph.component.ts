@@ -43,7 +43,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public static readonly ZOOM_PERIOD_VIEWED_DAYS: number = 14; // Days
 	public static readonly TODAY_MARKER_LABEL: string = "Today";
 
-	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.670;
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.665;
 	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
 
 	public PERFORMANCE_MARKER: number;
