@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { userSettings } from "../../../../../../shared/UserSettings";
+import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import * as _ from "lodash";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class UserSettingsDao {
 	 */
 	public fetch(): Promise<UserSettingsModel> {
 		return new Promise<UserSettingsModel>((resolve, reject) => {
-			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettingsData, (userSettingsSynced: UserSettingsModel) => {
 				const error = this.getChromeError();
 				if (error) {
 					reject(error.message);
@@ -35,7 +35,7 @@ export class UserSettingsDao {
 
 		return new Promise<T>((resolve, reject) => {
 
-			this.browserStorageSync().get(userSettings, (userSettingsSynced: UserSettingsModel) => {
+			this.browserStorageSync().get(userSettingsData, (userSettingsSynced: UserSettingsModel) => {
 
 				const error = this.getChromeError();
 				if (error) {
@@ -62,7 +62,7 @@ export class UserSettingsDao {
 
 		return new Promise<UserSettingsModel>((resolve, reject) => {
 
-			if (!_.has(userSettings, key)) {
+			if (!_.has(userSettingsData, key)) {
 				reject("key <" + key + "> does not exists in user settings");
 				return;
 			}
@@ -128,7 +128,7 @@ export class UserSettingsDao {
 
 		return new Promise<UserSettingsModel>((resolve, reject) => {
 
-			this.browserStorageSync().set(userSettings, () => {
+			this.browserStorageSync().set(userSettingsData, () => {
 
 				const error = this.getChromeError();
 				if (error) {

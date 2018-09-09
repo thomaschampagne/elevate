@@ -1,3 +1,8 @@
+<!--Loading-->
+<div *ngIf="(isSynced !== false && areSyncedActivitiesCompliant === null && isReSyncRequired === null)">
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
 <!--History not synced-->
 <mat-card *ngIf="(isSynced === false)" class="no-data">
 	<mat-card-title>
@@ -82,10 +87,41 @@
 	</mat-card-content>
 </mat-card>
 
-<!--Loading-->
-<mat-card *ngIf="(isSynced !== false && areSyncedActivitiesCompliant === null)">
+<!--Re-sync required-->
+<mat-card *ngIf="(isReSyncRequired === true)" class="no-data">
+	<mat-card-title>
+		Your synced activities needs to be recalculated
+	</mat-card-title>
 	<mat-card-content>
-		<mat-progress-bar mode="buffer"></mat-progress-bar>
+		<div>
+			Don't worry! This behavior can occur after a recent update of the plugin. Indeed stravistix needs your
+			activities to be recalculated for technical reasons. To recalculate your history, please
+			follow below steps:
+			<ul>
+				<li>
+					Perform a backup of your currently synced activities for security before. Just click
+					<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+					icon then
+					<i>
+						<mat-icon [style.vertical-align]="'bottom'">file_download</mat-icon>
+						Backup activities</i>
+				</li>
+				<li>
+					Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">single or dated
+					athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
+					then stress scores that depend on these settings will not be calculated resulting in missing data
+					in fitness trend.
+				</li>
+				<li>
+					Clear and synchronize again your activities. Click
+					<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+					icon then
+					<i>
+						<mat-icon [style.vertical-align]="'bottom'">redo</mat-icon>
+						Clear and re-sync activities</i>
+				</li>
+			</ul>
+		</div>
 	</mat-card-content>
 </mat-card>
 
@@ -100,14 +136,11 @@
 									  [periodViewed]="periodViewed"
 									  [lastPeriodViewed]="lastPeriodViewed"
 									  [lastFitnessActiveDate]="lastFitnessActiveDate"
-									  [fitnessUserSettingsModel]="fitnessUserSettingsModel"
 									  [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 									  [isPowerMeterEnabled]="isPowerMeterEnabled"
 									  [isSwimEnabled]="isSwimEnabled"
 									  [isEBikeRidesEnabled]="isEBikeRidesEnabled"
-									  [hasCyclingFtp]="hasCyclingFtp"
-									  [hasRunningFtp]="hasRunningFtp"
 									  (periodViewedChange)="onPeriodViewedChange($event)"
 									  (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
@@ -169,9 +202,7 @@
 								 [fitnessTrendConfigModel]="fitnessTrendConfigModel"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
 								 [isPowerMeterEnabled]="isPowerMeterEnabled"
-								 [isSwimEnabled]="isSwimEnabled"
-								 [hasCyclingFtp]="hasCyclingFtp"
-								 [hasRunningFtp]="hasRunningFtp">
+								 [isSwimEnabled]="isSwimEnabled">
 		</app-fitness-trend-table>
 	</mat-card-content>
 </mat-card>

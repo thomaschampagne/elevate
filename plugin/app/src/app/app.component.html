@@ -1,4 +1,5 @@
 <div id="app-container" class="mat-body-1">
+
 	<mat-sidenav-container>
 		<mat-sidenav #sidenav
 					 [mode]="sideNavMode"
@@ -23,6 +24,7 @@
 			<div id="logo"></div>
 
 		</mat-sidenav>
+
 		<mat-toolbar>
 
 			<button mat-icon-button id="toolBarMenu" (click)="onSideNavToggle()">
@@ -149,8 +151,8 @@
 				</button>
 			</mat-menu>
 		</mat-toolbar>
-
 		<div>
+			<app-athlete-settings-consistency-ribbon></app-athlete-settings-consistency-ribbon>
 			<router-outlet></router-outlet>
 		</div>
 	</mat-sidenav-container>

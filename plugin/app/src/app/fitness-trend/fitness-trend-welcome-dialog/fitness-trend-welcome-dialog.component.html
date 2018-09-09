@@ -21,7 +21,8 @@
 				Estimated <i>Cycling Power Stress Score (PSS)</i>:
 				<ul>
 					<li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
-						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
+						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>. A wrong ftp
+						can cause too big/low PSS scores on activities.
 					</li>
 					<li>The power meter data toggle
 						<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
@@ -33,6 +34,14 @@
 						estimate power data on your next cycling activities
 						(required to compute <i>PSS</i>).
 					</li>
+					<li>
+						Your cycling activities must have correct elevation data. Read Strava elevation <a
+						href="https://support.strava.com/hc/en-us/articles/115001294564-Elevation-on-Strava-FAQs"
+						target="_blank">FAQ</a> and <a
+						href="https://support.strava.com/hc/en-us/articles/216919447-Elevation-for-Your-Activity"
+						target="_blank">Notes</a> to fix your activities if needed. A "Clear and re-sync
+						activities" can be required after any fix.
+					</li>
 				</ul>
 			</li>
 			<li>
@@ -42,37 +51,6 @@
 						[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">athlete settings</a>.
 					</li>
 				</ul>
-			</li>
-		</ul>
-	</div>
-
-	<div>
-		<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
-		The "Estimated Fitness Trend" <strong>may not work properly on existing synced activities</strong> because some
-		added stats (required to estimate stress scores and fitness trend) are missing on your currently
-		synced activities. If you need to estimate stress scores on some of your activities and you have already synced
-		your activities in the past, you may do this:
-
-		<ul>
-			<li>
-				Perform a backup of your synced activities for security before. Just click
-				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
-				icon then
-				<i>
-					<mat-icon [style.vertical-align]="'bottom'">file_download</mat-icon>
-					Backup activities</i>
-			</li>
-			<li>
-				Make sure you properly configured all your <a [routerLink]="'/athleteSettings'"
-															  (click)="dialogRef.close()">athlete settings</a>.
-			</li>
-			<li>
-				Clear and synchronize again your activities. Click
-				<mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
-				icon then
-				<i>
-					<mat-icon [style.vertical-align]="'bottom'">redo</mat-icon>
-					Clear and re-sync activities</i>
 			</li>
 		</ul>
 	</div>

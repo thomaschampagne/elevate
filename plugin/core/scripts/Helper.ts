@@ -1,8 +1,8 @@
 import * as Q from "q";
 import { IStorageUsage } from "./StorageManager";
-import { MessagesModel } from "../../shared/models/messages.model";
-import { SpeedUnitDataModel } from "../../shared/models/activity-data/speed-unit-data.model";
-import { Constant } from "../../shared/Constant";
+import { MessagesModel } from "./shared/models/messages.model";
+import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
+import { Constant } from "./shared/constant";
 
 export class Helper {
 

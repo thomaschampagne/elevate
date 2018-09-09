@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
-import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as _ from "lodash";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import * as moment from "moment";
@@ -10,6 +10,8 @@ import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.en
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 import { Parser as Json2CsvParser } from "json2csv";
 import { saveAs } from "file-saver";
+import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -31,6 +33,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_ATL: string = "atl";
 	public static readonly COLUMN_TSB: string = "tsb";
 	public static readonly COLUMN_TRAINING_ZONE: string = "zone";
+	public static readonly COLUMN_ATHLETE_SETTINGS: string = "athleteSettings";
 	public static readonly COLUMN_STRAVA_LINK: string = "link";
 
 	public static readonly AVAILABLE_COLUMNS: FitnessTrendColumnModel[] = [
@@ -118,6 +121,11 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`
 		},
 		{
+			columnDef: FitnessTrendTableComponent.COLUMN_ATHLETE_SETTINGS,
+			header: "Settings",
+			type: FitnessTrendColumnType.ATHLETE_SETTINGS
+		},
+		{
 			columnDef: FitnessTrendTableComponent.COLUMN_STRAVA_LINK,
 			header: "Link",
 			type: FitnessTrendColumnType.STRAVA_LINK
@@ -147,19 +155,13 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("isSwimEnabled")
 	public isSwimEnabled;
 
-	@Input("hasCyclingFtp")
-	public hasCyclingFtp: boolean;
-
-	@Input("hasRunningFtp")
-	public hasRunningFtp: boolean;
-
 	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
 	@ViewChild(MatSort)
 	public matSort: MatSort;
 
-	constructor() {
+	constructor(public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
@@ -177,7 +179,6 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			if ((column.columnDef === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.hasRunningFtp)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
 				|| (column.columnDef === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
@@ -241,6 +242,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 				case FitnessTrendTableComponent.COLUMN_TRAINING_ZONE:
 					return dayFitnessTrendModel.trainingZone;
 
+				case FitnessTrendTableComponent.COLUMN_ATHLETE_SETTINGS:
+					return null;
+
 				case FitnessTrendTableComponent.COLUMN_STRAVA_LINK:
 					return dayFitnessTrendModel.timestamp;
 
@@ -300,6 +304,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			exportedFitnessDay.powerStressScore = (dayFitnessTrendModel.powerStressScore) ? _.floor(dayFitnessTrendModel.powerStressScore, 2) : "";
 			exportedFitnessDay.finalStressScore = (dayFitnessTrendModel.finalStressScore) ? _.floor(dayFitnessTrendModel.finalStressScore, 2) : "";
 
+			exportedFitnessDay.athleteSettings = (dayFitnessTrendModel.printAthleteSettings()) ? dayFitnessTrendModel.printAthleteSettings() : "";
+
 			exportedFitnessTrend.push(exportedFitnessDay);
 		});
 
@@ -308,6 +314,14 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 	public onOpenActivities(ids: number[]): void {
 		FitnessTrendComponent.openActivities(ids);
+	}
+
+	public onViewAthleteSettings(dayFitnessTrendModel: DayFitnessTrendModel): void {
+		this.dialog.open(GotItDialogComponent, {
+			minWidth: GotItDialogComponent.MIN_WIDTH,
+			maxWidth: GotItDialogComponent.MAX_WIDTH,
+			data: new GotItDialogDataModel("Calculated with athlete settings", dayFitnessTrendModel.printAthleteSettings())
+		});
 	}
 
 	public onSpreadSheetExport(): void {

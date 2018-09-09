@@ -1,6 +1,12 @@
-import { userSettings } from "../../shared/UserSettings";
+import { userSettingsData } from "./shared/user-settings.data";
 import { Helper } from "./Helper";
 import * as semver from "semver";
+import { AthleteModel } from "../../app/src/app/shared/models/athlete/athlete.model";
+import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { UserLactateThresholdModel } from "../../app/src/app/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
+import * as _ from "lodash";
+
 
 enum BrowserStorage { // TODO Refactor use with StorageManager (duplicate code)
 	SYNC = "sync",
@@ -199,10 +205,60 @@ class Installer {
 		return promise;
 	};
 
+	/**
+	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
+	 * Create datedAthleteSettings into local storage
+	 * @returns {Promise<void>}
+	 */
+	protected migrate_to_6_5_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.5.0")) {
+
+			console.log("Migrate to 6.5.0");
+
+			promise = this.get(BrowserStorage.SYNC, null).then((userSettingsModel: any) => {
+
+				if (userSettingsModel.userGender) {
+					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
+
+					const athleteModel = new AthleteModel(userGender, new AthleteSettingsModel(
+						(_.isNumber(userSettingsModel.userMaxHr)) ? userSettingsModel.userMaxHr : null,
+						(_.isNumber(userSettingsModel.userRestHr)) ? userSettingsModel.userRestHr : null,
+						(!_.isEmpty(userSettingsModel.userLTHR)) ? userSettingsModel.userLTHR : UserLactateThresholdModel.DEFAULT_MODEL,
+						(_.isNumber(userSettingsModel.userFTP)) ? userSettingsModel.userFTP : null,
+						(_.isNumber(userSettingsModel.userRunningFTP)) ? userSettingsModel.userRunningFTP : null,
+						(_.isNumber(userSettingsModel.userSwimFTP)) ? userSettingsModel.userSwimFTP : null,
+						(_.isNumber(userSettingsModel.userWeight)) ? userSettingsModel.userWeight : null
+					));
+
+					// Create new athlete model structure and apply change in sync settings
+					return this.set(BrowserStorage.SYNC, "athleteModel", athleteModel);
+				} else {
+					return Promise.resolve();
+				}
+
+			}).then(() => {
+				// Remove deprecated old user settings
+				return this.remove(BrowserStorage.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
+
+			}).then(() => {
+				return this.remove(BrowserStorage.LOCAL, "profileConfigured");
+			});
+
+		} else {
+			console.log("Skip migrate to 6.5.0");
+		}
+
+		return promise;
+
+	};
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
-		console.debug("UserSettings on update", userSettings);
+		console.debug("UserSettings on update", userSettingsData);
 
 		return this.migrate_to_5_1_1().then(() => {
 			return this.migrate_to_5_11_0();
@@ -210,6 +266,8 @@ class Installer {
 			return this.migrate_to_6_1_2();
 		}).then(() => {
 			return this.migrate_to_6_4_0();
+		}).then(() => {
+			return this.migrate_to_6_5_0();
 		});
 
 	}
@@ -266,3 +324,13 @@ class Installer {
 
 const installer = new Installer();
 installer.listen();
+
+
+
+
+
+
+
+
+
+

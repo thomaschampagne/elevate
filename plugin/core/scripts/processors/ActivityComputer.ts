@@ -2,26 +2,27 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { RunningPowerEstimator } from "./RunningPowerEstimator";
 import { SplitCalculator } from "./SplitCalculator";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { UserLactateThresholdModel } from "../../../shared/models/user-settings/user-lactate-threshold.model";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../../../shared/models/activity-data/analysis-data.model";
-import { MoveDataModel } from "../../../shared/models/activity-data/move-data.model";
-import { SpeedDataModel } from "../../../shared/models/activity-data/speed-data.model";
-import { PaceDataModel } from "../../../shared/models/activity-data/pace-data.model";
-import { GradeDataModel } from "../../../shared/models/activity-data/grade-data.model";
-import { PowerDataModel } from "../../../shared/models/activity-data/power-data.model";
-import { HeartRateDataModel } from "../../../shared/models/activity-data/heart-rate-data.model";
-import { CadenceDataModel } from "../../../shared/models/activity-data/cadence-data.model";
-import { ElevationDataModel } from "../../../shared/models/activity-data/elevation-data.model";
-import { ZoneModel } from "../../../shared/models/activity-data/zone.model";
-import { UpFlatDownSumTotalModel } from "../../../shared/models/activity-data/up-flat-down-sum-total.model";
-import { UpFlatDownModel } from "../../../shared/models/activity-data/up-flat-down.model";
-import { UpFlatDownSumCounterModel } from "../../../shared/models/activity-data/up-flat-down-sum-counter.model";
-import { AscentSpeedDataModel } from "../../../shared/models/activity-data/ascent-speed-data.model";
-import { LowPassFilter } from "../utils/LowPassFilter";
+import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
+import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
+import { MoveDataModel } from "../models/activity-data/move-data.model";
+import { SpeedDataModel } from "../models/activity-data/speed-data.model";
+import { PaceDataModel } from "../models/activity-data/pace-data.model";
+import { GradeDataModel } from "../models/activity-data/grade-data.model";
+import { PowerDataModel } from "../models/activity-data/power-data.model";
+import { HeartRateDataModel } from "../models/activity-data/heart-rate-data.model";
+import { CadenceDataModel } from "../models/activity-data/cadence-data.model";
+import { ElevationDataModel } from "../models/activity-data/elevation-data.model";
+import { ZoneModel } from "../shared/models/zone.model";
+import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-sum-total.model";
+import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
+import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
+import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
+import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
+import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
+import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 export class ActivityComputer {
 
@@ -34,15 +35,14 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
-	public static readonly POWER_IMPULSE_SMOOTHING_FACTOR: number = 0.1;
-	public static readonly POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING: number = 295;
+	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 60; // Seconds
+	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
+	protected athleteModel: AthleteModel;
 	protected activityType: string;
 	protected isTrainer: boolean;
 	protected userSettings: UserSettingsModel;
 	protected movementData: MoveDataModel;
-	protected athleteWeight: number;
 	protected isActivityAuthor: boolean;
 	protected hasPowerMeter: boolean;
 	protected activityStatsMap: ActivityStatsMapModel;
@@ -50,18 +50,22 @@ export class ActivityComputer {
 	protected bounds: number[];
 	protected returnZones: boolean;
 
-	constructor(activityType: string, isTrainer: boolean, userSettings: UserSettingsModel, athleteWeight: number,
+	constructor(activityType: string,
+				isTrainer: boolean,
+				userSettings: UserSettingsModel,
+				athleteModel: AthleteModel,
 				isActivityAuthor: boolean,
 				hasPowerMeter: boolean,
 				activityStatsMap: ActivityStatsMapModel,
 				activityStream: ActivityStreamsModel,
-				bounds: number[], returnZones: boolean) {
+				bounds: number[],
+				returnZones: boolean) {
 
-		// Store activityType, isTrainer, input activity params and userSettings
+		// Store activityType, isTrainer, input activity params and userSettingsData
 		this.activityType = activityType;
 		this.isTrainer = isTrainer;
 		this.userSettings = userSettings;
-		this.athleteWeight = athleteWeight;
+		this.athleteModel = athleteModel;
 		this.isActivityAuthor = isActivityAuthor;
 		this.hasPowerMeter = hasPowerMeter;
 		this.activityStatsMap = activityStatsMap;
@@ -110,6 +114,83 @@ export class ActivityComputer {
 		return streamVariations;
 	}
 
+	/**
+	 * Compute Heart Rate Stress Score (HRSS)
+	 * @param {string} userGender
+	 * @param {number} userMaxHr
+	 * @param {number} userMinHr
+	 * @param {number} lactateThreshold
+	 * @param {number} activityTrainingImpulse
+	 * @returns {number}
+	 */
+	public static computeHeartRateStressScore(userGender: Gender, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
+		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
+		const TRIMPGenderFactor: number = (userGender === Gender.MEN) ? 1.92 : 1.67;
+		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
+		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
+	}
+
+	/**
+	 *
+	 * @param movingTime
+	 * @param weightedPower
+	 * @param cyclingFtp
+	 */
+	public static computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
+
+		if (!_.isNumber(cyclingFtp) || cyclingFtp <= 0) {
+			return null;
+		}
+
+		const intensity = (weightedPower / cyclingFtp);
+		return (movingTime * weightedPower * intensity) / (cyclingFtp * 3600) * 100;
+	}
+
+	/**
+	 * @param {number} movingTime
+	 * @param {number} gradeAdjustedAvgPace in s/km
+	 * @param {number} runningThresholdPace
+	 * @returns {number}
+	 */
+	public static computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
+		// Convert pace to speed (km/s)
+		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
+		const runningThresholdSpeed = 1 / runningThresholdPace;
+		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
+		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
+	}
+
+	/**
+	 *
+	 * @param activityType
+	 * @param athleteSettingsModel
+	 */
+	public static resolveLTHR(activityType: string, athleteSettingsModel: AthleteSettingsModel): number {
+
+		if (athleteSettingsModel.lthr) {
+			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+				if (_.isNumber(athleteSettingsModel.lthr.cycling)) {
+					return athleteSettingsModel.lthr.cycling;
+				}
+			}
+
+			if (activityType === "Run") {
+				if (_.isNumber(athleteSettingsModel.lthr.running)) {
+					return athleteSettingsModel.lthr.running;
+				}
+			}
+
+			if (_.isNumber(athleteSettingsModel.lthr.default)) {
+				return athleteSettingsModel.lthr.default;
+			}
+		}
+
+		return athleteSettingsModel.restHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR
+			* (athleteSettingsModel.maxHr - athleteSettingsModel.restHr);
+
+	}
+
+
 	public compute(): AnalysisDataModel {
 
 		if (!this.activityStream) {
@@ -123,9 +204,7 @@ export class ActivityComputer {
 		// It's mainly used for segment effort extended stats
 		this.sliceStreamFromBounds(this.activityStream, this.bounds);
 
-		return this.computeAnalysisData(this.userSettings.userGender, this.userSettings.userRestHr, this.userSettings.userMaxHr,
-			this.userSettings.userLTHR, this.userSettings.userFTP, this.athleteWeight, this.hasPowerMeter,
-			this.activityStatsMap, this.activityStream);
+		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
 	}
 
 	protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
@@ -188,8 +267,7 @@ export class ActivityComputer {
 	}
 
 
-	protected computeAnalysisData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel,
-								  userFTP: number, athleteWeight: number, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
+	protected computeAnalysisData(athleteModel: AthleteModel, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
@@ -224,14 +302,11 @@ export class ActivityComputer {
 			&& !this.hasPowerMeter
 			&& this.isActivityAuthor) {
 
-			// Override athlete weight given in settings for the author watching his run
-			athleteWeight = this.userSettings.userWeight;
-
-			powerData = this.estimatedRunningPower(activityStream, athleteWeight, hasPowerMeter, userFTP);
+			powerData = this.estimatedRunningPower(activityStream, athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp);
 
 		} else {
 
-			powerData = this.powerData(athleteWeight, hasPowerMeter, userFTP, activityStream.watts, activityStream.velocity_smooth,
+			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp, activityStream.watts, activityStream.velocity_smooth,
 				activityStream.time);
 
 		}
@@ -242,7 +317,7 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = this.heartRateData(userGender, userRestHr, userMaxHr, userLactateThresholdModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
+		const heartRateData: HeartRateDataModel = this.heartRateData(athleteModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
@@ -462,7 +537,7 @@ export class ActivityComputer {
 
 		let best20min = null;
 		try {
-			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray));
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 			best20min = splitCalculator.getBestSplit(60 * 20, true) * 3.6;
 		} catch (err) {
 			console.warn("No best 20min speed/pace available for this range");
@@ -484,8 +559,8 @@ export class ActivityComputer {
 
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
 
-		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.userSettings.userRunningFTP)
-			? this.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.userSettings.userRunningFTP) : null;
+		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
+			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
@@ -522,69 +597,6 @@ export class ActivityComputer {
 		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
 	}
 
-	/**
-	 * TODO Duplicated code of FitnessService.computeHeartRateStressScore. To be refactored
-	 * Compute Heart Rate Stress Score (HRSS)
-	 * @param {string} userGender
-	 * @param {number} userMaxHr
-	 * @param {number} userMinHr
-	 * @param {number} lactateThreshold
-	 * @param {number} activityTrainingImpulse
-	 * @returns {number}
-	 */
-	public computeHeartRateStressScore(userGender: string, userMaxHr: number, userMinHr: number, lactateThreshold: number, activityTrainingImpulse: number): number {
-		const lactateThresholdReserve = (lactateThreshold - userMinHr) / (userMaxHr - userMinHr);
-		const TRIMPGenderFactor: number = (userGender === "men") ? 1.92 : 1.67;
-		const lactateThresholdTrainingImpulse = 60 * lactateThresholdReserve * 0.64 * Math.exp(TRIMPGenderFactor * lactateThresholdReserve);
-		return (activityTrainingImpulse / lactateThresholdTrainingImpulse * 100);
-	}
-
-	/**
-	 * TODO Duplicated code of FitnessService.computeRunningStressScore. To be refactored
-	 * @param {number} movingTime
-	 * @param {number} gradeAdjustedAvgPace in s/km
-	 * @param {number} runningThresholdPace
-	 * @returns {number}
-	 */
-	public computeRunningStressScore(movingTime: number, gradeAdjustedAvgPace: number, runningThresholdPace: number): number {
-		// Convert pace to speed (km/s)
-		const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
-		const runningThresholdSpeed = 1 / runningThresholdPace;
-		const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
-		return (movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600) * 100;
-	}
-
-	/**
-	 * TODO Duplicated code of FitnessService.resolveLTHR. To be refactored
-	 * @param {string} activityType
-	 * @param {number} userMaxHr
-	 * @param {number} userRestHr
-	 * @param {UserLactateThresholdModel} userLactateThresholdModel
-	 * @returns {number}
-	 */
-	public resolveLTHR(activityType: string, userMaxHr: number, userRestHr: number, userLactateThresholdModel: UserLactateThresholdModel): number {
-
-		if (userLactateThresholdModel) {
-			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
-				if (_.isNumber(userLactateThresholdModel.cycling)) {
-					return userLactateThresholdModel.cycling;
-				}
-			}
-
-			if (activityType === "Run") {
-				if (_.isNumber(userLactateThresholdModel.running)) {
-					return userLactateThresholdModel.running;
-				}
-			}
-
-			if (_.isNumber(userLactateThresholdModel.default)) {
-				return userLactateThresholdModel.default;
-			}
-		}
-
-		return userRestHr + ActivityComputer.DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (userMaxHr - userRestHr);
-	}
-
 
 	/**
 	 * Andrew Coggan weighted power compute method
@@ -596,17 +608,11 @@ export class ActivityComputer {
 	 * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
 	 * like WKO+ to do the work for you <g>.)
 	 */
-	protected powerData(athleteWeight: number, hasPowerMeter: boolean, userFTP: number, powerArray: number[],
+	protected powerData(athleteWeight: number, hasPowerMeter: boolean, cyclingFtp: number, powerArray: number[],
 						velocityArray: number[], timeArray: number[], isEstimatedRunningPower?: boolean): PowerDataModel {
 
 		if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
 			return null;
-		}
-
-		if (!hasPowerMeter) {
-			const lowPassFilter = new LowPassFilter(ActivityComputer.POWER_IMPULSE_SMOOTHING_FACTOR);
-			powerArray = lowPassFilter.adaptiveSmoothArray(powerArray, timeArray,
-				ActivityComputer.POWER_IMPULSE_THRESHOLD_WATTS_SMOOTHING);
 		}
 
 		let powerZonesAlongActivityType: ZoneModel[];
@@ -648,16 +654,17 @@ export class ActivityComputer {
 					totalMovingInSeconds += durationInSeconds;
 				}
 
-
 				timeWindowValue += durationInSeconds; // Add seconds to time buffer
 				sumPowerTimeWindow.push(powerArray[i]); // Add power value
 
 				if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
 
-					// Get average of power during these 30 seconds windows & power 4th
-					sum4thPower.push(Math.pow(_.reduce(sumPowerTimeWindow, function (a, b) { // The reduce function and implementation return the sum of array
-						return (a as number) + (b as number);
-					}, 0) / sumPowerTimeWindow.length, 4));
+					// Get average of power during these 60 seconds windows & power 4th
+					const sumPower = _.reduce(sumPowerTimeWindow, (a: number, b: number) => { // The reduce function and implementation return the sum of array
+						return (a + b);
+					}, 0) / sumPowerTimeWindow.length;
+
+					sum4thPower.push(Math.pow(sumPower, 4));
 
 					timeWindowValue = 0; // Reset time window
 					sumPowerTimeWindow = []; // Reset sum of power window
@@ -680,13 +687,23 @@ export class ActivityComputer {
 
 		// Finalize compute of Power
 		const avgWatts: number = _.mean(powerArray);
+		const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray),
+			ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+
+		let bestEightyPercent = null;
+		try {
+			bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
+		} catch (err) {
+			console.warn("No best 80% power available for this range");
+		}
 
 		const weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, (a: number, b: number) => { // The reduce function and implementation return the sum of array
 			return (a + b);
 		}, 0) / sum4thPower.length));
 
+
 		const variabilityIndex: number = weightedPower / avgWatts;
-		const intensity: number = (_.isNumber(userFTP) && userFTP > 0) ? (weightedPower / userFTP) : null;
+		const intensity: number = (_.isNumber(cyclingFtp) && cyclingFtp > 0) ? (weightedPower / cyclingFtp) : null;
 		const weightedWattsPerKg: number = weightedPower / athleteWeight;
 		const avgWattsPerKg: number = avgWatts / athleteWeight;
 
@@ -696,31 +713,15 @@ export class ActivityComputer {
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
 		// Find Best 20min and best 80% of time power splits
-		let splitCalculator: SplitCalculator = null;
+
 		let best20min = null;
-		let bestEightyPercent = null;
-
 		try {
-			splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray));
-			try {
-				best20min = splitCalculator.getBestSplit(60 * 20, true);
-			} catch (err) {
-				console.warn("No best 20min power available for this range");
-			}
-
-			try {
-				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
-			} catch (err) {
-				console.warn("No best 80% power available for this range");
-			}
-
+			best20min = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
-			console.warn("Cannot use split calculator on this activity");
+			console.warn("No best 20min power available for this range");
 		}
 
-		// If athlete don't have power meter we use his best 80% split power as weightedPower
-		const pssWeightedPowerUsed = ((hasPowerMeter) ? weightedPower : bestEightyPercent);
-		const powerStressScore = (_.isNumber(userFTP) && userFTP > 0) ? ((totalMovingInSeconds * pssWeightedPowerUsed * intensity) / (userFTP * 3600) * 100) : null; // TSS = (sec x NP x IF)/(FTP x 3600) x 100
+		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
 		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
 
 		const powerData: PowerDataModel = {
@@ -748,8 +749,8 @@ export class ActivityComputer {
 		return powerData;
 	}
 
-	protected heartRateData(userGender: string, userRestHr: number, userMaxHr: number, userLactateThresholdModel: UserLactateThresholdModel, heartRateArray: number[],
-							timeArray: number[], velocityArray: number[]): HeartRateDataModel {
+	protected heartRateData(athleteModel: AthleteModel, heartRateArray: number[], timeArray: number[],
+							velocityArray: number[]): HeartRateDataModel {
 
 		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
 			return null;
@@ -758,7 +759,7 @@ export class ActivityComputer {
 		this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
 
 		let trainingImpulse = 0;
-		const TRIMPGenderFactor: number = (userGender == "men") ? 1.92 : 1.67;
+		const TRIMPGenderFactor: number = (athleteModel.gender === Gender.MEN) ? 1.92 : 1.67;
 		let hrrSecondsCount = 0;
 		let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number,
 			zoneId: number;
@@ -785,7 +786,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, userMaxHr, userRestHr); // (hr - userSettings.userRestHr) / (userSettings.userMaxHr - userSettings.userRestHr);
+				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr); // (hr - userSettingsData.userRestHr) / (userSettingsData.userMaxHr - userSettingsData.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
@@ -805,8 +806,10 @@ export class ActivityComputer {
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
-		const userLthrAlongActivityType: number = this.resolveLTHR(this.activityType, userMaxHr, userRestHr, userLactateThresholdModel);
-		const heartRateStressScore = this.computeHeartRateStressScore(userGender, userMaxHr, userRestHr, userLthrAlongActivityType, trainingImpulse);
+		const userLthrAlongActivityType: number = ActivityComputer.resolveLTHR(this.activityType, athleteModel.athleteSettings);
+
+		const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(athleteModel.gender, athleteModel.athleteSettings.maxHr,
+			athleteModel.athleteSettings.restHr, userLthrAlongActivityType, trainingImpulse);
 		const HRSSPerHour: number = heartRateStressScore / hrrSecondsCount * 60 * 60;
 
 		const averageHeartRate: number = hrSum / hrrSecondsCount;
@@ -814,7 +817,7 @@ export class ActivityComputer {
 
 		let best20minHr = null;
 		try {
-			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray));
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 			best20minHr = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
 			console.warn("No best 20min heart rate available for this range");
@@ -832,8 +835,8 @@ export class ActivityComputer {
 			upperQuartileHeartRate: percentiles[2],
 			averageHeartRate: averageHeartRate,
 			maxHeartRate: maxHeartRate,
-			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, userMaxHr, userRestHr) * 100,
-			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, userMaxHr, userRestHr) * 100,
+			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr) * 100,
+			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, athleteModel.athleteSettings.maxHr, athleteModel.athleteSettings.restHr) * 100,
 		};
 	}
 

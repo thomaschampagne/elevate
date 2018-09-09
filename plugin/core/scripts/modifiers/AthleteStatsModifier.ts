@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { Helper } from "../Helper";
 import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
-import { Constant } from "../../../shared/Constant";
+import { Constant } from "../shared/constant";
 import { AbstractModifier } from "./AbstractModifier";
 
 export class AthleteStatsModifier extends AbstractModifier {

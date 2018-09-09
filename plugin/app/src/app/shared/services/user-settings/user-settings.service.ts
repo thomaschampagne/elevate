@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { ZoneModel } from "../../../../../../shared/models/activity-data/zone.model";
+import { ZoneModel } from "../../../../../../core/scripts/shared/models/zone.model";
 
 @Injectable()
 export class UserSettingsService {
@@ -53,9 +53,11 @@ export class UserSettingsService {
 	 * Clear local storage on next reload
 	 * @returns {Promise<UserSettingsModel>}
 	 */
-	public markLocalStorageClear(): Promise<UserSettingsModel> {
-		console.log("Mark localStorage to be cleared on next strava.com load");
-		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
+	public clearLocalStorageOnNextLoad(): Promise<void> {
+		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => {
+			console.log("LocalStorage is marked to be cleared on next core load");
+			return Promise.resolve();
+		});
 	}
 
 	/**
@@ -93,10 +95,6 @@ export class UserSettingsService {
 
 	get userSettingsDao(): UserSettingsDao {
 		return this._userSettingsDao;
-	}
-
-	set userSettingsDao(value: UserSettingsDao) {
-		this._userSettingsDao = value;
 	}
 
 }

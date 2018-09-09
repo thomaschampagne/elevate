@@ -11,8 +11,8 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
-import { userSettings } from "../../../../shared/UserSettings";
-import { SyncedActivityModel } from "../../../../shared/models/sync/synced-activity.model";
+import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
+import { SyncedActivityModel } from "../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { YearProgressModule } from "./year-progress.module";
 
 describe("YearProgressComponent", () => {
@@ -43,16 +43,17 @@ describe("YearProgressComponent", () => {
 
 		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettings));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettingsData));
 		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(YearProgressComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {

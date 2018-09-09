@@ -3,12 +3,13 @@ module.exports = function (config) {
 		basePath: "./",
 		browsers: ["Chrome"],
 		frameworks: ["jasmine", "promise"],
-		reporters: ["progress"],
+		reporters: ["progress", "spec"],
 		plugins: [
 			"karma-webpack",
 			"karma-jasmine",
 			"karma-promise",
-			"karma-chrome-launcher"
+			"karma-chrome-launcher",
+			"karma-spec-reporter"
 		],
 		customLaunchers: {
 			ChromeHeadless: {
@@ -51,6 +52,15 @@ module.exports = function (config) {
 		},
 		mime: {
 			"text/x-typescript": ["ts", "tsx"]
+		},
+		specReporter: {
+			maxLogLines: 5,             	// limit number of lines logged per test
+			suppressErrorSummary: false, 	// do not print error summary
+			suppressFailed: false,      	// do not print information about failed tests
+			suppressPassed: false,      	// do not print information about passed tests
+			suppressSkipped: true,      	// do not print information about skipped tests
+			showSpecTiming: true,      		// print the time elapsed for each spec
+			failFast: false              	// test would finish with error when a first fail occurs.
 		},
 		colors: true,
 		singleRun: false,

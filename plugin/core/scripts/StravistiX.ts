@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "./Helper";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
 import { StorageManager } from "./StorageManager";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -37,27 +37,32 @@ import { ActivityProcessor } from "./processors/ActivityProcessor";
 import { BikeOdoProcessor } from "./processors/BikeOdoProcessor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/SegmentProcessor";
 import { VacuumProcessor } from "./processors/VacuumProcessor";
-import { ActivitiesSynchronizer } from "./synchronizer/ActivitiesSynchronizer";
+import { ActivitiesSynchronizer } from "./models/sync/ActivitiesSynchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { ActivityBasicInfoModel } from "../../shared/models/activity-data/activity-basic-info.model";
-import { AthleteUpdate } from "./AthleteUpdate";
+import { SyncResultModel } from "./shared/models/sync/sync-result.model";
+import { ActivityBasicInfoModel } from "./models/activity-data/activity-basic-info.model";
+import { AthleteUpdate } from "./utils/AthleteUpdate";
 import "./Follow";
-import { releaseNotes } from "../../shared/ReleaseNotes";
-import { ReleaseNoteModel } from "../../shared/models/release-note.model";
+import { releaseNotesData } from "./shared/release-notes.data";
+import { ReleaseNoteModel } from "./shared/models/release-note.model";
+import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver";
+import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 
 export class StravistiX {
+
 	public static instance: StravistiX = null;
 
-	public static versionInstalledKey = "versionInstalled";
-	public isPro: boolean;
+	public static LOCAL_VERSION_INSTALLED_KEY = "versionInstalled";
+	public static LOCAL_DATED_ATHLETE_SETTINGS_KEY = "datedAthleteSettings";
 
+	public isPro: boolean;
 	public isPremium: boolean;
 	public athleteName: string;
 	public activityAthleteId: number;
 	public activityId: number;
 	public athleteId: number;
-	public activityProcessor: ActivityProcessor;
+	public athleteModelResolver: AthleteModelResolver;
 	public isActivityAuthor: boolean;
 	public extensionId: string;
 	public appResources: AppResourcesModel;
@@ -69,98 +74,127 @@ export class StravistiX {
 
 		this.userSettings = userSettings;
 		this.appResources = appResources;
-		this.extensionId = this.appResources.extensionId;
-		this.vacuumProcessor = new VacuumProcessor();
-		this.athleteId = this.vacuumProcessor.getAthleteId();
-		this.athleteName = this.vacuumProcessor.getAthleteName();
-		this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-		this.isActivityAuthor = (this.activityAthleteId == this.athleteId);
-		this.activityProcessor = new ActivityProcessor(this.appResources, this.vacuumProcessor, this.userSettings, this.isActivityAuthor);
-		this.isPremium = this.vacuumProcessor.getPremiumStatus();
-		this.isPro = this.vacuumProcessor.getProStatus();
-		this.activityId = this.vacuumProcessor.getActivityId();
-		this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings);
 
 		if (StravistiX.instance == null) {
 			StravistiX.instance = this;
 		}
 	}
 
-	/**
-	 * Make the work...
-	 */
 	public run(): void {
 
-		// Redirect app.strava.com/* to www.strava.com/*
-		if (this.handleForwardToWWW()) {
-			return; // Skip rest of init to be compliant with www.strava.com/* on next reload
-		}
+		this.init().then(() => {
 
-		// Handle some tasks when install/update occurs
-		this.handlePluginInstallOrUpgrade();
+			// Redirect app.strava.com/* to www.strava.com/*
+			if (this.handleForwardToWWW()) {
+				return; // Skip rest of init to be compliant with www.strava.com/* on next reload
+			}
 
-		if (CoreEnv.preview) {
-			this.handlePreviewRibbon();
-		}
+			// Handle some tasks when install/update occurs
+			this.handlePluginInstallOrUpgrade();
 
-		if (this.userSettings.localStorageMustBeCleared) {
-			localStorage.clear();
-			Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "localStorageMustBeCleared", false, (response: any) => {
-				console.log("localStorageMustBeCleared is now " + response.data.localStorageMustBeCleared);
-			});
-		}
+			if (CoreEnv.preview) {
+				this.handlePreviewRibbon();
+			}
 
-		// Init "stravistix bridge"
-		window.__stravistix_bridge__ = {}; // TODO Find another solution
+			if (this.userSettings.localStorageMustBeCleared) {
+				localStorage.clear();
+				Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "localStorageMustBeCleared", false, (response: any) => {
+					console.log("localStorageMustBeCleared is now " + response.data.localStorageMustBeCleared);
+				});
+			}
 
-		if (CoreEnv.debugMode) {
-			console.log("Handling " + window.location.pathname);
-		}
+			// Init "stravistix bridge"
+			window.__stravistix_bridge__ = {}; // TODO Find another solution
 
-		// Common
-		this.handleMenu();
-		this.handleRemoteLinks();
-		this.handleWindyTyModifier();
-		this.handleReliveCCModifier();
-		this.handleDefaultLeaderboardFilter();
-		this.handleSegmentRankPercentage();
-		this.handleSegmentHRAP();
-		this.handleActivityStravaMapType();
-		this.handleHideFeed();
-		this.handleDisplayFlyByFeedModifier();
-		this.handleOnFlyActivitiesSync();
-		this.handleActivitiesSyncFromOutside();
+			if (CoreEnv.debugMode) {
+				console.log("Handling " + window.location.pathname);
+			}
 
-		// Bike
-		this.handleExtendedActivityData();
-		this.handleExtendedSegmentEffortData();
-		this.handleNearbySegments();
-		this.handleActivityBikeOdo();
-		this.handleActivitySegmentTimeComparison();
-		this.handleActivityBestSplits();
+			// Common
+			this.handleMenu();
+			this.handleRemoteLinks();
+			this.handleWindyTyModifier();
+			this.handleReliveCCModifier();
+			this.handleDefaultLeaderboardFilter();
+			this.handleSegmentRankPercentage();
+			this.handleSegmentHRAP();
+			this.handleActivityStravaMapType();
+			this.handleHideFeed();
+			this.handleDisplayFlyByFeedModifier();
+			this.handleOnFlyActivitiesSync();
+			this.handleActivitiesSyncFromOutside();
 
-		// Run
-		this.handleRunningGradeAdjustedPace();
-		this.handleRunningHeartRate();
-		this.handleRunningCadence();
-		this.handleRunningTemperature();
+			// Bike
+			this.handleExtendedActivityData();
+			this.handleExtendedSegmentEffortData();
+			this.handleNearbySegments();
+			this.handleActivityBikeOdo();
+			this.handleActivitySegmentTimeComparison();
+			this.handleActivityBestSplits();
 
-		// All activities
-		this.handleActivityQRCodeDisplay();
-		this.handleVirtualPartner();
-		this.handleAthletesStats();
-		this.handleActivitiesSummary();
+			// Run
+			this.handleRunningGradeAdjustedPace();
+			this.handleRunningHeartRate();
+			this.handleRunningCadence();
+			this.handleRunningTemperature();
 
-		// Must be done at the end
-		this.handleTrackTodayIncomingConnection();
-		this.handleAthleteUpdate();
-		this.saveAthleteId();
-		this.handleGoogleMapsComeBackModifier();
+			// All activities
+			this.handleActivityQRCodeDisplay();
+			this.handleVirtualPartner();
+			this.handleAthletesStats();
+			this.handleActivitiesSummary();
+
+			// Must be done at the end
+			this.handleTrackTodayIncomingConnection();
+			this.handleAthleteUpdate();
+			this.saveAthleteId();
+			this.handleGoogleMapsComeBackModifier();
+		});
 	}
 
-	/**
-	 *
-	 */
+	public init(): Promise<void> {
+
+		this.extensionId = this.appResources.extensionId;
+
+		return this.initAthleteModelResolver().then(() => {
+			this.vacuumProcessor = new VacuumProcessor();
+			this.athleteId = this.vacuumProcessor.getAthleteId();
+			this.athleteName = this.vacuumProcessor.getAthleteName();
+			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
+			this.isActivityAuthor = (this.activityAthleteId === this.athleteId);
+			this.isPremium = this.vacuumProcessor.getPremiumStatus();
+			this.isPro = this.vacuumProcessor.getProStatus();
+			this.activityId = this.vacuumProcessor.getActivityId();
+			this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings, this.athleteModelResolver);
+
+			return Promise.resolve();
+
+		});
+
+	}
+
+	public initAthleteModelResolver(): Promise<void> {
+
+		if (this.athleteModelResolver) {
+			return Promise.resolve();
+		} else {
+			return this.createAthleteModelResolver(this.userSettings).then(athleteModelResolver => {
+				this.athleteModelResolver = athleteModelResolver;
+				return Promise.resolve();
+			});
+		}
+	}
+
+	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
+
+		return new Promise((resolve, reject) => {
+			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
+				.then((result: { data: DatedAthleteSettingsModel[] }) => {
+					resolve(new AthleteModelResolver(userSettings, result.data));
+				}, error => reject(error));
+		});
+	}
+
 	public handleForwardToWWW(): boolean {
 
 		if (_.isEqual(window.location.hostname, "app.strava.com")) {
@@ -171,12 +205,9 @@ export class StravistiX {
 		return false;
 	}
 
-	/**
-	 *
-	 */
 	public showPluginInstallOrUpgradeRibbon(): void {
 
-		const latestRelease: ReleaseNoteModel = _.first(releaseNotes);
+		const latestRelease: ReleaseNoteModel = _.first(releaseNotesData);
 
 		if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
 			console.log("Silent update... skip update ribbon");
@@ -229,9 +260,6 @@ export class StravistiX {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public handlePluginInstallOrUpgrade(): void {
 
 		if (!window.location.pathname.match(/^\/dashboard/)) {
@@ -250,14 +278,14 @@ export class StravistiX {
 				on: Date.now(),
 			};
 
-			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.versionInstalledKey, toBeStored, () => {
+			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, toBeStored, () => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.versionInstalledKey, (response: any) => {
+		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, (response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -320,9 +348,6 @@ export class StravistiX {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public handleAthletesStats(): void {
 
 		// If we are not on the athletes page then return...
@@ -341,9 +366,6 @@ export class StravistiX {
 		athleteStatsModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleActivitiesSummary(): void {
 
 		/* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
@@ -360,18 +382,12 @@ export class StravistiX {
          */
 	}
 
-	/**
-	 *
-	 */
 	public handlePreviewRibbon(): void {
 		const globalStyle = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
 		const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
 		$("body").before(html);
 	}
 
-	/**
-	 *
-	 */
 	public handleMenu(): void {
 
 		if (CoreEnv.debugMode) {
@@ -382,9 +398,6 @@ export class StravistiX {
 		menuModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleRemoteLinks(): void {
 
 		// If we are not on a segment or activity page then return...
@@ -468,9 +481,6 @@ export class StravistiX {
 		reliveCCModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleDefaultLeaderboardFilter(): void {
 
 		// If we are not on a segment or activity page then return...
@@ -493,9 +503,6 @@ export class StravistiX {
 		defaultLeaderBoardFilterModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleSegmentRankPercentage(): void {
 
 		if (!this.userSettings.displaySegmentRankPercentage) {
@@ -530,15 +537,17 @@ export class StravistiX {
 			console.log("Execute handleSegmentHRAP_()");
 		}
 
-		const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
+		const athleteModel = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
 
-		const segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings, this.athleteId, segmentId);
+		const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
+		const segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings.displayRecentEffortsHRAdjustedPacePower,
+			athleteModel,
+			this.athleteId,
+			segmentId);
 		segmentHRATime.modify();
+
 	}
 
-	/**
-	 *
-	 */
 	public handleActivityStravaMapType(): void {
 
 		// Test where are on an activity...
@@ -594,9 +603,6 @@ export class StravistiX {
 		displayFlyByFeedModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleExtendedActivityData(): void {
 
 		if (_.isUndefined(window.pageView)) {
@@ -604,7 +610,7 @@ export class StravistiX {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
+		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
@@ -612,9 +618,10 @@ export class StravistiX {
 			return;
 		}
 
-		this.activityProcessor.setActivityType(activityType);
-		this.activityProcessor.setSupportsGap(supportsGap);
-		this.activityProcessor.setTrainer(isTrainer);
+		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
+
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
+			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
 
 		if (CoreEnv.debugMode) {
 			console.log("Execute handleExtendedData_()");
@@ -630,9 +637,8 @@ export class StravistiX {
 		switch (activityType) {
 			case "Ride":
 				extendedDataModifier = new CyclingExtendedDataModifier(
-					this.activityProcessor,
+					activityProcessor,
 					this.activityId,
-					activityType,
 					supportsGap,
 					this.appResources,
 					this.userSettings,
@@ -642,9 +648,8 @@ export class StravistiX {
 				break;
 			case "Run":
 				extendedDataModifier = new RunningExtendedDataModifier(
-					this.activityProcessor,
+					activityProcessor,
 					this.activityId,
-					activityType,
 					supportsGap,
 					this.appResources,
 					this.userSettings,
@@ -653,17 +658,17 @@ export class StravistiX {
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
 			/*default:
-				extendedDataModifier = new GenericExtendedDataModifier(
-					this.activityProcessor,
-					this.activityId,
-					activityType,
-					supportsGap,
-					this.appResources,
-					this.userSettings,
-					this.isActivityAuthor,
-					basicInfo,
-					AbstractExtendedDataModifier.TYPE_ACTIVITY);
-				break;*/
+            extendedDataModifier = new GenericExtendedDataModifier(
+                this.activityProcessor,
+                this.activityId,
+                activityType,
+                hasSupportsGap,
+                this.appResources,
+                this.userSettingsData,
+                this.isActivityAuthor,
+                basicInfo,
+                AbstractExtendedDataModifier.TYPE_ACTIVITY);
+            break;*/
 		}
 
 		// Send opened activity type to ga for stats
@@ -674,6 +679,7 @@ export class StravistiX {
 		};
 
 		follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
+
 	}
 
 	public handleExtendedSegmentEffortData(): void {
@@ -687,7 +693,7 @@ export class StravistiX {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
+		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
@@ -695,9 +701,9 @@ export class StravistiX {
 			return;
 		}
 
-		this.activityProcessor.setActivityType(activityType);
-		this.activityProcessor.setSupportsGap(supportsGap);
-		this.activityProcessor.setTrainer(isTrainer);
+		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
+			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
 
 		let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
 
@@ -727,9 +733,8 @@ export class StravistiX {
 			switch (activityType) {
 				case "Ride":
 					extendedDataModifier = new CyclingExtendedDataModifier(
-						that.activityProcessor,
+						activityProcessor,
 						that.activityId,
-						activityType,
 						supportsGap,
 						that.appResources,
 						that.userSettings,
@@ -739,9 +744,8 @@ export class StravistiX {
 					break;
 				case "Run":
 					extendedDataModifier = new RunningExtendedDataModifier(
-						that.activityProcessor,
+						activityProcessor,
 						that.activityId,
-						activityType,
 						supportsGap,
 						that.appResources,
 						that.userSettings,
@@ -754,11 +758,9 @@ export class StravistiX {
 			}
 			return r;
 		};
+
 	}
 
-	/**
-	 *
-	 */
 	public handleNearbySegments(): void {
 
 		if (!this.userSettings.displayNearbySegments) {
@@ -791,9 +793,6 @@ export class StravistiX {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public handleActivityBikeOdo(): void {
 
 		if (!this.userSettings.displayBikeOdoInActivity) {
@@ -825,9 +824,6 @@ export class StravistiX {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public handleActivitySegmentTimeComparison(): void {
 
 		// Test where are on an activity page... (note this includes activities/XXX/segments)
@@ -852,9 +848,6 @@ export class StravistiX {
 
 	}
 
-	/**
-	 *
-	 */
 	public handleActivityBestSplits(): void {
 
 		if (!this.userSettings.displayActivityBestSplits) {
@@ -880,7 +873,7 @@ export class StravistiX {
 		}
 
 		// TODO Implement cache here: get stream from cache if exist
-		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, hasPowerMeter: boolean) => {
+		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
 
 			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", (response: any) => {
 
@@ -895,9 +888,6 @@ export class StravistiX {
 		});
 	}
 
-	/**
-	 *
-	 */
 	public handleRunningGradeAdjustedPace(): void {
 
 		if (!this.userSettings.activateRunningGradeAdjustedPace) {
@@ -925,9 +915,6 @@ export class StravistiX {
 		runningGradeAdjustedPace.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleRunningHeartRate(): void {
 
 		if (!this.userSettings.activateRunningHeartRate) {
@@ -1009,9 +996,6 @@ export class StravistiX {
 		runningTemperatureModifier.modify();
 	}
 
-	/**
-	 *
-	 */
 	public handleActivityQRCodeDisplay(): void {
 
 		// Test where are on an activity...
@@ -1196,12 +1180,17 @@ export class StravistiX {
 		const fastSync = (urlParams.fastSync === "true" && !forceSync);
 		const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId) : -1;
 
-		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.appResources, this.userSettings, fastSync, forceSync, sourceTabId);
+		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronizer, fastSync, forceSync, sourceTabId);
 		activitiesSyncModifier.modify();
 	}
 
 	public commitAthleteUpdate(): Q.IPromise<any> {
-		const athleteUpdate: AthleteUpdateModel = AthleteUpdate.create(this.athleteId, this.athleteName, (this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName, this.isPremium, this.isPro, window.navigator.language, this.userSettings.userRestHr, this.userSettings.userMaxHr);
+
+		const athleteModel = this.athleteModelResolver.getCurrent();
+
+		const athleteUpdate: AthleteUpdateModel = AthleteUpdate.create(this.athleteId, this.athleteName,
+			(this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName,
+			this.isPremium, this.isPro, window.navigator.language, athleteModel.athleteSettings.restHr, athleteModel.athleteSettings.maxHr);
 		return AthleteUpdate.commit(athleteUpdate);
 	}
 }

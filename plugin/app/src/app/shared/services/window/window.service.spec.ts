@@ -7,13 +7,15 @@ describe("WindowService", () => {
 
 	let service: WindowService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			providers: [WindowService, ObservableMedia]
 		});
 
 		service = TestBed.get(WindowService);
+
+		done();
 	});
 
 	it("should be created", inject([WindowService], (service: WindowService) => {
@@ -25,14 +27,12 @@ describe("WindowService", () => {
 		// Given
 		const expectedCallCount = 1;
 		const spy = spyOn(service.resizing, "next");
-		const event: Event = new Event("ResizeEvent");
 
 		// When
-		service.onResize(event);
+		service.onResize();
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-		expect(spy).toHaveBeenCalledWith(event);
 		done();
 	});
 });

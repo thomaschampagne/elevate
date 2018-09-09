@@ -7,28 +7,15 @@ import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fi
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { userSettings } from "../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
-import { Gender } from "../shared/enums/gender.enum";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { UserLactateThresholdModel } from "../../../../shared/models/user-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 
 describe("FitnessTrendComponent", () => {
 
 	const pluginId = "c061d18abea0";
-	const userGender = Gender.MEN;
-	const maxHr = 200;
-	const restHr = 50;
-	const cyclingFtp = 150;
-	const swimFtp = 31;
-	const userLactateThreshold: UserLactateThresholdModel = {
-		default: 175,
-		cycling: null,
-		running: null
-	};
-
 	let activityDao: ActivityDao;
 	let activityDaoStorageSpy: jasmine.Spy;
 	let userSettingsDao: UserSettingsDao;
@@ -69,7 +56,7 @@ describe("FitnessTrendComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettings);
+				callback(userSettingsData);
 			},
 			set: (keys: any, callback: () => {}) => {
 				callback();
@@ -83,16 +70,6 @@ describe("FitnessTrendComponent", () => {
 
 		fixture = TestBed.createComponent(FitnessTrendComponent);
 		component = fixture.componentInstance;
-
-		component.fitnessUserSettingsModel = {
-			userGender: userGender,
-			userMaxHr: maxHr,
-			userRestHr: restHr,
-			userLactateThreshold: userLactateThreshold,
-			cyclingFtp: cyclingFtp,
-			runningFtp: null,
-			swimFtp: swimFtp,
-		};
 
 		component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
@@ -114,8 +91,6 @@ describe("FitnessTrendComponent", () => {
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
 		component.isEBikeRidesEnabled = true;
-		component.fitnessUserSettingsModel.cyclingFtp = 250;
-		component.fitnessUserSettingsModel.swimFtp = 40;
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
 
 		// When
@@ -139,8 +114,6 @@ describe("FitnessTrendComponent", () => {
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
 		component.isEBikeRidesEnabled = true;
-		component.fitnessUserSettingsModel.cyclingFtp = 250;
-		component.fitnessUserSettingsModel.swimFtp = 40;
 		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
 
 		// When

@@ -1,5 +1,5 @@
 import { AthleteUpdateModel } from "../../scripts/models/athlete-update.model";
-import { AthleteUpdate } from "../../scripts/AthleteUpdate";
+import { AthleteUpdate } from "../../scripts/utils/AthleteUpdate";
 
 describe("Generate Athlete Update", () => {
 

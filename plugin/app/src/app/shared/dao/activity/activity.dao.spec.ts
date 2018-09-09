@@ -4,7 +4,7 @@ import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 
 describe("ActivityDao", () => {
 
@@ -12,7 +12,7 @@ describe("ActivityDao", () => {
 
 	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			providers: [ActivityDao]
 		});
@@ -21,6 +21,7 @@ describe("ActivityDao", () => {
 
 		// Retrieve injected service
 		activityDao = TestBed.get(ActivityDao);
+		done();
 	});
 
 	it("should be created", (done: Function) => {

@@ -1,4 +1,4 @@
-import * as _ from "lodash"
+import * as _ from "lodash";
 import * as moment from "moment";
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
@@ -47,12 +47,10 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 
 	public updateEstimatedStressScoresToggles(): void {
 
-		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasCyclingFtp
-			&& this.fitnessTrendConfigDialogData.isPowerMeterEnabled
+		this.isEstimatedPowerStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.isPowerMeterEnabled
 			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
-		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.hasRunningFtp
-			&& this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+		this.isEstimatedRunningStressScoreToggleEnabled = this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 
 	}
 

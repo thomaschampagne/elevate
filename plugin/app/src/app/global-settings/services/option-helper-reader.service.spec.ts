@@ -9,7 +9,7 @@ describe("OptionHelperReaderService", () => {
 	let http: HttpClient;
 	let optionHelperReaderService: OptionHelperReaderService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientModule],
 			providers: [OptionHelperReaderService, HttpClient]
@@ -17,6 +17,7 @@ describe("OptionHelperReaderService", () => {
 
 		http = TestBed.get(HttpClient);
 		optionHelperReaderService = TestBed.get(OptionHelperReaderService);
+		done();
 	});
 
 	it("should be created", (done: Function) => {

@@ -8,7 +8,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015
 import * as moment from "moment";
 import { Moment } from "moment";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
@@ -16,8 +16,6 @@ import * as _ from "lodash";
 import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
-import { Gender } from "../../shared/enums/gender.enum";
-import { FitnessUserSettingsModel } from "../shared/models/fitness-user-settings.model";
 
 describe("FitnessTrendGraphComponent", () => {
 
@@ -60,7 +58,7 @@ describe("FitnessTrendGraphComponent", () => {
 
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettings);
+				callback(userSettingsData);
 			},
 			set: (keys: any, callback: () => {}) => {
 				callback();
@@ -85,21 +83,7 @@ describe("FitnessTrendGraphComponent", () => {
 		const powerMeterEnable = true;
 		const swimEnable = true;
 
-		const fitnessUserSettingsModel: FitnessUserSettingsModel = {
-			userGender: Gender.MEN,
-			userMaxHr: 190,
-			userRestHr: 60,
-			userLactateThreshold: {
-				default: 163,
-				cycling: null,
-				running: null
-			},
-			cyclingFtp: 150,
-			runningFtp: null,
-			swimFtp: 31,
-		};
-
-		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessUserSettingsModel, fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+		const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessTrendConfigModel, powerMeterEnable, swimEnable);
 		promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 			FITNESS_TREND = fitnessTrend;
 			done();

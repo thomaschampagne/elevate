@@ -12,17 +12,18 @@ describe("DonateComponent", () => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
-				SharedModule,
+				SharedModule
 			]
 		}).compileComponents();
 
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(DonateComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {
