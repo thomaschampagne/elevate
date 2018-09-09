@@ -1,13 +1,24 @@
 import * as _ from "lodash";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/SpecsTools";
-import { SyncedActivityModel } from "../../../shared/models/sync/synced-activity.model";
-import { StravaActivityModel } from "../../../shared/models/sync/strava-activity.model";
-import { ActivitiesChangesModel } from "../../scripts/synchronizer/activities-changes.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { ActivitiesSynchronizer } from "../../scripts/synchronizer/ActivitiesSynchronizer";
+import { SyncedActivityModel } from "../../scripts/shared/models/sync/synced-activity.model";
+import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
+import { ActivitiesChangesModel } from "../../scripts/models/sync/activities-changes.model";
+import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
+import { ActivitiesSynchronizer } from "../../scripts/models/sync/ActivitiesSynchronizer";
+import { AthleteModelResolver } from "../../scripts/shared/resolvers/athlete-model.resolver";
+import { userSettingsData } from "../../scripts/shared/user-settings.data";
 
 describe("ActivitiesSynchronizer", () => {
+
+	let userSettingsMock: UserSettingsModel;
+	let athleteModelResolver: AthleteModelResolver;
+
+	beforeEach((done: Function) => {
+		userSettingsMock = _.cloneDeep(userSettingsData);
+		athleteModelResolver = new AthleteModelResolver(userSettingsMock, []);
+		done();
+	});
 
 	it("should remove activity from array properly ", (done: Function) => {
 
@@ -45,7 +56,7 @@ describe("ActivitiesSynchronizer", () => {
 		let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/syncedActivities20161213.json").syncedActivities);
 		let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
 
-		// Simulate Added in strava: consist to remove from synced activities...
+		// Simulate Added in strava: consist to remove since synced activities...
 		syncedActivities = removeActivityFromArray(723224273, syncedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
 		syncedActivities = removeActivityFromArray(707356065, syncedActivities); // Remove Ride "Je suis un gros lent !"
 
@@ -54,7 +65,6 @@ describe("ActivitiesSynchronizer", () => {
 		rawPageOfActivities = editActivityFromArray(708752345, rawPageOfActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
 
 		// Now find+test changes
-		// let activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
 		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
 
 		expect(changes).not.toBeNull();
@@ -85,9 +95,8 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should append activities of pages where activities added, modified and deleted ", (done: Function) => {
 
-		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/userSettings/2470979.json"));
 		const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/appResources/appResources.json"));
-		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock);
+		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
 
 		// Append
 		activitiesSynchronizer.appendGlobalActivitiesChanges({

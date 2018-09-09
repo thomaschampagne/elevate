@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { ZoneModel } from "../../../../../shared/models/activity-data/zone.model";
+import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
 
 @Injectable()
 export class ZonesService {
@@ -261,7 +261,7 @@ export class ZonesService {
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {
-					return this.userSettingsService.markLocalStorageClear();
+					return this.userSettingsService.clearLocalStorageOnNextLoad();
 				}).then(() => {
 					resolve();
 				}).catch(error => {
@@ -283,7 +283,7 @@ export class ZonesService {
 		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
-			this.currentZones = _.clone(_.propertyOf(userSettings.zones)(this.zoneDefinition.value));
+			this.currentZones = _.clone(_.propertyOf(userSettingsData.zones)(this.zoneDefinition.value));
 
 			this.saveZones().then(() => {
 

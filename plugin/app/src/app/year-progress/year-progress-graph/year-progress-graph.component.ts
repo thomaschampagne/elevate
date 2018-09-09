@@ -23,12 +23,13 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
+	constructor(public yearProgressService: YearProgressService,
+				public sideNavService: SideNavService,
+				public windowService: WindowService) {
+	}
+
 	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
 	public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
-
-	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.675;
-	}
 
 	public readonly ProgressType = ProgressType;
 
@@ -55,9 +56,15 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public initialized = false;
 
-	constructor(public yearProgressService: YearProgressService,
-				public sideNavService: SideNavService,
-				public windowService: WindowService) {
+	public static findGraphicHeight(): number {
+		return window.innerHeight * 0.675;
+	}
+
+	public static clearSvgGraphContent(): void {
+		const svgElement = document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0];
+		if (svgElement) {
+			svgElement.remove();
+		}
 	}
 
 	public ngOnInit(): void {
@@ -178,17 +185,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 
 	public draw(): void {
-		setTimeout(() => {
+		_.defer(() => {
 			MG.data_graphic(this.graphConfig);
 			this.isGraphDataReadyOnYearChange = true;
 		});
-	}
-
-	public static clearSvgGraphContent(): void {
-		const svgElement = document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0];
-		if (svgElement) {
-			svgElement.remove();
-		}
 	}
 
 

@@ -7,7 +7,7 @@ describe("AppUsageDao", () => {
 
 	let appUsageDao: AppUsageDao = null;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			providers: [AppUsageDao]
@@ -15,6 +15,7 @@ describe("AppUsageDao", () => {
 
 		// Retrieve injected service
 		appUsageDao = TestBed.get(AppUsageDao);
+		done();
 	});
 
 	it("should be created", (done: Function) => {

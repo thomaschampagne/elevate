@@ -7,7 +7,7 @@ import { CoreModule } from "../../core/core.module";
 import { ZoneImportExportDataModel } from "./zone-import-export-data.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Mode } from "./mode.enum";
-import { userSettings } from "../../../../../shared/UserSettings";
+import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
 
 describe("ZonesImportExportDialogComponent", () => {
 
@@ -27,7 +27,7 @@ describe("ZonesImportExportDialogComponent", () => {
 
 	beforeEach((done: Function) => {
 
-		zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(zoneSpeedDefinition, userSettings.zones.speed, Mode.EXPORT);
+		zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(zoneSpeedDefinition, userSettingsData.zones.speed, Mode.EXPORT);
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -48,10 +48,11 @@ describe("ZonesImportExportDialogComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", (done: Function) => {
@@ -69,7 +70,7 @@ describe("ZonesImportExportDialogComponent", () => {
 		fixture.detectChanges();
 
 		// Then
-		expect(component.zonesJsonData).toEqual(JSON.stringify(userSettings.zones.speed));
+		expect(component.zonesJsonData).toEqual(JSON.stringify(userSettingsData.zones.speed));
 		expect(compiled.querySelector("h2").textContent).toContain("Export <Cycling Speed> zones");
 		done();
 	});

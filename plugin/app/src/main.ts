@@ -5,7 +5,7 @@ import { AppModule } from "./app/app.module";
 import { environment } from "./environments/environment";
 import "hammerjs";
 
-import { Theme } from "./app/shared/enums/theme.enum";
+import { Theme } from "./app/shared/theme.enum";
 
 if (environment.production) {
 	enableProdMode();

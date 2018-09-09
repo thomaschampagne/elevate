@@ -7,7 +7,7 @@ describe("SyncDao", () => {
 
 	let syncDao: SyncDao = null;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
 			providers: [SyncDao]
@@ -15,6 +15,8 @@ describe("SyncDao", () => {
 
 		// Retrieve injected service
 		syncDao = TestBed.get(SyncDao);
+
+		done();
 	});
 
 	it("should be created", (done: Function) => {

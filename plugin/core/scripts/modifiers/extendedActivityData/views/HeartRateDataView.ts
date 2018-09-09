@@ -1,24 +1,29 @@
 import * as _ from "lodash";
 import { Helper } from "../../../Helper";
-import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
-import { StravistiX } from "../../../StravistiX";
 import { AbstractDataView } from "./AbstractDataView";
-import { HeartRateDataModel } from "../../../../../shared/models/activity-data/heart-rate-data.model";
+import { HeartRateDataModel } from "../../../models/activity-data/heart-rate-data.model";
+import { AthleteModel } from "../../../../../app/src/app/shared/models/athlete/athlete.model";
 
 export class HeartRateDataView extends AbstractDataView {
 
+	public static instance: HeartRateDataView = null;
+
 	protected heartRateData: HeartRateDataModel;
+	protected athleteModel: AthleteModel;
 
-	protected userSettings: UserSettingsModel;
-
-	constructor(heartRateData: HeartRateDataModel, units: string, userSettings: UserSettingsModel) {
+	constructor(heartRateData: HeartRateDataModel, units: string, athleteModel: AthleteModel) {
 		super(units);
 		this.mainColor = [228, 76, 92];
 		this.heartRateData = heartRateData;
+		this.athleteModel = athleteModel;
 		this.setGraphTitleFromUnits();
-		this.userSettings = userSettings;
 		this.setupDistributionGraph();
 		this.setupDistributionTable();
+
+		if (HeartRateDataView.instance == null) {
+			HeartRateDataView.instance = this;
+		}
+
 	}
 
 	protected setupDistributionTable(): void {
@@ -39,9 +44,11 @@ export class HeartRateDataView extends AbstractDataView {
 		let zoneId = 1;
 		for (const zone in this.heartRateData.heartRateZones) {
 
-			let fromHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].from, this.userSettings.userMaxHr, this.userSettings.userRestHr) * 100;
+			let fromHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].from,
+				this.athleteModel.athleteSettings.maxHr, this.athleteModel.athleteSettings.restHr) * 100;
 			fromHRR = Math.round(fromHRR);
-			let toHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].to, this.userSettings.userMaxHr, this.userSettings.userRestHr) * 100;
+			let toHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].to,
+				this.athleteModel.athleteSettings.maxHr, this.athleteModel.athleteSettings.restHr) * 100;
 			toHRR = Math.round(toHRR);
 
 			htmlTable += "<tr>"; // Zone
@@ -106,10 +113,10 @@ export class HeartRateDataView extends AbstractDataView {
 		const hr: string[] = tooltip.title[0].split(" ")[1].replace("%", "").split("-");
 
 		tooltip.body[0].lines[0] = Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[0]),
-			StravistiX.instance.userSettings.userMaxHr, StravistiX.instance.userSettings.userRestHr) * 100) +
+			HeartRateDataView.instance.athleteModel.athleteSettings.maxHr, HeartRateDataView.instance.athleteModel.athleteSettings.restHr) * 100) +
 			" - " + Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[1]),
-				StravistiX.instance.userSettings.userMaxHr,
-				StravistiX.instance.userSettings.userRestHr) * 100) +
+				HeartRateDataView.instance.athleteModel.athleteSettings.maxHr,
+				HeartRateDataView.instance.athleteModel.athleteSettings.restHr) * 100) +
 			" %HRR during " + Helper.secondsToHHMMSS(timeInMinutes * 60);
 	}
 

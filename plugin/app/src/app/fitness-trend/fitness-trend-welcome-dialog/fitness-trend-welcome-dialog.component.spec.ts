@@ -26,10 +26,11 @@ describe("FitnessTrendWelcomeDialogComponent", () => {
 		done();
 	});
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(FitnessTrendWelcomeDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
+		done();
 	});
 
 	it("should create", () => {

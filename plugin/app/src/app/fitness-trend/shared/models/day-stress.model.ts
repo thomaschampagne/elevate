@@ -1,3 +1,5 @@
+import { AthleteModel } from "../../../shared/models/athlete/athlete.model";
+
 export class DayStressModel {
 
 	public ids: number[];
@@ -5,6 +7,7 @@ export class DayStressModel {
 	public timestamp: number;
 	public types: string[];
 	public activitiesName: string[];
+	public athleteModel: AthleteModel;
 
 	public heartRateStressScore?: number = null;
 	public trainingImpulseScore?: number = null;

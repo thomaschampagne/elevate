@@ -1,0 +1,11 @@
+@import "~@angular/material/theming";
+
+@mixin athlete-settings-consistency-ribbon-theming($theme) {
+
+	$warn: map-get($theme, warn);
+
+	.athlete-settings-consistency-ribbon {
+		background: mat-color($warn);
+	}
+
+}

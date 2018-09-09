@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
+import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
 
 export class VacuumProcessor {
 
@@ -136,8 +137,8 @@ export class VacuumProcessor {
 	protected getActivityStatsMap(): ActivityStatsMapModel {
 
 		// Create activityData Map
-		const movingTime = window.pageView.activity().get('moving_time');
-		const elevGain = window.pageView.activity().get('elev_gain');
+		const movingTime = window.pageView.activity().get("moving_time");
+		const elevGain = window.pageView.activity().get("elev_gain");
 
 		const activityCommonStats: ActivityStatsMapModel = {
 			movingTime: (movingTime) ? movingTime : null,
@@ -150,13 +151,14 @@ export class VacuumProcessor {
 	/**
 	 * @returns activity stream in callback
 	 */
-	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean) => void): void {
+	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
+										athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => void): void {
 
 		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
 
 		if (cache) {
 			cache = JSON.parse(cache);
-			callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.hasPowerMeter);
+			callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
 			return;
 		}
 
@@ -184,7 +186,7 @@ export class VacuumProcessor {
 				localStorage.clear();
 			}
 
-			callback(this.getActivityStatsMap(), activityStream, this.getAthleteWeight(), hasPowerMeter);
+			callback(this.getActivityStatsMap(), activityStream, this.getAthleteWeight(), this.getActivityAthleteGender(), hasPowerMeter);
 		});
 	}
 
@@ -295,6 +297,42 @@ export class VacuumProcessor {
 			callback(bikeOdoArray);
 		});
 	}
+
+	public getActivityStartDate(): Date {
+
+		if (window.pageView && window.pageView.activity) {
+			const startTime = window.pageView.activity().get("startDateLocal");
+			if (_.isNumber(startTime)) {
+				return new Date(startTime * 1000);
+			}
+		}
+
+		if (window.pageView
+			&& window.pageView.activity
+			&& _.isNumber(window.pageView.activity().get("id"))
+			&& window.pageView.similarActivities && window.pageView.similarActivities()
+			&& window.pageView.similarActivities().efforts
+			&& window.pageView.similarActivities().efforts.byActivityId
+		) {
+			const activity = window.pageView.similarActivities().efforts.byActivityId[window.pageView.activity().get("id")];
+			if (activity && _.isNumber(activity.get('start_date'))) {
+				return new Date(activity.get('start_date') * 1000);
+			}
+		}
+
+		return null;
+	}
+
+	public getActivityAthleteGender(): Gender {
+		if (window.pageView
+			&& window.pageView.activityAthlete
+			&& window.pageView.activityAthlete().get("gender")
+		) {
+			return (window.pageView.activityAthlete().get("gender") === "M") ? Gender.MEN : Gender.WOMEN;
+		}
+		return null;
+	}
+
 
 	public getActivityTime(): string {
 		const activityTime: string = $(".activity-summary-container").find("time").text().trim();

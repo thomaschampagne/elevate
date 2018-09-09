@@ -1,7 +1,8 @@
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "./app-resources.model";
-import { ActivityStatsMapModel } from "../../../shared/models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../../../shared/models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel } from "./activity-data/activity-stats-map.model";
+import { ActivityStreamsModel } from "./activity-data/activity-streams.model";
+import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
 
 export class ComputeActivityThreadMessageModel {
 	activityType: string;
@@ -10,7 +11,7 @@ export class ComputeActivityThreadMessageModel {
 	appResources: AppResourcesModel;
 	userSettings: UserSettingsModel;
 	isActivityAuthor: boolean;
-	athleteWeight: number;
+	athleteModel: AthleteModel;
 	hasPowerMeter: boolean;
 	activityStatsMap: ActivityStatsMapModel;
 	activityStream: ActivityStreamsModel;

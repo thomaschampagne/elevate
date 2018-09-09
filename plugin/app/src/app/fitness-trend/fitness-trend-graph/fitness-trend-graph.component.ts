@@ -43,7 +43,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public static readonly ZOOM_PERIOD_VIEWED_DAYS: number = 14; // Days
 	public static readonly TODAY_MARKER_LABEL: string = "Today";
 
-	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.685;
+	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.665;
 	public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
 
 	public PERFORMANCE_MARKER: number;
@@ -235,7 +235,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public draw(): void {
 
-		setTimeout(() => {
+		_.defer(() => {
 			MG.data_graphic(this.graphConfig);
 			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
 		});

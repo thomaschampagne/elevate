@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { Constant } from "../../../shared/Constant";
+import { Constant } from "../shared/constant";
 import { AbstractModifier } from "./AbstractModifier";
 
 export class ActivitiesSummaryModifier extends AbstractModifier {

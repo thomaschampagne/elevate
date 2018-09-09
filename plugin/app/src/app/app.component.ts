@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/material";
@@ -18,9 +18,9 @@ import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dial
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
-import { Theme } from "./shared/enums/theme.enum";
+import { Theme } from "./shared/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "../../../core/scripts/shared/models/sync/sync-result.model";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
@@ -134,7 +134,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				this.toolBarTitle = AppComponent.convertRouteToTitle((<NavigationEnd> routerEvent).urlAfterRedirects);
+				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
+				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
 			}
 		});
 
@@ -149,8 +150,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.updateLastSyncDateStatus();
 			}
 		});
-
-		this.setupWindowResizeBroadcast();
 
 	}
 
@@ -207,10 +206,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	@HostListener("window:resize")
 	public setupWindowResizeBroadcast(): void {
-		window.onresize = (event: Event) => {
-			this.windowService.onResize(event); // When user resize the window. Tell it to subscribers
-		};
+		this.windowService.onResize(); // When user resize the window. Tell it to subscribers
 	}
 
 	public onSync(fastSync: boolean, forceSync: boolean): void {
@@ -222,7 +220,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		const data: ConfirmDialogDataModel = {
 			title: "Clear your athlete synced data",
 			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-			"or a new re-synchronization."
+				"or a new re-synchronization."
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {

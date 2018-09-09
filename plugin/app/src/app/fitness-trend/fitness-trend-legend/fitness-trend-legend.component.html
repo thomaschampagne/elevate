@@ -22,7 +22,7 @@
 		</span>
 	</div>
 
-	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start" class="stressScore">
+	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
 		<span fxFlexAlign="end">
 			<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
 			<span *ngIf="viewedDay.finalStressScore">
@@ -68,6 +68,12 @@
 					&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>&nbsp;<i>Stress score</i>
 				</span>
 			</span>
+		</span>
+	</div>
+
+	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
+		<span fxFlexAlign="end" class="mat-caption athlete-settings">
+			<span *ngIf="viewedDay.printAthleteSettings()">Calculated with&nbsp;&nbsp;➔&nbsp;&nbsp;{{viewedDay.printAthleteSettings()}}</span>
 		</span>
 	</div>
 

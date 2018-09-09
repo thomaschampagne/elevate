@@ -17,6 +17,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.powerStressScore = dayStress.powerStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
+		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
 
 		this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
 
@@ -174,4 +175,52 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 		return this.trainingZoneAsString;
 	}
+
+	public printAthleteSettings(): string {
+
+		if (!this.athleteModel) {
+			return null;
+		}
+
+		let inlineSettings = "";
+
+		if (_.isNumber(this.heartRateStressScore) || _.isNumber(this.trainingImpulseScore)) {
+
+			inlineSettings += "MaxHr " + this.athleteModel.athleteSettings.maxHr + "bpm. ";
+			inlineSettings += "RestHr " + this.athleteModel.athleteSettings.restHr + "bpm. ";
+
+			if (this.athleteModel.athleteSettings.lthr.default
+				|| this.athleteModel.athleteSettings.lthr.cycling
+				|| this.athleteModel.athleteSettings.lthr.running) {
+
+				let lthrStr = "Lthr ";
+
+				lthrStr += (this.athleteModel.athleteSettings.lthr.default) ? "D:" + this.athleteModel.athleteSettings.lthr.default + "bpm, " : "";
+				lthrStr += (this.athleteModel.athleteSettings.lthr.cycling) ? "C:" + this.athleteModel.athleteSettings.lthr.cycling + "bpm, " : "";
+				lthrStr += (this.athleteModel.athleteSettings.lthr.running) ? "R:" + this.athleteModel.athleteSettings.lthr.running + "bpm, " : "";
+				lthrStr = lthrStr.slice(0, -2);
+
+				inlineSettings += lthrStr + ". ";
+			}
+
+		}
+
+		if (_.isNumber(this.powerStressScore) && this.athleteModel.athleteSettings.cyclingFtp) {
+			inlineSettings += "Cycling Ftp " + this.athleteModel.athleteSettings.cyclingFtp + "w. ";
+		}
+
+		if (_.isNumber(this.runningStressScore) && this.athleteModel.athleteSettings.runningFtp) {
+			inlineSettings += "Run Ftp " + this.athleteModel.athleteSettings.runningFtp + "s/km. ";
+		}
+
+		if (_.isNumber(this.swimStressScore) && this.athleteModel.athleteSettings.swimFtp) {
+			inlineSettings += "Swim Ftp " + this.athleteModel.athleteSettings.swimFtp + "m/min. ";
+		}
+
+		inlineSettings += "Weight " + this.athleteModel.athleteSettings.weight + "kg.";
+
+		return inlineSettings;
+
+	}
+
 }

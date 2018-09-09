@@ -1,7 +1,7 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AbstractCadenceDataView } from "./AbstractCadenceDataView";
-import { CadenceDataModel } from "../../../../../shared/models/activity-data/cadence-data.model";
+import { CadenceDataModel } from "../../../models/activity-data/cadence-data.model";
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {
 
