@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "StravistiX for Strava",
-	"short_name": "StravistiX",
-	"description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
+	"name": "Elevate for Strava",
+	"short_name": "Elevate",
+	"description": "Enhance your Strava experience with Elevate. An opensource web plugin which analyse deeper your activities and segments efforts !",
 	"version": "6.5.1",
 	"version_name": "6.5.1 Stable",
 	"background": {
