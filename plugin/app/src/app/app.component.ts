@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as moment from "moment";
-import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog, MatIconRegistry, MatSidenav, MatSnackBar } from "@angular/material";
@@ -151,7 +151,6 @@ export class AppComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.setupWindowResizeBroadcast();
 	}
 
 	public sideNavSetup(): void {
@@ -207,10 +206,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	@HostListener("window:resize")
 	public setupWindowResizeBroadcast(): void {
-		window.onresize = (event: Event) => {
-			this.windowService.onResize(event); // When user resize the window. Tell it to subscribers
-		};
+		this.windowService.onResize(); // When user resize the window. Tell it to subscribers
 	}
 
 	public onSync(fastSync: boolean, forceSync: boolean): void {

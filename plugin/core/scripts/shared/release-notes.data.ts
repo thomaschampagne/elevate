@@ -3,16 +3,18 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
 		version: "6.5.0",
-		date: "2018-09-03",
-		message: "Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date.",
+		date: "2018-09-09",
+		message: "Big update! Introducing \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
 		hotFixes: [],
 		features: [
-			"Added support of \"Dated Athlete Settings\" to provide matching athlete's attributes for a given activity date in order to calculate stats with actual attributes on that date."
+			"Added support of \"Dated Athlete Settings\".As you know your physiological attributes evolve over time (heart rate, weight, power, pace, ...) and activities' stats (including stress scores) are functions of these attributes. After configuration by yourself, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it."
 		],
 		isPatch: false,
 		fixes: [
+			"Reworked estimated power calculation: low pass filter has been removed. Some users had some strange behaviour with.",
 			"Fixed fitness trend tomorrow preview day not displayed for Brazil/Greenland users (timezone UTC−3).",
-			"Fixed cycling power stress score not computed for activities with significant pauses."
+			"Fixed cycling power stress score not computed for activities with significant pauses.",
+			"Various tiny fixes"
 		]
 	},
 	{
