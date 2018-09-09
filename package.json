@@ -1,5 +1,5 @@
 {
-	"name": "stravistix",
+	"name": "elevate",
 	"version": "6.5.1",
 	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
 	"scripts": {
@@ -38,7 +38,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/thomaschampagne/stravistix"
+		"url": "https://github.com/thomaschampagne/elevate"
 	},
 	"author": {
 		"name": "Thomas Champagne",

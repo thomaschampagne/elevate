@@ -24,7 +24,7 @@ import { SyncResultModel } from "../../../core/scripts/shared/models/sync/sync-r
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!
-// TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/stravistix/issues/484)
+// TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/elevate/issues/484)
 // TODO:FEAT @YearProgress Year progress Targets line display (by KEYS = activityTypes & ProgressType)
 // TODO: LoggerService
 

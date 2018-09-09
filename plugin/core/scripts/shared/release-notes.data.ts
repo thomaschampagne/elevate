@@ -70,7 +70,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Estimated Power Stress Score: improved reliability and precision of PSS when power data is estimated (no cycling power meter). Required by the upcoming fitness trend estimation without sensors.",
 			"Activity stats panel: replaced \"75% quartile speed\" by \"Best 20min speed\"",
 			"Activity: Fixed ODO distance for bikes with unicode names on the ride page.",
-			"Synchronization: you can now trigger the fastest \"sync recent activities\" directly from the stravistix app.",
+			"Synchronization: you can now trigger the fastest \"sync recent activities\" directly from the elevate app.",
 			"Technical: Upgraded angular version from v5 to v6. Also upgraded other libs.",
 			"Other: various improvements and minors bugs fixed."
 		]
@@ -87,9 +87,9 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		],
 		isPatch: false,
 		fixes: [
-			"Optimization of the synchronisation: stravistix can now fully track your \"recent\" activities (addition, edition and deletion) when you load a strava website page. The app content will be refreshed in real time. Some users experienced some crashes and memories issues with the background sync: this should be fixed now. The auto-sync delay setting has been also removed in that optimization: goal is that user focuses less on synchronization aspects by simplifying it.",
+			"Optimization of the synchronisation: elevate can now fully track your \"recent\" activities (addition, edition and deletion) when you load a strava website page. The app content will be refreshed in real time. Some users experienced some crashes and memories issues with the background sync: this should be fixed now. The auto-sync delay setting has been also removed in that optimization: goal is that user focuses less on synchronization aspects by simplifying it.",
 			"Optimized the rendering and styling of \"extended stats panel\". Should now scale properly whatever the resolution being used.",
-			"[Technical] Big work on the switch from SystemJS to Webpack (v4) as javascript module bundler and loader. This was a required step to accelerate portability of stravistix to Firefox.",
+			"[Technical] Big work on the switch from SystemJS to Webpack (v4) as javascript module bundler and loader. This was a required step to accelerate portability of elevate to Firefox.",
 		]
 	},
 	{
@@ -258,7 +258,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Added Running stats: Stride length & total steps.",
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
-			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in elevate settings.",
 		],
 		isPatch: true,
 		fixes: [
@@ -276,7 +276,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Added Running stats: Stride length & total steps.",
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
-			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in elevate settings.",
 		],
 		isPatch: false,
 		fixes: [
@@ -865,7 +865,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Globally improved segment time comparaison for cycling activities.",
 			"Fixed segment time comparaison '-0s' when activity beats year's record on a segment",
 			"Fixed segment time comparaison '-0s' when the year record beats global previous record",
-			"Removed useless stravistix highlight feature. It's not a feature... it's not a bug... it's remove ;)",
+			"Removed useless elevate highlight feature. It's not a feature... it's not a bug... it's remove ;)",
 			"Invisible project improvements (such as gulp task runner Implementation)",
 		],
 	}, {
@@ -891,7 +891,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "3.2.3",
 		date: "2016-03-26",
 		features: [
-			"Disable stravistix on new strava store",
+			"Disable elevate on new strava store",
 			"Minors improvements",
 		],
 	}, {
@@ -1100,7 +1100,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "0.7.1",
 		date: "2015-05-29",
 		features: [
-			"Hotfix: Remove display stravistix chrome tab on update (http://thomaschampagne.github.io/stravistix)",
+			"Hotfix: Remove display elevate chrome tab on update (http://thomaschampagne.github.io/elevate)",
 		],
 	}, {
 		version: "0.7.0",

@@ -20,7 +20,7 @@ interface IAnalysisDataCache {
 
 export class ActivityProcessor {
 
-	public static cachePrefix = "stravistix_activity_";
+	public static cachePrefix = "elevate_activity_";
 	protected appResources: AppResourcesModel;
 	protected vacuumProcessor: VacuumProcessor;
 	protected athleteModelResolver: AthleteModelResolver;

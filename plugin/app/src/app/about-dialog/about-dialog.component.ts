@@ -16,7 +16,7 @@ export class AboutDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "40%";
 	public static readonly MIN_WIDTH: string = "40%";
-	public static readonly MANIFEST_PRODUCTION: string = "https://raw.githubusercontent.com/thomaschampagne/stravistix/master/plugin/manifest.json";
+	public static readonly MANIFEST_PRODUCTION: string = "https://raw.githubusercontent.com/thomaschampagne/elevate/master/plugin/manifest.json";
 
 	public angularCoreVersion: string;
 	public angularMaterialVersion: string;

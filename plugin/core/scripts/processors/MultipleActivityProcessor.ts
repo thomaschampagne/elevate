@@ -141,7 +141,7 @@ export class MultipleActivityProcessor {
 			isTrainer: activityWithStream.trainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,
-			isActivityAuthor: true, // While syncing and processing activities, stravistix user is always author of the activity
+			isActivityAuthor: true, // While syncing and processing activities, elevate user is always author of the activity
 			athleteModel: activityWithStream.athleteModel,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
 			activityStatsMap: activityStatsMap,

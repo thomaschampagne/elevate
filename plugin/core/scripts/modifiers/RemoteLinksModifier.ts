@@ -38,8 +38,8 @@ export class RemoteLinksModifier extends AbstractModifier {
 		// Activity page
 		// Adding remote view links on left panel
 		let html = "<li class='group'>";
-		html += "<div class='title' id='stravistix_remote_title' style='cursor: pointer;'>Remote Views</div>";
-		html += "<ul style='display: none;' id='stravistix_remoteViews'>";
+		html += "<div class='title' id='elevate_remote_title' style='cursor: pointer;'>Remote Views</div>";
+		html += "<ul style='display: none;' id='elevate_remoteViews'>";
 		_.forEach(remoteViewActivityLinksArray, (linkArray: string[]) => {
 			html += "<li>";
 			html += "<a data-menu='' " + linkArray[3] + " target='_blank' style='color: #333;' href='" + linkArray[1] + this.activityId + linkArray[2] + "'>" + linkArray[0] + "</a>";
@@ -54,15 +54,15 @@ export class RemoteLinksModifier extends AbstractModifier {
 				evt.stopPropagation();
 			});
 
-			$("#stravistix_remote_title").click((evt: JQuery.Event) => {
+			$("#elevate_remote_title").click((evt: JQuery.Event) => {
 
 				evt.preventDefault();
 				evt.stopPropagation();
 
-				if ($("#stravistix_remoteViews").is(":visible")) {
-					$("#stravistix_remoteViews").slideUp();
+				if ($("#elevate_remoteViews").is(":visible")) {
+					$("#elevate_remoteViews").slideUp();
 				} else {
-					$("#stravistix_remoteViews").slideDown();
+					$("#elevate_remoteViews").slideDown();
 				}
 
 			});

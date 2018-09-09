@@ -13,16 +13,16 @@ export class ReliveCCModifier extends AbstractModifier {
 	public modify(): void {
 
 		let html = "<li class='group'>";
-		html += "<div class='title' style='cursor: pointer;' id='stravistix_relivecc'>Relive</div>";
+		html += "<div class='title' style='cursor: pointer;' id='elevate_relivecc'>Relive</div>";
 
 		$("#pagenav").append($(html)).each(() => {
 
-			$("#stravistix_relivecc").click((evt: JQuery.Event) => {
+			$("#elevate_relivecc").click((evt: JQuery.Event) => {
 
 				evt.preventDefault();
 				evt.stopPropagation();
 
-				const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=stravistix";
+				const url: string = "https://www.relive.cc/view/" + this.activityId + "?r=elevate";
 
 				const windowWidth = 800;
 				const windowHeight = 600;

@@ -18,7 +18,7 @@ export interface ISegmentInfo {
 
 export class SegmentProcessor {
 
-	public static cachePrefix = "stravistix_nearbySegments_";
+	public static cachePrefix = "elevate_nearbySegments_";
 
 	protected vacuumProcessor: VacuumProcessor;
 	protected segmentId: number;

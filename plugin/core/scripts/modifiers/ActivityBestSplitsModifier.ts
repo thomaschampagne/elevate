@@ -434,7 +434,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 		this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function () {
 		};
 		this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
-		this.cacheKeyPrefix = "stravistix_bestsplit_" + this.activityId + "_";
+		this.cacheKeyPrefix = "elevate_bestsplit_" + this.activityId + "_";
 	}
 
 	protected filterData(data: number[], distance: number[], smoothing: number): number[] {

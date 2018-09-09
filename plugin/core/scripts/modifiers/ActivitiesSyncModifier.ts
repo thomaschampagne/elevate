@@ -38,7 +38,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 		html += "       <div id=\"syncMessage\">";
 		html += "           <span style=\"font-size: 28px;\">Syncing activities to browser.</span><br/><br/>It can take several minutes on your first synchronisation. " +
 			"Keep that in background... Synced activities are locally saved in the storage allocated by the extension." +
-			"<br/><br/>On a daily use, your recent activities will be automatically pushed to the stravistix app when strava website is loaded." +
+			"<br/><br/>On a daily use, your recent activities will be automatically pushed to the Elevate app when strava website is loaded." +
 			"<br/><br/>In specific cases like \"old\" activities added, edited or deleted from strava, you have to launch synchronization by yourself.<br/><br/>" +
 			"<i>Note: closing this window will stop the synchronization. Window will close itself when synchronization is done.</i>";
 		html += "       </div>";
@@ -117,12 +117,12 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				}
 
 				// Register instance on the bridge
-				window.__stravistix_bridge__.activitiesSyncModifierInstance = this;
+				window.__elevate_bridge__.activitiesSyncModifierInstance = this;
 
 				let timer: number = 5 * 1000; // 5s for debug...
 				this.closeWindowIntervalId = window.setInterval(() => {
 					$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited:" + syncResult.activitiesChangesModel.edited.length + ", Deleted:" + syncResult.activitiesChangesModel.deleted.length +
-						". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__stravistix_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
+						". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__elevate_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
 					if (timer <= 0) {
 						window.close();
 					}

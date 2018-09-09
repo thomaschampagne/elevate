@@ -103,8 +103,8 @@ export class StravistiX {
 				});
 			}
 
-			// Init "stravistix bridge"
-			window.__stravistix_bridge__ = {}; // TODO Find another solution
+			// Init "elevate bridge"
+			window.__elevate_bridge__ = {}; // TODO Find another solution
 
 			if (CoreEnv.debugMode) {
 				console.log("Handling " + window.location.pathname);
@@ -266,7 +266,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (window.location.search.match("stravistixSync")) {
+		if (window.location.search.match("elevateSync")) {
 			console.log("Skip handlePluginInstallOrUpgrade since we are on a sync");
 			return;
 		}
@@ -338,7 +338,7 @@ export class StravistiX {
 
 					follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
-					StorageManager.setCookieSeconds("stravistix_athlete_update_done", false, 0); // Remove stravistix_athlete_update_done cookie to trigger athlete commit earlier
+					StorageManager.setCookieSeconds("elevate_athlete_update_done", false, 0); // Remove elevate_athlete_update_done cookie to trigger athlete commit earlier
 
 				} else {
 					console.log("No install or update detected");
@@ -1047,10 +1047,10 @@ export class StravistiX {
 	 */
 	public handleTrackTodayIncomingConnection(): void {
 
-		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
+		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("elevate_daily_connection_done") == "true");
 
 		if (CoreEnv.debugMode) {
-			console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
+			console.log("Cookie 'elevate_daily_connection_done' value found is: " + userHasConnectSince24Hour);
 		}
 
 		if (_.isNull(this.athleteId)) {
@@ -1081,7 +1081,7 @@ export class StravistiX {
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
 			if (CoreEnv.debugMode) {
-				console.log("Cookie 'stravistix_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
+				console.log("Cookie 'elevate_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
 			}
 
 			if (!CoreEnv.debugMode) {
@@ -1089,20 +1089,20 @@ export class StravistiX {
 			}
 
 			// Create cookie to avoid push during 1 day
-			StorageManager.setCookie("stravistix_daily_connection_done", true, 1);
+			StorageManager.setCookie("elevate_daily_connection_done", true, 1);
 
 		} else {
 			if (CoreEnv.debugMode) {
-				console.log("Cookie 'stravistix_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
+				console.log("Cookie 'elevate_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
 			}
 		}
 	}
 
 	public handleAthleteUpdate(): void {
-		if (!StorageManager.getCookie("stravistix_athlete_update_done")) {
+		if (!StorageManager.getCookie("elevate_athlete_update_done")) {
 			this.commitAthleteUpdate().then((response: any) => {
 				console.log("Updated", response);
-				StorageManager.setCookieSeconds("stravistix_athlete_update_done", true, 6 * 60 * 60); // Don't update for 6 hours
+				StorageManager.setCookieSeconds("elevate_athlete_update_done", true, 6 * 60 * 60); // Don't update for 6 hours
 			}, (err: any) => {
 				console.error(err);
 			});
@@ -1116,7 +1116,7 @@ export class StravistiX {
 	public handleOnFlyActivitiesSync(): void {
 
 		// Skipping on fly sync because a dedicated sync has been asked by user
-		if (window.location.search.match("stravistixSync")) {
+		if (window.location.search.match("elevateSync")) {
 			return;
 		}
 
@@ -1125,7 +1125,7 @@ export class StravistiX {
 			return;
 		}
 
-		if (window.location.search.match("stravistixSync")) {
+		if (window.location.search.match("elevateSync")) {
 			console.log("Sync Popup. Skip handleOnFlyActivitiesSync()");
 			return;
 		}
@@ -1165,13 +1165,13 @@ export class StravistiX {
 
 	public handleActivitiesSyncFromOutside() {
 
-		if (!window.location.search.match("stravistixSync")) { // Skipping is we are not on sync popup
+		if (!window.location.search.match("elevateSync")) { // Skipping is we are not on sync popup
 			return;
 		}
 
 		const urlParams = Helper.params(window.location);
 
-		const syncingAllowed = (urlParams.stravistixSync === "true");
+		const syncingAllowed = (urlParams.elevateSync === "true");
 		if (!syncingAllowed) {
 			return;
 		}
