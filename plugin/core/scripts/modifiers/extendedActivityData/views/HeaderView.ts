@@ -23,8 +23,7 @@ export class HeaderView extends AbstractDataView {
 
 		this.content += "<div style='width:100%; margin-left: 10px; margin-top: 10px; margin-bottom: 5px;font-size: 14px;'>";
 		this.content += "   <div style='display: inline;'><img style='width:30px' src='" + this.appResources.logoNoText + "'/></div>";
-		this.content += "   <div style='display: inline;'><img style='width:100px' src='" + this.appResources.logoTextOnly + "'/></div>";
-		this.content += "   <div style='display: inline;'>EXTENDED STATS PANEL // " + detail + "</div>";
+		this.content += "   <div style='display: inline;'>" + detail + "</div>";
 		this.content += "   <div style='display: inline; margin-right: 10px;'>";
 		this.content += "       <a href='" + this.appResources.settingsLink + "#/donate' target='_blank' class=\"btn btn-sm btn-primary\" style='position: initial;' '>Do you like this stuff?</a>";
 		this.content += "   </div>";
