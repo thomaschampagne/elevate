@@ -687,15 +687,6 @@ export class ActivityComputer {
 
 		// Finalize compute of Power
 		const avgWatts: number = _.mean(powerArray);
-		const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray),
-			ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-
-		let bestEightyPercent = null;
-		try {
-			bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
-		} catch (err) {
-			console.warn("No best 80% power available for this range");
-		}
 
 		const weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, (a: number, b: number) => { // The reduce function and implementation return the sum of array
 			return (a + b);
@@ -713,12 +704,26 @@ export class ActivityComputer {
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
 		// Find Best 20min and best 80% of time power splits
-
 		let best20min = null;
+		let bestEightyPercent = null;
 		try {
-			best20min = splitCalculator.getBestSplit(60 * 20, true);
+
+			const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+
+			try {
+				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
+			} catch (err) {
+				console.warn("No best 80% power available for this range");
+			}
+
+			try {
+				best20min = splitCalculator.getBestSplit(60 * 20, true);
+			} catch (err) {
+				console.warn("No best 20min power available for this range");
+			}
+
 		} catch (err) {
-			console.warn("No best 20min power available for this range");
+			console.warn(err);
 		}
 
 		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
