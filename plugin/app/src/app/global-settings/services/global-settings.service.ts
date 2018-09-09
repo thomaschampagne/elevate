@@ -267,7 +267,7 @@ export class GlobalSettingsService {
 			min: 0,
 		}],
 	}, {
-		title: "StravistiX Year progression targets for " + (new Date()).getFullYear(),
+		title: "Elevate Year progression targets for " + (new Date()).getFullYear(),
 		options: [{
 			key: "targetsYearRide",
 			type: "number",

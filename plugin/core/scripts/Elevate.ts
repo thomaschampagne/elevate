@@ -49,9 +49,9 @@ import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver"
 import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 
-export class StravistiX {
+export class Elevate {
 
-	public static instance: StravistiX = null;
+	public static instance: Elevate = null;
 
 	public static LOCAL_VERSION_INSTALLED_KEY = "versionInstalled";
 	public static LOCAL_DATED_ATHLETE_SETTINGS_KEY = "datedAthleteSettings";
@@ -75,8 +75,8 @@ export class StravistiX {
 		this.userSettings = userSettings;
 		this.appResources = appResources;
 
-		if (StravistiX.instance == null) {
-			StravistiX.instance = this;
+		if (Elevate.instance == null) {
+			Elevate.instance = this;
 		}
 	}
 
@@ -188,7 +188,7 @@ export class StravistiX {
 	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
 
 		return new Promise((resolve, reject) => {
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
+			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
 				.then((result: { data: DatedAthleteSettingsModel[] }) => {
 					resolve(new AthleteModelResolver(userSettings, result.data));
 				}, error => reject(error));
@@ -215,7 +215,7 @@ export class StravistiX {
 		}
 
 		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
-			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Stravistix v" + this.appResources.extVersion + " updated " + ((latestRelease.isPatch) ? " (patch)" : "") + "</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Elevate v" + this.appResources.extVersion + " updated " + ((latestRelease.isPatch) ? " (patch)" : "") + "</strong></div>" +
 			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
 			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
 			"	<div>" +
@@ -278,14 +278,14 @@ export class StravistiX {
 				on: Date.now(),
 			};
 
-			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, toBeStored, () => {
+			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored, () => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, (response: any) => {
+		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, (response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -384,7 +384,7 @@ export class StravistiX {
 
 	public handlePreviewRibbon(): void {
 		const globalStyle = "background-color: #FFF200; color: rgb(84, 84, 84); font-size: 12px; padding: 5px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center;";
-		const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>StravistiX</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
+		const html: string = "<div id=\"updateRibbon\" style=\"" + globalStyle + "\"><strong>WARNING</strong> You are running a preview of <strong>Elevate</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>";
 		$("body").before(html);
 	}
 
@@ -717,7 +717,7 @@ export class StravistiX {
 
 		const functionRender: any = view.prototype.render;
 
-		const that: StravistiX = this;
+		const that: Elevate = this;
 
 		view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
 
