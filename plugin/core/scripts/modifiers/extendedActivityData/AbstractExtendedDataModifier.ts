@@ -291,7 +291,7 @@ export abstract class AbstractExtendedDataModifier {
 			transitionOut: "none",
 			closeBtn: false,
 			type: "iframe",
-			content: "<div class=\"stravistiXExtendedData\">" + this.content + "</div>",
+			content: "<div class=\"elevateExtendedData\">" + this.content + "</div>",
 		});
 
 		// For each view start making the assossiated graphs
