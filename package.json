@@ -1,7 +1,7 @@
 {
 	"name": "elevate",
 	"version": "6.5.1",
-	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
+	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
 		"build:prod": "npm-run-all clean res-copy:* build-project:core@prod build-project:app@prod",
