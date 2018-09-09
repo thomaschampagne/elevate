@@ -133,7 +133,7 @@ export class HeartRateDataView extends AbstractDataView {
 		this.setupDistributionTable();
 
 		if (!this.isAuthorOfViewedActivity) {
-			this.content += "<u>Note:</u> You don't own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your StravistiX health settings.<br/>";
+			this.content += "<u>Note:</u> You don't own this activity. Notice that <strong>TRaining IMPulse</strong>, <strong>%HRR Average</strong> and <strong>distribution graph</strong> are computed from your Elevate health settings.<br/>";
 			this.content += "This allows you to analyse your heart capacity with the data recorded on the activity of this athlete.<br/><br/>";
 		}
 

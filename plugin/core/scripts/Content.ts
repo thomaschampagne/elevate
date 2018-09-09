@@ -51,7 +51,7 @@ export class Content {
 
 		// Skip execution if needed
 		if (!this.isExtensionRunnableInThisContext()) {
-			console.log("Skipping StravistiX chrome extension execution in this page");
+			console.log("Skipping Elevate chrome extension execution in this page");
 			return;
 		}
 
@@ -93,7 +93,7 @@ export class Content {
 
 export let appResources: AppResourcesModel = {
 	settingsLink: chrome.extension.getURL("/app/index.html"),
-	logoStravistix: chrome.extension.getURL("/core/icons/logo_elevate_no_circle.svg"),
+	logoElevate: chrome.extension.getURL("/core/icons/logo_elevate_no_circle.svg"),
 	menuIconBlack: chrome.extension.getURL("/core/icons/ic_menu_24px_black.svg"),
 	menuIconOrange: chrome.extension.getURL("/core/icons/ic_menu_24px_orange.svg"),
 	remoteViewIcon: chrome.extension.getURL("/core/icons/ic_open_in_new_24px.svg"),

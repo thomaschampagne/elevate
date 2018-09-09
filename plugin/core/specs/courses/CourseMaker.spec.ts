@@ -32,7 +32,7 @@ describe("CourseMaker", () => {
 			.getElementsByTagName("name")[0]
 			.childNodes[0]
 			.nodeValue
-		).toBe("StravistiX");
+		).toBe("Elevate");
 
 		// ... Check course name
 		const trkNode = xmlStream.getElementsByTagName("trk")[0];

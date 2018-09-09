@@ -60,7 +60,7 @@ export class MenuModifier extends AbstractModifier {
 					console.error(error);
 					$(".sx_menu_heatmap").attr("href", "#");
 					$(".sx_menu_heatmap").attr("target", "_self");
-					$(".sx_menu_heatmap").attr("onclick", "alert(\"Some StravistiX functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.\")");
+					$(".sx_menu_heatmap").attr("onclick", "alert(\"Some Elevate functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.\")");
 				},
 			);
 		}

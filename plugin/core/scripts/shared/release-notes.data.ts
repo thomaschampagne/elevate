@@ -325,7 +325,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		],
 		features: [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
-			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
+			"Technical: Elevate scripts are loaded on demand with SystemJS library. Elevate & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
 		isPatch: true,
 		fixes: [
@@ -340,7 +340,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		hotFixes: [],
 		features: [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
-			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
+			"Technical: Elevate scripts are loaded on demand with SystemJS library. Elevate & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
 		isPatch: false,
 		fixes: [
@@ -701,7 +701,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"BETA: Running estimated paces based on your most painful effort on a segment.",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
-		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
+		fixes: ["Fixed broken heat map link in Elevate burger menu"],
 	}, {
 		version: "4.3.1",
 		date: "2016-10-15",
@@ -712,7 +712,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Running estimated paces based on your most painful effort on a segment.",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
-		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
+		fixes: ["Fixed broken heat map link in Elevate burger menu"],
 	}, {
 		version: "4.2.3",
 		date: "2016-10-02",
@@ -1140,7 +1140,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Customized zones for each Xtended data",
 			"Add TRIMP/Hour",
-			"Change extension name from StravPlus to StravistiX",
+			"Change extension name from StravPlus to Elevate",
 			"Bugs fix",
 		],
 	}, {
@@ -1278,7 +1278,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Add nearby cycling+running segments added on segment page",
 			"Add average pace in cycling activities",
 			"Add lower quartile power, median power and upper quartile power in cycling activities",
-			"Fixed: Unable to see StravistiX icon menu when highlight option is on.",
+			"Fixed: Unable to see Elevate icon menu when highlight option is on.",
 		],
 	}, {
 		version: "0.3.6",
@@ -1293,7 +1293,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		date: "2014-11-02",
 		features: [
 			"Fixed display text glitches on some pages",
-			"StravistiX menu icon orange",
+			"Elevate menu icon orange",
 			"Others minor bug fixes",
 		],
 	}, {
@@ -1304,7 +1304,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Bike activities extended data new look. Possibility to get the activity extended data panel hidden on load",
 			"Cache management of bike Odo for bike activities, force refresh possible",
 			"Fixing hide challenges and new routes which broken in new Strava.com update",
-			"New StravistiX design",
+			"New Elevate design",
 			"Bug fixes",
 		],
 	}, {
@@ -1344,7 +1344,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		date: null,
 		features: [
 			"Add Watts/KG for cycling activities",
-			"Add VeloViewer Challenges Trophy Cabinet to StravistiX menu",
+			"Add VeloViewer Challenges Trophy Cabinet to Elevate menu",
 		],
 	}, {
 		version: "0.1.9",
@@ -1369,16 +1369,16 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Hide the challenges in dashboard feed",
 			"Hide the created routes in dashboard feed",
 			"Bug fixing",
-			"Switch app name to 'StravistiX Developper Preview'",
+			"Switch app name to 'Elevate Developper Preview'",
 		],
 	}, {
 		version: "0.1.6",
 		date: null,
 		features: [
 			"Add this about page",
-			"StravistiX placed first in header",
-			"Add icons in StravistiX menu",
-			"Remove StravistiX settings page popup when extension is updated",
+			"Elevate placed first in header",
+			"Add icons in Elevate menu",
+			"Remove Elevate settings page popup when extension is updated",
 			"Bug fixing",
 		],
 	}, {
@@ -1388,7 +1388,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Segment Rank percentage now working on all leaderboards (Clubs, following, ...)",
 			"Add bike odo display or not as an option",
 			"Come back to Strava Classic color style",
-			"Add StravistiX features highlighted in bright orange as option (new miscellaneous section).",
+			"Add Elevate features highlighted in bright orange as option (new miscellaneous section).",
 		],
 	}, {
 		version: "0.1.4",
@@ -1411,10 +1411,10 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Add Default Google Map type in activity",
 			"Add links to Flyby, Veloviewer, Raceshape in activity page",
 			"Allow free accounts users to hide premium features",
-			"Add StravistiX menu",
-			"Add Settings page link to StravistiX menu",
-			"Add Global Heat Map to StravistiX menu",
-			"Add user veloviewer link to StravistiX menu",
-			"Add Kom Map link to StravistiX menu",
+			"Add Elevate menu",
+			"Add Settings page link to Elevate menu",
+			"Add Global Heat Map to Elevate menu",
+			"Add user veloviewer link to Elevate menu",
+			"Add Kom Map link to Elevate menu",
 		],
 	}];

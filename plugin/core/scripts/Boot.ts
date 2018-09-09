@@ -1,6 +1,6 @@
 import "fancyboxCss";
 import "../css/core.css";
-import { StravistiX } from "./StravistiX";
+import { Elevate } from "./Elevate";
 import * as $ from "jquery";
 import * as fancyboxBoot from "fancybox";
 import { MessagesModel } from "./shared/models/messages.model";
@@ -15,7 +15,7 @@ class Boot {
 		addEventListener(MessagesModel.ON_START_CORE_EVENT, (event: any) => {
 
 			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
-			const stravistiX = new StravistiX(initData.userSettings, initData.appResources);
+			const stravistiX = new Elevate(initData.userSettings, initData.appResources);
 			stravistiX.run();
 
 		});
