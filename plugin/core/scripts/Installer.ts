@@ -53,7 +53,7 @@ class Installer {
 	protected handleInstall() {
 
 		chrome.tabs.create({
-			url: "http://thomaschampagne.github.io/stravistix/", // TODO Get from config/constants
+			url: "http://thomaschampagne.github.io/elevate/", // TODO Get from config/constants
 		}, (tab: chrome.tabs.Tab) => {
 			console.log("First install. Display website new tab:", tab);
 			chrome.tabs.create({

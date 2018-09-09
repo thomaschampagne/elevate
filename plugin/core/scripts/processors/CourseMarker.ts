@@ -45,7 +45,7 @@ export class CourseMaker {
             "<metadata>\n" +
             "<author>\n" +
             "<name>StravistiX</name>\n" +
-			"<link href=\"http://thomaschampagne.github.io/stravistix/\"/>\n" +
+			"<link href=\"http://thomaschampagne.github.io/elevate/\"/>\n" +
             "</author>\n" +
             "</metadata>\n" +
             "<trk>\n" +

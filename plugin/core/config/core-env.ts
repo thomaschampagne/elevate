@@ -4,5 +4,5 @@ export class CoreEnv {
 	public static readonly simulateUpdate = false; // Must be false in release
 	public static readonly debugMode = false; // Must be false in release
 	public static readonly useActivityStreamCache = true; // Must be true in release
-	public static readonly endPoint = "https://stravistix-prod-${id}.herokuapp.com"; // StravistiX endPoint for new features
+	public static readonly endPoint = "https://elevate-prod-${id}.herokuapp.com"; // StravistiX endPoint for new features
 }

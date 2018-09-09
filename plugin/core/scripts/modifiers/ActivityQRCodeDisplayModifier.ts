@@ -23,7 +23,7 @@ export class ActivityQRCodeDisplayModifier extends AbstractModifier {
 			// Once dom inserted
 			$("#activityFlashCodebutton").click(() => {
 
-				$.fancybox("<div align=\"center\"><h2>#stravistix Activity Flash code</h2><h3>Scan from your smartphone.</h3><p><canvas style=\"padding: 0px 60px 0px 60px;\" id=\"qrcode\"></canvas></p><h3>Save by right click on image then \"Save image as...\"</h3></div>");
+				$.fancybox("<div align=\"center\"><h2>#elevate Activity Flash code</h2><h3>Scan from your smartphone.</h3><p><canvas style=\"padding: 0px 60px 0px 60px;\" id=\"qrcode\"></canvas></p><h3>Save by right click on image then \"Save image as...\"</h3></div>");
 
 				QRCode.toCanvas(document.getElementById("qrcode"),
 					"http://app.strava.com/activities/" + this.activityId, (error) => {

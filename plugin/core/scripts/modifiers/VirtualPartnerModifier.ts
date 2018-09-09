@@ -40,12 +40,12 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 			const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-			const exportButtonHtml = "<a class=\"btn-block btn-xs button raceshape-btn btn-primary stravistix_exportVpu\" id=\"stravistix_exportVpu\">Export this Segment Effort to your GPS</a>";
-			if ($(".stravistix_exportVpu").length < 1) {
+			const exportButtonHtml = "<a class=\"btn-block btn-xs button raceshape-btn btn-primary elevate_exportVpu\" id=\"elevate_exportVpu\">Export this Segment Effort to your GPS</a>";
+			if ($(".elevate_exportVpu").length < 1) {
 
 				$(".effort-actions").first().after(exportButtonHtml).each(() => {
 
-					$("#stravistix_exportVpu").click((evt) => {
+					$("#elevate_exportVpu").click((evt) => {
 						evt.preventDefault();
 						evt.stopPropagation();
 						that.displayDownloadPopup();
@@ -96,17 +96,17 @@ export class VirtualPartnerModifier extends AbstractModifier {
 			ExportTypes.TCX,
 		];
 
-		const message: string = "Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id=\"stravistix_download_course_" + effortId + "\"></div>";
+		const message: string = "Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id=\"elevate_download_course_" + effortId + "\"></div>";
 
-		$.fancybox("<div width=\"250px\" id=\"stravistix_popup_download_course_" + effortId + "\">" + message + "</div>", {
+		$.fancybox("<div width=\"250px\" id=\"elevate_popup_download_course_" + effortId + "\">" + message + "</div>", {
 			afterShow: () => {
 				_.forEach(exportsType, (type: ExportTypes) => {
 					const exportTypeAsString: string = ExportTypes[type];
 					const link: JQuery = $("<a class=\"button btn-block btn-primary\" style=\"margin-bottom: 15px;\">Download Course File as " + exportTypeAsString + "</a>").on("click", () => {
 						this.download(effortId, type);
-						$("#stravistix_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
+						$("#elevate_popup_download_course_" + effortId).html("Your " + exportTypeAsString + " file is (being) dropped in your download folder...");
 					});
-					$("#stravistix_download_course_" + effortId).append(link);
+					$("#elevate_download_course_" + effortId).append(link);
 				});
 			},
 		});

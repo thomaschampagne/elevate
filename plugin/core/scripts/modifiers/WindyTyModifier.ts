@@ -89,8 +89,8 @@ export class WindyTyModifier extends AbstractModifier {
 		];
 
 		let html = "<li class='group'>";
-		html += "<div class='title' style='cursor: pointer;' id='stravistix_weather_title'>Weather</div>";
-		html += "<ul style='display: none;' id='stravistix_weatherList'>";
+		html += "<div class='title' style='cursor: pointer;' id='elevate_weather_title'>Weather</div>";
+		html += "<ul style='display: none;' id='elevate_weatherList'>";
 		$.each(remoteViewActivityLinksArray, function () {
 			html += "<li>";
 			html += "<a data-wheater-windyty='" + this[1] + "' href='#'>" + this[0] + "</a>";
@@ -106,15 +106,15 @@ export class WindyTyModifier extends AbstractModifier {
 				this.showWeather($(evt.target).attr("data-wheater-windyty"));
 			});
 
-			$("#stravistix_weather_title").click((evt: JQuery.Event) => {
+			$("#elevate_weather_title").click((evt: JQuery.Event) => {
 
 				evt.preventDefault();
 				evt.stopPropagation();
 
-				if ($("#stravistix_weatherList").is(":visible")) {
-					$("#stravistix_weatherList").slideUp();
+				if ($("#elevate_weatherList").is(":visible")) {
+					$("#elevate_weatherList").slideUp();
 				} else {
-					$("#stravistix_weatherList").slideDown();
+					$("#elevate_weatherList").slideDown();
 				}
 
 			});

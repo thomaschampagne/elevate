@@ -6,7 +6,7 @@ import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
 
 export class VacuumProcessor {
 
-	public static cachePrefix = "stravistix_activityStream_";
+	public static cachePrefix = "elevate_activityStream_";
 
 	/**
 	 *  Get the strava athlete id connected
