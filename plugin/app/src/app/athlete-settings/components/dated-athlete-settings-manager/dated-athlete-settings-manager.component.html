@@ -116,7 +116,7 @@
 				<mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
 				<mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
 					<button *ngIf="!datedSettings.isForever()" mat-icon-button
-							(click)="onRemove(datedSettings.from)"
+							(click)="onRemove(datedSettings.since)"
 							matTooltip="Delete dated settings">
 						<mat-icon>delete</mat-icon>
 					</button>
