@@ -2,7 +2,18 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
-		version: "6.5.1",
+		version: "6.5.2",
+		date: "2018-09-10",
+		message: "Hotfixed the new v6.5 which introduces \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
+		hotFixes: [
+			"Fixed inability to delete a \"dated athlete settings\" in v6.5.0"
+		],
+		features: [],
+		isPatch: true,
+		fixes: []
+	},
+	{
+		version: "6.5.0",
 		date: "2018-09-09",
 		message: "Big update! Introducing \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
 		hotFixes: [],
@@ -238,7 +249,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "5.13.0",
 		date: "2018-01-28",
 		message: "Added Power estimation on <strong>your</strong> runs <span style='text-decoration: line-through;'>(beta)</span> " +
-		"<strong style='font-size: 16px'>+</strong> cycling \"Power Stress Score (PSS)\" estimation (when no running or cycling power meter available)!!. And few others things...",
+			"<strong style='font-size: 16px'>+</strong> cycling \"Power Stress Score (PSS)\" estimation (when no running or cycling power meter available)!!. And few others things...",
 		hotFixes: [],
 		features: [
 			"Added estimation of PSS (Power Stress Score) cycling activities without power meter.",
@@ -453,8 +464,8 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "5.5.0",
 		date: "2017-02-22",
 		message: "At a glance...</br>Cycling Power Stress Score on your activities :)</br>" +
-		"Support of Running Power Meters :)</br>" +
-		"Please redo a full sync of your history if you \"pause\" your activities during lunch (See below fixed bugs)",
+			"Support of Running Power Meters :)</br>" +
+			"Please redo a full sync of your history if you \"pause\" your activities during lunch (See below fixed bugs)",
 		hotFixes: [],
 		features: [
 			"Added \"Cycling Power Stress Score\" to strava activity pages. You must have a power meter on your bike to view the stat.",
@@ -555,7 +566,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "5.1.1",
 		date: "2016-12-20",
 		message: "MultiSports Fitness Trend here. Sync process fully reworked!. Last alpha testing version optimistically.</br></br>" +
-		"/!\\ Your <u>history</u> have been <u>cleared</u> on this update if you had synced one... Just sync again... Sry :/",
+			"/!\\ Your <u>history</u> have been <u>cleared</u> on this update if you had synced one... Just sync again... Sry :/",
 		hotFixes: [],
 		features: [
 			"<i>MultiSports Fitness Trend:</i> Sync process fully reworked. Added, deleted & edited activities should be well handled. Sync typescript code is covered by unit tests.",
@@ -570,7 +581,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "5.1.0",
 		date: "2016-12-11",
 		message: "MultiSports Fitness Trend live! Improvements + fixes. Short nights :D. Feature still in \"test\".</br>" +
-		"Your history have been cleared if you had synced one... just sync again.",
+			"Your history have been cleared if you had synced one... just sync again.",
 		hotFixes: [],
 		features: [
 			"Generating <i>MultiSports Fitness Trend</i> graph up to 4x faster",
